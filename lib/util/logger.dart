@@ -1,5 +1,5 @@
 class Log{
-  final String APP_NAME = "CRYB";
+  final String APP_NAME = "FELLO";
   String class_name;
 
   Log(this.class_name);
