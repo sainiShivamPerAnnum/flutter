@@ -1,9 +1,12 @@
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/pages/home_screen.dart';
+import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'base_util.dart';
 
 void main() {
   setupLocator();
@@ -17,6 +20,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(builder: (_) => locator<DBModel>()),
+        ChangeNotifierProvider(builder: (_) =>  locator<BaseUtil>()),
       ],
       child: MaterialApp(
         title: Constants.APP_NAME,
@@ -24,14 +28,9 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: MyHomePage(title: Constants.APP_NAME),
+        home: SplashScreen(),
         routes: <String, WidgetBuilder> {
-          // '/launcher': (BuildContext context) => SplashScreen(),
-          // '/home': (BuildContext context) => Dashboard(onLoginRequest: (pageNo) {
-          //   Navigator.push(context, MaterialPageRoute(
-          //       builder: (context) => LoginController(initPage: pageNo)
-          //   ));
-          // }),
+          '/home': (BuildContext context) => MyHomePage(title: Constants.APP_NAME),
         },
       ),
     );

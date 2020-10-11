@@ -1,4 +1,4 @@
-package in.fello.felloapp
+package `in`.fello.felloapp
 
 import io.flutter.embedding.android.FlutterActivity
 
