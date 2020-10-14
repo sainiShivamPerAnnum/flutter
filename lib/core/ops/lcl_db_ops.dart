@@ -1,3 +1,4 @@
+import 'package:felloapp/core/model/User.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -6,6 +7,26 @@ import 'package:flutter/material.dart';
 class LocalDBModel extends ChangeNotifier {
   LocalApi _api = locator<LocalApi>();
   final Log log = new Log("LocalDBModel");
+
+  Future<User> getUser() async {
+    try{
+      List<String> contents = await _api.readUserFile();
+      return User.parseFile(contents);
+    }catch(e) {
+      log.error("Unable to fetch user from local store." + e.toString());
+      return null;
+    }
+  }
+
+  Future<bool> saveUser(User user) async{
+    try {
+      await _api.writeUserFile(user.toFileString());
+      return true;
+    }catch(e) {
+      log.error("Failed to store user details in local db: " + e.toString());
+      return false;
+    }
+  }
 
   Future<int> isUserOnboarded() async {
     try {

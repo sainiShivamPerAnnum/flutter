@@ -13,6 +13,26 @@ class LocalApi {
     return File('$path/onboarded.txt');
   }
 
+  Future<File> get userFile async {
+    final path = await _localPath;
+    return File('$path/userdetails.txt');
+  }
+
+  Future<List<String>> readUserFile() async{
+    final file = await userFile;
+    return file.readAsLines();
+  }
+
+  Future<File> writeUserFile(String content) async{
+    final file = await userFile;
+    return file.writeAsString(content);
+  }
+
+  Future<void> deleteUserFile() async{
+    final file = await userFile;
+    if(file != null)return file.delete();
+  }
+
   Future<File> writeOnboardFile(String content) async {
     final file = await onboardFile;
     return file.writeAsString(content);

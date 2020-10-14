@@ -1,15 +1,19 @@
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/fcm_listener.dart';
+import 'package:felloapp/core/model/User.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
+import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
+import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-
-
 
 class LoginController extends StatefulWidget {
   final int initPage;
@@ -34,87 +38,78 @@ class _LoginControllerState extends State<LoginController> {
   static FcmListener fcmProvider;
 
   String userMobile;
-//  static MobileInputScreen mobileInScreen;
-//  static OtpInputScreen otpInScreen;
-//  static NameInputScreen nameInScreen;
-//  static AddressInputScreen addressInScreen;
   String verificationId;
   static List<Widget> _pages;
   int _currentPage;
   final _mobileScreenKey = new GlobalKey<MobileInputScreenState>();
   final _otpScreenKey = new GlobalKey<OtpInputScreenState>();
   final _nameScreenKey = new GlobalKey<NameInputScreenState>();
-  final _addressScreenKey = new GlobalKey<AddressInputScreenState>();
+  // final _addressScreenKey = new GlobalKey<AddressInputScreenState>();
 
   @override
   void initState() {
     super.initState();
     _currentPage = (initPage != null) ? initPage : MobileInputScreen.index;
-    _formProgress = 0.2 * (_currentPage+1);
+    _formProgress = 0.2 * (_currentPage + 1);
     _controller = new PageController(initialPage: _currentPage);
-//    mobileInScreen = MobileInputScreen();
-//    otpInScreen = OtpInputScreen();
-    //nameInScreen = NameInputScreen(key: _nameScreenKey);
-    //addressInScreen = AddressInputScreen(key: _addressScreenKey);
     _pages = [
       MobileInputScreen(key: _mobileScreenKey),
       OtpInputScreen(key: _otpScreenKey),
       NameInputScreen(key: _nameScreenKey),
-      AddressInputScreen(key: _addressScreenKey),
+      // AddressInputScreen(key: _addressScreenKey),
     ];
   }
 
   Future<void> verifyPhone() async {
     final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
-      //this.verificationId = verId;
       log.debug("Phone number hasnt been auto verified yet");
-//      otpInScreen.onOtpTimeout();
-        _otpScreenKey.currentState.onOtpAutoDetectTimeout();
+      _otpScreenKey.currentState.onOtpAutoDetectTimeout();
     };
 
     final PhoneCodeSent smsCodeSent = (String verId, [int forceCodeResend]) {
       this.verificationId = verId;
       log.debug(
           "User mobile number format verified. Sending otp and verifying");
-      //move to otp screen
-      //_currentPage = OtpInputScreen.index;
       baseProvider.isLoginNextInProgress = false;
       _controller.animateToPage(OtpInputScreen.index,
           duration: Duration(milliseconds: 300), curve: Curves.easeIn);
       setState(() {});
     };
 
-    final PhoneVerificationCompleted verifiedSuccess = (AuthCredential user) async{
+    final PhoneVerificationCompleted verifiedSuccess =
+        (AuthCredential user) async {
       log.debug("Verified automagically!");
-      if(!baseProvider.isLoginNextInProgress) {
+      if (!baseProvider.isLoginNextInProgress) {
         baseProvider.isLoginNextInProgress = true;
         setState(() {});
       }
-      if(_currentPage == OtpInputScreen.index){
-      //  UiConstants.offerSnacks(context, "Mobile verified!");
+      if (_currentPage == OtpInputScreen.index) {
+        //  UiConstants.offerSnacks(context, "Mobile verified!");
 //        otpInScreen.onOtpReceived();
-          _otpScreenKey.currentState.onOtpReceived();
+        _otpScreenKey.currentState.onOtpReceived();
       }
       log.debug("Now verifying user");
-      bool flag = await baseProvider.authenticateUser(user);//.then((flag) {
+      bool flag = await baseProvider.authenticateUser(user); //.then((flag) {
       if (flag) {
         log.debug("User signed in successfully");
         onSignInSuccess();
       } else {
         log.error("User auto sign in didnt work");
         baseProvider.isLoginNextInProgress = false;
-        baseProvider.showNegativeAlert('Sign In Failed', 'Please check your network or number and try again', context);
+        baseProvider.showNegativeAlert('Sign In Failed',
+            'Please check your network or number and try again', context);
         setState(() {});
       }
     };
 
     final PhoneVerificationFailed veriFailed = (AuthException exception) {
       //codes: 'quotaExceeded'
-      if(exception.code == 'quotaExceeded') {
+      if (exception.code == 'quotaExceeded') {
         log.error("Quota for otps exceeded");
       }
       log.error("Verification process failed:  ${exception.message}");
-      baseProvider.showNegativeAlert('Sign In Failed', 'Please check your network or number and try again', context);
+      baseProvider.showNegativeAlert('Sign In Failed',
+          'Please check your network or number and try again', context);
       baseProvider.isLoginNextInProgress = false;
       setState(() {});
     };
@@ -136,12 +131,6 @@ class _LoginControllerState extends State<LoginController> {
     fcmProvider = Provider.of<FcmListener>(context);
     return Scaffold(
       appBar: BaseUtil.getAppBar(),
-//      shape: RoundedRectangleBorder(
-//        borderRadius: BorderRadius.circular(10.0),
-//      ),
-//      elevation: 0.0,
-//      backgroundColor: Colors.transparent,
-//      child: dialogContent(context),
       backgroundColor: Colors.white,
       body: SafeArea(
           child: Stack(
@@ -151,74 +140,62 @@ class _LoginControllerState extends State<LoginController> {
               backgroundColor: Colors.transparent,
               valueColor: AlwaysStoppedAnimation<Color>(
                   Theme.of(context).primaryColor)),
-          //new Positioned.fill(
-            //child:
-            //Expanded(
-              //child:
-              new PageView.builder(
-              physics: new NeverScrollableScrollPhysics(),
-              controller: _controller,
-              itemCount: _pages.length,
-              itemBuilder: (BuildContext context, int index) {
-                return _pages[index % _pages.length];
-              },
-              onPageChanged: (int index) {
-                setState(() {
-                  _formProgress = 0.2 * (index+1);
-                  _currentPage = index;
-                });
-              },
-            ),
-          //)
-        //  ),
-          //Flexible(
-            //child:
-            Align(
-//          bottom: 10.0,
-//          left: 0.0,
-//          right: 0.0,
+          new PageView.builder(
+            physics: new NeverScrollableScrollPhysics(),
+            controller: _controller,
+            itemCount: _pages.length,
+            itemBuilder: (BuildContext context, int index) {
+              return _pages[index % _pages.length];
+            },
+            onPageChanged: (int index) {
+              setState(() {
+                _formProgress = 0.2 * (index + 1);
+                _currentPage = index;
+              });
+            },
+          ),
+          Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-//            child: new Column(
-//              children: <Widget>[
               padding: EdgeInsets.all(20.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
-                  (//_currentPage == OtpInputScreen.index ||
-                      _currentPage == AddressInputScreen.index)?
-                  Container(
-                    width: 150.0,
-                    height: 50.0,
-                    decoration: BoxDecoration(
-                      borderRadius: new BorderRadius.circular(30.0),
-                      border: Border.all(color: UiConstants.primaryColor, width: 1.0),
-                      color: Colors.transparent,
-                    ),
-                    child: new Material(
-                      child: MaterialButton(
-                        child: Text(
-                          'BACK',
-                          style: Theme.of(context)
-                              .textTheme
-                              .button
-                              .copyWith(color: UiConstants.primaryColor),
-                        ),
-                        onPressed: () {
-                          _currentPage--;
-                          _controller.animateToPage(_currentPage,
-                              duration: Duration(milliseconds: 300),
-                              curve: Curves.easeIn);
-                        },
-                        highlightColor: Colors.orange.withOpacity(0.5),
-                        splashColor: Colors.orange.withOpacity(0.5),
-                      ),
-                      color: Colors.transparent,
-                      borderRadius: new BorderRadius.circular(30.0),
-                    ),
-                  )
-                      :new Container(),
+                  ( //_currentPage == OtpInputScreen.index ||
+                          _currentPage == AddressInputScreen.index)
+                      ? Container(
+                          width: 150.0,
+                          height: 50.0,
+                          decoration: BoxDecoration(
+                            borderRadius: new BorderRadius.circular(30.0),
+                            border: Border.all(
+                                color: UiConstants.primaryColor, width: 1.0),
+                            color: Colors.transparent,
+                          ),
+                          child: new Material(
+                            child: MaterialButton(
+                              child: Text(
+                                'BACK',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .button
+                                    .copyWith(color: UiConstants.primaryColor),
+                              ),
+                              onPressed: () {
+                                _currentPage--;
+                                _controller.animateToPage(_currentPage,
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.easeIn);
+                              },
+                              highlightColor: Colors.orange.withOpacity(0.5),
+                              splashColor: Colors.orange.withOpacity(0.5),
+                            ),
+                            color: Colors.transparent,
+                            borderRadius: new BorderRadius.circular(30.0),
+                          ),
+                        )
+                      : new Container(),
                   new Container(
                     width: 150.0,
                     height: 50.0,
@@ -226,28 +203,26 @@ class _LoginControllerState extends State<LoginController> {
                       gradient: new LinearGradient(colors: [
                         UiConstants.primaryColor,
                         UiConstants.darkPrimaryColor,
-//                                  Colors.orange[600],
-//                                  Colors.orange[900],
-                      ],
-                          begin: Alignment(0.5, -1.0),
-                          end: Alignment(0.5, 1.0)
-                      ),
+                      ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
                       borderRadius: new BorderRadius.circular(30.0),
                     ),
                     child: new Material(
                       child: MaterialButton(
-                        child: (!baseProvider.isLoginNextInProgress)?Text(
-                          'NEXT',
-                          style: Theme.of(context)
-                              .textTheme
-                              .button
-                              .copyWith(color: Colors.white),
-                        ):SpinKitThreeBounce(
-                        color: UiConstants.spinnerColor2,
-                        size: 18.0,
-                        ),
+                        child: (!baseProvider.isLoginNextInProgress)
+                            ? Text(
+                                'NEXT',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .button
+                                    .copyWith(color: Colors.white),
+                              )
+                            : SpinKitThreeBounce(
+                                color: UiConstants.spinnerColor2,
+                                size: 18.0,
+                              ),
                         onPressed: () {
-                          if(!baseProvider.isLoginNextInProgress)processScreenInput(_currentPage);
+                          if (!baseProvider.isLoginNextInProgress)
+                            processScreenInput(_currentPage);
                         },
                         highlightColor: Colors.white30,
                         splashColor: Colors.white30,
@@ -255,28 +230,24 @@ class _LoginControllerState extends State<LoginController> {
                       color: Colors.transparent,
                       borderRadius: new BorderRadius.circular(30.0),
                     ),
-
                   ),
                 ],
               ),
-//              ],
-//            ),
             ),
           ),
-    //      )
         ],
-      )
-    ),
+      )),
     );
   }
 
-  processScreenInput(int currentPage) async{
+  processScreenInput(int currentPage) async {
     switch (currentPage) {
       case MobileInputScreen.index:
         {
           //in mobile input screen. Get and set mobile/ set error interface if not correct
           if (_mobileScreenKey.currentState.formKey.currentState.validate()) {
-            log.debug('Mobile number validated: ${_mobileScreenKey.currentState.getMobile()}');
+            log.debug(
+                'Mobile number validated: ${_mobileScreenKey.currentState.getMobile()}');
             this.userMobile = _mobileScreenKey.currentState.getMobile();
             this.verificationId = '+91' + this.userMobile;
             verifyPhone();
@@ -299,27 +270,30 @@ class _LoginControllerState extends State<LoginController> {
           if (otp != null && otp.isNotEmpty && otp.length == 6) {
             baseProvider.isLoginNextInProgress = true;
             setState(() {});
-            bool flag = await baseProvider.authenticateUser(baseProvider.generateAuthCredential(verificationId, otp));
-                //.then((flag) {
-              if (flag) {
+            bool flag = await baseProvider.authenticateUser(
+                baseProvider.generateAuthCredential(verificationId, otp));
+            //.then((flag) {
+            if (flag) {
 //                otpInScreen.onOtpReceived();
-                _otpScreenKey.currentState.onOtpReceived();
-                onSignInSuccess();
-              } else {
-                baseProvider.showNegativeAlert('Invalid Otp', 'Please enter a valid otp', context);
-                baseProvider.isLoginNextInProgress = true;
-                setState(() {});
-              }
+              _otpScreenKey.currentState.onOtpReceived();
+              onSignInSuccess();
+            } else {
+              baseProvider.showNegativeAlert(
+                  'Invalid Otp', 'Please enter a valid otp', context);
+              baseProvider.isLoginNextInProgress = true;
+              setState(() {});
+            }
 //            });
           } else {
-            baseProvider.showNegativeAlert('Enter OTP', 'Please enter a valid one time password', context);
+            baseProvider.showNegativeAlert(
+                'Enter OTP', 'Please enter a valid one time password', context);
           }
           break;
         }
       case NameInputScreen.index:
         {
           //if(nameInScreen.validate()) {
-          if(_nameScreenKey.currentState.formKey.currentState.validate()) {
+          if (_nameScreenKey.currentState.formKey.currentState.validate()) {
             if (baseProvider.myUser == null) {
               //firebase user should never be null at this point
               baseProvider.myUser = User.newUser(baseProvider.firebaseUser.uid,
@@ -340,22 +314,26 @@ class _LoginControllerState extends State<LoginController> {
         }
       case AddressInputScreen.index:
         {
-          if(_addressScreenKey.currentState.formKey.currentState.validate()){
-            Society selSociety = _addressScreenKey.currentState.selected_society;
+          if (_addressScreenKey.currentState.formKey.currentState.validate()) {
+            Society selSociety =
+                _addressScreenKey.currentState.selected_society;
             String selFlatNo = _addressScreenKey.currentState.flat_no;
             int selBhk = _addressScreenKey.currentState.bhk;
-            if(selSociety != null && selFlatNo != null && selBhk != 0) {  //added safegaurd
+            if (selSociety != null && selFlatNo != null && selBhk != 0) {
+              //added safegaurd
               baseProvider.myUser.flat_no = selFlatNo;
               baseProvider.myUser.society_id = selSociety.sId;
               baseProvider.myUser.sector = selSociety.sector;
               baseProvider.myUser.bhk = selBhk;
               //if nothing was invalid:
-              bool flag = await dbProvider.updateUser(baseProvider.myUser);//.then((flag) {
+              bool flag = await dbProvider
+                  .updateUser(baseProvider.myUser); //.then((flag) {
               if (flag) {
                 log.debug("User object saved successfully");
                 onSignUpComplete();
               } else {
-                baseProvider.showNegativeAlert('Update failed', 'Please try again in sometime', context);
+                baseProvider.showNegativeAlert(
+                    'Update failed', 'Please try again in sometime', context);
               }
 //              });
             }
@@ -407,23 +385,27 @@ class _LoginControllerState extends State<LoginController> {
     return null;
   }
 
-  void onSignInSuccess() async{
+  void onSignInSuccess() async {
     log.debug("User authenticated. Now check if details previously available.");
     //FirebaseAuth.instance.currentUser().then((fUser) => baseProvider.firebaseUser);
-    baseProvider.firebaseUser = await FirebaseAuth.instance.currentUser();//.then((fUser) {
-      //baseProvider.firebaseUser = fUser;
+    baseProvider.firebaseUser =
+        await FirebaseAuth.instance.currentUser(); //.then((fUser) {
+    //baseProvider.firebaseUser = fUser;
     log.debug("User is set: " + baseProvider.firebaseUser.uid);
-      //dbProvider.getUser(this.userMobile).then((user) {
-    User user = await dbProvider.getUser(baseProvider.firebaseUser.uid);//.then((user) {
+    //dbProvider.getUser(this.userMobile).then((user) {
+    User user = await dbProvider
+        .getUser(baseProvider.firebaseUser.uid); //.then((user) {
     //user variable is pre cast into User object
     //dbProvider.logDeviceId(fUser.uid); //TODO do someday
-    if(baseProvider.isLoginNextInProgress == true) {
+    if (baseProvider.isLoginNextInProgress == true) {
       baseProvider.isLoginNextInProgress = false;
       setState(() {});
     }
     if (user == null || (user != null && user.hasIncompleteDetails())) {
-      log.debug("No existing user details found or found incomplete details for user. Moving to details page");
-      baseProvider.myUser = user ?? User.newUser(baseProvider.firebaseUser.uid, this.userMobile);
+      log.debug(
+          "No existing user details found or found incomplete details for user. Moving to details page");
+      baseProvider.myUser =
+          user ?? User.newUser(baseProvider.firebaseUser.uid, this.userMobile);
       //Move to name input page
       //_currentPage = NameInputScreen.index;
       _controller.animateToPage(NameInputScreen.index,
@@ -441,20 +423,22 @@ class _LoginControllerState extends State<LoginController> {
 //    });
   }
 
-  Future onSignUpComplete() async{
+  Future onSignUpComplete() async {
     bool flag = await localDbProvider.saveUser(baseProvider.myUser);
-    if(flag) {
+    if (flag) {
       log.debug("User object saved locally");
       await baseProvider.init();
       await fcmProvider.setupFcm();
       Navigator.of(context).pop();
       Navigator.of(context).pushReplacementNamed('/home');
-      baseProvider.showPositiveAlert('Sign In Complete',
+      baseProvider.showPositiveAlert(
+          'Sign In Complete',
           'Welcome to ${Constants.APP_NAME}, ${baseProvider.myUser.name}',
           context);
-    }else{
+    } else {
       log.error("Failed to save user data to local db");
-      baseProvider.showNegativeAlert('Sign In Failed', 'Please restart ${Constants.APP_NAME} and try again', context);
+      baseProvider.showNegativeAlert('Sign In Failed',
+          'Please restart ${Constants.APP_NAME} and try again', context);
     }
     //process complete
     //move to home through animation

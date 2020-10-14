@@ -1,6 +1,7 @@
 import 'dart:io' show Platform;
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/util/locator.dart';
@@ -18,6 +19,7 @@ class FcmListener extends ChangeNotifier{
   FirebaseMessaging _fcm;
   
   FcmListener() {}
+
   //TODO INTERNET MESSAGE PlatformException(Error performing get, Failed to get document because the client is offline., null)
   Future<FirebaseMessaging> setupFcm() async {
     _fcm = FirebaseMessaging();
