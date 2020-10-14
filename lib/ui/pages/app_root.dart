@@ -1,6 +1,7 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/ui/pages/home_screen.dart';
+import 'package:felloapp/ui/pages/tabs/home_screen.dart';
+import 'package:felloapp/ui/pages/tabs/play_tab.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +69,7 @@ class _AppRootState extends State<AppRoot> {
   Widget getTab(int index, BuildContext context) {
     switch(index) {
       case 0: {
-        return MyHomePage(title: Constants.APP_NAME);
+        return SudokuScreen();
       }
       case 1: {
         return MyHomePage(title: Constants.APP_NAME);

@@ -25,6 +25,7 @@ dependencies:
   connectivity: ^0.4.6+2
   flushbar: ^1.10.4
   bottom_navy_bar: ^5.5.0
+  countdown: ^0.1.0 #for game refresh
 
   flutter:
     sdk: flutter

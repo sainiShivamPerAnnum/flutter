@@ -4,7 +4,7 @@ import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/pages/app_root.dart';
-import 'package:felloapp/ui/pages/home_screen.dart';
+import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/pages/tabs/home_screen.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding_widget.dart';
