@@ -24,4 +24,26 @@ class DBModel extends ChangeNotifier {
       return false;
     }
   }
+
+  Future<User> getUser(String id) async {
+    try {
+      var doc = await _api.getUserById(id);
+      return User.fromMap(doc.data, id);
+    }catch(e) {
+      log.error("Error fetch User details: " + e.toString());
+      return null;
+    }
+  }
+
+  Future<bool> updateUser(User user) async {
+    try {
+      //String id = user.mobile;
+      String id = user.uid;
+      await _api.updateUserDocument(id, user.toJson());
+      return true;
+    }catch(e) {
+      log.error("Failed to update user object: " + e.toString());
+      return false;
+    }
+  }
 }

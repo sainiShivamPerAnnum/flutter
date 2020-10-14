@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "298601110864-6hrmkosu97s820u6il9l7op2o6gvr22i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.fello.felloapp",
+            "certificate_hash": "d6b6988ca925e68b8868895571165241118c937b"
+          }
+        },
+        {
           "client_id": "298601110864-49dpp6jnmqffba2hu2ndae2oag608o1r.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

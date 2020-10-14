@@ -146,7 +146,7 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
                                 log.debug("Setting Onboarding flag to true.");
                                 onboardProvider.saveOnboardStatus(true);
                                 _controller.dispose();
-                                Navigator.of(context).pop();
+                                // Navigator.of(context).pop();
                                 Navigator.of(context).pushReplacementNamed('/login');
                               },
                               highlightColor: Colors.orange.withOpacity(0.5),
@@ -172,7 +172,7 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
                               onPressed: (){
                                 log.debug("Setting Onboarding flag to true.");
                                 onboardProvider.saveOnboardStatus(true);
-                                Navigator.of(context).pop();
+                                // Navigator.of(context).pop();
                                 Navigator.of(context).pushReplacementNamed('/home');
                               },
                               highlightColor: Colors.white30,

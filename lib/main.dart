@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(builder: (_) => locator<LocalDBModel>()),
         ChangeNotifierProvider(builder: (_) =>  locator<BaseUtil>()),
         ChangeNotifierProvider(builder: (_) =>  locator<FcmListener>()),
+
         ChangeNotifierProvider(builder: (_) =>  locator<FcmHandler>()),
       ],
       child: MaterialApp(

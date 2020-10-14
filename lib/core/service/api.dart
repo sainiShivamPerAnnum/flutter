@@ -14,4 +14,14 @@ class Api {
     ref = _db.collection(Constants.COLN_USERS).document(userId).collection(Constants.SUBCOLN_USER_FCM);
     return ref.document(Constants.DOC_USER_FCM_TOKEN).setData(data);
   }
+
+  Future<DocumentSnapshot> getUserById(String id) {
+    ref = _db.collection(Constants.COLN_USERS);
+    return ref.document(id).get();
+  }
+
+  Future<void> updateUserDocument(String docId, Map data) {
+    ref = _db.collection(Constants.COLN_USERS);
+    return ref.document(docId).setData(data, merge: true);
+  }
 }

@@ -8,6 +8,7 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -162,40 +163,40 @@ class _LoginControllerState extends State<LoginController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
-                  ( //_currentPage == OtpInputScreen.index ||
-                          _currentPage == AddressInputScreen.index)
-                      ? Container(
-                          width: 150.0,
-                          height: 50.0,
-                          decoration: BoxDecoration(
-                            borderRadius: new BorderRadius.circular(30.0),
-                            border: Border.all(
-                                color: UiConstants.primaryColor, width: 1.0),
-                            color: Colors.transparent,
-                          ),
-                          child: new Material(
-                            child: MaterialButton(
-                              child: Text(
-                                'BACK',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .button
-                                    .copyWith(color: UiConstants.primaryColor),
-                              ),
-                              onPressed: () {
-                                _currentPage--;
-                                _controller.animateToPage(_currentPage,
-                                    duration: Duration(milliseconds: 300),
-                                    curve: Curves.easeIn);
-                              },
-                              highlightColor: Colors.orange.withOpacity(0.5),
-                              splashColor: Colors.orange.withOpacity(0.5),
-                            ),
-                            color: Colors.transparent,
-                            borderRadius: new BorderRadius.circular(30.0),
-                          ),
-                        )
-                      : new Container(),
+                  //Back button check
+                  // (_currentPage == AddressInputScreen.index)
+                  //     ? Container(
+                  //         width: 150.0,
+                  //         height: 50.0,
+                  //         decoration: BoxDecoration(
+                  //           borderRadius: new BorderRadius.circular(30.0),
+                  //           border: Border.all(
+                  //               color: UiConstants.primaryColor, width: 1.0),
+                  //           color: Colors.transparent,
+                  //         ),
+                  //         child: new Material(
+                  //           child: MaterialButton(
+                  //             child: Text(
+                  //               'BACK',
+                  //               style: Theme.of(context)
+                  //                   .textTheme
+                  //                   .button
+                  //                   .copyWith(color: UiConstants.primaryColor),
+                  //             ),
+                  //             onPressed: () {
+                  //               _currentPage--;
+                  //               _controller.animateToPage(_currentPage,
+                  //                   duration: Duration(milliseconds: 300),
+                  //                   curve: Curves.easeIn);
+                  //             },
+                  //             highlightColor: Colors.orange.withOpacity(0.5),
+                  //             splashColor: Colors.orange.withOpacity(0.5),
+                  //           ),
+                  //           color: Colors.transparent,
+                  //           borderRadius: new BorderRadius.circular(30.0),
+                  //         ),
+                  //       )
+                  //     : new Container(),
                   new Container(
                     width: 150.0,
                     height: 50.0,
@@ -307,66 +308,45 @@ class _LoginControllerState extends State<LoginController> {
               baseProvider.myUser.email = email;
             }
             //currentPage = AddressInputScreen.index;
-            _controller.animateToPage(AddressInputScreen.index,
-                duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+            bool flag = await dbProvider.updateUser(baseProvider.myUser);
+            if (flag) {
+              log.debug("User object saved successfully");
+              onSignUpComplete();
+            } else {
+              baseProvider.showNegativeAlert(
+                  'Update failed', 'Please try again in sometime', context);
+            }
+            // _controller.animateToPage(AddressInputScreen.index,
+            //     duration: Duration(milliseconds: 300), curve: Curves.easeIn);
           }
           break;
         }
-      case AddressInputScreen.index:
-        {
-          if (_addressScreenKey.currentState.formKey.currentState.validate()) {
-            Society selSociety =
-                _addressScreenKey.currentState.selected_society;
-            String selFlatNo = _addressScreenKey.currentState.flat_no;
-            int selBhk = _addressScreenKey.currentState.bhk;
-            if (selSociety != null && selFlatNo != null && selBhk != 0) {
-              //added safegaurd
-              baseProvider.myUser.flat_no = selFlatNo;
-              baseProvider.myUser.society_id = selSociety.sId;
-              baseProvider.myUser.sector = selSociety.sector;
-              baseProvider.myUser.bhk = selBhk;
-              //if nothing was invalid:
-              bool flag = await dbProvider
-                  .updateUser(baseProvider.myUser); //.then((flag) {
-              if (flag) {
-                log.debug("User object saved successfully");
-                onSignUpComplete();
-              } else {
-                baseProvider.showNegativeAlert(
-                    'Update failed', 'Please try again in sometime', context);
-              }
-//              });
-            }
-          }
-//          Society selSociety = addressInScreen.getSociety();
-//          String selFlatNo = addressInScreen.getFlatNo();
-//          int selBhk = addressInScreen.getBhk();
-//          if (selSociety == null) {
-//            UiConstants.offerSnacks(context, "Please select your appt");
-//            return;
-//          }
-//          if (selFlatNo == null || selFlatNo.isEmpty) {
-//            addressInScreen.setFlatNoInvalid();
-//            return;
-//          }
-//          if (selBhk == null) {
-//            UiConstants.offerSnacks(context, "Please select your house size");
-//            return;
-//          }
-//          baseProvider.myUser.flat_no = selFlatNo;
-//          baseProvider.myUser.society_id = selSociety.sId;
-//          baseProvider.myUser.sector = selSociety.sector;
-//          baseProvider.myUser.bhk = selBhk;
-//          //if nothing was invalid:
-//          dbProvider.updateUser(baseProvider.myUser).then((flag) {
-//            if (flag) {
-//              log.debug("User object saved successfully");
-//              onSignUpComplete();
-//            } else {
-//              //TODO signup failed! YIKES please try again later
-//            }
-//          });
-        }
+      // case AddressInputScreen.index:
+      //   {
+      //     if (_addressScreenKey.currentState.formKey.currentState.validate()) {
+      //       Society selSociety =
+      //           _addressScreenKey.currentState.selected_society;
+      //       String selFlatNo = _addressScreenKey.currentState.flat_no;
+      //       int selBhk = _addressScreenKey.currentState.bhk;
+      //       if (selSociety != null && selFlatNo != null && selBhk != 0) {
+      //         //added safegaurd
+      //         baseProvider.myUser.flat_no = selFlatNo;
+      //         baseProvider.myUser.society_id = selSociety.sId;
+      //         baseProvider.myUser.sector = selSociety.sector;
+      //         baseProvider.myUser.bhk = selBhk;
+      //         //if nothing was invalid:
+      //         bool flag = await dbProvider
+      //             .updateUser(baseProvider.myUser); //.then((flag) {
+      //         if (flag) {
+      //           log.debug("User object saved successfully");
+      //           onSignUpComplete();
+      //         } else {
+      //           baseProvider.showNegativeAlert(
+      //               'Update failed', 'Please try again in sometime', context);
+      //         }
+      //       }
+      //     }
+      //   }
     }
   }
 
@@ -413,14 +393,11 @@ class _LoginControllerState extends State<LoginController> {
     } else {
       log.debug("User details available: Name: " +
           user.name +
-          "\nAddress: " +
-          user.flat_no);
+          "\nEmail: " +
+          user.email);
       baseProvider.myUser = user;
-      //baseProvider.myUser.mobile = userMobile;
       onSignUpComplete();
     }
-//    });
-//    });
   }
 
   Future onSignUpComplete() async {
@@ -429,7 +406,7 @@ class _LoginControllerState extends State<LoginController> {
       log.debug("User object saved locally");
       await baseProvider.init();
       await fcmProvider.setupFcm();
-      Navigator.of(context).pop();
+      // Navigator.of(context).pop();
       Navigator.of(context).pushReplacementNamed('/home');
       baseProvider.showPositiveAlert(
           'Sign In Complete',
