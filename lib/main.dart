@@ -3,6 +3,7 @@ import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/ui/pages/app_root.dart';
 import 'package:felloapp/ui/pages/home_screen.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
@@ -38,9 +39,12 @@ class MyApp extends StatelessWidget {
         ),
         home: SplashScreen(),
         routes: <String, WidgetBuilder> {
-          '/home': (BuildContext context) => MyHomePage(title: Constants.APP_NAME),
+          '/approot': (BuildContext context) => AppRoot(),
           '/onboarding': (BuildContext context) => OnboardingMainPage(),
           '/login': (BuildContext context) => LoginController(),
+          '/gametab': (BuildContext context) => MyHomePage(title: Constants.APP_NAME),
+          '/savetab': (BuildContext context) => MyHomePage(title: Constants.APP_NAME),
+          '/refertab': (BuildContext context) => MyHomePage(title: Constants.APP_NAME),
         },
       ),
     );

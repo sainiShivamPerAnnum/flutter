@@ -58,7 +58,7 @@ class LogoFadeIn extends State<SplashScreen> {
     else {
       log.debug("Existing User. Moving to Home..");
      // Navigator.of(context).pop();
-      Navigator.of(context).pushReplacementNamed('/home');
+      Navigator.of(context).pushReplacementNamed('/approot');
     }
   }
 

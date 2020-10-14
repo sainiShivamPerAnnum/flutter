@@ -24,6 +24,7 @@ dependencies:
   http: ^0.12.0+3
   connectivity: ^0.4.6+2
   flushbar: ^1.10.4
+  bottom_navy_bar: ^5.5.0
 
   flutter:
     sdk: flutter

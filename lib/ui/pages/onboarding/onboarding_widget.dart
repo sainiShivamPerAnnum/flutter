@@ -173,7 +173,7 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
                                 log.debug("Setting Onboarding flag to true.");
                                 onboardProvider.saveOnboardStatus(true);
                                 // Navigator.of(context).pop();
-                                Navigator.of(context).pushReplacementNamed('/home');
+                                Navigator.of(context).pushReplacementNamed('/approot');
                               },
                               highlightColor: Colors.white30,
                               splashColor: Colors.white30,

@@ -407,7 +407,7 @@ class _LoginControllerState extends State<LoginController> {
       await baseProvider.init();
       await fcmProvider.setupFcm();
       // Navigator.of(context).pop();
-      Navigator.of(context).pushReplacementNamed('/home');
+      Navigator.of(context).pushReplacementNamed('/approot');
       baseProvider.showPositiveAlert(
           'Sign In Complete',
           'Welcome to ${Constants.APP_NAME}, ${baseProvider.myUser.name}',
