@@ -52,7 +52,7 @@ class LogoFadeIn extends State<SplashScreen> {
     _timer3.cancel();
     if(!baseProvider.isUserOnboarded) {
       log.debug("New user. Moving to Onboarding..");
-      Navigator.of(context).pop();
+      // Navigator.of(context).pop();
       Navigator.of(context).pushReplacementNamed('/onboarding');
     }
     else {
