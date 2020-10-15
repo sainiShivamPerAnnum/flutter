@@ -6,13 +6,13 @@ class SudokuView extends SudokuViewModel{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _body(),
+      body: _getBody(),
     );
   }
 
   Widget _buildGameBody(){
-    int gridStateLength = sudokuBoard.length;
-    int gridStateHeight = 3;
+    int gridStateHeight = sudokuBoard.length;
+    int gridStateLength = 9;
     return Column(
         children: <Widget>[
           AspectRatio(
@@ -35,22 +35,53 @@ class SudokuView extends SudokuViewModel{
   }
 
   Widget _buildGridItems(BuildContext context, int index) {
-    int gridStateLength = sudokuBoard.length;
+    int gridStateHeight = sudokuBoard.length;
+    int gridStateLength = 9;
     int x, y = 0;
     x = (index / gridStateLength).floor();
     y = (index % gridStateLength);
+    //
+    // x = (index % gridStateLength);
+    // y = (index / gridStateLength).floor();
+
     return GestureDetector(
       onTap: () => gridItemTapped(x, y),
       child: GridTile(
         child: Container(
           child: Center(
-            child: _buildGridItem(x, y),
+            child: _buildGridItem2(x, y),
           ),
         ),
       ),
     );
   }
 
+  Widget _getItemContainer(int x, int y, int digit) {
+    return SizedBox.expand(
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: this.gridOnTap && x == this.tappedX && y == this.tappedY ? Colors.orange : Colors.black,
+              width: this.gridOnTap && x == this.tappedX && y == this.tappedY ? 2.0 : 0.0),
+          color: (x+y)%2 == 0 ? Colors.blueGrey : Colors.grey,
+        ),
+        foregroundDecoration: BoxDecoration(
+            border: Border(
+                top: BorderSide(width: x == 0 ? 2.0 : 0.0, color: x == 0 ? Colors.orange : Colors.black),
+                left: BorderSide(width: y == 0 ? 2.0: 0.0, color: y == 0 ? Colors.orange : Colors.black),
+                bottom: BorderSide(width: x == 2 ? 2.0 : 0.0, color: x == 2 || x == 5 || x == 8 ? Colors.orange : Colors.black),
+                right: BorderSide(width: y == 8 ? 2.0 : 0.0, color: y == 2 || y == 5 || y == 8 ? Colors.orange : Colors.black)
+            )
+        ),
+        child: Center(
+          child: Text(digit==0?'':digit.toString()),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGridItem2(int x, int y) {
+    return _getItemContainer(x,y,sudokuBoard[x][y]);
+  }
 
   Widget _buildGridItem(int x, int y) {
     switch (sudokuBoard[x][y]) {
@@ -279,8 +310,25 @@ class SudokuView extends SudokuViewModel{
     }
   }
 
-  _body(){
+  _getBody() {
+    return Stack(
+      fit: StackFit.loose,
+      children: <Widget>[
+        Align(
+          alignment: Alignment.bottomCenter,
+          // margin: EdgeInsets.only(top: 35.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildGameBody(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
+  _body(){
     return Stack(
       fit: StackFit.loose,
       children: <Widget>[
@@ -303,54 +351,54 @@ class SudokuView extends SudokuViewModel{
           margin: EdgeInsets.only(top: 35.0),
           child: Column(
             children: <Widget>[
-              Container(
-                child: Text("Sudoku"),
-                margin: EdgeInsets.only(bottom: 30.0),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  GestureDetector(
-                      onTap: (){
-                        // MyDialog(context, "WARNING", "Permainan ini akan direset", Status.WARNING).build(() {
-                        //   resetGame();
-                        //   Navigator.pop(context);
-                        // }, cancel: (){
-                        //   Navigator.pop(context);
-                        // });
-                      },
-                      child: Container(
-                        padding: EdgeInsets.only(right: 20.0),
-                        color: Colors.orange,
-                        child: new Row(
-                          children: <Widget>[
-                            IconButton(
-                              icon: Icon(Icons.add, color: Colors.white),
-                              onPressed: resetGame,
-                            ),
-                            Text("NEW GAME", style: TextStyle(color: Colors.white))
-                          ],
-                        ),
-                      )
-                  ),
-                  Column(
-                    children: <Widget>[
-                      Text("Time Remaining", style: TextStyle(color: Colors.white),),
-                      Row(
-                        children: <Widget>[
-                          InkWell(
-                            onTap: (){
-                              onStartStopPress();
-                            },
-                            child: new Icon(playButton ? Icons.pause : Icons.play_arrow, color: Colors.orange,),
-                          ),
-                          new Text(countDownText, style: TextStyle(color: Colors.white),)
-                        ],
-                      )
-                    ],
-                  )
-                ],
-              ),
+              // Container(
+              //   child: Text("Sudoku"),
+              //   margin: EdgeInsets.only(bottom: 30.0),
+              // ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //   children: <Widget>[
+              //     GestureDetector(
+              //         onTap: (){
+              //           // MyDialog(context, "WARNING", "Permainan ini akan direset", Status.WARNING).build(() {
+              //           //   resetGame();
+              //           //   Navigator.pop(context);
+              //           // }, cancel: (){
+              //           //   Navigator.pop(context);
+              //           // });
+              //         },
+              //         child: Container(
+              //           padding: EdgeInsets.only(right: 20.0),
+              //           color: Colors.orange,
+              //           child: new Row(
+              //             children: <Widget>[
+              //               IconButton(
+              //                 icon: Icon(Icons.add, color: Colors.white),
+              //                 onPressed: resetGame,
+              //               ),
+              //               Text("NEW GAME", style: TextStyle(color: Colors.white))
+              //             ],
+              //           ),
+              //         )
+              //     ),
+              //     Column(
+              //       children: <Widget>[
+              //         Text("Time Remaining", style: TextStyle(color: Colors.white),),
+              //         Row(
+              //           children: <Widget>[
+              //             InkWell(
+              //               onTap: (){
+              //                 onStartStopPress();
+              //               },
+              //               child: new Icon(playButton ? Icons.pause : Icons.play_arrow, color: Colors.orange,),
+              //             ),
+              //             new Text(countDownText, style: TextStyle(color: Colors.white),)
+              //           ],
+              //         )
+              //       ],
+              //     )
+              //   ],
+              // ),
               _buildGameBody(),
               Container(
                 margin: EdgeInsets.only(top: 20.0),
@@ -433,33 +481,33 @@ class SudokuView extends SudokuViewModel{
                   ],
                 ),
               ),
-              Expanded(
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: AspectRatio(
-                      aspectRatio: 6.0,
-                      child: GestureDetector(
-                          onTap: (){
-                            // MyDialog(context, "WARNING", "Apakah Anda mengaku selesai ?", Status.WARNING).build(() {
-                            //   Navigator.pop(context);
-                            //   setState(() {
-                            //     try_solving();
-                            //   });
-                            // }, cancel: (){
-                            //   Navigator.pop(context);
-                            // });
-                          },
-                          child: Container(
-                              padding: EdgeInsets.all(20.0),
-                              color: Colors.green,
-                              child: new Center(
-                                child: Text("SOLVE ME!", style: TextStyle(fontSize: 20, color: Colors.white)),
-                              )
-                          )
-                      ),
-                    ),
-                  )
-              )
+              // Expanded(
+              //     child: Align(
+              //       alignment: Alignment.bottomCenter,
+              //       child: AspectRatio(
+              //         aspectRatio: 6.0,
+              //         child: GestureDetector(
+              //             onTap: (){
+              //               // MyDialog(context, "WARNING", "Apakah Anda mengaku selesai ?", Status.WARNING).build(() {
+              //               //   Navigator.pop(context);
+              //               //   setState(() {
+              //               //     try_solving();
+              //               //   });
+              //               // }, cancel: (){
+              //               //   Navigator.pop(context);
+              //               // });
+              //             },
+              //             child: Container(
+              //                 padding: EdgeInsets.all(20.0),
+              //                 color: Colors.green,
+              //                 child: new Center(
+              //                   child: Text("SOLVE ME!", style: TextStyle(fontSize: 20, color: Colors.white)),
+              //                 )
+              //             )
+              //         ),
+              //       ),
+              //     )
+              // )
 
             ],
           ),
