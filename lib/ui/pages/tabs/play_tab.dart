@@ -1,9 +1,9 @@
 import 'package:felloapp/ui/pages/tabs/tambola_view.dart';
 import 'package:flutter/material.dart';
 
-class SudokuScreen extends StatefulWidget{
+class TambolaScreen extends StatefulWidget{
 
   @override
-  SudokuView createState() => new SudokuView();
+  TambolaView createState() => new TambolaView();
 
 }

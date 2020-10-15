@@ -69,7 +69,7 @@ class _AppRootState extends State<AppRoot> {
   Widget getTab(int index, BuildContext context) {
     switch(index) {
       case 0: {
-        return SudokuScreen();
+        return TambolaScreen();
       }
       case 1: {
         return MyHomePage(title: Constants.APP_NAME);

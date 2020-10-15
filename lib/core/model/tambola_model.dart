@@ -1,24 +1,21 @@
+import 'dart:collection';
+
 import 'package:countdown/countdown.dart';
 import 'package:felloapp/ui/pages/tabs/play_tab.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:flutter/widgets.dart';
-import 'package:collection/collection.dart';
 
-abstract class SudokuViewModel extends State<SudokuScreen>{
+abstract class TambolaViewModel extends State<TambolaScreen> {
+  Log log = new Log('TambolaModel');
+  static final int boardHeight = 3;
+  static final int boardLength = 9;
 
-  List<List<int>> sudokuBoard = [
-    [0, 0, 6, 0, 0, 0, 4, 1, 0],
-    [0, 0, 1, 0, 7, 0, 0, 2, 9],
-    [0, 9, 2, 3, 0, 1, 0, 0, 0]
-  ];
-
+  String sampleTambolaString = "3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A";
+  List<String> encodedTambolaList;
+  List<List<int>> tambolaBoard =
+      new List.generate(boardHeight, (_) => new List(boardLength));
+  Map<int, int> indexValueMap = new HashMap();
   List<List<int>> manualSoal = new List.generate(3, (_) => new List(9));
-//
-//  List<List<int>> sudokuBoard = [
-//    [0, 0, 3, 4],
-//    [3, 4, 0, 0],
-//    [0, 0, 4, 3],
-//    [0, 3, 2, 0]
-//  ];
 
   bool playButton = false;
   bool gridOnTap = false;
@@ -38,11 +35,56 @@ abstract class SudokuViewModel extends State<SudokuScreen>{
   static const int N = 9;
   static const int SQN = 3;
 
-//  static const int UNASSIGNED = 0;
-//  static const int N = 4;
-//  static const int SQN = 2;
+  List<String> encodedStringToArray(String cde) {
+    try {
+      return cde.split(RegExp('(?<=[Aa-z])'));
+    } catch (e) {
+      return new List();
+    }
+  }
 
-  gridItemTapped(int x, int y){
+  Map<int, int> compileEncodedArrayToMap() {
+    Map<int, int> map = new HashMap();
+    encodedTambolaList.forEach((val) {
+      TambolaValueObject obj = new TambolaValueObject(val);
+      if (obj.index != TambolaValueObject.INVALID &&
+          obj.value != TambolaValueObject.INVALID)
+        map[obj.index] = obj.value;
+      else
+        log.error("Error while inserting Tambola item value: $val");
+    });
+
+    return map;
+  }
+
+  List<List<int>> compileBoardMap() {
+    for (int i = 0; i < boardHeight; i++) {
+      for (int j = 0; j < boardLength; j++) {
+        int key = i * boardLength + j;
+        tambolaBoard[i][j] =
+            (indexValueMap.containsKey(key)) ? indexValueMap[key] : 0;
+      }
+    }
+    return tambolaBoard;
+  }
+
+  decodeBoard(String boardCde) {
+    encodedTambolaList = encodedStringToArray(boardCde);
+    log.debug(encodedTambolaList.toString());
+    if (encodedTambolaList.isNotEmpty && encodedTambolaList.length == 15) {
+      indexValueMap = compileEncodedArrayToMap();
+      if (indexValueMap.isNotEmpty) {
+        tambolaBoard = compileBoardMap();
+      } else {
+        log.error("indexValueMap is empty");
+      }
+    } else {
+      log.error(
+          'Invalid decomposition of boardCode: ${encodedTambolaList.toString()}');
+    }
+  }
+
+  gridItemTapped(int x, int y) {
     setState(() {
       this.gridOnTap = true;
       print(x.toString() + "," + y.toString());
@@ -52,265 +94,70 @@ abstract class SudokuViewModel extends State<SudokuScreen>{
     });
   }
 
-  onTapInsertGrid(int v){
+  onTapInsertGrid(int v) {
     setState(() {
-      if (manualSoal[this.tappedX][this.tappedY] == UNASSIGNED){
-        sudokuBoard[this.tappedX][this.tappedY] = v;
-        print(manualSoal.toString());
-        print(sudokuBoard.toString());
-        if(!isSafe(sudokuBoard, this.tappedX, this.tappedY, v)){
-          manualCheck = true;
-        }else
-          manualCheck = false;
-
-      }
-      print(manualCheck.toString());
+      // if (manualSoal[this.tappedX][this.tappedY] == UNASSIGNED){
+      //   sudokuBoard[this.tappedX][this.tappedY] = v;
+      //   print(manualSoal.toString());
+      //   print(sudokuBoard.toString());
+      //   if(!isSafe(sudokuBoard, this.tappedX, this.tappedY, v)){
+      //     manualCheck = true;
+      //   }else
+      //     manualCheck = false;
+      //
+      // }
+      // print(manualCheck.toString());
     });
-  }
-
-  onStartStopPress() {
-
-    if(this.sub == null){
-      sub = cd.stream.listen(null);
-
-      sub.onData((Duration d){
-        setState((){
-          totalSeconds = d.inSeconds;
-          int m = totalSeconds ~/ 60;
-          int s = totalSeconds - (60*m);
-          this.countDownText = "00:" + m.toString() + ":" + s.toString();
-        });
-
-      });
-
-      sub.onDone((){
-        print("done");
-
-        setState((){
-          this.playButton = false;
-          // MyDialog(context, "Game Over", "Waktu Habis", Status.WARNING).build(() {
-          //   Navigator.pop(context);
-          // });
-        });
-      });
-    }else{
-      if(!this.playButton){
-        sub.resume();
-      }else{
-        sub.pause();
-      }
-    }
-
-    setState((){
-      this.playButton = !this.playButton;
-    });
-
-  }
-
-  resetGame(){
-    setState(() {
-      this.countDownText = "00:15:00";
-      cd = new CountDown(new Duration(minutes: 15));
-      this.sudokuBoard = [
-        [0, 0, 6, 0, 0, 0, 4, 1, 0],
-        [0, 0, 1, 0, 7, 0, 0, 2, 9],
-        [0, 9, 2, 3, 0, 1, 0, 0, 0]
-      ];
-      this.playButton = false;
-      sub.pause();
-      sub = null;
-      onStartStopPress();
-    });
-  }
-
-  bool SudokuSolver(List<List<int>> grid){
-    int row = -1;
-    int col = -1;
-    bool isEmpty = true;
-
-    //find empty location
-    for (int i = 0; i < M; i++){
-      for (int j = 0; j < N; j++){
-        if (grid[i][j] == UNASSIGNED){
-          row = i;
-          col = j;
-          isEmpty = false;
-          break;
-        }
-      }
-      if(!isEmpty){
-        break;
-      }
-
-    }
-//
-    if(isEmpty){
-      return true;
-    }
-    //selesai
-
-//    if(!FindEmptyLocation(grid, row, col))
-//      return true;
-
-    // consider digits 1 to 9
-    for (int num = 1; num <= N; num++)
-    {
-      // if looks promising
-      if (isSafe(grid, row, col, num))
-      {
-        // make tentative assignment
-        grid[row][col] = num;
-
-        // return, if success, yay!
-        if (SudokuSolver(grid))
-          return true;
-        else
-          grid[row][col] = UNASSIGNED;
-        // failure, unmake & try again
-
-      }
-
-    }
-
-    return false;
-
-  }
-
-
-  bool isSafe(List<List<int>> grid, int row, int col, int num)
-  {
-    return !UsedInRow(grid, row, num) &&
-        !UsedInCol(grid, col, num) &&
-        !UsedInBox(grid, row - row%SQN , col - col%SQN, num);
-  }
-
-  bool UsedInBox(List<List<int>> grid, int boxStartRow, int boxStartCol, int num)
-  {
-    for (int row = boxStartRow; row < boxStartRow + SQN; row++){
-      for (int col = boxStartCol; col < boxStartCol + SQN; col++){
-        if (grid[row][col] == num)
-          return true;
-      }
-    }
-    return false;
-  }
-
-  bool UsedInCol(List<List<int>> grid, int col, int num)
-  {
-    for (int row = 0; row < N; row++){
-      if (grid[row][col] == num)
-        return true;
-    }
-    return false;
-  }
-
-  bool UsedInRow(List<List<int>> grid, int row, int num)
-  {
-    for (int col = 0; col < N; col++){
-      if (grid[row][col] == num)
-        return true;
-    }
-    return false;
-  }
-
-  bool cek(List<List<int>> grid){
-
-    for(int i=0; i < N; i++){
-      for(int j=0; j < N; j++){
-        int num = grid[i][j];
-        print(!isSafe(grid, i, j, num));
-        if (isSafe(grid, i, j, num) == false)
-        {
-          // return, if success, yay!
-//          if (cek(grid)){
-//            return true;
-//          }
-//
-//          else
-//            grid[row][col] = UNASSIGNED;
-          // failure, unmake & try again
-          return false;
-        }
-      }
-    }
-
-    return true;
-
-  }
-
-  try_solving(){
-    duplicateBoard(manualSoal, sudokuBoard);
-    Function deepEq = const DeepCollectionEquality().equals;
-
-    if (SudokuSolver(sudokuBoard) == true){
-      print(sudokuBoard.toString());
-      //ToDO: gambar ulang gridnya
-      if(cek(sudokuBoard) == true){
-        if(deepEq(manualSoal, sudokuBoard)){
-          success = true;
-          // MyDialog(context, "SUCCESS", "Selamat anda berhasil menyelesaikan", Status.WARNING).build(() {
-          //   Navigator.pop(context);
-          //
-          // });
-        }else{
-          success = false;
-          // MyDialog(context, "ERROR", "Anda Gagal. Permainan Telah Dselesaikan Otomatis", Status.WARNING).build(() {
-          //   Navigator.pop(context);
-          //
-          // });
-        }
-
-      }else{
-        if(deepEq(manualSoal, sudokuBoard)){
-          success = true;
-          // MyDialog(context, "SALAH", "Solusi Tak DItemukan", Status.WARNING).build(() {
-          //   Navigator.pop(context);
-          //
-          // });
-        }
-        setState(() {
-          this.sudokuBoard = [
-            [6, 0, 6, 0, 0, 0, 4, 1, 0],
-            [0, 0, 1, 0, 7, 0, 0, 2, 9],
-            [0, 9, 2, 3, 0, 1, 0, 0, 0],
-            [6, 0, 5, 0, 3, 7, 0, 0, 2],
-            [0, 0, 8, 2, 0, 5, 1, 0, 0],
-            [4, 0, 0, 1, 6, 0, 5, 0, 7],
-            [0, 0, 0, 9, 0, 3, 7, 6, 0],
-            [9, 8, 0, 0, 1, 0, 3, 0, 0],
-            [0, 6, 3, 0, 0, 0, 2, 0, 0]
-          ];
-
-        });
-      }
-      print("Status : " + cek(sudokuBoard).toString());
-
-
-    }
-    else{
-      print("No solution exists");
-    }
-
-  }
-
-  duplicateBoard(var from, var to){
-    for(int i =0; i < 3; i++){
-      for (int j = 0; j < 9; j++){
-        to[i][j] = from[i][j];
-      }
-    }
   }
 
   @override
   void initState() {
-    print(sudokuBoard.toString());
-    print(manualSoal.toString());
-    duplicateBoard(sudokuBoard, manualSoal);
-    print(manualSoal.toString());
-    cd = new CountDown(new Duration(minutes: 15));
-    onStartStopPress();
-    // TODO: implement initState
     super.initState();
   }
+}
 
+class TambolaValueObject {
+  Log log = new Log("TambolaValueObject");
+  int _value = 0;
+  int _index = 0;
+  bool _valueInvalid = false;
+  bool _indexInvalid = false;
+  static final int INVALID = -1;
+
+  TambolaValueObject(String val) {
+    String int_part = val.replaceAll(RegExp('[^0-9]'), '');
+    String char_part = val.replaceAll(int_part, '');
+    log.debug('Result: $char_part and $int_part');
+
+    try {
+      int bval = int.parse(int_part);
+      if (bval < 1 || bval > 90)
+        _valueInvalid = true;
+      else
+        _value = bval;
+    } catch (e) {
+      _valueInvalid = true;
+    }
+
+    if (char_part.length != 1)
+      _indexInvalid = true;
+    else {
+      int bindex = char_part.codeUnitAt(0);
+      if (bindex > 96 && bindex < 122) {
+        _index = bindex - 97;
+      } else if (bindex == 65) {
+        _index = 26;
+      } else {
+        _indexInvalid = true;
+      }
+    }
+  }
+
+  bool get indexInvalid => _indexInvalid;
+
+  bool get valueInvalid => _valueInvalid;
+
+  int get index => _indexInvalid ? INVALID : _index;
+
+  int get value => _valueInvalid ? INVALID : _value;
 }
