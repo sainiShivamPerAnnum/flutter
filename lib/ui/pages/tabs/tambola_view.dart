@@ -1,7 +1,14 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/tambola_model.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class TambolaView extends TambolaViewModel {
+  Log log = new Log('TambolaView');
+  DBModel _reqProvider;
+  BaseUtil _baseProvider;
   @override
   void initState() {
     decodeBoard(sampleTambolaString);
@@ -10,6 +17,9 @@ class TambolaView extends TambolaViewModel {
 
   @override
   Widget build(BuildContext context) {
+    _reqProvider = Provider.of<DBModel>(context);
+    _baseProvider = Provider.of<BaseUtil>(context);
+
     return Scaffold(
       body: _getBody(),
     );
@@ -108,10 +118,31 @@ class TambolaView extends TambolaViewModel {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildGameBody(),
+              _buildButton()
             ],
           ),
         ),
       ],
+    );
+  }
+
+  _buildButton() {
+    return Padding(
+      padding: EdgeInsets.all(20.0),
+        child:Material(
+          child: MaterialButton(
+            color: Colors.blueAccent,
+            child: Text('Get Tickets',
+              style: TextStyle(color: Colors.white, fontSize: 20.0),
+            ),
+            minWidth: double.infinity,
+            height: 50,
+            onPressed: () {
+              _reqProvider.pushTicketRequest(_baseProvider.myUser, 1);
+            },
+          ),
+          borderRadius: new BorderRadius.circular(80.0),
+        )
     );
   }
 

@@ -24,4 +24,8 @@ class Api {
     ref = _db.collection(Constants.COLN_USERS);
     return ref.document(docId).setData(data, merge: true);
   }
+
+  Future<void> createTicketRequest(Map data) {
+    return _db.collection(Constants.COLN_TICKETREQUEST).document().setData(data, merge: false);
+  }
 }
