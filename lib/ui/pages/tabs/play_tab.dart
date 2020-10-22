@@ -1,4 +1,4 @@
-import 'package:felloapp/ui/elements/tambola_card.dart';
+import 'package:felloapp/ui/elements/tambola_board_view.dart';
 import 'package:flutter/material.dart';
 
 class GameScreen extends StatefulWidget{
