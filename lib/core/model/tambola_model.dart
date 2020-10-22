@@ -5,7 +5,7 @@ import 'package:felloapp/ui/pages/tabs/play_tab.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/widgets.dart';
 
-abstract class TambolaViewModel extends State<TambolaScreen> {
+abstract class TambolaViewModel extends State<GameScreen> {
   Log log = new Log('TambolaModel');
   static final int boardHeight = 3;
   static final int boardLength = 9;
