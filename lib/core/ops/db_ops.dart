@@ -60,4 +60,24 @@ class DBModel extends ChangeNotifier {
       return false;
     }
   }
+
+  bool subscribeUserTickets(User user) {
+    DateTime td = DateTime.now();
+    Timestamp today = Timestamp.fromDate(td);
+    try{
+      String _id = user.uid;
+      Stream<QuerySnapshot> _stream = _api.getValidUserTickets(_id, today);
+      _stream.listen((querySnapshot) {
+        if(querySnapshot != null && querySnapshot.documents.length > 0) {
+          querySnapshot.documents.forEach((docSnapshot) {
+            if(docSnapshot.exists)
+            log.debug('Received snapshot: ' + docSnapshot.data.toString());
+
+          });
+        }
+      });
+    }catch(err) {
+
+    }
+  }
 }

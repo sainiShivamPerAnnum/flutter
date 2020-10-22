@@ -8,6 +8,7 @@ class Constants {
 
   //Sub-collections
   static final String SUBCOLN_USER_FCM = "fcm";
+  static final String SUBCOLN_USER_TICKETS = "tickets";
 
   //Sub-collection docs
   static final String DOC_USER_FCM_TOKEN = "client_token";

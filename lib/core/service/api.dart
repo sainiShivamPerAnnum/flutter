@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:flutter/cupertino.dart';
 
 class Api {
   Log log = new Log("Api");
@@ -27,5 +29,12 @@ class Api {
 
   Future<void> createTicketRequest(Map data) {
     return _db.collection(Constants.COLN_TICKETREQUEST).document().setData(data, merge: false);
+  }
+
+  Stream<QuerySnapshot> getValidUserTickets(String user_id, Timestamp timestamp) {
+    Query query = _db.collection(Constants.COLN_USERS).document(user_id).collection(Constants.SUBCOLN_USER_TICKETS);
+    query = query.where(TambolaBoard.fldValidityStart, isLessThanOrEqualTo: timestamp).where(TambolaBoard.fldValidityEnd, isGreaterThanOrEqualTo: timestamp);
+
+    return query.snapshots();
   }
 }
