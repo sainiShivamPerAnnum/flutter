@@ -28,4 +28,6 @@ class UiConstants{
     return;
   }
 
+  static List<Color> boardColors = Colors.accents;
+
 }

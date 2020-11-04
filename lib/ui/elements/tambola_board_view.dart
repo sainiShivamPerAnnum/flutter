@@ -1,12 +1,14 @@
 import 'dart:collection';
 
 import 'package:felloapp/util/logger.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TambolaBoardView extends StatefulWidget {
-  TambolaBoardView({Key key, this.boardValueCde}) : super(key: key);
+  TambolaBoardView({Key key, this.boardValueCde, this.boardColor=Colors.blueGrey}) : super(key: key);
 
   final String boardValueCde;
+  final Color boardColor;
 
   @override
   State<StatefulWidget> createState() => _TambolaBoardState();
@@ -22,31 +24,46 @@ class _TambolaBoardState extends State<TambolaBoardView> {
   List<List<int>> tambolaBoard =
       new List.generate(boardHeight, (_) => new List(boardLength));
   Map<int, int> indexValueMap = new HashMap();
+  Color altGridColor = Colors.blueGrey;
 
   @override
   void initState() {
     decodeBoard(widget.boardValueCde);
+    if(widget.boardColor != Colors.blueGrey) {
+      int r = widget.boardColor.red;
+      int g = widget.boardColor.green;
+      int b = widget.boardColor.blue;
+
+      int rx = r + (255-r*0.25).round();
+      int gx = g + (255-g*0.25).round();
+      int bx = b + (255-b*0.25).round();
+
+      altGridColor = Color.fromRGBO(rx, gx, bx, 1);
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: <Widget>[
-      AspectRatio(
-          aspectRatio: 0.98,
-          child: SizedBox.expand(
-            child: Container(
-              margin: const EdgeInsets.only(left: 8.0, right: 8.0),
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: boardLength,
+    return  Column(children: <Widget>[
+        AspectRatio(
+            aspectRatio: 3.1,
+            child: SizedBox.expand(
+              child: Container(
+                margin: const EdgeInsets.only(left: 8.0, right: 8.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(6.0),
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: boardLength,
+                    ),
+                    itemBuilder: _buildGridItems,
+                    itemCount: boardLength * boardHeight,
+                  ),
                 ),
-                itemBuilder: _buildGridItems,
-                itemCount: boardLength * boardHeight,
               ),
-            ),
-          )),
-    ]);
+            )),
+      ]);
   }
 
   Widget _buildGridItems(BuildContext context, int index) {
@@ -82,33 +99,35 @@ class _TambolaBoardState extends State<TambolaBoardView> {
         decoration: BoxDecoration(
           border: Border.all(
               color: this.gridOnTap && x == this.tappedX && y == this.tappedY
-                  ? Colors.orange
+                  ? widget.boardColor
                   : Colors.black,
               width: this.gridOnTap && x == this.tappedX && y == this.tappedY
                   ? 2.0
                   : 0.0),
-          color: (x + y) % 2 == 0 ? Colors.blueGrey : Colors.grey,
+          color: (x + y) % 2 == 0 ? altGridColor : Colors.grey,
         ),
         foregroundDecoration: BoxDecoration(
             border: Border(
                 top: BorderSide(
-                    width: x == 0 ? 2.0 : 0.0,
-                    color: x == 0 ? Colors.orange : Colors.black),
+                    width: x == 0 ? 4.0 : 0.0,
+                    color: x == 0 ? widget.boardColor : Colors.black),
                 left: BorderSide(
-                    width: y == 0 ? 2.0 : 0.0,
-                    color: y == 0 ? Colors.orange : Colors.black),
+                    width: y == 0 ? 4.0 : 0.0,
+                    color: y == 0 ? widget.boardColor : Colors.black),
                 bottom: BorderSide(
-                    width: x == 2 ? 2.0 : 0.0,
+                    width: x == 2 ? 4.0 : 0.0,
                     color: x == 2 || x == 5 || x == 8
-                        ? Colors.orange
+                        ? widget.boardColor
                         : Colors.black),
                 right: BorderSide(
-                    width: y == 8 ? 2.0 : 0.0,
+                    width: y == 8 ? 4.0 : 0.0,
                     color: y == 2 || y == 5 || y == 8
-                        ? Colors.orange
+                        ? widget.boardColor
                         : Colors.black))),
         child: Center(
-          child: Text(digit == 0 ? '' : digit.toString()),
+          child: Text(digit == 0 ? '' : digit.toString(),
+              style: Theme.of(context).textTheme.bodyText1.copyWith(fontFamily: 'rms', color: Colors.black),
+          ),
         ),
       ),
     );

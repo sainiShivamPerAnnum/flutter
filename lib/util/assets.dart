@@ -23,4 +23,5 @@ class Assets{
     'We ensure PPE provisions, daily temperature checks and Aarogya Setu monitoring to keep you safe.',
     'Your ratings, reviews and the assistant\'s performance determine our partnership with every assistant.',
   ];
+
 }

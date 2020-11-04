@@ -78,7 +78,7 @@ class _AppRootState extends State<AppRoot> {
         return UpiPayment();
       }
       case 2: {
-        return MyCardApp();
+        return PlayHome();
       }
       default: {
         return MyHomePage(title: Constants.APP_NAME);

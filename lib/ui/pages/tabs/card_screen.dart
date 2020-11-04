@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:felloapp/ui/elements/board_selector.dart';
+import 'package:felloapp/ui/elements/tambola_board_view.dart';
+import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class MyCardApp extends StatelessWidget {
@@ -9,22 +12,23 @@ class MyCardApp extends StatelessWidget {
     var t = Theme.of(c)
         .textTheme
         .apply(displayColor: Colors.white70, bodyColor: Colors.white70);
-    return MaterialApp(
-      theme: ThemeData(brightness: Brightness.dark, textTheme: t),
-      home: Home(),
+    return Scaffold(
+      //theme: ThemeData(brightness: Brightness.dark, textTheme: t),
+      body: PlayHome(),
     );
   }
 }
 
-class Home extends StatefulWidget {
+class PlayHome extends StatefulWidget {
   @override
   _HState createState() => _HState();
 }
 
-class _HState extends State<Home> {
+class _HState extends State<PlayHome> {
   List _cs;
   Map _c;
   double _w = 0;
+  var rnd = new Random();
 
   @override
   void initState() {
@@ -40,29 +44,57 @@ class _HState extends State<Home> {
     if (_cs == null) return Container();
     if (_w <= 0) _w = MediaQuery.of(context).size.width - 40.0;
     //return Scaffold(body:
-        return Padding(
-        padding: EdgeInsets.only(top: 48.0),
-        child: Column(
+        return Scaffold(
+          //debugShowCheckedModeBanner: false,
+        //padding: EdgeInsets.only(top: 48.0),
+        body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.all(24.0),
-              child: Text(
-                "Fancy Wallet",
-                style: Theme.of(c)
-                    .textTheme
-                    .display3
-                    .copyWith(fontFamily: 'rms', color: Colors.white),
+              padding: EdgeInsets.all(10.0),
+              child: Container(
+                  width: double.infinity,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: Colors.indigo,
+                      borderRadius: BorderRadius.all(Radius.circular(20))
+                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                   Text('Today\'s picks',
+                     textAlign: TextAlign.left,
+                   ),
+                  ]),
               ),
             ),
-            SizedBox(height: 32.0),
+            SizedBox(
+              height: 24.0,
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                "This week\'s tickets",
+                style: Theme.of(c)
+                    .textTheme.headline5
+                    .copyWith(fontFamily: 'rms', color: Colors.blueAccent),
+              ),
+            ),
+            SizedBox(height: 5.0),
             CardSelector(
-                cards: _cs.map((c) => Card(c)).toList(),
-                mainCardWidth: _w,
-                mainCardHeight: _w * 0.63,
-                mainCardPadding: 6.0,
+                cards: _cs.map((c) => TambolaBoardView(
+                    boardValueCde: '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A',
+                    boardColor: UiConstants.boardColors[rnd.nextInt(UiConstants.boardColors.length)],
+                )
+                ).toList(),
+                mainCardWidth: 380,
+                mainCardHeight: 128,
+                mainCardPadding: 4.0,
+                dropTargetWidth: 0,
                 cardAnimationDurationMs: 500,
-                onChanged: (i) => setState(() => _c = _cs[i])),
+                onChanged: (i) => setState(() => _c = _cs[i])
+            ),
             Expanded(child: Amounts(_c)),
           ],
         ),
