@@ -3,6 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/pages/tabs/card_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
 import 'package:felloapp/ui/pages/tabs/play_tab.dart';
+import 'package:felloapp/ui/pages/tabs/upi_screen.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +74,8 @@ class _AppRootState extends State<AppRoot> {
         return GameScreen();
       }
       case 1: {
-        return MyHomePage(title: Constants.APP_NAME);
+        // return MyHomePage(title: Constants.APP_NAME);
+        return UpiPayment();
       }
       case 2: {
         return MyCardApp();

@@ -25,6 +25,7 @@ dependencies:
   connectivity: ^0.4.6+2
   flushbar: ^1.10.4
   bottom_navy_bar: ^5.5.0
+  upi_pay: ^0.2.1
   countdown: ^0.1.0 #for game refresh
 
   flutter:
@@ -44,3 +45,9 @@ flutter:
 
   assets:
     - images/logo_full_size.png
+    - images/in.json
+    - images/visa.png
+    - images/mastercard.png
+    - images/dots.png
+    - images/layers.png
+    - images/circles.png
