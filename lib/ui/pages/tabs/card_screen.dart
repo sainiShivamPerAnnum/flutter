@@ -6,9 +6,11 @@ import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/board_selector.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
+import 'package:felloapp/ui/elements/weekly_draw_dialog.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class MyCardApp extends StatelessWidget {
@@ -75,7 +77,16 @@ class _HState extends State<PlayHome> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          _buildTodaysPicksWidget(baseProvider.weeklyDigits),
+          InkWell(
+            child: _buildTodaysPicksWidget(baseProvider.weeklyDigits),
+            onTap: () {
+              HapticFeedback.vibrate();
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => WeeklyDrawDialog(baseProvider.weeklyDigits)
+              );
+            },
+          ),
           SizedBox(
             height: 24.0,
           ),
