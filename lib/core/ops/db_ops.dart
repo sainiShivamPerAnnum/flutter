@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/User.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/locator.dart';
@@ -78,6 +80,25 @@ class DBModel extends ChangeNotifier {
       });
     }catch(err) {
 
+    }
+  }
+
+  Future<DailyPick> getWeeklyPicks() async {
+    try {
+      DateTime date = new DateTime.now();
+      int weekCde = date.year*100 + BaseUtil.getWeekNumber();
+      QuerySnapshot querySnapshot = await _api.getWeekPickByCde(weekCde);
+
+      if(querySnapshot.documents.length != 1){
+        log.error('Did not receive a single doc. Error staged');
+        return null;
+      }
+      else{
+        return DailyPick.fromMap(querySnapshot.documents[0].data);
+      }
+    } catch (e) {
+      log.error("Error fetch Dailypick details: " + e.toString());
+      return null;
     }
   }
 }

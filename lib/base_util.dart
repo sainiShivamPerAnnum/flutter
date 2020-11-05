@@ -1,3 +1,4 @@
+import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/User.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
@@ -18,6 +19,8 @@ class BaseUtil extends ChangeNotifier {
   bool isUserOnboarded = false;
   bool isLoginNextInProgress = false;
   User _myUser;
+  DailyPick weeklyDigits;
+  bool weeklyDrawFetched = false;
 
   BaseUtil() {
     //init();
@@ -110,6 +113,25 @@ class BaseUtil extends ChangeNotifier {
 
   set myUser(User value) {
     _myUser = value;
+  }
+
+  static int getWeekNumber() {
+    DateTime tdt = new DateTime.now();
+    int dayn = tdt.weekday;
+    //tdt = new DateTime(tdt.year, tdt.month, tdt.day-dayn+3);
+    //tdt.setDate(tdt.getDate() - dayn + 3);
+    DateTime firstThursday = new DateTime(tdt.year, tdt.month, tdt.day-dayn+3);
+    tdt = new DateTime(tdt.year, 1, 1);
+    if (tdt.weekday != DateTime.friday) {
+      //tdt.setMonth(0, 1 + ((4 - tdt.getDay()) + 7) % 7);
+      int x = tdt.weekday;
+      x = (tdt.weekday == 7)?0:tdt.weekday;
+      tdt = new DateTime(tdt.year, 1, 1 + ((5 - x) + 7) % 7);
+    }
+
+    int n = 1 + ((firstThursday.millisecondsSinceEpoch - tdt.millisecondsSinceEpoch) / 604800000).ceil();
+    //log.debug("Current week number: " + n.toString());
+    return n;
   }
 
 }

@@ -1,10 +1,15 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/DailyPick.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/board_selector.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MyCardApp extends StatelessWidget {
   @override
@@ -25,10 +30,13 @@ class PlayHome extends StatefulWidget {
 }
 
 class _HState extends State<PlayHome> {
+  Log log = new Log('CardScreen');
   List _cs;
   Map _c;
   double _w = 0;
   var rnd = new Random();
+  BaseUtil baseProvider;
+  DBModel dbProvider;
 
   @override
   void initState() {
@@ -39,66 +47,131 @@ class _HState extends State<PlayHome> {
     });
   }
 
+  _init() {
+    if (baseProvider != null && dbProvider != null) {
+      if (!baseProvider.weeklyDrawFetched) {
+        log.debug('Requesting for weekly picks');
+        dbProvider.getWeeklyPicks().then((picks) {
+          baseProvider.weeklyDrawFetched = true;
+          if (picks != null) baseProvider.weeklyDigits = picks;
+          log.debug('Weekly Picks received: $picks');
+          setState(() {});
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext c) {
+    baseProvider = Provider.of<BaseUtil>(context);
+    dbProvider = Provider.of<DBModel>(context);
+    _init();
     if (_cs == null) return Container();
     if (_w <= 0) _w = MediaQuery.of(context).size.width - 40.0;
     //return Scaffold(body:
-        return Scaffold(
-          //debugShowCheckedModeBanner: false,
-        //padding: EdgeInsets.only(top: 48.0),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Container(
-                  width: double.infinity,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: Colors.indigo,
-                      borderRadius: BorderRadius.all(Radius.circular(20))
-                  ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                   Text('Today\'s picks',
-                     textAlign: TextAlign.left,
-                   ),
-                  ]),
-              ),
+    return Scaffold(
+      //debugShowCheckedModeBanner: false,
+      //padding: EdgeInsets.only(top: 48.0),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          _buildTodaysPicksWidget(baseProvider.weeklyDigits),
+          SizedBox(
+            height: 24.0,
+          ),
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Text(
+              "This week\'s tickets",
+              style: Theme.of(c)
+                  .textTheme
+                  .headline5
+                  .copyWith(fontFamily: 'rms', color: Colors.blueAccent),
             ),
-            SizedBox(
-              height: 24.0,
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Text(
-                "This week\'s tickets",
-                style: Theme.of(c)
-                    .textTheme.headline5
-                    .copyWith(fontFamily: 'rms', color: Colors.blueAccent),
-              ),
-            ),
-            SizedBox(height: 5.0),
-            CardSelector(
-                cards: _cs.map((c) => TambolaBoardView(
-                    boardValueCde: '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A',
-                    boardColor: UiConstants.boardColors[rnd.nextInt(UiConstants.boardColors.length)],
-                )
-                ).toList(),
-                mainCardWidth: 380,
-                mainCardHeight: 128,
-                mainCardPadding: 4.0,
-                dropTargetWidth: 0,
-                cardAnimationDurationMs: 500,
-                onChanged: (i) => setState(() => _c = _cs[i])
-            ),
-            Expanded(child: Amounts(_c)),
-          ],
-        ),
+          ),
+          SizedBox(height: 5.0),
+          CardSelector(
+              cards: _cs
+                  .map((c) => TambolaBoardView(
+                        boardValueCde:
+                            '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A',
+                        boardColor: UiConstants.boardColors[
+                            rnd.nextInt(UiConstants.boardColors.length)],
+                      ))
+                  .toList(),
+              mainCardWidth: 380,
+              mainCardHeight: 128,
+              mainCardPadding: 4.0,
+              dropTargetWidth: 0,
+              cardAnimationDurationMs: 500,
+              onChanged: (i) => setState(() => _c = _cs[i])),
+          Expanded(child: Amounts(_c)),
+        ],
+      ),
       //),
+    );
+  }
+
+  Widget _buildTodaysPicksWidget(DailyPick draws) {
+    DateTime date = DateTime.now();
+    return Padding(
+      padding: EdgeInsets.all(10.0),
+      child: Container(
+        width: double.infinity,
+        height: 100,
+        decoration: BoxDecoration(
+            color: Colors.indigo,
+            borderRadius: BorderRadius.all(Radius.circular(20))),
+        child: Column(
+            //mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: Text(
+                  'Today\'s picks',
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              Padding(
+                  padding: EdgeInsets.only(top: 10, left: 15, right: 15),
+                  child: _getDrawBallRow(draws, date.weekday))
+            ]),
+      ),
+    );
+  }
+
+  Widget _getDrawBallRow(DailyPick draws, int day) {
+    List<Widget> balls = [];
+    if (draws != null && draws.getWeekdayDraws(day - 1) != null) {
+      draws.getWeekdayDraws(day - 1).forEach((element) {
+        balls.add(_getDrawBall(element.toString()));
+      });
+    } else {
+      for (int i = 0; i < 5; i++) {
+        balls.add(_getDrawBall('-'));
+      }
+    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: balls,
+    );
+  }
+
+  Widget _getDrawBall(String digit) {
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: new BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+      ),
+      child: Center(
+          child: Text(
+        digit,
+        style: TextStyle(fontSize: 22),
+        textAlign: TextAlign.center,
+      )),
     );
   }
 }

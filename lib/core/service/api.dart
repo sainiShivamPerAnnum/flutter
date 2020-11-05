@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
@@ -36,5 +37,11 @@ class Api {
     query = query.where(TambolaBoard.fldValidityStart, isLessThanOrEqualTo: timestamp).where(TambolaBoard.fldValidityEnd, isGreaterThanOrEqualTo: timestamp);
 
     return query.snapshots();
+  }
+
+  Future<QuerySnapshot> getWeekPickByCde(int weekCde) {
+    Query query = _db.collection(Constants.COLN_DAILYPICKS).where(DailyPick.fldWeekCode, isEqualTo: weekCde);
+
+    return query.getDocuments();
   }
 }
