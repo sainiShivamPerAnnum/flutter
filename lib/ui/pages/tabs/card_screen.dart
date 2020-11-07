@@ -16,7 +16,8 @@ import 'package:provider/provider.dart';
 class MyCardApp extends StatelessWidget {
   @override
   Widget build(BuildContext c) {
-    var t = Theme.of(c)
+    var t = Theme
+        .of(c)
         .textTheme
         .apply(displayColor: Colors.white70, bodyColor: Colors.white70);
     return Scaffold(
@@ -69,7 +70,10 @@ class _HState extends State<PlayHome> {
     dbProvider = Provider.of<DBModel>(context);
     _init();
     if (_cs == null) return Container();
-    if (_w <= 0) _w = MediaQuery.of(context).size.width - 40.0;
+    if (_w <= 0) _w = MediaQuery
+        .of(context)
+        .size
+        .width - 40.0;
     //return Scaffold(body:
     return Scaffold(
       //debugShowCheckedModeBanner: false,
@@ -77,13 +81,15 @@ class _HState extends State<PlayHome> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          _buildDashboard(),
           InkWell(
             child: _buildTodaysPicksWidget(baseProvider.weeklyDigits),
             onTap: () {
               HapticFeedback.vibrate();
               showDialog(
                   context: context,
-                  builder: (BuildContext context) => WeeklyDrawDialog(baseProvider.weeklyDigits)
+                  builder: (BuildContext context) =>
+                      WeeklyDrawDialog(baseProvider.weeklyDigits)
               );
             },
           ),
@@ -94,7 +100,8 @@ class _HState extends State<PlayHome> {
             padding: EdgeInsets.all(10.0),
             child: Text(
               "This week\'s tickets",
-              style: Theme.of(c)
+              style: Theme
+                  .of(c)
                   .textTheme
                   .headline5
                   .copyWith(fontFamily: 'rms', color: Colors.blueAccent),
@@ -103,12 +110,13 @@ class _HState extends State<PlayHome> {
           SizedBox(height: 5.0),
           CardSelector(
               cards: _cs
-                  .map((c) => TambolaBoardView(
-                        boardValueCde:
-                            '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A',
-                        boardColor: UiConstants.boardColors[
-                            rnd.nextInt(UiConstants.boardColors.length)],
-                      ))
+                  .map((c) =>
+                  TambolaBoardView(
+                    boardValueCde:
+                    '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A',
+                    boardColor: UiConstants.boardColors[
+                    rnd.nextInt(UiConstants.boardColors.length)],
+                  ))
                   .toList(),
               mainCardWidth: 380,
               mainCardHeight: 128,
@@ -123,6 +131,90 @@ class _HState extends State<PlayHome> {
     );
   }
 
+  Widget _buildDashboard() {
+    return Padding(
+      padding: EdgeInsets.all(10.0),
+      child: Container(
+        width: double.infinity,
+        height: 100,
+        decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.all(Radius.circular(20))),
+        child:Stack(
+          children: [
+            Center(
+            child:VerticalDivider(
+              thickness: 1.5,
+              endIndent: 10,indent: 10,
+            )),
+            Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    child: Container(
+                      //color: Colors.black54,
+                        width: 150,
+                        height: 3,
+                        child: Divider(
+                          color: Colors.grey[300],
+                          thickness: 1.5,
+                        ),
+                  )
+            )),
+            Center(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '23',
+                            style: TextStyle(fontSize: 38),
+                            textAlign: TextAlign.left,
+                          ),
+                          Text(
+                            'tickets',
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      )
+                    ),
+                    // VerticalDivider(thickness: 1.5,
+                    //   endIndent: 10,indent: 10,
+                    // ),
+                    Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text('Rules',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.black54
+                              ),
+                            ),
+                            Text('Prizes',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.black54
+                              ),
+                            ),
+                          ],)
+                    ),
+                  ]),
+            ),
+          ],
+        )
+      ),
+    );
+  }
+
   Widget _buildTodaysPicksWidget(DailyPick draws) {
     DateTime date = DateTime.now();
     return Padding(
@@ -134,7 +226,7 @@ class _HState extends State<PlayHome> {
             color: Colors.indigo,
             borderRadius: BorderRadius.all(Radius.circular(20))),
         child: Column(
-            //mainAxisAlignment: MainAxisAlignment.center,
+          //mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
@@ -179,10 +271,10 @@ class _HState extends State<PlayHome> {
       ),
       child: Center(
           child: Text(
-        digit,
-        style: TextStyle(fontSize: 22),
-        textAlign: TextAlign.center,
-      )),
+            digit,
+            style: TextStyle(fontSize: 22),
+            textAlign: TextAlign.center,
+          )),
     );
   }
 }
@@ -194,7 +286,9 @@ class Amounts extends StatelessWidget {
 
   @override
   Widget build(BuildContext cx) {
-    var tt = Theme.of(cx).textTheme;
+    var tt = Theme
+        .of(cx)
+        .textTheme;
     var pd = EdgeInsets.symmetric(vertical: 8.0, horizontal: 24.0);
     return ListView.builder(
       physics: BouncingScrollPhysics(),
@@ -247,7 +341,9 @@ class Card extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var tt = Theme.of(context).textTheme;
+    var tt = Theme
+        .of(context)
+        .textTheme;
     return ClipRRect(
       borderRadius: BorderRadius.circular(12.0),
       child: Container(

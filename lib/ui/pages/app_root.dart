@@ -51,17 +51,20 @@ class _AppRootState extends State<AppRoot> {
                 BottomNavyBarItem(
                     icon: Icon(Icons.play_circle_filled),
                     title: Text('Play'),
-                    activeColor: Colors.green
+                    inactiveColor: Colors.teal[300],
+                    activeColor: Colors.teal
                 ),
                 BottomNavyBarItem(
                     icon: Icon(Icons.account_balance_wallet),
                     title: Text('Save'),
-                    activeColor: Colors.blueAccent
+                    inactiveColor: Colors.teal[300],
+                    activeColor: Colors.teal
                 ),
                 BottomNavyBarItem(
                     icon: Icon(Icons.supervised_user_circle),
                     title: Text('Refer'),
-                    activeColor: Colors.deepOrangeAccent
+                    inactiveColor: Colors.teal[300],
+                    activeColor: Colors.teal
                 ),
               ]
           ),
@@ -71,14 +74,14 @@ class _AppRootState extends State<AppRoot> {
   Widget getTab(int index, BuildContext context) {
     switch(index) {
       case 0: {
-        return GameScreen();
+        return PlayHome();
       }
       case 1: {
         // return MyHomePage(title: Constants.APP_NAME);
         return UpiPayment();
       }
       case 2: {
-        return PlayHome();
+        return GameScreen();
       }
       default: {
         return MyHomePage(title: Constants.APP_NAME);

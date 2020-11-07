@@ -24,7 +24,7 @@ class _UpiPaymentState extends State<UpiPayment> {
     super.initState();
 
     // we have declared amount as 999 (i.e. Rs.999).
-    _amountController.text = (999).toString();
+    _amountController.text = (1).toString();
 
     // we have used sample UPI address (will be used to receive amount)
     _upiAddressController.text = 'shouryalala-3@okhdfcbank';
