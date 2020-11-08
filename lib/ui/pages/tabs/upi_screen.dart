@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:upi_pay/upi_pay.dart';
 
@@ -72,116 +73,195 @@ class _UpiPaymentState extends State<UpiPayment> {
 
   @override
   Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          height: 200,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              stops: [0.1, 0.6],
+              colors: [
+                UiConstants.primaryColor.withGreen(190),
+                UiConstants.primaryColor,
+              ],
+            ),
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.elliptical(
+                  MediaQuery.of(context).size.width * 0.50, 18),
+              bottomRight: Radius.elliptical(
+                  MediaQuery.of(context).size.width * 0.50, 18),
+            ),
+          ),
+        ),
+        Positioned(
+          top: 30,
+          left: 5,
+          child: IconButton(
+            color: Colors.white,
+            icon: Icon(Icons.settings),
+            onPressed: () {
+
+            },
+          ),
+        ),
+        Positioned(
+          top: 30,
+          right: 5,
+          child: IconButton(
+            color: Colors.white,
+            icon: Icon(Icons.help_outline),
+            onPressed: () {
+              //Navigator.of(context).pushNamed(Settings.id);
+            },
+          ),
+        ),
+        Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(top: 70),
+              child: Column(
+                children: [
+                  Text(
+                    '₹1,040',
+                    style: TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
+                    ),
+
+                  ),
+                  Text(
+                    'saved',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white
+                    ),
+                  ),
+                ],
+              ),
+            )
+        ),
+        Padding(
+            padding: EdgeInsets.only(top: 160),
+            child: _buildUpiLayout()
+        )
+      ],
+    );
+  }
+
+  Widget _buildUpiLayout() {
     return SafeArea(
         child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      child: ListView(
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: 32),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextFormField(
-                    controller: _upiAddressController,
-                    enabled: false,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'address@upi',
-                      labelText: 'Receiving UPI Address',
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: ListView(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(top: 32),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextFormField(
+                        controller: _upiAddressController,
+                        enabled: false,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: 'address@upi',
+                          labelText: 'Receiving UPI Address',
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          if (_upiAddrError != null)
-            Container(
-              margin: EdgeInsets.only(top: 4, left: 12),
-              child: Text(
-                _upiAddrError,
-                style: TextStyle(color: Colors.red),
               ),
-            ),
-          Container(
-            margin: EdgeInsets.only(top: 32),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    controller: _amountController,
-                    readOnly: true,
-                    enabled: false,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Amount',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 128, bottom: 32),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
+              if (_upiAddrError != null)
                 Container(
-                  margin: EdgeInsets.only(bottom: 12),
+                  margin: EdgeInsets.only(top: 4, left: 12),
                   child: Text(
-                    'Pay Using',
-                    style: Theme.of(context).textTheme.caption,
+                    _upiAddrError,
+                    style: TextStyle(color: Colors.red),
                   ),
                 ),
-                FutureBuilder<List<ApplicationMeta>>(
-                  future: _appsFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState != ConnectionState.done) {
-                      return Container();
-                    }
-
-                    return GridView.count(
-                      crossAxisCount: 2,
-                      shrinkWrap: true,
-                      mainAxisSpacing: 8,
-                      crossAxisSpacing: 8,
-                      childAspectRatio: 1.6,
-                      physics: NeverScrollableScrollPhysics(),
-                      children: snapshot.data
-                          .map((i) => Material(
-                                key: ObjectKey(i.upiApplication),
-                                color: Colors.grey[200],
-                                child: InkWell(
-                                  onTap: () => _openUPIGateway(i),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Image.memory(
-                                        i.icon,
-                                        width: 64,
-                                        height: 64,
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(top: 4),
-                                        child: Text(
-                                          i.upiApplication.getAppName(),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ))
-                          .toList(),
-                    );
-                  },
+              Container(
+                margin: EdgeInsets.only(top: 32),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextField(
+                        controller: _amountController,
+                        readOnly: true,
+                        enabled: false,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Amount',
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          )
-        ],
-      ),
-    ));
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 78, bottom: 32),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(bottom: 12),
+                      child: Text(
+                        'Pay Using',
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                    ),
+                    FutureBuilder<List<ApplicationMeta>>(
+                      future: _appsFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState != ConnectionState.done) {
+                          return Container();
+                        }
+
+                        return GridView.count(
+                          crossAxisCount: 2,
+                          shrinkWrap: true,
+                          mainAxisSpacing: 8,
+                          crossAxisSpacing: 8,
+                          childAspectRatio: 1.6,
+                          physics: NeverScrollableScrollPhysics(),
+                          children: snapshot.data
+                              .map((i) => Material(
+                            key: ObjectKey(i.upiApplication),
+                            color: Colors.grey[200],
+                            child: InkWell(
+                              onTap: () => _openUPIGateway(i),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Image.memory(
+                                    i.icon,
+                                    width: 64,
+                                    height: 64,
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 4),
+                                    child: Text(
+                                      i.upiApplication.getAppName(),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ))
+                              .toList(),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ));
   }
 }
 

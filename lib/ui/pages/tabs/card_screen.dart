@@ -78,56 +78,136 @@ class _HState extends State<PlayHome> {
     return Scaffold(
       //debugShowCheckedModeBanner: false,
       //padding: EdgeInsets.only(top: 48.0),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          _buildDashboard(),
-          InkWell(
-            child: _buildTodaysPicksWidget(baseProvider.weeklyDigits),
-            onTap: () {
-              HapticFeedback.vibrate();
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) =>
-                      WeeklyDrawDialog(baseProvider.weeklyDigits)
-              );
-            },
-          ),
-          SizedBox(
-            height: 24.0,
-          ),
-          Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Text(
-              "This week\'s tickets",
-              style: Theme
-                  .of(c)
-                  .textTheme
-                  .headline5
-                  .copyWith(fontFamily: 'rms', color: Colors.blueAccent),
+      body: Stack(
+        children: [
+          Container(
+            height: 200,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                stops: [0.1, 0.6],
+                colors: [
+                  UiConstants.primaryColor.withGreen(190),
+                  UiConstants.primaryColor,
+                ],
+              ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.elliptical(
+                    MediaQuery.of(context).size.width * 0.50, 18),
+                bottomRight: Radius.elliptical(
+                    MediaQuery.of(context).size.width * 0.50, 18),
+              ),
             ),
           ),
-          SizedBox(height: 5.0),
-          CardSelector(
-              cards: _cs
-                  .map((c) =>
-                  TambolaBoardView(
-                    boardValueCde:
-                    '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A',
-                    boardColor: UiConstants.boardColors[
-                    rnd.nextInt(UiConstants.boardColors.length)],
-                  ))
-                  .toList(),
-              mainCardWidth: 380,
-              mainCardHeight: 128,
-              mainCardPadding: 4.0,
-              dropTargetWidth: 0,
-              cardAnimationDurationMs: 500,
-              onChanged: (i) => setState(() => _c = _cs[i])),
-          Expanded(child: Amounts(_c)),
+          Positioned(
+            top: 30,
+            left: 5,
+            child: IconButton(
+              color: Colors.white,
+              icon: Icon(Icons.settings),
+              onPressed: () {
+
+              },
+            ),
+          ),
+          Positioned(
+            top: 30,
+            right: 5,
+            child: IconButton(
+              color: Colors.white,
+              icon: Icon(Icons.help_outline),
+              onPressed: () {
+                //Navigator.of(context).pushNamed(Settings.id);
+              },
+            ),
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(top: 70),
+              child: Column(
+                children: [
+                  Text(
+                    '23',
+                    style: TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
+                    ),
+
+                  ),
+                  Text(
+                    'tickets',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ),
+          SafeArea(child: Padding(
+            padding: EdgeInsets.only(top: 140),
+              child: _buildCardCanvas(context))
+          )
+
         ],
-      ),
+      )
       //),
+    );
+  }
+
+  Widget _buildCardCanvas(BuildContext c) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        //_buildDashboard(),
+        InkWell(
+          child: _buildTodaysPicksWidget(baseProvider.weeklyDigits),
+          onTap: () {
+            HapticFeedback.vibrate();
+            showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    WeeklyDrawDialog(baseProvider.weeklyDigits)
+            );
+          },
+        ),
+        SizedBox(
+          height: 24.0,
+        ),
+        Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Text(
+            "This week\'s tickets",
+            style: Theme
+                .of(c)
+                .textTheme
+                .headline5
+                .copyWith(fontFamily: 'rms', color: UiConstants.accentColor),
+          ),
+        ),
+        SizedBox(height: 5.0),
+        CardSelector(
+            cards: _cs
+                .map((c) =>
+                TambolaBoardView(
+                  boardValueCde:
+                  '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A',
+                  boardColor: UiConstants.boardColors[
+                  rnd.nextInt(UiConstants.boardColors.length)],
+                ))
+                .toList(),
+            mainCardWidth: 380,
+            mainCardHeight: 128,
+            mainCardPadding: 4.0,
+            dropTargetWidth: 0,
+            cardAnimationDurationMs: 500,
+            onChanged: (i) => setState(() => _c = _cs[i])),
+        Expanded(child: Amounts(_c)),
+      ],
     );
   }
 
@@ -223,7 +303,12 @@ class _HState extends State<PlayHome> {
         width: double.infinity,
         height: 100,
         decoration: BoxDecoration(
-            color: Colors.indigo,
+            color: Colors.blueGrey[400],
+            boxShadow: [new BoxShadow(
+              color: Colors.black26,
+              offset: Offset.fromDirection(20, 7),
+              blurRadius: 5.0,
+            )],
             borderRadius: BorderRadius.all(Radius.circular(20))),
         child: Column(
           //mainAxisAlignment: MainAxisAlignment.center,
@@ -233,6 +318,7 @@ class _HState extends State<PlayHome> {
                 padding: EdgeInsets.only(top: 10),
                 child: Text(
                   'Today\'s picks',
+                  style: TextStyle(color: Colors.white70),
                   textAlign: TextAlign.left,
                 ),
               ),

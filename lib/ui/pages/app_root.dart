@@ -3,9 +3,12 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/pages/tabs/card_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
 import 'package:felloapp/ui/pages/tabs/play_tab.dart';
+import 'package:felloapp/ui/pages/tabs/refer_screen.dart';
+import 'package:felloapp/ui/pages/tabs/test_screen.dart';
 import 'package:felloapp/ui/pages/tabs/upi_screen.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:morpheus/widgets/morpheus_tab_view.dart';
 
@@ -24,7 +27,7 @@ class _AppRootState extends State<AppRoot> {
         onWillPop: () async => Navigator.of(context).maybePop(),
         child:
         Scaffold(
-          appBar: BaseUtil.getAppBar(),
+          // appBar: BaseUtil.getAppBar(),
           body: Center(
               child:
               MorpheusTabView(
@@ -51,20 +54,20 @@ class _AppRootState extends State<AppRoot> {
                 BottomNavyBarItem(
                     icon: Icon(Icons.play_circle_filled),
                     title: Text('Play'),
-                    inactiveColor: Colors.teal[300],
-                    activeColor: Colors.teal
+                    inactiveColor: UiConstants.primaryColor,
+                    activeColor: UiConstants.primaryColor
                 ),
                 BottomNavyBarItem(
                     icon: Icon(Icons.account_balance_wallet),
                     title: Text('Save'),
-                    inactiveColor: Colors.teal[300],
-                    activeColor: Colors.teal
+                    inactiveColor: UiConstants.primaryColor,
+                    activeColor: UiConstants.primaryColor
                 ),
                 BottomNavyBarItem(
                     icon: Icon(Icons.supervised_user_circle),
                     title: Text('Refer'),
-                    inactiveColor: Colors.teal[300],
-                    activeColor: Colors.teal
+                    inactiveColor: UiConstants.primaryColor,
+                    activeColor: UiConstants.primaryColor
                 ),
               ]
           ),
@@ -81,7 +84,7 @@ class _AppRootState extends State<AppRoot> {
         return UpiPayment();
       }
       case 2: {
-        return GameScreen();
+        return ReferScreen();
       }
       default: {
         return MyHomePage(title: Constants.APP_NAME);
