@@ -41,6 +41,22 @@ class _AppRootState extends State<AppRoot> {
 //            _buildOffstageNavigator(2, context),
 //          ]),
 //      ),
+          bottomSheet: Container(
+              color: Colors.blueGrey[100],
+              height: 25.0,
+              child: Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
+                  child:Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('We are currently in Beta',
+                        style: TextStyle(color: Colors.black54),
+                      ),
+                      Icon(Icons.info_outline, size: 20,color: Colors.black54,)
+                    ],
+                  )
+              )
+          ),
           bottomNavigationBar: BottomNavyBar(
               selectedIndex: _currentIndex,
               showElevation: true,

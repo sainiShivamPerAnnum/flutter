@@ -309,7 +309,17 @@ class _HState extends State<PlayHome> {
               offset: Offset.fromDirection(20, 7),
               blurRadius: 5.0,
             )],
-            borderRadius: BorderRadius.all(Radius.circular(20))),
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            stops: [0.1, 0.4],
+            colors: [
+              Colors.blueGrey[500],
+              Colors.blueGrey[400]
+            ],
+          ),
+        ),
         child: Column(
           //mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

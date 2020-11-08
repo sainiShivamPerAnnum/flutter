@@ -2,6 +2,7 @@ import 'constants.dart';
 
 class Assets{
   static final String logoMaxSize = 'images/logo_full_size.png';
+  static final String referGraphic = 'images/transfer.png';
 
   static final List<String> onboardingSlide = [
     'images/logo_full_size.png',

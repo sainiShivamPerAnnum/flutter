@@ -28,7 +28,7 @@ class _UpiPaymentState extends State<UpiPayment> {
     _amountController.text = (1).toString();
 
     // we have used sample UPI address (will be used to receive amount)
-    _upiAddressController.text = 'shouryalala-3@okhdfcbank';
+    _upiAddressController.text = 'shouryalala@oksbi';
 
     // used for getting list of UPI apps installed in current device
     _appsFuture = UpiPay.getInstalledUpiApplications();
@@ -164,7 +164,7 @@ class _UpiPaymentState extends State<UpiPayment> {
                     Expanded(
                       child: TextFormField(
                         controller: _upiAddressController,
-                        enabled: false,
+                        enabled: true,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           hintText: 'address@upi',
@@ -190,8 +190,8 @@ class _UpiPaymentState extends State<UpiPayment> {
                     Expanded(
                       child: TextField(
                         controller: _amountController,
-                        readOnly: true,
-                        enabled: false,
+                        readOnly: false,
+                        enabled: true,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Amount',

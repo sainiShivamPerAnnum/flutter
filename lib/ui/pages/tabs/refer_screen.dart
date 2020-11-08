@@ -1,4 +1,5 @@
 
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -97,7 +98,16 @@ class _ReferScreenState extends State<ReferScreen> {
   }
 
   Widget _buildReferCanvas(BuildContext context) {
-    return Text('Refer');
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 40),
+        child:Image(
+        image: AssetImage(Assets.referGraphic),
+        fit: BoxFit.contain,
+      ),
+      )
+    );
   }
 
 }

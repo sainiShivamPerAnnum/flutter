@@ -35,6 +35,6 @@ class UiConstants{
   //   Colors.green,Colors.green[600],Colors.green[700],Colors.green[800],Colors.green[900],Colors.lightGreen,
   //   Colors.lightGreen[600],Colors.lightGreen[700],Colors.lightGreen[800],Colors.lightGreen[900]];
 
-  static List<Color> boardColors = [primaryColor];
+  static List<Color> boardColors = [Colors.greenAccent];
 
 }
