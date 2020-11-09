@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -126,12 +127,24 @@ class _TambolaBoardState extends State<TambolaBoardView> {
                         ? widget.boardColor
                         : Colors.black))),
         child: Center(
-          child: Text(digit == 0 ? '' : digit.toString(),
-              style: Theme.of(context).textTheme.bodyText1.copyWith(fontFamily: 'rms', color: Colors.black),
-          ),
+          child: _getDecoratedDigit(digit, widget.calledDigits),
         ),
       ),
     );
+  }
+
+  Widget _getDecoratedDigit(int digit, List<int> calledDigits) {
+    if(digit == 0) return Text('');
+    else if(calledDigits.contains(digit)) return StrikeThroughWidget(
+      child: Text(digit.toString(),
+        style: Theme.of(context).textTheme.bodyText1.copyWith(fontFamily: 'rms', color: Colors.black),
+      ),
+    );
+    else{
+      return Text(digit.toString(),
+        style: Theme.of(context).textTheme.bodyText1.copyWith(fontFamily: 'rms', color: Colors.black),
+      );
+    }
   }
 
   List<String> encodedStringToArray(String cde) {
@@ -228,4 +241,23 @@ class TambolaValueObject {
   int get index => _indexInvalid ? INVALID : _index;
 
   int get value => _valueInvalid ? INVALID : _value;
+}
+
+class StrikeThroughWidget extends StatelessWidget {
+  final Widget _child;
+
+  StrikeThroughWidget({Key key, @required Widget child})
+      : this._child = child,
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: _child,
+      padding: EdgeInsets.symmetric(horizontal: 6), // this line is optional to make strikethrough effect outside a text
+      decoration: BoxDecoration(
+        image: DecorationImage(image: AssetImage(Assets.strikeThroughGraphic), fit: BoxFit.fitWidth),
+      ),
+    );
+  }
 }

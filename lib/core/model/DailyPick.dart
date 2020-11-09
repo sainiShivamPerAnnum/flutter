@@ -48,5 +48,7 @@ class DailyPick {
     if(fri != null && fri.isNotEmpty)allDigits.addAll(fri);
     if(sat != null && sat.isNotEmpty)allDigits.addAll(sat);
     if(sun != null && sun.isNotEmpty)allDigits.addAll(sun);
+
+    return allDigits;
   }
 }
