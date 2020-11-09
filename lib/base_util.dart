@@ -10,6 +10,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
+import 'core/model/TambolaBoard.dart';
+
 
 class BaseUtil extends ChangeNotifier {
   final Log log = new Log("BaseUtil");
@@ -20,7 +22,10 @@ class BaseUtil extends ChangeNotifier {
   bool isLoginNextInProgress = false;
   User _myUser;
   DailyPick weeklyDigits;
+  List<TambolaBoard> userWeeklyBoards;
+  int userTicketsCount = 0;
   bool weeklyDrawFetched = false;
+  bool weeklyTicksFetched = false;
 
   BaseUtil() {
     //init();

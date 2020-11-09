@@ -5,10 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TambolaBoardView extends StatefulWidget {
-  TambolaBoardView({Key key, this.boardValueCde, this.boardColor=Colors.blueGrey}) : super(key: key);
+  TambolaBoardView({Key key, this.boardValueCde, this.calledDigits, this.boardColor=Colors.blueGrey}) : super(key: key);
 
   final String boardValueCde;
   final Color boardColor;
+  final List<int> calledDigits;
 
   @override
   State<StatefulWidget> createState() => _TambolaBoardState();

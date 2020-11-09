@@ -38,4 +38,15 @@ class DailyPick {
       case 6: return sun;
     }
   }
+
+  List<int> toList() {
+    List<int> allDigits = [];
+    if(mon != null && mon.isNotEmpty)allDigits.addAll(mon);
+    if(tue != null && tue.isNotEmpty)allDigits.addAll(tue);
+    if(wed != null && wed.isNotEmpty)allDigits.addAll(wed);
+    if(thu != null && thu.isNotEmpty)allDigits.addAll(thu);
+    if(fri != null && fri.isNotEmpty)allDigits.addAll(fri);
+    if(sat != null && sat.isNotEmpty)allDigits.addAll(sat);
+    if(sun != null && sun.isNotEmpty)allDigits.addAll(sun);
+  }
 }

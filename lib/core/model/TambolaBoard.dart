@@ -7,18 +7,25 @@ class TambolaBoard{
   final String val;
   final Timestamp validity_start;
   final Timestamp validity_end;
+  final int week_code;
   static final String fldAssignedTime = 'assigned_time';
   static final String fldValidityStart = 'validity_start';
   static final String fldValidityEnd = 'validity_end';
   static final String fldBoardValue = 'val';
+  static final String fldWeekCode = 'week_code';
 
-  TambolaBoard({this.assigned_time, this.val, this.validity_start, this.validity_end});
+  TambolaBoard({this.assigned_time, this.val, this.validity_start, this.validity_end, this.week_code});
 
-  TambolaBoard.fromMap(Map<String, dynamic> data, String id)
+  TambolaBoard.fromMap(Map<String, dynamic> data)
     : this(
     assigned_time: data[fldAssignedTime],
     val: data[fldBoardValue],
     validity_start: data[fldValidityStart],
-    validity_end: data[fldValidityEnd]
+    validity_end: data[fldValidityEnd],
+    week_code: data[fldWeekCode]
   );
+
+  bool isValid() {
+    return (val != null); //TODO
+  }
 }

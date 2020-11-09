@@ -32,11 +32,10 @@ class Api {
     return _db.collection(Constants.COLN_TICKETREQUEST).document().setData(data, merge: false);
   }
 
-  Stream<QuerySnapshot> getValidUserTickets(String user_id, Timestamp timestamp) {
+  Future<QuerySnapshot> getValidUserTickets(String user_id, int weekCode) {
     Query query = _db.collection(Constants.COLN_USERS).document(user_id).collection(Constants.SUBCOLN_USER_TICKETS);
-    query = query.where(TambolaBoard.fldValidityStart, isLessThanOrEqualTo: timestamp).where(TambolaBoard.fldValidityEnd, isGreaterThanOrEqualTo: timestamp);
-
-    return query.snapshots();
+    query = query.where(TambolaBoard.fldWeekCode, isEqualTo: weekCode);
+    return query.getDocuments();
   }
 
   Future<QuerySnapshot> getWeekPickByCde(int weekCde) {

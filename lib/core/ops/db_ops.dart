@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
+import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/model/User.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/locator.dart';
@@ -63,24 +64,27 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  bool subscribeUserTickets(User user) {
+  Future<List<TambolaBoard>> refreshUserTickets(User user) async{
     DateTime td = DateTime.now();
     Timestamp today = Timestamp.fromDate(td);
+    List<TambolaBoard> requestedBoards = [];
+    DateTime date = new DateTime.now();
+    int weekCde = date.year*100 + BaseUtil.getWeekNumber();
     try{
       String _id = user.uid;
-      Stream<QuerySnapshot> _stream = _api.getValidUserTickets(_id, today);
-      _stream.listen((querySnapshot) {
-        if(querySnapshot != null && querySnapshot.documents.length > 0) {
-          querySnapshot.documents.forEach((docSnapshot) {
-            if(docSnapshot.exists)
-            log.debug('Received snapshot: ' + docSnapshot.data.toString());
-
-          });
-        }
-      });
+      QuerySnapshot querySnapshot = await _api.getValidUserTickets(_id, weekCde);
+      if(querySnapshot != null && querySnapshot.documents.length > 0) {
+        querySnapshot.documents.forEach((docSnapshot) {
+          if(docSnapshot.exists)
+          log.debug('Received snapshot: ' + docSnapshot.data.toString());
+          TambolaBoard board = TambolaBoard.fromMap(docSnapshot.data);
+          if(board.isValid())requestedBoards.add(board);
+        });
+      }
     }catch(err) {
-
+      log.error('Failed to fetch tambola boards');
     }
+    return requestedBoards;
   }
 
   Future<DailyPick> getWeeklyPicks() async {

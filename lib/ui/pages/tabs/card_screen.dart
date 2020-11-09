@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
+import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/board_selector.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
@@ -11,6 +12,7 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class MyCardApp extends StatelessWidget {
@@ -36,6 +38,7 @@ class _HState extends State<PlayHome> {
   Log log = new Log('CardScreen');
   List _cs;
   Map _c;
+  TambolaBoard _currentBoard;
   double _w = 0;
   var rnd = new Random();
   BaseUtil baseProvider;
@@ -59,6 +62,18 @@ class _HState extends State<PlayHome> {
           if (picks != null) baseProvider.weeklyDigits = picks;
           log.debug('Weekly Picks received: $picks');
           setState(() {});
+        });
+      }
+      if (!baseProvider.weeklyTicksFetched) {
+        log.debug('Requesting for weekly tickets');
+        dbProvider.refreshUserTickets(baseProvider.myUser).then((tickets) {
+          baseProvider.weeklyTicksFetched = true;
+          if(tickets != null) {
+            baseProvider.userWeeklyBoards = tickets;
+            baseProvider.userTicketsCount = tickets.length;
+            log.debug('User weekly tickets fetched:: Count: ${baseProvider.userWeeklyBoards.length}');
+            setState(() {});
+          }
         });
       }
     }
@@ -107,7 +122,7 @@ class _HState extends State<PlayHome> {
               color: Colors.white,
               icon: Icon(Icons.settings),
               onPressed: () {
-
+                HapticFeedback.vibrate();
               },
             ),
           ),
@@ -118,6 +133,7 @@ class _HState extends State<PlayHome> {
               color: Colors.white,
               icon: Icon(Icons.help_outline),
               onPressed: () {
+                HapticFeedback.vibrate();
                 //Navigator.of(context).pushNamed(Settings.id);
               },
             ),
@@ -129,7 +145,7 @@ class _HState extends State<PlayHome> {
               child: Column(
                 children: [
                   Text(
-                    '23',
+                    baseProvider.userTicketsCount.toString(),
                     style: TextStyle(
                         fontSize: 50,
                         fontWeight: FontWeight.bold,
@@ -152,7 +168,6 @@ class _HState extends State<PlayHome> {
             padding: EdgeInsets.only(top: 140),
               child: _buildCardCanvas(context))
           )
-
         ],
       )
       //),
@@ -164,7 +179,7 @@ class _HState extends State<PlayHome> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         //_buildDashboard(),
-        InkWell(
+        (baseProvider.weeklyDrawFetched)?InkWell(
           child: _buildTodaysPicksWidget(baseProvider.weeklyDigits),
           onTap: () {
             HapticFeedback.vibrate();
@@ -174,6 +189,17 @@ class _HState extends State<PlayHome> {
                     WeeklyDrawDialog(baseProvider.weeklyDigits)
             );
           },
+        ):Padding(  //Loader
+          padding: EdgeInsets.all(10),
+          child: Container(
+            width: double.infinity,
+            height: 200,
+            child: Center(
+              child: SpinKitWave(
+                color: UiConstants.primaryColor,
+              ),
+            ),
+          ),
         ),
         SizedBox(
           height: 24.0,
@@ -190,12 +216,14 @@ class _HState extends State<PlayHome> {
           ),
         ),
         SizedBox(height: 5.0),
-        CardSelector(
-            cards: _cs
-                .map((c) =>
+        (baseProvider.weeklyTicksFetched)?
+        (baseProvider.userTicketsCount > 0)?CardSelector(
+            cards: baseProvider.userWeeklyBoards
+                .map((board) =>
                 TambolaBoardView(
                   boardValueCde:
                   '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A',
+                  calledDigits: (baseProvider.weeklyDrawFetched)?baseProvider.weeklyDigits.toList():[],
                   boardColor: UiConstants.boardColors[
                   rnd.nextInt(UiConstants.boardColors.length)],
                 ))
@@ -205,8 +233,38 @@ class _HState extends State<PlayHome> {
             mainCardPadding: 4.0,
             dropTargetWidth: 0,
             cardAnimationDurationMs: 500,
-            onChanged: (i) => setState(() => _c = _cs[i])),
-        Expanded(child: Amounts(_c)),
+            onChanged: (i) => setState(() => _currentBoard = baseProvider.userWeeklyBoards[i])
+        ):Padding(
+          padding: EdgeInsets.all(10),
+          child: Container(
+            width: double.infinity,
+            height: 200,
+            child: Center(
+              child: Text('No tickets yet'),
+            )
+          )
+        ):Padding(  //Loader
+          padding: EdgeInsets.all(10),
+          child: Container(
+            width: double.infinity,
+            height: 200,
+            child: Center(
+              child: SpinKitWave(
+                color: UiConstants.primaryColor,
+              ),
+            ),
+          ),
+        ),
+        (baseProvider.weeklyTicksFetched && baseProvider.userTicketsCount>0)?
+        Expanded(
+            child: Amounts(_c)
+        ):Padding(  //Loader
+          padding: EdgeInsets.all(10),
+          child: Container(
+            width: double.infinity,
+            height: 50,
+          ),
+        ),
       ],
     );
   }
