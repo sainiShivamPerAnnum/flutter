@@ -1,6 +1,9 @@
 import 'dart:math';
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:upi_pay/upi_pay.dart';
 
 class UpiPayment extends StatefulWidget {
@@ -10,6 +13,8 @@ class UpiPayment extends StatefulWidget {
 
 class _UpiPaymentState extends State<UpiPayment> {
   // used for storing errors.
+  BaseUtil baseProvider;
+  DBModel dbProvider;
   String _upiAddrError;
 
   // used for defining amount and UPI address of merchant where
@@ -73,6 +78,8 @@ class _UpiPaymentState extends State<UpiPayment> {
 
   @override
   Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context);
+    dbProvider = Provider.of<DBModel>(context);
     return Stack(
       children: [
         Container(
@@ -146,6 +153,10 @@ class _UpiPaymentState extends State<UpiPayment> {
         Padding(
             padding: EdgeInsets.only(top: 160),
             child: _buildUpiLayout()
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: _buildButton(),
         )
       ],
     );
@@ -262,6 +273,26 @@ class _UpiPaymentState extends State<UpiPayment> {
             ],
           ),
         ));
+  }
+
+  _buildButton() {
+    return Padding(
+        padding: EdgeInsets.all(20.0),
+        child:Material(
+          child: MaterialButton(
+            color: Colors.blueAccent,
+            child: Text('Get Tickets',
+              style: TextStyle(color: Colors.white, fontSize: 20.0),
+            ),
+            minWidth: double.infinity,
+            height: 50,
+            onPressed: () {
+              dbProvider.pushTicketRequest(baseProvider.myUser, 1);
+            },
+          ),
+          borderRadius: new BorderRadius.circular(80.0),
+        )
+    );
   }
 }
 

@@ -52,8 +52,9 @@ class DBModel extends ChangeNotifier {
       String _uid = user.uid;
       var rMap = {
         'user_id': _uid,
-        'manual': false,
+        'manual': true,
         'count': count,
+        'week_code': _getWeekCode(),
         'timestamp': FieldValue.serverTimestamp()
       };
       await _api.createTicketRequest(rMap);
@@ -65,14 +66,10 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<List<TambolaBoard>> refreshUserTickets(User user) async{
-    DateTime td = DateTime.now();
-    Timestamp today = Timestamp.fromDate(td);
     List<TambolaBoard> requestedBoards = [];
-    DateTime date = new DateTime.now();
-    int weekCde = date.year*100 + BaseUtil.getWeekNumber();
     try{
       String _id = user.uid;
-      QuerySnapshot querySnapshot = await _api.getValidUserTickets(_id, weekCde);
+      QuerySnapshot querySnapshot = await _api.getValidUserTickets(_id, _getWeekCode());
       if(querySnapshot != null && querySnapshot.documents.length > 0) {
         querySnapshot.documents.forEach((docSnapshot) {
           if(docSnapshot.exists)
@@ -104,5 +101,13 @@ class DBModel extends ChangeNotifier {
       log.error("Error fetch Dailypick details: " + e.toString());
       return null;
     }
+  }
+
+  int _getWeekCode() {
+    DateTime td = DateTime.now();
+    Timestamp today = Timestamp.fromDate(td);
+    DateTime date = new DateTime.now();
+
+    return date.year*100 + BaseUtil.getWeekNumber();
   }
 }

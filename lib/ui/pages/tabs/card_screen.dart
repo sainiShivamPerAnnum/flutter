@@ -216,45 +216,8 @@ class _HState extends State<PlayHome> {
           ),
         ),
         SizedBox(height: 5.0),
-        (baseProvider.weeklyTicksFetched)?
-        (baseProvider.userTicketsCount > 0)?CardSelector(
-            cards: baseProvider.userWeeklyBoards
-                .map((board) =>
-                TambolaBoardView(
-                  boardValueCde:
-                  '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A',
-                  calledDigits: (baseProvider.weeklyDrawFetched)?baseProvider.weeklyDigits.toList():[],
-                  boardColor: UiConstants.boardColors[
-                  rnd.nextInt(UiConstants.boardColors.length)],
-                ))
-                .toList(),
-            mainCardWidth: 380,
-            mainCardHeight: 128,
-            mainCardPadding: 4.0,
-            dropTargetWidth: 0,
-            cardAnimationDurationMs: 500,
-            onChanged: (i) => setState(() => _currentBoard = baseProvider.userWeeklyBoards[i])
-        ):Padding(
-          padding: EdgeInsets.all(10),
-          child: Container(
-            width: double.infinity,
-            height: 200,
-            child: Center(
-              child: Text('No tickets yet'),
-            )
-          )
-        ):Padding(  //Loader
-          padding: EdgeInsets.all(10),
-          child: Container(
-            width: double.infinity,
-            height: 200,
-            child: Center(
-              child: SpinKitWave(
-                color: UiConstants.primaryColor,
-              ),
-            ),
-          ),
-        ),
+        _buildCards(baseProvider.weeklyTicksFetched,
+            baseProvider.userWeeklyBoards,baseProvider.userTicketsCount),
         (baseProvider.weeklyTicksFetched && baseProvider.userTicketsCount>0)?
         Expanded(
             child: Amounts(_c)
@@ -267,6 +230,70 @@ class _HState extends State<PlayHome> {
         ),
       ],
     );
+  }
+
+  Widget _buildCards(bool fetchedFlag, List<TambolaBoard> boards, int count) {
+    Widget _widget;
+    if(!fetchedFlag) {
+      _widget = Padding(  //Loader
+        padding: EdgeInsets.all(10),
+        child: Container(
+          width: double.infinity,
+          height: 200,
+          child: Center(
+            child: SpinKitWave(
+              color: UiConstants.primaryColor,
+            ),
+          ),
+        ),
+      );
+    }
+    else if(boards==null || count==0) {
+      _widget = Padding(
+          padding: EdgeInsets.all(10),
+          child: Container(
+              width: double.infinity,
+              height: 200,
+              child: Center(
+                child: Text('No tickets yet'),
+              )
+          )
+      );
+    }
+    else if(count == 1) {
+      _widget = Padding(
+          padding: EdgeInsets.all(10),
+          child: Container(
+              width: double.infinity,
+              child: TambolaBoardView(
+                boardValueCde:baseProvider.userWeeklyBoards[0].val,
+                //boardValueCde:'3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A',
+                calledDigits: (baseProvider.weeklyDrawFetched)?baseProvider.weeklyDigits.toList():[],
+                boardColor: UiConstants.boardColors[
+                rnd.nextInt(UiConstants.boardColors.length)],
+              ))
+          );
+    }else{
+      _widget = CardSelector(
+          cards: baseProvider.userWeeklyBoards
+              .map((board) =>
+              TambolaBoardView(
+                boardValueCde:board.val,
+                //boardValueCde:'3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A',
+                calledDigits: (baseProvider.weeklyDrawFetched)?baseProvider.weeklyDigits.toList():[],
+                boardColor: UiConstants.boardColors[
+                rnd.nextInt(UiConstants.boardColors.length)],
+              ))
+              .toList(),
+          mainCardWidth: 380,
+          mainCardHeight: 128,
+          mainCardPadding: 4.0,
+          dropTargetWidth: 0,
+          cardAnimationDurationMs: 500,
+          onChanged: (i) => setState(() => _currentBoard = baseProvider.userWeeklyBoards[i])
+      );
+    }
+    return _widget;
   }
 
   Widget _buildDashboard() {

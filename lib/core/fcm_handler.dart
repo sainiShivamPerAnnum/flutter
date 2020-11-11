@@ -7,6 +7,7 @@ class FcmHandler extends ChangeNotifier {
   FcmHandler() {}
 
   Future<bool> handleMessage(Map data) async{
+    log.debug(data);
     return true;
   }
 

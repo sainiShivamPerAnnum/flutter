@@ -224,7 +224,7 @@ class TambolaValueObject {
       _indexInvalid = true;
     else {
       int bindex = char_part.codeUnitAt(0);
-      if (bindex > 96 && bindex < 122) {
+      if (bindex > 96 && bindex < 123) {
         _index = bindex - 97;
       } else if (bindex == 65) {
         _index = 26;
