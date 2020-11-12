@@ -1,4 +1,5 @@
 
+import 'package:felloapp/ui/elements/raffle_digit.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -89,6 +90,10 @@ class _ReferScreenState extends State<ReferScreen> {
             SafeArea(child: Padding(
                 padding: EdgeInsets.only(top: 140),
                 child: _buildReferCanvas(context))
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: SingleDigit(initialValue: 6,),
             )
 
           ],

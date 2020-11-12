@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/elements/raffle_digit.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,7 @@ class _UpiPaymentState extends State<UpiPayment> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   String _upiAddrError;
+  SingleDigit animDigit = SingleDigit(initialValue: 6);
 
   // used for defining amount and UPI address of merchant where
   // payment is to be received.
@@ -156,7 +158,7 @@ class _UpiPaymentState extends State<UpiPayment> {
         ),
         Align(
           alignment: Alignment.bottomCenter,
-          child: _buildButton(),
+          child: _buildDummy(),
         )
       ],
     );
@@ -275,6 +277,16 @@ class _UpiPaymentState extends State<UpiPayment> {
         ));
   }
 
+  _buildDummy() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        animDigit,
+        _buildButton()
+      ],
+    );
+  }
+
   _buildButton() {
     return Padding(
         padding: EdgeInsets.all(20.0),
@@ -287,7 +299,8 @@ class _UpiPaymentState extends State<UpiPayment> {
             minWidth: double.infinity,
             height: 50,
             onPressed: () {
-              dbProvider.pushTicketRequest(baseProvider.myUser, 1);
+              //dbProvider.pushTicketRequest(baseProvider.myUser, 1);
+              animDigit.setValue(90);
             },
           ),
           borderRadius: new BorderRadius.circular(80.0),

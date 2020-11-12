@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -6,6 +7,7 @@ import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/board_selector.dart';
+import 'package:felloapp/ui/elements/raffle_digit.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
 import 'package:felloapp/ui/elements/weekly_draw_dialog.dart';
 import 'package:felloapp/util/logger.dart';
@@ -43,6 +45,7 @@ class _HState extends State<PlayHome> {
   var rnd = new Random();
   BaseUtil baseProvider;
   DBModel dbProvider;
+  bool prizeButtonUp = false;
 
   @override
   void initState() {
@@ -50,6 +53,11 @@ class _HState extends State<PlayHome> {
     DefaultAssetBundle.of(context).loadString("images/in.json").then((d) {
       _cs = json.decode(d);
       setState(() => _c = _cs[0]);
+    });
+    new Timer(const Duration(seconds: 3), () {
+      setState(() {
+        prizeButtonUp = true;
+      });
     });
   }
 
@@ -210,24 +218,27 @@ class _HState extends State<PlayHome> {
         SizedBox(
           height: 12.0,
         ),
-        Padding(
-          padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
-          child: Text(
-            "This week\'s tickets",
-            style: Theme
-                .of(c)
-                .textTheme
-                .headline5
-                .copyWith(fontFamily: 'rms', color: UiConstants.accentColor),
+        Center(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
+            child: Text(
+              "This week\'s tickets",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w300,
+                color: Colors.blueGrey[800]
+              )
+            )
           ),
         ),
         SizedBox(height: 5.0),
         _buildCards(baseProvider.weeklyTicksFetched,
             baseProvider.userWeeklyBoards,baseProvider.userTicketsCount),
-        Padding(
+        (baseProvider.weeklyTicksFetched && baseProvider.userTicketsCount>0)?Padding(
           padding: EdgeInsets.only(left: 25),
           child: Text('ID: ${_currentBoard.id}'),
-        ),
+        ):Container(),
         (baseProvider.weeklyTicksFetched && baseProvider.userTicketsCount>0)?
         Expanded(
             child: Amounts(_currentBoard, baseProvider.weeklyDigits.toList())
@@ -440,11 +451,11 @@ class _HState extends State<PlayHome> {
     List<Widget> balls = [];
     if (draws != null && draws.getWeekdayDraws(day - 1) != null) {
       draws.getWeekdayDraws(day - 1).forEach((element) {
-        balls.add(_getDrawBall(element.toString()));
+        balls.add(_getDrawBall(element));
       });
     } else {
       for (int i = 0; i < 5; i++) {
-        balls.add(_getDrawBall('-'));
+        balls.add(_getDrawBall(0));
       }
     }
     return Row(
@@ -453,7 +464,33 @@ class _HState extends State<PlayHome> {
     );
   }
 
-  Widget _getDrawBall(String digit) {
+  Widget _getDrawBall(int digit) {
+    return Stack(
+      children: [
+        Container(
+          width: 40,
+          height: 40,
+          decoration: new BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+          ),
+        ),
+        Center(
+            child:(digit!=null && digit>0)?
+            Padding(
+              padding: EdgeInsets.only(left: 7, top:8),
+              child:SingleDigit(
+                initialValue: digit,
+              )
+            )
+            :Text(
+              digit.toString(),
+              style: TextStyle(fontSize: 22),
+              textAlign: TextAlign.center,
+            )
+        )
+      ],
+    );
     return Container(
       width: 40,
       height: 40,
@@ -462,44 +499,49 @@ class _HState extends State<PlayHome> {
         shape: BoxShape.circle,
       ),
       child: Center(
-          child: Text(
-            digit,
+          child:(digit!=null && digit>0)?
+          Stack(
+              children: [SingleDigit(initialValue: digit,)],
+          ):Text(
+            digit.toString(),
             style: TextStyle(fontSize: 22),
             textAlign: TextAlign.center,
-          )),
+          )
+      ),
     );
   }
 
   Widget _buildPrizeButton() {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 32),
-      child: Container(
-        height: 40,
-        width: 100,
-        decoration: BoxDecoration(
-          color: Colors.blueGrey[300],
-          boxShadow: [new BoxShadow(
-            color: Colors.black12,
-            offset: Offset.fromDirection(20, 7),
-            blurRadius: 5.0,
-          )],
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            stops: [0.1, 0.4],
-            colors: [
-              Colors.blueGrey[400],
-              Colors.blueGrey[400]
-            ],
-          ),
+    return AnimatedContainer(
+      height: 40,
+      width: 100,
+      duration: const Duration(milliseconds: 400),
+      margin: (prizeButtonUp)?EdgeInsets.only(bottom: 32):EdgeInsets.only(bottom: 0),
+      decoration: (prizeButtonUp)?BoxDecoration(
+        color: Colors.blueGrey[300],
+        boxShadow: [new BoxShadow(
+          color: Colors.black12,
+          offset: Offset.fromDirection(20, 7),
+          blurRadius: 5.0,
+        )],
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          stops: [0.1, 0.4],
+          colors: [
+            Colors.blueGrey[400],
+            Colors.blueGrey[400]
+          ],
         ),
-        child: Center(
-          child: Text('Prizes',
-            style: TextStyle(
+      ):BoxDecoration(
+        color: Colors.transparent
+      ),
+      child: Center(
+        child: Text('Prizes',
+          style: TextStyle(
               color: Colors.white70,
               fontSize: 16
-            ),
           ),
         ),
       ),
