@@ -167,6 +167,12 @@ class _HState extends State<PlayHome> {
           SafeArea(child: Padding(
             padding: EdgeInsets.only(top: 140),
               child: _buildCardCanvas(context))
+          ),
+          SafeArea(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: _buildPrizeButton()
+              )
           )
         ],
       )
@@ -202,10 +208,10 @@ class _HState extends State<PlayHome> {
           ),
         ),
         SizedBox(
-          height: 24.0,
+          height: 12.0,
         ),
         Padding(
-          padding: EdgeInsets.all(10.0),
+          padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
           child: Text(
             "This week\'s tickets",
             style: Theme
@@ -218,9 +224,13 @@ class _HState extends State<PlayHome> {
         SizedBox(height: 5.0),
         _buildCards(baseProvider.weeklyTicksFetched,
             baseProvider.userWeeklyBoards,baseProvider.userTicketsCount),
+        Padding(
+          padding: EdgeInsets.only(left: 25),
+          child: Text('ID: ${_currentBoard.id}'),
+        ),
         (baseProvider.weeklyTicksFetched && baseProvider.userTicketsCount>0)?
         Expanded(
-            child: Amounts(_c)
+            child: Amounts(_currentBoard, baseProvider.weeklyDigits.toList())
         ):Padding(  //Loader
           padding: EdgeInsets.all(10),
           child: Container(
@@ -273,6 +283,7 @@ class _HState extends State<PlayHome> {
                 rnd.nextInt(UiConstants.boardColors.length)],
               ))
           );
+      _currentBoard = baseProvider.userWeeklyBoards[0];
     }else{
       _widget = CardSelector(
           cards: baseProvider.userWeeklyBoards
@@ -458,60 +469,233 @@ class _HState extends State<PlayHome> {
           )),
     );
   }
+
+  Widget _buildPrizeButton() {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 32),
+      child: Container(
+        height: 40,
+        width: 100,
+        decoration: BoxDecoration(
+          color: Colors.blueGrey[300],
+          boxShadow: [new BoxShadow(
+            color: Colors.black12,
+            offset: Offset.fromDirection(20, 7),
+            blurRadius: 5.0,
+          )],
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            stops: [0.1, 0.4],
+            colors: [
+              Colors.blueGrey[400],
+              Colors.blueGrey[400]
+            ],
+          ),
+        ),
+        child: Center(
+          child: Text('Prizes',
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 16
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class Amounts extends StatelessWidget {
-  final Map _c;
+  final TambolaBoard _board;
+  final List<int> _digits;
 
-  Amounts(this._c);
+  Amounts(this._board, this._digits);
 
   @override
   Widget build(BuildContext cx) {
+    if (_board == null || _digits == null) return Container();
+
+    return ListView.builder(
+        physics: BouncingScrollPhysics(),
+        itemCount: 5,
+        itemBuilder:(context, index) {
+          switch(index) {
+            case 0: return _buildRow(cx, Icons.border_top, 'Top Row', '5/12', '10/12');
+            case 1: return _buildRow(cx, Icons.border_horizontal, 'Middle Row', '5/12', '10/12');
+            case 2: return _buildRow(cx, Icons.border_bottom, 'Bottom Row', '5/12', '10/12');
+            case 3: return _buildRow(cx, Icons.apps, 'Full House', '5/12', '10/12');
+            case 4: return _buildRow(cx, Icons.border_horizontal, 'Middle Row', '5/12', '10/12');
+            default: return _buildRow(cx, Icons.border_horizontal, 'Middle Row', '5/12', '10/12');
+          }
+          //return _buildRow(cx, Icons.border_horizontal, 'Middle Row', '5/12', '10/12');
+        },
+    );
+  }
+
+  Widget _buildRow(BuildContext cx, IconData _i, String _title, String _tOdd, String _oOdd) {
     var tt = Theme
         .of(cx)
         .textTheme;
     var pd = EdgeInsets.symmetric(vertical: 8.0, horizontal: 24.0);
-    return ListView.builder(
-      physics: BouncingScrollPhysics(),
-      itemCount: (_c['tx'] as List).length + 1,
-      itemBuilder: (c, i) {
-        if (i == 0) {
-          return Padding(
-            padding: pd,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text('Balance', style: tt.caption),
-                SizedBox(height: 8.0),
-                Text(_c['bl'], style: tt.display1.apply(color: Colors.white)),
-                SizedBox(height: 24.0),
-                Text('Today', style: tt.caption),
+    return Padding(
+      padding: pd,
+      child:Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Row(
+              children: [
+                Icon(_i, size: 24.0, color: Colors.blueGrey),
+                SizedBox(width: 9.0),
+                Text(_title, style: tt.caption.apply(color: Colors.blueGrey)),
               ],
             ),
-          );
-        }
-        var tx = _c['tx'][i - 1];
-        return Padding(
-          padding: pd,
-          child: Row(
-            children: <Widget>[
-              Icon(Icons.shopping_cart, size: 24.0, color: Colors.blueGrey),
-              SizedBox(width: 16.0),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(tx['m'], style: tt.title.apply(color: Colors.white)),
-                    Text(tx['t'], style: tt.caption)
-                  ],
-                ),
-              ),
-              Text(tx['a'], style: tt.body2.apply(color: Colors.deepOrange))
-            ],
-          ),
-        );
-      },
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(_tOdd, style: tt.title.apply(color: Colors.blueGrey)),
+                Text('This ticket', style: tt.caption.apply(color: Colors.blueGrey))
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(_oOdd, style: tt.title.apply(color: Colors.blueGrey)),
+                Text('Overall', style: tt.caption.apply(color: Colors.blueGrey))
+              ],
+            )]
+      )
     );
+  }
+}
+
+class Amountz extends StatelessWidget {
+  final TambolaBoard _board;
+  final List<int> _digits;
+
+  Amountz(this._board, this._digits);
+
+  @override
+  Widget build(BuildContext cx) {
+    if(_board == null || _digits == null) return Container();
+    var tt = Theme
+        .of(cx)
+        .textTheme;
+    var pd = EdgeInsets.symmetric(vertical: 8.0, horizontal: 24.0);
+    return Padding(
+      padding: pd,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('ID: ${_board.id}'),
+          Padding(
+            padding: EdgeInsets.only(top:10, bottom: 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: [
+                          Icon(Icons.border_horizontal, size: 24.0, color: Colors.blueGrey),
+                          SizedBox(width: 9.0),
+                          Text('Best Row', style: tt.caption.apply(color: Colors.blueGrey)),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('5/12', style: tt.title.apply(color: Colors.blueGrey)),
+                          Text('This ticket', style: tt.caption.apply(color: Colors.blueGrey))
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('5/12', style: tt.title.apply(color: Colors.blueGrey)),
+                          Text('Overall', style: tt.caption.apply(color: Colors.blueGrey))
+                        ],
+                      )]
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: [
+                          Icon(Icons.apps, size: 24.0, color: Colors.blueGrey),
+                          SizedBox(width: 9.0),
+                          Text('Full House', style: tt.caption.apply(color: Colors.blueGrey)),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('5/12', style: tt.title.apply(color: Colors.blueGrey)),
+                          Text('This ticket', style: tt.caption.apply(color: Colors.blueGrey))
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('5/12', style: tt.title.apply(color: Colors.blueGrey)),
+                          Text('Overall', style: tt.caption.apply(color: Colors.blueGrey))
+                        ],
+                      )]
+                )
+              ],
+            ),
+          )
+        ],
+      )
+    );
+
+    // return ListView.builder(
+    //   physics: BouncingScrollPhysics(),
+    //   itemCount: (_c['tx'] as List).length + 1,
+    //   itemBuilder: (c, i) {
+    //     if (i == 0) {
+    //       return Padding(
+    //         padding: pd,
+    //         child: Column(
+    //           crossAxisAlignment: CrossAxisAlignment.start,
+    //           children: <Widget>[
+    //             Text('Balance', style: tt.caption),
+    //             SizedBox(height: 8.0),
+    //             Text(_c['bl'], style: tt.display1.apply(color: Colors.white)),
+    //             SizedBox(height: 24.0),
+    //             Text('Today', style: tt.caption),
+    //           ],
+    //         ),
+    //       );
+    //     }
+    //     var tx = _c['tx'][i - 1];
+    //     return Padding(
+    //       padding: pd,
+    //       child: Row(
+    //         children: <Widget>[
+    //           Icon(Icons.shopping_cart, size: 24.0, color: Colors.blueGrey),
+    //           SizedBox(width: 16.0),
+    //           Expanded(
+    //             child: Column(
+    //               crossAxisAlignment: CrossAxisAlignment.start,
+    //               children: <Widget>[
+    //                 Text(tx['m'], style: tt.title.apply(color: Colors.white)),
+    //                 Text(tx['t'], style: tt.caption)
+    //               ],
+    //             ),
+    //           ),
+    //           Text(tx['a'], style: tt.body2.apply(color: Colors.deepOrange))
+    //         ],
+    //       ),
+    //     );
+    //   },
+    // );
   }
 }
 
