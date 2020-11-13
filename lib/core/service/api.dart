@@ -43,4 +43,8 @@ class Api {
 
     return query.getDocuments();
   }
+
+  Future<void> addCallbackDocument(String year, String monthCde, Map data) {
+    return _db.collection('callbacks').document(year).collection(monthCde).document().setData(data, merge:false);
+  }
 }

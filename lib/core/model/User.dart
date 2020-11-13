@@ -80,7 +80,8 @@ class User {
   }
 
   bool hasIncompleteDetails() {
-    return ((_mobile?.isEmpty??true) || (_name?.isEmpty??true) || (_email?.isEmpty??true));
+    //return ((_mobile?.isEmpty??true) || (_name?.isEmpty??true) || (_email?.isEmpty??true));
+    return ((_mobile?.isEmpty??true) || (_name?.isEmpty??true));
   }
 
   String get client_token => _client_token;

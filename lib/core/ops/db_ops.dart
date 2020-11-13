@@ -103,11 +103,48 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<bool> addCallbackRequest(String uid, String mobile) async{
+    try{
+      DateTime today = DateTime.now();
+      String year = today.year.toString();
+      String monthCde = getCurrentMonthCode(today.month);
+      int date = today.day;
+      Map<String, dynamic> data = {};
+      data['date'] = date;
+      data['user_id'] = uid;
+      data['mobile'] = mobile;
+      data['timestamp'] = FieldValue.serverTimestamp();
+
+      await _api.addCallbackDocument(year, monthCde, data);
+      return true;
+    }catch (e) {
+      log.error("Error adding callback doc: " + e.toString());
+      return false;
+    }
+  }
+
   int _getWeekCode() {
     DateTime td = DateTime.now();
     Timestamp today = Timestamp.fromDate(td);
     DateTime date = new DateTime.now();
 
     return date.year*100 + BaseUtil.getWeekNumber();
+  }
+
+  String getCurrentMonthCode(int month) {
+    switch(month) {
+      case 1: return "JAN";
+      case 2: return "FEB";
+      case 3: return "MAR";
+      case 4: return "APR";
+      case 5: return "MAY";
+      case 6: return "JUN";
+      case 7: return "JUL";
+      case 8: return "AUG";
+      case 9: return "SEP";
+      case 10: return "OCT";
+      case 11: return "NOV";
+      case 12: return "DEC";
+    }
   }
 }

@@ -28,6 +28,7 @@ class BaseUtil extends ChangeNotifier {
   bool weeklyTicksFetched = false;
   static const dummyTambolaVal = '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A';
   static const int TOTAL_DRAWS = 35;
+  static bool isDeviceOffline = false;
 
   BaseUtil() {
     //init();
@@ -115,6 +116,25 @@ class BaseUtil extends ChangeNotifier {
     )..show(context);
   }
 
+  showNoInternetAlert(BuildContext context) {
+    Flushbar(
+      flushbarPosition: FlushbarPosition.TOP,
+      flushbarStyle: FlushbarStyle.FLOATING,
+      icon: Icon(
+        Icons.error,
+        size: 28.0,
+        color: Colors.white,
+      ),
+      margin: EdgeInsets.all(10),
+      borderRadius: 8,
+      title: "No Internet",
+      message: "Please check your network connection and try again",
+      duration: Duration(seconds: 2),
+      backgroundColor: Colors.red,
+      boxShadows: [BoxShadow(color: Colors.red[800], offset: Offset(0.0, 2.0), blurRadius: 3.0,)],
+    )..show(context);
+  }
+
   AuthCredential generateAuthCredential(String verificationId, String smsCode) {
     final AuthCredential credential = PhoneAuthProvider.getCredential(
       verificationId: verificationId,
@@ -132,6 +152,19 @@ class BaseUtil extends ChangeNotifier {
       log.error("User Authentication failed with credential: Error: " + e.toString());
       return false;
     });
+  }
+
+  Future<bool> signOut() async{
+    try{
+      await FirebaseAuth.instance.signOut();
+      log.debug('Signed Out Firebase User');
+      await _lModel.deleteLocalAppData();
+      log.debug('Cleared local cache');
+      return true;
+    }catch(e) {
+      log.error('Failed to clear data/sign out user: ' + e.toString());
+      return false;
+    }
   }
 
   User get myUser => _myUser;

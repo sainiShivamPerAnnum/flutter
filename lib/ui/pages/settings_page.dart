@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
+import 'package:felloapp/ui/elements/contact_dialog.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -86,59 +88,59 @@ class _OptionsList extends State<SettingsPage> {
         break;
       }
       case 'contUs': {
-        // showDialog(
-        //     context: context,
-        //     builder: (BuildContext dialogContext) => ContactUsDialog(
-        //       isResident: (baseProvider.isSignedIn() && baseProvider.isActiveUser()),
-        //       isUnavailable: BaseUtil.isDeviceOffline,
-        //       onClick: () {
-        //         if(BaseUtil.isDeviceOffline) {
-        //           baseProvider.showNoInternetAlert(context);
-        //           return;
-        //         }
-        //         if(baseProvider.isSignedIn() && baseProvider.isActiveUser()) {
-        //           reqProvider.requestCallback(baseProvider.firebaseUser.uid, baseProvider.myUser.mobile).then((flag) {
-        //             if(flag) {
-        //               Navigator.of(context).pop();
-        //               baseProvider.showPositiveAlert('Callback placed!', 'We\'ll contact you soon on your registered mobile', context);
-        //             }
-        //           });
-        //         }else{
-        //           baseProvider.showNegativeAlert('Unavailable', 'Callbacks are reserved for active users', context);
-        //         }
-        //       },
-        //     )
-        // );
+        showDialog(
+            context: context,
+            builder: (BuildContext dialogContext) => ContactUsDialog(
+              isResident: (baseProvider.isSignedIn() && baseProvider.isActiveUser()),
+              isUnavailable: BaseUtil.isDeviceOffline,
+              onClick: () {
+                if(BaseUtil.isDeviceOffline) {
+                  baseProvider.showNoInternetAlert(context);
+                  return;
+                }
+                if(baseProvider.isSignedIn() && baseProvider.isActiveUser()) {
+                  reqProvider.addCallbackRequest(baseProvider.firebaseUser.uid, baseProvider.myUser.mobile).then((flag) {
+                    if(flag) {
+                      Navigator.of(context).pop();
+                      baseProvider.showPositiveAlert('Callback placed!', 'We\'ll contact you soon on your registered mobile', context);
+                    }
+                  });
+                }else{
+                  baseProvider.showNegativeAlert('Unavailable', 'Callbacks are reserved for active users', context);
+                }
+              },
+            )
+        );
         break;
       }
       case 'signOut': {
-        // showDialog(
-        //     context: context,
-        //     builder: (BuildContext dialogContext) => ConfirmActionDialog(
-        //       title: 'Confirm',
-        //       description: 'Are you sure you want to sign out?',
-        //       buttonText: 'Yes',
-        //       confirmAction: () {
-        //         HapticFeedback.vibrate();
-        //         baseProvider.signOut().then((flag) {
-        //           if(flag) {
-        //             log.debug('Sign out process complete');
-        //             Navigator.of(context).pop();
-        //             Navigator.of(context).pushReplacementNamed('/launcher');
-        //             baseProvider.showPositiveAlert('Signed out', 'Hope to see you soon', context);
-        //           }else{
-        //             Navigator.of(context).pop();
-        //             baseProvider.showNegativeAlert('Sign out failed', 'Couldn\'t signout. Please try again', context);
-        //             log.error('Sign out process failed');
-        //           }
-        //         });
-        //       },
-        //       cancelAction: () {
-        //         HapticFeedback.vibrate();
-        //         Navigator.of(context).pop();
-        //       },
-        //     )
-        // );
+        showDialog(
+            context: context,
+            builder: (BuildContext dialogContext) => ConfirmActionDialog(
+              title: 'Confirm',
+              description: 'Are you sure you want to sign out?',
+              buttonText: 'Yes',
+              confirmAction: () {
+                HapticFeedback.vibrate();
+                baseProvider.signOut().then((flag) {
+                  if(flag) {
+                    log.debug('Sign out process complete');
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushReplacementNamed('/launcher');
+                    baseProvider.showPositiveAlert('Signed out', 'Hope to see you soon', context);
+                  }else{
+                    Navigator.of(context).pop();
+                    baseProvider.showNegativeAlert('Sign out failed', 'Couldn\'t signout. Please try again', context);
+                    log.error('Sign out process failed');
+                  }
+                });
+              },
+              cancelAction: () {
+                HapticFeedback.vibrate();
+                Navigator.of(context).pop();
+              },
+            )
+        );
         break;
       }
     }
@@ -146,8 +148,8 @@ class _OptionsList extends State<SettingsPage> {
 
   List<OptionDetail> _loadOptionsList() {
     return [
-      new OptionDetail(key: 'upAddress', value: 'Update Address', isEnabled: (baseProvider.isSignedIn() && baseProvider.isActiveUser())),
-      new OptionDetail(key: 'abUs', value: 'About ${Constants.APP_NAME}', isEnabled: true),
+     // new OptionDetail(key: 'upAddress', value: 'Update Address', isEnabled: (baseProvider.isSignedIn() && baseProvider.isActiveUser())),
+      //new OptionDetail(key: 'abUs', value: 'About ${Constants.APP_NAME}', isEnabled: true),
       new OptionDetail(key: 'contUs', value: 'Contact Us', isEnabled: true),
       new OptionDetail(key: 'signOut', value: 'Sign Out', isEnabled: (baseProvider.isSignedIn())),
     ];

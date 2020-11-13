@@ -438,24 +438,6 @@ class _HState extends State<PlayHome> {
         )
       ],
     );
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: new BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-      ),
-      child: Center(
-          child:(digit!=null && digit>0)?
-          Stack(
-              children: [SingleDigit(initialValue: digit,)],
-          ):Text(
-            digit.toString(),
-            style: TextStyle(fontSize: 22),
-            textAlign: TextAlign.center,
-          )
-      ),
-    );
   }
 
   Widget _buildPrizeButton() {
@@ -567,7 +549,7 @@ class Odds extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   Text(_oOdd, style: tt.title.apply(color: Colors.blueGrey)),
-                  Text('Overall\t\t\t',
+                  Text('Best ticket',
                       textAlign: TextAlign.center,
                       style: tt.caption.apply(color: Colors.blueGrey)
                   )
