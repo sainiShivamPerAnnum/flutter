@@ -6,6 +6,8 @@ import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/board_selector.dart';
+import 'package:felloapp/ui/elements/guide_dialog.dart';
+import 'package:felloapp/ui/elements/prize_dialog.dart';
 import 'package:felloapp/ui/elements/raffle_digit.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
 import 'package:felloapp/ui/elements/weekly_draw_dialog.dart';
@@ -131,7 +133,10 @@ class _HState extends State<PlayHome> {
               icon: Icon(Icons.help_outline),
               onPressed: () {
                 HapticFeedback.vibrate();
-                //Navigator.of(context).pushNamed(Settings.id);
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => GuideDialog()
+                );
               },
             ),
           ),
@@ -151,7 +156,7 @@ class _HState extends State<PlayHome> {
 
                   ),
                   Text(
-                    'tickets',
+                    (baseProvider.userTicketsCount==1)?'ticket':'tickets',
                     style: TextStyle(
                         fontSize: 18,
                         color: Colors.white
@@ -341,90 +346,6 @@ class _HState extends State<PlayHome> {
     return _widget;
   }
 
-  Widget _buildDashboard() {
-    return Padding(
-      padding: EdgeInsets.all(10.0),
-      child: Container(
-        width: double.infinity,
-        height: 100,
-        decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.all(Radius.circular(20))),
-        child:Stack(
-          children: [
-            Center(
-            child:VerticalDivider(
-              thickness: 1.5,
-              endIndent: 10,indent: 10,
-            )),
-            Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                    child: Container(
-                      //color: Colors.black54,
-                        width: 150,
-                        height: 3,
-                        child: Divider(
-                          color: Colors.grey[300],
-                          thickness: 1.5,
-                        ),
-                  )
-            )),
-            Center(
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '23',
-                            style: TextStyle(fontSize: 38),
-                            textAlign: TextAlign.left,
-                          ),
-                          Text(
-                            'tickets',
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
-                      )
-                    ),
-                    // VerticalDivider(thickness: 1.5,
-                    //   endIndent: 10,indent: 10,
-                    // ),
-                    Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text('Rules',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.black54
-                              ),
-                            ),
-                            Text('Prizes',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black54
-                              ),
-                            ),
-                          ],)
-                    ),
-                  ]),
-            ),
-          ],
-        )
-      ),
-    );
-  }
-
   Widget _buildTodaysPicksWidget(DailyPick draws) {
     DateTime date = DateTime.now();
     return Padding(
@@ -506,10 +427,13 @@ class _HState extends State<PlayHome> {
                 initialValue: digit,
               )
             )
-            :Text(
-              digit.toString(),
-              style: TextStyle(fontSize: 22),
-              textAlign: TextAlign.center,
+            :Padding(
+              padding: EdgeInsets.only(left: 16, top:7),
+              child:Text(
+                '-',
+                style: TextStyle(fontSize: 22),
+                textAlign: TextAlign.center,
+              )
             )
         )
       ],
@@ -560,13 +484,22 @@ class _HState extends State<PlayHome> {
       ):BoxDecoration(
         color: Colors.transparent
       ),
-      child: Center(
-        child: Text('Prizes',
-          style: TextStyle(
-              color: Colors.white70,
-              fontSize: 16
+      child: InkWell(
+          child: Center(
+            child: Text('Prizes',
+              style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 16
+              ),
+            ),
           ),
-        ),
+        onTap: () {
+            HapticFeedback.vibrate();
+            showDialog(
+                context: context,
+                builder: (BuildContext context) => PrizeDialog()
+            );
+        },
       ),
     );
   }
