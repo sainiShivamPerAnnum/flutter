@@ -8,6 +8,7 @@ import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/pages/tabs/home_sc
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding_widget.dart';
+import 'package:felloapp/ui/pages/settings_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
           '/gametab': (BuildContext context) => MyHomePage(title: Constants.APP_NAME),
           '/savetab': (BuildContext context) => MyHomePage(title: Constants.APP_NAME),
           '/refertab': (BuildContext context) => MyHomePage(title: Constants.APP_NAME),
+          '/settings': (BuildContext context) => SettingsPage(),
         },
       ),
     );

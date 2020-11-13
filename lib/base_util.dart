@@ -43,18 +43,18 @@ class BaseUtil extends ChangeNotifier {
   static Widget getAppBar() {
     return AppBar(
       elevation: 1.0,
-      backgroundColor: Colors.white70,
+      backgroundColor: UiConstants.primaryColor,
       iconTheme: IconThemeData(
-        color: Colors.black, //change your color here
+        color: UiConstants.accentColor, //change your color here
       ),
       title: Text('${Constants.APP_NAME}',
           style: TextStyle(
-              color: Colors.black,
+              color: UiConstants.accentColor,
               fontWeight: FontWeight.w700,
               fontSize: 30.0)),
       bottom: PreferredSize(
           child: Container(
-            color: Colors.blue[100],
+            color: Colors.blueGrey[100],
             height: 25.0,
             child: Padding(
                 padding: EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
@@ -158,5 +158,9 @@ class BaseUtil extends ChangeNotifier {
     //log.debug("Current week number: " + n.toString());
     return n;
   }
+
+  bool isSignedIn() => (firebaseUser != null && firebaseUser.uid != null);
+
+  bool isActiveUser() => (_myUser != null && !_myUser.hasIncompleteDetails());
 
 }

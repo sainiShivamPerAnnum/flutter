@@ -119,6 +119,7 @@ class _HState extends State<PlayHome> {
               icon: Icon(Icons.settings),
               onPressed: () {
                 HapticFeedback.vibrate();
+                Navigator.of(context).pushNamed('/settings');
               },
             ),
           ),
@@ -225,7 +226,7 @@ class _HState extends State<PlayHome> {
             baseProvider.userWeeklyBoards,baseProvider.userTicketsCount),
         (baseProvider.weeklyTicksFetched && baseProvider.userTicketsCount>0)?Padding(
           padding: EdgeInsets.only(left: 25),
-          child: Text('ID: ${_currentBoard.id}'),
+          child: Text('Ticket #${_getTicketNumber(_currentBoard.id)}'),
         ):Container(),
         (baseProvider.weeklyTicksFetched && baseProvider.userTicketsCount>0)?
         Expanded(
@@ -239,6 +240,21 @@ class _HState extends State<PlayHome> {
         ),
       ],
     );
+  }
+
+  String _getTicketNumber(String id) {
+    try {
+      if (id != null && id.startsWith('pg')) {
+        String x = id.replaceAll('pg', '');
+        List<String> y = x.split('sh');
+        int a = int.parse(y[0]);
+        int b = int.parse(y[1]);
+        return (a*100 + b).toString();
+      }
+    }catch(e) {
+
+    }
+    return 'NA';
   }
 
   Widget _buildCards(bool fetchedFlag, List<TambolaBoard> boards, int count) {
