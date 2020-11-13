@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,10 +14,10 @@ class TambolaBoardView extends StatefulWidget {
   final List<int> calledDigits;
 
   @override
-  State<StatefulWidget> createState() => _TambolaBoardState();
+  State<StatefulWidget> createState() => TambolaBoardState();
 }
 
-class _TambolaBoardState extends State<TambolaBoardView> {
+class TambolaBoardState extends State<TambolaBoardView> {
   Log log = new Log('TambolaBoard');
   static final int boardHeight = 3;
   static final int boardLength = 9;
@@ -196,24 +197,68 @@ class _TambolaBoardState extends State<TambolaBoardView> {
     }
   }
 
-  double getTopRowOdds() {
+  String getRowOdds(int rowIndex) {
+    if(tambolaBoard==null || tambolaBoard.isEmpty
+        || widget.calledDigits==null || widget.calledDigits.isEmpty) return 'NA';
+    int digitsLeftToBeAnnounced = BaseUtil.TOTAL_DRAWS-widget.calledDigits.length;
+    int rowCalledCount = 0;
+    for(int i=0; i<boardLength; i++) {
+      if(tambolaBoard[rowIndex][i] !=0 && widget.calledDigits.contains(tambolaBoard[rowIndex][i]))rowCalledCount++;
+    }
+    int rowLeftCount = 5-rowCalledCount;
 
+    if(rowLeftCount==0) return 'HIT!';
+    else if(rowLeftCount>digitsLeftToBeAnnounced)return '0';
+    else return '$rowLeftCount/$digitsLeftToBeAnnounced';
   }
 
-  double getMiddleRowOdds() {
+  String getCornerOdds() {
+    if(tambolaBoard==null || tambolaBoard.isEmpty
+        || widget.calledDigits==null || widget.calledDigits.isEmpty) return 'NA';
+    int cornerA = 0;
+    int cornerB = 0;
+    int cornerC = 0;
+    int cornerD = 0;
+    int cornerCount = 0;
+    for(int i=0; i<boardHeight; i++) {
+      for(int j=0; j<boardLength; j++) {
+        if(tambolaBoard[i][j] != 0) {
+          if(i==0 && cornerA == 0)cornerA = tambolaBoard[i][j];
+          if(i==0)cornerB = tambolaBoard[i][j];
+          if(i==2 && cornerC == 0)cornerC = tambolaBoard[i][j];
+          if(i==2)cornerD = tambolaBoard[i][j];
+        }
+      }
+    }
+    if(widget.calledDigits.contains(cornerA))cornerCount++;
+    if(widget.calledDigits.contains(cornerB))cornerCount++;
+    if(widget.calledDigits.contains(cornerC))cornerCount++;
+    if(widget.calledDigits.contains(cornerD))cornerCount++;
+    int digitsLeftToBeAnnounced = BaseUtil.TOTAL_DRAWS-widget.calledDigits.length;
+    int cornerLeftCount = 4-cornerCount;
 
+    if(cornerLeftCount==0) return 'HIT!';
+    else if(cornerLeftCount>digitsLeftToBeAnnounced) return '0';
+    else return '$cornerLeftCount left';
   }
 
-  double getBottomRowOdds() {
+  String getFullHouseOdds() {
+    if(tambolaBoard==null || tambolaBoard.isEmpty
+        || widget.calledDigits==null || widget.calledDigits.isEmpty) return 'NA';
+    int fullHouseCount = 0;
+    int digitsLeftToBeAnnounced = BaseUtil.TOTAL_DRAWS-widget.calledDigits.length;
+    for(int i=0; i<boardHeight; i++) {
+      for(int j=0; j<boardLength; j++) {
+        if(tambolaBoard[i][j] != 0) {
+          if(widget.calledDigits.contains(tambolaBoard[i][j]))fullHouseCount++;
+        }
+      }
+    }
+    int fullHouseLeftCount = 15-fullHouseCount;
 
-  }
-
-  double getCornerOdds() {
-
-  }
-
-  double getFullHouseOdds() {
-
+    if(fullHouseLeftCount==0) return 'HIT!';
+    else if(fullHouseLeftCount>digitsLeftToBeAnnounced) return '0';
+    else return '$fullHouseLeftCount/$digitsLeftToBeAnnounced';
   }
 }
 
