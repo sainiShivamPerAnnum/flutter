@@ -48,7 +48,7 @@ class _SingleDigitState extends State<SingleDigit> with TickerProviderStateMixin
     int x = this.currentValue;
     this.currentValue = 0;
     _initAnimation();
-    new Timer(const Duration(seconds: 2), () {
+    new Timer(const Duration(seconds: 1), () {
       setState(() {
         this.currentValue = x;
         _initAnimation();
@@ -58,7 +58,7 @@ class _SingleDigitState extends State<SingleDigit> with TickerProviderStateMixin
 
   _initAnimation() {
     controller = AnimationController(
-        duration: const Duration(milliseconds: 1100), vsync: this);
+        duration: const Duration(milliseconds: 1400), vsync: this);
     animation = Tween<double>(
         begin: previousValue.toDouble(),
         end: currentValue.toDouble())

@@ -195,6 +195,26 @@ class _TambolaBoardState extends State<TambolaBoardView> {
           'Invalid decomposition of boardCode: ${encodedTambolaList.toString()}');
     }
   }
+
+  double getTopRowOdds() {
+
+  }
+
+  double getMiddleRowOdds() {
+
+  }
+
+  double getBottomRowOdds() {
+
+  }
+
+  double getCornerOdds() {
+
+  }
+
+  double getFullHouseOdds() {
+
+  }
 }
 
 class TambolaValueObject {

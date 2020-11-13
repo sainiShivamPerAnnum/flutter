@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
@@ -20,12 +19,7 @@ import 'package:provider/provider.dart';
 class MyCardApp extends StatelessWidget {
   @override
   Widget build(BuildContext c) {
-    var t = Theme
-        .of(c)
-        .textTheme
-        .apply(displayColor: Colors.white70, bodyColor: Colors.white70);
     return Scaffold(
-      //theme: ThemeData(brightness: Brightness.dark, textTheme: t),
       body: PlayHome(),
     );
   }
@@ -38,10 +32,9 @@ class PlayHome extends StatefulWidget {
 
 class _HState extends State<PlayHome> {
   Log log = new Log('CardScreen');
-  List _cs;
-  Map _c;
   TambolaBoard _currentBoard;
-  double _w = 0;
+  TambolaBoardView _currentBoardView;
+  List<TambolaBoardView> _tambolaBoardViews;
   var rnd = new Random();
   BaseUtil baseProvider;
   DBModel dbProvider;
@@ -50,10 +43,6 @@ class _HState extends State<PlayHome> {
   @override
   void initState() {
     super.initState();
-    DefaultAssetBundle.of(context).loadString("images/in.json").then((d) {
-      _cs = json.decode(d);
-      setState(() => _c = _cs[0]);
-    });
     new Timer(const Duration(seconds: 3), () {
       setState(() {
         prizeButtonUp = true;
@@ -80,6 +69,16 @@ class _HState extends State<PlayHome> {
             baseProvider.userWeeklyBoards = tickets;
             baseProvider.userTicketsCount = tickets.length;
             log.debug('User weekly tickets fetched:: Count: ${baseProvider.userWeeklyBoards.length}');
+
+            _tambolaBoardViews = [];
+            baseProvider.userWeeklyBoards.map((ticket) {
+              TambolaBoardView(
+                boardValueCde:ticket.val,
+                calledDigits: (baseProvider.weeklyDrawFetched)?baseProvider.weeklyDigits.toList():[],
+                boardColor: UiConstants.boardColors[
+                rnd.nextInt(UiConstants.boardColors.length)],
+              );
+            });
             setState(() {});
           }
         });
@@ -92,12 +91,6 @@ class _HState extends State<PlayHome> {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
     _init();
-    if (_cs == null) return Container();
-    if (_w <= 0) _w = MediaQuery
-        .of(context)
-        .size
-        .width - 40.0;
-    //return Scaffold(body:
     return Scaffold(
       //debugShowCheckedModeBanner: false,
       //padding: EdgeInsets.only(top: 48.0),
@@ -241,7 +234,7 @@ class _HState extends State<PlayHome> {
         ):Container(),
         (baseProvider.weeklyTicksFetched && baseProvider.userTicketsCount>0)?
         Expanded(
-            child: Amounts(_currentBoard, baseProvider.weeklyDigits.toList())
+            child: Odds(_currentBoardView, baseProvider.weeklyDigits.toList())
         ):Padding(  //Loader
           padding: EdgeInsets.all(10),
           child: Container(
@@ -282,37 +275,47 @@ class _HState extends State<PlayHome> {
       );
     }
     else if(count == 1) {
+      _tambolaBoardViews = [];
+      _tambolaBoardViews.add(
+          TambolaBoardView(
+            boardValueCde:baseProvider.userWeeklyBoards[0].val,
+            calledDigits: (baseProvider.weeklyDrawFetched)?baseProvider.weeklyDigits.toList():[],
+            boardColor: UiConstants.boardColors[
+            rnd.nextInt(UiConstants.boardColors.length)],
+          )
+      );
+      _currentBoardView = _tambolaBoardViews[0];
+      _currentBoard = baseProvider.userWeeklyBoards[0];
       _widget = Padding(
           padding: EdgeInsets.all(10),
           child: Container(
               width: double.infinity,
-              child: TambolaBoardView(
-                boardValueCde:baseProvider.userWeeklyBoards[0].val,
-                //boardValueCde:'3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A',
-                calledDigits: (baseProvider.weeklyDrawFetched)?baseProvider.weeklyDigits.toList():[],
-                boardColor: UiConstants.boardColors[
-                rnd.nextInt(UiConstants.boardColors.length)],
-              ))
+              child: _tambolaBoardViews[0])
           );
-      _currentBoard = baseProvider.userWeeklyBoards[0];
     }else{
-      _widget = CardSelector(
-          cards: baseProvider.userWeeklyBoards
-              .map((board) =>
+      _tambolaBoardViews = [];
+      baseProvider.userWeeklyBoards.map((board) {
+          _tambolaBoardViews.add(
               TambolaBoardView(
                 boardValueCde:board.val,
-                //boardValueCde:'3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A',
                 calledDigits: (baseProvider.weeklyDrawFetched)?baseProvider.weeklyDigits.toList():[],
                 boardColor: UiConstants.boardColors[
                 rnd.nextInt(UiConstants.boardColors.length)],
-              ))
-              .toList(),
+              )
+          );
+      });
+      _widget = CardSelector(
+          cards: _tambolaBoardViews.toList(),
           mainCardWidth: 380,
           mainCardHeight: 128,
           mainCardPadding: 4.0,
           dropTargetWidth: 0,
           cardAnimationDurationMs: 500,
-          onChanged: (i) => setState(() => _currentBoard = baseProvider.userWeeklyBoards[i])
+          onChanged: (i){
+            _currentBoard = baseProvider.userWeeklyBoards[i];
+            _currentBoardView = _tambolaBoardViews[i];
+            setState(() {});
+          }
       );
     }
     return _widget;
@@ -549,15 +552,15 @@ class _HState extends State<PlayHome> {
   }
 }
 
-class Amounts extends StatelessWidget {
-  final TambolaBoard _board;
+class Odds extends StatelessWidget {
+  final TambolaBoardView _boardView;
   final List<int> _digits;
 
-  Amounts(this._board, this._digits);
+  Odds(this._boardView, this._digits);
 
   @override
   Widget build(BuildContext cx) {
-    if (_board == null || _digits == null) return Container();
+    if (_boardView == null || _digits == null) return Container();
 
     return ListView.builder(
         physics: BouncingScrollPhysics(),
@@ -567,8 +570,8 @@ class Amounts extends StatelessWidget {
             case 0: return _buildRow(cx, Icons.border_top, 'Top Row', '5/12', '10/12');
             case 1: return _buildRow(cx, Icons.border_horizontal, 'Middle Row', '5/12', '10/12');
             case 2: return _buildRow(cx, Icons.border_bottom, 'Bottom Row', '5/12', '10/12');
-            case 3: return _buildRow(cx, Icons.apps, 'Full House', '5/12', '10/12');
-            case 4: return _buildRow(cx, Icons.border_horizontal, 'Middle Row', '5/12', '10/12');
+            case 3: return _buildRow(cx, Icons.border_outer, 'Corners', '5/12', '10/12');
+            case 4: return _buildRow(cx, Icons.apps, 'Full House', '5/12', '10/12');
             default: return _buildRow(cx, Icons.border_horizontal, 'Middle Row', '5/12', '10/12');
           }
           //return _buildRow(cx, Icons.border_horizontal, 'Middle Row', '5/12', '10/12');
@@ -613,180 +616,3 @@ class Amounts extends StatelessWidget {
   }
 }
 
-class Amountz extends StatelessWidget {
-  final TambolaBoard _board;
-  final List<int> _digits;
-
-  Amountz(this._board, this._digits);
-
-  @override
-  Widget build(BuildContext cx) {
-    if(_board == null || _digits == null) return Container();
-    var tt = Theme
-        .of(cx)
-        .textTheme;
-    var pd = EdgeInsets.symmetric(vertical: 8.0, horizontal: 24.0);
-    return Padding(
-      padding: pd,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('ID: ${_board.id}'),
-          Padding(
-            padding: EdgeInsets.only(top:10, bottom: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Row(
-                        children: [
-                          Icon(Icons.border_horizontal, size: 24.0, color: Colors.blueGrey),
-                          SizedBox(width: 9.0),
-                          Text('Best Row', style: tt.caption.apply(color: Colors.blueGrey)),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('5/12', style: tt.title.apply(color: Colors.blueGrey)),
-                          Text('This ticket', style: tt.caption.apply(color: Colors.blueGrey))
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('5/12', style: tt.title.apply(color: Colors.blueGrey)),
-                          Text('Overall', style: tt.caption.apply(color: Colors.blueGrey))
-                        ],
-                      )]
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Row(
-                        children: [
-                          Icon(Icons.apps, size: 24.0, color: Colors.blueGrey),
-                          SizedBox(width: 9.0),
-                          Text('Full House', style: tt.caption.apply(color: Colors.blueGrey)),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('5/12', style: tt.title.apply(color: Colors.blueGrey)),
-                          Text('This ticket', style: tt.caption.apply(color: Colors.blueGrey))
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('5/12', style: tt.title.apply(color: Colors.blueGrey)),
-                          Text('Overall', style: tt.caption.apply(color: Colors.blueGrey))
-                        ],
-                      )]
-                )
-              ],
-            ),
-          )
-        ],
-      )
-    );
-
-    // return ListView.builder(
-    //   physics: BouncingScrollPhysics(),
-    //   itemCount: (_c['tx'] as List).length + 1,
-    //   itemBuilder: (c, i) {
-    //     if (i == 0) {
-    //       return Padding(
-    //         padding: pd,
-    //         child: Column(
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: <Widget>[
-    //             Text('Balance', style: tt.caption),
-    //             SizedBox(height: 8.0),
-    //             Text(_c['bl'], style: tt.display1.apply(color: Colors.white)),
-    //             SizedBox(height: 24.0),
-    //             Text('Today', style: tt.caption),
-    //           ],
-    //         ),
-    //       );
-    //     }
-    //     var tx = _c['tx'][i - 1];
-    //     return Padding(
-    //       padding: pd,
-    //       child: Row(
-    //         children: <Widget>[
-    //           Icon(Icons.shopping_cart, size: 24.0, color: Colors.blueGrey),
-    //           SizedBox(width: 16.0),
-    //           Expanded(
-    //             child: Column(
-    //               crossAxisAlignment: CrossAxisAlignment.start,
-    //               children: <Widget>[
-    //                 Text(tx['m'], style: tt.title.apply(color: Colors.white)),
-    //                 Text(tx['t'], style: tt.caption)
-    //               ],
-    //             ),
-    //           ),
-    //           Text(tx['a'], style: tt.body2.apply(color: Colors.deepOrange))
-    //         ],
-    //       ),
-    //     );
-    //   },
-    // );
-  }
-}
-
-class Card extends StatelessWidget {
-  final Map _c;
-
-  Card(this._c);
-
-  @override
-  Widget build(BuildContext context) {
-    var tt = Theme
-        .of(context)
-        .textTheme;
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12.0),
-      child: Container(
-        color: Color(_c['co']),
-        child: Stack(
-          children: <Widget>[
-            Image.asset(
-              'images/${_c['txt']}.png',
-              fit: BoxFit.cover,
-              height: double.infinity,
-              width: double.infinity,
-            ),
-            Padding(
-              padding: EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(_c['bk'], style: tt.title),
-                  Text(_c['ty'].toUpperCase(), style: tt.caption),
-                  Expanded(child: Container()),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Expanded(
-                        child: Text(_c['nm'],
-                            style: tt.subhead, overflow: TextOverflow.ellipsis),
-                      ),
-                      Image.asset('images/${_c['br']}.png', width: 48.0)
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

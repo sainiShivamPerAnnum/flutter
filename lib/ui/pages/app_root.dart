@@ -1,10 +1,7 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/pages/tabs/card_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
-import 'package:felloapp/ui/pages/tabs/play_tab.dart';
 import 'package:felloapp/ui/pages/tabs/refer_screen.dart';
-import 'package:felloapp/ui/pages/tabs/test_screen.dart';
 import 'package:felloapp/ui/pages/tabs/upi_screen.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
@@ -23,9 +20,10 @@ class _AppRootState extends State<AppRoot> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async => Navigator.of(context).maybePop(),
-        child:
+    return
+      // WillPopScope(
+      //   onWillPop: () async => Navigator.of(context).maybePop(),
+      //   child:
         Scaffold(
           // appBar: BaseUtil.getAppBar(),
           body: Center(
@@ -87,7 +85,8 @@ class _AppRootState extends State<AppRoot> {
                 ),
               ]
           ),
-        ));
+    //    )
+    );
   }
 
   Widget getTab(int index, BuildContext context) {
