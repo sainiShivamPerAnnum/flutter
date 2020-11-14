@@ -38,6 +38,7 @@ class _HState extends State<PlayHome> {
   TambolaBoardView _currentBoardView;
   //GlobalKey<TambolaBoardState> _currentKey;
   List<TambolaBoardView> _tambolaBoardViews;
+  List<TambolaBoard> _bestTambolaBoards;
   //List<GlobalKey<TambolaBoardState>> _boardKeys;
   var rnd = new Random();
   BaseUtil baseProvider;
@@ -258,7 +259,7 @@ class _HState extends State<PlayHome> {
         ):Container(),
         (baseProvider.weeklyTicksFetched && baseProvider.userTicketsCount>0 && baseProvider.weeklyDrawFetched)?
         Expanded(
-            child:Odds(baseProvider.weeklyDigits.toList(), _currentBoard)
+            child:Odds(baseProvider.weeklyDigits.toList(), _currentBoard, _refreshBestBoards())
             //Odds(_currentBoardView, baseProvider.weeklyDigits.toList(), _currentKey)
         ):Padding(  //Loader
           padding: EdgeInsets.all(10),
@@ -269,6 +270,44 @@ class _HState extends State<PlayHome> {
         ),
       ],
     );
+  }
+
+  List<TambolaBoard> _refreshBestBoards() {
+    if(baseProvider.userWeeklyBoards==null || baseProvider.userWeeklyBoards.isEmpty
+    || baseProvider.weeklyDigits==null || baseProvider.weeklyDigits.toList().isEmpty){
+      return new List<TambolaBoard>(5);
+    }
+    _bestTambolaBoards = new List<TambolaBoard>(5);
+    baseProvider.userWeeklyBoards.forEach((board) {
+      if(_bestTambolaBoards[0] == null)_bestTambolaBoards[0] = board;
+      if(_bestTambolaBoards[1] == null)_bestTambolaBoards[1] = board;
+      if(_bestTambolaBoards[2] == null)_bestTambolaBoards[2] = board;
+      if(_bestTambolaBoards[3] == null)_bestTambolaBoards[3] = board;
+      if(_bestTambolaBoards[4] == null)_bestTambolaBoards[4] = board;
+
+      if(_bestTambolaBoards[0].getRowOdds(0, baseProvider.weeklyDigits.toList())
+          >board.getRowOdds(0, baseProvider.weeklyDigits.toList())){
+        _bestTambolaBoards[0] = board;
+      }
+      if(_bestTambolaBoards[1].getRowOdds(1, baseProvider.weeklyDigits.toList())
+          >board.getRowOdds(1, baseProvider.weeklyDigits.toList())){
+        _bestTambolaBoards[1] = board;
+      }
+      if(_bestTambolaBoards[2].getRowOdds(2, baseProvider.weeklyDigits.toList())
+          >board.getRowOdds(2, baseProvider.weeklyDigits.toList())){
+        _bestTambolaBoards[2] = board;
+      }
+      if(_bestTambolaBoards[3].getCornerOdds(baseProvider.weeklyDigits.toList())
+          >board.getCornerOdds(baseProvider.weeklyDigits.toList())){
+        _bestTambolaBoards[3] = board;
+      }
+      if(_bestTambolaBoards[4].getFullHouseOdds(baseProvider.weeklyDigits.toList())
+          >board.getFullHouseOdds(baseProvider.weeklyDigits.toList())){
+        _bestTambolaBoards[4] = board;
+      }
+    });
+
+    return _bestTambolaBoards;
   }
 
   String _getTicketNumber(String id) {
@@ -518,13 +557,11 @@ class _HState extends State<PlayHome> {
 }
 
 class Odds extends StatelessWidget {
-  // final TambolaBoardView _boardView;
   final List<int> _digits;
   final TambolaBoard _board;
-  // final GlobalKey<TambolaBoardState> _state;
+  final List<TambolaBoard> _bestBoards;
 
-  // Odds(this._boardView, this._digits, this._state);
-  Odds(this._digits, this._board);
+  Odds(this._digits, this._board, this._bestBoards);
 
   @override
   Widget build(BuildContext cx) {
@@ -535,14 +572,25 @@ class Odds extends StatelessWidget {
         itemCount: 5,
         itemBuilder:(context, index) {
           switch(index) {
-            case 0: return _buildRow(cx, Icons.border_top, 'Top Row', _board.getRowOdds(0, _digits), '10/12');
-            case 1: return _buildRow(cx, Icons.border_horizontal, 'Middle Row', _board.getRowOdds(1, _digits), '10/12');
-            case 2: return _buildRow(cx, Icons.border_bottom, 'Bottom Row', _board.getRowOdds(2, _digits), '10/12');
-            case 3: return _buildRow(cx, Icons.border_outer, 'Corners', _board.getCornerOdds(_digits), '10/12');
-            case 4: return _buildRow(cx, Icons.apps, 'Full House', _board.getFullHouseOdds(_digits), '10/12');
-            default: return _buildRow(cx, Icons.border_horizontal, _board.getRowOdds(0, _digits), '5/12', '10/12');
+            case 0: return _buildRow(cx, Icons.border_top, 'Top Row',
+                _board.getRowOdds(0, _digits).toString() + ' left',
+                _bestBoards[0].getRowOdds(0, _digits).toString() + ' left');
+            case 1: return _buildRow(cx, Icons.border_horizontal, 'Middle Row',
+                _board.getRowOdds(1, _digits).toString() + ' left',
+                _bestBoards[1].getRowOdds(1, _digits).toString() + ' left');
+            case 2: return _buildRow(cx, Icons.border_bottom, 'Bottom Row',
+                _board.getRowOdds(2, _digits).toString() + ' left',
+                _bestBoards[2].getRowOdds(2, _digits).toString() + ' left');
+            case 3: return _buildRow(cx, Icons.border_outer, 'Corners',
+                _board.getCornerOdds(_digits).toString() + ' left',
+                _bestBoards[3].getCornerOdds(_digits).toString() + ' left');
+            case 4: return _buildRow(cx, Icons.apps, 'Full House',
+                _board.getFullHouseOdds(_digits).toString() + ' left',
+                _bestBoards[4].getFullHouseOdds(_digits).toString() + ' left');
+            default: return _buildRow(cx, Icons.border_top, 'Top Row',
+                _board.getRowOdds(0, _digits).toString() + ' left',
+                _bestBoards[0].getRowOdds(0, _digits).toString() + ' left');
           }
-          //return _buildRow(cx, Icons.border_horizontal, 'Middle Row', '5/12', '10/12');
         },
     );
   }

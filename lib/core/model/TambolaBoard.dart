@@ -90,9 +90,9 @@ class TambolaBoard{
     return tambolaBoard;
   }
 
-  String getRowOdds(int rowIndex, List<int> calledDigits) {
+  int getRowOdds(int rowIndex, List<int> calledDigits) {
     if(tambolaBoard==null || tambolaBoard.isEmpty
-        || calledDigits==null || calledDigits.isEmpty) return 'NA';
+        || calledDigits==null || calledDigits.isEmpty) return 5;
     int digitsLeftToBeAnnounced = BaseUtil.TOTAL_DRAWS-calledDigits.length;
     int rowCalledCount = 0;
     for(int i=0; i<boardLength; i++) {
@@ -100,14 +100,15 @@ class TambolaBoard{
     }
     int rowLeftCount = 5-rowCalledCount;
 
-    if(rowLeftCount==0) return 'HIT!';
-    else if(rowLeftCount>digitsLeftToBeAnnounced)return '0';
-    else return '$rowLeftCount/$digitsLeftToBeAnnounced';
+    // if(rowLeftCount==0) return 1;
+    // else if(rowLeftCount>digitsLeftToBeAnnounced)return 0;
+    // else return '$rowLeftCount/$digitsLeftToBeAnnounced';
+    return rowLeftCount;
   }
 
-  String getCornerOdds(List<int> calledDigits) {
+  int getCornerOdds(List<int> calledDigits) {
     if(tambolaBoard==null || tambolaBoard.isEmpty
-        || calledDigits==null || calledDigits.isEmpty) return 'NA';
+        || calledDigits==null || calledDigits.isEmpty) return 4;
     int cornerA = 0;
     int cornerB = 0;
     int cornerC = 0;
@@ -130,14 +131,15 @@ class TambolaBoard{
     int digitsLeftToBeAnnounced = BaseUtil.TOTAL_DRAWS-calledDigits.length;
     int cornerLeftCount = 4-cornerCount;
 
-    if(cornerLeftCount==0) return 'HIT!';
-    else if(cornerLeftCount>digitsLeftToBeAnnounced) return '0';
-    else return '$cornerLeftCount left';
+    // if(cornerLeftCount==0) return 'HIT!';
+    // else if(cornerLeftCount>digitsLeftToBeAnnounced) return '0';
+    // else return '$cornerLeftCount left';
+    return cornerLeftCount;
   }
 
-  String getFullHouseOdds(List<int> calledDigits) {
+  int getFullHouseOdds(List<int> calledDigits) {
     if(tambolaBoard==null || tambolaBoard.isEmpty
-        || calledDigits==null || calledDigits.isEmpty) return 'NA';
+        || calledDigits==null || calledDigits.isEmpty) return 15;
     int fullHouseCount = 0;
     int digitsLeftToBeAnnounced = BaseUtil.TOTAL_DRAWS-calledDigits.length;
     for(int i=0; i<boardHeight; i++) {
@@ -149,9 +151,11 @@ class TambolaBoard{
     }
     int fullHouseLeftCount = 15-fullHouseCount;
 
-    if(fullHouseLeftCount==0) return 'HIT!';
-    else if(fullHouseLeftCount>digitsLeftToBeAnnounced) return '0';
-    else return '$fullHouseLeftCount/$digitsLeftToBeAnnounced';
+    // if(fullHouseLeftCount==0) return 'HIT!';
+    // else if(fullHouseLeftCount>digitsLeftToBeAnnounced) return '0';
+    // else return '$fullHouseLeftCount/$digitsLeftToBeAnnounced';
+
+    return fullHouseLeftCount;
   }
 }
 
@@ -166,7 +170,7 @@ class TambolaValueObject {
   TambolaValueObject(String val) {
     String int_part = val.replaceAll(RegExp('[^0-9]'), '');
     String char_part = val.replaceAll(int_part, '');
-    log.debug('Result: $char_part and $int_part');
+    //log.debug('Result: $char_part and $int_part');
 
     try {
       int bval = int.parse(int_part);
