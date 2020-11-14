@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/logger.dart';
 
 class User {
@@ -9,20 +10,22 @@ class User {
   String _name;
   String _email;
   String _client_token;   //fetched from a subcollection
+  int _ticket_count;
   static final String fldId = "mID";
   static final String fldMobile = "mMobile";
   static final String fldEmail = "mEmail";
   static final String fldName = "mName";
   static final String fldClient_token = "mClientToken";
+  static final String fldTicket_count = "mTicketCount";
 
-  User(this._uid, this._mobile, this._email, this._name, this._client_token);
+  User(this._uid, this._mobile, this._email, this._name, this._client_token, this._ticket_count);
 
-  static List<String> _fldList = [ fldMobile, fldEmail, fldName ];
+  static List<String> _fldList = [ fldMobile, fldEmail, fldName, fldTicket_count ];
 
-  User.newUser(String id, String mobile) : this(id, mobile, null, null, null);
+  User.newUser(String id, String mobile) : this(id, mobile, null, null, null, BaseUtil.NEW_USER_TICKET_COUNT);
 
   User.fromMap(Map<String, dynamic> data, String id, [String client_token]) :
-        this(id, data[fldMobile],  data[fldEmail], data[fldName], client_token);
+        this(id, data[fldMobile],  data[fldEmail], data[fldName], client_token, data[fldTicket_count]);
 
   //to send user object to server
   toJson() {
@@ -30,6 +33,7 @@ class User {
       fldMobile: _mobile,
       fldName: _name,
       fldEmail: _email,
+      fldTicket_count: _ticket_count
     };
   }
 
@@ -46,6 +50,16 @@ class User {
         }
         else if (line.contains('$fldClient_token\$')) {
           client_token = line.split('\$')[1];
+          continue;
+        }
+        else if (line.contains('$fldTicket_count\$')) {
+          String a = line.split('\$')[1];
+          try{
+            int count = int.parse(a);
+            gData[fldTicket_count] = count;
+          }catch(e) {
+            gData[fldTicket_count] = BaseUtil.NEW_USER_TICKET_COUNT;
+          }
           continue;
         }
         else {
@@ -74,6 +88,7 @@ class User {
     if(_email != null) oContent.writeln(fldEmail + '\$' +_email.trim());
     if(_name != null) oContent.writeln(fldName + '\$' + _name.trim());
     if(_client_token != null)oContent.writeln(fldClient_token + '\$' + _client_token.trim());
+    if(_ticket_count != null)oContent.writeln(fldTicket_count + '\$' + _ticket_count.toString());
 
     log.debug("Generated FileWrite String: " + oContent.toString());
     return oContent.toString();
@@ -81,7 +96,7 @@ class User {
 
   bool hasIncompleteDetails() {
     //return ((_mobile?.isEmpty??true) || (_name?.isEmpty??true) || (_email?.isEmpty??true));
-    return ((_mobile?.isEmpty??true) || (_name?.isEmpty??true));
+    return (((_mobile?.isEmpty??true) || (_name?.isEmpty??true))||_ticket_count==null);
   }
 
   String get client_token => _client_token;
