@@ -19,7 +19,7 @@ class GameView extends State<GameScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TambolaBoardView(boardValueCde: '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A'),
+             // TambolaBoardView(boardValueCde: '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A'),
               _buildButton()
             ],
           ),

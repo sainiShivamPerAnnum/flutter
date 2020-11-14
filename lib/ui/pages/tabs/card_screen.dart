@@ -36,9 +36,9 @@ class _HState extends State<PlayHome> {
   Log log = new Log('CardScreen');
   TambolaBoard _currentBoard;
   TambolaBoardView _currentBoardView;
-  GlobalKey<TambolaBoardState> _currentKey;
+  //GlobalKey<TambolaBoardState> _currentKey;
   List<TambolaBoardView> _tambolaBoardViews;
-  List<GlobalKey<TambolaBoardState>> _boardKeys;
+  //List<GlobalKey<TambolaBoardState>> _boardKeys;
   var rnd = new Random();
   BaseUtil baseProvider;
   DBModel dbProvider;
@@ -74,7 +74,7 @@ class _HState extends State<PlayHome> {
           log.debug('User weekly tickets fetched:: Count: ${baseProvider.userWeeklyBoards.length}');
 
           _tambolaBoardViews = [];
-          _boardKeys = [];
+          //_boardKeys = [];
           setState(() {});
         }
       });
@@ -102,6 +102,7 @@ class _HState extends State<PlayHome> {
   @override
   void dispose() {
     super.dispose();
+    baseProvider.weeklyTicksFetched = false;
     if(dbProvider != null) dbProvider.addUserTicketListener(null);
   }
 
@@ -257,7 +258,8 @@ class _HState extends State<PlayHome> {
         ):Container(),
         (baseProvider.weeklyTicksFetched && baseProvider.userTicketsCount>0 && baseProvider.weeklyDrawFetched)?
         Expanded(
-            child: Odds(_currentBoardView, baseProvider.weeklyDigits.toList(), _currentKey)
+            child:Odds(baseProvider.weeklyDigits.toList(), _currentBoard)
+            //Odds(_currentBoardView, baseProvider.weeklyDigits.toList(), _currentKey)
         ):Padding(  //Loader
           padding: EdgeInsets.all(10),
           child: Container(
@@ -314,19 +316,20 @@ class _HState extends State<PlayHome> {
     }
     else if(count == 1) {
       _tambolaBoardViews = [];
-      _boardKeys = [];
-      _boardKeys.add(new GlobalKey<TambolaBoardState>(debugLabel: '__KEY1__'));
+      // _boardKeys = [];
+      // _boardKeys.add(new GlobalKey<TambolaBoardState>(debugLabel: '__KEY1__'));
       _tambolaBoardViews.add(
           TambolaBoardView(
-            key: _boardKeys[0],
-            boardValueCde:baseProvider.userWeeklyBoards[0].val,
+            //key: _boardKeys[0],
+            //boardValueCde:baseProvider.userWeeklyBoards[0].val,
+            tambolaBoard: baseProvider.userWeeklyBoards[0].tambolaBoard,
             calledDigits: (baseProvider.weeklyDrawFetched)?baseProvider.weeklyDigits.toList():[],
             boardColor: UiConstants.boardColors[
             rnd.nextInt(UiConstants.boardColors.length)],
           )
       );
       _currentBoardView = _tambolaBoardViews[0];
-      _currentKey = _boardKeys[0];
+      // _currentKey = _boardKeys[0];
       _currentBoard = baseProvider.userWeeklyBoards[0];
       _widget = Padding(
           padding: EdgeInsets.all(10),
@@ -336,15 +339,16 @@ class _HState extends State<PlayHome> {
           );
     }else{
       _tambolaBoardViews = [];
-      _boardKeys = [];
+      // _boardKeys = [];
       int c = 1;
       baseProvider.userWeeklyBoards.forEach((board) {
           GlobalKey<TambolaBoardState> _key = new GlobalKey<TambolaBoardState>(debugLabel: '__KEY${c}__');
-          _boardKeys.add(_key);
+          // _boardKeys.add(_key);
           _tambolaBoardViews.add(
               TambolaBoardView(
-                key: _key,
-                boardValueCde:board.val,
+                // key: _key,
+                // boardValueCde:board.val,
+                tambolaBoard: board.tambolaBoard,
                 calledDigits: (baseProvider.weeklyDrawFetched)?baseProvider.weeklyDigits.toList():[],
                 boardColor: UiConstants.boardColors[
                 rnd.nextInt(UiConstants.boardColors.length)],
@@ -362,13 +366,12 @@ class _HState extends State<PlayHome> {
           onChanged: (i){
             _currentBoard = baseProvider.userWeeklyBoards[i];
             _currentBoardView = _tambolaBoardViews[i];
-            _currentKey = _boardKeys[i];
+            // _currentKey = _boardKeys[i];
             setState(() {});
           }
       );
-      _currentBoardView = _tambolaBoardViews[0];
-      _currentKey = _boardKeys[0];
-      _currentBoard = baseProvider.userWeeklyBoards[0];
+      if(_currentBoardView==null)_currentBoardView = _tambolaBoardViews[0];
+      if(_currentBoard==null)_currentBoard = baseProvider.userWeeklyBoards[0];
     }
     return _widget;
   }
@@ -515,27 +518,29 @@ class _HState extends State<PlayHome> {
 }
 
 class Odds extends StatelessWidget {
-  final TambolaBoardView _boardView;
+  // final TambolaBoardView _boardView;
   final List<int> _digits;
-  final GlobalKey<TambolaBoardState> _state;
+  final TambolaBoard _board;
+  // final GlobalKey<TambolaBoardState> _state;
 
-  Odds(this._boardView, this._digits, this._state);
+  // Odds(this._boardView, this._digits, this._state);
+  Odds(this._digits, this._board);
 
   @override
   Widget build(BuildContext cx) {
-    if (_boardView == null || _digits == null || _state == null) return Container();
+    if (_digits == null || _board == null) return Container();
 
     return ListView.builder(
         physics: BouncingScrollPhysics(),
         itemCount: 5,
         itemBuilder:(context, index) {
           switch(index) {
-            case 0: return _buildRow(cx, Icons.border_top, 'Top Row', _state.currentState.getRowOdds(0) , '10/12');
-            case 1: return _buildRow(cx, Icons.border_horizontal, 'Middle Row', _state.currentState.getRowOdds(1), '10/12');
-            case 2: return _buildRow(cx, Icons.border_bottom, 'Bottom Row', _state.currentState.getRowOdds(2), '10/12');
-            case 3: return _buildRow(cx, Icons.border_outer, 'Corners', _state.currentState.getCornerOdds(), '10/12');
-            case 4: return _buildRow(cx, Icons.apps, 'Full House', _state.currentState.getFullHouseOdds(), '10/12');
-            default: return _buildRow(cx, Icons.border_horizontal, _state.currentState.getRowOdds(0), '5/12', '10/12');
+            case 0: return _buildRow(cx, Icons.border_top, 'Top Row', _board.getRowOdds(0, _digits), '10/12');
+            case 1: return _buildRow(cx, Icons.border_horizontal, 'Middle Row', _board.getRowOdds(1, _digits), '10/12');
+            case 2: return _buildRow(cx, Icons.border_bottom, 'Bottom Row', _board.getRowOdds(2, _digits), '10/12');
+            case 3: return _buildRow(cx, Icons.border_outer, 'Corners', _board.getCornerOdds(_digits), '10/12');
+            case 4: return _buildRow(cx, Icons.apps, 'Full House', _board.getFullHouseOdds(_digits), '10/12');
+            default: return _buildRow(cx, Icons.border_horizontal, _board.getRowOdds(0, _digits), '5/12', '10/12');
           }
           //return _buildRow(cx, Icons.border_horizontal, 'Middle Row', '5/12', '10/12');
         },
