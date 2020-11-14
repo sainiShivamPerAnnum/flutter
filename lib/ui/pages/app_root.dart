@@ -2,6 +2,7 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:felloapp/ui/pages/tabs/card_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
 import 'package:felloapp/ui/pages/tabs/refer_screen.dart';
+import 'package:felloapp/ui/pages/tabs/save_tab.dart';
 import 'package:felloapp/ui/pages/tabs/upi_screen.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
@@ -96,7 +97,7 @@ class _AppRootState extends State<AppRoot> {
       }
       case 1: {
         // return MyHomePage(title: Constants.APP_NAME);
-        return UpiPayment();
+        return SaveScreen();
       }
       case 2: {
         return ReferScreen();

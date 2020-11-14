@@ -3,6 +3,9 @@ import 'constants.dart';
 class Assets{
   static final String logoMaxSize = 'images/fello_logo.png';
   static final String referGraphic = 'images/transfer.png';
+  static final String iciciGraphic = 'images/icici.png';
+  static final String sebiGraphic = 'images/sebi.png';
+  static final String amfiGraphic = 'images/amfi.png';
   static final String strikeThroughGraphic = 'images/diagonal-strike.png';
 
   static final List<String> onboardingSlide = [

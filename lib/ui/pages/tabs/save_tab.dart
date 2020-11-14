@@ -1,0 +1,245 @@
+import 'dart:math';
+
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/elements/guide_dialog.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/ui_constants.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:upi_pay/upi_pay.dart';
+
+class SaveScreen extends StatefulWidget {
+  @override
+  _SaveScreenState createState() => _SaveScreenState();
+}
+
+class _SaveScreenState extends State<SaveScreen> {
+  BaseUtil baseProvider;
+  DBModel dbProvider;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // dispose text field controllers after use.
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context);
+    dbProvider = Provider.of<DBModel>(context);
+    return Stack(
+      children: [
+        Container(
+          height: 200,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              stops: [0.1, 0.6],
+              colors: [
+                UiConstants.primaryColor.withGreen(190),
+                UiConstants.primaryColor,
+              ],
+            ),
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.elliptical(
+                  MediaQuery.of(context).size.width * 0.50, 18),
+              bottomRight: Radius.elliptical(
+                  MediaQuery.of(context).size.width * 0.50, 18),
+            ),
+          ),
+        ),
+        Positioned(
+          top: 30,
+          left: 5,
+          child: IconButton(
+            color: Colors.white,
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              HapticFeedback.vibrate();
+              Navigator.of(context).pushNamed('/settings');
+            },
+          ),
+        ),
+        Positioned(
+          top: 30,
+          right: 5,
+          child: IconButton(
+            color: Colors.white,
+            icon: Icon(Icons.help_outline),
+            onPressed: () {
+              HapticFeedback.vibrate();
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => GuideDialog()
+              );
+            },
+          ),
+        ),
+        Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(top: 70),
+              child: Column(
+                children: [
+                  Text(
+                    '₹0',
+                    style: TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white
+                    ),
+
+                  ),
+                  Text(
+                    'saved',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white
+                    ),
+                  ),
+                ],
+              ),
+            )
+        ),
+        SafeArea(
+            child: Padding(
+            padding: EdgeInsets.only(top: 130),
+            child: _buildSaveLayout())
+        ),
+        SafeArea(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 35),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      child: Opacity(
+                          opacity: 0.2,
+                          child: Image(
+                            image: AssetImage(Assets.sebiGraphic),
+                            fit: BoxFit.contain,
+                          )
+                      ),
+                      height: 80,
+                      width: 80,
+                    ),
+                    SizedBox(
+                      child: Opacity(
+                          opacity: 0.2,
+                          child: Image(
+                            image: AssetImage(Assets.amfiGraphic),
+                            fit: BoxFit.contain,
+                          )
+                      ),
+                      height: 80,
+                      width: 80,
+                    )
+                  ],
+                ),
+              ),
+            )
+        ),
+        // Align(
+        //   alignment: Alignment.bottomCenter,
+        //   child: _buildButton()
+        // )
+      ],
+    );
+  }
+
+  _buildSaveLayout() {
+    return Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Container(
+            width: double.infinity,
+            height: 200,
+            decoration: BoxDecoration(
+              color: Colors.blueGrey[400],
+              boxShadow: [new BoxShadow(
+                color: Colors.black26,
+                offset: Offset.fromDirection(20, 7),
+                blurRadius: 5.0,
+              )],
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                stops: [0.1, 0.4],
+                colors: [
+                  Colors.white70,
+                  Colors.white
+                ],
+              ),
+            ),
+          child: Stack(
+            children: [
+              SizedBox(
+                child: Opacity(
+                  opacity: 0.2,
+                  child: Image(
+                    image: AssetImage(Assets.iciciGraphic),
+                    fit: BoxFit.contain,
+                  )
+                ),
+                height: 200,
+                width: 500,
+              ),
+              Center(
+               child: Text(
+                 'Coming Soon!',
+                 style: TextStyle(
+                   fontSize: 36,
+                   fontStyle: FontStyle.italic,
+                   fontWeight: FontWeight.w800,
+                   color: Colors.blueGrey[700]
+                 ),
+               )
+              )
+            ],
+          ),
+        )
+    );
+  }
+
+  _buildButton() {
+    return Padding(
+        padding: EdgeInsets.all(20.0),
+        child:Material(
+          child: MaterialButton(
+            color: Colors.blueAccent,
+            child: Text('Get Tickets',
+              style: TextStyle(color: Colors.white, fontSize: 20.0),
+            ),
+            minWidth: double.infinity,
+            height: 50,
+            onPressed: () {
+              dbProvider.pushTicketRequest(baseProvider.myUser, 1);
+            },
+          ),
+          borderRadius: new BorderRadius.circular(80.0),
+        )
+    );
+  }
+}
+
+String _validateUpiAddress(String value) {
+  if (value.isEmpty) {
+    return 'UPI Address is required.';
+  }
+
+  if (!UpiPay.checkIfUpiAddressIsValid(value)) {
+    return 'UPI Address is invalid.';
+  }
+
+  return null;
+}

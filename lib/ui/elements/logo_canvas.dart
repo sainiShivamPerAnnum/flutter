@@ -259,7 +259,7 @@ class _LogoPainter extends BoxPainter {
   Rect _textBoundingRect;
 
   void _prepareText() {
-    const String kLabel = Constants.APP_NAME;
+    const String kLabel = '   ';//Constants.APP_NAME;
     _textPainter = TextPainter(
       text: TextSpan(
         text: kLabel,

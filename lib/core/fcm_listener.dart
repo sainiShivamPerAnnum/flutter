@@ -58,6 +58,8 @@ class FcmListener extends ChangeNotifier{
         print("Settings registered: $settings");
       });
     }
+    
+    _fcm.subscribeToTopic('dailypickbroadcast');
 
     if(_baseUtil.myUser != null && _baseUtil.myUser.mobile != null)await _saveDeviceToken();
     return _fcm;
