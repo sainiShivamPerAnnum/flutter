@@ -25,4 +25,6 @@ class TambolaBoard{
   bool isValid() {
     return (val != null); //TODO
   }
+
 }
+

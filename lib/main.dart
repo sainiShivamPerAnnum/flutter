@@ -11,6 +11,7 @@ import 'package:felloapp/ui/pages/onboarding/onboarding_widget.dart';
 import 'package:felloapp/ui/pages/settings_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: Constants.APP_NAME,
         theme: ThemeData(
+          primaryColor: UiConstants.primaryColor,
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),

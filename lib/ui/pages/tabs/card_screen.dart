@@ -65,22 +65,44 @@ class _HState extends State<PlayHome> {
           setState(() {});
         });
       }
-      if (!baseProvider.weeklyTicksFetched) {
-        log.debug('Requesting for weekly tickets');
-        dbProvider.refreshUserTickets(baseProvider.myUser).then((tickets) {
-          baseProvider.weeklyTicksFetched = true;
-          if(tickets != null) {
-            baseProvider.userWeeklyBoards = tickets;
-            baseProvider.userTicketsCount = tickets.length;
-            log.debug('User weekly tickets fetched:: Count: ${baseProvider.userWeeklyBoards.length}');
 
-            _tambolaBoardViews = [];
-            _boardKeys = [];
-            setState(() {});
-          }
-        });
-      }
+      dbProvider.addUserTicketListener((tickets) {
+        baseProvider.weeklyTicksFetched = true;
+        if(tickets != null) {
+          baseProvider.userWeeklyBoards = tickets;
+          baseProvider.userTicketsCount = tickets.length;
+          log.debug('User weekly tickets fetched:: Count: ${baseProvider.userWeeklyBoards.length}');
+
+          _tambolaBoardViews = [];
+          _boardKeys = [];
+          setState(() {});
+        }
+      });
+
+      if (!baseProvider.weeklyTicksFetched) dbProvider.subscribeUserTickets(baseProvider.myUser);
+      // if (!baseProvider.weeklyTicksFetched) {
+      //   log.debug('Requesting for weekly tickets');
+      //   dbProvider.refreshUserTickets(baseProvider.myUser).then((tickets) {
+      //     baseProvider.weeklyTicksFetched = true;
+      //     if(tickets != null) {
+      //       baseProvider.userWeeklyBoards = tickets;
+      //       baseProvider.userTicketsCount = tickets.length;
+      //       log.debug('User weekly tickets fetched:: Count: ${baseProvider.userWeeklyBoards.length}');
+      //
+      //       _tambolaBoardViews = [];
+      //       _boardKeys = [];
+      //       setState(() {});
+      //     }
+      //   });
+      // }
     }
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    if(dbProvider != null) dbProvider.addUserTicketListener(null);
   }
 
   @override
@@ -233,7 +255,7 @@ class _HState extends State<PlayHome> {
           padding: EdgeInsets.only(left: 25),
           child: Text('Ticket #${_getTicketNumber(_currentBoard.id)}'),
         ):Container(),
-        (baseProvider.weeklyTicksFetched && baseProvider.userTicketsCount>0)?
+        (baseProvider.weeklyTicksFetched && baseProvider.userTicketsCount>0 && baseProvider.weeklyDrawFetched)?
         Expanded(
             child: Odds(_currentBoardView, baseProvider.weeklyDigits.toList(), _currentKey)
         ):Padding(  //Loader
@@ -293,7 +315,7 @@ class _HState extends State<PlayHome> {
     else if(count == 1) {
       _tambolaBoardViews = [];
       _boardKeys = [];
-      _boardKeys.add(new GlobalKey<TambolaBoardState>());
+      _boardKeys.add(new GlobalKey<TambolaBoardState>(debugLabel: '__KEY1__'));
       _tambolaBoardViews.add(
           TambolaBoardView(
             key: _boardKeys[0],
@@ -315,8 +337,9 @@ class _HState extends State<PlayHome> {
     }else{
       _tambolaBoardViews = [];
       _boardKeys = [];
-      baseProvider.userWeeklyBoards.map((board) {
-          final _key = new GlobalKey<TambolaBoardState>();
+      int c = 1;
+      baseProvider.userWeeklyBoards.forEach((board) {
+          GlobalKey<TambolaBoardState> _key = new GlobalKey<TambolaBoardState>(debugLabel: '__KEY${c}__');
           _boardKeys.add(_key);
           _tambolaBoardViews.add(
               TambolaBoardView(
@@ -327,6 +350,7 @@ class _HState extends State<PlayHome> {
                 rnd.nextInt(UiConstants.boardColors.length)],
               )
           );
+          c++;
       });
       _widget = CardSelector(
           cards: _tambolaBoardViews.toList(),
@@ -342,6 +366,9 @@ class _HState extends State<PlayHome> {
             setState(() {});
           }
       );
+      _currentBoardView = _tambolaBoardViews[0];
+      _currentKey = _boardKeys[0];
+      _currentBoard = baseProvider.userWeeklyBoards[0];
     }
     return _widget;
   }

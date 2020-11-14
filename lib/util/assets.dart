@@ -3,13 +3,13 @@ import 'constants.dart';
 class Assets{
   static final String logoMaxSize = 'images/logo_full_size.png';
   static final String referGraphic = 'images/transfer.png';
-  static final String strikeThroughGraphic = 'images/diagonalstrike.png';
+  static final String strikeThroughGraphic = 'images/diagonal-strike.png';
 
   static final List<String> onboardingSlide = [
-    'images/logo_full_size.png',
-    'images/logo_full_size.png',
-    'images/logo_full_size.png',
-    'images/logo_full_size.png',
+    'images/save-small.png',
+    'images/grow-small.png',
+    'images/games-small.png',
+    'images/safe-small.png',
   ];
 
   static final List<String> onboardingHeader=[

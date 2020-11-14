@@ -120,13 +120,13 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         new Container(
-                          width: 150.0,
+                          width: MediaQuery.of(context).size.width-50,
                           height: 50.0,
                           decoration: BoxDecoration(
                             gradient: new LinearGradient(
                                 colors: [
                                     UiConstants.primaryColor,
-                                    UiConstants.darkPrimaryColor,
+                                    UiConstants.primaryColor.withBlue(190),
 //                                    Colors.green[400],
 //                                    Colors.green[600],
 //                                  Colors.orange[600],
@@ -135,7 +135,7 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
                                 begin: Alignment(0.5, -1.0),
                                 end: Alignment(0.5, 1.0)
                             ),
-                            borderRadius: new BorderRadius.circular(30.0),
+                            borderRadius: new BorderRadius.circular(10.0),
                           ),
                           child: new Material(
                             child: MaterialButton(
@@ -144,7 +144,7 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
                               ),
                               onPressed: (){
                                 log.debug("Setting Onboarding flag to true.");
-                                onboardProvider.saveOnboardStatus(true);
+                                //onboardProvider.saveOnboardStatus(true);
                                 _controller.dispose();
                                 // Navigator.of(context).pop();
                                 Navigator.of(context).pushReplacementNamed('/login');
@@ -153,35 +153,35 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
                               splashColor: Colors.orange.withOpacity(0.5),
                             ),
                             color: Colors.transparent,
-                            borderRadius: new BorderRadius.circular(30.0),
+                            borderRadius: new BorderRadius.circular(20.0),
                           ),
                         ),
-                        new Container(
-                          width: 150.0,
-                          height: 50.0,
-                          decoration: BoxDecoration(
-                            borderRadius: new BorderRadius.circular(30.0),
-                            border: Border.all(color: UiConstants.primaryColor, width: 1.0),
-                            color: Colors.transparent,
-                          ),
-                          child: new Material(
-                            child: MaterialButton(
-                              child: Text('SKIP',
-                                style: Theme.of(context).textTheme.button.copyWith(color: UiConstants.primaryColor),
-                              ),
-                              onPressed: (){
-                                log.debug("Setting Onboarding flag to true.");
-                                onboardProvider.saveOnboardStatus(true);
-                                // Navigator.of(context).pop();
-                                Navigator.of(context).pushReplacementNamed('/approot');
-                              },
-                              highlightColor: Colors.white30,
-                              splashColor: Colors.white30,
-                            ),
-                            color: Colors.transparent,
-                            borderRadius: new BorderRadius.circular(30.0),
-                          ),
-                        ),
+                        // new Container(
+                        //   width: 150.0,
+                        //   height: 50.0,
+                        //   decoration: BoxDecoration(
+                        //     borderRadius: new BorderRadius.circular(30.0),
+                        //     border: Border.all(color: UiConstants.primaryColor, width: 1.0),
+                        //     color: Colors.transparent,
+                        //   ),
+                        //   child: new Material(
+                        //     child: MaterialButton(
+                        //       child: Text('SKIP',
+                        //         style: Theme.of(context).textTheme.button.copyWith(color: UiConstants.primaryColor),
+                        //       ),
+                        //       onPressed: (){
+                        //         log.debug("Setting Onboarding flag to true.");
+                        //         onboardProvider.saveOnboardStatus(true);
+                        //         // Navigator.of(context).pop();
+                        //         Navigator.of(context).pushReplacementNamed('/approot');
+                        //       },
+                        //       highlightColor: Colors.white30,
+                        //       splashColor: Colors.white30,
+                        //     ),
+                        //     color: Colors.transparent,
+                        //     borderRadius: new BorderRadius.circular(30.0),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ],

@@ -140,7 +140,7 @@ class _LoginControllerState extends State<LoginController> {
               value: _formProgress,
               backgroundColor: Colors.transparent,
               valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).primaryColor)),
+                  UiConstants.primaryColor.withBlue(150))),
           new PageView.builder(
             physics: new NeverScrollableScrollPhysics(),
             controller: _controller,
@@ -160,7 +160,7 @@ class _LoginControllerState extends State<LoginController> {
             child: Padding(
               padding: EdgeInsets.all(20.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   //Back button check
@@ -203,8 +203,9 @@ class _LoginControllerState extends State<LoginController> {
                     decoration: BoxDecoration(
                       gradient: new LinearGradient(colors: [
                         UiConstants.primaryColor,
-                        UiConstants.darkPrimaryColor,
-                      ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
+                        UiConstants.primaryColor.withBlue(200),
+                      ],
+                      begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
                       borderRadius: new BorderRadius.circular(30.0),
                     ),
                     child: new Material(
@@ -392,9 +393,7 @@ class _LoginControllerState extends State<LoginController> {
           duration: Duration(milliseconds: 300), curve: Curves.easeIn);
     } else {
       log.debug("User details available: Name: " +
-          user.name +
-          "\nEmail: " +
-          user.email);
+          user.name);
       baseProvider.myUser = user;
       onSignUpComplete();
     }

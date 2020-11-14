@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 
 class DBModel extends ChangeNotifier {
   Api _api = locator<Api>();
+  ValueChanged<List<TambolaBoard>> userTicketsUpdated;
   final Log log = new Log("DBModel");
 
   Future<bool> updateClientToken(User user, String token) async {
@@ -64,24 +65,46 @@ class DBModel extends ChangeNotifier {
       return false;
     }
   }
+  //
+  // Future<List<TambolaBoard>> refreshUserTickets(User user) async{
+  //   List<TambolaBoard> requestedBoards = [];
+  //   try{
+  //     String _id = user.uid;
+  //     QuerySnapshot querySnapshot = await _api.getValidUserTickets(_id, _getWeekCode());
+  //     if(querySnapshot != null && querySnapshot.documents.length > 0) {
+  //       querySnapshot.documents.forEach((docSnapshot) {
+  //         if(docSnapshot.exists)
+  //         log.debug('Received snapshot: ' + docSnapshot.data.toString());
+  //         TambolaBoard board = TambolaBoard.fromMap(docSnapshot.data);
+  //         if(board.isValid())requestedBoards.add(board);
+  //       });
+  //     }
+  //   }catch(err) {
+  //     log.error('Failed to fetch tambola boards');
+  //   }
+  //   return requestedBoards;
+  // }
 
-  Future<List<TambolaBoard>> refreshUserTickets(User user) async{
-    List<TambolaBoard> requestedBoards = [];
+  bool subscribeUserTickets(User user){
     try{
       String _id = user.uid;
-      QuerySnapshot querySnapshot = await _api.getValidUserTickets(_id, _getWeekCode());
-      if(querySnapshot != null && querySnapshot.documents.length > 0) {
+      Stream<QuerySnapshot> _stream = _api.getValidUserTickets(_id, _getWeekCode());
+      _stream.listen((querySnapshot) {
+        List<TambolaBoard> requestedBoards = [];
         querySnapshot.documents.forEach((docSnapshot) {
           if(docSnapshot.exists)
-          log.debug('Received snapshot: ' + docSnapshot.data.toString());
+            log.debug('Received snapshot: ' + docSnapshot.data.toString());
           TambolaBoard board = TambolaBoard.fromMap(docSnapshot.data);
           if(board.isValid())requestedBoards.add(board);
         });
-      }
+
+        log.debug('Post stream update-> sending ticket count to dashboard: ${requestedBoards.length}');
+        if(userTicketsUpdated != null)userTicketsUpdated(requestedBoards);
+      });
     }catch(err) {
       log.error('Failed to fetch tambola boards');
     }
-    return requestedBoards;
+    return true;
   }
 
   Future<DailyPick> getWeeklyPicks() async {
@@ -146,5 +169,9 @@ class DBModel extends ChangeNotifier {
       case 11: return "NOV";
       case 12: return "DEC";
     }
+  }
+
+  addUserTicketListener(ValueChanged<List<TambolaBoard>> listener) {
+    userTicketsUpdated = listener;
   }
 }

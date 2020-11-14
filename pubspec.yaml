@@ -46,4 +46,8 @@ flutter:
   assets:
     - images/logo_full_size.png
     - images/transfer.png
-    - images/diagonalstrike.png
+    - images/diagonal-strike.png
+    - images/games-small.png
+    - images/grow-small.png
+    - images/safe-small.png
+    - images/save-small.png

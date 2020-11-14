@@ -37,8 +37,9 @@ class BaseUtil extends ChangeNotifier {
   Future init() async {
     //fetch on-boarding status and User details
     firebaseUser = await FirebaseAuth.instance.currentUser();
-    isUserOnboarded = await _lModel.isUserOnboarded()==1;
+    // isUserOnboarded = await _lModel.isUserOnboarded()==1;
     _myUser = await _lModel.getUser();
+    isUserOnboarded = (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
   }
 
   static Widget getAppBar() {
