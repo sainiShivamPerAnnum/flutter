@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui show Image, instantiateImageCodec;
 
+import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/ui/elements/logo_canvas.dart';
 import 'package:felloapp/ui/elements/logo_container.dart';
 import 'package:felloapp/util/assets.dart';
@@ -46,9 +47,9 @@ class LogoFadeIn extends State<SplashScreen> {
 
   initialize() async{
     final baseProvider = Provider.of<BaseUtil>(context);
-    // final fcmProvider = Provider.of<FcmListener>(context);
+    final fcmProvider = Provider.of<FcmListener>(context);
     await baseProvider.init();
-    // await fcmProvider.setupFcm();
+    await fcmProvider.setupFcm();
     _timer3.cancel();
     if(!baseProvider.isUserOnboarded) {
       log.debug("New user. Moving to Onboarding..");
