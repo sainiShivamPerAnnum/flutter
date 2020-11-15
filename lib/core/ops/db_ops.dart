@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 class DBModel extends ChangeNotifier {
   Api _api = locator<Api>();
   ValueChanged<List<TambolaBoard>> userTicketsUpdated;
+  VoidCallback userTicketsRequested;
   final Log log = new Log("DBModel");
 
   Future<bool> updateClientToken(User user, String token) async {
@@ -53,7 +54,7 @@ class DBModel extends ChangeNotifier {
       String _uid = user.uid;
       var rMap = {
         'user_id': _uid,
-        'manual': true,
+        'manual': false,
         'count': count,
         'week_code': _getWeekCode(),
         'timestamp': FieldValue.serverTimestamp()
@@ -99,6 +100,16 @@ class DBModel extends ChangeNotifier {
         });
 
         log.debug('Post stream update-> sending ticket count to dashboard: ${requestedBoards.length}');
+        if(requestedBoards != null && user.ticket_count > 0) {
+          if(requestedBoards.length < user.ticket_count) {
+            log.debug('Requested board count is less than needed tickets');
+            int ticketCountRequired = user.ticket_count - requestedBoards.length;
+            pushTicketRequest(user, ticketCountRequired).then((value) {
+              log.debug('More tickets request sent');
+              if(userTicketsRequested != null)userTicketsRequested();
+            });
+          }
+        }
         if(userTicketsUpdated != null)userTicketsUpdated(requestedBoards);
       });
     }catch(err) {
@@ -173,5 +184,9 @@ class DBModel extends ChangeNotifier {
 
   addUserTicketListener(ValueChanged<List<TambolaBoard>> listener) {
     userTicketsUpdated = listener;
+  }
+
+  addUserTicketRequestListener(VoidCallback listener) {
+    userTicketsRequested = listener;
   }
 }

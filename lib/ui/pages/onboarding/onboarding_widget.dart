@@ -26,7 +26,7 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(Duration(seconds: 4), (Timer timer) {
+    _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
       if (page < 3) {
         page++;
       } else {
@@ -35,7 +35,7 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
 
       if(_controller.positions.isNotEmpty)_controller.animateToPage(
         page,
-        duration: Duration(milliseconds: 350),
+        duration: Duration(milliseconds: 600),
         curve: Curves.easeIn,
       );
     });

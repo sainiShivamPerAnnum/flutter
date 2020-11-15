@@ -128,4 +128,10 @@ class User {
   set uid(String value) {
     _uid = value;
   }
+
+  int get ticket_count => _ticket_count;
+
+  set ticket_count(int value) {
+    _ticket_count = value;
+  }
 }

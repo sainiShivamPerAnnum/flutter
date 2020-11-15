@@ -52,7 +52,10 @@ class Page1 extends StatelessWidget {
                   //padding: const EdgeInsets.all(18.0),
                   padding: const EdgeInsets.fromLTRB(18.0, 25, 18.0, 18.0),
                   child: Text(Assets.onboardingHeader[0],
-                    style: Theme.of(context).textTheme.display1.copyWith(color: Colors.grey[800]),
+                    style: Theme.of(context).textTheme.display1.copyWith(
+                        color: Colors.grey[800],
+                      fontWeight: FontWeight.w500
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),

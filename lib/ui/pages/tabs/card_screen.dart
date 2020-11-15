@@ -44,6 +44,7 @@ class _HState extends State<PlayHome> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   bool prizeButtonUp = false;
+  bool ticketsBeingGenerated = false;
 
   @override
   void initState() {
@@ -73,11 +74,14 @@ class _HState extends State<PlayHome> {
           baseProvider.userWeeklyBoards = tickets;
           baseProvider.userTicketsCount = tickets.length;
           log.debug('User weekly tickets fetched:: Count: ${baseProvider.userWeeklyBoards.length}');
-
           _tambolaBoardViews = [];
-          //_boardKeys = [];
           setState(() {});
         }
+      });
+
+      dbProvider.addUserTicketRequestListener(() {
+        ticketsBeingGenerated = true;
+        setState(() {});
       });
 
       if (!baseProvider.weeklyTicksFetched) dbProvider.subscribeUserTickets(baseProvider.myUser);
@@ -105,6 +109,7 @@ class _HState extends State<PlayHome> {
     super.dispose();
     baseProvider.weeklyTicksFetched = false;
     if(dbProvider != null) dbProvider.addUserTicketListener(null);
+    if(dbProvider != null) dbProvider.addUserTicketRequestListener(null);
   }
 
   @override
@@ -348,7 +353,7 @@ class _HState extends State<PlayHome> {
               width: double.infinity,
               height: 200,
               child: Center(
-                child: Text('No tickets yet'),
+                child: Text((ticketsBeingGenerated)?'Your new tickets are being generated..':'No tickets yet'),
               )
           )
       );

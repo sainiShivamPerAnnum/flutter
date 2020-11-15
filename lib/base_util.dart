@@ -29,6 +29,7 @@ class BaseUtil extends ChangeNotifier {
   static const dummyTambolaVal = '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A';
   static const int TOTAL_DRAWS = 35;
   static const NEW_USER_TICKET_COUNT = 5;
+  static const INVESTMENT_AMOUNT_FOR_TICKET = 100;
   static bool isDeviceOffline = false;
 
   BaseUtil() {
@@ -39,7 +40,7 @@ class BaseUtil extends ChangeNotifier {
     //fetch on-boarding status and User details
     firebaseUser = await FirebaseAuth.instance.currentUser();
     // isUserOnboarded = await _lModel.isUserOnboarded()==1;
-    _myUser = await _lModel.getUser();
+    if(firebaseUser != null)_myUser = await _dbModel.getUser(firebaseUser.uid);//_lModel.getUser();
     isUserOnboarded = (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
   }
 

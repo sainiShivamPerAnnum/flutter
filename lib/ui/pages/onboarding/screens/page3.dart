@@ -46,7 +46,10 @@ class Page3 extends StatelessWidget {
                 new Padding(
                   padding: const EdgeInsets.fromLTRB(18.0, 25, 18.0, 8.0),
                   child: Text(Assets.onboardingHeader[2],
-                    style: Theme.of(context).textTheme.display1.copyWith(color: Colors.grey[800]),
+                    style: Theme.of(context).textTheme.display1.copyWith(
+                        color: Colors.grey[800],
+                        fontWeight: FontWeight.w500
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
