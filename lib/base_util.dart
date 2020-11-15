@@ -31,6 +31,8 @@ class BaseUtil extends ChangeNotifier {
   static const NEW_USER_TICKET_COUNT = 5;
   static const INVESTMENT_AMOUNT_FOR_TICKET = 100;
   static bool isDeviceOffline = false;
+  static bool ticketRequestSent = false;
+  static int ticketCountBeforeRequest = NEW_USER_TICKET_COUNT;
 
   BaseUtil() {
     //init();

@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/ui/elements/board_selector.dart';
 import 'package:felloapp/ui/elements/dots_indicator.dart';
 import 'package:felloapp/ui/pages/onboarding/screens/page1.dart';
 import 'package:felloapp/ui/pages/onboarding/screens/page2.dart';
 import 'package:felloapp/ui/pages/onboarding/screens/page3.dart';
 import 'package:felloapp/ui/pages/onboarding/screens/page4.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -71,29 +73,21 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
                 },
               ),
             ),
-            /*new Positioned(
-              top: 0.0,
-              left: 0.0,
-              right: 0.0,
-              child: new SafeArea(
-                child: AppBar(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0.0,
-                  primary: false,
-                  title: Text('Onboarding Example'),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: Text(isDone ? 'DONE' : 'NEXT', style: TextStyle(color: Colors.white),),
-                      onPressed: isDone ? (){
-                        Navigator.pop(context);
-                      } : (){
-                        _controller.animateToPage(page + 1, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                      },
-                    )
-                  ],
-                ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 30),
+                  child: SizedBox(
+                    child: Image(
+                      image: AssetImage(Assets.logoMaxSize),
+                      fit: BoxFit.contain,
+                    ),
+                    width: 80,
+                  ),
+                )
               ),
-            ),*/
+            ),
             new Positioned(
               bottom: 30.0,
               left: 0.0,

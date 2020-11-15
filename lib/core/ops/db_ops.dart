@@ -100,7 +100,7 @@ class DBModel extends ChangeNotifier {
         });
 
         log.debug('Post stream update-> sending ticket count to dashboard: ${requestedBoards.length}');
-        if(requestedBoards != null && user.ticket_count > 0) {
+        if(requestedBoards != null && user.ticket_count > 0 && !BaseUtil.ticketRequestSent) {
           if(requestedBoards.length < user.ticket_count) {
             log.debug('Requested board count is less than needed tickets');
             int ticketCountRequired = user.ticket_count - requestedBoards.length;
@@ -108,12 +108,16 @@ class DBModel extends ChangeNotifier {
               log.debug('More tickets request sent');
               if(userTicketsRequested != null)userTicketsRequested();
             });
+            BaseUtil.ticketRequestSent = true;
+            BaseUtil.ticketCountBeforeRequest = requestedBoards.length;
           }
         }
         if(userTicketsUpdated != null)userTicketsUpdated(requestedBoards);
+        if(BaseUtil.ticketCountBeforeRequest < requestedBoards.length)BaseUtil.ticketRequestSent = false;
       });
     }catch(err) {
       log.error('Failed to fetch tambola boards');
+      return false;
     }
     return true;
   }
