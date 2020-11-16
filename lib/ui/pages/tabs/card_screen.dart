@@ -36,9 +36,11 @@ class _HState extends State<PlayHome> {
   Log log = new Log('CardScreen');
   TambolaBoard _currentBoard;
   TambolaBoardView _currentBoardView;
+
   //GlobalKey<TambolaBoardState> _currentKey;
   List<TambolaBoardView> _tambolaBoardViews;
   List<TambolaBoard> _bestTambolaBoards;
+
   //List<GlobalKey<TambolaBoardState>> _boardKeys;
   var rnd = new Random();
   BaseUtil baseProvider;
@@ -70,14 +72,15 @@ class _HState extends State<PlayHome> {
 
       dbProvider.addUserTicketListener((tickets) {
         baseProvider.weeklyTicksFetched = true;
-        if(tickets != null) {
+        if (tickets != null) {
           baseProvider.userWeeklyBoards = tickets;
           baseProvider.userTicketsCount = tickets.length;
-          log.debug('User weekly tickets fetched:: Count: ${baseProvider.userWeeklyBoards.length}');
+          log.debug(
+              'User weekly tickets fetched:: Count: ${baseProvider.userWeeklyBoards.length}');
           _tambolaBoardViews = [];
 
           int cx = baseProvider.checkTicketCountValidity(tickets);
-          if(cx > 0){
+          if (cx > 0) {
             log.debug('Pushing ticket generation request');
             dbProvider.pushTicketRequest(baseProvider.myUser, cx);
           }
@@ -90,7 +93,8 @@ class _HState extends State<PlayHome> {
         setState(() {});
       });
 
-      if (!baseProvider.weeklyTicksFetched) dbProvider.subscribeUserTickets(baseProvider.myUser);
+      if (!baseProvider.weeklyTicksFetched)
+        dbProvider.subscribeUserTickets(baseProvider.myUser);
       // if (!baseProvider.weeklyTicksFetched) {
       //   log.debug('Requesting for weekly tickets');
       //   dbProvider.refreshUserTickets(baseProvider.myUser).then((tickets) {
@@ -109,13 +113,12 @@ class _HState extends State<PlayHome> {
     }
   }
 
-
   @override
   void dispose() {
     super.dispose();
-    baseProvider.weeklyTicksFetched = false;
-    if(dbProvider != null) dbProvider.addUserTicketListener(null);
-    if(dbProvider != null) dbProvider.addUserTicketRequestListener(null);
+    //baseProvider.weeklyTicksFetched = false;
+    if (dbProvider != null) dbProvider.addUserTicketListener(null);
+    if (dbProvider != null) dbProvider.addUserTicketRequestListener(null);
   }
 
   @override
@@ -124,58 +127,57 @@ class _HState extends State<PlayHome> {
     dbProvider = Provider.of<DBModel>(context);
     _init();
     return Scaffold(
-      //debugShowCheckedModeBanner: false,
-      //padding: EdgeInsets.only(top: 48.0),
-      body: Stack(
-        children: [
-          Container(
-            height: 200,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                stops: [0.1, 0.6],
-                colors: [
-                  UiConstants.primaryColor.withGreen(190),
-                  UiConstants.primaryColor,
-                ],
-              ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.elliptical(
-                    MediaQuery.of(context).size.width * 0.50, 18),
-                bottomRight: Radius.elliptical(
-                    MediaQuery.of(context).size.width * 0.50, 18),
-              ),
+        //debugShowCheckedModeBanner: false,
+        //padding: EdgeInsets.only(top: 48.0),
+        body: Stack(
+      children: [
+        Container(
+          height: 200,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              stops: [0.1, 0.6],
+              colors: [
+                UiConstants.primaryColor.withGreen(190),
+                UiConstants.primaryColor,
+              ],
+            ),
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.elliptical(
+                  MediaQuery.of(context).size.width * 0.50, 18),
+              bottomRight: Radius.elliptical(
+                  MediaQuery.of(context).size.width * 0.50, 18),
             ),
           ),
-          Positioned(
-            top: 30,
-            left: 5,
-            child: IconButton(
-              color: Colors.white,
-              icon: Icon(Icons.settings),
-              onPressed: () {
-                HapticFeedback.vibrate();
-                Navigator.of(context).pushNamed('/settings');
-              },
-            ),
+        ),
+        Positioned(
+          top: 30,
+          left: 5,
+          child: IconButton(
+            color: Colors.white,
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              HapticFeedback.vibrate();
+              Navigator.of(context).pushNamed('/settings');
+            },
           ),
-          Positioned(
-            top: 30,
-            right: 5,
-            child: IconButton(
-              color: Colors.white,
-              icon: Icon(Icons.help_outline),
-              onPressed: () {
-                HapticFeedback.vibrate();
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) => GuideDialog()
-                );
-              },
-            ),
+        ),
+        Positioned(
+          top: 30,
+          right: 5,
+          child: IconButton(
+            color: Colors.white,
+            icon: Icon(Icons.help_outline),
+            onPressed: () {
+              HapticFeedback.vibrate();
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => GuideDialog());
+            },
           ),
-          Align(
+        ),
+        Align(
             alignment: Alignment.topCenter,
             child: Padding(
               padding: EdgeInsets.only(top: 70),
@@ -186,35 +188,26 @@ class _HState extends State<PlayHome> {
                     style: TextStyle(
                         fontSize: 50,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white
-                    ),
-
+                        color: Colors.white),
                   ),
                   Text(
-                    (baseProvider.userTicketsCount==1)?'ticket':'tickets',
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white
-                    ),
+                    (baseProvider.userTicketsCount == 1) ? 'ticket' : 'tickets',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ],
               ),
-            )
-          ),
-          SafeArea(child: Padding(
-            padding: EdgeInsets.only(top: 140),
-              child: _buildCardCanvas(context))
-          ),
-          SafeArea(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: _buildPrizeButton()
-              )
-          )
-        ],
-      )
-      //),
-    );
+            )),
+        SafeArea(
+            child: Padding(
+                padding: EdgeInsets.only(top: 140),
+                child: _buildCardCanvas(context))),
+        SafeArea(
+            child: Align(
+                alignment: Alignment.bottomCenter, child: _buildPrizeButton()))
+      ],
+    )
+        //),
+        );
   }
 
   Widget _buildCardCanvas(BuildContext c) {
@@ -222,70 +215,78 @@ class _HState extends State<PlayHome> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         //_buildDashboard(),
-        (baseProvider.weeklyDrawFetched)?InkWell(
-          child: _buildTodaysPicksWidget(baseProvider.weeklyDigits),
-          onTap: () {
-            HapticFeedback.vibrate();
-            showDialog(
-                context: context,
-                builder: (BuildContext context) =>
-                    WeeklyDrawDialog(baseProvider.weeklyDigits)
-            );
-          },
-        ):Padding(  //Loader
-          padding: EdgeInsets.all(10),
-          child: Container(
-            width: double.infinity,
-            height: 200,
-            child: Center(
-              child: SpinKitWave(
-                color: UiConstants.primaryColor,
+        (baseProvider.weeklyDrawFetched)
+            ? InkWell(
+                child: _buildTodaysPicksWidget(baseProvider.weeklyDigits),
+                onTap: () {
+                  HapticFeedback.vibrate();
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          WeeklyDrawDialog(baseProvider.weeklyDigits));
+                },
+              )
+            : Padding(
+                //Loader
+                padding: EdgeInsets.all(10),
+                child: Container(
+                  width: double.infinity,
+                  height: 200,
+                  child: Center(
+                    child: SpinKitWave(
+                      color: UiConstants.primaryColor,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
         SizedBox(
           height: 12.0,
         ),
         Center(
           child: Padding(
-            padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
-            child: Text(
-              "This week\'s tickets",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w300,
-                color: Colors.blueGrey[800]
-              )
-            )
-          ),
+              padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
+              child: Text("This week\'s tickets",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.blueGrey[800]))),
         ),
         SizedBox(height: 5.0),
         _buildCards(baseProvider.weeklyTicksFetched,
-            baseProvider.userWeeklyBoards,baseProvider.userTicketsCount),
-        (baseProvider.weeklyTicksFetched && baseProvider.userWeeklyBoards != null && baseProvider.userTicketsCount>0)?Padding(
-          padding: EdgeInsets.only(left: 25),
-          child: Text('Ticket #${_getTicketNumber(_currentBoard.id)}'),
-        ):Container(),
-        (baseProvider.weeklyTicksFetched && baseProvider.userWeeklyBoards!=null && baseProvider.userTicketsCount>0
-            && baseProvider.weeklyDrawFetched)?
-        Expanded(
-            child:Odds(baseProvider.weeklyDigits, _currentBoard, _refreshBestBoards())
-            //Odds(_currentBoardView, baseProvider.weeklyDigits.toList(), _currentKey)
-        ):Padding(  //Loader
-          padding: EdgeInsets.all(10),
-          child: Container(
-            width: double.infinity,
-            height: 50,
-          ),
-        ),
+            baseProvider.userWeeklyBoards, baseProvider.userTicketsCount),
+        (baseProvider.weeklyTicksFetched &&
+                baseProvider.userWeeklyBoards != null &&
+                baseProvider.userTicketsCount > 0)
+            ? Padding(
+                padding: EdgeInsets.only(left: 25),
+                child: Text('Ticket #${_getTicketNumber(_currentBoard.id)}'),
+              )
+            : Container(),
+        (baseProvider.weeklyTicksFetched &&
+                baseProvider.userWeeklyBoards != null &&
+                baseProvider.userTicketsCount > 0 &&
+                baseProvider.weeklyDrawFetched)
+            ? Expanded(
+                child: Odds(baseProvider.weeklyDigits, _currentBoard,
+                    _refreshBestBoards())
+                //Odds(_currentBoardView, baseProvider.weeklyDigits.toList(), _currentKey)
+                )
+            : Padding(
+                //Loader
+                padding: EdgeInsets.all(10),
+                child: Container(
+                  width: double.infinity,
+                  height: 50,
+                ),
+              ),
       ],
     );
   }
 
   List<TambolaBoard> _refreshBestBoards() {
-    if(baseProvider.userWeeklyBoards==null || baseProvider.userWeeklyBoards.isEmpty){
+    if (baseProvider.userWeeklyBoards == null ||
+        baseProvider.userWeeklyBoards.isEmpty) {
       return new List<TambolaBoard>(5);
     }
     _bestTambolaBoards = new List<TambolaBoard>(5);
@@ -296,35 +297,41 @@ class _HState extends State<PlayHome> {
     _bestTambolaBoards[3] = baseProvider.userWeeklyBoards[0];
     _bestTambolaBoards[4] = baseProvider.userWeeklyBoards[0];
 
-    if(baseProvider.weeklyDigits==null || baseProvider.weeklyDigits.toList().isEmpty) {
+    if (baseProvider.weeklyDigits == null ||
+        baseProvider.weeklyDigits.toList().isEmpty) {
       return _bestTambolaBoards;
     }
 
     baseProvider.userWeeklyBoards.forEach((board) {
-      if(_bestTambolaBoards[0] == null)_bestTambolaBoards[0] = board;
-      if(_bestTambolaBoards[1] == null)_bestTambolaBoards[1] = board;
-      if(_bestTambolaBoards[2] == null)_bestTambolaBoards[2] = board;
-      if(_bestTambolaBoards[3] == null)_bestTambolaBoards[3] = board;
-      if(_bestTambolaBoards[4] == null)_bestTambolaBoards[4] = board;
+      if (_bestTambolaBoards[0] == null) _bestTambolaBoards[0] = board;
+      if (_bestTambolaBoards[1] == null) _bestTambolaBoards[1] = board;
+      if (_bestTambolaBoards[2] == null) _bestTambolaBoards[2] = board;
+      if (_bestTambolaBoards[3] == null) _bestTambolaBoards[3] = board;
+      if (_bestTambolaBoards[4] == null) _bestTambolaBoards[4] = board;
 
-      if(_bestTambolaBoards[0].getRowOdds(0, baseProvider.weeklyDigits.toList())
-          >board.getRowOdds(0, baseProvider.weeklyDigits.toList())){
+      if (_bestTambolaBoards[0]
+              .getRowOdds(0, baseProvider.weeklyDigits.toList()) >
+          board.getRowOdds(0, baseProvider.weeklyDigits.toList())) {
         _bestTambolaBoards[0] = board;
       }
-      if(_bestTambolaBoards[1].getRowOdds(1, baseProvider.weeklyDigits.toList())
-          >board.getRowOdds(1, baseProvider.weeklyDigits.toList())){
+      if (_bestTambolaBoards[1]
+              .getRowOdds(1, baseProvider.weeklyDigits.toList()) >
+          board.getRowOdds(1, baseProvider.weeklyDigits.toList())) {
         _bestTambolaBoards[1] = board;
       }
-      if(_bestTambolaBoards[2].getRowOdds(2, baseProvider.weeklyDigits.toList())
-          >board.getRowOdds(2, baseProvider.weeklyDigits.toList())){
+      if (_bestTambolaBoards[2]
+              .getRowOdds(2, baseProvider.weeklyDigits.toList()) >
+          board.getRowOdds(2, baseProvider.weeklyDigits.toList())) {
         _bestTambolaBoards[2] = board;
       }
-      if(_bestTambolaBoards[3].getCornerOdds(baseProvider.weeklyDigits.toList())
-          >board.getCornerOdds(baseProvider.weeklyDigits.toList())){
+      if (_bestTambolaBoards[3]
+              .getCornerOdds(baseProvider.weeklyDigits.toList()) >
+          board.getCornerOdds(baseProvider.weeklyDigits.toList())) {
         _bestTambolaBoards[3] = board;
       }
-      if(_bestTambolaBoards[4].getFullHouseOdds(baseProvider.weeklyDigits.toList())
-          >board.getFullHouseOdds(baseProvider.weeklyDigits.toList())){
+      if (_bestTambolaBoards[4]
+              .getFullHouseOdds(baseProvider.weeklyDigits.toList()) >
+          board.getFullHouseOdds(baseProvider.weeklyDigits.toList())) {
         _bestTambolaBoards[4] = board;
       }
     });
@@ -339,18 +346,17 @@ class _HState extends State<PlayHome> {
         List<String> y = x.split('sh');
         int a = int.parse(y[0]);
         int b = int.parse(y[1]);
-        return (a*100 + b).toString();
+        return (a * 100 + b).toString();
       }
-    }catch(e) {
-
-    }
+    } catch (e) {}
     return 'NA';
   }
 
   Widget _buildCards(bool fetchedFlag, List<TambolaBoard> boards, int count) {
     Widget _widget;
-    if(!fetchedFlag) {
-      _widget = Padding(  //Loader
+    if (!fetchedFlag) {
+      _widget = Padding(
+        //Loader
         padding: EdgeInsets.all(10),
         child: Container(
           width: double.infinity,
@@ -362,60 +368,45 @@ class _HState extends State<PlayHome> {
           ),
         ),
       );
-    }
-    else if(boards==null || count==0) {
+    } else if (boards == null || count == 0) {
       _widget = Padding(
           padding: EdgeInsets.all(10),
           child: Container(
               width: double.infinity,
               height: 200,
               child: Center(
-                child: Text((ticketsBeingGenerated)?'Your new tickets are being generated..':'No tickets yet'),
-              )
-          )
-      );
-    }
-    else if(count == 1) {
+                child: Text((ticketsBeingGenerated)
+                    ? 'Your new tickets are being generated..'
+                    : 'No tickets yet'),
+              )));
+    } else if (count == 1) {
       _tambolaBoardViews = [];
-      // _boardKeys = [];
-      // _boardKeys.add(new GlobalKey<TambolaBoardState>(debugLabel: '__KEY1__'));
-      _tambolaBoardViews.add(
-          TambolaBoardView(
-            //key: _boardKeys[0],
-            //boardValueCde:baseProvider.userWeeklyBoards[0].val,
-            tambolaBoard: baseProvider.userWeeklyBoards[0].tambolaBoard,
-            calledDigits: (baseProvider.weeklyDrawFetched)?baseProvider.weeklyDigits.toList():[],
-            boardColor: UiConstants.boardColors[
-            rnd.nextInt(UiConstants.boardColors.length)],
-          )
-      );
+      _tambolaBoardViews.add(TambolaBoardView(
+        tambolaBoard: baseProvider.userWeeklyBoards[0].tambolaBoard,
+        calledDigits: (baseProvider.weeklyDrawFetched)
+            ? baseProvider.weeklyDigits.toList()
+            : [],
+        boardColor: UiConstants
+            .boardColors[rnd.nextInt(UiConstants.boardColors.length)],
+      ));
       _currentBoardView = _tambolaBoardViews[0];
-      // _currentKey = _boardKeys[0];
       _currentBoard = baseProvider.userWeeklyBoards[0];
       _widget = Padding(
           padding: EdgeInsets.all(10),
-          child: Container(
-              width: double.infinity,
-              child: _tambolaBoardViews[0])
-          );
-    }else{
+          child:
+              Container(width: double.infinity, child: _tambolaBoardViews[0]));
+    } else {
       _tambolaBoardViews = [];
-      // _boardKeys = [];
-      int c = 1;
       baseProvider.userWeeklyBoards.forEach((board) {
-          GlobalKey<TambolaBoardState> _key = new GlobalKey<TambolaBoardState>(debugLabel: '__KEY${c}__');
-          // _boardKeys.add(_key);
-          _tambolaBoardViews.add(
-              TambolaBoardView(
-                // key: _key,
-                // boardValueCde:board.val,
-                tambolaBoard: board.tambolaBoard,
-                calledDigits: (baseProvider.weeklyDrawFetched && baseProvider.weeklyDigits!=null)?baseProvider.weeklyDigits.toList():[],
-                boardColor: UiConstants.boardColors[
-                rnd.nextInt(UiConstants.boardColors.length)],
-              )
-          );
-          c++;
+        _tambolaBoardViews.add(TambolaBoardView(
+          tambolaBoard: board.tambolaBoard,
+          calledDigits: (baseProvider.weeklyDrawFetched &&
+                  baseProvider.weeklyDigits != null)
+              ? baseProvider.weeklyDigits.toList()
+              : [],
+          boardColor: UiConstants
+              .boardColors[rnd.nextInt(UiConstants.boardColors.length)],
+        ));
       });
       _widget = CardSelector(
           cards: _tambolaBoardViews.toList(),
@@ -424,15 +415,15 @@ class _HState extends State<PlayHome> {
           mainCardPadding: 4.0,
           dropTargetWidth: 0,
           cardAnimationDurationMs: 500,
-          onChanged: (i){
+          onChanged: (i) {
             _currentBoard = baseProvider.userWeeklyBoards[i];
             _currentBoardView = _tambolaBoardViews[i];
             // _currentKey = _boardKeys[i];
             setState(() {});
-          }
-      );
-      if(_currentBoardView==null)_currentBoardView = _tambolaBoardViews[0];
-      if(_currentBoard==null)_currentBoard = baseProvider.userWeeklyBoards[0];
+          });
+      if (_currentBoardView == null) _currentBoardView = _tambolaBoardViews[0];
+      if (_currentBoard == null)
+        _currentBoard = baseProvider.userWeeklyBoards[0];
     }
     return _widget;
   }
@@ -445,25 +436,24 @@ class _HState extends State<PlayHome> {
         width: double.infinity,
         height: 100,
         decoration: BoxDecoration(
-            color: Colors.blueGrey[400],
-            boxShadow: [new BoxShadow(
+          color: Colors.blueGrey[400],
+          boxShadow: [
+            new BoxShadow(
               color: Colors.black26,
               offset: Offset.fromDirection(20, 7),
               blurRadius: 5.0,
-            )],
-            borderRadius: BorderRadius.all(Radius.circular(20)),
+            )
+          ],
+          borderRadius: BorderRadius.all(Radius.circular(20)),
           gradient: LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
             stops: [0.1, 0.4],
-            colors: [
-              Colors.blueGrey[500],
-              Colors.blueGrey[400]
-            ],
+            colors: [Colors.blueGrey[500], Colors.blueGrey[400]],
           ),
         ),
         child: Column(
-          //mainAxisAlignment: MainAxisAlignment.center,
+            //mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
@@ -511,22 +501,19 @@ class _HState extends State<PlayHome> {
           ),
         ),
         Center(
-            child:(digit!=null && digit>0)?
-            Padding(
-              padding: EdgeInsets.only(left: 7, top:8),
-              child:SingleDigit(
-                initialValue: digit,
-              )
-            )
-            :Padding(
-              padding: EdgeInsets.only(left: 16, top:7),
-              child:Text(
-                '-',
-                style: TextStyle(fontSize: 22),
-                textAlign: TextAlign.center,
-              )
-            )
-        )
+            child: (digit != null && digit > 0)
+                ? Padding(
+                    padding: EdgeInsets.only(left: 7, top: 8),
+                    child: SingleDigit(
+                      initialValue: digit,
+                    ))
+                : Padding(
+                    padding: EdgeInsets.only(left: 16, top: 7),
+                    child: Text(
+                      '-',
+                      style: TextStyle(fontSize: 22),
+                      textAlign: TextAlign.center,
+                    )))
       ],
     );
   }
@@ -536,42 +523,40 @@ class _HState extends State<PlayHome> {
       height: 40,
       width: 100,
       duration: const Duration(milliseconds: 400),
-      margin: (prizeButtonUp)?EdgeInsets.only(bottom: 32):EdgeInsets.only(bottom: 0),
-      decoration: (prizeButtonUp)?BoxDecoration(
-        color: Colors.blueGrey[300],
-        boxShadow: [new BoxShadow(
-          color: Colors.black12,
-          offset: Offset.fromDirection(20, 7),
-          blurRadius: 5.0,
-        )],
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          stops: [0.1, 0.4],
-          colors: [
-            Colors.blueGrey[400],
-            Colors.blueGrey[400]
-          ],
-        ),
-      ):BoxDecoration(
-        color: Colors.transparent
-      ),
-      child: InkWell(
-          child: Center(
-            child: Text('Prizes',
-              style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 16
+      margin: (prizeButtonUp)
+          ? EdgeInsets.only(bottom: 32)
+          : EdgeInsets.only(bottom: 0),
+      decoration: (prizeButtonUp)
+          ? BoxDecoration(
+              color: Colors.blueGrey[300],
+              boxShadow: [
+                new BoxShadow(
+                  color: Colors.black12,
+                  offset: Offset.fromDirection(20, 7),
+                  blurRadius: 5.0,
+                )
+              ],
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                stops: [0.1, 0.4],
+                colors: [Colors.blueGrey[400], Colors.blueGrey[400]],
               ),
-            ),
+            )
+          : BoxDecoration(color: Colors.transparent),
+      child: InkWell(
+        child: Center(
+          child: Text(
+            'Prizes',
+            style: TextStyle(color: Colors.white70, fontSize: 16),
           ),
+        ),
         onTap: () {
-            HapticFeedback.vibrate();
-            showDialog(
-                context: context,
-                builder: (BuildContext context) => PrizeDialog()
-            );
+          HapticFeedback.vibrate();
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => PrizeDialog());
         },
       ),
     );
@@ -588,79 +573,99 @@ class Odds extends StatelessWidget {
   @override
   Widget build(BuildContext cx) {
     if (_board == null) return Container();
-    List<int> _digits = (_digitsObj!=null)?_digitsObj.toList():[];
+    List<int> _digits = (_digitsObj != null) ? _digitsObj.toList() : [];
     return ListView.builder(
-        physics: BouncingScrollPhysics(),
-        itemCount: 5,
-        itemBuilder:(context, index) {
-          switch(index) {
-            case 0: return _buildRow(cx, Icons.border_top, 'Top Row',
+      physics: BouncingScrollPhysics(),
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        switch (index) {
+          case 0:
+            return _buildRow(
+                cx,
+                Icons.border_top,
+                'Top Row',
                 _board.getRowOdds(0, _digits).toString() + ' left',
                 _bestBoards[0].getRowOdds(0, _digits).toString() + ' left');
-            case 1: return _buildRow(cx, Icons.border_horizontal, 'Middle Row',
+          case 1:
+            return _buildRow(
+                cx,
+                Icons.border_horizontal,
+                'Middle Row',
                 _board.getRowOdds(1, _digits).toString() + ' left',
                 _bestBoards[1].getRowOdds(1, _digits).toString() + ' left');
-            case 2: return _buildRow(cx, Icons.border_bottom, 'Bottom Row',
+          case 2:
+            return _buildRow(
+                cx,
+                Icons.border_bottom,
+                'Bottom Row',
                 _board.getRowOdds(2, _digits).toString() + ' left',
                 _bestBoards[2].getRowOdds(2, _digits).toString() + ' left');
-            case 3: return _buildRow(cx, Icons.border_outer, 'Corners',
+          case 3:
+            return _buildRow(
+                cx,
+                Icons.border_outer,
+                'Corners',
                 _board.getCornerOdds(_digits).toString() + ' left',
                 _bestBoards[3].getCornerOdds(_digits).toString() + ' left');
-            case 4: return _buildRow(cx, Icons.apps, 'Full House',
+          case 4:
+            return _buildRow(
+                cx,
+                Icons.apps,
+                'Full House',
                 _board.getFullHouseOdds(_digits).toString() + ' left',
                 _bestBoards[4].getFullHouseOdds(_digits).toString() + ' left');
-            default: return _buildRow(cx, Icons.border_top, 'Top Row',
+          default:
+            return _buildRow(
+                cx,
+                Icons.border_top,
+                'Top Row',
                 _board.getRowOdds(0, _digits).toString() + ' left',
                 _bestBoards[0].getRowOdds(0, _digits).toString() + ' left');
-          }
-        },
+        }
+      },
     );
   }
 
-  Widget _buildRow(BuildContext cx, IconData _i, String _title, String _tOdd, String _oOdd) {
-    var tt = Theme
-        .of(cx)
-        .textTheme;
+  Widget _buildRow(
+      BuildContext cx, IconData _i, String _title, String _tOdd, String _oOdd) {
+    var tt = Theme.of(cx).textTheme;
     var pd = EdgeInsets.symmetric(vertical: 8.0, horizontal: 24.0);
     return Padding(
-      padding: pd,
-      child:Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: Row(
-                children: [
-                  Icon(_i, size: 24.0, color: Colors.blueGrey),
-                  SizedBox(width: 9.0),
-                  Text(_title, style: tt.caption.apply(color: Colors.blueGrey)),
-                ],
+        padding: pd,
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: Row(
+                  children: [
+                    Icon(_i, size: 24.0, color: Colors.blueGrey),
+                    SizedBox(width: 9.0),
+                    Text(_title,
+                        style: tt.caption.apply(color: Colors.blueGrey)),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Text(_tOdd, style: tt.title.apply(color: Colors.blueGrey)),
-                  Text('This ticket', style: tt.caption.apply(color: Colors.blueGrey))
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(_tOdd, style: tt.title.apply(color: Colors.blueGrey)),
+                    Text('This ticket',
+                        style: tt.caption.apply(color: Colors.blueGrey))
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: Column(
+              Expanded(
+                  child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   Text(_oOdd, style: tt.title.apply(color: Colors.blueGrey)),
                   Text('Best ticket',
                       textAlign: TextAlign.center,
-                      style: tt.caption.apply(color: Colors.blueGrey)
-                  )
+                      style: tt.caption.apply(color: Colors.blueGrey))
                 ],
-              )
-            ),
-            ]
-      )
-    );
+              )),
+            ]));
   }
 }
-
