@@ -1,14 +1,17 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/pages/tabs/card_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
 import 'package:felloapp/ui/pages/tabs/refer_screen.dart';
 import 'package:felloapp/ui/pages/tabs/save_tab.dart';
-import 'package:felloapp/ui/pages/tabs/upi_screen.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:morpheus/widgets/morpheus_tab_view.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class AppRoot extends StatefulWidget{
   @override
@@ -17,10 +20,19 @@ class AppRoot extends StatefulWidget{
 
 class _AppRootState extends State<AppRoot> {
   Log log = new Log("AppRoot");
+  BaseUtil baseProvider;
   int _currentIndex = 0;
+
+
+  @override
+  void initState() {
+    super.initState();
+    initDynamicLinks();
+  }
 
   @override
   Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context);
     return
       // WillPopScope(
       //   onWillPop: () async => Navigator.of(context).maybePop(),
@@ -106,5 +118,47 @@ class _AppRootState extends State<AppRoot> {
         return MyHomePage(title: Constants.APP_NAME);
       }
     }
+  }
+
+  void initDynamicLinks() async {
+    FirebaseDynamicLinks.instance.onLink(
+        onSuccess: (PendingDynamicLinkData dynamicLink) async {
+          final Uri deepLink = dynamicLink?.link;
+
+          if (deepLink != null) {
+            log.debug('Received deep link');
+            log.debug(deepLink.toString());
+            postReferral(baseProvider.myUser.uid, deepLink);
+          }
+        },
+        onError: (OnLinkErrorException e) async {
+          log.error('Error in fetching deeplink');
+          log.error(e);
+        }
+    );
+
+    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri deepLink = data?.link;
+
+    if (deepLink != null) {
+      log.debug('Received deep link');
+      log.debug(deepLink.toString());
+      postReferral(baseProvider.myUser.uid, deepLink);
+    }
+  }
+
+  Future<http.Response> postReferral(String userId, Uri deepLink) {
+    String prefix = 'https://fello.in/';
+    String dLink = deepLink.toString();
+    if(dLink.startsWith(prefix)){
+      String referee = dLink.replaceAll(prefix, '');
+      log.debug(referee);
+      if(prefix.length > 0 && prefix != userId){
+        return http.post(
+          'https://us-central1-fello-d3a9c.cloudfunctions.net/validateReferral?uid=$userId&rid=$referee',
+        );
+      }
+    }
+    return null;
   }
 }

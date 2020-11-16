@@ -1,10 +1,16 @@
 
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 
 class ReferScreen extends StatefulWidget{
   @override
@@ -14,8 +20,13 @@ class ReferScreen extends StatefulWidget{
 
 class _ReferScreenState extends State<ReferScreen> {
   Log log = new Log('ReferScreen');
+  BaseUtil baseProvider;
+  DBModel dbProvider;
+
   @override
   Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context);
+    dbProvider = Provider.of<DBModel>(context);
     return Scaffold(
       //debugShowCheckedModeBanner: false,
       //padding: EdgeInsets.only(top: 48.0),
@@ -70,7 +81,7 @@ class _ReferScreenState extends State<ReferScreen> {
                   child: Column(
                     children: [
                       Text(
-                        '2',
+                        '0',
                         style: TextStyle(
                             fontSize: 50,
                             fontWeight: FontWeight.bold,
@@ -124,7 +135,7 @@ class _ReferScreenState extends State<ReferScreen> {
                 ),
                 child: new Material(
                   child: MaterialButton(
-                    child: Row(
+                    child: (!baseProvider.isReferralLinkBuildInProgressWhatsapp)?Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text('SHARE ON WHATSAPP',
@@ -141,10 +152,21 @@ class _ReferScreenState extends State<ReferScreen> {
                           width: 15,
                         )
                       ],
+                    ):SpinKitThreeBounce(
+                      color: UiConstants.spinnerColor2,
+                      size: 18.0,
                     ),
                     onPressed: () async{
-                      var res = await FlutterShareMe().shareToWhatsApp(msg: 'fellop');
-                      log.debug(res);
+                      baseProvider.isReferralLinkBuildInProgressWhatsapp = true;
+                      _createDynamicLink(baseProvider.myUser.uid, true, 'Whatsapp').then((url) async{
+                        baseProvider.isReferralLinkBuildInProgressWhatsapp = false;
+                        log.debug(url);
+                        setState(() {});
+                        FlutterShareMe().shareToWhatsApp(msg: 'Checkout: ' + url).then((flag) {
+                          log.debug(flag);
+                        });
+                      });
+                      setState(() {});
                     },
                     highlightColor: Colors.orange.withOpacity(0.5),
                     splashColor: Colors.orange.withOpacity(0.5),
@@ -172,17 +194,28 @@ class _ReferScreenState extends State<ReferScreen> {
                 ),
                 child: new Material(
                   child: MaterialButton(
-                    child: Row(
+                    child: (!baseProvider.isReferralLinkBuildInProgressOther)?Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text('SHARE',
                           style: Theme.of(context).textTheme.button.copyWith(color: Colors.white),
                         )
                       ],
+                    ):SpinKitThreeBounce(
+                      color: UiConstants.spinnerColor2,
+                      size: 18.0,
                     ),
                     onPressed: () async{
-                      var res = await FlutterShareMe().shareToSystem(msg: 'fellop');
-                      log.debug(res);
+                      baseProvider.isReferralLinkBuildInProgressOther = true;
+                      _createDynamicLink(baseProvider.myUser.uid, true, 'Other').then((url) async{
+                        log.debug(url);
+                        baseProvider.isReferralLinkBuildInProgressOther = false;
+                        setState(() {});
+                        FlutterShareMe().shareToWhatsApp(msg: 'Checkout: ' + url).then((flag) {
+                          log.debug(flag);
+                        });
+                      });
+                      setState(() {});
                     },
                     highlightColor: Colors.orange.withOpacity(0.5),
                     splashColor: Colors.orange.withOpacity(0.5),
@@ -208,4 +241,46 @@ class _ReferScreenState extends State<ReferScreen> {
     );
   }
 
+  Future<String> _createDynamicLink(String userId, bool short, String source) async {
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: 'https://fello.page.link',
+      link: Uri.parse('https://fello.in/$userId'),
+      socialMetaTagParameters: SocialMetaTagParameters(
+        title: '${Constants.APP_NAME} Referral',
+        description: 'Download ${Constants.APP_NAME} and win big for both!',
+        imageUrl: Uri.parse('https://fello.in/src/images/fello_logo_2_grey.png')
+      ),
+      googleAnalyticsParameters: GoogleAnalyticsParameters(
+        campaign: 'referrals',
+        medium: 'social',
+        source: source,
+      ),
+      androidParameters: AndroidParameters(
+        packageName: 'in.fello.felloapp',
+        minimumVersion: 0,
+      ),
+      dynamicLinkParametersOptions: DynamicLinkParametersOptions(
+        shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
+      ),
+      iosParameters: IosParameters(
+        bundleId: 'com.google.FirebaseCppDynamicLinksTestApp.dev',
+        minimumVersion: '0',
+      ),
+    );
+
+    Uri url;
+    if (short) {
+      final ShortDynamicLink shortLink = await parameters.buildShortLink();
+      url = shortLink.shortUrl;
+    } else {
+      url = await parameters.buildUrl();
+    }
+
+    return url.toString();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 }
