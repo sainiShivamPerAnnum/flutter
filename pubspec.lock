@@ -113,13 +113,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
-  countdown:
-    dependency: "direct main"
-    description:
-      name: countdown
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
   crypto:
     dependency: transitive
     description:
@@ -218,13 +211,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.1.8"
-  firebase_storage:
-    dependency: "direct main"
-    description:
-      name: firebase_storage
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.1.6"
   flushbar:
     dependency: "direct main"
     description:
@@ -251,6 +237,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.2"
+  flutter_share_me:
+    dependency: "direct main"
+    description:
+      name: flutter_share_me
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.2"
   flutter_spinkit:
     dependency: "direct main"
     description:
