@@ -75,6 +75,12 @@ class _HState extends State<PlayHome> {
           baseProvider.userTicketsCount = tickets.length;
           log.debug('User weekly tickets fetched:: Count: ${baseProvider.userWeeklyBoards.length}');
           _tambolaBoardViews = [];
+
+          int cx = baseProvider.checkTicketCountValidity(tickets);
+          if(cx > 0){
+            log.debug('Pushing ticket generation request');
+            dbProvider.pushTicketRequest(baseProvider.myUser, cx);
+          }
           setState(() {});
         }
       });
@@ -258,13 +264,14 @@ class _HState extends State<PlayHome> {
         SizedBox(height: 5.0),
         _buildCards(baseProvider.weeklyTicksFetched,
             baseProvider.userWeeklyBoards,baseProvider.userTicketsCount),
-        (baseProvider.weeklyTicksFetched && baseProvider.userTicketsCount>0)?Padding(
+        (baseProvider.weeklyTicksFetched && baseProvider.userWeeklyBoards != null && baseProvider.userTicketsCount>0)?Padding(
           padding: EdgeInsets.only(left: 25),
           child: Text('Ticket #${_getTicketNumber(_currentBoard.id)}'),
         ):Container(),
-        (baseProvider.weeklyTicksFetched && baseProvider.userTicketsCount>0 && baseProvider.weeklyDrawFetched)?
+        (baseProvider.weeklyTicksFetched && baseProvider.userWeeklyBoards!=null && baseProvider.userTicketsCount>0
+            && baseProvider.weeklyDrawFetched)?
         Expanded(
-            child:Odds(baseProvider.weeklyDigits.toList(), _currentBoard, _refreshBestBoards())
+            child:Odds(baseProvider.weeklyDigits, _currentBoard, _refreshBestBoards())
             //Odds(_currentBoardView, baseProvider.weeklyDigits.toList(), _currentKey)
         ):Padding(  //Loader
           padding: EdgeInsets.all(10),
@@ -278,11 +285,21 @@ class _HState extends State<PlayHome> {
   }
 
   List<TambolaBoard> _refreshBestBoards() {
-    if(baseProvider.userWeeklyBoards==null || baseProvider.userWeeklyBoards.isEmpty
-    || baseProvider.weeklyDigits==null || baseProvider.weeklyDigits.toList().isEmpty){
+    if(baseProvider.userWeeklyBoards==null || baseProvider.userWeeklyBoards.isEmpty){
       return new List<TambolaBoard>(5);
     }
     _bestTambolaBoards = new List<TambolaBoard>(5);
+    //initialise
+    _bestTambolaBoards[0] = baseProvider.userWeeklyBoards[0];
+    _bestTambolaBoards[1] = baseProvider.userWeeklyBoards[0];
+    _bestTambolaBoards[2] = baseProvider.userWeeklyBoards[0];
+    _bestTambolaBoards[3] = baseProvider.userWeeklyBoards[0];
+    _bestTambolaBoards[4] = baseProvider.userWeeklyBoards[0];
+
+    if(baseProvider.weeklyDigits==null || baseProvider.weeklyDigits.toList().isEmpty) {
+      return _bestTambolaBoards;
+    }
+
     baseProvider.userWeeklyBoards.forEach((board) {
       if(_bestTambolaBoards[0] == null)_bestTambolaBoards[0] = board;
       if(_bestTambolaBoards[1] == null)_bestTambolaBoards[1] = board;
@@ -393,7 +410,7 @@ class _HState extends State<PlayHome> {
                 // key: _key,
                 // boardValueCde:board.val,
                 tambolaBoard: board.tambolaBoard,
-                calledDigits: (baseProvider.weeklyDrawFetched)?baseProvider.weeklyDigits.toList():[],
+                calledDigits: (baseProvider.weeklyDrawFetched && baseProvider.weeklyDigits!=null)?baseProvider.weeklyDigits.toList():[],
                 boardColor: UiConstants.boardColors[
                 rnd.nextInt(UiConstants.boardColors.length)],
               )
@@ -562,16 +579,16 @@ class _HState extends State<PlayHome> {
 }
 
 class Odds extends StatelessWidget {
-  final List<int> _digits;
+  final DailyPick _digitsObj;
   final TambolaBoard _board;
   final List<TambolaBoard> _bestBoards;
 
-  Odds(this._digits, this._board, this._bestBoards);
+  Odds(this._digitsObj, this._board, this._bestBoards);
 
   @override
   Widget build(BuildContext cx) {
-    if (_digits == null || _board == null) return Container();
-
+    if (_board == null) return Container();
+    List<int> _digits = (_digitsObj!=null)?_digitsObj.toList():[];
     return ListView.builder(
         physics: BouncingScrollPhysics(),
         itemCount: 5,

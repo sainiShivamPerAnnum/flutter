@@ -28,7 +28,33 @@ class Api {
     return ref.document(docId).setData(data, merge: true);
   }
 
-  Future<void> createTicketRequest(Map data) {
+  // Future<Map<String, dynamic>> setTicketGenInProcess(String userId) {
+  //   return _db.runTransaction((transaction){
+  //     Map<String, dynamic> tMap = {};
+  //     var _ref = _db.collection(Constants.COLN_USERS).document(userId);
+  //     return transaction.get(_ref).then((value) {
+  //       var doc = value;
+  //       if(doc != null && doc.exists) {
+  //         Map dt = doc.data;
+  //         if(dt['tg_in_progress'] != null && dt['tg_in_progress']){
+  //           tMap['flag'] = false;
+  //           return Promise.resolve(true);
+  //           return tMap;
+  //         }
+  //         else {
+  //           Map<String, dynamic> dx = {};
+  //           dx['tg_in_progress'] = true;
+  //           transaction.update(_ref, dx).then((valuex) {
+  //             tMap['flag'] = true;
+  //             return tMap;
+  //           });
+  //         }
+  //       }
+  //     });
+  //   });
+  // }
+
+  Future<void> createTicketRequest(String userId, Map data) {
     return _db.collection(Constants.COLN_TICKETREQUEST).document().setData(data, merge: false);
   }
 

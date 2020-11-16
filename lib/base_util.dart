@@ -172,6 +172,28 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
+  int checkTicketCountValidity(List<TambolaBoard> requestedBoards) {
+    if(requestedBoards != null && _myUser.ticket_count > 0) {
+      if(requestedBoards.length < _myUser.ticket_count) {
+        log.debug('Requested board count is less than needed tickets');
+        int ticketCountRequired = _myUser.ticket_count - requestedBoards.length;
+
+        if(ticketCountRequired>0 && !BaseUtil.ticketRequestSent){
+          BaseUtil.ticketRequestSent = true;
+          BaseUtil.ticketCountBeforeRequest = requestedBoards.length;
+          return ticketCountRequired;
+        }
+      }
+      if(BaseUtil.ticketRequestSent) {
+        if(requestedBoards.length > BaseUtil.ticketCountBeforeRequest) {
+          log.debug('Previous request had completed and not the ticket count has increased');
+          //BaseUtil.ticketRequestSent = false; //not really needed i think
+        }
+      }
+    }
+    return 0;
+  }
+
   User get myUser => _myUser;
 
   set myUser(User value) {
