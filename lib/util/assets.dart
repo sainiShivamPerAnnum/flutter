@@ -8,6 +8,8 @@ class Assets{
   static final String iciciGraphic = 'images/icici.png';
   static final String sebiGraphic = 'images/sebi.png';
   static final String amfiGraphic = 'images/amfi.png';
+  static final String prizesGraphic = 'images/prizes-small.png';
+  static final String winnersGraphic = 'images/winners-small.png';
   static final String whatsappIcon = 'images/whatsapp.png';
   static final String strikeThroughGraphic = 'images/diagonal-strike.png';
 
@@ -35,5 +37,15 @@ class Assets{
     '${Constants.APP_NAME} follows SEBI regulated guidelines and invests directly into the instrument of your choice,'
         ' while giving you the freedom to withdraw at any point.',
   ];
+
+  static final String guideText = 'Rules:\n\n'
+      '1. You get 1 ticket for every Rs.100 invested.\n\n'
+      '2. The tambola tickets are valid for one week from Monday to Sunday. \n\n'
+      '3. You receive fresh tambola tickets every week for your current savings balance.\n\n'
+      '4. You can also earn more tickets by referring Fello to your peers.  \n\n'
+      '5. Every day 5 numbers will be drawn from the raffle with 35 numbers per week.  \n\n'
+      '6. Users can win corners, 1st, 2nd, 3rd rows and full house if their ticket numbers match with any of the 35 numbers drawn.  \n\n'
+      '7. If more than one user wins a category, then the prize money will be split equally amongst the winners.  \n\n'
+      '8. *Cumulation of matching numbers across multiple tickets will not be considered.';
 
 }

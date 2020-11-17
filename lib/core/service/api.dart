@@ -72,6 +72,12 @@ class Api {
     return query.getDocuments();
   }
 
+  Future<QuerySnapshot> getWinnersByWeekCde(int weekCde) {
+    Query query = _db.collection(Constants.COLN_WINNERS).where('week_code', isEqualTo: weekCde);
+
+    return query.getDocuments();
+  }
+
   Future<void> addCallbackDocument(String year, String monthCde, Map data) {
     return _db.collection('callbacks').document(year).collection(monthCde).document().setData(data, merge:false);
   }

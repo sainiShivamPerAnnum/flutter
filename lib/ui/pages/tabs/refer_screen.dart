@@ -1,6 +1,7 @@
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
@@ -8,6 +9,7 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -59,7 +61,8 @@ class _ReferScreenState extends State<ReferScreen> {
                 color: Colors.white,
                 icon: Icon(Icons.settings),
                 onPressed: () {
-
+                  HapticFeedback.vibrate();
+                  Navigator.of(context).pushNamed('/settings');
                 },
               ),
             ),
@@ -70,7 +73,11 @@ class _ReferScreenState extends State<ReferScreen> {
                 color: Colors.white,
                 icon: Icon(Icons.help_outline),
                 onPressed: () {
-                  //Navigator.of(context).pushNamed(Settings.id);
+                  HapticFeedback.vibrate();
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) => GuideDialog()
+                  );
                 },
               ),
             ),

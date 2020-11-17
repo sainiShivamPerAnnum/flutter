@@ -117,8 +117,6 @@ class DBModel extends ChangeNotifier {
     return true;
   }
 
-
-
   Future<DailyPick> getWeeklyPicks() async {
     try {
       DateTime date = new DateTime.now();
@@ -134,6 +132,27 @@ class DBModel extends ChangeNotifier {
       }
     } catch (e) {
       log.error("Error fetch Dailypick details: " + e.toString());
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>> getWeeklyWinners() async {
+    try {
+      DateTime date = new DateTime.now();
+      int weekCde = date.year*100 + BaseUtil.getWeekNumber();
+
+      QuerySnapshot querySnapshot = await _api.getWinnersByWeekCde(weekCde);
+      if(querySnapshot != null && querySnapshot.documents.length == 1){
+        DocumentSnapshot snapshot = querySnapshot.documents[0];
+        if(snapshot.exists && snapshot.data['winners'] != null) {
+          Map<String, dynamic> rMap = snapshot.data['winners'];
+          log.debug(rMap.toString());
+          return rMap;
+        }
+      }
+      return null;
+    } catch (e) {
+      log.error("Error fetch weekly winners details: " + e.toString());
       return null;
     }
   }
