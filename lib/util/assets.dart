@@ -39,12 +39,11 @@ class Assets{
   ];
 
   static final String guideText = '1. Users receive 1 ticket for every Rs.100 invested.\n\n'
-      '2. The tambola tickets are valid for one week from Monday through Sunday. \n\n'
+      '2. Each tambola ticket is valid for one week starting from Monday through Sunday. \n\n'
       '3. You receive fresh tambola tickets every week for your current savings balance.\n\n'
-      '4. You can also earn 10 tickets for every successful referral to your peers.  \n\n'
-      '5. Every day 5 numbers will be drawn from a raffle totalling 35 numbers per week.  \n\n'
-      '6. Users can win corners, 1st, 2nd, 3rd rows or a full house if their ticket numbers match with any of the 35 numbers drawn.  \n\n'
-      '7. If more than one user wins a category, then the prize money will be split equally amongst the winners.  \n\n'
-      '8. *Combination of numbers across multiple tickets will not be considered.';
+      '4. Every day 5 numbers will be drawn from a raffle totalling 35 numbers per week.  \n\n'
+      '5. Users can win corners, 1st, 2nd, 3rd rows or a full house if their ticket numbers match with any of the 35 numbers drawn.  \n\n'
+      '6. If more than one user wins a category, then the prize money will be split equally amongst the winners.  \n\n'
+      '7. *Combination of numbers across multiple tickets will not be considered.';
 
 }

@@ -108,7 +108,7 @@ class _ReferScreenState extends State<ReferScreen> {
                 )
             ),
             SafeArea(child: Padding(
-                padding: EdgeInsets.only(top: 180),
+                padding: EdgeInsets.only(top: 125),
                 child: _buildReferCanvas(context))
             ),
           ],
@@ -120,14 +120,84 @@ class _ReferScreenState extends State<ReferScreen> {
   Widget _buildReferCanvas(BuildContext context) {
     return Stack(
       children: [
+        Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 0),
+              child:SizedBox(
+                child: Image(
+                  image: AssetImage(Assets.referGraphic),
+                  fit: BoxFit.contain,
+                ),
+                width: 300,
+                height: 300,
+              ),
+            )
+        ),
         Padding(
           padding: EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Container(
+                  width: double.infinity,
+                  height: 160,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      new BoxShadow(
+                        color: Colors.black12,
+                        offset: Offset.fromDirection(20, 7),
+                        blurRadius: 3.0,
+                        spreadRadius: 0.1
+                      )
+                    ],
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      stops: [0.1, 0.4],
+                      colors: [Colors.white, Colors.white],
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('Share Fello with your friends',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: UiConstants.primaryColor,
+                              fontWeight: FontWeight.bold
+                            )
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text('You both receive ₹50 in your account alongwith 10 extra Tambola tickets every week!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 20,
+                              height: 1.2,
+                              color: UiConstants.accentColor,
+                              fontWeight: FontWeight.w300
+                            )
+                          )
+                        ]),
+                  )
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
               Container(
-                width: MediaQuery.of(context).size.width-50,
+                width: MediaQuery.of(context).size.width-60,
                 height: 50.0,
                 decoration: BoxDecoration(
                   gradient: new LinearGradient(
@@ -139,6 +209,13 @@ class _ReferScreenState extends State<ReferScreen> {
                       end: Alignment(0.5, 1.0)
                   ),
                   borderRadius: new BorderRadius.circular(10.0),
+                  // boxShadow: [
+                  //   new BoxShadow(
+                  //     color: Colors.black12,
+                  //     offset: Offset.fromDirection(20, 7),
+                  //     blurRadius: 3.0,
+                  //   )
+                  // ],
                 ),
                 child: new Material(
                   child: MaterialButton(
@@ -186,7 +263,7 @@ class _ReferScreenState extends State<ReferScreen> {
                 height: 20,
               ),
               Container(
-                width: MediaQuery.of(context).size.width-50,
+                width: MediaQuery.of(context).size.width-60,
                 height: 50.0,
                 decoration: BoxDecoration(
                   gradient: new LinearGradient(
@@ -198,6 +275,13 @@ class _ReferScreenState extends State<ReferScreen> {
                       end: Alignment(0.5, 1.0)
                   ),
                   borderRadius: new BorderRadius.circular(10.0),
+                  // boxShadow: [
+                  //   new BoxShadow(
+                  //     color: Colors.black12,
+                  //     offset: Offset.fromDirection(20, 7),
+                  //     blurRadius: 3.0,
+                  //   )
+                  // ],
                 ),
                 child: new Material(
                   child: MaterialButton(
@@ -234,16 +318,6 @@ class _ReferScreenState extends State<ReferScreen> {
             ],
           ),
         ),
-        Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 40),
-              child:Image(
-                image: AssetImage(Assets.referGraphic),
-                fit: BoxFit.contain,
-              ),
-            )
-        )
       ],
     );
   }
@@ -255,7 +329,7 @@ class _ReferScreenState extends State<ReferScreen> {
       socialMetaTagParameters: SocialMetaTagParameters(
         title: '${Constants.APP_NAME} Referral',
         description: 'Download ${Constants.APP_NAME} and win big for both!',
-        imageUrl: Uri.parse('https://fello.in/src/images/fello_logo_2_grey.png')
+        imageUrl: Uri.parse('https://play-lh.googleusercontent.com/yA_k3_efLEwy4slB6RUa-aBzJNuS5Bta7LudVRxYAThc0wnU0jgNih7lt95gHDgR_Ew=s360-rw')
       ),
       googleAnalyticsParameters: GoogleAnalyticsParameters(
         campaign: 'referrals',

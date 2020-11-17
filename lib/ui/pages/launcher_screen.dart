@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui show Image, instantiateImageCodec;
 
 import 'package:felloapp/core/fcm_listener.dart';
+import 'package:felloapp/ui/elements/breathing_text_widget.dart';
 import 'package:felloapp/ui/elements/logo_canvas.dart';
 import 'package:felloapp/ui/elements/logo_container.dart';
 import 'package:felloapp/util/assets.dart';
@@ -79,19 +80,19 @@ class LogoFadeIn extends State<SplashScreen> {
                   ),
                 ),
               ):Text('Loading..'),
-              // Align(
-              //   alignment: Alignment.bottomCenter,
-              //   child: Padding(
-              //       padding: EdgeInsets.fromLTRB(20, 20, 20, 40),
-              //       child: Visibility(
-              //           maintainSize: true,
-              //           maintainAnimation: true,
-              //           maintainState: true,
-              //           visible: _isSlowConnection,
-              //           child:  BreathingText(alertText: 'Connection is taking longer than usual')
-              //       )
-              //   ),
-              // )
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                    padding: EdgeInsets.fromLTRB(20, 20, 20, 40),
+                    child: Visibility(
+                        maintainSize: true,
+                        maintainAnimation: true,
+                        maintainState: true,
+                        visible: _isSlowConnection,
+                        child:  BreathingText(alertText: 'Connection is taking longer than usual')
+                    )
+                ),
+              )
             ],
           )
       ),
