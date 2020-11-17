@@ -218,7 +218,7 @@ class _ReferScreenState extends State<ReferScreen> {
                         log.debug(url);
                         baseProvider.isReferralLinkBuildInProgressOther = false;
                         setState(() {});
-                        FlutterShareMe().shareToWhatsApp(msg: 'Checkout: ' + url).then((flag) {
+                        FlutterShareMe().shareToSystem(msg: 'Checkout: ' + url).then((flag) {
                           log.debug(flag);
                         });
                       });

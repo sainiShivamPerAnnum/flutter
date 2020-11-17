@@ -10,6 +10,7 @@ import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/ui/elements/prize_dialog.dart';
 import 'package:felloapp/ui/elements/raffle_digit.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
+import 'package:felloapp/ui/elements/tambola_dialog.dart';
 import 'package:felloapp/ui/elements/weekly_draw_dialog.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -576,7 +577,7 @@ class Odds extends StatelessWidget {
     List<int> _digits = (_digitsObj != null) ? _digitsObj.toList() : [];
     return ListView.builder(
       physics: BouncingScrollPhysics(),
-      itemCount: 5,
+      itemCount: 6,
       itemBuilder: (context, index) {
         switch (index) {
           case 0:
@@ -585,49 +586,58 @@ class Odds extends StatelessWidget {
                 Icons.border_top,
                 'Top Row',
                 _board.getRowOdds(0, _digits).toString() + ' left',
-                _bestBoards[0].getRowOdds(0, _digits).toString() + ' left');
+                _bestBoards[0].getRowOdds(0, _digits).toString() + ' left',
+                _bestBoards[0], _digits);
           case 1:
             return _buildRow(
                 cx,
                 Icons.border_horizontal,
                 'Middle Row',
                 _board.getRowOdds(1, _digits).toString() + ' left',
-                _bestBoards[1].getRowOdds(1, _digits).toString() + ' left');
+                _bestBoards[1].getRowOdds(1, _digits).toString() + ' left',
+                _bestBoards[1], _digits);
           case 2:
             return _buildRow(
                 cx,
                 Icons.border_bottom,
                 'Bottom Row',
                 _board.getRowOdds(2, _digits).toString() + ' left',
-                _bestBoards[2].getRowOdds(2, _digits).toString() + ' left');
+                _bestBoards[2].getRowOdds(2, _digits).toString() + ' left',
+                _bestBoards[2], _digits);
           case 3:
             return _buildRow(
                 cx,
                 Icons.border_outer,
                 'Corners',
                 _board.getCornerOdds(_digits).toString() + ' left',
-                _bestBoards[3].getCornerOdds(_digits).toString() + ' left');
+                _bestBoards[3].getCornerOdds(_digits).toString() + ' left',
+                _bestBoards[3], _digits);
           case 4:
             return _buildRow(
                 cx,
                 Icons.apps,
                 'Full House',
                 _board.getFullHouseOdds(_digits).toString() + ' left',
-                _bestBoards[4].getFullHouseOdds(_digits).toString() + ' left');
+                _bestBoards[4].getFullHouseOdds(_digits).toString() + ' left',
+                _bestBoards[4], _digits);
+          case 5:
+            return SizedBox(height: 40,);
           default:
             return _buildRow(
                 cx,
                 Icons.border_top,
                 'Top Row',
                 _board.getRowOdds(0, _digits).toString() + ' left',
-                _bestBoards[0].getRowOdds(0, _digits).toString() + ' left');
+                _bestBoards[0].getRowOdds(0, _digits).toString() + ' left',
+                _bestBoards[0], _digits);
         }
       },
     );
   }
 
   Widget _buildRow(
-      BuildContext cx, IconData _i, String _title, String _tOdd, String _oOdd) {
+      BuildContext cx, IconData _i, String _title, String _tOdd, String _oOdd,
+      TambolaBoard _bestBoard, List<int> _digits) {
     var tt = Theme.of(cx).textTheme;
     var pd = EdgeInsets.symmetric(vertical: 8.0, horizontal: 24.0);
     return Padding(
@@ -657,15 +667,24 @@ class Odds extends StatelessWidget {
                 ),
               ),
               Expanded(
-                  child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Text(_oOdd, style: tt.title.apply(color: Colors.blueGrey)),
-                  Text('Best ticket',
-                      textAlign: TextAlign.center,
-                      style: tt.caption.apply(color: Colors.blueGrey))
-                ],
-              )),
+                  child: InkWell(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(_oOdd, style: tt.title.apply(color: Colors.blueGrey)),
+                        Text('Best ticket',
+                            textAlign: TextAlign.center,
+                            style: tt.caption.apply(color: Colors.blueGrey))
+                      ],
+                    ),
+                    onTap: () {
+                      HapticFeedback.vibrate();
+                      showDialog(
+                          context: cx,
+                          builder: (BuildContext context) => TambolaDialog(board: _bestBoard,digits: _digits,));
+                    },
+                  )
+              ),
             ]));
   }
 }

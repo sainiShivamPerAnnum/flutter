@@ -30,7 +30,7 @@ class GuideDialog extends StatelessWidget {
           SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Padding(
-                padding: EdgeInsets.only(top: 30, bottom: 30, left: 30, right: 30),
+                padding: EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -43,6 +43,17 @@ class GuideDialog extends StatelessWidget {
                       ),
                       width: 180,
                       height: 180,
+                    ),
+                    Text('STEPS',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w700,
+                        color: UiConstants.primaryColor
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
                     ),
                     Text(
                       Assets.guideText,
