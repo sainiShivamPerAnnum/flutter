@@ -6,6 +6,7 @@ import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/elements/board_selector.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/ui/elements/prize_dialog.dart';
@@ -48,6 +49,7 @@ class _HState extends State<PlayHome> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   FcmHandler fcmProvider;
+  LocalDBModel localDBModel;
 
   bool prizeButtonUp = false;
   bool ticketsBeingGenerated = false;
@@ -117,7 +119,7 @@ class _HState extends State<PlayHome> {
     //baseProvider.weeklyTicksFetched = false;
     if (dbProvider != null) dbProvider.addUserTicketListener(null);
     if (dbProvider != null) dbProvider.addUserTicketRequestListener(null);
-    if(fcmProvider != null) fcmProvider.addIncomingMessageListener(null,0);
+    if (fcmProvider != null) fcmProvider.addIncomingMessageListener(null,0);
   }
 
   @override
@@ -125,6 +127,7 @@ class _HState extends State<PlayHome> {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
     fcmProvider = Provider.of<FcmHandler>(context);
+    localDBModel = Provider.of<LocalDBModel>(context);
 
     _init();
     return Scaffold(
@@ -285,7 +288,58 @@ class _HState extends State<PlayHome> {
     );
   }
 
+  _processTicketResults() {
+    if(baseProvider.userWeeklyBoards == null || baseProvider.userWeeklyBoards.isEmpty
+    || baseProvider.weeklyDigits == null || baseProvider.weeklyDigits.toList().isEmpty
+    || localDBModel != null) {
+      log.debug('Testing is not ready yet');
+      return false;
+    }
+    DateTime date = DateTime.now();
+    if(date.weekday == 7) {
+      if(baseProvider.weeklyDigits.toList().length == 35) {
+        localDBModel.isUserOnboarded().then((flag) {
+          if(flag == 1) {
+            log.debug('Ticket results not yet displayed. Displaying: ');
+            _testTickets();
+            localDBModel.saveOnboardStatus(false);
+          }
+        });
+      }
+    }else{
+      localDBModel.isUserOnboarded().then((flag) {
+        if(flag == 0)localDBModel.saveOnboardStatus(true);
+      });
+    }
+  }
 
+  _testTickets() {
+    if(baseProvider.userWeeklyBoards == null || baseProvider.userWeeklyBoards.isEmpty
+        || baseProvider.weeklyDigits == null || baseProvider.weeklyDigits.toList().isEmpty) {
+      log.debug('Testing is not ready yet');
+      return false;
+    }
+    Map<String, int> ticketCodeWinIndex = {};
+    baseProvider.userWeeklyBoards.forEach((boardObj) {
+      if(boardObj.getCornerOdds(baseProvider.weeklyDigits.toList()) == 0) {
+        ticketCodeWinIndex[boardObj.id] = 0;
+      }
+      if(boardObj.getRowOdds(0, baseProvider.weeklyDigits.toList()) == 0) {
+        ticketCodeWinIndex[boardObj.id] = 1;
+      }
+      if(boardObj.getRowOdds(1, baseProvider.weeklyDigits.toList()) == 0) {
+        ticketCodeWinIndex[boardObj.id] = 2;
+      }
+      if(boardObj.getRowOdds(2, baseProvider.weeklyDigits.toList()) == 0) {
+        ticketCodeWinIndex[boardObj.id] = 3;
+      }
+      if(boardObj.getFullHouseOdds(baseProvider.weeklyDigits.toList()) == 0) {
+        ticketCodeWinIndex[boardObj.id] = 4;
+      }
+    });
+
+    log.debug('Resultant wins: ${ticketCodeWinIndex.toString()}');
+  }
 
   List<TambolaBoard> _refreshBestBoards() {
     if (baseProvider.userWeeklyBoards == null ||
