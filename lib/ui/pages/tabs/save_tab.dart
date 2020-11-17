@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/util/assets.dart';
@@ -18,22 +19,31 @@ class SaveScreen extends StatefulWidget {
 class _SaveScreenState extends State<SaveScreen> {
   BaseUtil baseProvider;
   DBModel dbProvider;
+  FcmHandler fcmProvider;
 
-  @override
-  void initState() {
-    super.initState();
+  _init() {
+    if(fcmProvider != null && baseProvider != null) {
+      fcmProvider.addIncomingMessageListener((valueMap) {
+        if(valueMap['title'] != null && valueMap['body'] != null){
+          baseProvider.showPositiveAlert(valueMap['title'], valueMap['body'], context, seconds: 5);
+        }
+      },1);
+    }
   }
 
   @override
   void dispose() {
-    // dispose text field controllers after use.
     super.dispose();
+    if(fcmProvider != null) fcmProvider.addIncomingMessageListener(null,1);
   }
 
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
+    fcmProvider = Provider.of<FcmHandler>(context);
+    _init();
+
     return Stack(
       children: [
         Container(

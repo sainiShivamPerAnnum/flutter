@@ -1,5 +1,6 @@
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/util/assets.dart';
@@ -24,11 +25,31 @@ class _ReferScreenState extends State<ReferScreen> {
   Log log = new Log('ReferScreen');
   BaseUtil baseProvider;
   DBModel dbProvider;
+  FcmHandler fcmProvider;
+
+  _init() {
+    if(fcmProvider != null && baseProvider != null) {
+      fcmProvider.addIncomingMessageListener((valueMap) {
+        if(valueMap['title'] != null && valueMap['body'] != null){
+          baseProvider.showPositiveAlert(valueMap['title'], valueMap['body'], context, seconds: 5);
+        }
+      },2);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if(fcmProvider != null) fcmProvider.addIncomingMessageListener(null,2);
+  }
 
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
+    fcmProvider = Provider.of<FcmHandler>(context);
+
+    _init();
     return Scaffold(
       //debugShowCheckedModeBanner: false,
       //padding: EdgeInsets.only(top: 48.0),

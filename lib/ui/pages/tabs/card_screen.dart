@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -46,6 +47,8 @@ class _HState extends State<PlayHome> {
   var rnd = new Random();
   BaseUtil baseProvider;
   DBModel dbProvider;
+  FcmHandler fcmProvider;
+
   bool prizeButtonUp = false;
   bool ticketsBeingGenerated = false;
 
@@ -83,6 +86,7 @@ class _HState extends State<PlayHome> {
           int cx = baseProvider.checkTicketCountValidity(tickets);
           if (cx > 0) {
             log.debug('Pushing ticket generation request');
+            ticketsBeingGenerated = true;
             dbProvider.pushTicketRequest(baseProvider.myUser, cx);
           }
           setState(() {});
@@ -96,21 +100,14 @@ class _HState extends State<PlayHome> {
 
       if (!baseProvider.weeklyTicksFetched)
         dbProvider.subscribeUserTickets(baseProvider.myUser);
-      // if (!baseProvider.weeklyTicksFetched) {
-      //   log.debug('Requesting for weekly tickets');
-      //   dbProvider.refreshUserTickets(baseProvider.myUser).then((tickets) {
-      //     baseProvider.weeklyTicksFetched = true;
-      //     if(tickets != null) {
-      //       baseProvider.userWeeklyBoards = tickets;
-      //       baseProvider.userTicketsCount = tickets.length;
-      //       log.debug('User weekly tickets fetched:: Count: ${baseProvider.userWeeklyBoards.length}');
-      //
-      //       _tambolaBoardViews = [];
-      //       _boardKeys = [];
-      //       setState(() {});
-      //     }
-      //   });
-      // }
+    }
+
+    if(fcmProvider != null && baseProvider != null) {
+      fcmProvider.addIncomingMessageListener((valueMap) {
+        if(valueMap['title'] != null && valueMap['body'] != null){
+          baseProvider.showPositiveAlert(valueMap['title'], valueMap['body'], context, seconds: 5);
+        }
+      },0);
     }
   }
 
@@ -120,12 +117,15 @@ class _HState extends State<PlayHome> {
     //baseProvider.weeklyTicksFetched = false;
     if (dbProvider != null) dbProvider.addUserTicketListener(null);
     if (dbProvider != null) dbProvider.addUserTicketRequestListener(null);
+    if(fcmProvider != null) fcmProvider.addIncomingMessageListener(null,0);
   }
 
   @override
   Widget build(BuildContext c) {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
+    fcmProvider = Provider.of<FcmHandler>(context);
+
     _init();
     return Scaffold(
         //debugShowCheckedModeBanner: false,
@@ -284,6 +284,8 @@ class _HState extends State<PlayHome> {
       ],
     );
   }
+
+
 
   List<TambolaBoard> _refreshBestBoards() {
     if (baseProvider.userWeeklyBoards == null ||

@@ -81,7 +81,7 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  showPositiveAlert(String title, String message, BuildContext context) {
+  showPositiveAlert(String title, String message, BuildContext context, {int seconds}) {
     Flushbar(
       flushbarPosition: FlushbarPosition.BOTTOM,
       flushbarStyle: FlushbarStyle.FLOATING,
