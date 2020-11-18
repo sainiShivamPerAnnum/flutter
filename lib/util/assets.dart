@@ -7,7 +7,7 @@ class Assets{
   static final String referGraphic = 'images/transfer.png';
   static final String iciciGraphic = 'images/icici.png';
   static final String sebiGraphic = 'images/sebi.png';
-  static final String amfiGraphic = 'images/amfi-arn.png';
+  static final String amfiGraphic = 'images/amfi.png';
   static final String prizesGraphic = 'images/prizes-small.png';
   static final String winnersGraphic = 'images/winners-small.png';
   static final String whatsappIcon = 'images/whatsapp.png';
