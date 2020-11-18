@@ -157,6 +157,20 @@ class TambolaBoard{
 
     return fullHouseLeftCount;
   }
+
+
+  String getTicketNumber() {
+    try {
+      if (id != null && id.startsWith('pg')) {
+        String x = id.replaceAll('pg', '');
+        List<String> y = x.split('sh');
+        int a = int.parse(y[0]);
+        int b = int.parse(y[1]);
+        return (a * 100 + b).toString();
+      }
+    } catch (e) {}
+    return 'NA';
+  }
 }
 
 class TambolaValueObject {

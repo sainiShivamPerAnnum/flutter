@@ -14,4 +14,10 @@ class Constants {
 
   //Sub-collection docs
   static final String DOC_USER_FCM_TOKEN = "client_token";
+
+  static const int CORNERS_COMPLETED = 0;
+  static const int ROW_ONE_COMPLETED = 1;
+  static const int ROW_TWO_COMPLETED = 2;
+  static const int ROW_THREE_COMPLETED = 3;
+  static const int FULL_HOUSE_COMPLETED = 4;
 }

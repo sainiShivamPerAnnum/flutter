@@ -14,6 +14,8 @@ import 'package:felloapp/ui/elements/raffle_digit.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
 import 'package:felloapp/ui/elements/tambola_dialog.dart';
 import 'package:felloapp/ui/elements/weekly_draw_dialog.dart';
+import 'package:felloapp/ui/elements/winnings_dialog.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -264,7 +266,7 @@ class _HState extends State<PlayHome> {
                 baseProvider.userTicketsCount > 0)
             ? Padding(
                 padding: EdgeInsets.only(left: 25),
-                child: Text('Ticket #${_getTicketNumber(_currentBoard.id)}'),
+                child: Text('Ticket #${_currentBoard.getTicketNumber()}'),
               )
             : Container(),
         (baseProvider.weeklyTicksFetched &&
@@ -322,23 +324,26 @@ class _HState extends State<PlayHome> {
     Map<String, int> ticketCodeWinIndex = {};
     baseProvider.userWeeklyBoards.forEach((boardObj) {
       if(boardObj.getCornerOdds(baseProvider.weeklyDigits.toList()) == 0) {
-        ticketCodeWinIndex[boardObj.id] = 0;
+        if(boardObj.getTicketNumber() != 'NA')ticketCodeWinIndex[boardObj.getTicketNumber()] = Constants.CORNERS_COMPLETED;
       }
       if(boardObj.getRowOdds(0, baseProvider.weeklyDigits.toList()) == 0) {
-        ticketCodeWinIndex[boardObj.id] = 1;
+        if(boardObj.getTicketNumber() != 'NA')ticketCodeWinIndex[boardObj.getTicketNumber()] = Constants.ROW_ONE_COMPLETED;
       }
       if(boardObj.getRowOdds(1, baseProvider.weeklyDigits.toList()) == 0) {
-        ticketCodeWinIndex[boardObj.id] = 2;
+        if(boardObj.getTicketNumber() != 'NA')ticketCodeWinIndex[boardObj.getTicketNumber()] = Constants.ROW_TWO_COMPLETED;
       }
       if(boardObj.getRowOdds(2, baseProvider.weeklyDigits.toList()) == 0) {
-        ticketCodeWinIndex[boardObj.id] = 3;
+        if(boardObj.getTicketNumber() != 'NA')ticketCodeWinIndex[boardObj.getTicketNumber()] = Constants.ROW_THREE_COMPLETED;
       }
       if(boardObj.getFullHouseOdds(baseProvider.weeklyDigits.toList()) == 0) {
-        ticketCodeWinIndex[boardObj.id] = 4;
+        if(boardObj.getTicketNumber() != 'NA')ticketCodeWinIndex[boardObj.getTicketNumber()] = Constants.FULL_HOUSE_COMPLETED;
       }
     });
 
     log.debug('Resultant wins: ${ticketCodeWinIndex.toString()}');
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => WinningsDialog(winningsMap: ticketCodeWinIndex,));
   }
 
   List<TambolaBoard> _refreshBestBoards() {
@@ -396,18 +401,6 @@ class _HState extends State<PlayHome> {
     return _bestTambolaBoards;
   }
 
-  String _getTicketNumber(String id) {
-    try {
-      if (id != null && id.startsWith('pg')) {
-        String x = id.replaceAll('pg', '');
-        List<String> y = x.split('sh');
-        int a = int.parse(y[0]);
-        int b = int.parse(y[1]);
-        return (a * 100 + b).toString();
-      }
-    } catch (e) {}
-    return 'NA';
-  }
 
   Widget _buildCards(bool fetchedFlag, List<TambolaBoard> boards, int count) {
     Widget _widget;
