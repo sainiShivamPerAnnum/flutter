@@ -85,4 +85,9 @@ class Api {
   Future<void> addClaimDocument(Map data) {
     return _db.collection('claims').document().setData(data, merge: false);
   }
+
+  Future<QuerySnapshot> getReferedDocs(String id) {
+    ref = _db.collection(Constants.COLN_REFERRALS);
+    return ref.where('ref_by', isEqualTo: id).getDocuments();
+  }
 }

@@ -28,12 +28,18 @@ class _ReferScreenState extends State<ReferScreen> {
   FcmHandler fcmProvider;
 
   _init() {
-    if(fcmProvider != null && baseProvider != null) {
+    if(fcmProvider != null && baseProvider != null && dbProvider != null) {
       fcmProvider.addIncomingMessageListener((valueMap) {
         if(valueMap['title'] != null && valueMap['body'] != null){
           baseProvider.showPositiveAlert(valueMap['title'], valueMap['body'], context, seconds: 5);
         }
       },2);
+
+      if(!baseProvider.referCountFetched)dbProvider.getReferCount(baseProvider.myUser.uid).then((count) {
+        baseProvider.referCountFetched = true;
+        baseProvider.referCount = count;
+        if(count > 0)setState(() {});
+      });
     }
   }
 
@@ -109,7 +115,7 @@ class _ReferScreenState extends State<ReferScreen> {
                   child: Column(
                     children: [
                       Text(
-                        '0',
+                        baseProvider.referCount.toString(),
                         style: TextStyle(
                             fontSize: 50,
                             fontWeight: FontWeight.bold,

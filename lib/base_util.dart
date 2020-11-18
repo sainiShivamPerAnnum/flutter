@@ -24,9 +24,11 @@ class BaseUtil extends ChangeNotifier {
   User _myUser;
   DailyPick weeklyDigits;
   List<TambolaBoard> userWeeklyBoards;
+  int referCount = 0;
   int userTicketsCount = 0;
   bool weeklyDrawFetched = false;
   bool weeklyTicksFetched = false;
+  bool referCountFetched = false;
   bool isReferralLinkBuildInProgressWhatsapp = false;
   bool isReferralLinkBuildInProgressOther = false;
   static const dummyTambolaVal = '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A';

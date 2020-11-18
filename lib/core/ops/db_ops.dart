@@ -196,6 +196,16 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<int> getReferCount(String uid) async {
+    try {
+      var docs = await _api.getReferedDocs(uid);
+      if(docs != null && docs.documents != null && docs.documents.length > 0) return docs.documents.length;
+    } catch (e) {
+      log.error("Error fetch referrals details: " + e.toString());
+    }
+    return 0;
+  }
+
   int _getWeekCode() {
     DateTime td = DateTime.now();
     Timestamp today = Timestamp.fromDate(td);
