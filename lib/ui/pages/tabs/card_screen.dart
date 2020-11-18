@@ -41,6 +41,7 @@ class _HState extends State<PlayHome> {
   Log log = new Log('CardScreen');
   TambolaBoard _currentBoard;
   TambolaBoardView _currentBoardView;
+  bool _winnerDialogCalled = false;
 
   //GlobalKey<TambolaBoardState> _currentKey;
   List<TambolaBoardView> _tambolaBoardViews;
@@ -130,8 +131,9 @@ class _HState extends State<PlayHome> {
     dbProvider = Provider.of<DBModel>(context);
     fcmProvider = Provider.of<FcmHandler>(context);
     localDBModel = Provider.of<LocalDBModel>(context);
-
     _init();
+    _processTicketResults();
+
     return Scaffold(
         //debugShowCheckedModeBanner: false,
         //padding: EdgeInsets.only(top: 48.0),
@@ -293,7 +295,7 @@ class _HState extends State<PlayHome> {
   _processTicketResults() {
     if(baseProvider.userWeeklyBoards == null || baseProvider.userWeeklyBoards.isEmpty
     || baseProvider.weeklyDigits == null || baseProvider.weeklyDigits.toList().isEmpty
-    || localDBModel != null) {
+    || localDBModel == null) {
       log.debug('Testing is not ready yet');
       return false;
     }
@@ -341,9 +343,19 @@ class _HState extends State<PlayHome> {
     });
 
     log.debug('Resultant wins: ${ticketCodeWinIndex.toString()}');
-    showDialog(
-        context: context,
-        builder: (BuildContext context) => WinningsDialog(winningsMap: ticketCodeWinIndex,));
+
+    if(!_winnerDialogCalled)new Timer(const Duration(seconds: 4), () {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => WinningsDialog(winningsMap: ticketCodeWinIndex,));
+    });
+    _winnerDialogCalled = true;
+
+    if(ticketCodeWinIndex.length > 0) {
+      dbProvider.addWinClaim(baseProvider.myUser.uid, ticketCodeWinIndex).then((flag) {
+        log.debug('Added claim document');
+      });
+    }
   }
 
   List<TambolaBoard> _refreshBestBoards() {

@@ -9,7 +9,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class WinningsDialog extends StatefulWidget{
-  Map<String, int> winningsMap;
+  final Map<String, int> winningsMap;
 
   WinningsDialog({this.winningsMap});
 
@@ -35,7 +35,10 @@ class WinningsDialogState extends State<WinningsDialog> {
       ),
       elevation: 0.0,
       backgroundColor: Colors.white,
-      child: dialogContent(context),
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: dialogContent(context),
+      ),
     );
   }
 
@@ -46,42 +49,48 @@ class WinningsDialogState extends State<WinningsDialog> {
         children: <Widget>[
           Container(
             width: double.infinity,
-            height: 600,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Text('This week\' results',
+                  padding: EdgeInsets.fromLTRB(10,10,10,10),
+                  child: Text('This week\'s results',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: UiConstants.primaryColor,
-                        fontSize: 20
+                        fontSize: 28
                     ),
                   ),                  
                 ),
                 (widget.winningsMap != null && widget.winningsMap.length > 0)?
-                ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    padding: EdgeInsets.all(20),
-                    itemCount: widget.winningsMap.length,
-                    itemBuilder: (context, i) {
-                      return _buildWinnerDetailsRow(widget.winningsMap.keys.toList()[i],
-                          widget.winningsMap.values.toList()[i]);
-                    } 
-                ):Center(
+                Container(
+                  height: 150,
+                  child:  ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      padding: EdgeInsets.all(20),
+                      itemCount: widget.winningsMap.length,
+                      itemBuilder: (context, i) {
+                        return _buildWinnerDetailsRow(widget.winningsMap.keys.toList()[i],
+                            widget.winningsMap.values.toList()[i]);
+                      }
+                  ),
+                )
+               :Center(
                   child: Padding(
                     padding: EdgeInsets.all(20),
-                    child: Text('None of the tickets matched this week.',
+                    child: Text('None of your tickets matched this week.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
-                          color: UiConstants.accentColor
+                          color: UiConstants.accentColor,
+                          fontSize: 18,
+
                         ),
                     ),
                   ),
                 ),
                 (widget.winningsMap != null && widget.winningsMap.length > 0)?
-                Text('Your winnings shall be credited to your account shortly!',
+                Text('Your winnings shall be credited to your account shortly!🎉',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
@@ -98,24 +107,24 @@ class WinningsDialogState extends State<WinningsDialog> {
 
   Widget _buildWinnerDetailsRow(String ticketId, int type) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Expanded(
-          child: Text('#' + ticketId,
-              textAlign: TextAlign.left,
+          child: Text('Ticket #' + ticketId,
+              textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 26,
+                  fontSize: 20,
                   height: 1.6,
                   color: UiConstants.accentColor)
           ),
         ),
         Expanded(
           child: Text(_typeToPrize(type),
-              textAlign: TextAlign.end,
+              textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 26,
+                  fontSize: 20,
                   height: 1.6,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w300,
                   color: UiConstants.primaryColor)
           ),
         ),
@@ -125,10 +134,10 @@ class WinningsDialogState extends State<WinningsDialog> {
 
   String _typeToPrize(int type) {
     switch(type) {
-      case Constants.CORNERS_COMPLETED: return 'Corners';
-      case Constants.ROW_ONE_COMPLETED: return 'First Row';
-      case Constants.ROW_TWO_COMPLETED: return 'Second Row';
-      case Constants.ROW_THREE_COMPLETED: return 'Third Row';
+      case Constants.CORNERS_COMPLETED: return 'Corners matched!';
+      case Constants.ROW_ONE_COMPLETED: return 'First row matched!';
+      case Constants.ROW_TWO_COMPLETED: return 'Second row matched!';
+      case Constants.ROW_THREE_COMPLETED: return 'Third row matched!';
       case Constants.FULL_HOUSE_COMPLETED: return 'Full House!';
       default: return 'NA';
     }

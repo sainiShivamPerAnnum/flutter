@@ -177,6 +177,25 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<bool> addWinClaim(String uid, Map<String, int> resMap) async{
+    try{
+      DateTime date = new DateTime.now();
+      int weekCde = date.year*100 + BaseUtil.getWeekNumber();
+
+      Map<String, dynamic> data = {};
+      data['user_id'] = uid;
+      data['week_code'] = weekCde;
+      data['ticket_cat_map'] = resMap;
+      data['timestamp'] = FieldValue.serverTimestamp();
+
+      await _api.addClaimDocument(data);
+      return true;
+    }catch (e) {
+      log.error("Error adding callback doc: " + e.toString());
+      return false;
+    }
+  }
+
   int _getWeekCode() {
     DateTime td = DateTime.now();
     Timestamp today = Timestamp.fromDate(td);
