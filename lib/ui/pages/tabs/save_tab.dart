@@ -20,6 +20,7 @@ class _SaveScreenState extends State<SaveScreen> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   FcmHandler fcmProvider;
+  int acctBalance = 0;
 
   _init() {
     if(fcmProvider != null && baseProvider != null) {
@@ -28,6 +29,7 @@ class _SaveScreenState extends State<SaveScreen> {
           baseProvider.showPositiveAlert(valueMap['title'], valueMap['body'], context, seconds: 5);
         }
       },1);
+      if(baseProvider.myUser.account_balance != null && baseProvider.myUser.account_balance>0)acctBalance = baseProvider.myUser.account_balance;
     }
   }
 
@@ -100,7 +102,7 @@ class _SaveScreenState extends State<SaveScreen> {
               child: Column(
                 children: [
                   Text(
-                    '₹0',
+                    '₹'+acctBalance.toString(),
                     style: TextStyle(
                         fontSize: 50,
                         fontWeight: FontWeight.bold,

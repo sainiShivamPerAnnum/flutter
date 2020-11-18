@@ -11,21 +11,23 @@ class User {
   String _email;
   String _client_token;   //fetched from a subcollection
   int _ticket_count;
+  int _account_balance;
   static final String fldId = "mID";
   static final String fldMobile = "mMobile";
   static final String fldEmail = "mEmail";
   static final String fldName = "mName";
   static final String fldClient_token = "mClientToken";
   static final String fldTicket_count = "mTicketCount";
+  static final String fldAcctBalance = "mAcctBalance";
 
-  User(this._uid, this._mobile, this._email, this._name, this._client_token, this._ticket_count);
+  User(this._uid, this._mobile, this._email, this._name, this._client_token, this._ticket_count, this._account_balance);
 
   static List<String> _fldList = [ fldMobile, fldEmail, fldName, fldTicket_count ];
 
-  User.newUser(String id, String mobile) : this(id, mobile, null, null, null, BaseUtil.NEW_USER_TICKET_COUNT);
+  User.newUser(String id, String mobile) : this(id, mobile, null, null, null, BaseUtil.NEW_USER_TICKET_COUNT, 0);
 
   User.fromMap(Map<String, dynamic> data, String id, [String client_token]) :
-        this(id, data[fldMobile],  data[fldEmail], data[fldName], client_token, data[fldTicket_count]);
+        this(id, data[fldMobile], data[fldEmail], data[fldName], client_token, data[fldTicket_count], data[fldAcctBalance]??0);
 
   //to send user object to server
   toJson() {
@@ -33,7 +35,8 @@ class User {
       fldMobile: _mobile,
       fldName: _name,
       fldEmail: _email,
-      fldTicket_count: _ticket_count
+      fldTicket_count: _ticket_count,
+      fldAcctBalance: _account_balance
     };
   }
 
@@ -59,6 +62,16 @@ class User {
             gData[fldTicket_count] = count;
           }catch(e) {
             gData[fldTicket_count] = BaseUtil.NEW_USER_TICKET_COUNT;
+          }
+          continue;
+        }
+        else if (line.contains('$fldAcctBalance\$')) {
+          String a = line.split('\$')[1];
+          try{
+            int balance = int.parse(a);
+            gData[fldAcctBalance] = balance;
+          }catch(e) {
+            gData[fldAcctBalance] = 0;
           }
           continue;
         }
@@ -89,6 +102,7 @@ class User {
     if(_name != null) oContent.writeln(fldName + '\$' + _name.trim());
     if(_client_token != null)oContent.writeln(fldClient_token + '\$' + _client_token.trim());
     if(_ticket_count != null)oContent.writeln(fldTicket_count + '\$' + _ticket_count.toString());
+    if(_account_balance != null)oContent.writeln(fldAcctBalance + '\$' + _account_balance.toString());
 
     log.debug("Generated FileWrite String: " + oContent.toString());
     return oContent.toString();
@@ -133,5 +147,11 @@ class User {
 
   set ticket_count(int value) {
     _ticket_count = value;
+  }
+
+  int get account_balance => _account_balance;
+
+  set account_balance(int value) {
+    _account_balance = value;
   }
 }
