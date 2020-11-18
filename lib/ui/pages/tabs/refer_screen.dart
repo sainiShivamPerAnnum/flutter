@@ -207,7 +207,7 @@ class _ReferScreenState extends State<ReferScreen> {
                           SizedBox(
                             height: 10,
                           ),
-                          Text('You both receive ₹50 in your account alongwith 10 extra Tambola tickets every week!',
+                          Text('You both receive ₹50 in your account along with 10 extra Tambola tickets every week!',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 20,

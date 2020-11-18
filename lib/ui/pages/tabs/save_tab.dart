@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
@@ -9,7 +10,6 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:upi_pay/upi_pay.dart';
 
 class SaveScreen extends StatefulWidget {
   @override
@@ -124,7 +124,7 @@ class _SaveScreenState extends State<SaveScreen> {
         SafeArea(
             child: Padding(
             padding: EdgeInsets.only(top: 130),
-            child: _buildSaveLayout())
+            child: _buildLayout())
         ),
         SafeArea(
             child: Align(
@@ -169,7 +169,70 @@ class _SaveScreenState extends State<SaveScreen> {
     );
   }
 
-  _buildSaveLayout() {
+  Widget _buildLayout() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        _buildFundList(),
+        SizedBox(height: 15,),
+        _buildBetaSaveButton()
+      ],
+    );
+  }
+
+  Widget _buildBetaSaveButton() {
+    return Container(
+      width: MediaQuery.of(context).size.width-40,
+      height: 50.0,
+      decoration: BoxDecoration(
+        gradient: new LinearGradient(
+            colors: [
+              UiConstants.primaryColor,
+              UiConstants.primaryColor.withBlue(190),
+            ],
+            begin: Alignment(0.5, -1.0),
+            end: Alignment(0.5, 1.0)
+        ),
+        borderRadius: new BorderRadius.circular(10.0),
+        // boxShadow: [
+        //   new BoxShadow(
+        //     color: Colors.black12,
+        //     offset: Offset.fromDirection(20, 7),
+        //     blurRadius: 3.0,
+        //   )
+        // ],
+      ),
+      child: new Material(
+        child: MaterialButton(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('DEPOSIT ',
+                style: Theme.of(context).textTheme.button.copyWith(color: Colors.white),
+              ),
+              Text('BETA',
+                style: Theme.of(context).textTheme.button.copyWith(
+                    color: Colors.white,fontStyle: FontStyle.italic,
+                  fontSize: 10,
+
+                ),
+              ),
+            ],
+          ),
+          onPressed: () async{
+            HapticFeedback.vibrate();
+            Navigator.of(context).pushNamed('/deposit');
+          },
+          highlightColor: Colors.orange.withOpacity(0.5),
+          splashColor: Colors.orange.withOpacity(0.5),
+        ),
+        color: Colors.transparent,
+        borderRadius: new BorderRadius.circular(20.0),
+      ),
+    );
+  }
+
+  _buildFundList() {
     return Padding(
         padding: EdgeInsets.all(20.0),
         child: Container(
@@ -244,14 +307,3 @@ class _SaveScreenState extends State<SaveScreen> {
   }
 }
 
-String _validateUpiAddress(String value) {
-  if (value.isEmpty) {
-    return 'UPI Address is required.';
-  }
-
-  if (!UpiPay.checkIfUpiAddressIsValid(value)) {
-    return 'UPI Address is invalid.';
-  }
-
-  return null;
-}

@@ -34,7 +34,7 @@ class _UpiPaymentState extends State<UpiPayment> {
     _amountController.text = (1).toString();
 
     // we have used sample UPI address (will be used to receive amount)
-    _upiAddressController.text = 'shouryalala@oksbi';
+    _upiAddressController.text = '998643444@okbizaxis';
 
     // used for getting list of UPI apps installed in current device
     _appsFuture = UpiPay.getInstalledUpiApplications();
@@ -68,7 +68,7 @@ class _UpiPaymentState extends State<UpiPayment> {
     final a = await UpiPay.initiateTransaction(
       amount: _amountController.text,
       app: app.upiApplication,
-      receiverName: 'ICICI',
+      receiverName: 'Fello',
       receiverUpiAddress: _upiAddressController.text,
       transactionRef: transactionRef,
       merchantCode: '7372',
@@ -77,89 +77,99 @@ class _UpiPaymentState extends State<UpiPayment> {
     print(a);
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   baseProvider = Provider.of<BaseUtil>(context);
+  //   dbProvider = Provider.of<DBModel>(context);
+  //   return Stack(
+  //     children: [
+  //       Container(
+  //         height: 200,
+  //         decoration: BoxDecoration(
+  //           gradient: LinearGradient(
+  //             begin: Alignment.topRight,
+  //             end: Alignment.bottomLeft,
+  //             stops: [0.1, 0.6],
+  //             colors: [
+  //               UiConstants.primaryColor.withGreen(190),
+  //               UiConstants.primaryColor,
+  //             ],
+  //           ),
+  //           borderRadius: BorderRadius.only(
+  //             bottomLeft: Radius.elliptical(
+  //                 MediaQuery.of(context).size.width * 0.50, 18),
+  //             bottomRight: Radius.elliptical(
+  //                 MediaQuery.of(context).size.width * 0.50, 18),
+  //           ),
+  //         ),
+  //       ),
+  //       Positioned(
+  //         top: 30,
+  //         left: 5,
+  //         child: IconButton(
+  //           color: Colors.white,
+  //           icon: Icon(Icons.settings),
+  //           onPressed: () {
+  //
+  //           },
+  //         ),
+  //       ),
+  //       Positioned(
+  //         top: 30,
+  //         right: 5,
+  //         child: IconButton(
+  //           color: Colors.white,
+  //           icon: Icon(Icons.help_outline),
+  //           onPressed: () {
+  //             //Navigator.of(context).pushNamed(Settings.id);
+  //           },
+  //         ),
+  //       ),
+  //       Align(
+  //           alignment: Alignment.topCenter,
+  //           child: Padding(
+  //             padding: EdgeInsets.only(top: 70),
+  //             child: Column(
+  //               children: [
+  //                 Text(
+  //                   '₹1,040',
+  //                   style: TextStyle(
+  //                       fontSize: 50,
+  //                       fontWeight: FontWeight.bold,
+  //                       color: Colors.white
+  //                   ),
+  //
+  //                 ),
+  //                 Text(
+  //                   'saved',
+  //                   style: TextStyle(
+  //                       fontSize: 18,
+  //                       color: Colors.white
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           )
+  //       ),
+  //       Padding(
+  //           padding: EdgeInsets.only(top: 160),
+  //           child: _buildUpiLayout()
+  //       ),
+  //       Align(
+  //         alignment: Alignment.bottomCenter,
+  //         child: _buildButton()
+  //       )
+  //     ],
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
-    dbProvider = Provider.of<DBModel>(context);
-    return Stack(
-      children: [
-        Container(
-          height: 200,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              stops: [0.1, 0.6],
-              colors: [
-                UiConstants.primaryColor.withGreen(190),
-                UiConstants.primaryColor,
-              ],
-            ),
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.elliptical(
-                  MediaQuery.of(context).size.width * 0.50, 18),
-              bottomRight: Radius.elliptical(
-                  MediaQuery.of(context).size.width * 0.50, 18),
-            ),
-          ),
-        ),
-        Positioned(
-          top: 30,
-          left: 5,
-          child: IconButton(
-            color: Colors.white,
-            icon: Icon(Icons.settings),
-            onPressed: () {
 
-            },
-          ),
-        ),
-        Positioned(
-          top: 30,
-          right: 5,
-          child: IconButton(
-            color: Colors.white,
-            icon: Icon(Icons.help_outline),
-            onPressed: () {
-              //Navigator.of(context).pushNamed(Settings.id);
-            },
-          ),
-        ),
-        Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: EdgeInsets.only(top: 70),
-              child: Column(
-                children: [
-                  Text(
-                    '₹1,040',
-                    style: TextStyle(
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white
-                    ),
-
-                  ),
-                  Text(
-                    'saved',
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white
-                    ),
-                  ),
-                ],
-              ),
-            )
-        ),
-        Padding(
-            padding: EdgeInsets.only(top: 160),
-            child: _buildUpiLayout()
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: _buildButton()
-        )
-      ],
+    return new Scaffold(
+        appBar: BaseUtil.getAppBar(),
+        body: _buildUpiLayout()
     );
   }
 
@@ -169,6 +179,59 @@ class _UpiPaymentState extends State<UpiPayment> {
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: ListView(
             children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Container(
+                    width: double.infinity,
+                    height: 160,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        new BoxShadow(
+                            color: Colors.black12,
+                            offset: Offset.fromDirection(20, 7),
+                            blurRadius: 3.0,
+                            spreadRadius: 0.1
+                        )
+                      ],
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        stops: [0.1, 0.4],
+                        colors: [Colors.white, Colors.white],
+                      ),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text('Beta Deposit Dashboard',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: UiConstants.primaryColor,
+                                    fontWeight: FontWeight.bold
+                                )
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text('Deposit with Fello and we will seamlessly invest your amount and forward all relevant receipts',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    height: 1.2,
+                                    color: UiConstants.accentColor,
+                                    fontWeight: FontWeight.w300
+                                )
+                            )
+                          ]),
+                    )
+                ),
+              ),
               Container(
                 margin: EdgeInsets.only(top: 32),
                 child: Row(
@@ -221,7 +284,7 @@ class _UpiPaymentState extends State<UpiPayment> {
                     Container(
                       margin: EdgeInsets.only(bottom: 12),
                       child: Text(
-                        'Pay Using',
+                        'Deposit using your installed UPI apps',
                         style: Theme.of(context).textTheme.caption,
                       ),
                     ),
