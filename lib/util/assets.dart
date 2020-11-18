@@ -27,6 +27,11 @@ class Assets{
     'Safe',
   ];
 
+  static final String aboutUsDesc = 'Fello is a gamified savings and investment platform for users to save, grow and earn higher returns than a traditional savings bank account. For every Rs.100 saved and invested through Fello, users get amazing rewards and incentives. \n\n'
+      'We (Manish & Shourya) are two finance folks who started Fello with the vision of helping people save money in a better way and learn about personal finance and investments with an added tinge of fun with games like never before. Now savings are no more boring, it is fun, safe and rewarding!\n\n'
+      'We are an AMFI registered mutual fund distributor and all your money is invested directly into a relevant mutual fund. So the money saved is safe and secure with the security of a financial institution. \n\n'
+      'If you have any queries, feel free to reach out to us and we would be happy to help you.';
+
   static final List<String> onboardingDesc = [
     '${Constants.APP_NAME} is a gamified savings and investment platform. '
         'We make saving a lot more rewarding, and investing a lot more simple.',

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/elements/aboutus_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/contact_dialog.dart';
 import 'package:felloapp/util/constants.dart';
@@ -81,10 +82,10 @@ class _OptionsList extends State<SettingsPage> {
         break;
       }
       case 'abUs': {
-        // showDialog(
-        //     context: context,
-        //     builder: (BuildContext context) => AboutUsDialog()
-        // );
+        showDialog(
+            context: context,
+            builder: (BuildContext context) => AboutUsDialog()
+        );
         break;
       }
       case 'faq': {
@@ -154,7 +155,7 @@ class _OptionsList extends State<SettingsPage> {
   List<OptionDetail> _loadOptionsList() {
     return [
      // new OptionDetail(key: 'upAddress', value: 'Update Address', isEnabled: (baseProvider.isSignedIn() && baseProvider.isActiveUser())),
-      //new OptionDetail(key: 'abUs', value: 'About ${Constants.APP_NAME}', isEnabled: true),
+      new OptionDetail(key: 'abUs', value: 'About ${Constants.APP_NAME}', isEnabled: true),
       new OptionDetail(key: 'contUs', value: 'Contact Us', isEnabled: true),
       new OptionDetail(key: 'faq', value: 'FAQs', isEnabled: true),
       new OptionDetail(key: 'signOut', value: 'Sign Out', isEnabled: (baseProvider.isSignedIn())),
