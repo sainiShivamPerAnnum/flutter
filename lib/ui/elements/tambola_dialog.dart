@@ -37,7 +37,13 @@ class TambolaDialog extends StatelessWidget {
              tambolaBoard: this.board.tambolaBoard,
              calledDigits: this.digits,
              boardColor: UiConstants.primaryColor,
-           )
+           ),
+          Text('Ticket #' + this.board.getTicketNumber(),
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 20
+            ),
+          ),
         ]
     );
   }
