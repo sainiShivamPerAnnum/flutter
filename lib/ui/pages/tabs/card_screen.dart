@@ -56,15 +56,39 @@ class _HState extends State<PlayHome> {
 
   bool prizeButtonUp = false;
   bool ticketsBeingGenerated = false;
+  bool dailyPickHeaderWithTimings = false;
+  String dailyPickHeaderText = 'Today\'s picks';
 
   @override
   void initState() {
     super.initState();
+    initDailyPickFlags();
     new Timer(const Duration(seconds: 3), () {
       setState(() {
         prizeButtonUp = true;
       });
     });
+  }
+
+  initDailyPickFlags() {
+    String remoteTime = BaseUtil.remoteConfig.getString('draw_pick_time');
+    remoteTime = (remoteTime == null || remoteTime.isEmpty)?'9':remoteTime;
+    int tx = 9;
+    try{
+      tx = int.parse(remoteTime);
+    }catch(e) {
+      tx = 9;
+    }
+    DateTime _time = DateTime.now();
+    dailyPickHeaderWithTimings = (_time.hour < tx);
+    if(dailyPickHeaderWithTimings) {
+      String am_pm = (tx > 11) ? 'PM' : 'AM';
+      String ttime = (tx > 12) ? (tx - 12).toString() + am_pm : tx.toString() +
+          am_pm;
+      dailyPickHeaderText = 'Today\'s picks - Drawn at $ttime';
+    }else{
+      dailyPickHeaderText = 'Today\'s picks';
+    }
   }
 
   _init() {
@@ -521,14 +545,14 @@ class _HState extends State<PlayHome> {
               Padding(
                 padding: EdgeInsets.only(top: 10),
                 child: Text(
-                  'Today\'s picks',
+                  dailyPickHeaderText,
                   style: TextStyle(color: Colors.white70),
                   textAlign: TextAlign.left,
                 ),
               ),
               Padding(
                   padding: EdgeInsets.only(top: 10, left: 15, right: 15),
-                  child: _getDrawBallRow(draws, date.weekday))
+                  child: _getDrawBallRow(draws, date.weekday)),
             ]),
       ),
     );

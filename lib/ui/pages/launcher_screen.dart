@@ -33,7 +33,7 @@ class LogoFadeIn extends State<SplashScreen> {
         _logoStyle = LogoStyle.stacked;
       });
     });
-    _timer2 = new Timer(const Duration(seconds: 3), () {
+    _timer2 = new Timer(const Duration(seconds: 2), () {
       setState(() {
         initialize();
       });

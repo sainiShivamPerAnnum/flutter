@@ -7,6 +7,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
@@ -35,6 +36,7 @@ class BaseUtil extends ChangeNotifier {
   static bool isDeviceOffline = false;
   static bool ticketRequestSent = false;
   static int ticketCountBeforeRequest = NEW_USER_TICKET_COUNT;
+  static RemoteConfig remoteConfig;
 
   BaseUtil() {
     //init();
@@ -46,6 +48,25 @@ class BaseUtil extends ChangeNotifier {
     // isUserOnboarded = await _lModel.isUserOnboarded()==1;
     if(firebaseUser != null)_myUser = await _dbModel.getUser(firebaseUser.uid);//_lModel.getUser();
     isUserOnboarded = (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
+
+    if(isUserOnboarded)await initRemoteConfig();
+  }
+
+  initRemoteConfig() async{
+    remoteConfig = await RemoteConfig.instance;
+    remoteConfig.setDefaults(<String, dynamic>{
+      'draw_pick_time': '9',
+    });
+    try {
+      // Using default duration to force fetching from remote server.
+      await remoteConfig.fetch(expiration: const Duration(seconds: 0));
+      await remoteConfig.activateFetched();
+    } on FetchThrottledException catch (exception) {
+      // Fetch throttled.
+      print(exception);
+    } catch (exception) {
+      print('Unable to fetch remote config. Cached or default values will be used');
+    }
   }
 
   static Widget getAppBar() {
