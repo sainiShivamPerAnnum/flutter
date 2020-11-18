@@ -87,6 +87,11 @@ class _OptionsList extends State<SettingsPage> {
         // );
         break;
       }
+      case 'faq': {
+        HapticFeedback.vibrate();
+        Navigator.of(context).pushNamed('/faq');
+        break;
+      }
       case 'contUs': {
         showDialog(
             context: context,
@@ -151,6 +156,7 @@ class _OptionsList extends State<SettingsPage> {
      // new OptionDetail(key: 'upAddress', value: 'Update Address', isEnabled: (baseProvider.isSignedIn() && baseProvider.isActiveUser())),
       //new OptionDetail(key: 'abUs', value: 'About ${Constants.APP_NAME}', isEnabled: true),
       new OptionDetail(key: 'contUs', value: 'Contact Us', isEnabled: true),
+      new OptionDetail(key: 'faq', value: 'FAQs', isEnabled: true),
       new OptionDetail(key: 'signOut', value: 'Sign Out', isEnabled: (baseProvider.isSignedIn())),
     ];
   }

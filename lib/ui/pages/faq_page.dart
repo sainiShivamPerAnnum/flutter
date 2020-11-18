@@ -1,0 +1,100 @@
+import 'dart:async';
+
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
+import 'package:felloapp/ui/elements/contact_dialog.dart';
+import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/logger.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+class FAQPage extends StatefulWidget{
+  FAQPage({this.onPush});
+  final ValueChanged<String> onPush;
+  @override
+  State createState() {
+    return _FAQList(onPush: onPush);
+  }
+}
+
+class _FAQList extends State<FAQPage> {
+  _FAQList({this.onPush});
+  final ValueChanged<String> onPush;
+  Log log = new Log('SettingsPage');
+  BaseUtil baseProvider;
+  List<Item> _faqs;
+
+  @override
+  void initState() {
+    super.initState();
+    _faqs = generateItems(8);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context);
+    return new Scaffold(
+        appBar: BaseUtil.getAppBar(),
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: ListView(
+            children: [_buildFAQBody()],
+          ),
+        )
+    );
+  }
+
+  List<Item> generateItems(int numberOfItems) {
+    return List.generate(numberOfItems, (int index) {
+      return Item(
+        headerValue: 'Book $index',
+        expandedValue: 'Details for Book $index goes here',
+      );
+    });
+  }
+
+  Widget _buildFAQBody() {
+    return ExpansionPanelList(
+      animationDuration: Duration(milliseconds: 300),
+      expansionCallback: (int index, bool isExpanded) {
+        _faqs[index].isExpanded = !isExpanded;
+        setState(() {});
+      },
+      children:_faqs.map<ExpansionPanel>((Item item) {
+        return ExpansionPanel(
+            headerBuilder: (BuildContext context, bool isExpanded) {
+              return ListTile(
+                title: Text(item.headerValue),
+              );
+            },
+            canTapOnHeader: true,
+            body: ListTile(
+              title: Text(item.headerValue,
+              style: Theme.of(context).textTheme.bodyText1.copyWith(
+                  color: Colors.grey[800],
+                  fontWeight: FontWeight.w400
+              ),),
+              //subtitle: Text(item.expandedValue),
+            ),
+            isExpanded: item.isExpanded
+        );
+      }).toList(),
+    );
+  }
+}
+
+class Item {
+  Item({
+    this.expandedValue,
+    this.headerValue,
+    this.isExpanded = false,
+  });
+
+  String expandedValue;
+  String headerValue;
+  bool isExpanded;
+}

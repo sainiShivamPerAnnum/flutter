@@ -4,6 +4,7 @@ import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/pages/app_root.dart';
+import 'package:felloapp/ui/pages/faq_page.dart';
 import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/pages/tabs/home_screen.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
           '/savetab': (BuildContext context) => MyHomePage(title: Constants.APP_NAME),
           '/refertab': (BuildContext context) => MyHomePage(title: Constants.APP_NAME),
           '/settings': (BuildContext context) => SettingsPage(),
+          '/faq': (BuildContext context) => FAQPage(),
         },
       ),
     );
