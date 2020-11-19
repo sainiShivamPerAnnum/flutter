@@ -1,10 +1,10 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
+import 'package:felloapp/ui/elements/scrolling_text.dart';
 import 'package:felloapp/ui/elements/withdraw_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -176,10 +176,38 @@ class _SaveScreenState extends State<SaveScreen> {
       children: [
         _buildFundList(),
         SizedBox(height: 15,),
+        _buildDividerText(),
+        SizedBox(height: 15,),
         _buildBetaSaveButton(),
         SizedBox(height: 15,),
         _buildBetaWithdrawButton()
       ],
+    );
+  }
+
+  Widget _buildDividerText() {
+    return Padding(
+      padding: EdgeInsets.only(left: 10, right: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Divider(
+              indent: 10,
+              endIndent: 10,
+            ),
+          ),
+          Expanded(
+            child: Text('In the meanwhile'),
+          ),
+          Expanded(
+            child: Divider(
+              indent: 10,
+              endIndent: 10,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -342,6 +370,9 @@ class _SaveScreenState extends State<SaveScreen> {
                    color: Colors.blueGrey[700]
                  ),
                )
+              ),
+              ScrollingText(
+                text: 'Direct deposits are coming soon!  ',
               )
             ],
           ),
@@ -349,24 +380,5 @@ class _SaveScreenState extends State<SaveScreen> {
     );
   }
 
-  _buildButton() {
-    return Padding(
-        padding: EdgeInsets.all(20.0),
-        child:Material(
-          child: MaterialButton(
-            color: Colors.blueAccent,
-            child: Text('Get Tickets',
-              style: TextStyle(color: Colors.white, fontSize: 20.0),
-            ),
-            minWidth: double.infinity,
-            height: 50,
-            onPressed: () {
-              dbProvider.pushTicketRequest(baseProvider.myUser, 1);
-            },
-          ),
-          borderRadius: new BorderRadius.circular(80.0),
-        )
-    );
-  }
 }
 

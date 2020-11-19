@@ -1,4 +1,3 @@
-import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
