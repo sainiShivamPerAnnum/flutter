@@ -12,6 +12,7 @@ class User {
   String _client_token;   //fetched from a subcollection
   int _ticket_count;
   int _account_balance;
+  String _pan;
   static final String fldId = "mID";
   static final String fldMobile = "mMobile";
   static final String fldEmail = "mEmail";
@@ -19,15 +20,16 @@ class User {
   static final String fldClient_token = "mClientToken";
   static final String fldTicket_count = "mTicketCount";
   static final String fldAcctBalance = "mAcctBalance";
+  static final String fldPan = "mPan";
 
-  User(this._uid, this._mobile, this._email, this._name, this._client_token, this._ticket_count, this._account_balance);
+  User(this._uid, this._mobile, this._email, this._name, this._client_token, this._ticket_count, this._account_balance, this._pan);
 
-  static List<String> _fldList = [ fldMobile, fldEmail, fldName, fldTicket_count ];
+  static List<String> _fldList = [ fldMobile, fldEmail, fldName, fldPan ];
 
-  User.newUser(String id, String mobile) : this(id, mobile, null, null, null, BaseUtil.NEW_USER_TICKET_COUNT, 0);
+  User.newUser(String id, String mobile) : this(id, mobile, null, null, null, BaseUtil.NEW_USER_TICKET_COUNT, 0, null);
 
   User.fromMap(Map<String, dynamic> data, String id, [String client_token]) :
-        this(id, data[fldMobile], data[fldEmail], data[fldName], client_token, data[fldTicket_count], data[fldAcctBalance]??0);
+        this(id, data[fldMobile], data[fldEmail], data[fldName], client_token, data[fldTicket_count], data[fldAcctBalance]??0, data[fldPan]);
 
   //to send user object to server
   toJson() {
@@ -36,7 +38,8 @@ class User {
       fldName: _name,
       fldEmail: _email,
       fldTicket_count: _ticket_count,
-      fldAcctBalance: _account_balance
+      fldAcctBalance: _account_balance,
+      fldPan: _pan
     };
   }
 
@@ -103,6 +106,7 @@ class User {
     if(_client_token != null)oContent.writeln(fldClient_token + '\$' + _client_token.trim());
     if(_ticket_count != null)oContent.writeln(fldTicket_count + '\$' + _ticket_count.toString());
     if(_account_balance != null)oContent.writeln(fldAcctBalance + '\$' + _account_balance.toString());
+    if(_pan != null)oContent.writeln(fldPan + '\$' + _pan.trim());
 
     log.debug("Generated FileWrite String: " + oContent.toString());
     return oContent.toString();
@@ -153,5 +157,11 @@ class User {
 
   set account_balance(int value) {
     _account_balance = value;
+  }
+
+  String get pan => _pan;
+
+  set pan(String value) {
+    _pan = value;
   }
 }

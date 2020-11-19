@@ -58,10 +58,11 @@ class BaseUtil extends ChangeNotifier {
     remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(<String, dynamic>{
       'draw_pick_time': '9',
+      'deposit_upi_address': '9986643444@okbizaxis'
     });
     try {
       // Using default duration to force fetching from remote server.
-      await remoteConfig.fetch(expiration: const Duration(seconds: 0));
+      await remoteConfig.fetch();
       await remoteConfig.activateFetched();
     } on FetchThrottledException catch (exception) {
       // Fetch throttled.

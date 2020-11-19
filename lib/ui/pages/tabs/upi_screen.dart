@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:upi_pay/upi_pay.dart';
 
@@ -17,10 +18,18 @@ class _UpiPaymentState extends State<UpiPayment> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   String _upiAddrError;
+  String _panError;
+  String _amountError;
+  String _upiAddress;
+  String _amtError;
+  bool _hasInvested = false;
+  bool _isProcessing = false;
+  String transactionMsg = null;
 
   // used for defining amount and UPI address of merchant where
   // payment is to be received.
   TextEditingController _upiAddressController = TextEditingController();
+  TextEditingController _panController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
 
   // used for showing list of UPI apps installed in current device
@@ -31,10 +40,12 @@ class _UpiPaymentState extends State<UpiPayment> {
     super.initState();
 
     // we have declared amount as 999 (i.e. Rs.999).
-    _amountController.text = (1).toString();
+    _amountController.text = (100).toString();
 
     // we have used sample UPI address (will be used to receive amount)
-    _upiAddressController.text = '998643444@okbizaxis';
+    _upiAddress = BaseUtil.remoteConfig.getString('deposit_upi_address');
+    _upiAddress = (_upiAddress==null||_upiAddress.isEmpty)?'9986643444@okbizaxis':_upiAddress;
+    _upiAddressController.text = _upiAddress;
 
     // used for getting list of UPI apps installed in current device
     _appsFuture = UpiPay.getInstalledUpiApplications();
@@ -44,6 +55,7 @@ class _UpiPaymentState extends State<UpiPayment> {
   void dispose() {
     // dispose text field controllers after use.
     _upiAddressController.dispose();
+    _panController.dispose();
     _amountController.dispose();
     super.dispose();
   }
@@ -61,111 +73,86 @@ class _UpiPaymentState extends State<UpiPayment> {
       _upiAddrError = null;
     });
 
+    final panErr = _validatePANnumber(_panController.text);
+    if(panErr != null) {
+      setState(() {
+        _panError = panErr;
+      });
+      return;
+    }
+    setState(() {
+      _panError = null;
+    });
+
+    final amtErr = _validateAmount(_amountController.text, _hasInvested);
+    if(amtErr != null) {
+      setState(() {
+        _amountError = amtErr;
+      });
+      return;
+    }
+    setState(() {
+      _amountError = null;
+    });
+
+    final String _note = 'FelloDeposit-user'+ baseProvider.myUser.mobile + 'pan' + _panController.text;
+
     final transactionRef = Random.secure().nextInt(1 << 32).toString();
     print("Starting transaction with id $transactionRef");
 
     // this function will initiate UPI transaction.
-    final a = await UpiPay.initiateTransaction(
+    final response = await UpiPay.initiateTransaction(
       amount: _amountController.text,
       app: app.upiApplication,
       receiverName: 'Fello',
-      receiverUpiAddress: _upiAddressController.text,
+      receiverUpiAddress: _upiAddress,
       transactionRef: transactionRef,
       merchantCode: '7372',
+      transactionNote: _note
     );
 
-    print(a);
+    print('Printing UPI transaction response');
+    print(response.rawResponse);
+    _isProcessing = true;
+    setState(() {});
+
+    String sucFlag = 'NA';
+    if(response.status == UpiTransactionStatus.success) sucFlag = 'SUCCESS';
+    else if(response.status == UpiTransactionStatus.failure) sucFlag = 'FAILURE';
+    else if(response.status == UpiTransactionStatus.submitted) sucFlag = 'SUBMITTED';
+
+    dbProvider.addFundDeposit(baseProvider.myUser.uid,
+        _amountController.text, response.rawResponse, sucFlag).then((value) {
+      if(value) {
+        baseProvider.myUser.pan = _panController.text;
+        dbProvider.updateUser(baseProvider.myUser).then((value) {
+          transactionMsg = 'Transaction details successfully saved. Your account and ticket balance will soon be updated!';
+          _isProcessing = false;
+          setState(() {});
+        });
+      }else{
+        transactionMsg = 'Failed to save the transaction details. '
+            ' We would request you to kindly send us a screenshot of the UPI transaction.'
+            ' We will contact you to confirm the transaction.';
+        _isProcessing = false;
+        setState(() {});
+      }
+    });
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   baseProvider = Provider.of<BaseUtil>(context);
-  //   dbProvider = Provider.of<DBModel>(context);
-  //   return Stack(
-  //     children: [
-  //       Container(
-  //         height: 200,
-  //         decoration: BoxDecoration(
-  //           gradient: LinearGradient(
-  //             begin: Alignment.topRight,
-  //             end: Alignment.bottomLeft,
-  //             stops: [0.1, 0.6],
-  //             colors: [
-  //               UiConstants.primaryColor.withGreen(190),
-  //               UiConstants.primaryColor,
-  //             ],
-  //           ),
-  //           borderRadius: BorderRadius.only(
-  //             bottomLeft: Radius.elliptical(
-  //                 MediaQuery.of(context).size.width * 0.50, 18),
-  //             bottomRight: Radius.elliptical(
-  //                 MediaQuery.of(context).size.width * 0.50, 18),
-  //           ),
-  //         ),
-  //       ),
-  //       Positioned(
-  //         top: 30,
-  //         left: 5,
-  //         child: IconButton(
-  //           color: Colors.white,
-  //           icon: Icon(Icons.settings),
-  //           onPressed: () {
-  //
-  //           },
-  //         ),
-  //       ),
-  //       Positioned(
-  //         top: 30,
-  //         right: 5,
-  //         child: IconButton(
-  //           color: Colors.white,
-  //           icon: Icon(Icons.help_outline),
-  //           onPressed: () {
-  //             //Navigator.of(context).pushNamed(Settings.id);
-  //           },
-  //         ),
-  //       ),
-  //       Align(
-  //           alignment: Alignment.topCenter,
-  //           child: Padding(
-  //             padding: EdgeInsets.only(top: 70),
-  //             child: Column(
-  //               children: [
-  //                 Text(
-  //                   '₹1,040',
-  //                   style: TextStyle(
-  //                       fontSize: 50,
-  //                       fontWeight: FontWeight.bold,
-  //                       color: Colors.white
-  //                   ),
-  //
-  //                 ),
-  //                 Text(
-  //                   'saved',
-  //                   style: TextStyle(
-  //                       fontSize: 18,
-  //                       color: Colors.white
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           )
-  //       ),
-  //       Padding(
-  //           padding: EdgeInsets.only(top: 160),
-  //           child: _buildUpiLayout()
-  //       ),
-  //       Align(
-  //         alignment: Alignment.bottomCenter,
-  //         child: _buildButton()
-  //       )
-  //     ],
-  //   );
-  // }
+  _initFields() {
+    if(baseProvider != null) {
+      if(baseProvider.myUser != null && baseProvider.myUser.pan != null && baseProvider.myUser.pan.isNotEmpty) {
+        _panController.text = baseProvider.myUser.pan;
+        _hasInvested = true;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
+    dbProvider = Provider.of<DBModel>(context);
 
     return new Scaffold(
         appBar: BaseUtil.getAppBar(),
@@ -174,6 +161,7 @@ class _UpiPaymentState extends State<UpiPayment> {
   }
 
   Widget _buildUpiLayout() {
+    _initFields();
     return SafeArea(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 16),
@@ -189,8 +177,8 @@ class _UpiPaymentState extends State<UpiPayment> {
                       boxShadow: [
                         new BoxShadow(
                             color: Colors.black12,
-                            offset: Offset.fromDirection(20, 7),
-                            blurRadius: 3.0,
+                            offset: Offset.fromDirection(20, 5),
+                            blurRadius: 1.0,
                             spreadRadius: 0.1
                         )
                       ],
@@ -219,7 +207,7 @@ class _UpiPaymentState extends State<UpiPayment> {
                             SizedBox(
                               height: 10,
                             ),
-                            Text('Deposit with Fello and we will seamlessly invest your amount and forward all relevant receipts',
+                            Text('Deposit with Fello and we will seamlessly invest your amount and forward all relevant confirmations',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 20,
@@ -232,33 +220,69 @@ class _UpiPaymentState extends State<UpiPayment> {
                     )
                 ),
               ),
-              Container(
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: Text('Receiving UPI address: $_upiAddress',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.blueGrey
+                  ),
+                ),
+              ),
+              (!_isProcessing && transactionMsg != null && transactionMsg.isNotEmpty)?Padding(
+                padding: EdgeInsets.all(10),
+                child: Text(transactionMsg,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: UiConstants.primaryColor
+                  ),
+                ),
+              ):Container(),
+              (_isProcessing)?Padding(
+                  padding: EdgeInsets.all(30),
+                  child: SpinKitWave(
+                    color: UiConstants.primaryColor,
+                  )
+              ):Container(),
+              (_isProcessing)?Padding(
+                  padding: EdgeInsets.all(30),
+                  child: Text('Please do not close this window',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: UiConstants.accentColor
+                    ),
+                  ),
+              ):Container(),
+              (!_isProcessing)?Container(
                 margin: EdgeInsets.only(top: 32),
                 child: Row(
                   children: <Widget>[
                     Expanded(
                       child: TextFormField(
-                        controller: _upiAddressController,
+                        controller: _panController,
                         enabled: true,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          hintText: 'address@upi',
-                          labelText: 'Receiving UPI Address',
+                          hintText: '',
+                          labelText: 'Your PAN number',
                         ),
                       ),
                     ),
                   ],
                 ),
-              ),
-              if (_upiAddrError != null)
+              ):Container(),
+              if (_panError != null)
                 Container(
                   margin: EdgeInsets.only(top: 4, left: 12),
                   child: Text(
-                    _upiAddrError,
+                    _panError,
                     style: TextStyle(color: Colors.red),
                   ),
                 ),
-              Container(
+              (!_isProcessing)?Container(
                 margin: EdgeInsets.only(top: 32),
                 child: Row(
                   children: <Widget>[
@@ -275,9 +299,17 @@ class _UpiPaymentState extends State<UpiPayment> {
                     ),
                   ],
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 78, bottom: 32),
+              ):Container(),
+              if (_amountError != null)
+                Container(
+                  margin: EdgeInsets.only(top: 4, left: 12),
+                  child: Text(
+                    _amountError,
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              (!_isProcessing)?Container(
+                margin: EdgeInsets.only(top: 68, bottom: 32),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -333,7 +365,7 @@ class _UpiPaymentState extends State<UpiPayment> {
                     ),
                   ],
                 ),
-              )
+              ):Container()
             ],
           ),
         ));
@@ -370,4 +402,29 @@ String _validateUpiAddress(String value) {
   }
 
   return null;
+}
+
+String _validatePANnumber(String value) {
+  if(value == null || value.isEmpty) {
+    return 'Please enter a valid PAN number';
+  }
+  RegExp regex = new RegExp('[A-Z]{5}[0-9]{4}[A-Z]{1}');
+  if(!regex.hasMatch(value) || value.length != 10) return 'Please enter a valid PAN number';
+
+  return null;
+}
+
+String _validateAmount(String value, bool hasInvested) {
+  if(value == null || value.isEmpty) {
+    return 'Please enter a valid amount';
+  }
+  try{
+    double amount = double.parse(value);
+    if(!hasInvested && amount < 100) return 'A minimum investment of ₹100 is required for the first investment';
+    if(hasInvested && amount < 1) return 'Please enter value more than ₹1';
+    else if(amount > 1500) return 'We are currently only accepting deposits below ₹1500';
+    else return null;
+  }catch(e) {
+    return 'Please enter a valid amount';
+  }
 }

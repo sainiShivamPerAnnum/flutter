@@ -206,6 +206,28 @@ class DBModel extends ChangeNotifier {
     return 0;
   }
 
+  Future<bool> addFundDeposit(String uid, String amount, String rawResponse, String status) async{
+    try{
+      DateTime today = DateTime.now();
+      String year = today.year.toString();
+      String monthCde = getCurrentMonthCode(today.month);
+      int date = today.day;
+      Map<String, dynamic> data = {};
+      data['date'] = date;
+      data['user_id'] = uid;
+      data['amount'] = amount;
+      data['raw_response'] = rawResponse;
+      data['status'] = status;
+      data['timestamp'] = FieldValue.serverTimestamp();
+
+      await _api.addDepositDocument(year, monthCde, data);
+      return true;
+    }catch (e) {
+      log.error("Error adding callback doc: " + e.toString());
+      return false;
+    }
+  }
+
   int _getWeekCode() {
     DateTime td = DateTime.now();
     Timestamp today = Timestamp.fromDate(td);
