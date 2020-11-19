@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:upi_pay/upi_pay.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UpiPayment extends StatefulWidget {
   @override
@@ -196,7 +197,7 @@ class _UpiPaymentState extends State<UpiPayment> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text('Beta Deposit Dashboard',
+                            Text('Deposit Portal',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 20,
@@ -222,13 +223,25 @@ class _UpiPaymentState extends State<UpiPayment> {
               ),
               Padding(
                 padding: EdgeInsets.all(10),
-                child: Text('Receiving UPI address: $_upiAddress',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.blueGrey
+                child: InkWell(
+                  child: Text('More about the fund',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.blueGrey,
+                        decoration: TextDecoration.underline,
+                    ),
                   ),
-                ),
+                  onTap: () async{
+                    const url = "https://www.icicipruamc.com/mutual-fund/debt-funds/icici-prudential-liquid-fund";
+                    if (await canLaunch(url)) {
+                      await launch(url);
+                    }
+                    else {
+                      baseProvider.showNegativeAlert('Unable to launch', 'Please try again later', context);
+                    }
+                  },
+                )
               ),
               (!_isProcessing && transactionMsg != null && transactionMsg.isNotEmpty)?Padding(
                 padding: EdgeInsets.all(10),
@@ -308,8 +321,9 @@ class _UpiPaymentState extends State<UpiPayment> {
                     style: TextStyle(color: Colors.red),
                   ),
                 ),
+
               (!_isProcessing)?Container(
-                margin: EdgeInsets.only(top: 68, bottom: 32),
+                margin: EdgeInsets.only(top: 38, bottom: 32),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -362,6 +376,16 @@ class _UpiPaymentState extends State<UpiPayment> {
                               .toList(),
                         );
                       },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text('Receiving UPI address: $_upiAddress',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.blueGrey
+                        ),
+                      ),
                     ),
                   ],
                 ),
