@@ -27,6 +27,8 @@ class _ReferScreenState extends State<ReferScreen> {
   DBModel dbProvider;
   FcmHandler fcmProvider;
 
+  String _shareMsg = 'Hey I am gifting you ₹50 and 10 free Tambola tickets. Lets start saving and playing together! ';
+
   _init() {
     if(fcmProvider != null && baseProvider != null && dbProvider != null) {
       fcmProvider.addIncomingMessageListener((valueMap) {
@@ -273,7 +275,7 @@ class _ReferScreenState extends State<ReferScreen> {
                         baseProvider.isReferralLinkBuildInProgressWhatsapp = false;
                         log.debug(url);
                         setState(() {});
-                        FlutterShareMe().shareToWhatsApp(msg: 'Checkout: ' + url).then((flag) {
+                        FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
                           log.debug(flag);
                         });
                       });
@@ -329,7 +331,7 @@ class _ReferScreenState extends State<ReferScreen> {
                         log.debug(url);
                         baseProvider.isReferralLinkBuildInProgressOther = false;
                         setState(() {});
-                        FlutterShareMe().shareToSystem(msg: 'Checkout: ' + url).then((flag) {
+                        FlutterShareMe().shareToSystem(msg: _shareMsg + url).then((flag) {
                           log.debug(flag);
                         });
                       });
@@ -354,8 +356,8 @@ class _ReferScreenState extends State<ReferScreen> {
       uriPrefix: 'https://fello.page.link',
       link: Uri.parse('https://fello.in/$userId'),
       socialMetaTagParameters: SocialMetaTagParameters(
-        title: '${Constants.APP_NAME} Referral',
-        description: 'Download ${Constants.APP_NAME} and win big for both!',
+        title: 'Download ${Constants.APP_NAME}',
+        description: 'Fello makes saving a lot more fun, and investing a lot more simple!',
         imageUrl: Uri.parse('https://play-lh.googleusercontent.com/yA_k3_efLEwy4slB6RUa-aBzJNuS5Bta7LudVRxYAThc0wnU0jgNih7lt95gHDgR_Ew=s360-rw')
       ),
       googleAnalyticsParameters: GoogleAnalyticsParameters(
