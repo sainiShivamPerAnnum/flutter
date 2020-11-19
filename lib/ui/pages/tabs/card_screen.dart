@@ -9,6 +9,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/elements/board_selector.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
+import 'package:felloapp/ui/elements/onboard_dialog.dart';
 import 'package:felloapp/ui/elements/prize_dialog.dart';
 import 'package:felloapp/ui/elements/raffle_digit.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
@@ -129,6 +130,17 @@ class _HState extends State<PlayHome> {
 
       if (!baseProvider.weeklyTicksFetched)
         dbProvider.subscribeUserTickets(baseProvider.myUser);
+
+      localDBModel.isFreshUser().then((flag) {
+        if(flag == 1) {
+          new Timer(const Duration(seconds: 3), () {
+            showDialog(context: context,
+                builder: (BuildContext context) => OnboardDialog()
+            );
+          });
+          localDBModel.saveFreshUserStatus(false);
+        }
+      });
     }
 
     if(fcmProvider != null && baseProvider != null) {

@@ -45,11 +45,34 @@ class LocalDBModel extends ChangeNotifier {
     return _api.writeOnboardFile('$status');
   }
 
+  Future<int> isFreshUser() async {
+    try {
+      final file = await _api.freshUserFile;
+      String contents = await file.readAsString();
+      return int.parse(contents);
+    } catch (e) {
+      log.error("Didnt find fresh user flag. Defaulting to 0.");
+      return 0;
+    }
+  }
+
+  Future saveFreshUserStatus(bool flag) async {
+    // Write the file
+    int status = (flag)?1:0;
+    return _api.writeFreshUserFile('$status');
+  }
+
   Future<bool> deleteLocalAppData() async{
     try{
       await _api.deleteOnboardFile();
     }catch(e) {
       log.error('Failed to delete onboarding file:' + e.toString());
+    }
+
+    try{
+      await _api.deleteFreshUserFile();
+    }catch(e) {
+      log.error('Failed to delete fresh user file:' + e.toString());
     }
     //User file deletion is crucial for return flag. Rest can be missing
     try{
@@ -59,6 +82,7 @@ class LocalDBModel extends ChangeNotifier {
       log.error('Failed to delete onboarding or user file:' + e.toString());
       return false;
     }
+
   }
 
 }

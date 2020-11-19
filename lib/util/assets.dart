@@ -12,6 +12,7 @@ class Assets{
   static final String winnersGraphic = 'images/winners-small.png';
   static final String whatsappIcon = 'images/whatsapp.png';
   static final String strikeThroughGraphic = 'images/diagonal-strike.png';
+  static final String onboardCollageGraphic = 'images/onboard_collage-small.png';
 
   static final List<String> onboardingSlide = [
     'images/save-small.png',
@@ -19,6 +20,7 @@ class Assets{
     'images/games-small.png',
     'images/safe-small.png',
   ];
+
 
   static final List<String> onboardingHeader=[
     'Save',
@@ -106,6 +108,12 @@ class Assets{
         'you get fresh tambola tickets equivalent to the amount invested. For example: If you have invested Rs.1000 on '
         'week 1, you get 10 tickets. If you continue holding the Rs.5000 for week 2, you get another 10 tickets and '
         'so on! Isn’t that amazing?! :D',
+  ];
+
+  static final List<String> onboardDialogDesc = [
+    'Welcome to Fello! We have added 5 game tickets to get you started',
+    'Save your funds in stable and highly liquid funds. For our Beta, we have onboarded ICICI Prudential Liquid Fund',
+    'For every ₹100 you save, you receive a game ticket that refreshes every week. For our Beta, we have listed Tambola as our first game'
   ];
 
 }

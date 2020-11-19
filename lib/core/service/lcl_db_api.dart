@@ -18,6 +18,12 @@ class LocalApi {
     return File('$path/userdetails.txt');
   }
 
+  Future<File> get freshUserFile async {
+    final path = await _localPath;
+    return File('$path/freshuser.txt');
+  }
+
+
   Future<List<String>> readUserFile() async{
     final file = await userFile;
     return file.readAsLines();
@@ -40,6 +46,16 @@ class LocalApi {
 
   Future<void> deleteOnboardFile() async{
     final file = await onboardFile;
+    if(file != null)return file.delete();
+  }
+
+  Future<File> writeFreshUserFile(String content) async {
+    final file = await freshUserFile;
+    return file.writeAsString(content);
+  }
+
+  Future<void> deleteFreshUserFile() async{
+    final file = await freshUserFile;
     if(file != null)return file.delete();
   }
 }
