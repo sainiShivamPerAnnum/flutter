@@ -86,6 +86,10 @@ class Api {
     return _db.collection('deposits').document(year).collection(monthCde).document().setData(data, merge:false);
   }
 
+  Future<void> addWithdrawalDocument(String year, String monthCde, Map data) {
+    return _db.collection('withdrawals').document(year).collection(monthCde).document().setData(data, merge:false);
+  }
+
   Future<void> addClaimDocument(Map data) {
     return _db.collection('claims').document().setData(data, merge: false);
   }

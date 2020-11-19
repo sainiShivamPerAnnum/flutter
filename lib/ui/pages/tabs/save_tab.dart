@@ -5,6 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
+import 'package:felloapp/ui/elements/withdraw_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -175,7 +176,9 @@ class _SaveScreenState extends State<SaveScreen> {
       children: [
         _buildFundList(),
         SizedBox(height: 15,),
-        _buildBetaSaveButton()
+        _buildBetaSaveButton(),
+        SizedBox(height: 15,),
+        _buildBetaWithdrawButton()
       ],
     );
   }
@@ -222,6 +225,66 @@ class _SaveScreenState extends State<SaveScreen> {
           onPressed: () async{
             HapticFeedback.vibrate();
             Navigator.of(context).pushNamed('/deposit');
+          },
+          highlightColor: Colors.orange.withOpacity(0.5),
+          splashColor: Colors.orange.withOpacity(0.5),
+        ),
+        color: Colors.transparent,
+        borderRadius: new BorderRadius.circular(20.0),
+      ),
+    );
+  }
+
+  Widget _buildBetaWithdrawButton() {
+    return Container(
+      width: MediaQuery.of(context).size.width-40,
+      height: 50.0,
+      decoration: BoxDecoration(
+        gradient: new LinearGradient(
+            colors: [
+              Colors.blueGrey,
+              Colors.blueGrey[600],
+            ],
+            begin: Alignment(0.5, -1.0),
+            end: Alignment(0.5, 1.0)
+        ),
+        borderRadius: new BorderRadius.circular(10.0),
+        // boxShadow: [
+        //   new BoxShadow(
+        //     color: Colors.black12,
+        //     offset: Offset.fromDirection(20, 7),
+        //     blurRadius: 3.0,
+        //   )
+        // ],
+      ),
+      child: new Material(
+        child: MaterialButton(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('WITHDRAW ',
+                style: Theme.of(context).textTheme.button.copyWith(color: Colors.white),
+              ),
+              Text('BETA',
+                style: Theme.of(context).textTheme.button.copyWith(
+                  color: Colors.white,fontStyle: FontStyle.italic,
+                  fontSize: 10,
+                ),
+              ),
+            ],
+          ),
+          onPressed: () async{
+            HapticFeedback.vibrate();
+            showDialog(
+                context: context,
+                builder: (BuildContext context) => WithdrawDialog(
+                  balance: baseProvider.myUser.account_balance,
+                  withdrawAction: (String wAmount) {
+                    Navigator.of(context).pop();
+                    baseProvider.showPositiveAlert('Withdrawal Request Added', 'Your withdrawal amount shall be credited shortly', context);
+                    dbProvider.addFundWithdrawal(baseProvider.myUser.uid, wAmount).then((value) {});
+                  },
+                ));
           },
           highlightColor: Colors.orange.withOpacity(0.5),
           splashColor: Colors.orange.withOpacity(0.5),

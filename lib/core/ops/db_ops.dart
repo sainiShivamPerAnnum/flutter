@@ -228,6 +228,26 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<bool> addFundWithdrawal(String uid, String amount) async{
+    try{
+      DateTime today = DateTime.now();
+      String year = today.year.toString();
+      String monthCde = getCurrentMonthCode(today.month);
+      int date = today.day;
+      Map<String, dynamic> data = {};
+      data['date'] = date;
+      data['user_id'] = uid;
+      data['amount'] = amount;
+      data['timestamp'] = FieldValue.serverTimestamp();
+
+      await _api.addWithdrawalDocument(year, monthCde, data);
+      return true;
+    }catch (e) {
+      log.error("Error adding callback doc: " + e.toString());
+      return false;
+    }
+  }
+
   int _getWeekCode() {
     DateTime td = DateTime.now();
     Timestamp today = Timestamp.fromDate(td);

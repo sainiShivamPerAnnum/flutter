@@ -58,7 +58,7 @@ class BaseUtil extends ChangeNotifier {
     remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(<String, dynamic>{
       'draw_pick_time': '9',
-      'deposit_upi_address': '9986643444@okbizaxis'
+      'deposit_upi_address': '9769637379@okbizaxis'
     });
     try {
       // Using default duration to force fetching from remote server.

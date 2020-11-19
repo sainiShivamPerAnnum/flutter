@@ -44,7 +44,7 @@ class _UpiPaymentState extends State<UpiPayment> {
 
     // we have used sample UPI address (will be used to receive amount)
     _upiAddress = BaseUtil.remoteConfig.getString('deposit_upi_address');
-    _upiAddress = (_upiAddress==null||_upiAddress.isEmpty)?'9986643444@okbizaxis':_upiAddress;
+    _upiAddress = (_upiAddress==null||_upiAddress.isEmpty)?'9769637379@okbizaxis':_upiAddress;
     _upiAddressController.text = _upiAddress;
 
     // used for getting list of UPI apps installed in current device
