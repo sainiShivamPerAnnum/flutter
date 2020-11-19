@@ -9,7 +9,6 @@ class OnboardDialog extends StatefulWidget {
   State createState() => OnboardDialogState();
 }
 
-
 class OnboardDialogState extends State<OnboardDialog> {
   final Log log = new Log('OnboardDialog');
   PageController _pageController;
@@ -28,7 +27,6 @@ class OnboardDialogState extends State<OnboardDialog> {
     super.dispose();
     _pageController.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {

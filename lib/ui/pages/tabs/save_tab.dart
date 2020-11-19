@@ -279,10 +279,10 @@ class _SaveScreenState extends State<SaveScreen> {
                 context: context,
                 builder: (BuildContext context) => WithdrawDialog(
                   balance: baseProvider.myUser.account_balance,
-                  withdrawAction: (String wAmount) {
+                  withdrawAction: (String wAmount, String recUpiAddress) {
                     Navigator.of(context).pop();
                     baseProvider.showPositiveAlert('Withdrawal Request Added', 'Your withdrawal amount shall be credited shortly', context);
-                    dbProvider.addFundWithdrawal(baseProvider.myUser.uid, wAmount).then((value) {});
+                    dbProvider.addFundWithdrawal(baseProvider.myUser.uid, wAmount, recUpiAddress).then((value) {});
                   },
                 ));
           },

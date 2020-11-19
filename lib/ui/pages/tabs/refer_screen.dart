@@ -8,7 +8,6 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
@@ -16,9 +15,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class ReferScreen extends StatefulWidget{
+
   @override
   State<StatefulWidget> createState() => _ReferScreenState();
-
 }
 
 class _ReferScreenState extends State<ReferScreen> {
@@ -27,7 +26,7 @@ class _ReferScreenState extends State<ReferScreen> {
   DBModel dbProvider;
   FcmHandler fcmProvider;
 
-  String _shareMsg = 'Hey I am gifting you ₹50 and 10 free Tambola tickets. Lets start saving and playing together! ';
+  String _shareMsg = 'Hey I am gifting you ₹25 and 10 free Tambola tickets. Lets start saving and playing together! ';
 
   _init() {
     if(fcmProvider != null && baseProvider != null && dbProvider != null) {
@@ -209,7 +208,7 @@ class _ReferScreenState extends State<ReferScreen> {
                           SizedBox(
                             height: 10,
                           ),
-                          Text('You both receive ₹50 in your account along with 10 extra Tambola tickets every week!',
+                          Text('You both receive ₹25 in your account along with 10 extra Tambola tickets every week!',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 20,

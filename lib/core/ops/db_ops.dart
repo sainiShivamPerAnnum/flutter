@@ -228,7 +228,7 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> addFundWithdrawal(String uid, String amount) async{
+  Future<bool> addFundWithdrawal(String uid, String amount, String upiAddress) async{
     try{
       DateTime today = DateTime.now();
       String year = today.year.toString();
@@ -238,6 +238,7 @@ class DBModel extends ChangeNotifier {
       data['date'] = date;
       data['user_id'] = uid;
       data['amount'] = amount;
+      data['rec_upi_address'] = upiAddress;
       data['timestamp'] = FieldValue.serverTimestamp();
 
       await _api.addWithdrawalDocument(year, monthCde, data);

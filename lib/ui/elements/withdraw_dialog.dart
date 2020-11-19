@@ -18,8 +18,9 @@ class WithdrawDialog extends StatefulWidget {
 class WithdrawDialogState extends State<WithdrawDialog> {
   final Log log = new Log('WithdrawDialog');  
   TextEditingController _amountController = TextEditingController();
+  TextEditingController _upiAddressController = TextEditingController();
   String _amountError;
-  double _amount;
+  String _upiAddressError;
 
   @override
   Widget build(BuildContext context) {
@@ -105,14 +106,42 @@ class WithdrawDialogState extends State<WithdrawDialog> {
                       SizedBox(
                         height: 15,
                       ),
+                    Container(
+                      margin: EdgeInsets.only(top: 32),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: TextField(
+                              controller: _upiAddressController,
+                              readOnly: false,
+                              enabled: true,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Your UPI address',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (_upiAddressError != null)
+                      Container(
+                        margin: EdgeInsets.only(top: 4, left: 12),
+                        child: Text(
+                          _upiAddressError,
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    SizedBox(
+                      height: 15,
+                    ),
                     _buildSubmitButton(context),
                   ],
                 )
             ),
           )
-          ]);
-
-
+          ]
+    );
   }
 
   Widget _buildSubmitButton(BuildContext context) {
@@ -144,6 +173,7 @@ class WithdrawDialogState extends State<WithdrawDialog> {
           onPressed: () async{
             HapticFeedback.vibrate();
             final amtErr = _validateAmount(_amountController.text);
+            final upiErr = _validateUPIAddress(_upiAddressController.text);
             if(amtErr != null) {
               setState(() {
                 _amountError = amtErr;
@@ -153,9 +183,18 @@ class WithdrawDialogState extends State<WithdrawDialog> {
             setState(() {
               _amountError = null;
             });
+            if(upiErr != null) {
+              setState(() {
+                _upiAddressError = upiErr;
+              });
+              return;
+            }
+            setState(() {
+              _upiAddressError = null;
+            });
             
-            if(_amountError == null) {
-              return widget.withdrawAction(_amountController.text);
+            if(_amountError == null && _upiAddressError == null) {
+              return widget.withdrawAction(_amountController.text, _upiAddressController.text);
             }
           },
           highlightColor: Colors.orange.withOpacity(0.5),
@@ -180,5 +219,12 @@ class WithdrawDialogState extends State<WithdrawDialog> {
     }catch(e) {
       return 'Please enter a valid amount';
     }
+  }
+
+  String _validateUPIAddress(String value) {
+    if(value == null || value.isEmpty) {
+      return 'Please enter a valid UPI address';
+    }
+    return null;
   }
 }
