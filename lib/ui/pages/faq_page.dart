@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/contact_dialog.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -49,12 +50,15 @@ class _FAQList extends State<FAQPage> {
   }
 
   List<Item> generateItems(int numberOfItems) {
-    return List.generate(numberOfItems, (int index) {
-      return Item(
-        headerValue: 'Book $index',
-        expandedValue: 'Details for Book $index goes here',
-      );
-    });
+    List<Item> _list = [];
+    for(int i=0; i<Assets.faqHeaders.length; i++) {
+      _list.add(Item(
+        headerValue: Assets.faqHeaders[i],
+        expandedValue: Assets.faqAnswers[i],
+        isExpanded: false
+      ));
+    }
+    return _list;
   }
 
   Widget _buildFAQBody() {
@@ -73,10 +77,12 @@ class _FAQList extends State<FAQPage> {
             },
             canTapOnHeader: true,
             body: ListTile(
-              title: Text(item.headerValue,
-              style: Theme.of(context).textTheme.bodyText1.copyWith(
+              title: Text(item.expandedValue,
+              style: Theme.of(context).textTheme.bodyText2.copyWith(
                   color: Colors.grey[800],
-                  fontWeight: FontWeight.w400
+                  fontSize: 14,
+                  height: 1.2,
+                  fontWeight: FontWeight.w500
               ),),
               //subtitle: Text(item.expandedValue),
             ),
