@@ -1,4 +1,5 @@
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -42,70 +43,98 @@ class OnboardDialogState extends State<OnboardDialog> {
 
   dialogContent(BuildContext context) {
     return Stack(
-        overflow: Overflow.visible,
-        alignment: Alignment.topCenter,
-        children: <Widget>[
-          Padding(
-              padding: EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    child: Image(
-                      image: AssetImage(Assets.onboardCollageGraphic),
-                      fit: BoxFit.contain,
-                    ),
-                    width: 180,
-                    height: 180,
-                  ),
-                  _addPageView(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      (_pageIndex>0)?InkWell(
-                        child: Text('PREVIOUS',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
+      children: <Widget>[
+        //...bottom card part,
+        Container(
+          padding: EdgeInsets.only(
+            top: UiConstants.padding + 30,
+            bottom: UiConstants.padding + 30,
+            left: UiConstants.padding,
+            right: UiConstants.padding,
+          ),
+          //margin: EdgeInsets.only(top: UiConstants.avatarRadius),
+          decoration: new BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(UiConstants.padding),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10.0,
+                offset: const Offset(0.0, 10.0),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // To make the card compact
+            children: <Widget>[
+              SizedBox(
+                child: Image(
+                  image: AssetImage(Assets.onboardCollageGraphic),
+                  fit: BoxFit.contain,
+                ),
+                width: 160,
+                height: 160,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                height: 120,
+                child: _addPageView(),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left:20, right:20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    (_pageIndex>0)?InkWell(
+                      child: Text('PREVIOUS',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
                             color: UiConstants.accentColor,
                             fontSize: 18
-                          ),
                         ),
-                        onTap: () {
-                          if(_pageIndex>0)setState(() {
-                            _pageIndex--;
-                          });
-                        },
-                      ):Container(),
-                      InkWell(
-                        child: Text((_pageIndex==2)?'GOT IT':'NEXT',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: UiConstants.accentColor,
-                              fontSize: 18
-                          ),
+                      ),
+                      onTap: () {
+                        if(_pageIndex>0){
+                          onTabTapped(_pageIndex-1);
+                        }
+                      },
+                    ):Container(),
+                    InkWell(
+                      child: Text((_pageIndex==2)?'GOT IT':'NEXT',
+                        textAlign: TextAlign.right,
+                        style: TextStyle(
+                            color: UiConstants.accentColor,
+                            fontSize: 18
                         ),
-                        onTap: () {
-                          if(_pageIndex<2) {
-                            setState(() {
-                              _pageIndex++;
-                            });
-                          }else{
-                            Navigator.of(context).pop();
-                          }
-                        },
-                      )
-                    ],
-                  )
-                ],
+                      ),
+                      onTap: () {
+                        if(_pageIndex<2) {
+                          onTabTapped(_pageIndex+1);
+
+                          // this._pageIndex = this._pageIndex + 1;
+                          // setState(() {});
+                        }else{
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    )
+                  ],
+                )
               )
+            ],
+          ),
           )
-        ]);
+
+      ],
+    );
   }
 
   Widget _pageViewItem(int index) {
@@ -136,5 +165,9 @@ class OnboardDialogState extends State<OnboardDialog> {
     setState(() {
       this._pageIndex = page;
     });
+  }
+
+  void onTabTapped(int index) {
+    this._pageController.animateToPage(index,duration: const Duration(milliseconds: 500),curve: Curves.easeInOut);
   }
 }

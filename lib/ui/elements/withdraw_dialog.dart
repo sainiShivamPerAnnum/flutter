@@ -103,10 +103,10 @@ class WithdrawDialogState extends State<WithdrawDialog> {
                         ),
                       ),
                       SizedBox(
-                        height: 15,
+                        height: 5,
                       ),
                     Container(
-                      margin: EdgeInsets.only(top: 32),
+                      margin: EdgeInsets.only(top: 12),
                       child: Row(
                         children: <Widget>[
                           Expanded(

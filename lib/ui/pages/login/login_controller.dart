@@ -308,6 +308,13 @@ class _LoginControllerState extends State<LoginController> {
             if (email != null && email.isNotEmpty) {
               baseProvider.myUser.email = email;
             }
+
+            String age = _nameScreenKey.currentState.age;
+            if(age != null && age.isNotEmpty){
+              baseProvider.myUser.age = age;
+            }
+            bool isInv = _nameScreenKey.currentState.isInvested;
+            if(isInv != null)baseProvider.myUser.isInvested = isInv;
             //currentPage = AddressInputScreen.index;
             bool flag = await dbProvider.updateUser(baseProvider.myUser);
             if (flag) {

@@ -111,9 +111,9 @@ class Assets{
   ];
 
   static final List<String> onboardDialogDesc = [
-    'Welcome to Fello! We have added 5 game tickets to get you started',
-    'Save your funds in stable and highly liquid funds. For our Beta, we have onboarded ICICI Prudential Liquid Fund',
-    'For every ₹100 you save, you receive a game ticket that refreshes every week. For our Beta, we have listed Tambola as our first game'
+    'Welcome to Fello! We have added 5 game tickets to your account to get you started.',
+    'Save your money in diverse and stable funds. We have onboarded ICICI Prudential Liquid Fund as our first partner.',
+    'For every ₹100 you save, you receive a game ticket that refreshes every week. Our first listed game is Tambola! '
   ];
 
 }

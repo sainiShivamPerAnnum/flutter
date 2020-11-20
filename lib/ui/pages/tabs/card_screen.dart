@@ -8,6 +8,7 @@ import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/elements/board_selector.dart';
+import 'package:felloapp/ui/elements/contact_dialog.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/ui/elements/onboard_dialog.dart';
 import 'package:felloapp/ui/elements/prize_dialog.dart';
@@ -59,6 +60,8 @@ class _HState extends State<PlayHome> {
   bool ticketsBeingGenerated = false;
   bool dailyPickHeaderWithTimings = false;
   String dailyPickHeaderText = 'Today\'s picks';
+
+  bool temp =false;
 
   @override
   void initState() {
@@ -132,13 +135,14 @@ class _HState extends State<PlayHome> {
         dbProvider.subscribeUserTickets(baseProvider.myUser);
 
       localDBModel.isFreshUser().then((flag) {
-        if(flag == 1) {
-          new Timer(const Duration(seconds: 3), () {
+        if(flag == 0) {
+          new Timer(const Duration(seconds: 4), () {
             showDialog(context: context,
+                barrierDismissible: false,
                 builder: (BuildContext context) => OnboardDialog()
             );
           });
-          localDBModel.saveFreshUserStatus(false);
+          localDBModel.saveFreshUserStatus(true);
         }
       });
     }

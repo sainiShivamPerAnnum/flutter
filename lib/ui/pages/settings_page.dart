@@ -132,6 +132,7 @@ class _OptionsList extends State<SettingsPage> {
                   if(flag) {
                     log.debug('Sign out process complete');
                     Navigator.of(context).pop();
+                    Navigator.of(context).pop();
                     Navigator.of(context).pushReplacementNamed('/launcher');
                     baseProvider.showPositiveAlert('Signed out', 'Hope to see you soon', context);
                   }else{
