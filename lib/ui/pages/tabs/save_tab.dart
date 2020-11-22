@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
@@ -25,6 +26,24 @@ class _SaveScreenState extends State<SaveScreen> {
   DBModel dbProvider;
   FcmHandler fcmProvider;
   int acctBalance = 0;
+  bool displayInfoText = false;
+  bool displayTransactionText = false;
+
+
+  @override
+  void initState() {
+    super.initState();
+    new Timer(const Duration(milliseconds: 1500), () {
+      setState(() {
+        displayInfoText = true;
+      });
+    });
+    new Timer(const Duration(milliseconds: 2000), () {
+      setState(() {
+        displayTransactionText = true;
+      });
+    });
+  }
 
   _init() {
     if (fcmProvider != null && baseProvider != null) {
@@ -81,7 +100,7 @@ class _SaveScreenState extends State<SaveScreen> {
           left: 5,
           child: IconButton(
             color: Colors.white,
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.menu),
             onPressed: () {
               HapticFeedback.vibrate();
               Navigator.of(context).pushNamed('/settings');
@@ -123,9 +142,6 @@ class _SaveScreenState extends State<SaveScreen> {
               ),
             )),
         SafeArea(
-            child: Padding(
-                padding: EdgeInsets.only(top: 130), child: _buildLayout())),
-        SafeArea(
             child: Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
@@ -157,6 +173,18 @@ class _SaveScreenState extends State<SaveScreen> {
             ),
           ),
         )),
+        SafeArea(
+            child: Padding(
+                padding: EdgeInsets.only(top: 130), child: _buildLayout())),
+        SafeArea(
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child:  Padding(
+              padding: EdgeInsets.only(bottom: 55),
+              child: _buildDepositInfoDialogs(),
+            ),
+          ),
+        )
         // Align(
         //   alignment: Alignment.bottomCenter,
         //   child: _buildButton()
@@ -171,18 +199,153 @@ class _SaveScreenState extends State<SaveScreen> {
       children: [
         _buildFundList2(),
         SizedBox(
-          height: 20,
+          height: 10,
         ),
-        _buildDividerText(),
-        SizedBox(
-          height: 20,
+        // _buildDividerText(),
+        // SizedBox(
+        //   height: 20,
+        // ),
+        Padding(
+          padding: EdgeInsets.only(left:20, right:20),
+          child: _buildBetaSaveButton(),
         ),
-        _buildBetaSaveButton(),
+        //_buildDepositButtonRow(),
         SizedBox(
           height: 15,
         ),
-        _buildBetaWithdrawButton()
+        Padding(
+          padding: EdgeInsets.only(left: 20, right: 20),
+          child: _buildBetaWithdrawButton(),
+        ),
+        // SizedBox(
+        //   height: 60,
+        // ),
+
       ],
+    );
+  }
+
+  Widget _buildDepositInfoDialogs() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        AnimatedContainer(
+          duration: Duration(milliseconds: 400),
+          padding: EdgeInsets.all(8),
+          width: (displayInfoText)?200:50,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              new BoxShadow(
+                color: Colors.black12,
+                offset: Offset.fromDirection(20, 3),
+                blurRadius: 2.0,
+              )
+            ],
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              stops: [0.1, 0.4],
+              colors: [Colors.white, Colors.white],
+            ),
+          ),
+          child: InkWell(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.info_outline,
+                  color: Colors.blueGrey,),
+                (displayInfoText)?Text(' More about the fund',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.blueGrey
+                  ),):Container()
+              ],
+            ),
+            onTap: () {
+
+            },
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        AnimatedContainer(
+          duration: Duration(milliseconds: 400),
+          padding: EdgeInsets.all(8),
+          width: (displayTransactionText)?200:50,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              new BoxShadow(
+                color: Colors.black12,
+                offset: Offset.fromDirection(20, 3),
+                blurRadius: 2.0,
+              )
+            ],
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              stops: [0.1, 0.4],
+              colors: [Colors.white, Colors.white],
+            ),
+          ),
+          child: InkWell(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.swap_vertical_circle,
+                  color: Colors.blueGrey,),
+                (displayTransactionText)?Text(' Transaction process',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.blueGrey
+                  ),):Container()
+              ],
+            ),
+            onTap: () {
+
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDepositButtonRow() {
+    return Padding(
+      padding: EdgeInsets.only(left: 10, right: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: _buildBetaSaveButton(),
+          ),
+          SizedBox(width: 5,),
+          Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              borderRadius: new BorderRadius.circular(10.0),
+              border: Border.all(
+                width: 5,
+                color: UiConstants.primaryColor
+              ),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Icon(Icons.priority_high,
+              color: UiConstants.primaryColor,),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -200,11 +363,10 @@ class _SaveScreenState extends State<SaveScreen> {
             ),
           ),
           Expanded(
-            child: Text('Other methods',
+            child: Text(
+              'Other methods',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.blueGrey[300]
-              ),
+              style: TextStyle(color: Colors.blueGrey[300]),
             ),
           ),
           Expanded(
@@ -221,7 +383,7 @@ class _SaveScreenState extends State<SaveScreen> {
 
   Widget _buildBetaSaveButton() {
     return Container(
-      width: MediaQuery.of(context).size.width - 40,
+      width: double.infinity,
       height: 50.0,
       decoration: BoxDecoration(
         gradient: new LinearGradient(colors: [
@@ -249,14 +411,14 @@ class _SaveScreenState extends State<SaveScreen> {
                     .button
                     .copyWith(color: Colors.white),
               ),
-              Text(
-                'BETA',
-                style: Theme.of(context).textTheme.button.copyWith(
-                      color: Colors.white,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 10,
-                    ),
-              ),
+              // Text(
+              //   'BETA',
+              //   style: Theme.of(context).textTheme.button.copyWith(
+              //         color: Colors.white,
+              //         fontStyle: FontStyle.italic,
+              //         fontSize: 10,
+              //       ),
+              // ),
             ],
           ),
           onPressed: () async {
@@ -274,7 +436,7 @@ class _SaveScreenState extends State<SaveScreen> {
 
   Widget _buildBetaWithdrawButton() {
     return Container(
-      width: MediaQuery.of(context).size.width - 40,
+      width: double.infinity,
       height: 50.0,
       decoration: BoxDecoration(
         gradient: new LinearGradient(colors: [
@@ -302,14 +464,14 @@ class _SaveScreenState extends State<SaveScreen> {
                     .button
                     .copyWith(color: Colors.white),
               ),
-              Text(
-                'BETA',
-                style: Theme.of(context).textTheme.button.copyWith(
-                      color: Colors.white,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 10,
-                    ),
-              ),
+              // Text(
+              //   'BETA',
+              //   style: Theme.of(context).textTheme.button.copyWith(
+              //         color: Colors.white,
+              //         fontStyle: FontStyle.italic,
+              //         fontSize: 10,
+              //       ),
+              // ),
             ],
           ),
           onPressed: () async {
@@ -364,51 +526,47 @@ class _SaveScreenState extends State<SaveScreen> {
               ),
             ),
             child: Stack(children: [
-              Column(
-                children: [
-                  SizedBox(
-                    height: 2,
-                  ),
-                  SizedBox(
-                    child: Opacity(
-                        opacity: 0.2,
-                        child: Image(
-                          image: AssetImage(Assets.iciciGraphic),
-                          fit: BoxFit.contain,
-                        )),
-                    height: 175,
-                    width: 500,
-                  ),
-                  SizedBox(
-                    height: 6,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
-                    child: Text(
-                      'ICICI Prudential Liquid Mutual Fund is a'
-                          ' popular fund that has consistently given an annual return of 6-7%.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: UiConstants.accentColor,
-                          fontStyle: FontStyle.italic
-                      ),
-                    ),
-                  ),
-                ]),
-              Center(
-                child: Padding(
-                    padding: EdgeInsets.only(bottom: 40, left: 10, right: 10),
-                    child: ScrollingText(
-                      text: 'Direct deposits are coming soon!  ',
-                      textStyle: TextStyle(
-                          fontSize: 36,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.blueGrey[900]
-                      ),
-                    )
+              Column(children: [
+                SizedBox(
+                  height: 2,
                 ),
-              ),
+                SizedBox(
+                  child: Opacity(
+                      opacity: 0.2,
+                      child: Image(
+                        image: AssetImage(Assets.iciciGraphic),
+                        fit: BoxFit.contain,
+                      )),
+                  height: 175,
+                  width: 500,
+                ),
+                SizedBox(
+                  height: 6,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                  child: Text(
+                    'ICICI Prudential Liquid Mutual Fund is a'
+                    ' popular fund that has consistently given an annual return of 6-7%.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: UiConstants.accentColor,
+                        fontStyle: FontStyle.italic),
+                  ),
+                ),
+              ]),
+              // Center(
+              //   child: Padding(
+              //       padding: EdgeInsets.only(bottom: 40, left: 10, right: 10),
+              //       child: ScrollingText(
+              //         text: 'Direct deposits are coming soon!  ',
+              //         textStyle: TextStyle(
+              //             fontSize: 36,
+              //             fontStyle: FontStyle.italic,
+              //             fontWeight: FontWeight.w300,
+              //             color: Colors.blueGrey[900]),
+              //       )),
+              // ),
               // Align(
               //   alignment: Alignment.topCenter,
               //   child: Padding(
@@ -434,9 +592,7 @@ class _SaveScreenState extends State<SaveScreen> {
               //     ),
               //   ),
               // )
-            ])
-        )
-    );
+            ])));
   }
 
   _buildFundList() {

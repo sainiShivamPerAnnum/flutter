@@ -195,7 +195,7 @@ class _HState extends State<PlayHome> {
           left: 5,
           child: IconButton(
             color: Colors.white,
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.menu),
             onPressed: () {
               HapticFeedback.vibrate();
               Navigator.of(context).pushNamed('/settings');
