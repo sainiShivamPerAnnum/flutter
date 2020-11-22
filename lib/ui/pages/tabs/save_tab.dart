@@ -6,6 +6,7 @@ import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/ui/elements/scrolling_text.dart';
+import 'package:felloapp/ui/elements/transaction_dialog.dart';
 import 'package:felloapp/ui/elements/withdraw_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -317,6 +318,9 @@ class _SaveScreenState extends State<SaveScreen> {
             ),
             onTap: () {
               HapticFeedback.vibrate();
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => TransactionDialog());
             },
           ),
         ),

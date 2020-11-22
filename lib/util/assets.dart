@@ -116,4 +116,8 @@ class Assets{
     'For every ₹100 you save, you receive a game ticket that refreshes every week. Our first listed game is Tambola! '
   ];
 
+  static final String transactionProcess = 'Presently, your funds are manually deposited to your linked mutual fund '
+      'account along with an email confirmation. \n\nSoon, all deposits and withdrawals placed on Fello will be'
+      ' processed directly by your mutual fund of choice. ';
+
 }
