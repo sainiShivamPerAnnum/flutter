@@ -25,15 +25,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
-class MyCardApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext c) {
-    return Scaffold(
-      body: PlayHome(),
-    );
-  }
-}
-
 class PlayHome extends StatefulWidget {
   @override
   _HState createState() => _HState();
