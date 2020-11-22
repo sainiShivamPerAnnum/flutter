@@ -33,12 +33,12 @@ class _SaveScreenState extends State<SaveScreen> {
   @override
   void initState() {
     super.initState();
-    new Timer(const Duration(milliseconds: 1500), () {
+    new Timer(const Duration(milliseconds: 1000), () {
       setState(() {
         displayInfoText = true;
       });
     });
-    new Timer(const Duration(milliseconds: 2000), () {
+    new Timer(const Duration(milliseconds: 1400), () {
       setState(() {
         displayTransactionText = true;
       });
@@ -231,7 +231,7 @@ class _SaveScreenState extends State<SaveScreen> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         AnimatedContainer(
-          duration: Duration(milliseconds: 400),
+          duration: Duration(milliseconds: 450),
           padding: EdgeInsets.all(8),
           width: (displayInfoText)?200:50,
           decoration: BoxDecoration(
@@ -265,8 +265,15 @@ class _SaveScreenState extends State<SaveScreen> {
                   ),):Container()
               ],
             ),
-            onTap: () {
-
+            onTap: () async{
+              HapticFeedback.vibrate();
+              const url = "https://www.icicipruamc.com/mutual-fund/debt-funds/icici-prudential-liquid-fund";
+              if (await canLaunch(url)) {
+              await launch(url);
+              }
+              else {
+              baseProvider.showNegativeAlert('Unable to launch', 'Please try again later', context);
+              }
             },
           ),
         ),
@@ -274,7 +281,7 @@ class _SaveScreenState extends State<SaveScreen> {
           height: 10,
         ),
         AnimatedContainer(
-          duration: Duration(milliseconds: 400),
+          duration: Duration(milliseconds: 450),
           padding: EdgeInsets.all(8),
           width: (displayTransactionText)?200:50,
           decoration: BoxDecoration(
@@ -309,7 +316,7 @@ class _SaveScreenState extends State<SaveScreen> {
               ],
             ),
             onTap: () {
-
+              HapticFeedback.vibrate();
             },
           ),
         ),
