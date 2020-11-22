@@ -309,7 +309,7 @@ class _SaveScreenState extends State<SaveScreen> {
               children: [
                 Icon(Icons.swap_vertical_circle,
                   color: Colors.blueGrey,),
-                (displayTransactionText)?Text(' Transaction process',
+                (displayTransactionText)?Text(' How transactions work',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Colors.blueGrey

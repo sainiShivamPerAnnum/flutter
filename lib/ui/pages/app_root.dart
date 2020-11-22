@@ -1,16 +1,18 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/ui/elements/text_slider.dart';
 import 'package:felloapp/ui/pages/tabs/card_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
 import 'package:felloapp/ui/pages/tabs/refer_screen.dart';
 import 'package:felloapp/ui/pages/tabs/save_tab.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:morpheus/widgets/morpheus_tab_view.dart';
 import 'package:http/http.dart' as http;
+import 'package:morpheus/widgets/morpheus_tab_view.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
@@ -37,25 +39,7 @@ class _AppRootState extends State<AppRoot> {
       // appBar: BaseUtil.getAppBar(),
       body:
           Center(child: MorpheusTabView(child: getTab(_currentIndex, context))),
-      bottomSheet: Container(
-          color: Colors.blueGrey[100],
-          height: 25.0,
-          child: Padding(
-              padding: EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'We are currently in Beta',
-                    style: TextStyle(color: Colors.black54),
-                  ),
-                  Icon(
-                    Icons.info_outline,
-                    size: 20,
-                    color: Colors.black54,
-                  )
-                ],
-              ))),
+      bottomSheet: NavySlider(infoList: Assets.bottomSheetDesc,),
       bottomNavigationBar: BottomNavyBar(
           selectedIndex: _currentIndex,
           showElevation: true,
@@ -91,12 +75,6 @@ class _AppRootState extends State<AppRoot> {
       case 0:
         {
           return ShowCaseWidget(
-            onStart: (index, key) {
-              log.debug('ShowCase Widget started for PlayHome');
-            },
-            onComplete: (index, key) {
-              log.debug('ShowCase Widget ended for PlayHome');
-            },
             builder: Builder(builder: (context) => PlayHome()),
             autoPlay: true,
             autoPlayDelay: Duration(seconds: 5),

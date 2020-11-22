@@ -58,8 +58,7 @@ class _HState extends State<PlayHome> {
   GlobalKey _showcaseTwo = GlobalKey();
   GlobalKey _showcaseThree = GlobalKey();
   GlobalKey _showcaseFour = GlobalKey();
-
-  bool temp = false;
+  bool _showTutorial = false;
 
   @override
   void initState() {
@@ -135,10 +134,12 @@ class _HState extends State<PlayHome> {
       localDBModel.isFreshUser().then((flag) {
         if (flag == 0) {
           new Timer(const Duration(seconds: 4), () {
-            showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) => OnboardDialog());
+            // showDialog(
+            //     context: context,
+            //     barrierDismissible: false,
+            //     builder: (BuildContext context) => OnboardDialog());
+            _showTutorial = true;
+            setState(() {});
           });
           localDBModel.saveFreshUserStatus(true);
         }
@@ -167,6 +168,7 @@ class _HState extends State<PlayHome> {
             .startShowCase([_showcaseOne, _showcaseTwo, _showcaseThree, _showcaseFour]);
       });
     }
+    _showTutorial = false;
   }
 
   @override
@@ -186,7 +188,7 @@ class _HState extends State<PlayHome> {
     localDBModel = Provider.of<LocalDBModel>(context);
     _init();
     _processTicketResults();
-    _startTutorial();
+    if(_showTutorial)_startTutorial();
 
     return Scaffold(
         //debugShowCheckedModeBanner: false,

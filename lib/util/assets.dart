@@ -128,4 +128,10 @@ class Assets{
     'If any of your tickets match one of the 5 categories, you receive an instant cash prize in your account!'
   ];
 
+  static final List<String> bottomSheetDesc = [
+    'We are currently in Beta',
+    '₹100 saved = 1 ticket',
+    'Save more, Win more!'
+  ];
+
 }
