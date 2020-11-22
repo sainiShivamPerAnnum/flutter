@@ -105,18 +105,7 @@ class _AppRootState extends State<AppRoot> {
         }
       case 1:
         {
-          return ShowCaseWidget(
-            onStart: (index, key) {
-              log.debug('ShowCase Widget started for SaveScreen');
-            },
-            onComplete: (index, key) {
-              log.debug('ShowCase Widget ended for SaveScreen');
-            },
-            builder: Builder(builder: (context) => SaveScreen()),
-            autoPlay: true,
-            autoPlayDelay: Duration(seconds: 5),
-            autoPlayLockEnable: true,
-          );
+          return SaveScreen();
         }
       case 2:
         {
