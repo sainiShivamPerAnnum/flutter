@@ -167,8 +167,8 @@ class _HState extends State<PlayHome> {
         ShowCaseWidget.of(context)
             .startShowCase([_showcaseOne, _showcaseTwo, _showcaseThree, _showcaseFour]);
       });
+      _showTutorial = false;
     }
-    _showTutorial = false;
   }
 
   @override

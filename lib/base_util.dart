@@ -39,6 +39,7 @@ class BaseUtil extends ChangeNotifier {
   static bool ticketRequestSent = false;
   static int ticketCountBeforeRequest = NEW_USER_TICKET_COUNT;
   static RemoteConfig remoteConfig;
+  static int infoSliderIndex = 0;
 
   BaseUtil() {
     //init();

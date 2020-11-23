@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:felloapp/base_util.dart';
 import 'package:flutter/material.dart';
 
 class NavySlider extends StatefulWidget{
@@ -13,12 +14,13 @@ class NavySlider extends StatefulWidget{
 
 class NavySliderState extends State<NavySlider> {
   PageController _pageController;
-  int _pageIndex = 0;
+  int _pageIndex = BaseUtil.infoSliderIndex;
   Timer _timer;
 
   @override
   void initState() {
     super.initState();
+    _pageIndex = BaseUtil.infoSliderIndex;
     _pageController = PageController(initialPage: _pageIndex);
 
     _timer = Timer.periodic(Duration(seconds: 12), (Timer timer) {
@@ -40,6 +42,7 @@ class NavySliderState extends State<NavySlider> {
   @override
   void dispose() {
     super.dispose();
+    BaseUtil.infoSliderIndex = _pageIndex;
     _timer.cancel();
   }
 
