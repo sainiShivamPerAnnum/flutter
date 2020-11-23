@@ -40,7 +40,7 @@ class PrizeDialogState extends State<PrizeDialog> {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
     return Dialog(
-      insetPadding: EdgeInsets.only(left:20, top:50, bottom: 80, right:20),
+      insetPadding: EdgeInsets.only(left:20, top:50, bottom: 110, right:20),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
@@ -166,7 +166,7 @@ class PrizeDialogState extends State<PrizeDialog> {
             child: Text(title,
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                    fontSize: 26,
+                    fontSize: 20,
                     height: 1.6,
                     color: UiConstants.accentColor)
             ),
@@ -175,7 +175,7 @@ class PrizeDialogState extends State<PrizeDialog> {
             child: Text(prize,
                 textAlign: TextAlign.end,
                 style: TextStyle(
-                    fontSize: 26,
+                    fontSize: 24,
                     height: 1.6,
                     fontWeight: FontWeight.bold,
                     color: UiConstants.primaryColor)
@@ -253,7 +253,7 @@ class PrizeDialogState extends State<PrizeDialog> {
               textAlign: TextAlign.start,
               style: TextStyle(
                 color: UiConstants.accentColor,
-                fontSize: 28
+                fontSize: 22
               ),
             ),
           )
@@ -265,7 +265,8 @@ class PrizeDialogState extends State<PrizeDialog> {
                 textAlign: TextAlign.right,
                 style: TextStyle(
                     color: UiConstants.primaryColor,
-                    fontSize: 28
+                    fontSize: 24,
+                  fontWeight: FontWeight.bold
                 ),
               ),
             )

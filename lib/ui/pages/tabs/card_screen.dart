@@ -8,7 +8,6 @@ import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/elements/board_selector.dart';
-import 'package:felloapp/ui/elements/contact_dialog.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/ui/elements/onboard_dialog.dart';
 import 'package:felloapp/ui/elements/prize_dialog.dart';
@@ -17,6 +16,7 @@ import 'package:felloapp/ui/elements/tambola_board_view.dart';
 import 'package:felloapp/ui/elements/tambola_dialog.dart';
 import 'package:felloapp/ui/elements/weekly_draw_dialog.dart';
 import 'package:felloapp/ui/elements/winnings_dialog.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -24,15 +24,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-
-class MyCardApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext c) {
-    return Scaffold(
-      body: PlayHome(),
-    );
-  }
-}
+import 'package:showcaseview/showcase.dart';
+import 'package:showcaseview/showcase_widget.dart';
 
 class PlayHome extends StatefulWidget {
   @override
@@ -61,7 +54,11 @@ class _HState extends State<PlayHome> {
   bool dailyPickHeaderWithTimings = false;
   String dailyPickHeaderText = 'Today\'s picks';
 
-  bool temp =false;
+  GlobalKey _showcaseOne = GlobalKey();
+  GlobalKey _showcaseTwo = GlobalKey();
+  GlobalKey _showcaseThree = GlobalKey();
+  GlobalKey _showcaseFour = GlobalKey();
+  bool _showTutorial = false;
 
   @override
   void initState() {
@@ -76,21 +73,21 @@ class _HState extends State<PlayHome> {
 
   initDailyPickFlags() {
     String remoteTime = BaseUtil.remoteConfig.getString('draw_pick_time');
-    remoteTime = (remoteTime == null || remoteTime.isEmpty)?'9':remoteTime;
+    remoteTime = (remoteTime == null || remoteTime.isEmpty) ? '9' : remoteTime;
     int tx = 9;
-    try{
+    try {
       tx = int.parse(remoteTime);
-    }catch(e) {
+    } catch (e) {
       tx = 9;
     }
     DateTime _time = DateTime.now();
     dailyPickHeaderWithTimings = (_time.hour < tx);
-    if(dailyPickHeaderWithTimings) {
+    if (dailyPickHeaderWithTimings) {
       String am_pm = (tx > 11) ? 'PM' : 'AM';
-      String ttime = (tx > 12) ? (tx - 12).toString() + am_pm : tx.toString() +
-          am_pm;
+      String ttime =
+          (tx > 12) ? (tx - 12).toString() + am_pm : tx.toString() + am_pm;
       dailyPickHeaderText = 'Today\'s picks - Drawn at $ttime';
-    }else{
+    } else {
       dailyPickHeaderText = 'Today\'s picks';
     }
   }
@@ -135,25 +132,43 @@ class _HState extends State<PlayHome> {
         dbProvider.subscribeUserTickets(baseProvider.myUser);
 
       localDBModel.isFreshUser().then((flag) {
-        if(flag == 0) {
+        if (flag == 0) {
           new Timer(const Duration(seconds: 4), () {
-            showDialog(context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) => OnboardDialog()
-            );
+            // showDialog(
+            //     context: context,
+            //     barrierDismissible: false,
+            //     builder: (BuildContext context) => OnboardDialog());
+            _showTutorial = true;
+            setState(() {});
           });
           localDBModel.saveFreshUserStatus(true);
         }
       });
     }
 
-    if(fcmProvider != null && baseProvider != null) {
+    if (fcmProvider != null && baseProvider != null) {
       fcmProvider.addIncomingMessageListener((valueMap) {
-        if(valueMap['title'] != null && valueMap['body'] != null){
-          baseProvider.showPositiveAlert(valueMap['title'], valueMap['body'], context, seconds: 5);
+        if (valueMap['title'] != null && valueMap['body'] != null) {
+          baseProvider.showPositiveAlert(
+              valueMap['title'], valueMap['body'], context,
+              seconds: 5);
         }
-      },0);
+      }, 0);
     }
+  }
+
+  _startTutorial() {
+    if (baseProvider.weeklyDrawFetched &&
+        baseProvider.weeklyDigits != null &&
+        baseProvider.weeklyTicksFetched &&
+        baseProvider.userTicketsCount > 0) {
+      //Start showcase view after current widget frames are drawn.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ShowCaseWidget.of(context)
+            .startShowCase([_showcaseOne, _showcaseTwo, _showcaseThree, _showcaseFour]);
+      });
+    }
+    _showTutorial = false;
   }
 
   @override
@@ -162,7 +177,7 @@ class _HState extends State<PlayHome> {
     //baseProvider.weeklyTicksFetched = false;
     if (dbProvider != null) dbProvider.addUserTicketListener(null);
     if (dbProvider != null) dbProvider.addUserTicketRequestListener(null);
-    if (fcmProvider != null) fcmProvider.addIncomingMessageListener(null,0);
+    if (fcmProvider != null) fcmProvider.addIncomingMessageListener(null, 0);
   }
 
   @override
@@ -173,6 +188,7 @@ class _HState extends State<PlayHome> {
     localDBModel = Provider.of<LocalDBModel>(context);
     _init();
     _processTicketResults();
+    if(_showTutorial)_startTutorial();
 
     return Scaffold(
         //debugShowCheckedModeBanner: false,
@@ -204,7 +220,7 @@ class _HState extends State<PlayHome> {
           left: 5,
           child: IconButton(
             color: Colors.white,
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.menu),
             onPressed: () {
               HapticFeedback.vibrate();
               Navigator.of(context).pushNamed('/settings');
@@ -229,7 +245,8 @@ class _HState extends State<PlayHome> {
             alignment: Alignment.topCenter,
             child: Padding(
               padding: EdgeInsets.only(top: 70),
-              child: Column(
+              child: _buildShowcaseWrapper(_showcaseOne, Assets.showCaseDesc[0], Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     baseProvider.userTicketsCount.toString(),
@@ -243,8 +260,9 @@ class _HState extends State<PlayHome> {
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ],
-              ),
-            )),
+              )),
+            )
+        ),
         SafeArea(
             child: Padding(
                 padding: EdgeInsets.only(top: 140),
@@ -258,6 +276,46 @@ class _HState extends State<PlayHome> {
         );
   }
 
+  Widget _buildShowcaseWrapper(
+      GlobalKey showcaseKey, String showcaseMsg, Widget body) {
+    return Showcase.withWidget(
+        key: showcaseKey,
+        description: showcaseMsg,
+        contentPadding: EdgeInsets.all(20),
+        //descTextStyle: TextStyle(fontSize: 20),
+        width: 300,
+        height: 140,
+        container: Container(
+            width: 300,
+            height: 140,
+            padding: EdgeInsets.all(20),
+            decoration: new BoxDecoration(
+              shape: BoxShape.rectangle,
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(UiConstants.padding),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10.0,
+                  offset: const Offset(0.0, 10.0),
+                ),
+              ],
+            ),
+            child: Center(
+                child: Text(
+              showcaseMsg,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 16,
+                height: 1.4,
+                fontWeight: FontWeight.w300,
+                color: UiConstants.accentColor
+              ),
+            ))),
+        overlayOpacity: 0.6,
+        child: body);
+  }
+
   Widget _buildCardCanvas(BuildContext c) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,7 +323,8 @@ class _HState extends State<PlayHome> {
         //_buildDashboard(),
         (baseProvider.weeklyDrawFetched)
             ? InkWell(
-                child: _buildTodaysPicksWidget(baseProvider.weeklyDigits),
+                child: _buildShowcaseWrapper(_showcaseTwo, Assets.showCaseDesc[1],
+                    _buildTodaysPicksWidget(baseProvider.weeklyDigits)),
                 onTap: () {
                   HapticFeedback.vibrate();
                   showDialog(
@@ -316,10 +375,11 @@ class _HState extends State<PlayHome> {
                 baseProvider.userTicketsCount > 0 &&
                 baseProvider.weeklyDrawFetched)
             ? Expanded(
-                child: Odds(baseProvider.weeklyDigits, _currentBoard,
-                    _refreshBestBoards())
-                //Odds(_currentBoardView, baseProvider.weeklyDigits.toList(), _currentKey)
-                )
+                child: _buildShowcaseWrapper(
+                    _showcaseFour,
+                    Assets.showCaseDesc[3],
+                    Odds(baseProvider.weeklyDigits, _currentBoard,
+                        _refreshBestBoards())))
             : Padding(
                 //Loader
                 padding: EdgeInsets.all(10),
@@ -333,66 +393,85 @@ class _HState extends State<PlayHome> {
   }
 
   _processTicketResults() {
-    if(baseProvider.userWeeklyBoards == null || baseProvider.userWeeklyBoards.isEmpty
-    || baseProvider.weeklyDigits == null || baseProvider.weeklyDigits.toList().isEmpty
-    || localDBModel == null) {
+    if (baseProvider.userWeeklyBoards == null ||
+        baseProvider.userWeeklyBoards.isEmpty ||
+        baseProvider.weeklyDigits == null ||
+        baseProvider.weeklyDigits.toList().isEmpty ||
+        localDBModel == null) {
       log.debug('Testing is not ready yet');
       return false;
     }
     DateTime date = DateTime.now();
-    if(date.weekday == 7) {
-      if(baseProvider.weeklyDigits.toList().length == 35) {
+    if (date.weekday == 7) {
+      if (baseProvider.weeklyDigits.toList().length == 35) {
         localDBModel.isUserOnboarded().then((flag) {
-          if(flag == 1) {
+          if (flag == 1) {
             log.debug('Ticket results not yet displayed. Displaying: ');
             _testTickets();
             localDBModel.saveOnboardStatus(false);
           }
         });
       }
-    }else{
+    } else {
       localDBModel.isUserOnboarded().then((flag) {
-        if(flag == 0)localDBModel.saveOnboardStatus(true);
+        if (flag == 0) localDBModel.saveOnboardStatus(true);
       });
     }
   }
 
   _testTickets() {
-    if(baseProvider.userWeeklyBoards == null || baseProvider.userWeeklyBoards.isEmpty
-        || baseProvider.weeklyDigits == null || baseProvider.weeklyDigits.toList().isEmpty) {
+    if (baseProvider.userWeeklyBoards == null ||
+        baseProvider.userWeeklyBoards.isEmpty ||
+        baseProvider.weeklyDigits == null ||
+        baseProvider.weeklyDigits.toList().isEmpty) {
       log.debug('Testing is not ready yet');
       return false;
     }
     Map<String, int> ticketCodeWinIndex = {};
     baseProvider.userWeeklyBoards.forEach((boardObj) {
-      if(boardObj.getCornerOdds(baseProvider.weeklyDigits.toList()) == 0) {
-        if(boardObj.getTicketNumber() != 'NA')ticketCodeWinIndex[boardObj.getTicketNumber()] = Constants.CORNERS_COMPLETED;
+      if (boardObj.getCornerOdds(baseProvider.weeklyDigits.toList()) == 0) {
+        if (boardObj.getTicketNumber() != 'NA')
+          ticketCodeWinIndex[boardObj.getTicketNumber()] =
+              Constants.CORNERS_COMPLETED;
       }
-      if(boardObj.getRowOdds(0, baseProvider.weeklyDigits.toList()) == 0) {
-        if(boardObj.getTicketNumber() != 'NA')ticketCodeWinIndex[boardObj.getTicketNumber()] = Constants.ROW_ONE_COMPLETED;
+      if (boardObj.getRowOdds(0, baseProvider.weeklyDigits.toList()) == 0) {
+        if (boardObj.getTicketNumber() != 'NA')
+          ticketCodeWinIndex[boardObj.getTicketNumber()] =
+              Constants.ROW_ONE_COMPLETED;
       }
-      if(boardObj.getRowOdds(1, baseProvider.weeklyDigits.toList()) == 0) {
-        if(boardObj.getTicketNumber() != 'NA')ticketCodeWinIndex[boardObj.getTicketNumber()] = Constants.ROW_TWO_COMPLETED;
+      if (boardObj.getRowOdds(1, baseProvider.weeklyDigits.toList()) == 0) {
+        if (boardObj.getTicketNumber() != 'NA')
+          ticketCodeWinIndex[boardObj.getTicketNumber()] =
+              Constants.ROW_TWO_COMPLETED;
       }
-      if(boardObj.getRowOdds(2, baseProvider.weeklyDigits.toList()) == 0) {
-        if(boardObj.getTicketNumber() != 'NA')ticketCodeWinIndex[boardObj.getTicketNumber()] = Constants.ROW_THREE_COMPLETED;
+      if (boardObj.getRowOdds(2, baseProvider.weeklyDigits.toList()) == 0) {
+        if (boardObj.getTicketNumber() != 'NA')
+          ticketCodeWinIndex[boardObj.getTicketNumber()] =
+              Constants.ROW_THREE_COMPLETED;
       }
-      if(boardObj.getFullHouseOdds(baseProvider.weeklyDigits.toList()) == 0) {
-        if(boardObj.getTicketNumber() != 'NA')ticketCodeWinIndex[boardObj.getTicketNumber()] = Constants.FULL_HOUSE_COMPLETED;
+      if (boardObj.getFullHouseOdds(baseProvider.weeklyDigits.toList()) == 0) {
+        if (boardObj.getTicketNumber() != 'NA')
+          ticketCodeWinIndex[boardObj.getTicketNumber()] =
+              Constants.FULL_HOUSE_COMPLETED;
       }
     });
 
     log.debug('Resultant wins: ${ticketCodeWinIndex.toString()}');
 
-    if(!_winnerDialogCalled)new Timer(const Duration(seconds: 4), () {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => WinningsDialog(winningsMap: ticketCodeWinIndex,));
-    });
+    if (!_winnerDialogCalled)
+      new Timer(const Duration(seconds: 4), () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) => WinningsDialog(
+                  winningsMap: ticketCodeWinIndex,
+                ));
+      });
     _winnerDialogCalled = true;
 
-    if(ticketCodeWinIndex.length > 0) {
-      dbProvider.addWinClaim(baseProvider.myUser.uid, ticketCodeWinIndex).then((flag) {
+    if (ticketCodeWinIndex.length > 0) {
+      dbProvider
+          .addWinClaim(baseProvider.myUser.uid, ticketCodeWinIndex)
+          .then((flag) {
         log.debug('Added claim document');
       });
     }
@@ -453,7 +532,6 @@ class _HState extends State<PlayHome> {
     return _bestTambolaBoards;
   }
 
-
   Widget _buildCards(bool fetchedFlag, List<TambolaBoard> boards, int count) {
     Widget _widget;
     if (!fetchedFlag) {
@@ -493,10 +571,13 @@ class _HState extends State<PlayHome> {
       ));
       _currentBoardView = _tambolaBoardViews[0];
       _currentBoard = baseProvider.userWeeklyBoards[0];
-      _widget = Padding(
-          padding: EdgeInsets.all(10),
-          child:
-              Container(width: double.infinity, child: _tambolaBoardViews[0]));
+      _widget = _buildShowcaseWrapper(
+          _showcaseThree,
+          Assets.showCaseDesc[2],
+          Padding(
+              padding: EdgeInsets.all(10),
+              child: Container(
+                  width: double.infinity, child: _tambolaBoardViews[0])));
     } else {
       _tambolaBoardViews = [];
       baseProvider.userWeeklyBoards.forEach((board) {
@@ -510,19 +591,22 @@ class _HState extends State<PlayHome> {
               .boardColors[rnd.nextInt(UiConstants.boardColors.length)],
         ));
       });
-      _widget = CardSelector(
-          cards: _tambolaBoardViews.toList(),
-          mainCardWidth: 380,
-          mainCardHeight: 128,
-          mainCardPadding: 4.0,
-          dropTargetWidth: 0,
-          cardAnimationDurationMs: 500,
-          onChanged: (i) {
-            _currentBoard = baseProvider.userWeeklyBoards[i];
-            _currentBoardView = _tambolaBoardViews[i];
-            // _currentKey = _boardKeys[i];
-            setState(() {});
-          });
+      _widget = _buildShowcaseWrapper(
+          _showcaseThree,
+          Assets.showCaseDesc[2],
+          CardSelector(
+              cards: _tambolaBoardViews.toList(),
+              mainCardWidth: 380,
+              mainCardHeight: 128,
+              mainCardPadding: 4.0,
+              dropTargetWidth: 0,
+              cardAnimationDurationMs: 500,
+              onChanged: (i) {
+                _currentBoard = baseProvider.userWeeklyBoards[i];
+                _currentBoardView = _tambolaBoardViews[i];
+                // _currentKey = _boardKeys[i];
+                setState(() {});
+              }));
       if (_currentBoardView == null) _currentBoardView = _tambolaBoardViews[0];
       if (_currentBoard == null)
         _currentBoard = baseProvider.userWeeklyBoards[0];
@@ -688,7 +772,8 @@ class Odds extends StatelessWidget {
                 'Top Row',
                 _board.getRowOdds(0, _digits).toString() + ' left',
                 _bestBoards[0].getRowOdds(0, _digits).toString() + ' left',
-                _bestBoards[0], _digits);
+                _bestBoards[0],
+                _digits);
           case 1:
             return _buildRow(
                 cx,
@@ -696,7 +781,8 @@ class Odds extends StatelessWidget {
                 'Middle Row',
                 _board.getRowOdds(1, _digits).toString() + ' left',
                 _bestBoards[1].getRowOdds(1, _digits).toString() + ' left',
-                _bestBoards[1], _digits);
+                _bestBoards[1],
+                _digits);
           case 2:
             return _buildRow(
                 cx,
@@ -704,7 +790,8 @@ class Odds extends StatelessWidget {
                 'Bottom Row',
                 _board.getRowOdds(2, _digits).toString() + ' left',
                 _bestBoards[2].getRowOdds(2, _digits).toString() + ' left',
-                _bestBoards[2], _digits);
+                _bestBoards[2],
+                _digits);
           case 3:
             return _buildRow(
                 cx,
@@ -712,7 +799,8 @@ class Odds extends StatelessWidget {
                 'Corners',
                 _board.getCornerOdds(_digits).toString() + ' left',
                 _bestBoards[3].getCornerOdds(_digits).toString() + ' left',
-                _bestBoards[3], _digits);
+                _bestBoards[3],
+                _digits);
           case 4:
             return _buildRow(
                 cx,
@@ -720,9 +808,12 @@ class Odds extends StatelessWidget {
                 'Full House',
                 _board.getFullHouseOdds(_digits).toString() + ' left',
                 _bestBoards[4].getFullHouseOdds(_digits).toString() + ' left',
-                _bestBoards[4], _digits);
+                _bestBoards[4],
+                _digits);
           case 5:
-            return SizedBox(height: 40,);
+            return SizedBox(
+              height: 40,
+            );
           default:
             return _buildRow(
                 cx,
@@ -730,15 +821,15 @@ class Odds extends StatelessWidget {
                 'Top Row',
                 _board.getRowOdds(0, _digits).toString() + ' left',
                 _bestBoards[0].getRowOdds(0, _digits).toString() + ' left',
-                _bestBoards[0], _digits);
+                _bestBoards[0],
+                _digits);
         }
       },
     );
   }
 
-  Widget _buildRow(
-      BuildContext cx, IconData _i, String _title, String _tOdd, String _oOdd,
-      TambolaBoard _bestBoard, List<int> _digits) {
+  Widget _buildRow(BuildContext cx, IconData _i, String _title, String _tOdd,
+      String _oOdd, TambolaBoard _bestBoard, List<int> _digits) {
     var tt = Theme.of(cx).textTheme;
     var pd = EdgeInsets.symmetric(vertical: 8.0, horizontal: 24.0);
     return Padding(
@@ -769,23 +860,25 @@ class Odds extends StatelessWidget {
               ),
               Expanded(
                   child: InkWell(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Text(_oOdd, style: tt.title.apply(color: Colors.blueGrey)),
-                        Text('Best ticket',
-                            textAlign: TextAlign.center,
-                            style: tt.caption.apply(color: Colors.blueGrey))
-                      ],
-                    ),
-                    onTap: () {
-                      HapticFeedback.vibrate();
-                      showDialog(
-                          context: cx,
-                          builder: (BuildContext context) => TambolaDialog(board: _bestBoard,digits: _digits,));
-                    },
-                  )
-              ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Text(_oOdd, style: tt.title.apply(color: Colors.blueGrey)),
+                    Text('Best ticket',
+                        textAlign: TextAlign.center,
+                        style: tt.caption.apply(color: Colors.blueGrey))
+                  ],
+                ),
+                onTap: () {
+                  HapticFeedback.vibrate();
+                  showDialog(
+                      context: cx,
+                      builder: (BuildContext context) => TambolaDialog(
+                            board: _bestBoard,
+                            digits: _digits,
+                          ));
+                },
+              )),
             ]));
   }
 }

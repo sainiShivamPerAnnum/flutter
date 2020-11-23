@@ -160,6 +160,7 @@ class _OptionsList extends State<SettingsPage> {
       new OptionDetail(key: 'contUs', value: 'Contact Us', isEnabled: true),
       new OptionDetail(key: 'faq', value: 'FAQs', isEnabled: true),
       new OptionDetail(key: 'signOut', value: 'Sign Out', isEnabled: (baseProvider.isSignedIn())),
+      //new OptionDetail(key: 'tutorial', value: 'See Tutorial', isEnabled: true),
     ];
   }
 

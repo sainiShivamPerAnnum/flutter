@@ -87,7 +87,7 @@ class _ReferScreenState extends State<ReferScreen> {
               left: 5,
               child: IconButton(
                 color: Colors.white,
-                icon: Icon(Icons.settings),
+                icon: Icon(Icons.menu),
                 onPressed: () {
                   HapticFeedback.vibrate();
                   Navigator.of(context).pushNamed('/settings');
@@ -208,7 +208,7 @@ class _ReferScreenState extends State<ReferScreen> {
                           SizedBox(
                             height: 10,
                           ),
-                          Text('You both receive ₹25 in your account along with 10 extra Tambola tickets every week!',
+                          Text('You both receive ₹25 in your account along with 10 extra Tambola tickets!',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 20,

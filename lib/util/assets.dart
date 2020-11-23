@@ -116,4 +116,22 @@ class Assets{
     'For every ₹100 you save, you receive a game ticket that refreshes every week. Our first listed game is Tambola! '
   ];
 
+  static final String transactionProcess = 'Presently, your funds are manually deposited to your linked mutual fund '
+      'account along with an email confirmation. \n\nSoon, all deposits and withdrawals placed on Fello will be'
+      ' processed directly by your mutual fund of choice. ';
+
+  static final List<String> showCaseDesc = [
+    'Welcome to Fello!\n'
+    'We have added 5 tickets in your account to get you started',
+    'Everyday, 5 numbers are randomly picked from Monday to Sunday. Click the box to see this week\'s numbers',
+    'You receive fresh Tambola tickets every Monday. The ticket numbers are automatically crossed based on the daily picks',
+    'If any of your tickets match one of the 5 categories, you receive an instant cash prize in your account!'
+  ];
+
+  static final List<String> bottomSheetDesc = [
+    'We are currently in Beta',
+    '₹100 saved = 1 ticket',
+    'Save more, Win more!'
+  ];
+
 }

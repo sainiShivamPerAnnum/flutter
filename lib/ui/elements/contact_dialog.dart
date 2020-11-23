@@ -1,22 +1,24 @@
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactUsDialog extends StatefulWidget {
 //  final String title, description, buttonText;
 //  final Function dialogAction;
 //  final Image image;
-final bool isResident;
-final Function onClick;
-final bool isUnavailable;
-  ContactUsDialog({
-    @required this.isResident,
-    @required this.onClick,
-    @required this.isUnavailable
-  });
+  final bool isResident;
+  final Function onClick;
+  final bool isUnavailable;
+
+  ContactUsDialog(
+      {@required this.isResident,
+      @required this.onClick,
+      @required this.isUnavailable});
 
   @override
   State createState() => _ContactUsState();
@@ -73,14 +75,88 @@ class _ContactUsState extends State<ContactUsDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min, // To make the card compact
             children: <Widget>[
-              Text(
-                'Email: mail@${Constants.APP_NAME.toLowerCase()}.in',
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w700,
+              InkWell(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.email,
+                      size: 25,
+                    ),
+                    Text(
+                      ' hello@${Constants.APP_NAME.toLowerCase()}.in',
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ),
+                onTap: () async {
+                  const url =
+                      "mailto:hello@fello.in?subject=Fello Inquiry&body=Hello";
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  }
+                },
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              InkWell(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.phone,
+                      size: 25,
+                    ),
+                    Text(
+                      ' +91 79932 52690',
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+                onTap: () async {
+                  const url = "tel://+917993252690";
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  }
+                },
               ),
               SizedBox(height: 16.0),
+              InkWell(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      child: Image(
+                        image: AssetImage(Assets.whatsappIcon),
+                        fit: BoxFit.contain,
+                        color: Colors.black,
+                      ),
+                      width: 25,
+                    ),
+                    Text(
+                      ' +91 79932 52690',
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+                onTap: () async {
+                  const url = "whatsapp://send?phone=+917993252690";
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  }
+                },
+              ),
+              SizedBox(height: 15.0),
               Text(
                 'OR',
                 textAlign: TextAlign.center,
@@ -90,30 +166,31 @@ class _ContactUsState extends State<ContactUsDialog> {
               ),
               SizedBox(height: 16.0),
               Material(
-                color: (widget.isResident)?UiConstants.accentColor:Colors.grey,
+                color:
+                    (widget.isResident) ? UiConstants.accentColor : Colors.grey,
                 child: MaterialButton(
-                child: (!_isCallbackInitiated)?Text(
-                    'Request a callback',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20.0
-                  ),
-                ):SpinKitThreeBounce(
-                  color: UiConstants.spinnerColor2,
-                  size: 25.0,
+                  child: (!_isCallbackInitiated)
+                      ? Text(
+                          'Request a callback',
+                          style: TextStyle(color: Colors.white, fontSize: 20.0),
+                        )
+                      : SpinKitThreeBounce(
+                          color: UiConstants.spinnerColor2,
+                          size: 25.0,
+                        ),
+                  minWidth: double.infinity,
+                  onPressed: () {
+                    if (widget.isUnavailable || !widget.isResident)
+                      widget.onClick();
+                    else if (!_isCallbackInitiated) {
+                      HapticFeedback.vibrate();
+                      setState(() {
+                        _isCallbackInitiated = true;
+                      });
+                      widget.onClick();
+                    }
+                  },
                 ),
-                minWidth: double.infinity,
-                onPressed: () {
-                  if(widget.isUnavailable||!widget.isResident)widget.onClick();
-                  else if(!_isCallbackInitiated) {
-                    HapticFeedback.vibrate();
-                    setState(() {
-                      _isCallbackInitiated = true;
-                    });
-                    widget.onClick();
-                  }
-                },
-              ),
                 borderRadius: new BorderRadius.circular(10.0),
               ),
 //              Form(
