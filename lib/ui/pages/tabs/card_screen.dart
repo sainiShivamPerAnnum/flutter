@@ -689,8 +689,8 @@ class _HState extends State<PlayHome> {
   }
 
   Widget _getDrawBall(int digit) {
-   // double xWidth = MediaQuery.of(context).size.width;
-  //  double xFont = double.parse((xWidth/18).toStringAsFixed(2));
+    double xWidth = MediaQuery.of(context).size.width;
+    double xFont = double.parse((xWidth/18).toStringAsFixed(2));
   //   log.debug(xFont.toString());
     return Stack(
       children: [
@@ -705,11 +705,11 @@ class _HState extends State<PlayHome> {
         Center(
             child: (digit != null && digit > 0)
                 ? Padding(
-                    padding: EdgeInsets.only(left: 7, top:8),
+                    padding: EdgeInsets.only(left: xFont/3.3, top:xFont/3),
                     child: SingleDigit(
                       initialValue: digit,
                       textStyle: TextStyle(
-                          color: Colors.black, fontSize: 22
+                          color: Colors.black, fontSize: xFont
                       ),
                     ))
                 : Padding(

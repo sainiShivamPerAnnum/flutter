@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 
 class SingleDigit extends StatefulWidget {
-
   final TextStyle textStyle;
   final BoxDecoration boxDecoration;
   final int initialValue;
@@ -35,6 +35,7 @@ class _SingleDigitState extends State<SingleDigit> with TickerProviderStateMixin
 
   final TextStyle _textStyle;
   final BoxDecoration _boxDecoration;
+  Log log = new Log('RaffleDigitWidget');
 
   int previousValue;
   int currentValue;
@@ -57,16 +58,20 @@ class _SingleDigitState extends State<SingleDigit> with TickerProviderStateMixin
   }
 
   _initAnimation() {
-    controller = AnimationController(
-        duration: const Duration(milliseconds: 1400), vsync: this);
-    animation = Tween<double>(
-        begin: previousValue.toDouble(),
-        end: currentValue.toDouble())
-        .animate(controller)
-      ..addListener(() {
-        setState(() {});
-      });
-    controller.forward();
+    try {
+      controller = AnimationController(
+          duration: const Duration(milliseconds: 1400), vsync: this);
+      animation = Tween<double>(
+          begin: previousValue.toDouble(),
+          end: currentValue.toDouble())
+          .animate(controller)
+        ..addListener(() {
+          setState(() {});
+        });
+      controller.forward();
+    }catch(e) {
+      log.error('Raffle digit animation breaking');
+    }
   }
 
   @override

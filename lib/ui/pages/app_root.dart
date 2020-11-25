@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/elements/text_slider.dart';
@@ -35,7 +37,7 @@ class _AppRootState extends State<AppRoot> {
     initDynamicLinks();
 
     _slider = new NavySlider(infoList: Assets.bottomSheetDesc,);
-    _playFirst = true;//BaseUtil.playScreenFirst;
+    _playFirst = BaseUtil.playScreenFirst;
   }
 
   @override

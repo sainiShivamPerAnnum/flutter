@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/User.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -69,7 +71,7 @@ class BaseUtil extends ChangeNotifier {
     });
     try {
       // Using default duration to force fetching from remote server.
-      await remoteConfig.fetch(expiration: Duration(seconds: 0));
+      await remoteConfig.fetch();
       await remoteConfig.activateFetched();
     } on FetchThrottledException catch (exception) {
       // Fetch throttled.
