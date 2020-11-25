@@ -8,8 +8,8 @@ import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/elements/board_selector.dart';
+import 'package:felloapp/ui/elements/daily_pick_text_slider.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
-import 'package:felloapp/ui/elements/onboard_dialog.dart';
 import 'package:felloapp/ui/elements/prize_dialog.dart';
 import 'package:felloapp/ui/elements/raffle_digit.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
@@ -53,6 +53,7 @@ class _HState extends State<PlayHome> {
   bool ticketsBeingGenerated = false;
   bool dailyPickHeaderWithTimings = false;
   String dailyPickHeaderText = 'Today\'s picks';
+  List<String> dailyPickTextList = [];
 
   GlobalKey _showcaseOne = GlobalKey();
   GlobalKey _showcaseTwo = GlobalKey();
@@ -90,6 +91,9 @@ class _HState extends State<PlayHome> {
     } else {
       dailyPickHeaderText = 'Today\'s picks';
     }
+
+    dailyPickTextList.add(dailyPickHeaderText);
+    dailyPickTextList.add('Click to see the other picks');
   }
 
   _init() {
@@ -164,8 +168,8 @@ class _HState extends State<PlayHome> {
         baseProvider.userTicketsCount > 0) {
       //Start showcase view after current widget frames are drawn.
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ShowCaseWidget.of(context)
-            .startShowCase([_showcaseOne, _showcaseTwo, _showcaseThree, _showcaseFour]);
+        ShowCaseWidget.of(context).startShowCase(
+            [_showcaseOne, _showcaseTwo, _showcaseThree, _showcaseFour]);
       });
       _showTutorial = false;
     }
@@ -188,7 +192,7 @@ class _HState extends State<PlayHome> {
     localDBModel = Provider.of<LocalDBModel>(context);
     _init();
     _processTicketResults();
-    if(_showTutorial)_startTutorial();
+    if (_showTutorial) _startTutorial();
 
     return Scaffold(
         //debugShowCheckedModeBanner: false,
@@ -245,24 +249,28 @@ class _HState extends State<PlayHome> {
             alignment: Alignment.topCenter,
             child: Padding(
               padding: EdgeInsets.only(top: 70),
-              child: _buildShowcaseWrapper(_showcaseOne, Assets.showCaseDesc[0], Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    baseProvider.userTicketsCount.toString(),
-                    style: TextStyle(
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                  Text(
-                    (baseProvider.userTicketsCount == 1) ? 'ticket' : 'tickets',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ],
-              )),
-            )
-        ),
+              child: _buildShowcaseWrapper(
+                  _showcaseOne,
+                  Assets.showCaseDesc[0],
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        baseProvider.userTicketsCount.toString(),
+                        style: TextStyle(
+                            fontSize: 50,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                      Text(
+                        (baseProvider.userTicketsCount == 1)
+                            ? 'ticket'
+                            : 'tickets',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                    ],
+                  )),
+            )),
         SafeArea(
             child: Padding(
                 padding: EdgeInsets.only(top: 140),
@@ -307,10 +315,9 @@ class _HState extends State<PlayHome> {
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: 16,
-                height: 1.4,
-                fontWeight: FontWeight.w300,
-                color: UiConstants.accentColor
-              ),
+                  height: 1.4,
+                  fontWeight: FontWeight.w300,
+                  color: UiConstants.accentColor),
             ))),
         overlayOpacity: 0.6,
         child: body);
@@ -323,7 +330,9 @@ class _HState extends State<PlayHome> {
         //_buildDashboard(),
         (baseProvider.weeklyDrawFetched)
             ? InkWell(
-                child: _buildShowcaseWrapper(_showcaseTwo, Assets.showCaseDesc[1],
+                child: _buildShowcaseWrapper(
+                    _showcaseTwo,
+                    Assets.showCaseDesc[1],
                     _buildTodaysPicksWidget(baseProvider.weeklyDigits)),
                 onTap: () {
                   HapticFeedback.vibrate();
@@ -604,7 +613,6 @@ class _HState extends State<PlayHome> {
               onChanged: (i) {
                 _currentBoard = baseProvider.userWeeklyBoards[i];
                 _currentBoardView = _tambolaBoardViews[i];
-                // _currentKey = _boardKeys[i];
                 setState(() {});
               }));
       if (_currentBoardView == null) _currentBoardView = _tambolaBoardViews[0];
@@ -644,11 +652,7 @@ class _HState extends State<PlayHome> {
             children: [
               Padding(
                 padding: EdgeInsets.only(top: 10),
-                child: Text(
-                  dailyPickHeaderText,
-                  style: TextStyle(color: Colors.white70),
-                  textAlign: TextAlign.left,
-                ),
+                child: DPTextSlider(infoList: dailyPickTextList,),
               ),
               Padding(
                   padding: EdgeInsets.only(top: 10, left: 15, right: 15),
@@ -676,6 +680,9 @@ class _HState extends State<PlayHome> {
   }
 
   Widget _getDrawBall(int digit) {
+    double xWidth = MediaQuery.of(context).size.width;
+    double xFont = double.parse((xWidth/18).toStringAsFixed(2));
+    log.debug(xFont.toString());
     return Stack(
       children: [
         Container(
@@ -689,9 +696,12 @@ class _HState extends State<PlayHome> {
         Center(
             child: (digit != null && digit > 0)
                 ? Padding(
-                    padding: EdgeInsets.only(left: 7, top: 8),
+                    padding: EdgeInsets.only(left: xFont/3.3, top: xFont/3),
                     child: SingleDigit(
                       initialValue: digit,
+                      textStyle: TextStyle(
+                          color: Colors.black, fontSize: xFont
+                      ),
                     ))
                 : Padding(
                     padding: EdgeInsets.only(left: 16, top: 7),

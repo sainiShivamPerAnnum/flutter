@@ -11,6 +11,7 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:morpheus/widgets/morpheus_tab_view.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +39,7 @@ class _AppRootState extends State<AppRoot> {
     return Scaffold(
       // appBar: BaseUtil.getAppBar(),
       body:
-          Center(child: MorpheusTabView(child: getTab(_currentIndex, context))),
+          Center(child:getTab(_currentIndex, context)),
       bottomSheet: NavySlider(infoList: Assets.bottomSheetDesc,),
       bottomNavigationBar: BottomNavyBar(
           selectedIndex: _currentIndex,
@@ -46,9 +47,12 @@ class _AppRootState extends State<AppRoot> {
           iconSize: 34.0,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           containerHeight: 75.0,
-          onItemSelected: (index) => setState(() {
+          onItemSelected: (index){
+            HapticFeedback.heavyImpact();
+            setState(() {
                 _currentIndex = index;
-              }),
+            });
+          },
           items: [
             BottomNavyBarItem(
                 icon: Icon(Icons.play_circle_filled),

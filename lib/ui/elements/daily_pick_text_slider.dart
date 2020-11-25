@@ -2,16 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-class NavySlider extends StatefulWidget{
+class DPTextSlider extends StatefulWidget{
   final List<String> infoList;
 
-  NavySlider({this.infoList});
+  DPTextSlider({this.infoList});
 
   @override
-  State createState() => NavySliderState();
+  State createState() => DPTextSliderState();
 }
 
-class NavySliderState extends State<NavySlider> {
+class DPTextSliderState extends State<DPTextSlider> {
   PageController _pageController;
   int _pageIndex = 0;
   Timer _timer;
@@ -22,7 +22,7 @@ class NavySliderState extends State<NavySlider> {
     _pageIndex = 0;
     _pageController = PageController(initialPage: _pageIndex);
 
-    _timer = Timer.periodic(Duration(seconds: 12), (Timer timer) {
+    _timer = Timer.periodic(Duration(seconds: 8), (Timer timer) {
       if (_pageIndex < widget.infoList.length-1) {
         _pageIndex++;
       } else {
@@ -48,28 +48,24 @@ class NavySliderState extends State<NavySlider> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.blueGrey[100],
-        height: 25.0,
+        color: Colors.transparent,
+        height: 18.0,
         child: Padding(
-            padding: EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
+            padding: EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(child: Container(
-                  height: 25,
+                  height: 18,
                   width: 400,
                   child: PageView(
                     physics: NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
                     children:_buildTextPages(),
                     onPageChanged: onPageChanged,
                     controller: _pageController,
                   ),
                 )),
-                Icon(
-                  Icons.info_outline,
-                  size: 20,
-                  color: Colors.black54,
-                )
               ],
             )
         )
@@ -85,7 +81,8 @@ class NavySliderState extends State<NavySlider> {
       _pagerWidgets.add(
         Text(
           info,
-          style: TextStyle(color: Colors.black38),
+          style: TextStyle(color: Colors.white70),
+          textAlign: TextAlign.center,
         ),
       );
     });
