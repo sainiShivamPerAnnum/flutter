@@ -62,12 +62,13 @@ class _HState extends State<PlayHome> {
   GlobalKey _showcaseThree = GlobalKey();
   GlobalKey _showcaseFour = GlobalKey();
   bool _showTutorial = false;
+  Timer _prizeTimer;
 
   @override
   void initState() {
     super.initState();
     initDailyPickFlags();
-    new Timer(const Duration(seconds: 3), () {
+    _prizeTimer = new Timer(const Duration(seconds: 3), () {
       setState(() {
         prizeButtonUp = true;
       });
@@ -185,6 +186,7 @@ class _HState extends State<PlayHome> {
     if (dbProvider != null) dbProvider.addUserTicketRequestListener(null);
     if (fcmProvider != null) fcmProvider.addIncomingMessageListener(null, 0);
 
+    if(_prizeTimer.isActive)_prizeTimer.cancel();
     balls.forEach((eWidget) {
       // eWidget.dis
     });
@@ -687,9 +689,9 @@ class _HState extends State<PlayHome> {
   }
 
   Widget _getDrawBall(int digit) {
-    double xWidth = MediaQuery.of(context).size.width;
-    double xFont = double.parse((xWidth/18).toStringAsFixed(2));
-    log.debug(xFont.toString());
+   // double xWidth = MediaQuery.of(context).size.width;
+  //  double xFont = double.parse((xWidth/18).toStringAsFixed(2));
+  //   log.debug(xFont.toString());
     return Stack(
       children: [
         Container(
@@ -703,11 +705,11 @@ class _HState extends State<PlayHome> {
         Center(
             child: (digit != null && digit > 0)
                 ? Padding(
-                    padding: EdgeInsets.only(left: xFont/3.3, top: xFont/3),
+                    padding: EdgeInsets.only(left: 7, top:8),
                     child: SingleDigit(
                       initialValue: digit,
                       textStyle: TextStyle(
-                          color: Colors.black, fontSize: xFont
+                          color: Colors.black, fontSize: 22
                       ),
                     ))
                 : Padding(
