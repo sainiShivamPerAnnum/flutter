@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class NavySlider extends StatefulWidget{
@@ -22,7 +23,7 @@ class NavySliderState extends State<NavySlider> {
     _pageIndex = 0;
     _pageController = PageController(initialPage: _pageIndex);
 
-    _timer = Timer.periodic(Duration(seconds: 12), (Timer timer) {
+    _timer = Timer.periodic(Duration(seconds: 9), (Timer timer) {
       if (_pageIndex < widget.infoList.length-1) {
         _pageIndex++;
       } else {
@@ -85,7 +86,7 @@ class NavySliderState extends State<NavySlider> {
       _pagerWidgets.add(
         Text(
           info,
-          style: TextStyle(color: Colors.black38),
+          style: TextStyle(color: Colors.black54),
         ),
       );
     });

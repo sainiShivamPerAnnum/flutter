@@ -232,7 +232,7 @@ class _SaveScreenState extends State<SaveScreen> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         AnimatedContainer(
-          duration: Duration(milliseconds: 450),
+          duration: Duration(milliseconds: 350),
           padding: EdgeInsets.all(8),
           width: (displayInfoText)?200:50,
           decoration: BoxDecoration(
@@ -282,7 +282,7 @@ class _SaveScreenState extends State<SaveScreen> {
           height: 10,
         ),
         AnimatedContainer(
-          duration: Duration(milliseconds: 450),
+          duration: Duration(milliseconds: 350),
           padding: EdgeInsets.all(8),
           width: (displayTransactionText)?200:50,
           decoration: BoxDecoration(

@@ -54,6 +54,7 @@ class _HState extends State<PlayHome> {
   bool dailyPickHeaderWithTimings = false;
   String dailyPickHeaderText = 'Today\'s picks';
   List<String> dailyPickTextList = [];
+  List<String> prizeEmoji = ['🥇','🏆',' 🎊',' 🎉'];
 
   GlobalKey _showcaseOne = GlobalKey();
   GlobalKey _showcaseTwo = GlobalKey();
@@ -74,12 +75,12 @@ class _HState extends State<PlayHome> {
 
   initDailyPickFlags() {
     String remoteTime = BaseUtil.remoteConfig.getString('draw_pick_time');
-    remoteTime = (remoteTime == null || remoteTime.isEmpty) ? '9' : remoteTime;
-    int tx = 9;
+    remoteTime = (remoteTime == null || remoteTime.isEmpty) ? '18' : remoteTime;
+    int tx = 18;
     try {
       tx = int.parse(remoteTime);
     } catch (e) {
-      tx = 9;
+      tx = 18;
     }
     DateTime _time = DateTime.now();
     dailyPickHeaderWithTimings = (_time.hour < tx);
@@ -116,6 +117,8 @@ class _HState extends State<PlayHome> {
           log.debug(
               'User weekly tickets fetched:: Count: ${baseProvider.userWeeklyBoards.length}');
           _tambolaBoardViews = [];
+          _currentBoard = null;
+          _currentBoardView = null;
 
           int cx = baseProvider.checkTicketCountValidity(tickets);
           if (cx > 0) {
@@ -178,7 +181,6 @@ class _HState extends State<PlayHome> {
   @override
   void dispose() {
     super.dispose();
-    //baseProvider.weeklyTicksFetched = false;
     if (dbProvider != null) dbProvider.addUserTicketListener(null);
     if (dbProvider != null) dbProvider.addUserTicketRequestListener(null);
     if (fcmProvider != null) fcmProvider.addIncomingMessageListener(null, 0);
@@ -369,7 +371,7 @@ class _HState extends State<PlayHome> {
                       color: Colors.blueGrey[800]))),
         ),
         SizedBox(height: 5.0),
-        _buildCards(baseProvider.weeklyTicksFetched,
+        _buildCards(baseProvider.weeklyTicksFetched, baseProvider.weeklyDrawFetched,
             baseProvider.userWeeklyBoards, baseProvider.userTicketsCount),
         (baseProvider.weeklyTicksFetched &&
                 baseProvider.userWeeklyBoards != null &&
@@ -541,9 +543,10 @@ class _HState extends State<PlayHome> {
     return _bestTambolaBoards;
   }
 
-  Widget _buildCards(bool fetchedFlag, List<TambolaBoard> boards, int count) {
+  Widget _buildCards(bool fetchedFlag, bool drawFetchedFlag,
+      List<TambolaBoard> boards, int count) {
     Widget _widget;
-    if (!fetchedFlag) {
+    if (!fetchedFlag || !drawFetchedFlag) {
       _widget = Padding(
         //Loader
         padding: EdgeInsets.all(10),
@@ -570,9 +573,9 @@ class _HState extends State<PlayHome> {
               )));
     } else if (count == 1) {
       _tambolaBoardViews = [];
-      _tambolaBoardViews.add(TambolaBoardView(
+      _tambolaBoardViews.add(new TambolaBoardView(
         tambolaBoard: baseProvider.userWeeklyBoards[0].tambolaBoard,
-        calledDigits: (baseProvider.weeklyDrawFetched)
+        calledDigits: (baseProvider.weeklyDrawFetched && baseProvider.weeklyDigits != null)
             ? baseProvider.weeklyDigits.toList()
             : [],
         boardColor: UiConstants
@@ -590,7 +593,7 @@ class _HState extends State<PlayHome> {
     } else {
       _tambolaBoardViews = [];
       baseProvider.userWeeklyBoards.forEach((board) {
-        _tambolaBoardViews.add(TambolaBoardView(
+        _tambolaBoardViews.add(new TambolaBoardView(
           tambolaBoard: board.tambolaBoard,
           calledDigits: (baseProvider.weeklyDrawFetched &&
                   baseProvider.weeklyDigits != null)
@@ -715,6 +718,7 @@ class _HState extends State<PlayHome> {
   }
 
   Widget _buildPrizeButton() {
+    Random rnnd = new Random();
     return AnimatedContainer(
       height: 40,
       width: 100,
@@ -743,10 +747,21 @@ class _HState extends State<PlayHome> {
           : BoxDecoration(color: Colors.transparent),
       child: InkWell(
         child: Center(
-          child: Text(
-            'Prizes',
-            style: TextStyle(color: Colors.white70, fontSize: 16),
-          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+            Text(
+              'Prizes',
+              style: TextStyle(color: Colors.white70, fontSize: 16),
+            ),
+            Text(
+              prizeEmoji[rnd.nextInt(prizeEmoji.length)],
+              style: TextStyle(color: Colors.white70, fontSize: 16),
+            ),
+
+            ],
+          )
         ),
         onTap: () {
           HapticFeedback.vibrate();
@@ -873,10 +888,14 @@ class Odds extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    Text(_oOdd, style: tt.title.apply(color: Colors.blueGrey)),
+                    Text(_oOdd,
+                        style: tt.title.apply(
+                            color: Colors.blueGrey
+                        )
+                    ),
                     Text('Best ticket',
                         textAlign: TextAlign.center,
-                        style: tt.caption.apply(color: Colors.blueGrey))
+                        style: tt.caption.apply(color: Colors.blue[900]))
                   ],
                 ),
                 onTap: () {

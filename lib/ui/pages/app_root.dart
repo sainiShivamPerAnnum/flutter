@@ -26,11 +26,14 @@ class _AppRootState extends State<AppRoot> {
   Log log = new Log("AppRoot");
   BaseUtil baseProvider;
   int _currentIndex = 0;
+  NavySlider _slider;
 
   @override
   void initState() {
     super.initState();
     initDynamicLinks();
+
+    _slider = new NavySlider(infoList: Assets.bottomSheetDesc,);
   }
 
   @override
@@ -40,23 +43,25 @@ class _AppRootState extends State<AppRoot> {
       // appBar: BaseUtil.getAppBar(),
       body:
           Center(child:getTab(_currentIndex, context)),
-      bottomSheet: NavySlider(infoList: Assets.bottomSheetDesc,),
+      bottomSheet: _slider,
       bottomNavigationBar: BottomNavyBar(
           selectedIndex: _currentIndex,
           showElevation: true,
           iconSize: 34.0,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          containerHeight: 75.0,
+          containerHeight: 70.0,
           onItemSelected: (index){
             HapticFeedback.heavyImpact();
             setState(() {
                 _currentIndex = index;
             });
           },
+          itemCornerRadius: 20,
           items: [
             BottomNavyBarItem(
                 icon: Icon(Icons.play_circle_filled),
                 title: Text('Play'),
+                textAlign: TextAlign.justify,
                 inactiveColor: UiConstants.primaryColor,
                 activeColor: UiConstants.primaryColor),
             BottomNavyBarItem(

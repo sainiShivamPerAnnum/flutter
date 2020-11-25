@@ -1,9 +1,5 @@
-import 'dart:collection';
-
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TambolaBoardView extends StatefulWidget {
@@ -144,8 +140,6 @@ class TambolaBoardState extends State<TambolaBoardView> {
     }
   }
 }
-
-
 
 class StrikeThroughWidget extends StatelessWidget {
   final Widget _child;

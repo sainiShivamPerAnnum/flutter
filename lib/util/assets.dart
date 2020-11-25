@@ -129,9 +129,10 @@ class Assets{
   ];
 
   static final List<String> bottomSheetDesc = [
-    'We are currently in Beta',
+    'Save more, Win more!',
     '₹100 saved = 1 ticket',
-    'Save more, Win more!'
+    '1 referral = 10 tickets and ₹25',
+    'We are currently in Beta',
   ];
 
 }

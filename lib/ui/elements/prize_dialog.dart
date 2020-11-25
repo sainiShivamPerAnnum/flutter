@@ -74,7 +74,7 @@ class PrizeDialogState extends State<PrizeDialog> {
                         child:Padding(
                             padding: EdgeInsets.all(10),
                             child: InkWell(
-                              child: Text('This week\'s \nprizes',
+                              child: Text('Last week\'s winners',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: (this._pageIndex==0)?UiConstants.primaryColor:Colors.blueGrey,
@@ -89,7 +89,7 @@ class PrizeDialogState extends State<PrizeDialog> {
                         child:Padding(
                             padding: EdgeInsets.all(10),
                             child: InkWell(
-                              child: Text('Last week\'s winners',
+                              child: Text('This week\'s \nprizes',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: (this._pageIndex==1)?UiConstants.primaryColor:Colors.blueGrey,
@@ -128,9 +128,10 @@ class PrizeDialogState extends State<PrizeDialog> {
 
   Widget _addPageView() {
     return PageView(
+      physics: NeverScrollableScrollPhysics(),
       children: [
-        _buildPrizeTabView(),
         _buildWinnersTabView(),
+        _buildPrizeTabView(),
       ],
       onPageChanged: onPageChanged,
       controller: _pageController,
