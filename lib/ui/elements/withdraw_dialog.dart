@@ -135,6 +135,18 @@ class WithdrawDialogState extends State<WithdrawDialog> {
                       height: 15,
                     ),
                     _buildSubmitButton(context),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text('* Only users who have previously deposited are eligible for withdrawals',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 12,
+                            height: 1.2,
+                            color: UiConstants.accentColor,
+                            fontWeight: FontWeight.w300
+                        )
+                    )
                   ],
                 )
             ),

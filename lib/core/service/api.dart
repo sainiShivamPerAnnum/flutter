@@ -72,6 +72,10 @@ class Api {
     return query.getDocuments();
   }
 
+  Future<void> addFeedbackDocument(Map data) {
+    return _db.collection(Constants.COLN_FEEDBACK).add(data);
+  }
+
   Future<QuerySnapshot> getWinnersByWeekCde(int weekCde) {
     Query query = _db.collection(Constants.COLN_WINNERS).where('week_code', isEqualTo: weekCde);
 

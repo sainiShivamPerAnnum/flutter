@@ -34,12 +34,12 @@ class _SaveScreenState extends State<SaveScreen> {
   @override
   void initState() {
     super.initState();
-    new Timer(const Duration(milliseconds: 1000), () {
+    new Timer(const Duration(milliseconds: 800), () {
       setState(() {
         displayInfoText = true;
       });
     });
-    new Timer(const Duration(milliseconds: 1400), () {
+    new Timer(const Duration(milliseconds: 1100), () {
       setState(() {
         displayTransactionText = true;
       });

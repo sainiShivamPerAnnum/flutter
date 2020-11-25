@@ -20,6 +20,7 @@ class TambolaBoardState extends State<TambolaBoardView> {
   bool gridOnTap = false;
   var tappedX, tappedY;
   Color altGridColor = Colors.blueGrey;
+  Color borderColor = Colors.blueGrey;
 
   @override
   void initState() {
@@ -33,7 +34,8 @@ class TambolaBoardState extends State<TambolaBoardView> {
       int gx = g + (255-g*0.25).round();
       int bx = b + (255-b*0.25).round();
 
-      altGridColor = Color.fromRGBO(rx, gx, bx, 1);
+      altGridColor = Color.fromRGBO(rx, gx, bx, 1);//widget.boardColor;//Color.fromRGBO(rx, gx, bx, 1);
+      borderColor = widget.boardColor;
     }
     super.initState();
   }
@@ -99,25 +101,25 @@ class TambolaBoardState extends State<TambolaBoardView> {
               width: this.gridOnTap && x == this.tappedX && y == this.tappedY
                   ? 2.0
                   : 0.0),
-          color: (x + y) % 2 == 0 ? altGridColor : Colors.grey,
+          color: (x + y) % 2 == 0 ? altGridColor : Colors.grey[400],
         ),
         foregroundDecoration: BoxDecoration(
             border: Border(
                 top: BorderSide(
                     width: x == 0 ? 4.0 : 0.0,
-                    color: x == 0 ? widget.boardColor : Colors.black),
+                    color: x == 0 ? borderColor : Colors.black),
                 left: BorderSide(
                     width: y == 0 ? 4.0 : 0.0,
-                    color: y == 0 ? widget.boardColor : Colors.black),
+                    color: y == 0 ? borderColor : Colors.black),
                 bottom: BorderSide(
                     width: x == 2 ? 4.0 : 0.0,
                     color: x == 2 || x == 5 || x == 8
-                        ? widget.boardColor
+                        ? borderColor
                         : Colors.black),
                 right: BorderSide(
                     width: y == 8 ? 4.0 : 0.0,
                     color: y == 2 || y == 5 || y == 8
-                        ? widget.boardColor
+                        ? borderColor
                         : Colors.black))),
         child: Center(
           child: _getDecoratedDigit(digit, widget.calledDigits),

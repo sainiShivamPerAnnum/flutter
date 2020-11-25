@@ -8,6 +8,8 @@ class Constants {
   static final String COLN_DAILYPICKS = "dailypicks";
   static final String COLN_WINNERS = "winners";
   static final String COLN_REFERRALS = "referrals";
+  static final String COLN_FEEDBACK = "feedback";
+
 
   //Sub-collections
   static final String SUBCOLN_USER_FCM = "fcm";

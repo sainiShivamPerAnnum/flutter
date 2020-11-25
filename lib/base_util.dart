@@ -40,6 +40,7 @@ class BaseUtil extends ChangeNotifier {
   static int ticketCountBeforeRequest = NEW_USER_TICKET_COUNT;
   static RemoteConfig remoteConfig;
   static int infoSliderIndex = 0;
+  static bool playScreenFirst = true;
 
   BaseUtil() {
     //init();
@@ -52,18 +53,23 @@ class BaseUtil extends ChangeNotifier {
     if(firebaseUser != null)_myUser = await _dbModel.getUser(firebaseUser.uid);//_lModel.getUser();
     isUserOnboarded = (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
 
-    if(isUserOnboarded)await initRemoteConfig();
+    if(isUserOnboarded){
+      await initRemoteConfig();
+      String _p = remoteConfig.getString('play_screen_first');
+      playScreenFirst = !(_p != null && _p.isNotEmpty && _p == 'false');
+    }
   }
 
   initRemoteConfig() async{
     remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(<String, dynamic>{
-      'draw_pick_time': '9',
-      'deposit_upi_address': '9769637379@okbizaxis'
+      'draw_pick_time': '18',
+      'deposit_upi_address': '9769637379@okbizaxis',
+      'play_screen_first': 'true'
     });
     try {
       // Using default duration to force fetching from remote server.
-      await remoteConfig.fetch();
+      await remoteConfig.fetch(expiration: Duration(seconds: 0));
       await remoteConfig.activateFetched();
     } on FetchThrottledException catch (exception) {
       // Fetch throttled.

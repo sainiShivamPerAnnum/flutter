@@ -27,6 +27,7 @@ class _AppRootState extends State<AppRoot> {
   BaseUtil baseProvider;
   int _currentIndex = 0;
   NavySlider _slider;
+  bool _playFirst = true;
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _AppRootState extends State<AppRoot> {
     initDynamicLinks();
 
     _slider = new NavySlider(infoList: Assets.bottomSheetDesc,);
+    _playFirst = true;//BaseUtil.playScreenFirst;
   }
 
   @override
@@ -57,32 +59,48 @@ class _AppRootState extends State<AppRoot> {
             });
           },
           itemCornerRadius: 20,
-          items: [
-            BottomNavyBarItem(
-                icon: Icon(Icons.play_circle_filled),
-                title: Text('Play'),
-                textAlign: TextAlign.justify,
-                inactiveColor: UiConstants.primaryColor,
-                activeColor: UiConstants.primaryColor),
-            BottomNavyBarItem(
-                icon: Icon(Icons.account_balance_wallet),
-                title: Text('Save'),
-                inactiveColor: UiConstants.primaryColor,
-                activeColor: UiConstants.primaryColor),
-            BottomNavyBarItem(
-                icon: Icon(Icons.supervised_user_circle),
-                title: Text('Refer'),
-                inactiveColor: UiConstants.primaryColor,
-                activeColor: UiConstants.primaryColor),
-          ]),
+          items: buildBottomNavigation()),
       //    )
     );
+  }
+
+  List<BottomNavyBarItem> buildBottomNavigation() {
+    List<BottomNavyBarItem> _items = new List(3);
+    BottomNavyBarItem _itm1 =  BottomNavyBarItem(
+        icon: Icon(Icons.play_circle_filled),
+        title: Text('Play'),
+        textAlign: TextAlign.justify,
+        inactiveColor: UiConstants.primaryColor,
+        activeColor: UiConstants.primaryColor);
+    BottomNavyBarItem _itm2 =  BottomNavyBarItem(
+        icon: Icon(Icons.account_balance_wallet),
+        title: Text('Save'),
+        inactiveColor: UiConstants.primaryColor,
+        activeColor: UiConstants.primaryColor);
+    BottomNavyBarItem _itm3 = BottomNavyBarItem(
+        icon: Icon(Icons.supervised_user_circle),
+        title: Text('Refer'),
+        inactiveColor: UiConstants.primaryColor,
+        activeColor: UiConstants.primaryColor);
+
+    if(_playFirst){
+      _items[0] = _itm1;
+      _items[1] = _itm2;
+      _items[2] = _itm3;
+    }else{
+      _items[0] = _itm2;
+      _items[1] = _itm1;
+      _items[2] = _itm3;
+    }
+    return _items;
   }
 
   Widget getTab(int index, BuildContext context) {
     switch (index) {
       case 0:
         {
+          if(!_playFirst)return SaveScreen();
+
           return ShowCaseWidget(
             builder: Builder(builder: (context) => PlayHome()),
             autoPlay: true,
@@ -92,6 +110,14 @@ class _AppRootState extends State<AppRoot> {
         }
       case 1:
         {
+          if(!_playFirst) {
+            return ShowCaseWidget(
+              builder: Builder(builder: (context) => PlayHome()),
+              autoPlay: true,
+              autoPlayDelay: Duration(seconds: 5),
+              autoPlayLockEnable: true,
+            );
+          }
           return SaveScreen();
         }
       case 2:

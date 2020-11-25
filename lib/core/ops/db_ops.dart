@@ -249,6 +249,19 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<bool> submitFeedback(String userId, String fdbk) async{
+    try {
+      Map<String, dynamic> fdbkMap = {'user_id': userId,
+        'timestamp': FieldValue.serverTimestamp(),
+        'fdbk': fdbk};
+      await _api.addFeedbackDocument(fdbkMap);
+      return true;
+    }catch(e) {
+      log.error(e.toString());
+      return false;
+    }
+  }
+
   int _getWeekCode() {
     DateTime td = DateTime.now();
     Timestamp today = Timestamp.fromDate(td);

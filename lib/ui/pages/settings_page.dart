@@ -5,6 +5,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/aboutus_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/contact_dialog.dart';
+import 'package:felloapp/ui/elements/feedback_dialog.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -150,6 +151,28 @@ class _OptionsList extends State<SettingsPage> {
         );
         break;
       }
+      case 'fdbk': {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => FeedbackDialog(
+            title: "Tell us what you think",
+            description: "We'd love to hear from you",
+            buttonText: "Submit",
+            dialogAction: (String fdbk) {
+              if(fdbk != null && fdbk.isNotEmpty){
+                //feedback submission allowed even if user not signed in
+                reqProvider.submitFeedback((baseProvider.firebaseUser == null || baseProvider.firebaseUser.uid == null)?'UNKNOWN':
+                baseProvider.firebaseUser.uid, fdbk).then((flag) {
+                  if(flag) {
+                    baseProvider.showPositiveAlert('Thank You', 'We appreciate your feedback!', context);
+                  }
+                });
+                Navigator.of(context).pop();
+              }
+            },
+          ),
+        );
+      }
     }
   }
 
@@ -157,6 +180,7 @@ class _OptionsList extends State<SettingsPage> {
     return [
      // new OptionDetail(key: 'upAddress', value: 'Update Address', isEnabled: (baseProvider.isSignedIn() && baseProvider.isActiveUser())),
       new OptionDetail(key: 'abUs', value: 'About ${Constants.APP_NAME}', isEnabled: true),
+      new OptionDetail(key: 'fdbk', value: 'Feedback', isEnabled: true),
       new OptionDetail(key: 'contUs', value: 'Contact Us', isEnabled: true),
       new OptionDetail(key: 'faq', value: 'FAQs', isEnabled: true),
       new OptionDetail(key: 'signOut', value: 'Sign Out', isEnabled: (baseProvider.isSignedIn())),

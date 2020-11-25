@@ -41,6 +41,7 @@ class _HState extends State<PlayHome> {
   //GlobalKey<TambolaBoardState> _currentKey;
   List<TambolaBoardView> _tambolaBoardViews;
   List<TambolaBoard> _bestTambolaBoards;
+  List<Widget> balls = [];
 
   //List<GlobalKey<TambolaBoardState>> _boardKeys;
   var rnd = new Random();
@@ -102,7 +103,7 @@ class _HState extends State<PlayHome> {
       if (!baseProvider.weeklyDrawFetched) {
         log.debug('Requesting for weekly picks');
         dbProvider.getWeeklyPicks().then((picks) {
-          baseProvider.weeklyDrawFetched = true;
+         baseProvider.weeklyDrawFetched = true;
           if (picks != null) baseProvider.weeklyDigits = picks;
           log.debug('Weekly Picks received: $picks');
           setState(() {});
@@ -112,13 +113,13 @@ class _HState extends State<PlayHome> {
       dbProvider.addUserTicketListener((tickets) {
         baseProvider.weeklyTicksFetched = true;
         if (tickets != null) {
-          baseProvider.userWeeklyBoards = tickets;
-          baseProvider.userTicketsCount = tickets.length;
-          log.debug(
-              'User weekly tickets fetched:: Count: ${baseProvider.userWeeklyBoards.length}');
-          _tambolaBoardViews = [];
-          _currentBoard = null;
-          _currentBoardView = null;
+          setState(() {
+            baseProvider.userWeeklyBoards = tickets;
+            baseProvider.userTicketsCount = tickets.length;
+            _tambolaBoardViews = [];
+            _currentBoard = null;
+            _currentBoardView = null;
+          });
 
           int cx = baseProvider.checkTicketCountValidity(tickets);
           if (cx > 0) {
@@ -126,7 +127,6 @@ class _HState extends State<PlayHome> {
             ticketsBeingGenerated = true;
             dbProvider.pushTicketRequest(baseProvider.myUser, cx);
           }
-          setState(() {});
         }
       });
 
@@ -184,6 +184,10 @@ class _HState extends State<PlayHome> {
     if (dbProvider != null) dbProvider.addUserTicketListener(null);
     if (dbProvider != null) dbProvider.addUserTicketRequestListener(null);
     if (fcmProvider != null) fcmProvider.addIncomingMessageListener(null, 0);
+
+    balls.forEach((eWidget) {
+      // eWidget.dis
+    });
   }
 
   @override
@@ -375,7 +379,7 @@ class _HState extends State<PlayHome> {
             baseProvider.userWeeklyBoards, baseProvider.userTicketsCount),
         (baseProvider.weeklyTicksFetched &&
                 baseProvider.userWeeklyBoards != null &&
-                baseProvider.userTicketsCount > 0)
+                baseProvider.userTicketsCount > 0 && _currentBoard != null)
             ? Padding(
                 padding: EdgeInsets.only(left: 25),
                 child: Text('Ticket #${_currentBoard.getTicketNumber()}'),
@@ -666,7 +670,7 @@ class _HState extends State<PlayHome> {
   }
 
   Widget _getDrawBallRow(DailyPick draws, int day) {
-    List<Widget> balls = [];
+    balls = [];
     if (draws != null && draws.getWeekdayDraws(day - 1) != null) {
       draws.getWeekdayDraws(day - 1).forEach((element) {
         balls.add(_getDrawBall(element));
@@ -710,7 +714,8 @@ class _HState extends State<PlayHome> {
                     padding: EdgeInsets.only(left: 16, top: 7),
                     child: Text(
                       '-',
-                      style: TextStyle(fontSize: 22),
+                      style: TextStyle(fontSize: 22,
+                      color: Colors.black38),
                       textAlign: TextAlign.center,
                     )))
       ],
@@ -756,7 +761,7 @@ class _HState extends State<PlayHome> {
               style: TextStyle(color: Colors.white70, fontSize: 16),
             ),
             Text(
-              prizeEmoji[rnd.nextInt(prizeEmoji.length)],
+              prizeEmoji[rnnd.nextInt(prizeEmoji.length)],
               style: TextStyle(color: Colors.white70, fontSize: 16),
             ),
 

@@ -147,7 +147,7 @@ class PrizeDialogState extends State<PrizeDialog> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _getPrizeRow('Referral', '₹50'),
+            _getPrizeRow('Referral', '₹25'),
             _getPrizeRow('Corners', '₹500'),
             _getPrizeRow('First Row', '₹1500'),
             _getPrizeRow('Second Row', '₹1500'),
