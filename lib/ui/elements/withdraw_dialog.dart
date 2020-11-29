@@ -64,7 +64,7 @@ class WithdrawDialogState extends State<WithdrawDialog> {
                         color: UiConstants.primaryColor
                       ),
                     ),
-                    Text('The withdraw request shall be manually verified and completed with priority',
+                    Text('All withdrawal requests are manually verified and processed everyday at 10PM',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 20,

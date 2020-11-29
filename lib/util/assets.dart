@@ -29,7 +29,7 @@ class Assets{
     'Safe',
   ];
 
-  static final String aboutUsDesc = 'Fello is a gamified savings and investment platform for users to save, grow and earn higher returns than a traditional savings bank account. For every Rs.100 saved and invested through Fello, users get amazing rewards and incentives. \n\n'
+  static final String aboutUsDesc = 'Fello is a gamified savings and investment platform for users to save, grow and earn higher returns than a traditional savings bank account. For every ₹100 saved and invested through Fello, users get amazing rewards and incentives. \n\n'
       'We (Manish & Shourya) are two finance folks who started Fello with the vision of helping people save money in a better way and learn about personal finance and investments with an added tinge of fun with games like never before. Now savings are no more boring, it is fun, safe and rewarding!\n\n'
       'We are an AMFI registered mutual fund distributor and all your money is invested directly into a relevant mutual fund. So the money saved is safe and secure with the security of a financial institution. \n\n'
       'If you have any queries, feel free to reach out to us and we would be happy to help you.';
@@ -70,7 +70,7 @@ class Assets{
   static final List<String> faqAnswers = [
     'Fello is a gamified savings and investment platform for users to save, invest and grow their money '
         'through SEBI/RBI regulated financial assets and earn more than their savings bank account returns. '
-        'For every Rs.100 invested through Fello, users get one tambola ticket using which they can participate '
+        'For every ₹100 invested through Fello, users get one tambola ticket using which they can participate '
         'in weekly Tambola draws and win amazing cash rewards and prizes.',
     'Fello aims at listing only those financial investment products which have the potential to give returns more'
         ' than your traditional savings bank account returns which lie between 3-4%. For example, we are planning '
@@ -86,7 +86,7 @@ class Assets{
         'bank account of the relevant fund. Also, we want to take utmost care of all our Fello customers, so we have '
         'also made sure to have world class 256 bit encryption. Also, we are an ISO 27001 certified platform and '
         'will be a SEBI registered Mutual Fund Distributor.',
-    'It’s very simple. Step 1: Save and invest in the mutual fund listed on the platform. Step 2: For every Rs.100'
+    'It’s very simple. Step 1: Save and invest in the mutual fund listed on the platform. Step 2: For every ₹100'
         ' invested on the platform, you get a tambola ticket. Step 3: Participate in the weekly Tambola and you get '
         'to win amazing rewards and cash prizes.Step 4: Continue holding your investment and savings for the next '
         'week to get more tamobla tickets or . The longer you save and hold, the more you earn, the more tambola tickets'
@@ -101,12 +101,12 @@ class Assets{
         ' If the user wants to redeem them, then the mutual funds can be sold and the amount will be deposited into '
         'their bank accounts instantly or in t+1 days.',
     'I see that you want to win more! So to increase your chances of winning, you need to save and invest more in the'
-        ' listed mutual fund. For every Rs.100 invested you get 1 ticket, so if you invest and save Rs.1000, you get '
+        ' listed mutual fund. For every ₹100 invested you get 1 ticket, so if you invest and save ₹1000, you get '
         '10 tickets. Second, by referring it to your friends, the more you refer, the more tambola tickets you earn '
         'thus increasing the chances of you winning the draw!',
     'You don’t need to! If you invested on week 1 and if you are continuing to hold the investment for the coming week '
-        'you get fresh tambola tickets equivalent to the amount invested. For example: If you have invested Rs.1000 on '
-        'week 1, you get 10 tickets. If you continue holding the Rs.5000 for week 2, you get another 10 tickets and '
+        'you get fresh tambola tickets equivalent to the amount invested. For example: If you have invested ₹1000 on '
+        'week 1, you get 10 tickets. If you continue holding the ₹1000 for week 2, you get another 10 tickets and '
         'so on! Isn’t that amazing?! :D',
   ];
 

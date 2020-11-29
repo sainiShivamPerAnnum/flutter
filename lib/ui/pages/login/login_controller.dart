@@ -12,7 +12,9 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
@@ -157,86 +159,85 @@ class _LoginControllerState extends State<LoginController> {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  //Back button check
-                  // (_currentPage == AddressInputScreen.index)
-                  //     ? Container(
-                  //         width: 150.0,
-                  //         height: 50.0,
-                  //         decoration: BoxDecoration(
-                  //           borderRadius: new BorderRadius.circular(30.0),
-                  //           border: Border.all(
-                  //               color: UiConstants.primaryColor, width: 1.0),
-                  //           color: Colors.transparent,
-                  //         ),
-                  //         child: new Material(
-                  //           child: MaterialButton(
-                  //             child: Text(
-                  //               'BACK',
-                  //               style: Theme.of(context)
-                  //                   .textTheme
-                  //                   .button
-                  //                   .copyWith(color: UiConstants.primaryColor),
-                  //             ),
-                  //             onPressed: () {
-                  //               _currentPage--;
-                  //               _controller.animateToPage(_currentPage,
-                  //                   duration: Duration(milliseconds: 300),
-                  //                   curve: Curves.easeIn);
-                  //             },
-                  //             highlightColor: Colors.orange.withOpacity(0.5),
-                  //             splashColor: Colors.orange.withOpacity(0.5),
-                  //           ),
-                  //           color: Colors.transparent,
-                  //           borderRadius: new BorderRadius.circular(30.0),
-                  //         ),
-                  //       )
-                  //     : new Container(),
-                  new Container(
-                    width: 150.0,
-                    height: 50.0,
-                    decoration: BoxDecoration(
-                      gradient: new LinearGradient(colors: [
-                        UiConstants.primaryColor,
-                        UiConstants.primaryColor.withBlue(200),
-                      ],
-                      begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
-                      borderRadius: new BorderRadius.circular(30.0),
-                    ),
-                    child: new Material(
-                      child: MaterialButton(
-                        child: (!baseProvider.isLoginNextInProgress)
-                            ? Text(
-                                'NEXT',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .button
-                                    .copyWith(color: Colors.white),
-                              )
-                            : SpinKitThreeBounce(
-                                color: UiConstants.spinnerColor2,
-                                size: 18.0,
-                              ),
-                        onPressed: () {
-                          if (!baseProvider.isLoginNextInProgress)
-                            processScreenInput(_currentPage);
-                        },
-                        highlightColor: Colors.white30,
-                        splashColor: Colors.white30,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                (_currentPage==MobileInputScreen.index)?Padding(
+                    padding: EdgeInsets.fromLTRB(10,10,10,0),
+                    child: RichText(
+                      text: new TextSpan(
+                        children: [
+                          new TextSpan(
+                            text: 'By continuing, you agree to our ',
+                            style: new TextStyle(
+                                color: Colors.black45
+                            ),
+                          ),
+                          new TextSpan(
+                            text: 'Terms of Service',
+                            style: new TextStyle(
+                                color: Colors.black45,
+                                decoration: TextDecoration.underline
+                            ),
+                            recognizer: new TapGestureRecognizer()
+                              ..onTap = () {
+                                HapticFeedback.vibrate();
+                                Navigator.of(context).pushNamed('/tnc');
+                              },
+                          ),
+                        ],
                       ),
-                      color: Colors.transparent,
-                      borderRadius: new BorderRadius.circular(30.0),
-                    ),
+                    )
+                ):Container(),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      new Container(
+                        width: MediaQuery.of(context).size.width-50,
+                        height: 50.0,
+                        decoration: BoxDecoration(
+                          gradient: new LinearGradient(colors: [
+                            UiConstants.primaryColor,
+                            UiConstants.primaryColor.withBlue(200),
+                          ],
+                              begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
+                          borderRadius: new BorderRadius.circular(10.0),
+                        ),
+                        child: new Material(
+                          child: MaterialButton(
+                            child: (!baseProvider.isLoginNextInProgress)
+                                ? Text(
+                              'NEXT',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .button
+                                  .copyWith(color: Colors.white),
+                            )
+                                : SpinKitThreeBounce(
+                              color: UiConstants.spinnerColor2,
+                              size: 18.0,
+                            ),
+                            onPressed: () {
+                              if (!baseProvider.isLoginNextInProgress)
+                                processScreenInput(_currentPage);
+                            },
+                            highlightColor: Colors.white30,
+                            splashColor: Colors.white30,
+                          ),
+                          color: Colors.transparent,
+                          borderRadius: new BorderRadius.circular(30.0),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                )
+              ],
             ),
           ),
+
         ],
       )),
     );
