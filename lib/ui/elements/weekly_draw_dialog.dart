@@ -21,7 +21,22 @@ class WeeklyDrawDialog extends StatelessWidget {
   }
 
   dialogContent(BuildContext context) {
-    if (weeklyDraws == null) return Container();
+    if (weeklyDraws == null || weeklyDraws.toList().isEmpty) {
+      return Container(
+        height: 150,
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Text('This week\'s numbers have not been drawn yet.',
+              style: TextStyle(
+                color: Colors.black54
+              ),
+
+            ),
+          )
+        ),
+      );
+    }
     DateTime today = DateTime.now();
     List<Widget> colElems = [];
     int colCount = today.weekday;
