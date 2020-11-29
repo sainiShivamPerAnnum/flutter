@@ -1,15 +1,8 @@
-import 'dart:async';
-
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
-import 'package:felloapp/ui/elements/contact_dialog.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class FAQPage extends StatefulWidget{

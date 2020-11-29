@@ -42,6 +42,46 @@ class _OptionsList extends State<SettingsPage> {
     _optionsList = _loadOptionsList();
     return new Scaffold(
         appBar: BaseUtil.getAppBar(),
+        bottomSheet: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+              child: InkWell(
+                child: Text('Terms of Service',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    decoration: TextDecoration.underline
+                  ),
+                ),
+                onTap: () {
+                  HapticFeedback.vibrate();
+                  Navigator.of(context).pushNamed('/tnc');
+                },
+              ),
+            ),
+            Text('•',
+              style: TextStyle(
+                color: Colors.grey
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+              child: InkWell(
+                child: Text('Referral Policy',
+                  style: TextStyle(
+                      color: Colors.grey,
+                      decoration: TextDecoration.underline
+                  ),
+                ),
+                onTap: () {
+                  HapticFeedback.vibrate();
+                  Navigator.of(context).pushNamed('/refpolicy');
+                },
+              ),
+            )
+          ],
+        ),
         body: ListView.builder(
           padding: const EdgeInsets.all(16.0),
           itemBuilder: /*1*/ (context, i) {
@@ -92,6 +132,11 @@ class _OptionsList extends State<SettingsPage> {
       case 'faq': {
         HapticFeedback.vibrate();
         Navigator.of(context).pushNamed('/faq');
+        break;
+      }
+      case 'tnc': {
+        HapticFeedback.vibrate();
+        Navigator.of(context).pushNamed('/tnc');
         break;
       }
       case 'contUs': {
@@ -178,13 +223,13 @@ class _OptionsList extends State<SettingsPage> {
 
   List<OptionDetail> _loadOptionsList() {
     return [
-     // new OptionDetail(key: 'upAddress', value: 'Update Address', isEnabled: (baseProvider.isSignedIn() && baseProvider.isActiveUser())),
       new OptionDetail(key: 'abUs', value: 'About ${Constants.APP_NAME}', isEnabled: true),
       new OptionDetail(key: 'fdbk', value: 'Feedback', isEnabled: true),
       new OptionDetail(key: 'contUs', value: 'Contact Us', isEnabled: true),
       new OptionDetail(key: 'faq', value: 'FAQs', isEnabled: true),
       new OptionDetail(key: 'signOut', value: 'Sign Out', isEnabled: (baseProvider.isSignedIn())),
-      //new OptionDetail(key: 'tutorial', value: 'See Tutorial', isEnabled: true),
+      // new OptionDetail(key: 'tnc', value: 'Terms of Service', isEnabled: true),
+      // new OptionDetail(key: 'refpolicy', value: 'Referral Policy', isEnabled: true),
     ];
   }
 

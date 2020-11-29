@@ -18,7 +18,7 @@ dependencies:
   get_it: ^1.0.3+2
   pin_input_text_field: ^2.0.3
   path_provider:
-  morpheus: ^1.0.2
+  #morpheus: ^1.0.2
   flutter_spinkit: ^4.0.0
   cached_network_image: ^2.0.0
   http: ^0.12.0+3
@@ -33,6 +33,9 @@ dependencies:
   #upi_india: ^2.2.0+1
   url_launcher: ^5.7.0
   showcaseview: ^0.1.6
+  #xml: ^4.5.1
+  #flutter_widget_from_html: ^0.5.1+5
+  flutter_html: ^1.0.1
 
   flutter:
     sdk: flutter
@@ -65,3 +68,5 @@ flutter:
     - images/amfi.png
     - images/whatsapp.png
     - images/onboard_collage-small.png
+    - resources/fello_tnc.html
+    - resources/referral_policy.html

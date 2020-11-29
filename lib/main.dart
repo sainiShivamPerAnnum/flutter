@@ -13,6 +13,8 @@ import 'package:felloapp/ui/pages/onboarding/onboarding_widget.dart';
 import 'package:felloapp/ui/pages/settings_page.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
 import 'package:felloapp/ui/pages/tabs/upi_screen.dart';
+import 'package:felloapp/ui/pages/tnc_page.dart';
+import 'package:felloapp/ui/pages/referral_policy_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -57,6 +59,8 @@ class MyApp extends StatelessWidget {
           '/settings': (BuildContext context) => SettingsPage(),
           '/faq': (BuildContext context) => FAQPage(),
           '/deposit': (BuildContext context) => UpiPayment(),
+          '/tnc': (BuildContext context) => TnC(),
+          '/refpolicy': (BuildContext context) => ReferralPolicy(),
         },
       ),
     );
