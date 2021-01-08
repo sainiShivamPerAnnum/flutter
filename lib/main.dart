@@ -11,7 +11,6 @@ import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/onboarding_widget.dart';
 import 'package:felloapp/ui/pages/settings_page.dart';
-import 'package:felloapp/ui/pages/tabs/home_screen.dart';
 import 'package:felloapp/ui/pages/tabs/upi_screen.dart';
 import 'package:felloapp/ui/pages/tnc_page.dart';
 import 'package:felloapp/ui/pages/referral_policy_page.dart';
@@ -50,12 +49,6 @@ class MyApp extends StatelessWidget {
           '/approot': (BuildContext context) => AppRoot(),
           '/onboarding': (BuildContext context) => OnboardingMainPage(),
           '/login': (BuildContext context) => LoginController(),
-          '/gametab': (BuildContext context) =>
-              MyHomePage(title: Constants.APP_NAME),
-          '/savetab': (BuildContext context) =>
-              MyHomePage(title: Constants.APP_NAME),
-          '/refertab': (BuildContext context) =>
-              MyHomePage(title: Constants.APP_NAME),
           '/settings': (BuildContext context) => SettingsPage(),
           '/faq': (BuildContext context) => FAQPage(),
           '/deposit': (BuildContext context) => UpiPayment(),

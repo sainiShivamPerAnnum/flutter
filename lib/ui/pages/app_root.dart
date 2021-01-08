@@ -4,7 +4,6 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/elements/text_slider.dart';
 import 'package:felloapp/ui/pages/tabs/card_screen.dart';
-import 'package:felloapp/ui/pages/tabs/home_screen.dart';
 import 'package:felloapp/ui/pages/tabs/refer_screen.dart';
 import 'package:felloapp/ui/pages/tabs/save_tab.dart';
 import 'package:felloapp/util/assets.dart';
@@ -128,7 +127,7 @@ class _AppRootState extends State<AppRoot> {
         }
       default:
         {
-          return MyHomePage(title: Constants.APP_NAME);
+          return ReferScreen();
         }
     }
   }
