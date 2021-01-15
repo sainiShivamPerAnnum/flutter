@@ -4,6 +4,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -109,7 +110,13 @@ class PrizeDialogState extends State<PrizeDialog> {
                         )
                     ),
                   ]),
-                Divider(),
+                SizedBox(
+                  height: 10,
+                ),
+                Divider(
+                  endIndent: 30,
+                  indent: 30,
+                ),
                 // SizedBox(
                 //   child: Image(
                 //     image: AssetImage(Assets.prizesGraphic),
@@ -118,9 +125,7 @@ class PrizeDialogState extends State<PrizeDialog> {
                 //   width: 160,
                 //   height: 160,
                 // ),
-                // SizedBox(
-                //   height: 20,
-                // ),
+
                 Expanded(
                     child: Container(
                         alignment: Alignment.center,
@@ -172,6 +177,7 @@ class PrizeDialogState extends State<PrizeDialog> {
   Widget _getPrizeRow(String title, String prize) {
     return Container(
       margin: EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.symmetric(horizontal: 30,),
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -305,6 +311,7 @@ class PrizeDialogState extends State<PrizeDialog> {
     }
     return Container(
       margin: EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.symmetric(horizontal: 30,),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
