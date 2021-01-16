@@ -81,7 +81,7 @@ class PrizeDialogState extends State<PrizeDialog> {
                   children: [
                     Expanded(
                         child:Padding(
-                            padding: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(15),
                             child: InkWell(
                               child: Text('Last week\'s winners',
                                 textAlign: TextAlign.center,
@@ -96,7 +96,7 @@ class PrizeDialogState extends State<PrizeDialog> {
                     ),
                     Expanded(
                         child:Padding(
-                            padding: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(15),
                             child: InkWell(
                               child: Text('This week\'s prizes',
                                 textAlign: TextAlign.center,
@@ -111,28 +111,21 @@ class PrizeDialogState extends State<PrizeDialog> {
                     ),
                   ]),
                 SizedBox(
-                  height: 10,
+                  height: 0,
                 ),
                 Divider(
                   endIndent: 30,
                   indent: 30,
                 ),
-                // SizedBox(
-                //   child: Image(
-                //     image: AssetImage(Assets.prizesGraphic),
-                //     fit: BoxFit.contain,
-                //   ),
-                //   width: 160,
-                //   height: 160,
-                // ),
-
                 Expanded(
                     child: Container(
                         alignment: Alignment.center,
                         child: _addPageView()
                     )
+                ),
+                SizedBox(
+                  height: 15,
                 )
-
               ],
             ),
           ),
@@ -155,7 +148,6 @@ class PrizeDialogState extends State<PrizeDialog> {
 
   Widget _buildPrizeTabView() {
     return
-      //Center(child:
         Padding(
         padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
         child: Column(
@@ -206,6 +198,7 @@ class PrizeDialogState extends State<PrizeDialog> {
   }
 
   Widget _buildWinnersTabView() {
+    int weekCode = BaseUtil.getWeekNumber();
     Widget _tWidget;
     if(!_winnersFetched)dbProvider.getWeeklyWinners().then((resWinners) {
       _winnersFetched = true;
@@ -253,14 +246,25 @@ class PrizeDialogState extends State<PrizeDialog> {
         _winnerList.add(_buildWinnerRow(name, amt));
       });
 
-
       _tWidget =
       //new Center(child:
       Stack(
         children: [
-
           Padding(
-              padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
+            padding: EdgeInsets.fromLTRB(30,5,30,10),
+            child: Align(
+             alignment: Alignment.topCenter,
+              child:Text('Here are the winners from Week $weekCode:',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 22,
+                    color: Colors.blueGrey
+                ),
+              ),
+            )
+          ),
+          Padding(
+              padding: EdgeInsets.fromLTRB(20, 55, 20, 20),
               child: SingleChildScrollView(
                physics: BouncingScrollPhysics(),
                child: Column(
@@ -311,7 +315,7 @@ class PrizeDialogState extends State<PrizeDialog> {
     }
     return Container(
       margin: EdgeInsets.only(bottom: 8),
-      padding: EdgeInsets.symmetric(horizontal: 30,),
+      padding: EdgeInsets.symmetric(horizontal: 20,),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
