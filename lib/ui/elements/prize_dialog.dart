@@ -164,6 +164,12 @@ class PrizeDialogState extends State<PrizeDialog> {
   }
 
   Widget _buildPrizeTabView() {
+    String win_corner = BaseUtil.remoteConfig.getString('tambola_win_corner');
+    String win_top = BaseUtil.remoteConfig.getString('tambola_win_top');
+    String win_middle = BaseUtil.remoteConfig.getString('tambola_win_middle');
+    String win_bottom = BaseUtil.remoteConfig.getString('tambola_win_bottom');
+    String win_full = BaseUtil.remoteConfig.getString('tambola_win_full');
+    String referral_bonus = BaseUtil.remoteConfig.getString('referral_bonus');
     return
         Padding(
         padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
@@ -171,12 +177,12 @@ class PrizeDialogState extends State<PrizeDialog> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _getPrizeRow('Referral', '₹25'),
-            _getPrizeRow('Corners', '₹500'),
-            _getPrizeRow('First Row', '₹1500'),
-            _getPrizeRow('Second Row', '₹1500'),
-            _getPrizeRow('Third Row', '₹1500'),
-            _getPrizeRow('Full House', '₹10,000'),
+            _getPrizeRow('Referral', (referral_bonus==null||referral_bonus.isEmpty)?'₹25':'₹$referral_bonus'),
+            _getPrizeRow('Corners', (win_corner==null||win_corner.isEmpty)?'₹500':'₹$win_corner'),
+            _getPrizeRow('First Row', (win_top==null||win_top.isEmpty)?'₹1500':'₹$win_top'),
+            _getPrizeRow('Second Row', (win_middle==null||win_middle.isEmpty)?'₹1500':'₹$win_middle'),
+            _getPrizeRow('Third Row', (win_bottom==null||win_bottom.isEmpty)?'₹1500':'₹$win_bottom'),
+            _getPrizeRow('Full House', (win_full==null||win_full.isEmpty)?'₹10,000':'₹$win_full'),
           ],
         ),
       );

@@ -67,7 +67,14 @@ class BaseUtil extends ChangeNotifier {
     remoteConfig.setDefaults(<String, dynamic>{
       'draw_pick_time': '18',
       'deposit_upi_address': '9769637379@okbizaxis',
-      'play_screen_first': 'true'
+      'play_screen_first': 'true',
+      'tambola_win_corner':'500',
+      'tambola_win_top':'1500',
+      'tambola_win_middle':'1500',
+      'tambola_win_bottom':'1500',
+      'tambola_win_full':'10,000',
+      'referral_bonus':'25',
+      'referral_ticket_bonus':'10'
     });
     try {
       // Using default duration to force fetching from remote server.
