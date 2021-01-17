@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/ui/elements/text_slider.dart';
 import 'package:felloapp/ui/pages/tabs/card_screen.dart';
 import 'package:felloapp/ui/pages/tabs/refer_screen.dart';
@@ -26,6 +27,7 @@ class AppRoot extends StatefulWidget {
 class _AppRootState extends State<AppRoot> {
   Log log = new Log("AppRoot");
   BaseUtil baseProvider;
+  HttpModel httpModel;
   int _currentIndex = 0;
   NavySlider _slider;
   bool _playFirst = true;
@@ -42,6 +44,7 @@ class _AppRootState extends State<AppRoot> {
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
+    httpModel = Provider.of<HttpModel>(context);
     return Scaffold(
       // appBar: BaseUtil.getAppBar(),
       body:
@@ -140,7 +143,7 @@ class _AppRootState extends State<AppRoot> {
       if (deepLink != null) {
         log.debug('Received deep link');
         log.debug(deepLink.toString());
-        postReferral(baseProvider.myUser.uid, deepLink);
+        submitReferral(baseProvider.myUser.uid, deepLink);
       }
     }, onError: (OnLinkErrorException e) async {
       log.error('Error in fetching deeplink');
@@ -154,21 +157,18 @@ class _AppRootState extends State<AppRoot> {
     if (deepLink != null) {
       log.debug('Received deep link');
       log.debug(deepLink.toString());
-      postReferral(baseProvider.myUser.uid, deepLink);
+      submitReferral(baseProvider.myUser.uid, deepLink);
     }
   }
 
-  Future<http.Response> postReferral(String userId, Uri deepLink) {
+  Future<http.Response> submitReferral(String userId, Uri deepLink) {
     String prefix = 'https://fello.in/';
     String dLink = deepLink.toString();
     if (dLink.startsWith(prefix)) {
       String referee = dLink.replaceAll(prefix, '');
       log.debug(referee);
-      if (prefix.length > 0 && prefix != userId) {
-        return http.post(
-          'https://us-central1-fello-d3a9c.cloudfunctions.net/validateReferral?uid=$userId&rid=$referee',
-        );
-      }
+      if (prefix.length > 0 && prefix != userId)
+        httpModel.postReferral(userId, referee);
     }
     return null;
   }
