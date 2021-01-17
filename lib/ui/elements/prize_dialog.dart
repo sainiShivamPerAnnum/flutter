@@ -1,6 +1,7 @@
 import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -19,10 +20,12 @@ class PrizeDialogState extends State<PrizeDialog> {
   final Log log = new Log('PrizeDialog');
   BaseUtil baseProvider;
   DBModel dbProvider;
+  LocalDBModel lclDbProvider;
   PageController _pageController;
   ConfettiController _confeticontroller;
   int _pageIndex = 0;
   bool _winnersFetched = false;
+  bool _isInitialised = false;
   Map<String, dynamic> _winners = null;
 
   PrizeDialogState();
@@ -33,7 +36,7 @@ class PrizeDialogState extends State<PrizeDialog> {
     _confeticontroller = new ConfettiController(
       duration: new Duration(seconds: 2),
     );
-    _confeticontroller.play();
+    // _confeticontroller.play();
     super.initState();
   }
 
@@ -43,10 +46,24 @@ class PrizeDialogState extends State<PrizeDialog> {
     _pageController.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  _init(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
+    lclDbProvider = Provider.of<LocalDBModel>(context);
+
+    DateTime date = new DateTime.now();
+    int weekCde = date.year*100 + BaseUtil.getWeekNumber();
+    lclDbProvider.isConfettiRequired(weekCde).then((flag) {
+      if(flag) {
+        _confeticontroller.play();
+        lclDbProvider.saveConfettiUpdate(weekCde);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if(!_isInitialised)_init(context);
     return Dialog(
       insetPadding: EdgeInsets.only(left:20, top:50, bottom: 110, right:20),
       shape: RoundedRectangleBorder(
