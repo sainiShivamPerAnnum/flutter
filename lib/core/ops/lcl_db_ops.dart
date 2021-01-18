@@ -84,11 +84,15 @@ class LocalDBModel extends ChangeNotifier {
     }catch(e) {
       log.error('Failed to delete onboarding file:' + e.toString());
     }
-
     try{
       await _api.deleteFreshUserFile();
     }catch(e) {
       log.error('Failed to delete fresh user file:' + e.toString());
+    }
+    try{
+      await _api.deleteConfettiFile();
+    }catch(e) {
+      log.error('Failed to delete confetti track file:' + e.toString());
     }
     //User file deletion is crucial for return flag. Rest can be missing
     try{

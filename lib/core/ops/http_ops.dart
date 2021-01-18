@@ -15,15 +15,15 @@ class HttpModel extends ChangeNotifier{
     if(_baseUtil != null && _baseUtil.firebaseUser != null) {
       idToken = (await _baseUtil.firebaseUser.getIdToken()).token;
       log.debug('Fetched user IDToken: ' + idToken);
-    }
-    try {
-      return http.post(
-          '$homeuri/validateReferral?uid=$userId&rid=$referee',
-          headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'}
-      );
-    }catch(e) {
-      log.error('Http post failed: ' + e.toString());
-      return null;
+      try {
+        return http.post(
+            '$homeuri/validateReferral?uid=$userId&rid=$referee',
+            headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'}
+        );
+      }catch(e) {
+        log.error('Http post failed: ' + e.toString());
+        return null;
+      }
     }
   }
 }
