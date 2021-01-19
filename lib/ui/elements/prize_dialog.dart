@@ -1,11 +1,15 @@
+import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'dart:collection';
 
 class PrizeDialog extends StatefulWidget{
   @override
@@ -16,9 +20,12 @@ class PrizeDialogState extends State<PrizeDialog> {
   final Log log = new Log('PrizeDialog');
   BaseUtil baseProvider;
   DBModel dbProvider;
+  LocalDBModel lclDbProvider;
   PageController _pageController;
+  ConfettiController _confeticontroller;
   int _pageIndex = 0;
   bool _winnersFetched = false;
+  bool _isInitialised = false;
   Map<String, dynamic> _winners = null;
 
   PrizeDialogState();
@@ -26,6 +33,10 @@ class PrizeDialogState extends State<PrizeDialog> {
   @override
   void initState(){
     _pageController = PageController(initialPage: _pageIndex);
+    _confeticontroller = new ConfettiController(
+      duration: new Duration(seconds: 2),
+    );
+    // _confeticontroller.play();
     super.initState();
   }
 
@@ -35,10 +46,24 @@ class PrizeDialogState extends State<PrizeDialog> {
     _pageController.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  _init(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
+    lclDbProvider = Provider.of<LocalDBModel>(context);
+
+    DateTime date = new DateTime.now();
+    int weekCde = date.year*100 + BaseUtil.getWeekNumber();
+    lclDbProvider.isConfettiRequired(weekCde).then((flag) {
+      if(flag) {
+        _confeticontroller.play();
+        lclDbProvider.saveConfettiUpdate(weekCde);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if(!_isInitialised)_init(context);
     return Dialog(
       insetPadding: EdgeInsets.only(left:20, top:50, bottom: 110, right:20),
       shape: RoundedRectangleBorder(
@@ -65,6 +90,7 @@ class PrizeDialogState extends State<PrizeDialog> {
           ),
           Container(
             width: double.infinity,
+            height: MediaQuery.of(context).size.height*0.6,
             child: Column(
               children: [
                 SizedBox(height: 10,),
@@ -72,7 +98,7 @@ class PrizeDialogState extends State<PrizeDialog> {
                   children: [
                     Expanded(
                         child:Padding(
-                            padding: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(15),
                             child: InkWell(
                               child: Text('Last week\'s winners',
                                 textAlign: TextAlign.center,
@@ -87,9 +113,9 @@ class PrizeDialogState extends State<PrizeDialog> {
                     ),
                     Expanded(
                         child:Padding(
-                            padding: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(15),
                             child: InkWell(
-                              child: Text('This week\'s \nprizes',
+                              child: Text('This week\'s prizes',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: (this._pageIndex==1)?UiConstants.primaryColor:Colors.blueGrey,
@@ -101,27 +127,26 @@ class PrizeDialogState extends State<PrizeDialog> {
                         )
                     ),
                   ]),
-                Divider(),
                 SizedBox(
-                  child: Image(
-                    image: AssetImage(Assets.prizesGraphic),
-                    fit: BoxFit.contain,
-                  ),
-                  width: 160,
-                  height: 160,
+                  height: 0,
+                ),
+                Divider(
+                  endIndent: 30,
+                  indent: 30,
+                ),
+                Expanded(
+                    child: Container(
+                        alignment: Alignment.center,
+                        child: _addPageView()
+                    )
                 ),
                 SizedBox(
-                  height: 20,
-                ),
+                  height: 15,
+                )
               ],
             ),
           ),
-          Container(
-              height: 700,
-              alignment: Alignment.center,
-              padding: EdgeInsets.fromLTRB(30, 240, 30, 30),
-              child: _addPageView()
-          )
+
         ]
     );
   }
@@ -139,20 +164,25 @@ class PrizeDialogState extends State<PrizeDialog> {
   }
 
   Widget _buildPrizeTabView() {
+    String win_corner = BaseUtil.remoteConfig.getString('tambola_win_corner');
+    String win_top = BaseUtil.remoteConfig.getString('tambola_win_top');
+    String win_middle = BaseUtil.remoteConfig.getString('tambola_win_middle');
+    String win_bottom = BaseUtil.remoteConfig.getString('tambola_win_bottom');
+    String win_full = BaseUtil.remoteConfig.getString('tambola_win_full');
+    String referral_bonus = BaseUtil.remoteConfig.getString('referral_bonus');
     return
-      //Center(child:
         Padding(
         padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _getPrizeRow('Referral', '₹25'),
-            _getPrizeRow('Corners', '₹500'),
-            _getPrizeRow('First Row', '₹1500'),
-            _getPrizeRow('Second Row', '₹1500'),
-            _getPrizeRow('Third Row', '₹1500'),
-            _getPrizeRow('Full House', '₹10,000'),
+            _getPrizeRow('Referral', (referral_bonus==null||referral_bonus.isEmpty)?'₹25':'₹$referral_bonus'),
+            _getPrizeRow('Corners', (win_corner==null||win_corner.isEmpty)?'₹500':'₹$win_corner'),
+            _getPrizeRow('First Row', (win_top==null||win_top.isEmpty)?'₹1500':'₹$win_top'),
+            _getPrizeRow('Second Row', (win_middle==null||win_middle.isEmpty)?'₹1500':'₹$win_middle'),
+            _getPrizeRow('Third Row', (win_bottom==null||win_bottom.isEmpty)?'₹1500':'₹$win_bottom'),
+            _getPrizeRow('Full House', (win_full==null||win_full.isEmpty)?'₹10,000':'₹$win_full'),
           ],
         ),
       );
@@ -160,33 +190,38 @@ class PrizeDialogState extends State<PrizeDialog> {
   }
 
   Widget _getPrizeRow(String title, String prize) {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Expanded(
-            child: Text(title,
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                    fontSize: 20,
-                    height: 1.6,
-                    color: UiConstants.accentColor)
+    return Container(
+      margin: EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.symmetric(horizontal: 30,),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+              child: Text(title,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      fontSize: 20,
+                      height: 1.6,
+                      color: UiConstants.accentColor)
+              ),
             ),
-          ),
-          Expanded(
-            child: Text(prize,
-                textAlign: TextAlign.end,
-                style: TextStyle(
-                    fontSize: 24,
-                    height: 1.6,
-                    fontWeight: FontWeight.bold,
-                    color: UiConstants.primaryColor)
+            Expanded(
+              child: Text(prize,
+                  textAlign: TextAlign.end,
+                  style: TextStyle(
+                      fontSize: 24,
+                      height: 1.6,
+                      fontWeight: FontWeight.bold,
+                      color: UiConstants.primaryColor)
+              ),
             ),
-          ),
-        ],
-      );
+          ],
+        ),
+    );
   }
 
   Widget _buildWinnersTabView() {
+    int weekCode = BaseUtil.getWeekNumber();
     Widget _tWidget;
     if(!_winnersFetched)dbProvider.getWeeklyWinners().then((resWinners) {
       _winnersFetched = true;
@@ -220,23 +255,67 @@ class PrizeDialogState extends State<PrizeDialog> {
     }
     else {
       List<Widget> _winnerList = [];
-      _winners.forEach((name, amount) {
+      // SORTING THE LIST
+      var sortedKeys = _winners.keys.toList(growable:false)
+        ..sort((k1, k2) => _winners[k1].compareTo(_winners[k2]));
+      LinkedHashMap sortedMap = new LinkedHashMap
+          .fromIterable(sortedKeys, key: (k) => k, value: (k) => _winners[k]);
+      // REVERSING THE LIST
+      final reverseM = LinkedHashMap.fromEntries(sortedMap.entries.toList().reversed);
+      // DONE
+      reverseM.forEach((name, amount) {
+
         String amt = amount.toString();
         _winnerList.add(_buildWinnerRow(name, amt));
       });
+
       _tWidget =
       //new Center(child:
-      Padding(
-          padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
-          child: SingleChildScrollView(
-           physics: BouncingScrollPhysics(),
-           child: Column(
-               mainAxisAlignment: MainAxisAlignment.start,
-               crossAxisAlignment: CrossAxisAlignment.center,
-               children: _winnerList
-           ),
-          )
-        //),
+      Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(30,5,30,10),
+            child: Align(
+             alignment: Alignment.topCenter,
+              child:Text('Here are the winners from Week $weekCode:',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 22,
+                    color: Colors.blueGrey
+                ),
+              ),
+            )
+          ),
+          Padding(
+              padding: EdgeInsets.fromLTRB(20, 55, 20, 20),
+              child: SingleChildScrollView(
+               physics: BouncingScrollPhysics(),
+               child: Column(
+                   mainAxisAlignment: MainAxisAlignment.start,
+                   crossAxisAlignment: CrossAxisAlignment.center,
+                   children: _winnerList
+               ),
+              )
+            //),
+          ),
+          Container(
+            height: 100,
+              width: 100,
+              child: ConfettiWidget( blastDirectionality: BlastDirectionality.explosive,
+                confettiController: _confeticontroller,
+                particleDrag: 0.05,
+                emissionFrequency: 0.05,
+                numberOfParticles: 25,
+                gravity: 0.05,
+                shouldLoop: false,
+                colors: [
+                  UiConstants.primaryColor,
+                  Colors.grey,
+                  Colors.yellow,
+                  Colors.blue,
+                ],)
+          ),
+        ],
       );
     }
 
@@ -244,35 +323,53 @@ class PrizeDialogState extends State<PrizeDialog> {
   }
 
   Widget _buildWinnerRow(String name, String amount) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-            child: Text(name,
-              textAlign: TextAlign.start,
-              style: TextStyle(
-                color: UiConstants.accentColor,
-                fontSize: 22
-              ),
-            ),
-          )
-        ),
-        Expanded(
+
+    String camelCase(String value) {
+
+      var result = value[0].toUpperCase();
+      for (int i = 1; i < value.length; i++) {
+        if (value[i - 1] == " ") {
+          result = result + value[i].toUpperCase();
+        } else {
+          result = result + value[i].toLowerCase();
+        }
+      }
+      return result;
+    }
+    return Container(
+      margin: EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.symmetric(horizontal: 20,),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
             child: Padding(
               padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-              child: Text('₹'+ amount.toString(),
-                textAlign: TextAlign.right,
+              child: Text(camelCase(name),
+                textAlign: TextAlign.start,
                 style: TextStyle(
-                    color: UiConstants.primaryColor,
-                    fontSize: 24,
-                  fontWeight: FontWeight.bold
+
+                  color: UiConstants.accentColor,
+                  fontSize: 22
                 ),
               ),
             )
-        ),
-      ],
+          ),
+
+              Padding(
+                padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                child: Text('₹'+ amount.toString(),
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                      color: UiConstants.primaryColor,
+                      fontSize: 24,
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
+              )
+
+        ],
+      ),
     );
   }
 

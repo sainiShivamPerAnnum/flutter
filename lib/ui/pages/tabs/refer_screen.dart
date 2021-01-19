@@ -25,10 +25,15 @@ class _ReferScreenState extends State<ReferScreen> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   FcmHandler fcmProvider;
-
-  String _shareMsg = 'Hey I am gifting you ₹25 and 10 free Tambola tickets. Lets start saving and playing together! ';
+  String referral_bonus = BaseUtil.remoteConfig.getString('referral_bonus');
+  String referral_ticket_bonus = BaseUtil.remoteConfig.getString('referral_ticket_bonus');
+  String _shareMsg;
 
   _init() {
+    referral_bonus = (referral_bonus==null||referral_bonus.isEmpty)?'25':referral_bonus;
+    referral_ticket_bonus = (referral_ticket_bonus==null||referral_ticket_bonus.isEmpty)?'10':referral_ticket_bonus;
+    _shareMsg = 'Hey I am gifting you ₹$referral_bonus and $referral_ticket_bonus free Tambola tickets. Lets start saving and playing together! ';
+
     if(fcmProvider != null && baseProvider != null && dbProvider != null) {
       fcmProvider.addIncomingMessageListener((valueMap) {
         if(valueMap['title'] != null && valueMap['body'] != null){
@@ -208,7 +213,7 @@ class _ReferScreenState extends State<ReferScreen> {
                           SizedBox(
                             height: 10,
                           ),
-                          Text('You both receive ₹25 in your account along with 10 extra Tambola tickets!',
+                          Text('You both receive ₹$referral_bonus in your account along with $referral_ticket_bonus extra Tambola tickets!',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 20,

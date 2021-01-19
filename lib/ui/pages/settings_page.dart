@@ -6,6 +6,7 @@ import 'package:felloapp/ui/elements/aboutus_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/contact_dialog.dart';
 import 'package:felloapp/ui/elements/feedback_dialog.dart';
+import 'package:felloapp/ui/pages/edit_profile_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -165,6 +166,14 @@ class _OptionsList extends State<SettingsPage> {
         );
         break;
       }
+      case 'editProf' : {
+        HapticFeedback.vibrate();
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => EditProfile()),
+        );
+        break;
+      }
       case 'signOut': {
         showDialog(
             context: context,
@@ -225,8 +234,9 @@ class _OptionsList extends State<SettingsPage> {
     return [
       new OptionDetail(key: 'abUs', value: 'About ${Constants.APP_NAME}', isEnabled: true),
       new OptionDetail(key: 'fdbk', value: 'Feedback', isEnabled: true),
-      new OptionDetail(key: 'contUs', value: 'Contact Us', isEnabled: true),
       new OptionDetail(key: 'faq', value: 'FAQs', isEnabled: true),
+      new OptionDetail(key: 'editProf', value: 'Update Details',isEnabled: true),
+      new OptionDetail(key: 'contUs', value: 'Contact Us', isEnabled: true),
       new OptionDetail(key: 'signOut', value: 'Sign Out', isEnabled: (baseProvider.isSignedIn())),
       // new OptionDetail(key: 'tnc', value: 'Terms of Service', isEnabled: true),
       // new OptionDetail(key: 'refpolicy', value: 'Referral Policy', isEnabled: true),

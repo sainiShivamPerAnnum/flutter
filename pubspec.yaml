@@ -38,7 +38,7 @@ dependencies:
   flutter_html: ^1.0.1
   fl_animated_linechart: ^1.1.4
   google_fonts: ^1.1.1
-
+  confetti: ^0.5.4+1
 
   flutter:
     sdk: flutter
