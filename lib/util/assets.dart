@@ -2,7 +2,7 @@ import 'package:felloapp/base_util.dart';
 
 import 'constants.dart';
 
-class Assets{
+class Assets {
   static final String logoMaxSize = 'images/fello_logo.png';
   static final String referGraphic = 'images/transfer.png';
   static final String iciciGraphic = 'images/icici.png';
@@ -12,7 +12,8 @@ class Assets{
   static final String winnersGraphic = 'images/winners-small.png';
   static final String whatsappIcon = 'images/whatsapp.png';
   static final String strikeThroughGraphic = 'images/diagonal-strike.png';
-  static final String onboardCollageGraphic = 'images/onboard_collage-small.png';
+  static final String onboardCollageGraphic =
+      'images/onboard_collage-small.png';
 
   static final List<String> onboardingSlide = [
     'images/save-small.png',
@@ -21,15 +22,15 @@ class Assets{
     'images/safe-small.png',
   ];
 
-
-  static final List<String> onboardingHeader=[
+  static final List<String> onboardingHeader = [
     'Save',
     'Grow',
     'Play',
     'Safe',
   ];
 
-  static final String aboutUsDesc = 'Fello is a game based savings and investment platform for users to save, grow and earn higher returns than a traditional savings bank account. For every ₹100 saved and invested through Fello, users get amazing rewards and incentives. \n\n'
+  static final String aboutUsDesc =
+      'Fello is a game based savings and investment platform for users to save, grow and earn higher returns than a traditional savings bank account. For every ₹100 saved and invested through Fello, users get amazing rewards and incentives. \n\n'
       'We (Manish & Shourya) are two finance folks who started Fello with the vision of helping people save money in a better way and learn about personal finance and investments with an added tinge of fun with games like never before. Now savings are no more boring, it is fun, safe and rewarding!\n\n'
       'We are an AMFI registered mutual fund distributor and all your money is invested directly into a relevant mutual fund. So the money saved is safe and secure with the security of a financial institution. \n\n'
       'If you have any queries, feel free to reach out to us and we would be happy to help you.';
@@ -45,7 +46,8 @@ class Assets{
         ' while giving you the freedom to withdraw at any point.',
   ];
 
-  static final String guideText = '1. Users receive 1 weekly ticket for every ₹100 saved and invested.\n\n'
+  static final String guideText =
+      '1. Users receive 1 weekly ticket for every ₹100 saved and invested.\n\n'
       '2. Each tambola ticket is valid for one week starting from Monday, till  Sunday. \n\n'
       '3. You receive new tambola tickets every Monday for your amount saved in your account.\n\n'
       '4. Every day 5 numbers will be drawn from a raffle totalling 35 numbers per week.  \n\n'
@@ -116,13 +118,14 @@ class Assets{
     'For every ₹100 you save, you receive a game ticket that refreshes every week. Our first listed game is Tambola! '
   ];
 
-  static final String transactionProcess = 'Presently, your funds are manually deposited to your linked mutual fund '
+  static final String transactionProcess =
+      'Presently, your funds are manually deposited to your linked mutual fund '
       'account along with an email confirmation. \n\nSoon, all deposits and withdrawals placed on Fello will be'
       ' processed directly by your mutual fund of choice. ';
 
   static final List<String> showCaseDesc = [
     'Welcome to Fello!\n'
-    'We have added 5 tickets in your account to get you started',
+        'We have added 5 tickets in your account to get you started',
     'Everyday, 5 numbers are randomly picked from Monday to Sunday. Click the box to see this week\'s numbers',
     'You receive fresh Tambola tickets every Monday. The ticket numbers are automatically crossed based on the daily picks',
     'If any of your tickets match one of the 5 categories, you receive an instant cash prize in your account!'
@@ -135,4 +138,10 @@ class Assets{
     'We are currently in Beta',
   ];
 
+  static final List<String> mfTableDetailsInfo = [
+    "I am learning to build apps in Flutter. Now I have come to alert dialogs. I have done them before in Android and iOS, but how do I make an alert in Flutter?",
+    "I am learning to build apps in Flutter. Now I have come to alert dialogs. I have done them before in Android and iOS, but how do I make an alert in Flutter?",
+    "I am learning to build apps in Flutter. Now I have come to alert dialogs. I have done them before in Android and iOS, but how do I make an alert in Flutter?",
+    "I am learning to build apps in Flutter. Now I have come to alert dialogs. I have done them before in Android and iOS, but how do I make an alert in Flutter?",
+  ];
 }

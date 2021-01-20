@@ -533,91 +533,120 @@ class _SaveScreenState extends State<SaveScreen> {
             ),
           ),
           child: Container(
+              height: 240,
               width: double.infinity,
-              padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
-                // boxShadow: [
-                //   new BoxShadow(
-                //     color: Colors.black26,
-                //     offset: Offset.fromDirection(20, 7),
-                //     blurRadius: 5.0,
-                //   )
-                // ],
-                boxShadow: [
-                  BoxShadow(color: Colors.white),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                boxShadow: <BoxShadow>[
                   BoxShadow(
-                    color: Color(0xFFcdd0cb),
-                    offset: Offset(0, 20),
-                    blurRadius: 5,
-                    spreadRadius: 10,
-                  ),
-                  BoxShadow(
-                    color: Color(0xFFf5f4f4),
+                    offset: Offset(0, 10),
                     blurRadius: 10,
-                    spreadRadius: -2,
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 0,
                   ),
                 ],
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                // gradient: LinearGradient(
-                //   begin: Alignment.topRight,
-                //   end: Alignment.bottomLeft,
-                //   stops: [0.1, 0.4],
-                //   colors: [Colors.white70, Colors.white],
-                // ),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Stack(children: [
-                  Column(children: [
-                    SizedBox(
+              child: Stack(children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      height: 100,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: UiConstants.primaryColor.withGreen(160),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                          bottomRight: Radius.circular(20),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
                       child: Opacity(
-                          opacity: 0.8,
-                          child: Image(
-                            image: AssetImage(Assets.iciciGraphic),
-                            fit: BoxFit.contain,
-                          )),
+                        opacity: 0.6,
+                        child: Image(
+                          image: AssetImage(Assets.iciciGraphic),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                       width: 500,
                     ),
-                  ]),
-                  // Center(
-                  //   child: Padding(
-                  //       padding: EdgeInsets.only(bottom: 40, left: 10, right: 10),
-                  //       child: ScrollingText(
-                  //         text: 'Direct deposits are coming soon!  ',
-                  //         textStyle: TextStyle(
-                  //             fontSize: 36,
-                  //             fontStyle: FontStyle.italic,
-                  //             fontWeight: FontWeight.w300,
-                  //             color: Colors.blueGrey[900]),
-                  //       )),
-                  // ),
-                  // Align(
-                  //   alignment: Alignment.topCenter,
-                  //   child: Padding(
-                  //     padding: EdgeInsets.only(top: 10),
-                  //     child: InkWell(
-                  //       child: Text('More about the fund',
-                  //         textAlign: TextAlign.center,
-                  //         style: TextStyle(
-                  //           fontSize: 15,
-                  //           color: Colors.blueGrey[200],
-                  //           decoration: TextDecoration.underline,
-                  //         ),
-                  //       ),
-                  //       onTap: () async{
-                  //         const url = "https://www.icicipruamc.com/mutual-fund/debt-funds/icici-prudential-liquid-fund";
-                  //         if (await canLaunch(url)) {
-                  //           await launch(url);
-                  //         }
-                  //         else {
-                  //           baseProvider.showNegativeAlert('Unable to launch', 'Please try again later', context);
-                  //         }
-                  //       },
-                  //     ),
-                  //   ),
-                  // )
-                ]),
-              )),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: new LinearGradient(
+                            colors: [
+                              UiConstants.primaryColor.withGreen(160),
+                              UiConstants.primaryColor,
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(20),
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "SAVE NOW",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                // Center(
+                //   child: Padding(
+                //       padding: EdgeInsets.only(bottom: 40, left: 10, right: 10),
+                //       child: ScrollingText(
+                //         text: 'Direct deposits are coming soon!  ',
+                //         textStyle: TextStyle(
+                //             fontSize: 36,
+                //             fontStyle: FontStyle.italic,
+                //             fontWeight: FontWeight.w300,
+                //             color: Colors.blueGrey[900]),
+                //       )),
+                // ),
+                // Align(
+                //   alignment: Alignment.topCenter,
+                //   child: Padding(
+                //     padding: EdgeInsets.only(top: 10),
+                //     child: InkWell(
+                //       child: Text('More about the fund',
+                //         textAlign: TextAlign.center,
+                //         style: TextStyle(
+                //           fontSize: 15,
+                //           color: Colors.blueGrey[200],
+                //           decoration: TextDecoration.underline,
+                //         ),
+                //       ),
+                //       onTap: () async{
+                //         const url = "https://www.icicipruamc.com/mutual-fund/debt-funds/icici-prudential-liquid-fund";
+                //         if (await canLaunch(url)) {
+                //           await launch(url);
+                //         }
+                //         else {
+                //           baseProvider.showNegativeAlert('Unable to launch', 'Please try again later', context);
+                //         }
+                //       },
+                //     ),
+                //   ),
+                // )
+              ])),
         ));
   }
 

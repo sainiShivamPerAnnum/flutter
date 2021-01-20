@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/elements/faq_card.dart';
+import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/elements/withdraw_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -8,9 +10,11 @@ import 'package:fl_animated_linechart/chart/animated_line_chart.dart';
 import 'package:fl_animated_linechart/chart/area_line_chart.dart';
 import 'package:fl_animated_linechart/chart/line_chart.dart';
 import 'package:fl_animated_linechart/common/pair.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MFDetailsPage extends StatefulWidget {
   @override
@@ -44,24 +48,6 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     if (fcmProvider != null) fcmProvider.addIncomingMessageListener(null, 1);
   }
 
-  Map<DateTime, double> line1 = {
-    DateTime.utc(2000, 12, 09): 5.0,
-    DateTime.utc(2002, 02, 21): 10.0,
-    DateTime.utc(2005, 04, 15): 15.0,
-    DateTime.utc(2007, 12, 09): 18.0,
-    DateTime.utc(2009, 02, 21): 22.0,
-    DateTime.utc(2011, 04, 15): 15.0,
-    DateTime.utc(2015, 12, 09): 27.0,
-    DateTime.utc(2018, 02, 21): 32.0,
-    DateTime.utc(2022, 04, 15): 25.0,
-    DateTime.utc(2027, 12, 09): 40.0,
-    DateTime.utc(2032, 02, 21): 35.0,
-    DateTime.utc(2035, 04, 15): 45.0,
-  };
-
-  LineChart chart;
-
-  int months = 1;
   double containerHeight = 10;
 
   @override
@@ -70,16 +56,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     dbProvider = Provider.of<DBModel>(context);
     fcmProvider = Provider.of<FcmHandler>(context);
     _init();
-    double _height = MediaQuery.of(context).size.height;
-    double _width = MediaQuery.of(context).size.width;
-    chart = AreaLineChart.fromDateTimeMaps(
-      [line1],
-      [UiConstants.primaryColor],
-      ['C'],
-      gradients: [
-        Pair(UiConstants.primaryColor.withGreen(190), UiConstants.primaryColor)
-      ],
-    );
+
     return Scaffold(
       appBar: BaseUtil.getAppBar(),
       body: Column(
@@ -90,301 +67,11 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                 physics: BouncingScrollPhysics(),
                 child: Column(
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(
-                            left: _height * 0.02,
-                            top: _height * 0.02,
-                            bottom: _height * 0.02,
-                          ),
-                          width: _width * 0.2,
-                          child: Image.asset(Assets.iciciGraphic,
-                              fit: BoxFit.contain),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                            child: FittedBox(
-                          child: Text(
-                            "ICICI Prudential Mutual Fund",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 24),
-                          ),
-                        )),
-                        SizedBox(
-                          width: _height * 0.02,
-                        )
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          bottom: _height * 0.02, left: 20, right: 30),
-                      child: Text(
-                        'ICICI Prudential Liquid Mutual Fund is a'
-                        ' popular fund that has consistently given an annual return of 6-7%.',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                            color: UiConstants.accentColor,
-                            fontStyle: FontStyle.italic),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: _height * 0.02,
-                      ),
-                      height: _height * 0.3,
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: AnimatedLineChart(
-                          chart,
-                          key: UniqueKey(),
-                        ), //Unique key to force animations
-                      ),
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: _height * 0.02,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                            offset: Offset(5, 5),
-                            blurRadius: 5,
-                            color: Colors.black.withOpacity(0.1),
-                            spreadRadius: 0,
-                          ),
-                        ],
-                      ),
-                      child: Table(
-                        border: TableBorder(
-                          horizontalInside: BorderSide(
-                            color: Colors.black.withOpacity(0.1),
-                          ),
-                          verticalInside: BorderSide(
-                            color: Colors.black.withOpacity(0.1),
-                          ),
-                        ),
-                        children: [
-                          TableRow(children: [
-                            FundDetailsCell(
-                              title: "Current Price",
-                              data: "999",
-                              info:
-                                  "I am learning to build apps in Flutter. Now I have come to alert dialogs. I have done them before in Android and iOS, but how do I make an alert in Flutter?",
-                            ),
-                            FundDetailsCell(
-                              title: "CAGR%",
-                              data: "5.0",
-                              info:
-                                  "I am learning to build apps in Flutter. Now I have come to alert dialogs. I have done them before in Android and iOS, but how do I make an alert in Flutter?",
-                            ),
-                          ]),
-                          TableRow(children: [
-                            FundDetailsCell(
-                              title: "Age",
-                              data: "15",
-                              info:
-                                  "I am learning to build apps in Flutter. Now I have come to alert dialogs. I have done them before in Android and iOS, but how do I make an alert in Flutter?",
-                            ),
-                            FundDetailsCell(
-                              title: "Yeild%",
-                              data: "4.55",
-                              info:
-                                  "I am learning to build apps in Flutter. Now I have come to alert dialogs. I have done them before in Android and iOS, but how do I make an alert in Flutter?",
-                            ),
-                          ]),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text("For More Details visit official Site"),
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: _height * 0.02,
-                      ),
-                      width: double.infinity,
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                            offset: Offset(5, 5),
-                            blurRadius: 5,
-                            color: Colors.black.withOpacity(0.1),
-                            spreadRadius: 0,
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            "PROFIT CALCULATOR",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 24,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("Investment Amount"),
-                                    CalculatorCapsule(
-                                      gradColors: [
-                                        UiConstants.primaryColor.withGreen(190),
-                                        UiConstants.primaryColor
-                                      ],
-                                      child: TextField(
-                                        cursorColor: Colors.black,
-                                        keyboardType: TextInputType.number,
-                                        decoration: new InputDecoration(
-                                            border: InputBorder.none,
-                                            contentPadding: EdgeInsets.only(
-                                                left: 15,
-                                                bottom: 11,
-                                                top: 11,
-                                                right: 15),
-                                            hintText: "100"),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("Return Amount"),
-                                    CalculatorCapsule(
-                                      gradColors: [
-                                        Colors.blueGrey,
-                                        Colors.blueGrey[800],
-                                      ],
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 16.0),
-                                        child: Text("130"),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Wrap(
-                            spacing: 20,
-                            children: [
-                              Chip(
-                                backgroundColor: UiConstants.chipColor,
-                                label: Text("+100"),
-                              ),
-                              Chip(
-                                backgroundColor: UiConstants.chipColor,
-                                label: Text("+500"),
-                              ),
-                              Chip(
-                                backgroundColor: UiConstants.chipColor,
-                                label: Text("+1000"),
-                              ),
-                              Chip(
-                                backgroundColor: UiConstants.chipColor,
-                                label: Text("+5000"),
-                              ),
-                              Chip(
-                                backgroundColor: UiConstants.chipColor,
-                                label: Text("+10000"),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Text("Select No of Months: $months"),
-                          Slider(
-                            value: months.toDouble(),
-                            onChanged: (val) {
-                              setState(() {
-                                months = val.toInt();
-                              });
-                            },
-                            label: months.toString(),
-                            max: 36,
-                            min: 0,
-                            divisions: 18,
-                            activeColor: UiConstants.primaryColor,
-                            inactiveColor:
-                                UiConstants.primaryColor.withOpacity(0.2),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: _height * 0.02,
-                      ),
-                      width: double.infinity,
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                            offset: Offset(5, 5),
-                            blurRadius: 5,
-                            color: Colors.black.withOpacity(0.1),
-                            spreadRadius: 0,
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            "FAQs",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 24,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: 3,
-                            itemBuilder: (ctx, i) {
-                              return NewWidget();
-                            },
-                          )
-                        ],
-                      ),
-                    ),
+                    FundInfo(),
+                    FundGraph(),
+                    FundDetailsTable(),
+                    ProfitCalculator(),
+                    FAQCard(),
                     _buildBetaWithdrawButton(),
                   ],
                 ),
@@ -519,115 +206,190 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   }
 }
 
-class NewWidget extends StatefulWidget {
-  @override
-  _NewWidgetState createState() => _NewWidgetState();
-}
-
-class _NewWidgetState extends State<NewWidget> {
-  bool open = false;
-  void toggleContainerHeight() {
-    if (!open) {
-      setState(() {
-        open = true;
-      });
-    } else {
-      setState(() {
-        open = false;
-      });
-    }
-  }
-
+class FundDetailsTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Text("What is ICICI Prudential Mutual Funds?"),
-            Spacer(),
-            IconButton(
-              onPressed: toggleContainerHeight,
-              icon: Icon(
-                !open ? Icons.arrow_drop_down : Icons.arrow_drop_up,
-              ),
+    double _height = MediaQuery.of(context).size.height;
+    return Container(
+      margin: EdgeInsets.symmetric(
+        vertical: _height * 0.02,
+      ),
+      child: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.symmetric(
+              horizontal: _height * 0.02,
             ),
-          ],
-        ),
-        AnimatedContainer(
-          curve: Curves.fastOutSlowIn,
-          duration: Duration(milliseconds: 500),
-          height: open ? MediaQuery.of(context).size.height * 0.05 : 0,
-          padding: EdgeInsets.only(
-            right: 30,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  offset: Offset(5, 5),
+                  blurRadius: 5,
+                  color: Colors.black.withOpacity(0.1),
+                  spreadRadius: 0,
+                ),
+              ],
+            ),
+            child: Table(
+              border: TableBorder(
+                horizontalInside: BorderSide(
+                  color: Colors.black.withOpacity(0.1),
+                ),
+                verticalInside: BorderSide(
+                  color: Colors.black.withOpacity(0.1),
+                ),
+              ),
+              children: [
+                TableRow(children: [
+                  FundDetailsCell(
+                    title: "Current Price",
+                    data: "999",
+                    info: Assets.mfTableDetailsInfo[0],
+                  ),
+                  FundDetailsCell(
+                    title: "CAGR%",
+                    data: "5.0",
+                    info: Assets.mfTableDetailsInfo[1],
+                  ),
+                ]),
+                TableRow(children: [
+                  FundDetailsCell(
+                    title: "Age",
+                    data: "15",
+                    info: Assets.mfTableDetailsInfo[2],
+                  ),
+                  FundDetailsCell(
+                    title: "Yeild%",
+                    data: "4.55",
+                    info: Assets.mfTableDetailsInfo[3],
+                  ),
+                ]),
+              ],
+            ),
           ),
-          width: double.infinity,
-          child: Text(
-              "Lorem Ipsuem Lorem Ipsuem Lorem Ipsuem Lorem Ipsuem Lorem Ipsuem Lorem Ipsuem Lorem Ipsuem Lorem Ipsuem Lorem Ipsuem Lorem Ipsuem Lorem Ipsuem Lorem Ipsuem Lorem Ipsuem Lorem Ipsuem Lorem Ipsuem Lorem Ipsuem "),
-        ),
-      ],
+          Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: RichText(
+                text: TextSpan(
+                    text: "For More Details visit ",
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                    children: [
+                      TextSpan(
+                          text: 'Official Site',
+                          style: TextStyle(
+                              color: Colors.grey,
+                              decoration: TextDecoration.underline),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () async {
+                              const url = 'https://flutter.dev';
+                              if (await canLaunch(url)) {
+                                await launch(url);
+                              } else {
+                                throw 'Could not launch $url';
+                              }
+                            }),
+                    ]),
+              )),
+        ],
+      ),
     );
   }
 }
 
-class CalculatorCapsule extends StatelessWidget {
-  final List<Color> gradColors;
-  final Widget child;
-
-  CalculatorCapsule({
-    @required this.gradColors,
-    @required this.child,
-  });
+class FundGraph extends StatelessWidget {
+  final Map<DateTime, double> line1 = {
+    DateTime.utc(2018, 02, 19): 255.088,
+    DateTime.utc(2018, 06, 04): 260.479,
+    DateTime.utc(2018, 10, 01): 266.677,
+    DateTime.utc(2018, 12, 10): 270.567,
+    DateTime.utc(2019, 02, 18): 274.292,
+    DateTime.utc(2019, 06, 03): 280.168,
+    DateTime.utc(2019, 08, 02): 284.682,
+    DateTime.utc(2019, 11, 04): 287.417,
+    DateTime.utc(2020, 01, 10): 292.637,
+    DateTime.utc(2020, 05, 25): 296.341,
+    DateTime.utc(2020, 08, 17): 298.870,
+    DateTime.utc(2020, 10, 12): 300.374,
+    DateTime.utc(2020, 12, 14): 301.983,
+    DateTime.utc(2021, 01, 18): 302.761,
+  };
 
   @override
   Widget build(BuildContext context) {
+    double _height = MediaQuery.of(context).size.height;
+    LineChart chart = AreaLineChart.fromDateTimeMaps(
+      [line1],
+      [UiConstants.primaryColor],
+      ['₹'],
+      gradients: [
+        Pair(Colors.white, UiConstants.primaryColor.withOpacity(0.1))
+      ],
+    );
     return Container(
-      margin: EdgeInsets.only(top: 10),
-      height: 50,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(100),
-        color: Colors.white,
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            offset: Offset(3, 3),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-            spreadRadius: 0,
-          ),
-        ],
+      margin: EdgeInsets.symmetric(
+        horizontal: _height * 0.02,
       ),
-      child: Row(
-        children: [
-          Container(
-            height: 50,
-            width: 50,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(100),
-                bottomLeft: Radius.circular(100),
+      height: _height * 0.3,
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: AnimatedLineChart(
+          chart,
+        ), //Unique key to force animations
+      ),
+    );
+  }
+}
+
+class FundInfo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    double _height = MediaQuery.of(context).size.height;
+    double _width = MediaQuery.of(context).size.width;
+    return Column(
+      children: [
+        Row(
+          children: [
+            Container(
+              margin: EdgeInsets.only(
+                left: _height * 0.02,
+                top: _height * 0.02,
+                bottom: _height * 0.02,
               ),
-              gradient: new LinearGradient(
-                colors: gradColors,
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              ),
+              width: _width * 0.2,
+              child: Image.asset(Assets.iciciGraphic, fit: BoxFit.contain),
             ),
-            child: Center(
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+                child: FittedBox(
               child: Text(
-                "₹",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                  fontWeight: FontWeight.w700,
-                ),
+                "ICICI Prudential Mutual Fund",
+                textAlign: TextAlign.left,
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24),
               ),
-            ),
+            )),
+            SizedBox(
+              width: _height * 0.02,
+            )
+          ],
+        ),
+        Padding(
+          padding: EdgeInsets.only(bottom: _height * 0.02, left: 20, right: 30),
+          child: Text(
+            'ICICI Prudential Liquid Mutual Fund is a'
+            ' popular fund that has consistently given an annual return of 6-7%.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: UiConstants.accentColor, fontStyle: FontStyle.italic),
           ),
-          Expanded(
-            child: child,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -663,13 +425,17 @@ class FundDetailsCell extends StatelessWidget {
                 GestureDetector(
                   child: Icon(
                     Icons.info_outline,
-                    size: 15,
-                    color: Colors.blue,
+                    size: 12,
+                    color: UiConstants.spinnerColor,
                   ),
                   onTap: () {
                     showDialog(
                       context: context,
                       builder: (context) => new AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(UiConstants.padding),
+                        ),
                         title: new Text(title),
                         content: Text(info),
                         actions: <Widget>[
@@ -678,7 +444,12 @@ class FundDetailsCell extends StatelessWidget {
                               Navigator.of(context, rootNavigator: true)
                                   .pop(); // dismisses only the dialog and returns nothing
                             },
-                            child: new Text('OK'),
+                            child: new Text(
+                              'OK',
+                              style: TextStyle(
+                                color: UiConstants.primaryColor,
+                              ),
+                            ),
                           ),
                         ],
                       ),

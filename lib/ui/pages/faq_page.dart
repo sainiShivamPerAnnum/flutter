@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class FAQPage extends StatefulWidget{
+class FAQPage extends StatefulWidget {
   FAQPage({this.onPush});
   final ValueChanged<String> onPush;
   @override
@@ -38,18 +38,16 @@ class _FAQList extends State<FAQPage> {
           child: ListView(
             children: [_buildFAQBody()],
           ),
-        )
-    );
+        ));
   }
 
   List<Item> generateItems(int numberOfItems) {
     List<Item> _list = [];
-    for(int i=0; i<Assets.faqHeaders.length; i++) {
+    for (int i = 0; i < Assets.faqHeaders.length; i++) {
       _list.add(Item(
-        headerValue: Assets.faqHeaders[i],
-        expandedValue: Assets.faqAnswers[i],
-        isExpanded: false
-      ));
+          headerValue: Assets.faqHeaders[i],
+          expandedValue: Assets.faqAnswers[i],
+          isExpanded: false));
     }
     return _list;
   }
@@ -61,7 +59,7 @@ class _FAQList extends State<FAQPage> {
         _faqs[index].isExpanded = !isExpanded;
         setState(() {});
       },
-      children:_faqs.map<ExpansionPanel>((Item item) {
+      children: _faqs.map<ExpansionPanel>((Item item) {
         return ExpansionPanel(
             headerBuilder: (BuildContext context, bool isExpanded) {
               return ListTile(
@@ -70,17 +68,17 @@ class _FAQList extends State<FAQPage> {
             },
             canTapOnHeader: true,
             body: ListTile(
-              title: Text(item.expandedValue,
-              style: Theme.of(context).textTheme.bodyText2.copyWith(
-                  color: Colors.grey[800],
-                  fontSize: 14,
-                  height: 1.2,
-                  fontWeight: FontWeight.w500
-              ),),
+              title: Text(
+                item.expandedValue,
+                style: Theme.of(context).textTheme.bodyText2.copyWith(
+                    color: Colors.grey[800],
+                    fontSize: 14,
+                    height: 1.2,
+                    fontWeight: FontWeight.w500),
+              ),
               //subtitle: Text(item.expandedValue),
             ),
-            isExpanded: item.isExpanded
-        );
+            isExpanded: item.isExpanded);
       }).toList(),
     );
   }
