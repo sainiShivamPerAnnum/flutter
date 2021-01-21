@@ -12,9 +12,15 @@ class User {
   String _client_token;   //fetched from a subcollection
   int _ticket_count;
   int _account_balance;
+  int _deposit_balance;
+  int _prize_balance;
+  int _lifetime_winnings;
   String _pan;
-  bool _isInvested;
   String _age;
+  bool _isInvested;
+  bool _isIciciOnboarded;
+  bool _isKycVerified;
+
   static final String fldId = "mID";
   static final String fldMobile = "mMobile";
   static final String fldEmail = "mEmail";
@@ -25,15 +31,27 @@ class User {
   static final String fldPan = "mPan";
   static final String fldAge = "mAge";
   static final String fldIsInvested = "mIsInvested";
+  static final String fldIsIciciOnboarded = "mIsIciciOnboarded";
+  static final String fldIsKycVerified = "mIsKycVerified";
+  static final String fldDepositBalance = "mDepBalance";
+  static final String fldPriBalance = "mPriBalance";
+  static final String fldLifeTimeWinnings = "mLifeTimeWin";
 
-  User(this._uid, this._mobile, this._email, this._name, this._client_token, this._ticket_count, this._account_balance, this._pan, this._age, this._isInvested);
+  User(this._uid, this._mobile, this._email, this._name, this._client_token,
+      this._ticket_count, this._account_balance, this._deposit_balance,
+      this._prize_balance, this._lifetime_winnings, this._pan, this._age,
+      this._isInvested, this._isIciciOnboarded, this._isKycVerified);
 
   static List<String> _fldList = [ fldMobile, fldEmail, fldName, fldPan, fldAge ];
 
-  User.newUser(String id, String mobile) : this(id, mobile, null, null, null, BaseUtil.NEW_USER_TICKET_COUNT, 0, null, null, false);
+  User.newUser(String id, String mobile) : this(id, mobile, null, null, null,
+      BaseUtil.NEW_USER_TICKET_COUNT, 0, 0, 0, 0, null, null, false, false, false);
 
   User.fromMap(Map<String, dynamic> data, String id, [String client_token]) :
-        this(id, data[fldMobile], data[fldEmail], data[fldName], client_token, data[fldTicket_count], data[fldAcctBalance]??0, data[fldPan], data[fldAge], data[fldIsInvested]);
+        this(id, data[fldMobile], data[fldEmail], data[fldName], client_token,
+          data[fldTicket_count], data[fldAcctBalance]??0, data[fldDepositBalance]??0,
+          data[fldPriBalance]??0, data[fldLifeTimeWinnings]??0, data[fldPan],
+          data[fldAge], data[fldIsInvested], data[fldIsIciciOnboarded], data[fldIsKycVerified]);
 
   //to send user object to server
   toJson() {
@@ -43,9 +61,14 @@ class User {
       fldEmail: _email,
       fldTicket_count: _ticket_count,
       fldAcctBalance: _account_balance,
+      fldDepositBalance: _deposit_balance,
+      fldPriBalance: _prize_balance,
+      fldLifeTimeWinnings: _lifetime_winnings,
       fldPan: _pan,
       fldAge: _age,
-      fldIsInvested: _isInvested
+      fldIsInvested: _isInvested,
+      fldIsIciciOnboarded: _isIciciOnboarded,
+      fldIsKycVerified: _isKycVerified
     };
   }
 
@@ -194,5 +217,35 @@ class User {
 
   set isInvested(bool value) {
     _isInvested = value;
+  }
+
+  bool get isKycVerified => _isKycVerified;
+
+  set isKycVerified(bool value) {
+    _isKycVerified = value;
+  }
+
+  bool get isIciciOnboarded => _isIciciOnboarded;
+
+  set isIciciOnboarded(bool value) {
+    _isIciciOnboarded = value;
+  }
+
+  int get lifetime_winnings => _lifetime_winnings;
+
+  set lifetime_winnings(int value) {
+    _lifetime_winnings = value;
+  }
+
+  int get prize_balance => _prize_balance;
+
+  set prize_balance(int value) {
+    _prize_balance = value;
+  }
+
+  int get deposit_balance => _deposit_balance;
+
+  set deposit_balance(int value) {
+    _deposit_balance = value;
   }
 }
