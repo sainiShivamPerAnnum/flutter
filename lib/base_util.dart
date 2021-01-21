@@ -15,7 +15,6 @@ import 'package:flutter/material.dart';
 
 import 'core/model/TambolaBoard.dart';
 
-
 class BaseUtil extends ChangeNotifier {
   final Log log = new Log("BaseUtil");
   DBModel _dbModel = locator<DBModel>();
@@ -52,17 +51,19 @@ class BaseUtil extends ChangeNotifier {
     //fetch on-boarding status and User details
     firebaseUser = await FirebaseAuth.instance.currentUser();
     // isUserOnboarded = await _lModel.isUserOnboarded()==1;
-    if(firebaseUser != null)_myUser = await _dbModel.getUser(firebaseUser.uid);//_lModel.getUser();
-    isUserOnboarded = (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
+    if (firebaseUser != null)
+      _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
+    isUserOnboarded =
+        (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
 
-    if(isUserOnboarded){
+    if (isUserOnboarded) {
       await initRemoteConfig();
       String _p = remoteConfig.getString('play_screen_first');
       playScreenFirst = !(_p != null && _p.isNotEmpty && _p == 'false');
     }
   }
 
-  initRemoteConfig() async{
+  initRemoteConfig() async {
     remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(<String, dynamic>{
       'draw_pick_time': '18',
@@ -84,7 +85,8 @@ class BaseUtil extends ChangeNotifier {
       // Fetch throttled.
       print(exception);
     } catch (exception) {
-      print('Unable to fetch remote config. Cached or default values will be used');
+      print(
+          'Unable to fetch remote config. Cached or default values will be used');
     }
   }
 
@@ -100,28 +102,11 @@ class BaseUtil extends ChangeNotifier {
               color: UiConstants.accentColor,
               fontWeight: FontWeight.w700,
               fontSize: 30.0)),
-      bottom: PreferredSize(
-          child: Container(
-            color: Colors.blueGrey[100],
-            height: 25.0,
-            child: Padding(
-                padding: EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
-                child:Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('We are currently in Beta',
-                    style: TextStyle(color: Colors.black54),
-                    ),
-                    Icon(Icons.info_outline, size: 20,color: Colors.black54,)
-                  ],
-                )
-            )
-          ),
-          preferredSize: Size.fromHeight(25.0)),
     );
   }
 
-  showPositiveAlert(String title, String message, BuildContext context, {int seconds}) {
+  showPositiveAlert(String title, String message, BuildContext context,
+      {int seconds}) {
     Flushbar(
       flushbarPosition: FlushbarPosition.BOTTOM,
       flushbarStyle: FlushbarStyle.FLOATING,
@@ -140,11 +125,18 @@ class BaseUtil extends ChangeNotifier {
           end: Alignment.bottomLeft,
           colors: [Colors.lightBlueAccent, UiConstants.primaryColor]),
 //      backgroundColor: Colors.lightBlueAccent,
-      boxShadows: [BoxShadow(color: UiConstants.positiveAlertColor, offset: Offset(0.0, 2.0), blurRadius: 3.0,)],
+      boxShadows: [
+        BoxShadow(
+          color: UiConstants.positiveAlertColor,
+          offset: Offset(0.0, 2.0),
+          blurRadius: 3.0,
+        )
+      ],
     )..show(context);
   }
 
-  showNegativeAlert(String title, String message, BuildContext context, {int seconds}) {
+  showNegativeAlert(String title, String message, BuildContext context,
+      {int seconds}) {
     Flushbar(
       flushbarPosition: FlushbarPosition.BOTTOM,
       flushbarStyle: FlushbarStyle.FLOATING,
@@ -157,9 +149,15 @@ class BaseUtil extends ChangeNotifier {
       borderRadius: 8,
       title: title,
       message: message,
-      duration: Duration(seconds: seconds??3),
+      duration: Duration(seconds: seconds ?? 3),
       backgroundColor: UiConstants.negativeAlertColor,
-      boxShadows: [BoxShadow(color: UiConstants.negativeAlertColor, offset: Offset(0.0, 2.0), blurRadius: 3.0,)],
+      boxShadows: [
+        BoxShadow(
+          color: UiConstants.negativeAlertColor,
+          offset: Offset(0.0, 2.0),
+          blurRadius: 3.0,
+        )
+      ],
     )..show(context);
   }
 
@@ -178,7 +176,13 @@ class BaseUtil extends ChangeNotifier {
       message: "Please check your network connection and try again",
       duration: Duration(seconds: 2),
       backgroundColor: Colors.red,
-      boxShadows: [BoxShadow(color: Colors.red[800], offset: Offset(0.0, 2.0), blurRadius: 3.0,)],
+      boxShadows: [
+        BoxShadow(
+          color: Colors.red[800],
+          offset: Offset(0.0, 2.0),
+          blurRadius: 3.0,
+        )
+      ],
     )..show(context);
   }
 
@@ -196,39 +200,41 @@ class BaseUtil extends ChangeNotifier {
       this.firebaseUser = res.user;
       return true;
     }).catchError((e) {
-      log.error("User Authentication failed with credential: Error: " + e.toString());
+      log.error(
+          "User Authentication failed with credential: Error: " + e.toString());
       return false;
     });
   }
 
-  Future<bool> signOut() async{
-    try{
+  Future<bool> signOut() async {
+    try {
       await FirebaseAuth.instance.signOut();
       log.debug('Signed Out Firebase User');
       await _lModel.deleteLocalAppData();
       log.debug('Cleared local cache');
       return true;
-    }catch(e) {
+    } catch (e) {
       log.error('Failed to clear data/sign out user: ' + e.toString());
       return false;
     }
   }
 
   int checkTicketCountValidity(List<TambolaBoard> requestedBoards) {
-    if(requestedBoards != null && _myUser.ticket_count > 0) {
-      if(requestedBoards.length < _myUser.ticket_count) {
+    if (requestedBoards != null && _myUser.ticket_count > 0) {
+      if (requestedBoards.length < _myUser.ticket_count) {
         log.debug('Requested board count is less than needed tickets');
         int ticketCountRequired = _myUser.ticket_count - requestedBoards.length;
 
-        if(ticketCountRequired>0 && !BaseUtil.ticketRequestSent){
+        if (ticketCountRequired > 0 && !BaseUtil.ticketRequestSent) {
           BaseUtil.ticketRequestSent = true;
           BaseUtil.ticketCountBeforeRequest = requestedBoards.length;
           return ticketCountRequired;
         }
       }
-      if(BaseUtil.ticketRequestSent) {
-        if(requestedBoards.length > BaseUtil.ticketCountBeforeRequest) {
-          log.debug('Previous request had completed and not the ticket count has increased');
+      if (BaseUtil.ticketRequestSent) {
+        if (requestedBoards.length > BaseUtil.ticketCountBeforeRequest) {
+          log.debug(
+              'Previous request had completed and not the ticket count has increased');
           //BaseUtil.ticketRequestSent = false; //not really needed i think
         }
       }
@@ -247,16 +253,20 @@ class BaseUtil extends ChangeNotifier {
     int dayn = tdt.weekday;
     //tdt = new DateTime(tdt.year, tdt.month, tdt.day-dayn+3);
     //tdt.setDate(tdt.getDate() - dayn + 3);
-    DateTime firstThursday = new DateTime(tdt.year, tdt.month, tdt.day-dayn+3);
+    DateTime firstThursday =
+        new DateTime(tdt.year, tdt.month, tdt.day - dayn + 3);
     tdt = new DateTime(tdt.year, 1, 1);
     if (tdt.weekday != DateTime.friday) {
       //tdt.setMonth(0, 1 + ((4 - tdt.getDay()) + 7) % 7);
       int x = tdt.weekday;
-      x = (tdt.weekday == 7)?0:tdt.weekday;
+      x = (tdt.weekday == 7) ? 0 : tdt.weekday;
       tdt = new DateTime(tdt.year, 1, 1 + ((5 - x) + 7) % 7);
     }
 
-    int n = 1 + ((firstThursday.millisecondsSinceEpoch - tdt.millisecondsSinceEpoch) / 604800000).ceil();
+    int n = 1 +
+        ((firstThursday.millisecondsSinceEpoch - tdt.millisecondsSinceEpoch) /
+                604800000)
+            .ceil();
     //log.debug("Current week number: " + n.toString());
     return n;
   }
@@ -264,5 +274,4 @@ class BaseUtil extends ChangeNotifier {
   bool isSignedIn() => (firebaseUser != null && firebaseUser.uid != null);
 
   bool isActiveUser() => (_myUser != null && !_myUser.hasIncompleteDetails());
-
 }
