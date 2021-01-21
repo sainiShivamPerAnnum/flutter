@@ -22,6 +22,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import 'core/ops/icici_ops.dart';
+
 void main() {
   setupLocator();
   runApp(MyApp());
@@ -35,6 +37,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(builder: (_) => locator<DBModel>()),
         ChangeNotifierProvider(builder: (_) => locator<LocalDBModel>()),
         ChangeNotifierProvider(builder: (_) => locator<HttpModel>()),
+        ChangeNotifierProvider(builder: (_) => locator<ICICIModel>()),
         ChangeNotifierProvider(builder: (_) => locator<BaseUtil>()),
         ChangeNotifierProvider(builder: (_) => locator<FcmListener>()),
         ChangeNotifierProvider(builder: (_) => locator<FcmHandler>()),

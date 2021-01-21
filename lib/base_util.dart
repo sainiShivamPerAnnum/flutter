@@ -99,6 +99,24 @@ class BaseUtil extends ChangeNotifier {
               color: UiConstants.accentColor,
               fontWeight: FontWeight.w700,
               fontSize: 30.0)),
+      bottom: PreferredSize(
+          child: Container(
+              color: Colors.blueGrey[100],
+              height: 25.0,
+              child: Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
+                  child:Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('We are currently in Beta',
+                        style: TextStyle(color: Colors.black54),
+                      ),
+                      Icon(Icons.info_outline, size: 20,color: Colors.black54,)
+                    ],
+                  )
+              )
+          ),
+          preferredSize: Size.fromHeight(25.0)),
     );
   }
 

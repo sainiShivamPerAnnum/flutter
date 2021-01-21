@@ -16,7 +16,7 @@ class ICICIModel extends ChangeNotifier{
   String _baseUri;
   String _apiKey;
 
-  Future<bool> _init() async{
+  Future<bool> init() async{
     if(_dbModel == null) return false;
     Map<String,String> cMap = await _dbModel.getActiveAwsApiKey();
     if(cMap == null) return false;
@@ -65,7 +65,7 @@ class ICICIModel extends ChangeNotifier{
     if(params != null && params.length>0) {
       String _p = '';
       if(params.length == 1) {
-        _p = params.keys.elementAt(0) + '=' + params[0];
+        _p = params.keys.elementAt(0) + '=' + params.values.elementAt(0);
         _path = '$_path?$_p';
       }else{
         params.forEach((key, value) {
