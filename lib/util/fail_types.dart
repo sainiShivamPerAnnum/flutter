@@ -1,0 +1,3 @@
+enum FailType{
+  UserLoginOtpFailed
+}

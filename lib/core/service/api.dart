@@ -50,8 +50,18 @@ class Api {
     return _db.collection(Constants.COLN_FEEDBACK).add(data);
   }
 
+  Future<void> addFailedReportDocument(Map data) {
+    return _db.collection(Constants.COLN_FAILREPORTS).add(data);
+  }
+
   Future<QuerySnapshot> getWinnersByWeekCde(int weekCde) {
     Query query = _db.collection(Constants.COLN_WINNERS).where('week_code', isEqualTo: weekCde);
+
+    return query.getDocuments();
+  }
+
+  Future<QuerySnapshot> getCredentialsByType(String type, int index) {
+    Query query = _db.collection(Constants.COLN_CREDENTIALS).where('type', isEqualTo: type).where('index', isEqualTo: index);
 
     return query.getDocuments();
   }
