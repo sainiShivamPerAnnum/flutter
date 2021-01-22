@@ -9,6 +9,7 @@ import 'package:felloapp/ui/elements/scrolling_text.dart';
 import 'package:felloapp/ui/elements/transaction_dialog.dart';
 import 'package:felloapp/ui/elements/withdraw_dialog.dart';
 import 'package:felloapp/ui/pages/mf_details_page.dart';
+import 'package:felloapp/ui/pages/onboarding/input-screens/pan_details.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -142,34 +143,61 @@ class _SaveScreenState extends State<SaveScreen> {
                 ],
               ),
             )),
+
         SafeArea(
             child: Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
             padding: EdgeInsets.only(bottom: 35),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                SizedBox(
-                  child: Opacity(
-                      opacity: 0.5,
-                      child: Image(
-                        image: AssetImage(Assets.sebiGraphic),
-                        fit: BoxFit.contain,
-                      )),
-                  height: 80,
-                  width: 80,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      child: Opacity(
+                          opacity: 0.5,
+                          child: Image(
+                            image: AssetImage(Assets.sebiGraphic),
+                            fit: BoxFit.contain,
+                          )),
+                      height: 80,
+                      width: 80,
+                    ),
+                    SizedBox(
+                      child: Opacity(
+                          opacity: 0.5,
+                          child: Image(
+                            image: AssetImage(Assets.amfiGraphic),
+                            fit: BoxFit.contain,
+                          )),
+                      height: 80,
+                      width: 80,
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  child: Opacity(
-                      opacity: 0.5,
-                      child: Image(
-                        image: AssetImage(Assets.amfiGraphic),
-                        fit: BoxFit.contain,
-                      )),
-                  height: 80,
-                  width: 80,
-                )
+                SizedBox(height: 10),
+                Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  height: 50,
+                  color: UiConstants.primaryColor,
+                  child: GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (ctx) => PanInputScreen(),
+                      ),
+                    ),
+                    child: Text(
+                      "Input Screen",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
