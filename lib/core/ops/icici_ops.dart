@@ -60,12 +60,34 @@ class ICICIModel extends ChangeNotifier{
     }
   }
 
+  submitPanDetails(String panNumber, String fullName) async{
+    var headers = {
+      'x-api-key': _apiKey
+    };
+    var request = http.Request('GET',
+        Uri.parse(constructRequest(SubmitPanDetail.path,
+            {
+              SubmitPanDetail.fldPan: panNumber,
+              SubmitPanDetail.fldName: fullName
+            })
+        ));
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      log.debug(await response.stream.bytesToString());
+    }
+    else {
+      log.error(response.reasonPhrase);
+    }
+  }
+
   String constructRequest(String subPath, Map<String, String> params) {
     String _path = '$_baseUri/$subPath';
     if(params != null && params.length>0) {
       String _p = '';
       if(params.length == 1) {
-        _p = params.keys.elementAt(0) + '=' + params.values.elementAt(0);
+        _p = params.keys.elementAt(0) + '=' + Uri.encodeComponent(params.values.elementAt(0));
         _path = '$_path?$_p';
       }else{
         params.forEach((key, value) {
