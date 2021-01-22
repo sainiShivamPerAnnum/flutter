@@ -39,6 +39,22 @@ class LocalDBModel extends ChangeNotifier {
     }
   }
 
+  Future<bool> isConfettiRequired(int weekCde) async{
+    try{
+      final file = await _api.confettiFile;
+      String contents = await file.readAsString();
+      //check if confetti file has this week's code
+      //if not, confetti is required
+      return (int.parse(contents) != weekCde);
+    }catch(e) {
+      return true;
+    }
+  }
+
+  Future saveConfettiUpdate(int weekCde) async {
+    return _api.writeConfettiTrackFile('$weekCde');
+  }
+
   Future saveOnboardStatus(bool flag) async {
     // Write the file
     int status = (flag)?1:0;
@@ -68,11 +84,15 @@ class LocalDBModel extends ChangeNotifier {
     }catch(e) {
       log.error('Failed to delete onboarding file:' + e.toString());
     }
-
     try{
       await _api.deleteFreshUserFile();
     }catch(e) {
       log.error('Failed to delete fresh user file:' + e.toString());
+    }
+    try{
+      await _api.deleteConfettiFile();
+    }catch(e) {
+      log.error('Failed to delete confetti track file:' + e.toString());
     }
     //User file deletion is crucial for return flag. Rest can be missing
     try{
