@@ -10,7 +10,7 @@ import 'package:felloapp/ui/pages/app_root.dart';
 import 'package:felloapp/ui/pages/faq_page.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
-import 'package:felloapp/ui/pages/onboarding/onboarding_widget.dart';
+import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/pages/onboarding/app/onboarding_widget.dart';
 import 'package:felloapp/ui/pages/settings_page.dart';
 import 'package:felloapp/ui/pages/tabs/upi_screen.dart';
 import 'package:felloapp/ui/pages/tnc_page.dart';
