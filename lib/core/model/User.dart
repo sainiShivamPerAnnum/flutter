@@ -49,9 +49,10 @@ class User {
 
   User.fromMap(Map<String, dynamic> data, String id, [String client_token]) :
         this(id, data[fldMobile], data[fldEmail], data[fldName], client_token,
-          data[fldTicket_count], data[fldAcctBalance]??0, data[fldDepositBalance]??0,
-          data[fldPriBalance]??0, data[fldLifeTimeWinnings]??0, data[fldPan],
-          data[fldAge], data[fldIsInvested], data[fldIsIciciOnboarded], data[fldIsKycVerified]);
+          data[fldTicket_count]??BaseUtil.NEW_USER_TICKET_COUNT, data[fldAcctBalance]??0,
+          data[fldDepositBalance]??0,data[fldPriBalance]??0, data[fldLifeTimeWinnings]??0,
+          data[fldPan],data[fldAge], data[fldIsInvested]??false,
+          data[fldIsIciciOnboarded]??false, data[fldIsKycVerified]??false);
 
   //to send user object to server
   toJson() {
