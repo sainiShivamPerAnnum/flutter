@@ -1,14 +1,9 @@
-import 'package:felloapp/ui/pages/onboarding/input-elements/error_dialog.dart';
+import 'package:felloapp/ui/pages/onboarding/input-elements/data_provider.dart';
 import 'package:felloapp/ui/pages/onboarding/input-elements/input_field.dart';
-import 'package:felloapp/ui/pages/onboarding/input-screens/pan_details.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class BankDetailsInputScreen extends StatelessWidget {
-  final _formKey = GlobalKey<FormState>();
-  TextEditingController accNo = new TextEditingController();
-  TextEditingController cnfAccNo = new TextEditingController();
-  TextEditingController ifsc = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
@@ -21,12 +16,10 @@ class BankDetailsInputScreen extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
           child: Center(
             child: Form(
-              key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Spacer(),
                   Text(
                     "LET'S LINK YOUR",
                     style: TextStyle(
@@ -54,62 +47,26 @@ class BankDetailsInputScreen extends StatelessWidget {
                   Text("Account No"),
                   InputField(
                     child: TextField(
-                      controller: accNo,
+                      controller: IDP.accNo,
                       decoration: inputFieldDecoration("Account No"),
+                      keyboardType: TextInputType.number,
                     ),
                   ),
                   Text("Confirm Account No"),
                   InputField(
                     child: TextField(
-                      controller: cnfAccNo,
+                      controller: IDP.cnfAccNo,
                       decoration: inputFieldDecoration("Confirm Account No"),
+                      keyboardType: TextInputType.number,
                     ),
                   ),
                   Text("IFSC Code"),
                   InputField(
                     child: TextField(
-                      controller: ifsc,
+                      controller: IDP.ifsc,
                       decoration: inputFieldDecoration("IFSC Code"),
                     ),
                   ),
-                  Spacer(),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 20),
-                    height: 50,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      gradient: new LinearGradient(
-                        colors: [
-                          UiConstants.primaryColor,
-                          UiConstants.primaryColor.withGreen(150),
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    alignment: Alignment.center,
-                    child: FlatButton(
-                      onPressed: () {
-                        if (accNo.text == "" ||
-                            cnfAccNo.text == "" ||
-                            ifsc.text == "") {
-                          showErrorDialog(
-                              "Oops!", "All fields are necessary", context);
-                        }
-                        if (accNo.text != cnfAccNo.text) {
-                          showErrorDialog("Oops",
-                              "Please confirm account numbers", context);
-                        }
-                      },
-                      child: Text(
-                        "VERIFY",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),

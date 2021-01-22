@@ -10,6 +10,7 @@ import 'package:felloapp/ui/elements/transaction_dialog.dart';
 import 'package:felloapp/ui/elements/withdraw_dialog.dart';
 import 'package:felloapp/ui/pages/mf_details_page.dart';
 import 'package:felloapp/ui/pages/onboarding/input-screens/pan_details.dart';
+import 'package:felloapp/ui/pages/onboarding/input-screens/test_file.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -187,7 +188,7 @@ class _SaveScreenState extends State<SaveScreen> {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (ctx) => PanInputScreen(),
+                        builder: (ctx) => TestFile(),
                       ),
                     ),
                     child: Text(

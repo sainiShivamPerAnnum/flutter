@@ -1,7 +1,5 @@
-import 'package:felloapp/ui/pages/onboarding/input-elements/error_dialog.dart';
+import 'package:felloapp/ui/pages/onboarding/input-elements/data_provider.dart';
 import 'package:felloapp/ui/pages/onboarding/input-elements/input_field.dart';
-import 'package:felloapp/ui/pages/onboarding/input-elements/route_transitions.dart';
-import 'package:felloapp/ui/pages/onboarding/input-screens/bank_details.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +11,7 @@ class IncomeDetailsInputScreen extends StatefulWidget {
 }
 
 class _IncomeDetailsInputScreenState extends State<IncomeDetailsInputScreen> {
-  final _formKey = GlobalKey<FormState>();
+  final _incomeDetailsformKey = GlobalKey<FormState>();
 
   List<Map<String, String>> occupation = [
     {"OCC_CODE": "4", "OCC_NAME": "Agriculturist"},
@@ -48,10 +46,6 @@ class _IncomeDetailsInputScreenState extends State<IncomeDetailsInputScreen> {
     {"NA": "Not Applicable", "CODE": "03"}
   ];
 
-  String occupationChosenValue;
-  String wealthChosenValue;
-  String exposureChosenValue;
-
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
@@ -64,12 +58,11 @@ class _IncomeDetailsInputScreenState extends State<IncomeDetailsInputScreen> {
           padding: EdgeInsets.symmetric(horizontal: _width * 0.04),
           child: Center(
             child: Form(
-              key: _formKey,
+              key: _incomeDetailsformKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Spacer(),
                   Text(
                     "LIL BIT ",
                     style: TextStyle(
@@ -103,10 +96,10 @@ class _IncomeDetailsInputScreenState extends State<IncomeDetailsInputScreen> {
                       ),
                       iconEnabledColor: UiConstants.primaryColor,
                       hint: Text("Choose Your Occupation"),
-                      value: occupationChosenValue,
+                      value: IDP.occupationChosenValue,
                       onChanged: (String newVal) {
                         setState(() {
-                          occupationChosenValue = newVal;
+                          IDP.occupationChosenValue = newVal;
                           print(newVal);
                         });
                       },
@@ -131,10 +124,10 @@ class _IncomeDetailsInputScreenState extends State<IncomeDetailsInputScreen> {
                         ),
                         iconEnabledColor: UiConstants.primaryColor,
                         hint: Text("Are You involved in Politics"),
-                        value: exposureChosenValue,
+                        value: IDP.exposureChosenValue,
                         onChanged: (String newVal) {
                           setState(() {
-                            exposureChosenValue = newVal;
+                            IDP.exposureChosenValue = newVal;
                             print(newVal);
                           });
                         },
@@ -167,12 +160,11 @@ class _IncomeDetailsInputScreenState extends State<IncomeDetailsInputScreen> {
                         border: InputBorder.none,
                       ),
                       iconEnabledColor: UiConstants.primaryColor,
-                      hint:
-                          Text("Where are you getting all these money from ??"),
-                      value: wealthChosenValue,
+                      hint: Text("Source of Money?"),
+                      value: IDP.wealthChosenValue,
                       onChanged: (String newVal) {
                         setState(() {
-                          wealthChosenValue = newVal;
+                          IDP.wealthChosenValue = newVal;
                           print(newVal);
                         });
                       },
@@ -188,48 +180,6 @@ class _IncomeDetailsInputScreenState extends State<IncomeDetailsInputScreen> {
                           .toList(),
                     ),
                   ),
-                  Spacer(),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 20),
-                    height: 50,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      gradient: new LinearGradient(
-                        colors: [
-                          UiConstants.primaryColor,
-                          UiConstants.primaryColor.withGreen(150),
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    alignment: Alignment.center,
-                    child: FlatButton(
-                      onPressed: () {
-                        if (occupationChosenValue != null &&
-                            wealthChosenValue != null &&
-                            exposureChosenValue != null) {
-                          Navigator.push(
-                            context,
-                            EnterExitRoute(
-                              exitPage: IncomeDetailsInputScreen(),
-                              enterPage: BankDetailsInputScreen(),
-                            ),
-                          );
-                        } else {
-                          showErrorDialog("Oops!",
-                              "All Fields are necessary bruh!", context);
-                        }
-                      },
-                      child: Text(
-                        "NEXT",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),
