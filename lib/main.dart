@@ -32,12 +32,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(builder: (_) => locator<DBModel>()),
-        ChangeNotifierProvider(builder: (_) => locator<LocalDBModel>()),
-        ChangeNotifierProvider(builder: (_) => locator<HttpModel>()),
-        ChangeNotifierProvider(builder: (_) => locator<BaseUtil>()),
-        ChangeNotifierProvider(builder: (_) => locator<FcmListener>()),
-        ChangeNotifierProvider(builder: (_) => locator<FcmHandler>()),
+        ChangeNotifierProvider(create: (_) => locator<DBModel>()),
+        ChangeNotifierProvider(create: (_) => locator<LocalDBModel>()),
+        ChangeNotifierProvider(create: (_) => locator<HttpModel>()),
+        ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
+        ChangeNotifierProvider(create: (_) => locator<FcmListener>()),
+        ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
       ],
       child: MaterialApp(
         title: Constants.APP_NAME,
