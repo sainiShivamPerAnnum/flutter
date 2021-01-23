@@ -132,3 +132,67 @@ class GetSavedDetail{
   static final String resEmailId = 'EMAIL_ID';
   static final String resMobile = 'MOBILE_NO';
 }
+
+/**
+ * Sample output: {"STATUS":"1","OTPID":"185103"}
+ * */
+class SendOtp{
+  static final String path = 'api/requestSendOtp';
+  static final String fldEmail = 'email';
+  static final String fldMobile = 'mobile';
+
+  static final String resStatus = 'STATUS';
+  static final String resOtpId = 'OTPID';
+
+  static final int STATUS_SENT_EMAIL_MOBILE = 1;
+  static final int STATUS_SENT_EMAIL = 2;
+  static final int STATUS_SENT_MOBILE = 3;
+  static final int STATUS_NOT_SENT = 4;
+}
+
+/**
+ * Sample output: {"STATUS":"1","OTPID":"185103"}
+ * */
+class ResendOtp{
+  static final String path = 'api/requestSendOtp';
+  static final String fldEmail = 'email';
+  static final String fldMobile = 'mobile';
+  static final String fldOtpId = 'otpid';
+
+  static final String resStatus = 'STATUS';
+  static final String resOtpId = 'OTPID';
+
+  static final int STATUS_SENT_EMAIL_MOBILE = 1;
+  static final int STATUS_SENT_EMAIL = 2;
+  static final int STATUS_SENT_MOBILE = 3;
+  static final int STATUS_NOT_SENT = 4;
+}
+
+/**
+ * Sample output: {"STATUS":"1","OTPID":"185103"}
+ * */
+class VerifyOtp{
+  static final String path = 'api/verifyOtp';
+  static final String fldOtpId = 'otpid';
+  static final String fldOtp = 'otp';
+
+  static final String resStatus = 'STATUS';
+  static final String resOtpId = 'OTPID';
+
+  static final int STATUS_OTP_VALID = 1;
+  static final int STATUS_OTP_INVALID = 2;
+  static final int STATUS_OTP_EXPIRED = 3;
+  static final int STATUS_TRIES_EXCEEDED = 4; //after 3 tries usually
+}
+
+/**
+ * Sample output:
+ * [{"Return_Code":"7","Return_Msg":"Input Exceeds Maximum length.","Category":"F"}]
+ * or [{"Return_Code":"1","Return_Msg":"Please Enter INV_Address_1,Inv_City"}]
+ * or [{"Return_Code":"0","Return_Msg":"Record updated successfully","Exp_Date":"31-Dec-2018","Folio_No":"2000028046"}]
+ * */
+class CreatePortfolio{
+  static final String path = 'api/createPortfolio';
+  static final String fldId = 'appid';
+  static final String fldOtpId = 'otpid';
+}
