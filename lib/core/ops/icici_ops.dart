@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:html';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/locator.dart';
@@ -15,6 +18,7 @@ class ICICIModel extends ChangeNotifier{
   final String defaultBaseUri = 'https://r3bb6bx3p6.execute-api.ap-south-1.amazonaws.com/dev';
   String _baseUri;
   String _apiKey;
+  var headers;
 
   Future<bool> init() async{
     if(_dbModel == null) return false;
@@ -23,62 +27,286 @@ class ICICIModel extends ChangeNotifier{
 
     _baseUri = (cMap['baseuri'] == null || cMap['baseuri'].isEmpty)?defaultBaseUri:cMap['baseuri'];
     _apiKey = cMap['key'];
+    headers = {
+      'x-api-key': _apiKey
+    };
     return true;
   }
 
-  getTaxStatus() async{
-    var headers = {
-      'x-api-key': _apiKey
-    };
-    var request = http.Request('GET',
-        Uri.parse(constructRequest(GetTaxStatus.path, null)));
-    request.headers.addAll(headers);
+  Future<Map<String, dynamic>> getKycStatus(String panNumber) async{
+    var _params = {GetKycStatus.fldPan: panNumber};
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(GetKycStatus.path,_params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
 
-    http.StreamedResponse response = await request.send();
-    if (response.statusCode == 200) {
-      log.debug(await response.stream.bytesToString());
-    }
-    else {
-      log.error(response.reasonPhrase);
-    }
-  }
-
-  getKycStatus(String panNumber) async{
-    var headers = {
-      'x-api-key': _apiKey
-    };
-    var request = http.Request('GET',
-        Uri.parse(constructRequest(GetKycStatus.path, {GetKycStatus.fldPan: panNumber})));
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-    if (response.statusCode == 200) {
-      log.debug(await response.stream.bytesToString());
-    }
-    else {
-      log.error(response.reasonPhrase);
+    final resMap = await processResponse(_response);
+    if(resMap == null) {
+      log.error('Query Failed');
+      return {"flag": QUERY_FAILED};
+    }else{
+      log.debug(resMap[GetKycStatus.resPanStatus]);
+      log.debug(resMap[GetKycStatus.resStatus]);
+      log.debug((resMap[GetKycStatus.resStatus] == GetKycStatus.KYC_STATUS_VALID).toString());
+      return {"flag": QUERY_PASSED};
     }
   }
 
-  submitPanDetails(String panNumber, String fullName) async{
-    var headers = {
-      'x-api-key': _apiKey
+  Future<Map<String, dynamic>> submitPanDetails(String panNumber, String fullName) async{
+    var _params = {
+      SubmitPanDetail.fldPan: panNumber,
+      SubmitPanDetail.fldName: fullName
     };
-    var request = http.Request('GET',
-        Uri.parse(constructRequest(SubmitPanDetail.path,
-            {
-              SubmitPanDetail.fldPan: panNumber,
-              SubmitPanDetail.fldName: fullName
-            })
-        ));
-    request.headers.addAll(headers);
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(SubmitPanDetail.path,_params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
 
-    http.StreamedResponse response = await request.send();
-    if (response.statusCode == 200) {
-      log.debug(await response.stream.bytesToString());
+    final resMap = await processResponse(_response);
+    if(resMap == null) {
+      log.error('Query Failed');
+      return {"flag": QUERY_FAILED};
+    }else{
+      log.debug(resMap[SubmitPanDetail.resStatus]);
+      log.debug(resMap[SubmitPanDetail.resId]);
+      return {"flag": QUERY_PASSED};
     }
-    else {
-      log.error(response.reasonPhrase);
+  }
+
+  Future<Map<String, dynamic>> submitBasicDetails(String appid,
+      String panNumber, String mobile, String email, String dob) async{
+    var _params = {
+      SubmitInvoiceDetail.fldPan: panNumber,
+      SubmitInvoiceDetail.fldId: appid,
+      SubmitInvoiceDetail.fldMobile: mobile,
+      SubmitInvoiceDetail.fldEmail: email,
+      SubmitInvoiceDetail.fldDob: dob,
+    };
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(SubmitInvoiceDetail.path,_params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if(resMap == null) {
+      log.error('Query Failed');
+      return {"flag": QUERY_FAILED};
+    }else{
+      // log.debug(resMap[SubmitPanDetail.resStatus]);
+      // log.debug(resMap[SubmitPanDetail.resId]);
+      return {"flag": QUERY_PASSED};
+    }
+  }
+
+  Future<Map<String, dynamic>> submitSecondaryDetails(String id,
+      String occupationCode, String incomeCode, String politicalCode,
+      String panNumber, String srcOfWealth) async{
+    var _params = {
+      SubmitInvKYCDetail.fldId:id,
+      SubmitInvKYCDetail.fldPan:panNumber,
+      SubmitInvKYCDetail.fldOccpCde:occupationCode,
+      SubmitInvKYCDetail.fldPolOp:politicalCode,
+      SubmitInvKYCDetail.fldSrcWealth:srcOfWealth,
+      SubmitInvKYCDetail.fldIncome:incomeCode
+    };
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(SubmitInvKYCDetail.path,_params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if(resMap == null) {
+      log.error('Query Failed');
+      return {"flag": QUERY_FAILED};
+    }else{
+      // log.debug(resMap[SubmitPanDetail.resStatus]);
+      // log.debug(resMap[SubmitPanDetail.resId]);
+      return {"flag": QUERY_PASSED};
+    }
+  }
+
+  Future<Map<String, dynamic>> submitBankDetails(String appid,
+      String panNumber, String paymode, String acctype, String accno,
+      String bankname, String bankcode, String ifsc, String city,
+      String branch, String address) async{
+    var _params = {
+      SubmitBankDetails.fldPan: panNumber,
+      SubmitBankDetails.fldId: appid,
+      SubmitBankDetails.fldPayMode: paymode,
+      SubmitBankDetails.fldAccType: acctype,
+      SubmitBankDetails.fldBankAccNo: accno,
+      SubmitBankDetails.fldBankName: bankname,
+      SubmitBankDetails.fldBankCode: bankcode,
+      SubmitBankDetails.fldIfsc: ifsc,
+      SubmitBankDetails.fldCity: city,
+      SubmitBankDetails.fldBranch: branch,
+      SubmitBankDetails.fldAddress: address,
+    };
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(SubmitBankDetails.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if(resMap == null) {
+      log.error('Query Failed');
+      return {"flag": QUERY_FAILED};
+    }else{
+      // log.debug(resMap[SubmitPanDetail.resStatus]);
+      // log.debug(resMap[SubmitPanDetail.resId]);
+      return {"flag": QUERY_PASSED};
+    }
+  }
+
+  Future<Map<String, dynamic>> getBankInfo(String panNumber
+      ,String ifsc) async{
+    var _params = {
+      GetBankDetail.fldPan:panNumber,
+      GetBankDetail.fldIFSC:ifsc
+    };
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(GetBankDetail.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if(resMap == null) {
+      log.error('Query Failed');
+      return {"flag": QUERY_FAILED};
+    }else{
+      // log.debug(resMap[SubmitPanDetail.resStatus]);
+      // log.debug(resMap[SubmitPanDetail.resId]);
+      return {"flag": QUERY_PASSED};
+    }
+  }
+
+  Future<Map<String, dynamic>> getBankAcctTypes(String panNumber) async{
+    var _params = {
+      GetBankActType.fldPan:panNumber,
+    };
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(GetBankActType.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if(resMap == null) {
+      log.error('Query Failed');
+      return {"flag": QUERY_FAILED};
+    }else{
+      // log.debug(resMap[SubmitPanDetail.resStatus]);
+      // log.debug(resMap[SubmitPanDetail.resId]);
+      return {"flag": QUERY_PASSED};
+    }
+  }
+
+  Future<Map<String, dynamic>> sendOtp(String mobile, String email) async{
+    var _params = {
+      SendOtp.fldMobile:mobile,
+      SendOtp.fldEmail:email
+    };
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(SendOtp.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if(resMap == null) {
+      log.error('Query Failed');
+      return {"flag": QUERY_FAILED};
+    }else{
+      // log.debug(resMap[SubmitPanDetail.resStatus]);
+      // log.debug(resMap[SubmitPanDetail.resId]);
+      return {"flag": QUERY_PASSED};
+    }
+  }
+
+  Future<Map<String, dynamic>> resendOtp(String prevOtpId,
+      String mobile, String email) async{
+    var _params = {
+      ResendOtp.fldOtpId:prevOtpId,
+      ResendOtp.fldMobile:mobile,
+      ResendOtp.fldEmail:email
+    };
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(ResendOtp.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if(resMap == null) {
+      log.error('Query Failed');
+      return {"flag": QUERY_FAILED};
+    }else{
+      // log.debug(resMap[SubmitPanDetail.resStatus]);
+      // log.debug(resMap[SubmitPanDetail.resId]);
+      return {"flag": QUERY_PASSED};
+    }
+  }
+
+  Future<Map<String, dynamic>> verifyOtp(String prevOtpId,
+      String otp) async{
+    var _params = {
+      VerifyOtp.fldOtpId:prevOtpId,
+      VerifyOtp.fldOtp:otp
+    };
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(VerifyOtp.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if(resMap == null) {
+      log.error('Query Failed');
+      return {"flag": QUERY_FAILED};
+    }else{
+      // log.debug(resMap[SubmitPanDetail.resStatus]);
+      // log.debug(resMap[SubmitPanDetail.resId]);
+      return {"flag": QUERY_PASSED};
+    }
+  }
+
+  Future<Map<String, dynamic>> getSavedApplication(String panNumber,
+      String id) async{
+    var _params = {
+      GetSavedDetail.fldId:id,
+      GetSavedDetail.fldPan:panNumber
+    };
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(GetSavedDetail.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if(resMap == null) {
+      log.error('Query Failed');
+      return {"flag": QUERY_FAILED};
+    }else{
+      // log.debug(resMap[SubmitPanDetail.resStatus]);
+      // log.debug(resMap[SubmitPanDetail.resId]);
+      return {"flag": QUERY_PASSED};
+    }
+  }
+
+  Future<Map<String, dynamic>> createPortfolio(String id,
+      String otpId) async{
+    var _params = {
+      CreatePortfolio.fldId:id,
+      CreatePortfolio.fldOtpId:otpId
+    };
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(CreatePortfolio.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if(resMap == null) {
+      log.error('Query Failed');
+      return {"flag": QUERY_FAILED};
+    }else{
+      // log.debug(resMap[SubmitPanDetail.resStatus]);
+      // log.debug(resMap[SubmitPanDetail.resId]);
+      return {"flag": QUERY_PASSED};
     }
   }
 
@@ -98,6 +326,29 @@ class ICICIModel extends ChangeNotifier{
       }
     }
     return _path;
+  }
+
+  Future<Map<String, dynamic>> processResponse(http.StreamedResponse response) async{
+    if(response == null){
+      log.error('response is null');
+    }
+    if(response.statusCode != 200) {
+      log.error('Query Failed:: Status:${response.statusCode}, Reason:${response.reasonPhrase}');
+      return null;
+    }
+    try {
+      String res = await response.stream.bytesToString();
+      log.debug(res);
+      if(res == null || res.isEmpty || res == "\"\"") {
+        log.error('Returned empty response');
+        return null;
+      }
+      var rMap = json.decode(res);
+      return rMap;
+    }catch(e){
+      log.error('Failed to decode json');
+      return null;
+    }
   }
 
 }

@@ -1,3 +1,6 @@
+const int QUERY_FAILED = 500;
+const int QUERY_PASSED = 200;
+
 class GetTaxStatus{
   static final String path = 'api/getTaxStatus';
   static final String resTaxCode = 'TAX_CODE';
@@ -36,11 +39,11 @@ class GetKycStatus{
   static final String resFatcaStatus = 'FATCA_FLAG_1';
   static final String resPanStatus = 'F_PAN_STATUS';//should be 'OK'
 
-  static final int KYC_STATUS_INVALID = 0;
-  static final int KYC_STATUS_VALID = 1;
-  static final int KYC_STATUS_FETCH_FAILED = 2;
-  static final int KYC_STATUS_SERVICE_DOWN = 3;
-  static final int KYC_STATUS_ALLOW_VIDEO = 4;
+  static final String KYC_STATUS_INVALID = '0';
+  static final String KYC_STATUS_VALID = '1';
+  static final String KYC_STATUS_FETCH_FAILED = '2';
+  static final String KYC_STATUS_SERVICE_DOWN = '3';
+  static final String KYC_STATUS_ALLOW_VIDEO = '4';
 }
 
 /**
@@ -68,6 +71,22 @@ class SubmitInvoiceDetail{
 
   static final String resStatus = 'STATUS';
 }
+
+/**
+ * Sample output: {"STATUS":"Y"}
+ * */
+class SubmitInvKYCDetail{
+  static final String path = 'api/submitInvoiceKycDetails';
+  static final String fldId = 'appid';
+  static final String fldOccpCde = 'occpcde';
+  static final String fldIncome = 'income';
+  static final String fldPolOp = 'polopt';
+  static final String fldPan = 'firstpan';
+  static final String fldSrcWealth = 'srcwealth';
+
+  static final String resStatus = 'STATUS';
+}
+
 
 /**
  * Sample Output:
@@ -108,6 +127,7 @@ class SubmitBankDetails{
   static final String path = 'api/submitBankDetails';
   static final String fldId = 'appid';
   static final String fldPayMode = 'paymode';
+  static final String fldAccType = 'acctype';
   static final String fldBankAccNo = 'bankaccno';
   static final String fldBankName = 'bankname';
   static final String fldBankCode = 'bankcode';
