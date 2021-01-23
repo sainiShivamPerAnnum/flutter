@@ -60,7 +60,6 @@ class _ReferScreenState extends State<ReferScreen> {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
     fcmProvider = Provider.of<FcmHandler>(context);
-
     _init();
     return Scaffold(
       //debugShowCheckedModeBanner: false,

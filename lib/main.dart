@@ -10,7 +10,7 @@ import 'package:felloapp/ui/pages/app_root.dart';
 import 'package:felloapp/ui/pages/faq_page.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
-import 'package:felloapp/ui/pages/onboarding/onboarding_widget.dart';
+import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/pages/onboarding/app/onboarding_widget.dart';
 import 'package:felloapp/ui/pages/settings_page.dart';
 import 'package:felloapp/ui/pages/tabs/upi_screen.dart';
 import 'package:felloapp/ui/pages/tnc_page.dart';
@@ -22,6 +22,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import 'core/ops/icici_ops.dart';
+
 void main() {
   setupLocator();
   runApp(MyApp());
@@ -32,12 +34,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => locator<DBModel>()),
-        ChangeNotifierProvider(create: (_) => locator<LocalDBModel>()),
-        ChangeNotifierProvider(create: (_) => locator<HttpModel>()),
-        ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
-        ChangeNotifierProvider(create: (_) => locator<FcmListener>()),
-        ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
+        ChangeNotifierProvider(builder: (_) => locator<DBModel>()),
+        ChangeNotifierProvider(builder: (_) => locator<LocalDBModel>()),
+        ChangeNotifierProvider(builder: (_) => locator<HttpModel>()),
+        ChangeNotifierProvider(builder: (_) => locator<ICICIModel>()),
+        ChangeNotifierProvider(builder: (_) => locator<BaseUtil>()),
+        ChangeNotifierProvider(builder: (_) => locator<FcmListener>()),
+        ChangeNotifierProvider(builder: (_) => locator<FcmHandler>()),
       ],
       child: MaterialApp(
         title: Constants.APP_NAME,

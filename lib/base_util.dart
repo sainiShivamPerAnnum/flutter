@@ -51,11 +51,8 @@ class BaseUtil extends ChangeNotifier {
     //fetch on-boarding status and User details
     firebaseUser = await FirebaseAuth.instance.currentUser();
     // isUserOnboarded = await _lModel.isUserOnboarded()==1;
-    if (firebaseUser != null)
-      _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
-    isUserOnboarded =
-        (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
-
+    if (firebaseUser != null)_myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
+    isUserOnboarded = (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
     if (isUserOnboarded) {
       await initRemoteConfig();
       String _p = remoteConfig.getString('play_screen_first');
@@ -75,7 +72,8 @@ class BaseUtil extends ChangeNotifier {
       'tambola_win_bottom':'1500',
       'tambola_win_full':'10,000',
       'referral_bonus':'25',
-      'referral_ticket_bonus':'10'
+      'referral_ticket_bonus':'10',
+      'aws_key_index':'1'
     });
     try {
       // Using default duration to force fetching from remote server.
@@ -85,8 +83,7 @@ class BaseUtil extends ChangeNotifier {
       // Fetch throttled.
       print(exception);
     } catch (exception) {
-      print(
-          'Unable to fetch remote config. Cached or default values will be used');
+      print('Unable to fetch remote config. Cached or default values will be used');
     }
   }
 
@@ -102,6 +99,24 @@ class BaseUtil extends ChangeNotifier {
               color: UiConstants.accentColor,
               fontWeight: FontWeight.w700,
               fontSize: 30.0)),
+      bottom: PreferredSize(
+          child: Container(
+              color: Colors.blueGrey[100],
+              height: 25.0,
+              child: Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
+                  child:Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('We are currently in Beta',
+                        style: TextStyle(color: Colors.black54),
+                      ),
+                      Icon(Icons.info_outline, size: 20,color: Colors.black54,)
+                    ],
+                  )
+              )
+          ),
+          preferredSize: Size.fromHeight(25.0)),
     );
   }
 
@@ -262,11 +277,8 @@ class BaseUtil extends ChangeNotifier {
       x = (tdt.weekday == 7) ? 0 : tdt.weekday;
       tdt = new DateTime(tdt.year, 1, 1 + ((5 - x) + 7) % 7);
     }
-
-    int n = 1 +
-        ((firstThursday.millisecondsSinceEpoch - tdt.millisecondsSinceEpoch) /
-                604800000)
-            .ceil();
+    int n = 1 + ((firstThursday.millisecondsSinceEpoch
+        - tdt.millisecondsSinceEpoch)/604800000).ceil();
     //log.debug("Current week number: " + n.toString());
     return n;
   }

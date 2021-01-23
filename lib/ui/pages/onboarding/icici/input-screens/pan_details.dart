@@ -1,5 +1,5 @@
-import 'package:felloapp/ui/pages/onboarding/input-elements/data_provider.dart';
-import 'package:felloapp/ui/pages/onboarding/input-elements/input_field.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-elements/data_provider.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +27,7 @@ class PANPage extends StatelessWidget {
                   width: 100,
                 ),
                 Icon(
-                  Icons.help_outline_rounded,
+                  Icons.help_outline,
                 ),
               ],
             ),
