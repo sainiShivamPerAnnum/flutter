@@ -37,6 +37,7 @@ dependencies:
   fl_animated_linechart: ^1.1.4
   google_fonts: ^1.1.1
   confetti: ^0.5.4+1
+  lottie: ^0.7.0+1
 
   flutter:
     sdk: flutter
@@ -68,5 +69,6 @@ flutter:
     - images/amfi.png
     - images/whatsapp.png
     - images/onboard_collage-small.png
+    - images/checkmark.json
     - resources/fello_tnc.html
     - resources/referral_policy.html

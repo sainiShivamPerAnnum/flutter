@@ -15,22 +15,11 @@ class PANPage extends StatelessWidget {
         width: _width,
         height: _height,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Image.asset(
-                  Assets.iciciGraphic,
-                  fit: BoxFit.contain,
-                  height: 100,
-                  width: 100,
-                ),
-                Icon(
-                  Icons.help_outline,
-                ),
-              ],
+            SizedBox(
+              height: 20,
             ),
             Container(
               child: Column(
@@ -56,6 +45,7 @@ class PANPage extends StatelessWidget {
                     child: TextField(
                       autofocus: false,
                       controller: IDP.panInput,
+                      textCapitalization: TextCapitalization.characters,
                       decoration: inputFieldDecoration("Eg: ABCDXXXXXX"),
                       onSubmitted: (value) {
                         IDP.panInput.text = value;

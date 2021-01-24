@@ -4,7 +4,10 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/elements/withdraw_dialog.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:fl_animated_linechart/chart/animated_line_chart.dart';
 import 'package:fl_animated_linechart/chart/area_line_chart.dart';
@@ -98,7 +101,8 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       child: new Material(
         child: MaterialButton(
           child: (!baseProvider.isDepositRouteLogicInProgress)
-              ? Text('DEPOSIT',
+              ? Text(
+                  'DEPOSIT',
                   style: Theme.of(context)
                       .textTheme
                       .button
@@ -203,7 +207,19 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       Navigator.of(context).pop(); //go back to save tab
       Navigator.of(context).pushNamed('/verifykyc');
     } else {
-      //TODO check the icici collection for what has been entered already
+      baseProvider.iciciDetail =
+          await dbProvider.getUserIciciDetails(baseProvider.myUser.uid);
+      if (baseProvider.iciciDetail == null ||
+          baseProvider.iciciDetail.panNumber == null ||
+          baseProvider.iciciDetail.appId == null ||
+          baseProvider.iciciDetail.kycStatus == null) {
+        Navigator.of(context).pop(); //go back to save tab
+        Navigator.push(context, MaterialPageRoute(
+            builder: (ctx) => IciciOnboardController(startIndex: PANPage.index,),
+          ),
+        );
+      }
+      //TODO add more logic to direct the user to the right page
       baseProvider.isDepositRouteLogicInProgress = false;
     }
     return true;

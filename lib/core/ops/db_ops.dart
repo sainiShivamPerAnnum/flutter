@@ -329,6 +329,7 @@ class DBModel extends ChangeNotifier {
       dMap['user_id'] = userId;
       dMap['fail_type'] = failType.toString();
       dMap['manually_resolved'] = false;
+      dMap['timestamp'] = FieldValue.serverTimestamp();
       await _api.addFailedReportDocument(dMap);
       return true;
     }catch(e) {

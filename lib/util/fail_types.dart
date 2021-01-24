@@ -1,3 +1,4 @@
 enum FailType{
-  UserLoginOtpFailed
+  UserLoginOtpFailed,
+  UserKYCFlagFetchFailed
 }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -33,6 +32,8 @@ class ICICIModel extends ChangeNotifier{
     return true;
   }
 
+  bool isInit() => (_apiKey != null);
+
   Future<Map<String, dynamic>> getKycStatus(String panNumber) async{
     var _params = {GetKycStatus.fldPan: panNumber};
     var _request = http.Request('GET',
@@ -43,12 +44,16 @@ class ICICIModel extends ChangeNotifier{
     final resMap = await processResponse(_response);
     if(resMap == null) {
       log.error('Query Failed');
-      return {"flag": QUERY_FAILED};
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else if(!resMap[INTERNAL_FAIL_FLAG]){
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED, QUERY_FAIL_REASON: resMap["userMessage"]};
     }else{
       log.debug(resMap[GetKycStatus.resPanStatus]);
       log.debug(resMap[GetKycStatus.resStatus]);
       log.debug((resMap[GetKycStatus.resStatus] == GetKycStatus.KYC_STATUS_VALID).toString());
-      return {"flag": QUERY_PASSED};
+      resMap["flag"] = QUERY_PASSED;
+
+      return resMap;
     }
   }
 
@@ -334,16 +339,20 @@ class ICICIModel extends ChangeNotifier{
     }
     if(response.statusCode != 200) {
       log.error('Query Failed:: Status:${response.statusCode}, Reason:${response.reasonPhrase}');
-      return null;
+      if(response.statusCode == 502)
+        return {INTERNAL_FAIL_FLAG: false, "userMessage": "ICICI did not respond correctly"};
+      else
+        return {INTERNAL_FAIL_FLAG: false, "userMessage": "Unknown error occurred while sending request"};
     }
     try {
       String res = await response.stream.bytesToString();
       log.debug(res);
       if(res == null || res.isEmpty || res == "\"\"") {
         log.error('Returned empty response');
-        return null;
+        return {INTERNAL_FAIL_FLAG: false, "userMessage": "The entered data was not accepted"};
       }
       var rMap = json.decode(res);
+      rMap[INTERNAL_FAIL_FLAG] = true;
       return rMap;
     }catch(e){
       log.error('Failed to decode json');

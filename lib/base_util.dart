@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/User.dart';
+import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/util/constants.dart';
@@ -26,6 +27,7 @@ class BaseUtil extends ChangeNotifier {
   User _myUser;
   DailyPick weeklyDigits;
   List<TambolaBoard> userWeeklyBoards;
+  UserIciciDetail _iciciDetail;
   int referCount = 0;
   int userTicketsCount = 0;
   bool weeklyDrawFetched = false;
@@ -33,12 +35,13 @@ class BaseUtil extends ChangeNotifier {
   bool referCountFetched = false;
   bool isReferralLinkBuildInProgressWhatsapp = false;
   bool isReferralLinkBuildInProgressOther = false;
+  bool isIciciModelInitialized = false;
   static const dummyTambolaVal = '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A';
   static const int TOTAL_DRAWS = 35;
   static const NEW_USER_TICKET_COUNT = 5;
   static const KYC_UNTESTED = 0;
   static const KYC_INVALID = 1;
-  static const KYC_VALID = 1;
+  static const KYC_VALID = 2;
   static const INVESTMENT_AMOUNT_FOR_TICKET = 100;
   static bool isDeviceOffline = false;
   static bool ticketRequestSent = false;
@@ -265,6 +268,12 @@ class BaseUtil extends ChangeNotifier {
 
   set myUser(User value) {
     _myUser = value;
+  }
+
+  UserIciciDetail get iciciDetail => _iciciDetail;
+
+  set iciciDetail(UserIciciDetail value) {
+    _iciciDetail = value;
   }
 
   static int getWeekNumber() {

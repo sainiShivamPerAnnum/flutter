@@ -1,5 +1,8 @@
 const int QUERY_FAILED = 500;
 const int QUERY_PASSED = 200;
+const String QUERY_SUCCESS_FLAG = "flag";
+const String QUERY_FAIL_REASON = "reason";
+const String INTERNAL_FAIL_FLAG = "fello_flag";
 
 class GetTaxStatus{
   static final String path = 'api/getTaxStatus';
@@ -39,11 +42,11 @@ class GetKycStatus{
   static final String resFatcaStatus = 'FATCA_FLAG_1';
   static final String resPanStatus = 'F_PAN_STATUS';//should be 'OK'
 
-  static final String KYC_STATUS_INVALID = '0';
-  static final String KYC_STATUS_VALID = '1';
-  static final String KYC_STATUS_FETCH_FAILED = '2';
-  static final String KYC_STATUS_SERVICE_DOWN = '3';
-  static final String KYC_STATUS_ALLOW_VIDEO = '4';
+  static const String KYC_STATUS_INVALID = '0';
+  static const String KYC_STATUS_VALID = '1';
+  static const String KYC_STATUS_FETCH_FAILED = '2';
+  static const String KYC_STATUS_SERVICE_DOWN = '3';
+  static const String KYC_STATUS_ALLOW_VIDEO = '4';
 }
 
 /**
