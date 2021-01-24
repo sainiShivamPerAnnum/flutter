@@ -4,6 +4,7 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class BankDetailsInputScreen extends StatelessWidget {
+  static const int index = 3;
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;

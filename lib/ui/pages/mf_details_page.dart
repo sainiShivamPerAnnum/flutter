@@ -13,6 +13,7 @@ import 'package:fl_animated_linechart/common/pair.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -91,37 +92,30 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       decoration: BoxDecoration(
         gradient: new LinearGradient(colors: [
           UiConstants.primaryColor,
-          UiConstants.primaryColor.withBlue(190),
+          UiConstants.primaryColor.withBlue(200),
         ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
       ),
       child: new Material(
         child: MaterialButton(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'DEPOSIT ',
-                style: Theme.of(context)
-                    .textTheme
-                    .button
-                    .copyWith(color: Colors.white),
-              ),
-              // Text(
-              //   'BETA',
-              //   style: Theme.of(context).textTheme.button.copyWith(
-              //         color: Colors.white,
-              //         fontStyle: FontStyle.italic,
-              //         fontSize: 10,
-              //       ),
-              // ),
-            ],
-          ),
+          child: (!baseProvider.isDepositRouteLogicInProgress)
+              ? Text('DEPOSIT',
+                  style: Theme.of(context)
+                      .textTheme
+                      .button
+                      .copyWith(color: Colors.white),
+                )
+              : SpinKitThreeBounce(
+                  color: UiConstants.spinnerColor2,
+                  size: 18.0,
+                ),
           onPressed: () async {
             HapticFeedback.vibrate();
-            Navigator.of(context).pushNamed('/deposit');
+            baseProvider.isDepositRouteLogicInProgress = true;
+            onDepositClicked();
+            setState(() {});
           },
-          highlightColor: Colors.orange.withOpacity(0.5),
-          splashColor: Colors.orange.withOpacity(0.5),
+          highlightColor: Colors.white30,
+          splashColor: Colors.white30,
         ),
         color: Colors.transparent,
         borderRadius: new BorderRadius.circular(20.0),
@@ -167,14 +161,6 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                     .button
                     .copyWith(color: Colors.white),
               ),
-              // Text(
-              //   'BETA',
-              //   style: Theme.of(context).textTheme.button.copyWith(
-              //         color: Colors.white,
-              //         fontStyle: FontStyle.italic,
-              //         fontSize: 10,
-              //       ),
-              // ),
             ],
           ),
           onPressed: () async {
@@ -203,6 +189,24 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
         borderRadius: new BorderRadius.circular(20.0),
       ),
     );
+  }
+
+  Future<bool> onDepositClicked() async {
+    if (baseProvider.myUser.isIciciOnboarded) {
+      //move directly to depositing
+      baseProvider.isDepositRouteLogicInProgress = false;
+      Navigator.of(context).pop(); //go back to save tab
+      Navigator.of(context).pushNamed('/deposit');
+    }
+    if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID) {
+      baseProvider.isDepositRouteLogicInProgress = false;
+      Navigator.of(context).pop(); //go back to save tab
+      Navigator.of(context).pushNamed('/verifykyc');
+    } else {
+      //TODO check the icici collection for what has been entered already
+      baseProvider.isDepositRouteLogicInProgress = false;
+    }
+    return true;
   }
 }
 

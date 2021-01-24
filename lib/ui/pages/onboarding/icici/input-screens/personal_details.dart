@@ -1,12 +1,13 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/data_provider.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-screens/test_file.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PersonalPage extends StatefulWidget {
+  static const int index = 1;
   final personalForm;
   PersonalPage({@required this.personalForm});
   @override
@@ -15,7 +16,7 @@ class PersonalPage extends StatefulWidget {
 
 class _PersonalPageState extends State<PersonalPage> {
   BaseUtil baseProvider;
-  TestFile testInstance = new TestFile();
+  IciciOnboardController controllerInstance = new IciciOnboardController();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(

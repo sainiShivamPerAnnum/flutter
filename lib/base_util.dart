@@ -22,6 +22,7 @@ class BaseUtil extends ChangeNotifier {
   FirebaseUser firebaseUser;
   bool isUserOnboarded = false;
   bool isLoginNextInProgress = false;
+  bool isDepositRouteLogicInProgress = false;
   User _myUser;
   DailyPick weeklyDigits;
   List<TambolaBoard> userWeeklyBoards;
@@ -35,6 +36,9 @@ class BaseUtil extends ChangeNotifier {
   static const dummyTambolaVal = '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A';
   static const int TOTAL_DRAWS = 35;
   static const NEW_USER_TICKET_COUNT = 5;
+  static const KYC_UNTESTED = 0;
+  static const KYC_INVALID = 1;
+  static const KYC_VALID = 1;
   static const INVESTMENT_AMOUNT_FOR_TICKET = 100;
   static bool isDeviceOffline = false;
   static bool ticketRequestSent = false;

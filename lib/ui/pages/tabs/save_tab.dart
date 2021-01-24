@@ -7,7 +7,6 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/ui/elements/scrolling_text.dart';
 import 'package:felloapp/ui/pages/mf_details_page.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-screens/test_file.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -175,27 +174,27 @@ class _SaveScreenState extends State<SaveScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
-                Container(
-                  alignment: Alignment.center,
-                  width: double.infinity,
-                  height: 50,
-                  color: UiConstants.primaryColor,
-                  child: GestureDetector(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (ctx) => TestFile(),
-                      ),
-                    ),
-                    child: Text(
-                      "Input Screen",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
+                // SizedBox(height: 10),
+                // Container(
+                //   alignment: Alignment.center,
+                //   width: double.infinity,
+                //   height: 50,
+                //   color: UiConstants.primaryColor,
+                //   child: GestureDetector(
+                //     onTap: () => Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (ctx) => IciciOnboardController(),
+                //       ),
+                //     ),
+                //     child: Text(
+                //       "Input Screen",
+                //       style: TextStyle(
+                //         color: Colors.white,
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

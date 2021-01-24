@@ -3,6 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/model/User.dart';
+import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
@@ -46,6 +47,26 @@ class DBModel extends ChangeNotifier {
       return true;
     } catch (e) {
       log.error("Failed to update user object: " + e.toString());
+      return false;
+    }
+  }
+
+  Future<UserIciciDetail> getUserIciciDetails(String id) async{
+    try{
+      var doc = await _api.getUserIciciDetailDocument(id);
+      return UserIciciDetail.fromMap(doc.data);
+    }catch(e) {
+      log.error('Failed to fetch user icici details: $e');
+      return null;
+    }
+  }
+
+  Future<bool> updateUserIciciDetails(String userId, UserIciciDetail iciciDetail) async {
+    try {
+      await _api.updateUserIciciDetailDocument(userId, iciciDetail.toJson());
+      return true;
+    } catch (e) {
+      log.error("Failed to update user icici detail object: " + e.toString());
       return false;
     }
   }

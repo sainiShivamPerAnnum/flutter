@@ -16,9 +16,12 @@ class Constants {
   //Sub-collections
   static final String SUBCOLN_USER_FCM = "fcm";
   static final String SUBCOLN_USER_TICKETS = "tickets";
+  static final String SUBCOLN_USER_ICICI_DETAILS = "icici";
+  static final String SUBCOLN_USER_TXNS = "txns";
 
   //Sub-collection docs
   static final String DOC_USER_FCM_TOKEN = "client_token";
+  static final String DOC_USER_ICICI_DETAIL = "detail";
 
   static const int CORNERS_COMPLETED = 0;
   static const int ROW_ONE_COMPLETED = 1;

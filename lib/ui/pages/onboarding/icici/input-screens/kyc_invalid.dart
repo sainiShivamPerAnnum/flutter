@@ -4,8 +4,8 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
-class PANPage extends StatelessWidget {
-  static const int index = 0;
+class KYCInvalid extends StatelessWidget {
+  static const int index = 4;
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;

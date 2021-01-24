@@ -1,28 +1,25 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/data_provider.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/error_dialog.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-elements/route_transitions.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/submit_button.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/bank_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/income_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class TestFile extends StatefulWidget {
+class IciciOnboardController extends StatefulWidget {
+  IciciOnboardController({this.startIndex});
+  final int startIndex;
+
   @override
-  _TestFileState createState() => _TestFileState();
+  _IciciOnboardControllerState createState() => _IciciOnboardControllerState();
 }
 
-class _TestFileState extends State<TestFile> {
-// VARIABLE DECLARATION
-
+class _IciciOnboardControllerState extends State<IciciOnboardController> {
+  _IciciOnboardControllerState([this._pageIndex = PANPage.index]);
   PageController _pageController;
-  int _pageIndex = 0;
+  int _pageIndex;
   final personalDetailsformKey = GlobalKey<FormState>();
   DateTime selectedDate = DateTime.now();
   double _height, _width;
@@ -56,13 +53,13 @@ class _TestFileState extends State<TestFile> {
 // VERIFICATION FUNCTIONS
 
   checkPage() {
-    if (_pageIndex == 0) {
+    if (_pageIndex == PANPage.index) {
       verifyPan();
-    } else if (_pageIndex == 1) {
+    } else if (_pageIndex == PersonalPage.index) {
       verifyPersonalDetails();
-    } else if (_pageIndex == 2) {
+    } else if (_pageIndex == IncomeDetailsInputScreen.index) {
       verifyIncomeDetails();
-    } else if (_pageIndex == 3) {
+    } else if (_pageIndex == BankDetailsInputScreen.index) {
       verifyBankDetails();
     }
   }

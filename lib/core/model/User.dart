@@ -19,7 +19,7 @@ class User {
   String _age;
   bool _isInvested;
   bool _isIciciOnboarded;
-  bool _isKycVerified;
+  int _isKycVerified;
 
   static final String fldId = "mID";
   static final String fldMobile = "mMobile";
@@ -45,14 +45,14 @@ class User {
   static List<String> _fldList = [ fldMobile, fldEmail, fldName, fldPan, fldAge ];
 
   User.newUser(String id, String mobile) : this(id, mobile, null, null, null,
-      BaseUtil.NEW_USER_TICKET_COUNT, 0, 0, 0, 0, null, null, false, false, false);
+      BaseUtil.NEW_USER_TICKET_COUNT, 0, 0, 0, 0, null, null, false, false, BaseUtil.KYC_UNTESTED);
 
   User.fromMap(Map<String, dynamic> data, String id, [String client_token]) :
         this(id, data[fldMobile], data[fldEmail], data[fldName], client_token,
           data[fldTicket_count]??BaseUtil.NEW_USER_TICKET_COUNT, data[fldAcctBalance]??0,
           data[fldDepositBalance]??0,data[fldPriBalance]??0, data[fldLifeTimeWinnings]??0,
           data[fldPan],data[fldAge], data[fldIsInvested]??false,
-          data[fldIsIciciOnboarded]??false, data[fldIsKycVerified]??false);
+          data[fldIsIciciOnboarded]??false, data[fldIsKycVerified]??BaseUtil.KYC_UNTESTED);
 
   //to send user object to server
   toJson() {
@@ -220,9 +220,9 @@ class User {
     _isInvested = value;
   }
 
-  bool get isKycVerified => _isKycVerified;
+  int get isKycVerified => _isKycVerified;
 
-  set isKycVerified(bool value) {
+  set isKycVerified(int value) {
     _isKycVerified = value;
   }
 
