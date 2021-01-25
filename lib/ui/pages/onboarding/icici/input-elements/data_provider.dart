@@ -9,6 +9,7 @@ class IDP {
   static String wealthChosenValue;
   static String exposureChosenValue;
   static String acctTypeChosenValue;
+  static String otpChannels;
   static TextEditingController accNo = new TextEditingController();
   static TextEditingController cnfAccNo = new TextEditingController();
   static TextEditingController ifsc = new TextEditingController();

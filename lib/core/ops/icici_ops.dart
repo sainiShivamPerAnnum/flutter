@@ -161,11 +161,12 @@ class ICICIModel extends ChangeNotifier{
     final resMap = await processResponse(_response);
     if(resMap == null) {
       log.error('Query Failed');
-      return {"flag": QUERY_FAILED};
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else if(!resMap[INTERNAL_FAIL_FLAG]){
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED, QUERY_FAIL_REASON: resMap["userMessage"]};
     }else{
-      // log.debug(resMap[SubmitPanDetail.resStatus]);
-      // log.debug(resMap[SubmitPanDetail.resId]);
-      return {"flag": QUERY_PASSED};
+      resMap[QUERY_SUCCESS_FLAG] = true;
+      return resMap;
     }
   }
 
@@ -183,15 +184,16 @@ class ICICIModel extends ChangeNotifier{
     final resMap = await processResponse(_response);
     if(resMap == null) {
       log.error('Query Failed');
-      return {"flag": QUERY_FAILED};
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else if(!resMap[INTERNAL_FAIL_FLAG]){
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED, QUERY_FAIL_REASON: resMap["userMessage"]};
     }else{
-      // log.debug(resMap[SubmitPanDetail.resStatus]);
-      // log.debug(resMap[SubmitPanDetail.resId]);
-      return {"flag": QUERY_PASSED};
+      resMap[QUERY_SUCCESS_FLAG] = true;
+      return resMap;
     }
   }
 
-  Future<Map<String, dynamic>> getBankAcctTypes(String panNumber) async{
+  Future<List<Map<String, String>>> getBankAcctTypes(String panNumber) async{
     var _params = {
       GetBankActType.fldPan:panNumber,
     };
@@ -200,15 +202,12 @@ class ICICIModel extends ChangeNotifier{
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
-    final resMap = await processArrayResponse(_response);
-    if(resMap == null) {
+    final resList = await processArrayResponse(_response);
+    if(resList == null) {
       log.error('Query Failed');
-      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
-    }else if(!resMap[INTERNAL_FAIL_FLAG]){
-      return {QUERY_SUCCESS_FLAG: QUERY_FAILED, QUERY_FAIL_REASON: resMap["userMessage"]};
+      return null;
     }else{
-
-      return {"flag": QUERY_PASSED};
+      return resList;
     }
   }
 
@@ -225,11 +224,10 @@ class ICICIModel extends ChangeNotifier{
     final resMap = await processResponse(_response);
     if(resMap == null) {
       log.error('Query Failed');
-      return {"flag": QUERY_FAILED};
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     }else{
-      // log.debug(resMap[SubmitPanDetail.resStatus]);
-      // log.debug(resMap[SubmitPanDetail.resId]);
-      return {"flag": QUERY_PASSED};
+      resMap[QUERY_SUCCESS_FLAG] = true;
+      return resMap;
     }
   }
 

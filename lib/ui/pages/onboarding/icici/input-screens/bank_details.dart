@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 
 class BankDetailsInputScreen extends StatefulWidget{
   static const int index = 3;
-  BankDetailsInputScreen({this.acctTypes});
-  final List<Map<String, String>> acctTypes;
 
   @override
   State createState() => _BankDetailsInputScreenState();
@@ -71,7 +69,7 @@ class _BankDetailsInputScreenState extends State<BankDetailsInputScreen> {
                   ),
                   SizedBox(height: 20),
                   Text("Select your Account Type"),
-                  _buildAcctTypeWidget(widget.acctTypes),
+                  _buildAcctTypeWidget(IDP.userAcctTypes),
                   Text("IFSC Code"),
                   InputField(
                     child: TextField(

@@ -10,6 +10,7 @@ class UserIciciDetail{
   String _hasIssue;
   Timestamp _createdTime;
   Timestamp _updatedTime;
+  String _unverifiedOtpId;
 
   static final String fldAppId = 'iAppId';
   static final String fldPanNumber = 'iPanNumber';
@@ -73,5 +74,11 @@ class UserIciciDetail{
 
   set panName(String value) {
     _panName = value;
+  }
+
+  String get unverifiedOtpId => _unverifiedOtpId;
+
+  set unverifiedOtpId(String value) {
+    _unverifiedOtpId = value;
   }
 }

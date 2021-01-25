@@ -4,8 +4,8 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
-class KYCInvalid extends StatelessWidget {
-  static const int index = 5;
+class OtpVerification extends StatelessWidget {
+  static const int index = 4;
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
@@ -15,29 +15,18 @@ class KYCInvalid extends StatelessWidget {
         width: _width,
         height: _height,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Image.asset(
-                  Assets.iciciGraphic,
-                  fit: BoxFit.contain,
-                  height: 100,
-                  width: 100,
-                ),
-                Icon(
-                  Icons.help_outline,
-                ),
-              ],
+            SizedBox(
+              height: 20,
             ),
             Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "LET'S START\nWITH YOUR",
+                    "ONE FINAL",
                     style: TextStyle(
                       fontSize: 50,
                       color: Colors.black87,
@@ -45,7 +34,15 @@ class KYCInvalid extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "PAN",
+                    "STEP",
+                    style: TextStyle(
+                      fontSize: 50,
+                      color: UiConstants.primaryColor,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  Text(
+                    "Please enter the OTP sent to your ${IDP.otpChannels}",
                     style: TextStyle(
                       fontSize: 50,
                       color: UiConstants.primaryColor,
@@ -56,6 +53,7 @@ class KYCInvalid extends StatelessWidget {
                     child: TextField(
                       autofocus: false,
                       controller: IDP.panInput,
+                      textCapitalization: TextCapitalization.characters,
                       decoration: inputFieldDecoration("Eg: ABCDXXXXXX"),
                       onSubmitted: (value) {
                         IDP.panInput.text = value;

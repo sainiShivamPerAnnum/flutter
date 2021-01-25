@@ -3,6 +3,7 @@ const int QUERY_PASSED = 200;
 const String QUERY_SUCCESS_FLAG = "flag";
 const String QUERY_FAIL_REASON = "reason";
 const String INTERNAL_FAIL_FLAG = "fello_flag";
+const String PAYMODE = "UPI";
 
 class GetTaxStatus{
   static final String path = 'api/getTaxStatus';
@@ -108,6 +109,8 @@ class GetBankDetail{
   static final String resBankName = 'BANK_NAME';
   static final String resStatus = 'STATUS';
   static final String resBranchName = 'BRANCHNAME';
+  static final String resAddress = 'ADDRESS';
+  static final String resCity = 'CITY';
 }
 
 /**
@@ -139,6 +142,8 @@ class SubmitBankDetails{
   static final String fldBranch = 'branch';
   static final String fldAddress = 'address';
   static final String fldPan = 'firstpan';
+
+  static final String resStatus = 'STATUS';
 }
 
 class GetSavedDetail{
@@ -167,10 +172,10 @@ class SendOtp{
   static final String resStatus = 'STATUS';
   static final String resOtpId = 'OTPID';
 
-  static final int STATUS_SENT_EMAIL_MOBILE = 1;
-  static final int STATUS_SENT_EMAIL = 2;
-  static final int STATUS_SENT_MOBILE = 3;
-  static final int STATUS_NOT_SENT = 4;
+  static const String STATUS_SENT_EMAIL_MOBILE = '1';
+  static const String STATUS_SENT_EMAIL = '2';
+  static const String STATUS_SENT_MOBILE = '3';
+  static const String STATUS_NOT_SENT = '4';
 }
 
 /**

@@ -12,6 +12,7 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-elements/submit_button.
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/bank_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/income_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/kyc_invalid.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-screens/otp_verification.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
 import 'package:felloapp/util/assets.dart';
@@ -205,7 +206,8 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
         }else{
           _isProcessing = false;
           setState(() {});
-          //get Relevant Bank Acct Types for user
+          List<Map<String, String>> userAcctList = incomeObj['userAccts'];
+          if(userAcctList != null) IDP.userAcctTypes = userAcctList;
           new Timer(const Duration(milliseconds: 1000), () {
             onTabTapped(BankDetailsInputScreen.index);
           });
@@ -232,6 +234,31 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
       log.debug(IDP.occupationChosenValue);
       log.debug(IDP.accNo.text);
       log.debug(IDP.ifsc.text);
+
+      onBankAccEntered(IDP.accNo.text, IDP.acctTypeChosenValue, IDP.ifsc.text).then((resObj) {
+        if(!resObj['flag']) {
+          _isProcessing = false;
+          if (resObj['reason'] != null) {
+            //TODO Add error message
+          }
+          setState(() {});
+        }else{
+          sendOtp(baseProvider.myUser.mobile, IDP.email.text.trim()).then((otpObj) {
+            if(otpObj['flag']) {
+              _isProcessing = false;
+              if(otpObj['reason'] != null) {
+                //TODO what can the user do if the otp was not sent?
+              }
+              setState(() {});
+            }else{
+              if(otpObj['status'] == SendOtp.STATUS_SENT_MOBILE)IDP.otpChannels='mobile';
+              else if(otpObj['status'] == SendOtp.STATUS_SENT_EMAIL)IDP.otpChannels='email';
+              else if(otpObj['status'] == SendOtp.STATUS_SENT_EMAIL_MOBILE)IDP.otpChannels='mobile and your email';
+              onTabTapped(OtpVerification.index);
+            }
+          });
+        }
+      });
     }
   }
 
@@ -404,6 +431,10 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     }
   }
 
+  /**
+   * Return obj: {flag: false, reason: ...} OR
+   * {flag: true, userAccts: [Acct type list]}
+   * */
   Future<Map<String, dynamic>> onIncomeDetailsEntered(
       String occupationCode, String incomeCode, String polCode, srcWealth) async {
     if (baseProvider == null || dbProvider == null || iProvider == null) {
@@ -452,14 +483,149 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
           //bool icicUpFlag = await dbProvider.updateUserIciciDetails(baseProvider.myUser.uid, baseProvider.iciciDetail);;
           log.debug('Application ID added successfully');
           //get and update user Bank accounts
-
-          return {'flag': true};
+          var defaultAcctTypes = [
+            {'CODE': 'SB', 'NAME': 'Savings Account'},
+            {'CODE': 'CA', 'NAME': 'Current Account'},
+          ];
+          var userAcctTypes = await iProvider.getBankAcctTypes(baseProvider.iciciDetail.panNumber);
+          return {
+            'flag': true,
+            'userAccts': userAcctTypes??defaultAcctTypes
+          };
         }
       }
     }else{
       return {
         'flag': false,
         'reason': 'Field were invalid. Please try again'
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> onBankAccEntered(String accNo, String accTypeCde, String ifsc) async{
+    if (baseProvider == null || dbProvider == null || iProvider == null) {
+      log.error('Providers not initialised');
+      return {'flag': false, 'reason': 'App restart required'};
+    }
+    if (!iProvider.isInit()) await iProvider.init();
+
+    String panNumber = baseProvider.iciciDetail.panNumber;
+    var bankDetail = await iProvider.getBankInfo(panNumber, ifsc);
+    if (bankDetail == null || bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED) {
+      log.error('Couldnt fetch an appropriate response');
+      return {
+        'flag': false,
+        'reason': (bankDetail[QUERY_FAIL_REASON] != null)
+            ? bankDetail[QUERY_FAIL_REASON]
+            : 'Unknown'
+      };
+    }else if(bankDetail[GetBankDetail.resBankCode] == null
+        || bankDetail[GetBankDetail.resBankName] == null) {
+      log.error('Couldnt fetch an appropriate response');
+      return {
+        'flag': false,
+        'reason': 'We could not fetch the bank details from the given IFSC Code. Please verify and try again'
+      };
+    }else{
+      String bankCode = bankDetail[GetBankDetail.resBankCode];
+      String bankName = bankDetail[GetBankDetail.resBankName];
+      String bankBranchName = bankDetail[GetBankDetail.resBranchName];
+      String bankAddress = bankDetail[GetBankDetail.resAddress];
+      String bankCity = bankDetail[GetBankDetail.resCity];
+      log.debug('BankDetails fetched: ${bankCode??''}, ${bankName??''},'
+          + ' ${bankBranchName??''}, ${bankAddress??''}, ${bankCity??''} ');
+      if(bankCode == null || bankName == null || bankBranchName == null
+          || bankCode.isEmpty || bankName.isEmpty || bankBranchName.isEmpty) {
+        log.error('Couldnt fetch an appropriate response');
+        var failData = {'ifsc': ifsc};
+        bool failureLogged = await dbProvider.logFailure(
+            baseProvider.myUser.uid,
+            FailType.UserInsufficientBankDetailFailed,failData);
+        log.debug('Failure logged correctly: $failureLogged');
+        return {
+          'flag': false,
+          'reason': 'We could not fetch the bank details from the provided IFSC Code. Please verify and try again'
+        };
+      }else{
+        //submit all details
+        String appid = baseProvider.iciciDetail.appId;
+        var bankSubmitResponse = await iProvider.submitBankDetails(
+            appid, panNumber, PAYMODE, accTypeCde, accNo, bankName,
+            bankCode, ifsc, bankCity, bankBranchName, bankAddress);
+        if (bankSubmitResponse == null || bankSubmitResponse[QUERY_SUCCESS_FLAG] == QUERY_FAILED
+        || bankSubmitResponse[SubmitBankDetails.resStatus] != 'Y') {
+          log.error('Couldnt fetch an appropriate response');
+          var failData = {
+            'appid': appid,
+            'address': bankAddress,
+            'bankCode': bankCode,
+            'branchName': bankBranchName,
+            'ifsc': ifsc
+          };
+          bool failureLogged = await dbProvider.logFailure(
+              baseProvider.myUser.uid,
+              FailType.UserICICIIncomeFieldUpdateFailed,
+              failData);
+          log.debug('Failure logged correctly: $failureLogged');
+          return {
+            'flag': false,
+            'reason': (bankSubmitResponse[QUERY_FAIL_REASON] != null)
+                ? bankSubmitResponse[QUERY_FAIL_REASON]
+                : 'Unknown'
+          };
+        }else{
+          log.debug('Bank Details submission:: All good');
+          return {'flag': true};
+        }
+      }
+    }
+  }
+
+  /**
+   * Return obj: {flag: false, reason: ..} OR
+   * {flag: true, status: otpstatus}
+   * */
+  Future<Map<String, dynamic>> sendOtp(String mobile, String email) async{
+    if (baseProvider == null || dbProvider == null || iProvider == null) {
+      log.error('Providers not initialised');
+      return {'flag': false, 'reason': 'App restart required'};
+    }
+    if (!iProvider.isInit()) await iProvider.init();
+
+    var otpResObj = await iProvider.sendOtp(mobile, email);
+    if(otpResObj == null || otpResObj[QUERY_SUCCESS_FLAG] == false) {
+      log.error('Couldnt send otp');
+      return {
+        'flag': false,
+        'reason': (otpResObj[QUERY_FAIL_REASON] != null)
+            ? otpResObj[QUERY_FAIL_REASON]
+            : 'Unknown error occurred. Please try again'
+      };
+    }else if(otpResObj[SendOtp.resStatus] == null
+        || otpResObj[SendOtp.resStatus] == SendOtp.STATUS_NOT_SENT) {
+      log.error('Couldnt send otp');
+      log.error('Couldnt fetch an appropriate response');
+      var failData = {
+       'mobile': mobile,
+        'email': email
+      };
+      bool failureLogged = await dbProvider.logFailure(
+          baseProvider.myUser.uid,
+          FailType.UserICICIOTPSendFailed,
+          failData);
+      log.debug('Failure logged correctly: $failureLogged');
+      return {
+        'flag': false,
+        'reason': (otpResObj[QUERY_FAIL_REASON] != null)
+            ? otpResObj[QUERY_FAIL_REASON]
+            : 'Couldn\'t send an otp to provided email/mobile'
+      };
+    }else{
+      log.debug('Otp Success');
+      baseProvider.iciciDetail.unverifiedOtpId = otpResObj[SendOtp.resOtpId];
+      return {
+        'flag': true,
+        'status': otpResObj[SendOtp.resStatus]
       };
     }
   }
