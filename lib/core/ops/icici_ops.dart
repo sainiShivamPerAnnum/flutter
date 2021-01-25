@@ -75,7 +75,7 @@ class ICICIModel extends ChangeNotifier{
     }else{
       log.debug(resMap[SubmitPanDetail.resStatus]);
       log.debug(resMap[SubmitPanDetail.resId]);
-      resMap["flag"] = QUERY_PASSED;
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
 
       return resMap;
     }
@@ -98,11 +98,14 @@ class ICICIModel extends ChangeNotifier{
     final resMap = await processResponse(_response);
     if(resMap == null) {
       log.error('Query Failed');
-      return {"flag": QUERY_FAILED};
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else if(!resMap[INTERNAL_FAIL_FLAG]){
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED, QUERY_FAIL_REASON: resMap["userMessage"]};
     }else{
-      // log.debug(resMap[SubmitPanDetail.resStatus]);
-      // log.debug(resMap[SubmitPanDetail.resId]);
-      return {"flag": QUERY_PASSED};
+      log.debug(resMap[SubmitInvoiceDetail.resStatus]);
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+
+      return resMap;
     }
   }
 
@@ -197,13 +200,14 @@ class ICICIModel extends ChangeNotifier{
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
-    final resMap = await processResponse(_response);
+    final resMap = await processArrayResponse(_response);
     if(resMap == null) {
       log.error('Query Failed');
-      return {"flag": QUERY_FAILED};
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else if(!resMap[INTERNAL_FAIL_FLAG]){
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED, QUERY_FAIL_REASON: resMap["userMessage"]};
     }else{
-      // log.debug(resMap[SubmitPanDetail.resStatus]);
-      // log.debug(resMap[SubmitPanDetail.resId]);
+
       return {"flag": QUERY_PASSED};
     }
   }
@@ -357,6 +361,38 @@ class ICICIModel extends ChangeNotifier{
       var rMap = json.decode(res);
       rMap[INTERNAL_FAIL_FLAG] = true;
       return rMap;
+    }catch(e){
+      log.error('Failed to decode json');
+      return null;
+    }
+  }
+
+  Future<List<Map<String, String>>> processArrayResponse(http.StreamedResponse response) async{
+    if(response == null){
+      log.error('response is null');
+    }
+    if(response.statusCode != 200) {
+      log.error('Query Failed:: Status:${response.statusCode}, Reason:${response.reasonPhrase}');
+      if(response.statusCode == 502)
+        return null;
+      else
+        return null;
+    }
+    try {
+      String res = await response.stream.bytesToString();
+      log.debug(res);
+      if(res == null || res.isEmpty || res == "\"\"") {
+        log.error('Returned empty response');
+        return null;
+      }
+      List<dynamic> rList = json.decode(res);
+      //rMap[INTERNAL_FAIL_FLAG] = true;
+      List<Map<String, String>> refList = new List();
+      rList.forEach((element) {
+        refList.add({'CODE':element['BANK_ACT_VALUE'], 'NAME':element['BANK_ACT_TYPE']});
+      });
+      log.debug(refList.toString());
+      return refList;
     }catch(e){
       log.error('Failed to decode json');
       return null;

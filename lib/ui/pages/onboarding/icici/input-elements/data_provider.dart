@@ -8,7 +8,9 @@ class IDP {
   static String occupationChosenValue;
   static String wealthChosenValue;
   static String exposureChosenValue;
+  static String acctTypeChosenValue;
   static TextEditingController accNo = new TextEditingController();
   static TextEditingController cnfAccNo = new TextEditingController();
   static TextEditingController ifsc = new TextEditingController();
+  static List<Map<String, String>> userAcctTypes = new List();
 }

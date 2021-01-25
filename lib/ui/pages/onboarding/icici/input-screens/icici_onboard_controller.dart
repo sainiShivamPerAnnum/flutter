@@ -19,12 +19,14 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class IciciOnboardController extends StatefulWidget {
   IciciOnboardController({this.startIndex});
+
   final int startIndex;
 
   @override
@@ -33,7 +35,9 @@ class IciciOnboardController extends StatefulWidget {
 
 class _IciciOnboardControllerState extends State<IciciOnboardController> {
   final Log log = new Log('IciciOnboardController');
+
   _IciciOnboardControllerState([this._pageIndex = PANPage.index]);
+
   PageController _pageController;
   int _pageIndex;
   final personalDetailsformKey = GlobalKey<FormState>();
@@ -46,7 +50,6 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
   ICICIModel iProvider;
   bool _isProcessing = false;
   bool _isProcessingComplete = false;
-
 
   @override
   void initState() {
@@ -73,7 +76,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
   }
 
   checkPage() {
-    if(_isProcessing || _isProcessingComplete)return;
+    if (_isProcessing || _isProcessingComplete) return;
 
     if (_pageIndex == PANPage.index) {
       verifyPan();
@@ -96,49 +99,52 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
       _isProcessing = true;
       setState(() {});
       onPanEntered(panText).then((kycStatus) {
-        switch(kycStatus) {
-          case GetKycStatus.KYC_STATUS_VALID: {
-            _isProcessingComplete = true;
-            _isProcessing = false;
-            setState(() {});
-            new Timer(const Duration(milliseconds: 1000), () {
-              _isProcessingComplete = false;
+        switch (kycStatus) {
+          case GetKycStatus.KYC_STATUS_VALID:
+            {
+              _isProcessingComplete = true;
               _isProcessing = false;
               setState(() {});
               new Timer(const Duration(milliseconds: 1000), () {
-                onTabTapped(PersonalPage.index);
-                //setState(() {});
+                _isProcessingComplete = false;
+                _isProcessing = false;
+                setState(() {});
+                new Timer(const Duration(milliseconds: 1000), () {
+                  onTabTapped(PersonalPage.index);
+                  //setState(() {});
+                });
               });
-            });
-            break;
-          }
-          case GetKycStatus.KYC_STATUS_ALLOW_VIDEO: {
-            _isProcessingComplete = false;
-            _isProcessing = false;
-            setState(() {
-              onTabTapped(KYCInvalid.index);
-            });
-            break;
-          }
+              break;
+            }
+          case GetKycStatus.KYC_STATUS_ALLOW_VIDEO:
+            {
+              _isProcessingComplete = false;
+              _isProcessing = false;
+              setState(() {
+                onTabTapped(KYCInvalid.index);
+              });
+              break;
+            }
           case GetKycStatus.KYC_STATUS_FETCH_FAILED:
           case GetKycStatus.KYC_STATUS_SERVICE_DOWN:
-          case GetKycStatus.KYC_STATUS_INVALID:  {
-            //TODO add message and counter to try again
-            _isProcessing = false;
-            _isProcessingComplete = false;
-            setState(() {});
-            break;
-          }
-          case '$QUERY_FAILED': {
-            //TODO
-            _isProcessing = false;
-            _isProcessingComplete = false;
-            setState(() {});
-            break;
-          }
-          default: {
-
-          }
+          case GetKycStatus.KYC_STATUS_INVALID:
+            {
+              //TODO add message and counter to try again
+              _isProcessing = false;
+              _isProcessingComplete = false;
+              setState(() {});
+              break;
+            }
+          case '$QUERY_FAILED':
+            {
+              //TODO
+              _isProcessing = false;
+              _isProcessingComplete = false;
+              setState(() {});
+              break;
+            }
+          default:
+            {}
         }
       });
     } else {
@@ -150,19 +156,61 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     if (personalDetailsformKey.currentState.validate()) {
       _isProcessing = true;
       setState(() {});
-      iProvider.submitPanDetails(baseProvider.iciciDetail.panNumber, IDP.name.text).then((resMap) {
-        if(resMap[])
+      onNameEntered(IDP.name.text).then((nameResObj) {
+        if (!nameResObj['flag']) {
+          _isProcessing = false;
+          if (nameResObj['reason'] != null) {
+            //TODO Add error message
+          }
+          setState(() {});
+        } else {
+          onBasicDetailsEntered(baseProvider.myUser.mobile,
+              IDP.email.text, IDP.selectedDate).then((basicObj) {
+            if(!basicObj['flag']){
+              _isProcessing = false;
+              if (nameResObj['reason'] != null) {
+                //TODO Add error message
+              }
+              setState(() {});
+            }else{
+              _isProcessing = false;
+              setState(() {});
+              new Timer(const Duration(milliseconds: 1000), () {
+                onTabTapped(IncomeDetailsInputScreen.index);
+              });
+            }
+          });
+        }
       });
     }
   }
 
   verifyIncomeDetails() {
-    if (IDP.occupationChosenValue != null &&
-        IDP.wealthChosenValue != null &&
-        IDP.exposureChosenValue != null) {
-      onTabTapped(3);
-    } else {
+    if (IDP.occupationChosenValue == null ||
+        IDP.wealthChosenValue == null ||
+        IDP.exposureChosenValue == null) {
       showErrorDialog("Oops!", "All Fields are necessary bruh!", context);
+    } else {
+      _isProcessing = true;
+      setState(() {});
+
+      onIncomeDetailsEntered(IDP.occupationChosenValue,"10 to 25Lacs",
+          IDP.exposureChosenValue,IDP.wealthChosenValue).then((incomeObj) {
+        if(!incomeObj['flag']){
+          _isProcessing = false;
+          if (incomeObj['reason'] != null) {
+            //TODO Add error message
+          }
+          setState(() {});
+        }else{
+          _isProcessing = false;
+          setState(() {});
+          //get Relevant Bank Acct Types for user
+          new Timer(const Duration(milliseconds: 1000), () {
+            onTabTapped(BankDetailsInputScreen.index);
+          });
+        }
+      });
     }
   }
 
@@ -187,60 +235,271 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     }
   }
 
-  Future<String> onPanEntered(String panNumber) async{
-    if(baseProvider == null || dbProvider == null || iProvider == null) {
+  Future<String> onPanEntered(String panNumber) async {
+    if (baseProvider == null || dbProvider == null || iProvider == null) {
       log.error('Providers not initialised');
       return GetKycStatus.KYC_STATUS_SERVICE_DOWN;
     }
-    if(!iProvider.isInit())await iProvider.init();
+    if (!iProvider.isInit()) await iProvider.init();
 
     var kObj = await iProvider.getKycStatus(panNumber);
-    if(kObj == null || kObj[QUERY_SUCCESS_FLAG] == QUERY_FAILED
-        || kObj[GetKycStatus.resStatus] == null) {
+    if (kObj == null ||
+        kObj[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
+        kObj[GetKycStatus.resStatus] == null) {
       log.error('Couldnt fetch an appropriate response');
       log.error(kObj[QUERY_FAIL_REASON]);
       return '$QUERY_FAILED';
     }
     String fKycStatus = kObj[GetKycStatus.resStatus];
     String fKycName = kObj[GetKycStatus.resName];
-    if(fKycStatus == GetKycStatus.KYC_STATUS_VALID) {
+    if (fKycStatus == GetKycStatus.KYC_STATUS_VALID) {
       log.debug('User is KYC verified!');
       //create user icici obj
-      if(baseProvider.iciciDetail == null) {
-        baseProvider.iciciDetail = UserIciciDetail.newApplication(null, panNumber, fKycStatus);
-      }else {
+      if (baseProvider.iciciDetail == null) {
+        baseProvider.iciciDetail =
+            UserIciciDetail.newApplication(null, panNumber, fKycStatus);
+      } else {
         baseProvider.iciciDetail.panNumber = panNumber;
         baseProvider.iciciDetail.kycStatus = fKycStatus;
       }
-      if(fKycName != null || fKycStatus.isNotEmpty) baseProvider.iciciDetail.panName = fKycName;
+      if (fKycName != null || fKycStatus.isNotEmpty)
+        baseProvider.iciciDetail.panName = fKycName;
       //update user icici obj
-      bool iciciUpdated = await dbProvider.updateUserIciciDetails(baseProvider.myUser.uid, baseProvider.iciciDetail);
+      bool iciciUpdated = await dbProvider.updateUserIciciDetails(
+          baseProvider.myUser.uid, baseProvider.iciciDetail);
       //update flags in user document
       baseProvider.myUser.isKycVerified = BaseUtil.KYC_VALID;
       bool userFlagUpdated = await dbProvider.updateUser(baseProvider.myUser);
-      log.debug('Flags for icici update and user update: $iciciUpdated, $userFlagUpdated');
-    }else if(fKycStatus == GetKycStatus.KYC_STATUS_ALLOW_VIDEO) {
+      log.debug(
+          'Flags for icici update and user update: $iciciUpdated, $userFlagUpdated');
+    } else if (fKycStatus == GetKycStatus.KYC_STATUS_ALLOW_VIDEO) {
       log.debug('User is NOT KYC verified');
       baseProvider.myUser.isKycVerified = BaseUtil.KYC_INVALID;
       bool userFlagUpdated = await dbProvider.updateUser(baseProvider.myUser);
       log.debug('Flags for icici update:$userFlagUpdated');
-    }else{
+    } else {
       log.debug('KYC fetch ran into service issue');
-      var failData = {
-        'kyc_status': fKycStatus
-      };
-      bool failureLogged = await dbProvider.logFailure(baseProvider.myUser.uid,
-          FailType.UserKYCFlagFetchFailed, failData);
+      var failData = {'kyc_status': fKycStatus};
+      bool failureLogged = await dbProvider.logFailure(
+          baseProvider.myUser.uid, FailType.UserKYCFlagFetchFailed, failData);
       log.debug('Failure logged correctly: $failureLogged');
     }
     return fKycStatus;
+  }
+
+  /**
+   * Return obj: {flag: true/false, response: ''}
+   * */
+  Future<Map<String, dynamic>> onNameEntered(String name) async {
+    if (baseProvider == null || dbProvider == null || iProvider == null) {
+      log.error('Providers not initialised');
+      return {'flag': false, 'reason': 'App restart required'};
+    }
+    if (!iProvider.isInit()) await iProvider.init();
+
+    String panNumber = baseProvider.iciciDetail.panNumber;
+    var valMap = await iProvider.submitPanDetails(panNumber, name);
+    if (valMap == null || valMap[QUERY_SUCCESS_FLAG] == QUERY_FAILED) {
+      log.error('Couldnt fetch an appropriate response');
+      return {
+        'flag': false,
+        'reason': (valMap[QUERY_FAIL_REASON] != null)
+            ? valMap[QUERY_FAIL_REASON]
+            : 'Unknown'
+      };
+    } else {
+      String resStatus = valMap[SubmitPanDetail.resStatus];
+      String resId = valMap[SubmitPanDetail.resId];
+      if (resStatus == null ||
+          resStatus.isEmpty ||
+          resId == null ||
+          resId.isEmpty) {
+        log.error('Couldnt fetch an appropriate response');
+        return {
+          'flag': false,
+          'reason': 'Application creation failed. Please try again'
+        };
+      } else if (resStatus != 'Y') {
+        log.error('Couldnt fetch an appropriate response');
+        var failData = {'res_status': resStatus};
+        bool failureLogged = await dbProvider.logFailure(
+            baseProvider.myUser.uid,
+            FailType.UserICICAppCreationFailed,
+            failData);
+        log.debug('Failure logged correctly: $failureLogged');
+        return {
+          'flag': false,
+          'reason': 'Application creation failed. Please try again'
+        };
+      } else {
+        log.debug('ResID and ResStatus validated: $resStatus $resId');
+        baseProvider.iciciDetail.appId = resId;
+        bool icicUpFlag = await dbProvider.updateUserIciciDetails(
+            baseProvider.myUser.uid, baseProvider.iciciDetail);
+        ;
+        log.debug('Application ID added successfully');
+        return {'flag': true};
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>> onBasicDetailsEntered(
+      String mobile, String email, DateTime dob) async {
+    if (baseProvider == null || dbProvider == null || iProvider == null) {
+      log.error('Providers not initialised');
+      return {'flag': false, 'reason': 'App restart required'};
+    }
+    if (!iProvider.isInit()) await iProvider.init();
+
+    String appid = baseProvider.iciciDetail.appId;
+    String panNumber = baseProvider.iciciDetail.panNumber;
+    String dobStr = (dob != null)
+        ? '${dob.day}-${getMonth(dob.month)}-${dob.year}'
+        : null; //29-Aug-1996
+    if (appid != null && panNumber != null && mobile != null &&
+        email != null && dobStr != null) {
+      var bValMap = await iProvider.submitBasicDetails(
+          appid, panNumber, mobile, email, dobStr);
+      if (bValMap == null || bValMap[QUERY_SUCCESS_FLAG] == QUERY_FAILED) {
+        log.error('Couldnt fetch an appropriate response');
+        return {
+          'flag': false,
+          'reason': (bValMap[QUERY_FAIL_REASON] != null)
+              ? bValMap[QUERY_FAIL_REASON]
+              : 'Unknown'
+        };
+      } else {
+        String resStatus = bValMap[SubmitInvoiceDetail.resStatus];
+        if (resStatus == null || resStatus.isEmpty) {
+          log.error('Couldnt fetch an appropriate response');
+          return {
+            'flag': false,
+            'reason': 'Field Update failed. Please try again'
+          };
+        } else if (resStatus != 'Y') {
+          log.error('Couldnt fetch an appropriate response');
+          var failData = {'res_status': resStatus};
+          bool failureLogged = await dbProvider.logFailure(
+              baseProvider.myUser.uid,
+              FailType.UserICICIBasicFieldUpdateFailed,
+              failData);
+          log.debug('Failure logged correctly: $failureLogged');
+          return {
+            'flag': false,
+            'reason': 'Field update failed. Please try again'
+          };
+        } else {
+          log.debug('ResStatus validated: $resStatus');
+          //baseProvider.iciciDetail.appId = resId;
+          //bool icicUpFlag = await dbProvider.updateUserIciciDetails(baseProvider.myUser.uid, baseProvider.iciciDetail);;
+          log.debug('Application ID added successfully');
+          return {'flag': true};
+        }
+      }
+    }else{
+      return {
+        'flag': false,
+        'reason': 'Field were invalid. Please try again'
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> onIncomeDetailsEntered(
+      String occupationCode, String incomeCode, String polCode, srcWealth) async {
+    if (baseProvider == null || dbProvider == null || iProvider == null) {
+      log.error('Providers not initialised');
+      return {'flag': false, 'reason': 'App restart required'};
+    }
+    if (!iProvider.isInit()) await iProvider.init();
+
+    String appid = baseProvider.iciciDetail.appId;
+    String panNumber = baseProvider.iciciDetail.panNumber;
+    if (appid != null && panNumber != null && occupationCode != null &&
+        incomeCode != null && polCode != null && srcWealth != null) {
+      var bValMap = await iProvider.submitSecondaryDetails(appid,
+          occupationCode, incomeCode, polCode, panNumber, srcWealth);
+      if (bValMap == null || bValMap[QUERY_SUCCESS_FLAG] == QUERY_FAILED) {
+        log.error('Couldnt fetch an appropriate response');
+        return {
+          'flag': false,
+          'reason': (bValMap[QUERY_FAIL_REASON] != null)
+              ? bValMap[QUERY_FAIL_REASON]
+              : 'Unknown'
+        };
+      } else {
+        String resStatus = bValMap[SubmitInvoiceDetail.resStatus];
+        if (resStatus == null || resStatus.isEmpty) {
+          log.error('Couldnt fetch an appropriate response');
+          return {
+            'flag': false,
+            'reason': 'Field Update failed. Please try again'
+          };
+        } else if (resStatus != 'Y') {
+          log.error('Couldnt fetch an appropriate response');
+          var failData = {'res_status': resStatus};
+          bool failureLogged = await dbProvider.logFailure(
+              baseProvider.myUser.uid,
+              FailType.UserICICIIncomeFieldUpdateFailed,
+              failData);
+          log.debug('Failure logged correctly: $failureLogged');
+          return {
+            'flag': false,
+            'reason': 'Field update failed. Please try again'
+          };
+        } else {
+          log.debug('ResStatus validated: $resStatus');
+          //baseProvider.iciciDetail.appId = resId;
+          //bool icicUpFlag = await dbProvider.updateUserIciciDetails(baseProvider.myUser.uid, baseProvider.iciciDetail);;
+          log.debug('Application ID added successfully');
+          //get and update user Bank accounts
+
+          return {'flag': true};
+        }
+      }
+    }else{
+      return {
+        'flag': false,
+        'reason': 'Field were invalid. Please try again'
+      };
+    }
+  }
+
+  String getMonth(int mt) {
+    switch (mt) {
+      case 1:
+        return 'Jan';
+      case 2:
+        return 'Feb';
+      case 3:
+        return 'Mar';
+      case 4:
+        return 'Apr';
+      case 5:
+        return 'May';
+      case 6:
+        return 'June';
+      case 7:
+        return 'July';
+      case 8:
+        return 'Aug';
+      case 9:
+        return 'Sep';
+      case 10:
+        return 'Oct';
+      case 11:
+        return 'Nov';
+      case 12:
+        return 'Dec';
+      default:
+        return 'Jan';
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
-    iProvider = Provider.of<ICICIModel>(context);    
+    iProvider = Provider.of<ICICIModel>(context);
     _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
 
@@ -254,60 +513,74 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
             child: Stack(
               children: [
                 Align(
-                  alignment: Alignment.topCenter,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(10,0,10,0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Image.asset(
-                          Assets.iciciGraphic,
-                          fit: BoxFit.contain,
-                          height: 100,
-                          width: 100,
-                        ),
-                        InkWell(
-                          child:Row(
-                            children: [
-                              Text('Need Help? '),
-                              Icon(
-                                Icons.info_outline,
-                                color: UiConstants.accentColor,
-                              )
-                            ],
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Image.asset(
+                            Assets.iciciGraphic,
+                            fit: BoxFit.contain,
+                            height: 100,
+                            width: 100,
                           ),
-                          onTap: () {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext dialogContext) => ContactUsDialog(
-                                  isResident: (baseProvider.isSignedIn() && baseProvider.isActiveUser()),
-                                  isUnavailable: BaseUtil.isDeviceOffline,
-                                  onClick: () {
-                                    if(BaseUtil.isDeviceOffline) {
-                                      baseProvider.showNoInternetAlert(context);
-                                      return;
-                                    }
-                                    if(baseProvider.isSignedIn() && baseProvider.isActiveUser()) {
-                                      dbProvider.addCallbackRequest(baseProvider.firebaseUser.uid, baseProvider.myUser.mobile).then((flag) {
-                                        if(flag) {
-                                          Navigator.of(context).pop();
-                                          baseProvider.showPositiveAlert('Callback placed!', 'We\'ll contact you soon on your registered mobile', context);
-                                        }
-                                      });
-                                    }else{
-                                      baseProvider.showNegativeAlert('Unavailable', 'Callbacks are reserved for active users', context);
-                                    }
-                                  },
+                          InkWell(
+                            child: Row(
+                              children: [
+                                Text('Need Help? '),
+                                Icon(
+                                  Icons.info_outline,
+                                  color: UiConstants.accentColor,
                                 )
-                            );
-                          },
-                        )
-                      ],
-                    ),
-                  )
-                ),
+                              ],
+                            ),
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext dialogContext) =>
+                                      ContactUsDialog(
+                                        isResident:
+                                            (baseProvider.isSignedIn() &&
+                                                baseProvider.isActiveUser()),
+                                        isUnavailable: BaseUtil.isDeviceOffline,
+                                        onClick: () {
+                                          if (BaseUtil.isDeviceOffline) {
+                                            baseProvider
+                                                .showNoInternetAlert(context);
+                                            return;
+                                          }
+                                          if (baseProvider.isSignedIn() &&
+                                              baseProvider.isActiveUser()) {
+                                            dbProvider
+                                                .addCallbackRequest(
+                                                    baseProvider
+                                                        .firebaseUser.uid,
+                                                    baseProvider.myUser.mobile)
+                                                .then((flag) {
+                                              if (flag) {
+                                                Navigator.of(context).pop();
+                                                baseProvider.showPositiveAlert(
+                                                    'Callback placed!',
+                                                    'We\'ll contact you soon on your registered mobile',
+                                                    context);
+                                              }
+                                            });
+                                          } else {
+                                            baseProvider.showNegativeAlert(
+                                                'Unavailable',
+                                                'Callbacks are reserved for active users',
+                                                context);
+                                          }
+                                        },
+                                      ));
+                            },
+                          )
+                        ],
+                      ),
+                    )),
                 Opacity(
-                  opacity: (!_isProcessing && !_isProcessingComplete)?1:0.3,
+                  opacity: (!_isProcessing && !_isProcessingComplete) ? 1 : 0.3,
                   child: PageView(
                     physics: NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.vertical,
@@ -338,56 +611,64 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
                             maxIconSize: 30,
                             totalMilestones: 4,
                             width: _width * 0.40,
-                            completedIconData: Icons.check_circle, //optional
-                            completedIconColor: UiConstants.primaryColor, //optional
-                            nonCompletedIconData: Icons.check_circle_outline, //optional
+                            completedIconData: Icons.check_circle,
+                            //optional
+                            completedIconColor: UiConstants.primaryColor,
+                            //optional
+                            nonCompletedIconData: Icons.check_circle_outline,
+                            //optional
                             incompleteIconColor: Colors.grey, //optional
                           ),
                         ),
-                        SubmitButton(action: checkPage, title: controllerBtnText,
-                          isDisabled: (_isProcessing||_isProcessingComplete)),
+                        SubmitButton(
+                            action: checkPage,
+                            title: controllerBtnText,
+                            isDisabled:
+                                (_isProcessing || _isProcessingComplete)),
                       ],
                     ),
                   ),
                 ),
-                (_isProcessingComplete)?Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    child: Lottie.asset(Assets.checkmarkLottie),
-                  ),
-                ):Container(),
-                (_isProcessing)?Align(
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(40,0,40,0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                            height: 4,
-                            width: double.infinity,
-                            child: LinearProgressIndicator(
-                              backgroundColor: Colors.blueGrey[200],
-                              valueColor: AlwaysStoppedAnimation(UiConstants.primaryColor),
-                              minHeight: 4,
-                            )
+                (_isProcessingComplete)
+                    ? Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          height: 100,
+                          width: 100,
+                          child: Lottie.asset(Assets.checkmarkLottie),
                         ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                          child: Text('Processing',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: UiConstants.accentColor,
-                              fontSize: 20
-                            ),
-                          )
-                        )
-                      ],
-                    )
-                  ),
-                ):Container()
+                      )
+                    : Container(),
+                (_isProcessing)
+                    ? Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                            padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                    height: 4,
+                                    width: double.infinity,
+                                    child: LinearProgressIndicator(
+                                      backgroundColor: Colors.blueGrey[200],
+                                      valueColor: AlwaysStoppedAnimation(
+                                          UiConstants.primaryColor),
+                                      minHeight: 4,
+                                    )),
+                                Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                    child: Text(
+                                      'Processing',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: UiConstants.accentColor,
+                                          fontSize: 20),
+                                    ))
+                              ],
+                            )),
+                      )
+                    : Container()
               ],
             ),
           ),

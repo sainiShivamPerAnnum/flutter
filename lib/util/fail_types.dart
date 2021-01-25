@@ -1,4 +1,7 @@
 enum FailType{
   UserLoginOtpFailed,
-  UserKYCFlagFetchFailed
+  UserKYCFlagFetchFailed,
+  UserICICAppCreationFailed,
+  UserICICIBasicFieldUpdateFailed,
+  UserICICIIncomeFieldUpdateFailed
 }
