@@ -204,14 +204,17 @@ class DBModel extends ChangeNotifier {
     return null;
   }
 
-  Future<String> getActiveSignzyApiKey() async {
+  Future<Map<String, String>> getActiveSignzyApiKey() async {
     int keyIndex = 1;
     QuerySnapshot querySnapshot = await _api.getCredentialsByType('signzy', keyIndex);
     if(querySnapshot != null && querySnapshot.documents.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.documents[0];
       if(snapshot.exists && snapshot.data['apiKey'] != null) {
         log.debug('Found apiKey: ' + snapshot.data['apiKey']);
-        return snapshot.data['apiKey'];
+        return {
+          'baseuri': snapshot.data['base_url'],
+          'key': snapshot.data['apiKey']
+        };
       }
     }
 

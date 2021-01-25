@@ -8,8 +8,8 @@ class UserIciciDetail{
   String _kycStatus;
   String _panName;
   String _hasIssue;
-  FieldValue _createdTime;
-  FieldValue _updatedTime;
+  Timestamp _createdTime;
+  Timestamp _updatedTime;
 
   static final String fldAppId = 'iAppId';
   static final String fldPanNumber = 'iPanNumber';
@@ -26,7 +26,7 @@ class UserIciciDetail{
 
   UserIciciDetail.newApplication(String applicationId, String panNumber, String kycStatus):
       this(applicationId, panNumber, kycStatus, '', NO_ISSUES,
-          FieldValue.serverTimestamp(), FieldValue.serverTimestamp());
+          Timestamp.now(), Timestamp.now());
 
   UserIciciDetail.fromMap(Map<String, dynamic> data):
       this(data[fldAppId], data[fldPanNumber], data[fldKycStatus],
@@ -41,7 +41,7 @@ class UserIciciDetail{
       fldPanName: _panName,
       fldHasIssue: _hasIssue,
       fldCreatedTime: _createdTime,
-      fldUpdatedTime: FieldValue.serverTimestamp()
+      fldUpdatedTime: Timestamp.now()
     };
   }
 

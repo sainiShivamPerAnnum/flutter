@@ -558,7 +558,7 @@ class _SaveScreenState extends State<SaveScreen> {
             ),
           ),
           child: Container(
-              height: 240,
+              height: 210,
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(20)),

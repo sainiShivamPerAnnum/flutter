@@ -33,7 +33,7 @@ class _PersonalPageState extends State<PersonalPage> {
                 surface: UiConstants.primaryColor,
                 onSurface: Colors.black,
               ),
-              dialogBackgroundColor: Colors.white,
+              dialogBackgroundColor: Colors.blueGrey[50],
             ),
             child: child,
           );
@@ -49,7 +49,7 @@ class _PersonalPageState extends State<PersonalPage> {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
     baseProvider = Provider.of<BaseUtil>(context);
-    IDP.name.text = baseProvider.myUser.name;
+    IDP.name.text = baseProvider.iciciDetail.panName;
     return SafeArea(
       child: SingleChildScrollView(
         child: Container(
@@ -88,11 +88,12 @@ class _PersonalPageState extends State<PersonalPage> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Text("Name (As Per PAN Card)"),
+                Text("Name as per your PAN Card"),
                 InputField(
                   child: TextFormField(
-                    decoration: inputFieldDecoration(baseProvider.myUser.name),
+                    decoration: inputFieldDecoration(baseProvider.iciciDetail.panName),
                     controller: IDP.name,
+                    textCapitalization: TextCapitalization.characters,
                     validator: (value) {
                       RegExp nameCheck = RegExp(r"^[a-zA-Z\\s]+$");
                       if (value.isEmpty) {
@@ -111,6 +112,7 @@ class _PersonalPageState extends State<PersonalPage> {
                     // The validator receives the text that the user has entered.
                     decoration: inputFieldDecoration(baseProvider.myUser.email),
                     controller: IDP.email,
+                    keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       RegExp emailCheck = RegExp(
                           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
@@ -138,21 +140,23 @@ class _PersonalPageState extends State<PersonalPage> {
                   ),
                 ),
                 Text("Date of Birth"),
-                InputField(
-                  child: Row(
+                GestureDetector(
+                  onTap:() => _selectDate(context),
+                  child: InputField(
+                    child: Row(
                     children: [
                       Text(
                         "${IDP.selectedDate.toLocal()}".split(' ')[0],
                       ),
                       Spacer(),
                       IconButton(
-                        onPressed: () => _selectDate(context),
                         icon: Icon(
                           Icons.calendar_today,
                           color: UiConstants.primaryColor,
                         ),
                       ),
                     ],
+                  )
                   ),
                 ),
                 Spacer(),

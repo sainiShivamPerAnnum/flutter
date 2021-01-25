@@ -4,6 +4,8 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
+import 'package:felloapp/ui/elements/contact_dialog.dart';
+import 'package:felloapp/ui/elements/milestone_progress.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/data_provider.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/error_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/submit_button.dart';
@@ -67,7 +69,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
 
   void onTabTapped(int index) {
     this._pageController.animateToPage(index,
-        duration: const Duration(milliseconds: 2000), curve: Curves.easeInOut);
+        duration: const Duration(milliseconds: 1000), curve: Curves.easeInOut);
   }
 
   checkPage() {
@@ -105,19 +107,26 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
               setState(() {});
               new Timer(const Duration(milliseconds: 1000), () {
                 onTabTapped(PersonalPage.index);
-                setState(() {});
+                //setState(() {});
               });
             });
             break;
           }
           case GetKycStatus.KYC_STATUS_ALLOW_VIDEO: {
-            onTabTapped(KYCInvalid.index);
+            _isProcessingComplete = false;
+            _isProcessing = false;
+            setState(() {
+              onTabTapped(KYCInvalid.index);
+            });
             break;
           }
           case GetKycStatus.KYC_STATUS_FETCH_FAILED:
           case GetKycStatus.KYC_STATUS_SERVICE_DOWN:
           case GetKycStatus.KYC_STATUS_INVALID:  {
             //TODO add message and counter to try again
+            _isProcessing = false;
+            _isProcessingComplete = false;
+            setState(() {});
             break;
           }
           case '$QUERY_FAILED': {
@@ -139,8 +148,11 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
 
   verifyPersonalDetails() {
     if (personalDetailsformKey.currentState.validate()) {
-      log.debug("All Cool");
-      onTabTapped(2);
+      _isProcessing = true;
+      setState(() {});
+      iProvider.submitPanDetails(baseProvider.iciciDetail.panNumber, IDP.name.text).then((resMap) {
+        if(resMap[])
+      });
     }
   }
 
@@ -254,33 +266,63 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
                           height: 100,
                           width: 100,
                         ),
-                        Row(
-                          children: [
-                            Text('Need Help? '),
-                            Icon(
-                              Icons.info_outline,
-                              color: UiConstants.accentColor,
-                            )
-                          ],
-                        ),
+                        InkWell(
+                          child:Row(
+                            children: [
+                              Text('Need Help? '),
+                              Icon(
+                                Icons.info_outline,
+                                color: UiConstants.accentColor,
+                              )
+                            ],
+                          ),
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext dialogContext) => ContactUsDialog(
+                                  isResident: (baseProvider.isSignedIn() && baseProvider.isActiveUser()),
+                                  isUnavailable: BaseUtil.isDeviceOffline,
+                                  onClick: () {
+                                    if(BaseUtil.isDeviceOffline) {
+                                      baseProvider.showNoInternetAlert(context);
+                                      return;
+                                    }
+                                    if(baseProvider.isSignedIn() && baseProvider.isActiveUser()) {
+                                      dbProvider.addCallbackRequest(baseProvider.firebaseUser.uid, baseProvider.myUser.mobile).then((flag) {
+                                        if(flag) {
+                                          Navigator.of(context).pop();
+                                          baseProvider.showPositiveAlert('Callback placed!', 'We\'ll contact you soon on your registered mobile', context);
+                                        }
+                                      });
+                                    }else{
+                                      baseProvider.showNegativeAlert('Unavailable', 'Callbacks are reserved for active users', context);
+                                    }
+                                  },
+                                )
+                            );
+                          },
+                        )
                       ],
                     ),
                   )
                 ),
-                (!_isProcessing && !_isProcessingComplete)?PageView(
-                  physics: NeverScrollableScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  children: [
-                    PANPage(),
-                    PersonalPage(
-                      personalForm: personalDetailsformKey,
-                    ),
-                    IncomeDetailsInputScreen(),
-                    BankDetailsInputScreen(),
-                  ],
-                  onPageChanged: onPageChanged,
-                  controller: _pageController,
-                ):Container(),
+                Opacity(
+                  opacity: (!_isProcessing && !_isProcessingComplete)?1:0.3,
+                  child: PageView(
+                    physics: NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    children: [
+                      PANPage(),
+                      PersonalPage(
+                        personalForm: personalDetailsformKey,
+                      ),
+                      IncomeDetailsInputScreen(),
+                      BankDetailsInputScreen(),
+                    ],
+                    onPageChanged: onPageChanged,
+                    controller: _pageController,
+                  ),
+                ),
                 Positioned(
                   bottom: _height * 0.02,
                   child: Container(
@@ -290,33 +332,16 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          width: _width * 0.15,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CircleAvatar(
-                                radius: 5,
-                                backgroundColor: UiConstants.primaryColor,
-                              ),
-                              CircleAvatar(
-                                radius: 5,
-                                backgroundColor: _pageIndex > 0
-                                    ? UiConstants.primaryColor
-                                    : UiConstants.spinnerColor,
-                              ),
-                              CircleAvatar(
-                                radius: 5,
-                                backgroundColor: _pageIndex > 1
-                                    ? UiConstants.primaryColor
-                                    : UiConstants.spinnerColor,
-                              ),
-                              CircleAvatar(
-                                radius: 5,
-                                backgroundColor: _pageIndex > 2
-                                    ? UiConstants.primaryColor
-                                    : UiConstants.spinnerColor,
-                              ),
-                            ],
+                          width: _width * 0.40,
+                          child: MilestoneProgress(
+                            completedMilestone: _pageIndex,
+                            maxIconSize: 30,
+                            totalMilestones: 4,
+                            width: _width * 0.40,
+                            completedIconData: Icons.check_circle, //optional
+                            completedIconColor: UiConstants.primaryColor, //optional
+                            nonCompletedIconData: Icons.check_circle_outline, //optional
+                            incompleteIconColor: Colors.grey, //optional
                           ),
                         ),
                         SubmitButton(action: checkPage, title: controllerBtnText,

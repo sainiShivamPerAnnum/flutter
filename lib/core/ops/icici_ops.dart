@@ -12,7 +12,6 @@ import 'package:felloapp/util/icici_api_util.dart';
 
 class ICICIModel extends ChangeNotifier{
   final Log log = new Log('ICICIModel');
-  BaseUtil _baseUtil = locator<BaseUtil>(); //required to fetch client token
   DBModel _dbModel = locator<DBModel>();
   final String defaultBaseUri = 'https://r3bb6bx3p6.execute-api.ap-south-1.amazonaws.com/dev';
   String _baseUri;
@@ -70,11 +69,15 @@ class ICICIModel extends ChangeNotifier{
     final resMap = await processResponse(_response);
     if(resMap == null) {
       log.error('Query Failed');
-      return {"flag": QUERY_FAILED};
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else if(!resMap[INTERNAL_FAIL_FLAG]){
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED, QUERY_FAIL_REASON: resMap["userMessage"]};
     }else{
       log.debug(resMap[SubmitPanDetail.resStatus]);
       log.debug(resMap[SubmitPanDetail.resId]);
-      return {"flag": QUERY_PASSED};
+      resMap["flag"] = QUERY_PASSED;
+
+      return resMap;
     }
   }
 
