@@ -4,6 +4,7 @@ const String QUERY_SUCCESS_FLAG = "flag";
 const String QUERY_FAIL_REASON = "reason";
 const String INTERNAL_FAIL_FLAG = "fello_flag";
 const String PAYMODE = "UPI";
+const int ICICI_OTP_LEN = 5;
 
 class GetTaxStatus{
   static final String path = 'api/getTaxStatus';
@@ -190,10 +191,10 @@ class ResendOtp{
   static final String resStatus = 'STATUS';
   static final String resOtpId = 'OTPID';
 
-  static final int STATUS_SENT_EMAIL_MOBILE = 1;
-  static final int STATUS_SENT_EMAIL = 2;
-  static final int STATUS_SENT_MOBILE = 3;
-  static final int STATUS_NOT_SENT = 4;
+  static const String STATUS_SENT_EMAIL_MOBILE = '1';
+  static const String STATUS_SENT_EMAIL = '2';
+  static const String STATUS_SENT_MOBILE = '3';
+  static const String STATUS_NOT_SENT = '4';
 }
 
 /**
@@ -207,10 +208,10 @@ class VerifyOtp{
   static final String resStatus = 'STATUS';
   static final String resOtpId = 'OTPID';
 
-  static final int STATUS_OTP_VALID = 1;
-  static final int STATUS_OTP_INVALID = 2;
-  static final int STATUS_OTP_EXPIRED = 3;
-  static final int STATUS_TRIES_EXCEEDED = 4; //after 3 tries usually
+  static const String STATUS_OTP_VALID = '1';
+  static const String STATUS_OTP_INVALID = '2';
+  static const String STATUS_OTP_EXPIRED = '3';
+  static const String STATUS_TRIES_EXCEEDED = '4'; //after 3 tries usually
 }
 
 /**
@@ -223,4 +224,17 @@ class CreatePortfolio{
   static final String path = 'api/createPortfolio';
   static final String fldId = 'appid';
   static final String fldOtpId = 'otpid';
+
+  static final String resReturnCode = "Return Code";
+  static final String resRetMessage = "Return Msg";
+  static final String resFolioNo = "Folio No";
+  static final String resExpiryDate = "Exp Date";
+  static final String parsedRetCodeKey = 'RetCode';
+  static final String parsedRetMsgKey = 'RetMsg';
+  static final String parsedFolioNo = 'folioNo';
+  static final String parsedExpiryDate = 'expDate';
+
+  static const String STATUS_PORTFOLIO_CREATED = '0';
+
+  //rest not known yet
 }

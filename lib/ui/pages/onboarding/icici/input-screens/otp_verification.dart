@@ -3,9 +3,19 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.da
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:pin_input_text_field/pin_input_text_field.dart';
 
-class OtpVerification extends StatelessWidget {
+class OtpVerification extends StatefulWidget{
   static const int index = 4;
+  OtpVerification({this.action});
+  final Function action;
+
+  @override
+  State createState() => OtpVerificationState();
+}
+
+class OtpVerificationState extends State<OtpVerification> {
+
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
@@ -49,39 +59,45 @@ class OtpVerification extends StatelessWidget {
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  InputField(
-                    child: TextField(
-                      autofocus: false,
-                      controller: IDP.panInput,
-                      textCapitalization: TextCapitalization.characters,
-                      decoration: inputFieldDecoration("Eg: ABCDXXXXXX"),
-                      onSubmitted: (value) {
-                        IDP.panInput.text = value;
-                        print(IDP.panInput.text);
-                      },
-                    ),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 18.0),
+                      child: PinInputTextField(
+                        enabled: true,
+                        pinLength: 5,
+                        decoration: UnderlineDecoration(
+                            color: Colors.grey,
+                            textStyle: TextStyle(
+                                fontSize: 20,
+                                color: Colors.black)),
+                        controller: IDP.otpInput,
+                        autoFocus: true,
+                        textInputAction: TextInputAction.go,
+                        onSubmit: (pin) {
+                          print("Pressed submit for pin: " + pin.toString() + "\n  No action taken.");
+                        },
+                      )
                   ),
-                  Wrap(
-                    spacing: 20,
-                    children: [
-                      Chip(
-                        label: Text("What is a PAN?"),
-                        backgroundColor: UiConstants.chipColor,
-                      ),
-                      Chip(
-                        label: Text("Why do I need to give my PAN Number?"),
-                        backgroundColor: UiConstants.chipColor,
-                      ),
-                      Chip(
-                        label: Text("Where can I get my PAN?"),
-                        backgroundColor: UiConstants.chipColor,
-                      ),
-                      Chip(
-                        label: Text("How does a PAN look like?"),
-                        backgroundColor: UiConstants.chipColor,
-                      ),
-                    ],
-                  ),
+                  // Wrap(
+                  //   spacing: 20,
+                  //   children: [
+                  //     Chip(
+                  //       label: Text("What is a PAN?"),
+                  //       backgroundColor: UiConstants.chipColor,
+                  //     ),
+                  //     Chip(
+                  //       label: Text("Why do I need to give my PAN Number?"),
+                  //       backgroundColor: UiConstants.chipColor,
+                  //     ),
+                  //     Chip(
+                  //       label: Text("Where can I get my PAN?"),
+                  //       backgroundColor: UiConstants.chipColor,
+                  //     ),
+                  //     Chip(
+                  //       label: Text("How does a PAN look like?"),
+                  //       backgroundColor: UiConstants.chipColor,
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ),

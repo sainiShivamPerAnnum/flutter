@@ -13,5 +13,6 @@ class IDP {
   static TextEditingController accNo = new TextEditingController();
   static TextEditingController cnfAccNo = new TextEditingController();
   static TextEditingController ifsc = new TextEditingController();
+  static TextEditingController otpInput = new TextEditingController();
   static List<Map<String, String>> userAcctTypes = new List();
 }

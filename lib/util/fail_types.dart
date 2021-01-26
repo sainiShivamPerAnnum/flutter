@@ -5,5 +5,8 @@ enum FailType{
   UserICICIBasicFieldUpdateFailed,
   UserICICIIncomeFieldUpdateFailed,
   UserInsufficientBankDetailFailed,
-  UserICICIOTPSendFailed
+  UserICICIOTPSendFailed,
+  UserICICIOTPResendFailed,
+  UserICICIPfCreationFailed,
+  UserPfCreatedButFolioFailed
 }

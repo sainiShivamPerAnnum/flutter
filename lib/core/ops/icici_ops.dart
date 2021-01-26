@@ -202,7 +202,7 @@ class ICICIModel extends ChangeNotifier{
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
-    final resList = await processArrayResponse(_response);
+    final resList = await processBankAcctResponse(_response);
     if(resList == null) {
       log.error('Query Failed');
       return null;
@@ -246,11 +246,10 @@ class ICICIModel extends ChangeNotifier{
     final resMap = await processResponse(_response);
     if(resMap == null) {
       log.error('Query Failed');
-      return {"flag": QUERY_FAILED};
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     }else{
-      // log.debug(resMap[SubmitPanDetail.resStatus]);
-      // log.debug(resMap[SubmitPanDetail.resId]);
-      return {"flag": QUERY_PASSED};
+      resMap[QUERY_SUCCESS_FLAG] = true;
+      return resMap;
     }
   }
 
@@ -268,11 +267,10 @@ class ICICIModel extends ChangeNotifier{
     final resMap = await processResponse(_response);
     if(resMap == null) {
       log.error('Query Failed');
-      return {"flag": QUERY_FAILED};
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     }else{
-      // log.debug(resMap[SubmitPanDetail.resStatus]);
-      // log.debug(resMap[SubmitPanDetail.resId]);
-      return {"flag": QUERY_PASSED};
+      resMap[QUERY_SUCCESS_FLAG] = true;
+      return resMap;
     }
   }
 
@@ -309,14 +307,18 @@ class ICICIModel extends ChangeNotifier{
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
-    final resMap = await processResponse(_response);
-    if(resMap == null) {
+    final resList = await processPortfolioResponse(_response);
+    if(resList == null) {
       log.error('Query Failed');
-      return {"flag": QUERY_FAILED};
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     }else{
-      // log.debug(resMap[SubmitPanDetail.resStatus]);
-      // log.debug(resMap[SubmitPanDetail.resId]);
-      return {"flag": QUERY_PASSED};
+      Map<String, dynamic> yMap = resList[0];
+      if(yMap != null && yMap[CreatePortfolio.parsedRetMsgKey] != null) {
+        yMap[QUERY_SUCCESS_FLAG] = true;
+        return yMap;
+      }else{
+        return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+      }
     }
   }
 
@@ -365,7 +367,7 @@ class ICICIModel extends ChangeNotifier{
     }
   }
 
-  Future<List<Map<String, String>>> processArrayResponse(http.StreamedResponse response) async{
+  Future<List<Map<String, String>>> processBankAcctResponse(http.StreamedResponse response) async{
     if(response == null){
       log.error('response is null');
     }
@@ -388,6 +390,42 @@ class ICICIModel extends ChangeNotifier{
       List<Map<String, String>> refList = new List();
       rList.forEach((element) {
         refList.add({'CODE':element['BANK_ACT_VALUE'], 'NAME':element['BANK_ACT_TYPE']});
+      });
+      log.debug(refList.toString());
+      return refList;
+    }catch(e){
+      log.error('Failed to decode json');
+      return null;
+    }
+  }
+
+  Future<List<Map<String, String>>> processPortfolioResponse(http.StreamedResponse response) async{
+    if(response == null){
+      log.error('response is null');
+    }
+    if(response.statusCode != 200) {
+      log.error('Query Failed:: Status:${response.statusCode}, Reason:${response.reasonPhrase}');
+      if(response.statusCode == 502)
+        return null;
+      else
+        return null;
+    }
+    try {
+      String res = await response.stream.bytesToString();
+      log.debug(res);
+      if(res == null || res.isEmpty || res == "\"\"") {
+        log.error('Returned empty response');
+        return null;
+      }
+      List<dynamic> rList = json.decode(res);
+      List<Map<String, String>> refList = new List();
+      rList.forEach((element) {
+        refList.add({
+          CreatePortfolio.parsedRetCodeKey:element[CreatePortfolio.resReturnCode],
+          CreatePortfolio.parsedRetMsgKey:element[CreatePortfolio.resRetMessage],
+          CreatePortfolio.parsedFolioNo:element[CreatePortfolio.resFolioNo]??'',
+          CreatePortfolio.parsedExpiryDate:element[CreatePortfolio.resExpiryDate]??'',
+        });
       });
       log.debug(refList.toString());
       return refList;

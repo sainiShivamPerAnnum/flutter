@@ -87,6 +87,8 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
       verifyIncomeDetails();
     } else if (_pageIndex == BankDetailsInputScreen.index) {
       verifyBankDetails();
+    } else if (_pageIndex == OtpVerification.index) {
+      verifyOtpDetails();
     }
   }
 
@@ -167,13 +169,13 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
         } else {
           onBasicDetailsEntered(baseProvider.myUser.mobile,
               IDP.email.text, IDP.selectedDate).then((basicObj) {
-            if(!basicObj['flag']){
+            if (!basicObj['flag']) {
               _isProcessing = false;
               if (nameResObj['reason'] != null) {
                 //TODO Add error message
               }
               setState(() {});
-            }else{
+            } else {
               _isProcessing = false;
               setState(() {});
               new Timer(const Duration(milliseconds: 1000), () {
@@ -195,19 +197,19 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
       _isProcessing = true;
       setState(() {});
 
-      onIncomeDetailsEntered(IDP.occupationChosenValue,"10 to 25Lacs",
-          IDP.exposureChosenValue,IDP.wealthChosenValue).then((incomeObj) {
-        if(!incomeObj['flag']){
+      onIncomeDetailsEntered(IDP.occupationChosenValue, "10 to 25Lacs",
+          IDP.exposureChosenValue, IDP.wealthChosenValue).then((incomeObj) {
+        if (!incomeObj['flag']) {
           _isProcessing = false;
           if (incomeObj['reason'] != null) {
             //TODO Add error message
           }
           setState(() {});
-        }else{
+        } else {
           _isProcessing = false;
           setState(() {});
           List<Map<String, String>> userAcctList = incomeObj['userAccts'];
-          if(userAcctList != null) IDP.userAcctTypes = userAcctList;
+          if (userAcctList != null) IDP.userAcctTypes = userAcctList;
           new Timer(const Duration(milliseconds: 1000), () {
             onTabTapped(BankDetailsInputScreen.index);
           });
@@ -224,41 +226,93 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     } else if (IDP.accNo.text != IDP.cnfAccNo.text) {
       showErrorDialog("Oops", "Please confirm account numbers", context);
     } else {
-      showErrorDialog("Hurry", "All Good,Now you can Invest", context);
-      log.debug(IDP.panInput.text);
-      log.debug(IDP.name.text);
-      log.debug(IDP.email.text);
-      log.debug(IDP.selectedDate);
-      log.debug(IDP.wealthChosenValue);
-      log.debug(IDP.exposureChosenValue);
-      log.debug(IDP.occupationChosenValue);
-      log.debug(IDP.accNo.text);
-      log.debug(IDP.ifsc.text);
+      // showErrorDialog("Hurry", "All Good,Now you can Invest", context);
+      _isProcessing = true;
+      setState(() {});
 
-      onBankAccEntered(IDP.accNo.text, IDP.acctTypeChosenValue, IDP.ifsc.text).then((resObj) {
-        if(!resObj['flag']) {
+      onBankAccEntered(IDP.accNo.text, IDP.acctTypeChosenValue, IDP.ifsc.text)
+          .then((resObj) {
+        if (!resObj['flag']) {
           _isProcessing = false;
           if (resObj['reason'] != null) {
             //TODO Add error message
           }
           setState(() {});
-        }else{
-          sendOtp(baseProvider.myUser.mobile, IDP.email.text.trim()).then((otpObj) {
-            if(otpObj['flag']) {
+        } else {
+          sendOtp(baseProvider.myUser.mobile, baseProvider.iciciDetail.email)
+              .then((otpObj) {
+            if (otpObj['flag']) {
               _isProcessing = false;
-              if(otpObj['reason'] != null) {
+              if (otpObj['reason'] != null) {
                 //TODO what can the user do if the otp was not sent?
               }
               setState(() {});
-            }else{
-              if(otpObj['status'] == SendOtp.STATUS_SENT_MOBILE)IDP.otpChannels='mobile';
-              else if(otpObj['status'] == SendOtp.STATUS_SENT_EMAIL)IDP.otpChannels='email';
-              else if(otpObj['status'] == SendOtp.STATUS_SENT_EMAIL_MOBILE)IDP.otpChannels='mobile and your email';
+            } else {
+              if (otpObj['status'] == SendOtp.STATUS_SENT_MOBILE)
+                IDP.otpChannels = 'mobile';
+              else if (otpObj['status'] == SendOtp.STATUS_SENT_EMAIL)
+                IDP.otpChannels = 'email';
+              else if (otpObj['status'] == SendOtp.STATUS_SENT_EMAIL_MOBILE)
+                IDP.otpChannels = 'mobile and your email';
               onTabTapped(OtpVerification.index);
             }
           });
         }
       });
+    }
+  }
+
+  verifyOtpDetails() {
+    if (IDP.otpInput.text == null || IDP.otpInput.text.isEmpty
+        || IDP.otpInput.text.length != 5) {
+      showErrorDialog("Oops!", "All fields are necessary", context);
+    } else {
+      _isProcessing = true;
+      setState(() {});
+      if(baseProvider.iciciDetail.verifiedOtpId != null) {
+        //OTP has already been verified. Only attempt portfolio creation
+        onOtpVerified().then((rObj) {
+          if(!rObj['flag']) {
+            _isProcessing = false;
+            //TODO add error
+            setState(() {});
+          }else{
+            _isProcessingComplete = true;
+            _isProcessing = false;
+            setState(() {});
+            new Timer(const Duration(milliseconds: 1000), () {
+              _isProcessingComplete = false;
+              _isProcessing = false;
+              setState(() {});
+              new Timer(const Duration(milliseconds: 1000), () {
+                //TODO move back home
+                //setState(() {});
+              });
+            });
+          }
+        });
+      }else{
+        onOtpEntered(IDP.otpInput.text).then((resObj) {
+          if(!resObj['flag']) {
+            _isProcessing = false;
+            //TODO add error
+            setState(() {});
+          }else{
+            _isProcessingComplete = true;
+            _isProcessing = false;
+            setState(() {});
+            new Timer(const Duration(milliseconds: 1000), () {
+              _isProcessingComplete = false;
+              _isProcessing = false;
+              setState(() {});
+              new Timer(const Duration(milliseconds: 1000), () {
+                //TODO move back home
+                //setState(() {});
+              });
+            });
+          }
+        });
+      }
     }
   }
 
@@ -370,14 +424,15 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     }
   }
 
-  Future<Map<String, dynamic>> onBasicDetailsEntered(
-      String mobile, String email, DateTime dob) async {
+  Future<Map<String, dynamic>> onBasicDetailsEntered(String mobile,
+      String email, DateTime dob) async {
     if (baseProvider == null || dbProvider == null || iProvider == null) {
       log.error('Providers not initialised');
       return {'flag': false, 'reason': 'App restart required'};
     }
     if (!iProvider.isInit()) await iProvider.init();
 
+    baseProvider.iciciDetail.email = email.trim();
     String appid = baseProvider.iciciDetail.appId;
     String panNumber = baseProvider.iciciDetail.panNumber;
     String dobStr = (dob != null)
@@ -423,7 +478,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
           return {'flag': true};
         }
       }
-    }else{
+    } else {
       return {
         'flag': false,
         'reason': 'Field were invalid. Please try again'
@@ -435,8 +490,8 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
    * Return obj: {flag: false, reason: ...} OR
    * {flag: true, userAccts: [Acct type list]}
    * */
-  Future<Map<String, dynamic>> onIncomeDetailsEntered(
-      String occupationCode, String incomeCode, String polCode, srcWealth) async {
+  Future<Map<String, dynamic>> onIncomeDetailsEntered(String occupationCode,
+      String incomeCode, String polCode, srcWealth) async {
     if (baseProvider == null || dbProvider == null || iProvider == null) {
       log.error('Providers not initialised');
       return {'flag': false, 'reason': 'App restart required'};
@@ -487,14 +542,15 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
             {'CODE': 'SB', 'NAME': 'Savings Account'},
             {'CODE': 'CA', 'NAME': 'Current Account'},
           ];
-          var userAcctTypes = await iProvider.getBankAcctTypes(baseProvider.iciciDetail.panNumber);
+          var userAcctTypes = await iProvider.getBankAcctTypes(
+              baseProvider.iciciDetail.panNumber);
           return {
             'flag': true,
-            'userAccts': userAcctTypes??defaultAcctTypes
+            'userAccts': userAcctTypes ?? defaultAcctTypes
           };
         }
       }
-    }else{
+    } else {
       return {
         'flag': false,
         'reason': 'Field were invalid. Please try again'
@@ -502,7 +558,8 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     }
   }
 
-  Future<Map<String, dynamic>> onBankAccEntered(String accNo, String accTypeCde, String ifsc) async{
+  Future<Map<String, dynamic>> onBankAccEntered(String accNo, String accTypeCde,
+      String ifsc) async {
     if (baseProvider == null || dbProvider == null || iProvider == null) {
       log.error('Providers not initialised');
       return {'flag': false, 'reason': 'App restart required'};
@@ -519,41 +576,43 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
             ? bankDetail[QUERY_FAIL_REASON]
             : 'Unknown'
       };
-    }else if(bankDetail[GetBankDetail.resBankCode] == null
+    } else if (bankDetail[GetBankDetail.resBankCode] == null
         || bankDetail[GetBankDetail.resBankName] == null) {
       log.error('Couldnt fetch an appropriate response');
       return {
         'flag': false,
         'reason': 'We could not fetch the bank details from the given IFSC Code. Please verify and try again'
       };
-    }else{
+    } else {
       String bankCode = bankDetail[GetBankDetail.resBankCode];
       String bankName = bankDetail[GetBankDetail.resBankName];
       String bankBranchName = bankDetail[GetBankDetail.resBranchName];
       String bankAddress = bankDetail[GetBankDetail.resAddress];
       String bankCity = bankDetail[GetBankDetail.resCity];
-      log.debug('BankDetails fetched: ${bankCode??''}, ${bankName??''},'
-          + ' ${bankBranchName??''}, ${bankAddress??''}, ${bankCity??''} ');
-      if(bankCode == null || bankName == null || bankBranchName == null
+      log.debug('BankDetails fetched: ${bankCode ?? ''}, ${bankName ?? ''},'
+          +
+          ' ${bankBranchName ?? ''}, ${bankAddress ?? ''}, ${bankCity ?? ''} ');
+      if (bankCode == null || bankName == null || bankBranchName == null
           || bankCode.isEmpty || bankName.isEmpty || bankBranchName.isEmpty) {
         log.error('Couldnt fetch an appropriate response');
         var failData = {'ifsc': ifsc};
         bool failureLogged = await dbProvider.logFailure(
             baseProvider.myUser.uid,
-            FailType.UserInsufficientBankDetailFailed,failData);
+            FailType.UserInsufficientBankDetailFailed, failData);
         log.debug('Failure logged correctly: $failureLogged');
         return {
           'flag': false,
           'reason': 'We could not fetch the bank details from the provided IFSC Code. Please verify and try again'
         };
-      }else{
+      } else {
         //submit all details
         String appid = baseProvider.iciciDetail.appId;
         var bankSubmitResponse = await iProvider.submitBankDetails(
-            appid, panNumber, PAYMODE, accTypeCde, accNo, bankName,
-            bankCode, ifsc, bankCity, bankBranchName, bankAddress);
-        if (bankSubmitResponse == null || bankSubmitResponse[QUERY_SUCCESS_FLAG] == QUERY_FAILED
-        || bankSubmitResponse[SubmitBankDetails.resStatus] != 'Y') {
+            appid,panNumber,PAYMODE,accTypeCde,accNo,bankName,
+            bankCode,ifsc,bankCity,bankBranchName,bankAddress);
+        if (bankSubmitResponse == null ||
+            bankSubmitResponse[QUERY_SUCCESS_FLAG] == QUERY_FAILED
+            || bankSubmitResponse[SubmitBankDetails.resStatus] != 'Y') {
           log.error('Couldnt fetch an appropriate response');
           var failData = {
             'appid': appid,
@@ -573,7 +632,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
                 ? bankSubmitResponse[QUERY_FAIL_REASON]
                 : 'Unknown'
           };
-        }else{
+        } else {
           log.debug('Bank Details submission:: All good');
           return {'flag': true};
         }
@@ -585,7 +644,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
    * Return obj: {flag: false, reason: ..} OR
    * {flag: true, status: otpstatus}
    * */
-  Future<Map<String, dynamic>> sendOtp(String mobile, String email) async{
+  Future<Map<String, dynamic>> sendOtp(String mobile, String email) async {
     if (baseProvider == null || dbProvider == null || iProvider == null) {
       log.error('Providers not initialised');
       return {'flag': false, 'reason': 'App restart required'};
@@ -593,7 +652,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     if (!iProvider.isInit()) await iProvider.init();
 
     var otpResObj = await iProvider.sendOtp(mobile, email);
-    if(otpResObj == null || otpResObj[QUERY_SUCCESS_FLAG] == false) {
+    if (otpResObj == null || otpResObj[QUERY_SUCCESS_FLAG] == false) {
       log.error('Couldnt send otp');
       return {
         'flag': false,
@@ -601,12 +660,12 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
             ? otpResObj[QUERY_FAIL_REASON]
             : 'Unknown error occurred. Please try again'
       };
-    }else if(otpResObj[SendOtp.resStatus] == null
+    } else if (otpResObj[SendOtp.resStatus] == null
         || otpResObj[SendOtp.resStatus] == SendOtp.STATUS_NOT_SENT) {
       log.error('Couldnt send otp');
       log.error('Couldnt fetch an appropriate response');
       var failData = {
-       'mobile': mobile,
+        'mobile': mobile,
         'email': email
       };
       bool failureLogged = await dbProvider.logFailure(
@@ -620,13 +679,192 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
             ? otpResObj[QUERY_FAIL_REASON]
             : 'Couldn\'t send an otp to provided email/mobile'
       };
-    }else{
+    } else {
       log.debug('Otp Success');
       baseProvider.iciciDetail.unverifiedOtpId = otpResObj[SendOtp.resOtpId];
       return {
         'flag': true,
         'status': otpResObj[SendOtp.resStatus]
       };
+    }
+  }
+
+  /**
+   * Return obj: {flag: false, reason: ..} OR
+   * {flag: true, status: otpstatus}
+   * */
+  Future<Map<String, dynamic>> onResendOtp() async {
+    if (_pageIndex != OtpVerification.index ||
+        baseProvider.myUser.mobile.isEmpty
+        || baseProvider.iciciDetail.email == null ||
+        baseProvider.iciciDetail.email.isEmpty
+        || baseProvider.iciciDetail.unverifiedOtpId == null ||
+        baseProvider.iciciDetail.unverifiedOtpId.isEmpty) {
+      log.error('Error in fetching all details required to send the otp');
+      return {
+        'flag': false,
+        'reason': 'Couldnt resend otp to provided details. Kindly try again'
+      };
+    }else{
+      var resendObj = await iProvider.resendOtp(baseProvider.iciciDetail.unverifiedOtpId,
+          baseProvider.myUser.mobile, baseProvider.iciciDetail.email);
+      if(resendObj == null || resendObj[QUERY_SUCCESS_FLAG] == false) {
+        log.error('Couldnt send otp');
+        return {
+          'flag': false,
+          'reason': (resendObj[QUERY_FAIL_REASON] != null)
+              ? resendObj[QUERY_FAIL_REASON]
+              : 'Unknown error occurred. Please try again'
+        };
+      }else if(resendObj[SendOtp.resStatus] == null
+          || resendObj[SendOtp.resStatus] == SendOtp.STATUS_NOT_SENT) {
+        log.error('Couldnt send otp');
+        log.error('Couldnt fetch an appropriate response');
+        var failData = {
+          'otpid': baseProvider.iciciDetail.unverifiedOtpId,
+          'mobile': baseProvider.myUser.mobile,
+          'email': baseProvider.iciciDetail.email
+        };
+        bool failureLogged = await dbProvider.logFailure(baseProvider.myUser.uid,
+            FailType.UserICICIOTPResendFailed, failData);
+        log.debug('Failure logged correctly: $failureLogged');
+        return {
+          'flag': false,
+          'reason': (resendObj[QUERY_FAIL_REASON] != null)
+              ? resendObj[QUERY_FAIL_REASON]
+              : 'Couldn\'t send an otp to provided email/mobile'
+        };
+      }else{
+        log.debug('Otp Success');
+        baseProvider.iciciDetail.unverifiedOtpId = resendObj[SendOtp.resOtpId];
+        return {
+          'flag': true,
+          'status': resendObj[SendOtp.resStatus]
+        };
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>> onOtpEntered(String otp) async {
+    if (baseProvider == null || dbProvider == null || iProvider == null) {
+      log.error('Providers not initialised');
+      return {'flag': false, 'reason': 'App restart required'};
+    }
+    if (!iProvider.isInit()) await iProvider.init();
+
+    var verifyOtpObj = await iProvider.verifyOtp(baseProvider.iciciDetail.unverifiedOtpId, otp);
+    if (verifyOtpObj == null || verifyOtpObj[QUERY_SUCCESS_FLAG] == false
+        || verifyOtpObj[VerifyOtp.resStatus] == null) {
+      log.error('Couldnt send otp');
+      return {
+        'flag': false,
+        'reason': (verifyOtpObj[QUERY_FAIL_REASON] != null)
+            ? verifyOtpObj[QUERY_FAIL_REASON]
+            : 'Unknown error occurred. Please try again'
+      };
+    } else if (verifyOtpObj[VerifyOtp.resStatus] == VerifyOtp.STATUS_OTP_INVALID) {
+      log.debug('Invalid otp entered');
+      return {
+        'flag': false,
+        'reason': 'Invalid OTP entered. Please try again'
+      };
+    }else if (verifyOtpObj[VerifyOtp.resStatus] == VerifyOtp.STATUS_OTP_EXPIRED) {
+      log.debug('Invalid otp entered');
+      return {
+        'flag': false,
+        'reason': 'The entered otp has expired. Please request a new otp and retry'
+      };
+    }else if (verifyOtpObj[VerifyOtp.resStatus] == VerifyOtp.STATUS_TRIES_EXCEEDED) {
+      log.debug('Invalid otp entered');
+      return {
+        'flag': false,
+        'reason': 'You have exceeded the number of allowed tries. Please try again in a while'
+      };
+    } else if (verifyOtpObj[VerifyOtp.resStatus] == VerifyOtp.STATUS_OTP_VALID) {
+      log.debug('OTP validated');
+      baseProvider.iciciDetail.verifiedOtpId = verifyOtpObj[VerifyOtp.resOtpId];
+      var upObj = await dbProvider.updateUserIciciDetails(baseProvider.myUser.uid, baseProvider.iciciDetail);
+      log.debug('Succesfuly updated verified otp it to obj: ${upObj.toString()}');
+
+      var finObj = await onOtpVerified();
+      return finObj;
+      // return {
+      //   'flag': true,
+      //   'status': VerifyOtp.STATUS_OTP_VALID
+      // };
+    }else{
+      //should never reach here
+      return {
+        'flag': false,
+        'reason': 'Unknown'
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> onOtpVerified() async {
+    if (baseProvider == null || dbProvider == null || iProvider == null) {
+      log.error('Providers not initialised');
+      return {'flag': false, 'reason': 'App restart required'};
+    }
+    if (!iProvider.isInit()) await iProvider.init();
+
+    if(baseProvider.iciciDetail.appId == null || baseProvider.iciciDetail.verifiedOtpId == null) {
+      return {
+        'flag': false,
+        'reason': 'Invalid details. Please try again'
+      };
+    }
+
+    var createObj = await iProvider.createPortfolio(baseProvider.iciciDetail.appId, baseProvider.iciciDetail.verifiedOtpId);
+    if (createObj == null || createObj[QUERY_SUCCESS_FLAG] == false || createObj[CreatePortfolio.parsedRetMsgKey] == null ) {
+      return {
+        'flag': false,
+        'reason': (createObj[QUERY_FAIL_REASON] != null)
+            ? createObj[QUERY_FAIL_REASON]
+            : 'Unknown error occurred. Please try again'
+      };
+    }else{
+      if(createObj[CreatePortfolio.parsedRetMsgKey] != CreatePortfolio.STATUS_PORTFOLIO_CREATED) {
+        log.error('Portfolio creation failed');
+        var failData = {
+          'appid': baseProvider.iciciDetail.appId,
+          'returnCode': createObj[CreatePortfolio.parsedRetMsgKey],
+          'returnMsg': createObj[CreatePortfolio.parsedRetMsgKey]
+        };
+        bool failureLogged = await dbProvider.logFailure(baseProvider.myUser.uid,
+            FailType.UserICICIPfCreationFailed, failData);
+        log.debug('Failure logged correctly: $failureLogged');
+        return {
+          'flag': false,
+          'reason': 'Portfolio couldnt be created due to the following reason: ${createObj[CreatePortfolio.parsedRetMsgKey]}'
+        };
+      }else{
+        log.debug('OTP validated');
+        if(createObj[CreatePortfolio.parsedFolioNo] != null) {
+          baseProvider.iciciDetail.folioNo = createObj[CreatePortfolio.parsedFolioNo];
+          baseProvider.iciciDetail.expDate = createObj[CreatePortfolio.parsedExpiryDate];
+          var upObj = await dbProvider.updateUserIciciDetails(baseProvider.myUser.uid, baseProvider.iciciDetail);
+          baseProvider.myUser.isIciciOnboarded = true;
+          var userUpObj = await dbProvider.updateUser(baseProvider.myUser);
+          log.debug('Succesfuly updated user icici obj and user obj: ${upObj.toString()}, ${userUpObj.toString()}');
+          return {
+            'flag': true,
+          };
+        }else{
+          //portfolio created but folio no not returned??
+          var failData = {
+            'appid': baseProvider.iciciDetail.appId,
+            'otpid': baseProvider.iciciDetail.verifiedOtpId,
+          };
+          bool failureLogged = await dbProvider.logFailure(baseProvider.myUser.uid,
+              FailType.UserPfCreatedButFolioFailed, failData);
+          log.debug('Failure logged correctly: $failureLogged');
+          return {
+            'flag': false,
+            'reason': 'Portfolio couldnt be created due to the following reason: ${createObj[CreatePortfolio.parsedRetMsgKey]}'
+          };
+        }
+      }
     }
   }
 
@@ -666,8 +904,14 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
     iProvider = Provider.of<ICICIModel>(context);
-    _height = MediaQuery.of(context).size.height;
-    _width = MediaQuery.of(context).size.width;
+    _height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    _width = MediaQuery
+        .of(context)
+        .size
+        .width;
 
     return Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -707,8 +951,8 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
                                   builder: (BuildContext dialogContext) =>
                                       ContactUsDialog(
                                         isResident:
-                                            (baseProvider.isSignedIn() &&
-                                                baseProvider.isActiveUser()),
+                                        (baseProvider.isSignedIn() &&
+                                            baseProvider.isActiveUser()),
                                         isUnavailable: BaseUtil.isDeviceOffline,
                                         onClick: () {
                                           if (BaseUtil.isDeviceOffline) {
@@ -720,9 +964,9 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
                                               baseProvider.isActiveUser()) {
                                             dbProvider
                                                 .addCallbackRequest(
-                                                    baseProvider
-                                                        .firebaseUser.uid,
-                                                    baseProvider.myUser.mobile)
+                                                baseProvider
+                                                    .firebaseUser.uid,
+                                                baseProvider.myUser.mobile)
                                                 .then((flag) {
                                               if (flag) {
                                                 Navigator.of(context).pop();
@@ -757,6 +1001,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
                       ),
                       IncomeDetailsInputScreen(),
                       BankDetailsInputScreen(),
+                      OtpVerification(action: onResendOtp,)
                     ],
                     onPageChanged: onPageChanged,
                     controller: _pageController,
@@ -790,50 +1035,50 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
                             action: checkPage,
                             title: controllerBtnText,
                             isDisabled:
-                                (_isProcessing || _isProcessingComplete)),
+                            (_isProcessing || _isProcessingComplete)),
                       ],
                     ),
                   ),
                 ),
                 (_isProcessingComplete)
                     ? Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                          height: 100,
-                          width: 100,
-                          child: Lottie.asset(Assets.checkmarkLottie),
-                        ),
-                      )
+                  alignment: Alignment.center,
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    child: Lottie.asset(Assets.checkmarkLottie),
+                  ),
+                )
                     : Container(),
                 (_isProcessing)
                     ? Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                            padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                    height: 4,
-                                    width: double.infinity,
-                                    child: LinearProgressIndicator(
-                                      backgroundColor: Colors.blueGrey[200],
-                                      valueColor: AlwaysStoppedAnimation(
-                                          UiConstants.primaryColor),
-                                      minHeight: 4,
-                                    )),
-                                Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                    child: Text(
-                                      'Processing',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: UiConstants.accentColor,
-                                          fontSize: 20),
-                                    ))
-                              ],
-                            )),
-                      )
+                  alignment: Alignment.center,
+                  child: Padding(
+                      padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                              height: 4,
+                              width: double.infinity,
+                              child: LinearProgressIndicator(
+                                backgroundColor: Colors.blueGrey[200],
+                                valueColor: AlwaysStoppedAnimation(
+                                    UiConstants.primaryColor),
+                                minHeight: 4,
+                              )),
+                          Padding(
+                              padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                              child: Text(
+                                'Processing',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: UiConstants.accentColor,
+                                    fontSize: 20),
+                              ))
+                        ],
+                      )),
+                )
                     : Container()
               ],
             ),
