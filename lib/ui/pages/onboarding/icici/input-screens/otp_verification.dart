@@ -54,10 +54,13 @@ class OtpVerificationState extends State<OtpVerification> {
                   Text(
                     "Please enter the OTP sent to your ${IDP.otpChannels}",
                     style: TextStyle(
-                      fontSize: 50,
-                      color: UiConstants.primaryColor,
-                      fontWeight: FontWeight.w800,
+                      fontSize: 20,
+                      color: UiConstants.accentColor,
+                      fontWeight: FontWeight.w400,
                     ),
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   Padding(
                       padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 18.0),

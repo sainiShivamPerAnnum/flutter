@@ -219,20 +219,22 @@ class VerifyOtp{
  * [{"Return_Code":"7","Return_Msg":"Input Exceeds Maximum length.","Category":"F"}]
  * or [{"Return_Code":"1","Return_Msg":"Please Enter INV_Address_1,Inv_City"}]
  * or [{"Return_Code":"0","Return_Msg":"Record updated successfully","Exp_Date":"31-Dec-2018","Folio_No":"2000028046"}]
+ * or [{"Return_Code":"0","Return_Msg":"Record updated
+    successfully","Exp_Date":"22-Apr-2021","Folio_No":"16042280","Chk_Digit_No":"01","AMC_Ref_No":"IPRU752990","Payout_ID":"3010208"}]
+    or [{"Return_Code":"237","Return_Msg":"Duplicate transaction - Folio_No: (16042281) already created for this AMC Ref No.","Category":"F"}]
  * */
 class CreatePortfolio{
   static final String path = 'api/createPortfolio';
   static final String fldId = 'appid';
   static final String fldOtpId = 'otpid';
 
-  static final String resReturnCode = "Return Code";
-  static final String resRetMessage = "Return Msg";
-  static final String resFolioNo = "Folio No";
-  static final String resExpiryDate = "Exp Date";
-  static final String parsedRetCodeKey = 'RetCode';
-  static final String parsedRetMsgKey = 'RetMsg';
-  static final String parsedFolioNo = 'folioNo';
-  static final String parsedExpiryDate = 'expDate';
+  static final String resReturnCode = "Return_Code";
+  static final String resRetMessage = "Return_Msg";
+  static final String resFolioNo = "Folio_No";
+  static final String resExpiryDate = "Exp_Date";
+  static final String resAMCRefNo = "AMC_Ref_No";
+  static final String resPayoutId = "Payout_ID";
+  static final String resChkDigit = "Chk_Digit_No";
 
   static const String STATUS_PORTFOLIO_CREATED = '0';
 

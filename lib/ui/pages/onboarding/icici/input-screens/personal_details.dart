@@ -22,7 +22,7 @@ class _PersonalPageState extends State<PersonalPage> {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: IDP.selectedDate,
-        firstDate: DateTime(2015, 8),
+        firstDate: DateTime(1940, 8),
         lastDate: DateTime(2101),
         builder: (BuildContext context, Widget child) {
           return Theme(
@@ -95,7 +95,7 @@ class _PersonalPageState extends State<PersonalPage> {
                     controller: IDP.name,
                     textCapitalization: TextCapitalization.characters,
                     validator: (value) {
-                      RegExp nameCheck = RegExp(r"^[a-zA-Z\\s]+$");
+                      RegExp nameCheck = RegExp(r"^[a-zA-Z ]+$");
                       if (value.isEmpty) {
                         return 'Name Field Cannot be Empty';
                       } else if (nameCheck.hasMatch(value)) {

@@ -201,7 +201,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       baseProvider.isDepositRouteLogicInProgress = false;
       Navigator.of(context).pop(); //go back to save tab
       Navigator.of(context).pushNamed('/deposit');
-    }
+    }//TODO wrong logic
     if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID) {
       baseProvider.isDepositRouteLogicInProgress = false;
       Navigator.of(context).pop(); //go back to save tab

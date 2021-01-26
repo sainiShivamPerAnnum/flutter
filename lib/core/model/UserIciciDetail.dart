@@ -15,6 +15,10 @@ class UserIciciDetail{
   String _email;
   String _folioNo;
   String _expDate;
+  String _amcRefNo;
+  String _payoutId;
+  String _chkDigit;
+
 
   static final String fldAppId = 'iAppId';
   static final String fldPanNumber = 'iPanNumber';
@@ -26,21 +30,26 @@ class UserIciciDetail{
   static final String fldUpdatedTime = 'iUpdatedTime';
   static final String fldFolioNo = 'iFolioNo';
   static final String fldExpDate = 'iExpDate';
-
+  static final String fldAMCRefNo = 'iAMCRefNo';
+  static final String fldPayoutId = 'iPayoutId';
+  static final String fldChkDigit = 'iChkDigit';
 
   static const String NO_ISSUES = "NA";
 
   UserIciciDetail(this._appId, this._panNumber, this._kycStatus, this._panName
-      , this._hasIssue, this._verifiedOtpId, this._folioNo, this._expDate, this._createdTime, this._updatedTime);
+      , this._hasIssue, this._verifiedOtpId, this._folioNo, this._expDate,
+      this._amcRefNo, this._payoutId, this._chkDigit, this._createdTime,
+      this._updatedTime);
 
   UserIciciDetail.newApplication(String applicationId, String panNumber, String kycStatus):
-      this(applicationId, panNumber, kycStatus, '', NO_ISSUES, null, null, null,
-          Timestamp.now(), Timestamp.now());
+      this(applicationId, panNumber, kycStatus, '', NO_ISSUES, null,
+          null, null,null,null,null,Timestamp.now(), Timestamp.now());
 
   UserIciciDetail.fromMap(Map<String, dynamic> data):
       this(data[fldAppId], data[fldPanNumber], data[fldKycStatus],
           data[fldPanName], data[fldHasIssue], data[fldVerifiedOtpId],
-          data[fldFolioNo], data[fldExpDate],data[fldCreatedTime],
+          data[fldFolioNo], data[fldExpDate],data[fldAMCRefNo],
+          data[fldPayoutId], data[fldCreatedTime], data[fldChkDigit],
           data[fldUpdatedTime]);
 
   toJson() {
@@ -53,6 +62,9 @@ class UserIciciDetail{
       fldVerifiedOtpId: _verifiedOtpId,
       fldFolioNo: _folioNo,
       fldExpDate: _expDate,
+      fldAMCRefNo: _amcRefNo,
+      fldPayoutId: _payoutId,
+      fldChkDigit: _chkDigit,
       fldCreatedTime: _createdTime,
       fldUpdatedTime: Timestamp.now()
     };
@@ -116,5 +128,23 @@ class UserIciciDetail{
 
   set folioNo(String value) {
     _folioNo = value;
+  }
+
+  String get chkDigit => _chkDigit;
+
+  set chkDigit(String value) {
+    _chkDigit = value;
+  }
+
+  String get payoutId => _payoutId;
+
+  set payoutId(String value) {
+    _payoutId = value;
+  }
+
+  String get amcRefNo => _amcRefNo;
+
+  set amcRefNo(String value) {
+    _amcRefNo = value;
   }
 }

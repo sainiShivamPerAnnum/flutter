@@ -241,13 +241,15 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
         } else {
           sendOtp(baseProvider.myUser.mobile, baseProvider.iciciDetail.email)
               .then((otpObj) {
-            if (otpObj['flag']) {
+            if (!otpObj['flag']) {
               _isProcessing = false;
               if (otpObj['reason'] != null) {
                 //TODO what can the user do if the otp was not sent?
               }
               setState(() {});
             } else {
+              _isProcessing = false;
+              setState(() {});
               if (otpObj['status'] == SendOtp.STATUS_SENT_MOBILE)
                 IDP.otpChannels = 'mobile';
               else if (otpObj['status'] == SendOtp.STATUS_SENT_EMAIL)
@@ -285,7 +287,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
               _isProcessing = false;
               setState(() {});
               new Timer(const Duration(milliseconds: 1000), () {
-                //TODO move back home
+                Navigator.of(context).pop();
                 //setState(() {});
               });
             });
@@ -570,11 +572,17 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     var bankDetail = await iProvider.getBankInfo(panNumber, ifsc);
     if (bankDetail == null || bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED) {
       log.error('Couldnt fetch an appropriate response');
+      log.error('Couldnt fetch an appropriate response');
+      var failData = {'ifsc': ifsc};
+      bool failureLogged = await dbProvider.logFailure(
+          baseProvider.myUser.uid,
+          FailType.UserIFSCNotFound, failData);
+      log.debug('Failure logged correctly: $failureLogged');
       return {
         'flag': false,
         'reason': (bankDetail[QUERY_FAIL_REASON] != null)
             ? bankDetail[QUERY_FAIL_REASON]
-            : 'Unknown'
+            : 'We could not fetch the bank details from the given IFSC Code. Please verify and try again'
       };
     } else if (bankDetail[GetBankDetail.resBankCode] == null
         || bankDetail[GetBankDetail.resBankName] == null) {
@@ -708,7 +716,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     }else{
       var resendObj = await iProvider.resendOtp(baseProvider.iciciDetail.unverifiedOtpId,
           baseProvider.myUser.mobile, baseProvider.iciciDetail.email);
-      if(resendObj == null || resendObj[QUERY_SUCCESS_FLAG] == false) {
+      if(resendObj == null || resendObj[QUERY_SUCCESS_FLAG] == QUERY_FAILED) {
         log.error('Couldnt send otp');
         return {
           'flag': false,
@@ -753,7 +761,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     if (!iProvider.isInit()) await iProvider.init();
 
     var verifyOtpObj = await iProvider.verifyOtp(baseProvider.iciciDetail.unverifiedOtpId, otp);
-    if (verifyOtpObj == null || verifyOtpObj[QUERY_SUCCESS_FLAG] == false
+    if (verifyOtpObj == null || verifyOtpObj[QUERY_SUCCESS_FLAG] == QUERY_FAILED
         || verifyOtpObj[VerifyOtp.resStatus] == null) {
       log.error('Couldnt send otp');
       return {
@@ -816,7 +824,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     }
 
     var createObj = await iProvider.createPortfolio(baseProvider.iciciDetail.appId, baseProvider.iciciDetail.verifiedOtpId);
-    if (createObj == null || createObj[QUERY_SUCCESS_FLAG] == false || createObj[CreatePortfolio.parsedRetMsgKey] == null ) {
+    if (createObj == null || createObj[QUERY_SUCCESS_FLAG] == QUERY_FAILED || createObj[CreatePortfolio.resReturnCode] == null ) {
       return {
         'flag': false,
         'reason': (createObj[QUERY_FAIL_REASON] != null)
@@ -824,25 +832,28 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
             : 'Unknown error occurred. Please try again'
       };
     }else{
-      if(createObj[CreatePortfolio.parsedRetMsgKey] != CreatePortfolio.STATUS_PORTFOLIO_CREATED) {
+      if(createObj[CreatePortfolio.resReturnCode] != CreatePortfolio.STATUS_PORTFOLIO_CREATED) {
         log.error('Portfolio creation failed');
         var failData = {
           'appid': baseProvider.iciciDetail.appId,
-          'returnCode': createObj[CreatePortfolio.parsedRetMsgKey],
-          'returnMsg': createObj[CreatePortfolio.parsedRetMsgKey]
+          'returnCode': createObj[CreatePortfolio.resReturnCode],
+          'returnMsg': createObj[CreatePortfolio.resRetMessage]
         };
         bool failureLogged = await dbProvider.logFailure(baseProvider.myUser.uid,
             FailType.UserICICIPfCreationFailed, failData);
         log.debug('Failure logged correctly: $failureLogged');
         return {
           'flag': false,
-          'reason': 'Portfolio couldnt be created due to the following reason: ${createObj[CreatePortfolio.parsedRetMsgKey]}'
+          'reason': 'Portfolio couldnt be created due to the following reason: ${createObj[CreatePortfolio.resRetMessage]}'
         };
       }else{
         log.debug('OTP validated');
-        if(createObj[CreatePortfolio.parsedFolioNo] != null) {
-          baseProvider.iciciDetail.folioNo = createObj[CreatePortfolio.parsedFolioNo];
-          baseProvider.iciciDetail.expDate = createObj[CreatePortfolio.parsedExpiryDate];
+        if(createObj[CreatePortfolio.resFolioNo] != null) {
+          baseProvider.iciciDetail.folioNo = createObj[CreatePortfolio.resFolioNo];
+          baseProvider.iciciDetail.expDate = createObj[CreatePortfolio.resExpiryDate];
+          baseProvider.iciciDetail.amcRefNo = createObj[CreatePortfolio.resAMCRefNo];
+          baseProvider.iciciDetail.payoutId = createObj[CreatePortfolio.resPayoutId];
+          baseProvider.iciciDetail.chkDigit = createObj[CreatePortfolio.resChkDigit];
           var upObj = await dbProvider.updateUserIciciDetails(baseProvider.myUser.uid, baseProvider.iciciDetail);
           baseProvider.myUser.isIciciOnboarded = true;
           var userUpObj = await dbProvider.updateUser(baseProvider.myUser);
@@ -861,7 +872,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
           log.debug('Failure logged correctly: $failureLogged');
           return {
             'flag': false,
-            'reason': 'Portfolio couldnt be created due to the following reason: ${createObj[CreatePortfolio.parsedRetMsgKey]}'
+            'reason': 'Portfolio couldnt be created due to the following reason: ${createObj[CreatePortfolio.resRetMessage]}'
           };
         }
       }

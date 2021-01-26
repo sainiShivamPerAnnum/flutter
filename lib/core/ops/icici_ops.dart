@@ -128,11 +128,14 @@ class ICICIModel extends ChangeNotifier{
     final resMap = await processResponse(_response);
     if(resMap == null) {
       log.error('Query Failed');
-      return {"flag": QUERY_FAILED};
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else if(!resMap[INTERNAL_FAIL_FLAG]){
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED, QUERY_FAIL_REASON: resMap["userMessage"]};
     }else{
-      // log.debug(resMap[SubmitPanDetail.resStatus]);
-      // log.debug(resMap[SubmitPanDetail.resId]);
-      return {"flag": QUERY_PASSED};
+      log.debug(resMap[SubmitInvKYCDetail.resStatus]);
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+
+      return resMap;
     }
   }
 
@@ -165,7 +168,7 @@ class ICICIModel extends ChangeNotifier{
     }else if(!resMap[INTERNAL_FAIL_FLAG]){
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED, QUERY_FAIL_REASON: resMap["userMessage"]};
     }else{
-      resMap[QUERY_SUCCESS_FLAG] = true;
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
       return resMap;
     }
   }
@@ -188,7 +191,7 @@ class ICICIModel extends ChangeNotifier{
     }else if(!resMap[INTERNAL_FAIL_FLAG]){
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED, QUERY_FAIL_REASON: resMap["userMessage"]};
     }else{
-      resMap[QUERY_SUCCESS_FLAG] = true;
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
       return resMap;
     }
   }
@@ -226,7 +229,7 @@ class ICICIModel extends ChangeNotifier{
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     }else{
-      resMap[QUERY_SUCCESS_FLAG] = true;
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
       return resMap;
     }
   }
@@ -248,7 +251,7 @@ class ICICIModel extends ChangeNotifier{
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     }else{
-      resMap[QUERY_SUCCESS_FLAG] = true;
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
       return resMap;
     }
   }
@@ -269,7 +272,7 @@ class ICICIModel extends ChangeNotifier{
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     }else{
-      resMap[QUERY_SUCCESS_FLAG] = true;
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
       return resMap;
     }
   }
@@ -313,8 +316,8 @@ class ICICIModel extends ChangeNotifier{
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     }else{
       Map<String, dynamic> yMap = resList[0];
-      if(yMap != null && yMap[CreatePortfolio.parsedRetMsgKey] != null) {
-        yMap[QUERY_SUCCESS_FLAG] = true;
+      if(yMap != null && yMap[CreatePortfolio.resReturnCode] != null) {
+        yMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
         return yMap;
       }else{
         return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
@@ -333,7 +336,7 @@ class ICICIModel extends ChangeNotifier{
         params.forEach((key, value) {
           _p = '$_p$key=$value&';
         });
-        _p = _p.substring(0, _p.length-2);
+        _p = _p.substring(0, _p.length-1);
         _path = '$_path?$_p';
       }
     }
@@ -399,7 +402,7 @@ class ICICIModel extends ChangeNotifier{
     }
   }
 
-  Future<List<Map<String, String>>> processPortfolioResponse(http.StreamedResponse response) async{
+  Future<List<Map<String, dynamic>>> processPortfolioResponse(http.StreamedResponse response) async{
     if(response == null){
       log.error('response is null');
     }
@@ -418,13 +421,16 @@ class ICICIModel extends ChangeNotifier{
         return null;
       }
       List<dynamic> rList = json.decode(res);
-      List<Map<String, String>> refList = new List();
+      List<Map<String, dynamic>> refList = new List();
       rList.forEach((element) {
         refList.add({
-          CreatePortfolio.parsedRetCodeKey:element[CreatePortfolio.resReturnCode],
-          CreatePortfolio.parsedRetMsgKey:element[CreatePortfolio.resRetMessage],
-          CreatePortfolio.parsedFolioNo:element[CreatePortfolio.resFolioNo]??'',
-          CreatePortfolio.parsedExpiryDate:element[CreatePortfolio.resExpiryDate]??'',
+          CreatePortfolio.resReturnCode:element[CreatePortfolio.resReturnCode],
+          CreatePortfolio.resRetMessage:element[CreatePortfolio.resRetMessage],
+          CreatePortfolio.resFolioNo:element[CreatePortfolio.resFolioNo]??'',
+          CreatePortfolio.resExpiryDate:element[CreatePortfolio.resExpiryDate]??'',
+          CreatePortfolio.resAMCRefNo:element[CreatePortfolio.resAMCRefNo]??'',
+          CreatePortfolio.resPayoutId:element[CreatePortfolio.resPayoutId]??'',
+          CreatePortfolio.resChkDigit:element[CreatePortfolio.resChkDigit]??'',
         });
       });
       log.debug(refList.toString());
