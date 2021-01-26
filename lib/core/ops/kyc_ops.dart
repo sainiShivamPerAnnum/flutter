@@ -4,6 +4,16 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 
+
+/**
+ * To get KYC firebase document
+ * baseProvider.kycDetail =
+    await dbProvider.getUserKycDetails(baseProvider.myUser.uid);
+ *
+ * To UPDATE KYC firebase document
+ * await dbProvider.updateUserKycDetails(
+    baseProvider.myUser.uid, baseProvider.kycDetail);
+ * */
 class KYCModel extends ChangeNotifier {
   final Log log = new Log('KYCModel');
   DBModel _dbModel = locator<DBModel>();

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/User.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
+import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/util/constants.dart';
@@ -28,6 +29,7 @@ class BaseUtil extends ChangeNotifier {
   DailyPick weeklyDigits;
   List<TambolaBoard> userWeeklyBoards;
   UserIciciDetail _iciciDetail;
+  UserKycDetail _kycDetail;
   int referCount = 0;
   int userTicketsCount = 0;
   bool weeklyDrawFetched = false;
@@ -274,6 +276,13 @@ class BaseUtil extends ChangeNotifier {
 
   set iciciDetail(UserIciciDetail value) {
     _iciciDetail = value;
+  }
+
+
+  UserKycDetail get kycDetail => _kycDetail;
+
+  set kycDetail(UserKycDetail value) {
+    _kycDetail = value;
   }
 
   static int getWeekNumber() {

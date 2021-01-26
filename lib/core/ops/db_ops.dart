@@ -4,6 +4,7 @@ import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/model/User.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
+import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
@@ -67,6 +68,26 @@ class DBModel extends ChangeNotifier {
       return true;
     } catch (e) {
       log.error("Failed to update user icici detail object: " + e.toString());
+      return false;
+    }
+  }
+
+  Future<UserKycDetail> getUserKycDetails(String id) async{
+    try{
+      var doc = await _api.getUserKycDetailDocument(id);
+      return UserKycDetail.fromMap(doc.data);
+    }catch(e) {
+      log.error('Failed to fetch user kyc details: $e');
+      return null;
+    }
+  }
+
+  Future<bool> updateUserKycDetails(String userId, UserKycDetail iciciDetail) async {
+    try {
+      await _api.updateUserKycDetailDocument(userId, iciciDetail.toJson());
+      return true;
+    } catch (e) {
+      log.error("Failed to update user kyc detail object: " + e.toString());
       return false;
     }
   }
