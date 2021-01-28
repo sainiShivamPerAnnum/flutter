@@ -297,6 +297,7 @@ class KYCModel extends ChangeNotifier {
       res = false;
       message = "Something went wrong";
       log.debug(response.body);
+      //
 
     }
 
