@@ -107,11 +107,6 @@ class _SignatureScreenState extends State<SignatureScreen>
                       bool flag = res['flag'];
 
 
-
-
-
-
-
                       if (flag == true)
                       {
                         setState(() {

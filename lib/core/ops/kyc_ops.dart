@@ -61,10 +61,10 @@ class KYCModel extends ChangeNotifier {
 
     Map<dynamic,dynamic> body =
           {
-            "email" : "abc@gmail.com",
-            "username" : "soni2222.",
-            "phone" : "9811111111",
-            "name" : "Abhishek"
+            "email" : "fello@gmail.com",
+            "username" : "fello2222.",
+            "phone" : "9811111100",
+            "name" : "fello"
           };
 
     String jsonBody = json.encode(body);
@@ -182,15 +182,13 @@ class KYCModel extends ChangeNotifier {
   }
 
 
-
-
   Future<Map<dynamic,dynamic>> convertImages(var image) async
   {
     print("inside convertImage");
     bool result = false;
     var imageUrl;
 
-    // await getId();
+    await getId();
 
     var request = http.MultipartRequest('POST',Uri.parse(KycUrls.convertImages));
 
@@ -236,7 +234,6 @@ class KYCModel extends ChangeNotifier {
 
   Future<Map<dynamic,dynamic>> executePOI(var image)async
   {
-    print("inside execute poi");
 
     bool res = false;
     String message = "PAN Card Added Successfully";
@@ -247,9 +244,12 @@ class KYCModel extends ChangeNotifier {
 
     var auth = data['authToken'];
     var merchentId = data["merchantId"];
+    print(merchentId);
+    print("Auth Token = $auth");
 
 
     headers = {
+      'Content-Type': 'application/json',
       'Authorization': "$auth"
     };
 
@@ -261,7 +261,7 @@ class KYCModel extends ChangeNotifier {
         "type": "individualPan",
         "task": "autoRecognition",
         "data": {
-          "images": [imageURL],
+          "images": ["$imageURL"],
           "toVerifyData": {},
           "searchParam": {},
           "proofType": "identity"
@@ -280,7 +280,7 @@ class KYCModel extends ChangeNotifier {
     if(response.statusCode == 200)
     {
       res = true;
-      print("Suucess ${response.body}");
+      print("Success ${response.body}");
       var data = jsonDecode(response.body);
       print(data);
 
