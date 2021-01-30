@@ -101,21 +101,21 @@ class _SignatureScreenState extends State<SignatureScreen>
                             .asUint8List(data.offsetInBytes, data.lengthInBytes),
                       );
 
-
-                      var res = await kycModel.convertImages(file.path);
-
-                      bool flag = res['flag'];
+                      var res = await kycModel.updateSignature(file.path);
 
 
-                      if (flag == true)
+                      // bool flag = res['flag'];
+
+
+                      if (res == true)
                       {
-                        setState(() {
+                        setState(()
+                        {
                           loading = false;
                         });
 
 
                         Navigator.pop(context);
-
 
                       }
                       else
@@ -126,18 +126,7 @@ class _SignatureScreenState extends State<SignatureScreen>
                         }
                         );
 
-
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                            'Something went wrong please try again',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 20.0),
-                          ),
-                          backgroundColor: Colors.red,
-                          duration: Duration(seconds: 3),
-                        ));
-
-
+                        print("error");
                       }
 
                     },

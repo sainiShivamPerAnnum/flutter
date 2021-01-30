@@ -16,7 +16,10 @@ class KycUrls
   static String generatePdf = " https://multi-channel-preproduction.signzy.tech/api/onboardings/execute";
 
   static String login = "https://multi-channel-preproduction.signzy.tech/api/onboardings/login?ns=";
-  static String executePOI = "https://multi-channel-preproduction.signzy.tech/api/onboardings/execute";
+  static String execute = "https://multi-channel-preproduction.signzy.tech/api/onboardings/execute";
+
+  static String updateSignature = "https://multi-channel-preproduction.signzy.tech/api/onboardings/updateForm";
+
 
 
 

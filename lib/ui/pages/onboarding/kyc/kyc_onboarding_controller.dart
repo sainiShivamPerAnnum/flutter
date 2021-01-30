@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/kyc_ops.dart';
+import 'package:felloapp/core/service/location.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/signature.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +18,13 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
   static BaseUtil baseProvider;
   File image;
 
+  Location location = Location();
+
 
 
   KYCModel kycModel = KYCModel();
+  final picker = ImagePicker();
+
 
   @override
   Widget build(BuildContext context) {
@@ -80,13 +85,13 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
                             new FlatButton(
                               child: Text('Camera'),
                               onPressed: () async {
-                                image = await ImagePicker.pickImage(source: ImageSource.camera);
+                                var image = await picker.getImage(source: ImageSource.camera);
                                 var imagePath = image.path;
 
                                 print(imagePath);
 
-                               // var result =
-                               await kycModel.executePOI(imagePath);
+                               var result =
+                               await kycModel.POI(imagePath);
 
                                // var flag = result["flag"];
                                //
@@ -108,13 +113,10 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
                             FlatButton(
                               child: Text('Gallery'),
                               onPressed: () async {
-                                image = await ImagePicker.pickImage(source: ImageSource.camera);
+                                final image = await picker.getImage(source: ImageSource.gallery);
                                 var imagePath = image.path;
 
                                 await kycModel.executePOI(imagePath);
-
-
-
                               },
                             ),
 
@@ -129,6 +131,76 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
 
                   }),
 
+              MyButton(
+                  title: "Cancelled Cheque",
+                  onPressed: (){
+
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return  AlertDialog(
+                          title: Center(child: Text("POD")),
+                          content: Text("Choose image from"),
+                          actions: [
+
+                            new FlatButton(
+                              child: Text('Camera'),
+                              onPressed: () async {
+                                var image = await picker.getImage(source: ImageSource.camera);
+                                var imagePath = image.path;
+
+                                print(imagePath);
+
+                                var result =
+                                await kycModel.cancelledCheque(imagePath);
+
+
+
+
+                              },
+                            ),
+                            FlatButton(
+                              child: Text('Gallery'),
+                              onPressed: () async {
+                                final image = await picker.getImage(source: ImageSource.gallery);
+                                var imagePath = image.path;
+
+                                await kycModel.cancelledCheque(imagePath);
+                              },
+                            ),
+
+                          ],
+                        );
+                      },
+                    );
+
+
+
+
+
+                  }),
+
+              MyButton(title: "Penny Transfer", onPressed: () async{
+                await kycModel.bankPennyTransfer();
+              }),
+
+              MyButton(title: "PDF", onPressed: () async{
+                await kycModel.generatePdf();
+              }),
+
+              MyButton(title: "Location", onPressed: () async{
+
+                await location.getCurrentLocation();
+
+                var lat = location.latitude;
+                var long = location.longitude;
+
+                print("lat is $lat long is $long");
+
+
+              }),
+
+
 
 
             ],
@@ -138,6 +210,8 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
     );
   }
 }
+
+
 
 class MyButton extends StatelessWidget {
   final Color colour;
