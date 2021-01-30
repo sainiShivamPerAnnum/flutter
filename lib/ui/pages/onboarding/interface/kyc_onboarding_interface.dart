@@ -1,3 +1,4 @@
+import 'package:felloapp/ui/pages/onboarding/interface/kyc_onboard_data.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,6 +16,7 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
   int currentPage = 0;
   double _pollHeight = 0;
   int level = 5;
+  KycOnboardData kycGuide = new KycOnboardData();
 
   _slide(int pos, double deviceWidth) {
     setState(() {
@@ -45,7 +47,7 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
 
   _animatePoll(int level) {
     setState(() {
-      _pollHeight = 130.0 * level;
+      _pollHeight = 130.0 * kycGuide.level;
     });
   }
 
@@ -281,60 +283,53 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
                                           ),
                                           child: Column(
                                             children: [
-                                              StepCard(status: 1),
-                                              StepCard(status: 1),
-                                              StepCard(status: -1),
-                                              StepCard(status: 1),
-                                              StepCard(status: 1),
-                                              StepCard(status: 0),
-                                              StepCard(status: 0),
+                                              StepCard(
+                                                status: 1,
+                                                level: 0,
+                                              ),
+                                              StepCard(
+                                                status: 1,
+                                                level: 1,
+                                              ),
+                                              StepCard(
+                                                status: -1,
+                                                level: 2,
+                                              ),
+                                              StepCard(
+                                                status: 1,
+                                                level: 3,
+                                              ),
+                                              StepCard(
+                                                status: 1,
+                                                level: 4,
+                                              ),
+                                              StepCard(
+                                                status: 0,
+                                                level: 5,
+                                              ),
+                                              StepCard(
+                                                status: 0,
+                                                level: 6,
+                                              ),
+                                              StepCard(
+                                                status: 0,
+                                                level: 7,
+                                              ),
                                             ],
                                           ),
                                         ),
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                            top: 40,
-                                            left: 10,
-                                            right: 5,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            child: Scratcher(
-                                              brushSize: 30,
-                                              threshold: 50,
-                                              image: Image.network(
-                                                "https://www.nationalgalleries.org/sites/default/files/styles/ngs-default/public/externals/118664.jpg?itok=nY9XtfUF",
-                                                fit: BoxFit.cover,
-                                              ),
-                                              onChange: (value) => print(
-                                                  "Scratch progress: $value%"),
-                                              onThreshold: () => print(
-                                                  "Threshold reached, you won!"),
-                                              child: Container(
-                                                height: 170,
-                                                width: double.infinity,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.blue,
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                ),
-                                                child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                    child: Image.network(
-                                                      "https://babblesports.com/wp-content/uploads/2020/06/Untitled-design-7-1200x675.jpg",
-                                                      fit: BoxFit.cover,
-                                                    )),
-                                              ),
-                                            ),
-                                          ),
-                                        )
+                                        // Container(
+                                        //   margin: EdgeInsets.only(
+                                        //     top: 40,
+                                        //     left: 10,
+                                        //     right: 5,
+                                        //   ),
+                                        //   decoration: BoxDecoration(
+                                        //     borderRadius:
+                                        //         BorderRadius.circular(20),
+                                        //   ),
+                                        //   child:
+                                        // )
                                       ],
                                     ),
                                   ],
@@ -376,17 +371,22 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
                   ),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: FractionallySizedBox(
-                  widthFactor: 0.5,
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: UiConstants.primaryColor.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(20),
+                child: Stack(
+                  children: [
+                    FractionallySizedBox(
+                      widthFactor: 0.125 * kycGuide.level,
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: UiConstants.primaryColor.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
                     ),
-                    alignment: Alignment.center,
-                    child: Text("40%"),
-                  ),
+                    Center(
+                      child: Text("${kycGuide.level * 12.5}%"),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -399,8 +399,9 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
 
 class StepCard extends StatefulWidget {
   final int status;
+  final int level;
 
-  StepCard({@required this.status});
+  StepCard({@required this.status, @required this.level});
 
   @override
   _StepCardState createState() => _StepCardState();
@@ -409,6 +410,7 @@ class StepCard extends StatefulWidget {
 class _StepCardState extends State<StepCard>
     with SingleTickerProviderStateMixin {
   Color _focusColor;
+  KycOnboardData kycGuide = new KycOnboardData();
 
   String text;
 
@@ -432,15 +434,15 @@ class _StepCardState extends State<StepCard>
 
   @override
   Widget build(BuildContext context) {
-    if (widget.status == 0) {
+    if (widget.status == 0 || widget.level > kycGuide.level) {
       _focusColor = Colors.grey;
       text = "Start";
-    } else if (widget.status == 1) {
-      _focusColor = UiConstants.primaryColor;
-      text = "Completed";
-    } else if (widget.status == -1) {
+    } else if (widget.status == -1 && widget.level < kycGuide.level) {
       _focusColor = Colors.amber;
       text = "Retry";
+    } else if (widget.status == 1 || widget.level < kycGuide.level) {
+      _focusColor = UiConstants.primaryColor;
+      text = "Completed";
     }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -450,7 +452,7 @@ class _StepCardState extends State<StepCard>
           width: 50,
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.all(5),
-          child: widget.status == -1
+          child: widget.level == kycGuide.level
               ? _buildBody(
                   Container(
                     margin: EdgeInsets.all(10),
@@ -490,28 +492,29 @@ class _StepCardState extends State<StepCard>
                 ),
         ),
         Expanded(
-          child: Container(
-            height: 100,
-            margin: EdgeInsets.only(
-              top: 30,
-            ),
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 2,
-                color: _focusColor,
+          child: GestureDetector(
+            onTap: () => kycGuide.stepButtonAction(widget.level, context),
+            child: Container(
+              height: 100,
+              margin: EdgeInsets.only(
+                top: 30,
               ),
-              borderRadius: BorderRadius.circular(10),
-              color: _focusColor.withOpacity(0.05),
-            ),
-            child: Center(
-              child: ListTile(
-                contentPadding: EdgeInsets.all(10),
-                title: Text("PAN"),
-                subtitle: Text("Your PAN is required for verification"),
-                trailing: FlatButton(
-                  onPressed: () {},
-                  child: Text(
-                    text,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 2,
+                  color: _focusColor,
+                ),
+                borderRadius: BorderRadius.circular(10),
+                color: _focusColor.withOpacity(0.05),
+              ),
+              child: Center(
+                child: ListTile(
+                  contentPadding: EdgeInsets.all(10),
+                  title: Text("PAN"),
+                  leading: widget.level != 7 ? null : Icon(Icons.lock),
+                  subtitle: Text("Your PAN is required for verification"),
+                  trailing: Text(
+                    text + "    ",
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       color: _focusColor,
@@ -526,6 +529,8 @@ class _StepCardState extends State<StepCard>
       ],
     );
   }
+
+// RIPPLE EFFECT BUILD
 
   Widget _buildBody(Widget core) {
     return AnimatedBuilder(
