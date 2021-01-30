@@ -291,11 +291,9 @@ class ICICIModel extends ChangeNotifier{
     final resMap = await processResponse(_response);
     if(resMap == null) {
       log.error('Query Failed');
-      return {"flag": QUERY_FAILED};
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     }else{
-      // log.debug(resMap[SubmitPanDetail.resStatus]);
-      // log.debug(resMap[SubmitPanDetail.resId]);
-      return {"flag": QUERY_PASSED};
+      return {QUERY_SUCCESS_FLAG: QUERY_PASSED};
     }
   }
 
@@ -322,6 +320,61 @@ class ICICIModel extends ChangeNotifier{
       }else{
         return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
       }
+    }
+  }
+
+  Future<Map<String, dynamic>> initiateUPIPurchase(String id,
+      String email, String bankCode, String panNumber, String folioNumber,
+      String kycMode, String amount, String vpaAddress) async{
+    var _params = {
+      SubmitUpiPurchase.fldId:id,
+      SubmitUpiPurchase.fldEmail:email,
+      SubmitUpiPurchase.fldBankCode:bankCode,
+      SubmitUpiPurchase.fldPan:panNumber,
+      SubmitUpiPurchase.fldFolioNo:folioNumber,
+      SubmitUpiPurchase.fldKycMode:kycMode,
+      SubmitUpiPurchase.fldAmount:amount,
+      SubmitUpiPurchase.fldVPA:vpaAddress
+    };
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(SubmitUpiPurchase.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resList = await processPortfolioResponse(_response);
+    if(resList == null) {
+      log.error('Query Failed');
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else{
+      Map<String, dynamic> yMap = resList[0];
+      if(yMap != null && yMap[SubmitUpiPurchase.resTrnId] != null) {
+        yMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+        return yMap;
+      }else{
+        yMap[QUERY_SUCCESS_FLAG] = QUERY_FAILED;
+        return yMap;
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>> checkIMPSEligible(String folioNumber,
+      String amount) async{
+    var _params = {
+      CheckIMPSStatus.fldFolioNo: folioNumber,
+      CheckIMPSStatus.fldAmount: amount
+    };
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(CheckIMPSStatus.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if(resMap == null) {
+      log.error('Query Failed');
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else{
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+      return resMap;
     }
   }
 

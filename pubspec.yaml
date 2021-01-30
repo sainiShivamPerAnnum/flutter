@@ -38,6 +38,7 @@ dependencies:
   google_fonts: ^1.1.1
   confetti: ^0.5.4+1
   lottie: ^0.7.0+1
+  slider_button: ^0.6.0
 
   flutter:
     sdk: flutter

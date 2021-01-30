@@ -15,22 +15,14 @@ class KYCInvalid extends StatelessWidget {
         width: _width,
         height: _height,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Image.asset(
-                  Assets.iciciGraphic,
-                  fit: BoxFit.contain,
-                  height: 100,
-                  width: 100,
-                ),
-                Icon(
-                  Icons.help_outline,
-                ),
-              ],
+            Image.asset(
+              Assets.iciciGraphic,
+              fit: BoxFit.contain,
+              height: 100,
+              width: 100,
             ),
             Container(
               child: Column(

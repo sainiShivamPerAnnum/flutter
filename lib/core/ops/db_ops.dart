@@ -351,7 +351,7 @@ class DBModel extends ChangeNotifier {
     try {
       Map<String, dynamic> dMap = (data == null)?{}:data;
       dMap['user_id'] = userId;
-      dMap['fail_type'] = failType.toString();
+      dMap['fail_type'] = failType.value();
       dMap['manually_resolved'] = false;
       dMap['timestamp'] = FieldValue.serverTimestamp();
       await _api.addFailedReportDocument(dMap);

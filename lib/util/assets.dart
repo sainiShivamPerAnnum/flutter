@@ -12,8 +12,10 @@ class Assets {
   static final String winnersGraphic = 'images/winners-small.png';
   static final String whatsappIcon = 'images/whatsapp.png';
   static final String strikeThroughGraphic = 'images/diagonal-strike.png';
-  static final String onboardCollageGraphic =
-      'images/onboard_collage-small.png';
+  static final String onboardCollageGraphic = 'images/onboard_collage-small.png';
+  static final String dummyPanCard = 'images/sebi.png';
+  static final String dummyAadharCard = 'images/sebi.png';
+  static final String dummyCancelledCheque = 'images/sebi.png';
 
   static final List<String> onboardingSlide = [
     'images/save-small.png',
@@ -144,4 +146,7 @@ class Assets {
     "I am learning to build apps in Flutter. Now I have come to alert dialogs. I have done them before in Android and iOS, but how do I make an alert in Flutter?",
     "I am learning to build apps in Flutter. Now I have come to alert dialogs. I have done them before in Android and iOS, but how do I make an alert in Flutter?",
   ];
+
+  static final String infoWhyPan = 'Your PAN Card is required by ICICI to set up your investment folio';
+  static final String infoWherePan = 'Your PAN Number is a 10 character ID that can found on your PAN Card';
 }

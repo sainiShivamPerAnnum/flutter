@@ -17,6 +17,7 @@ class PersonalPage extends StatefulWidget {
 class _PersonalPageState extends State<PersonalPage> {
   BaseUtil baseProvider;
   IciciOnboardController controllerInstance = new IciciOnboardController();
+  TextEditingController _dateController = TextEditingController();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -41,6 +42,7 @@ class _PersonalPageState extends State<PersonalPage> {
     if (picked != null && picked != IDP.selectedDate)
       setState(() {
         IDP.selectedDate = picked;
+        _dateController.text = "${picked.toLocal()}".split(' ')[0];
       });
   }
 
@@ -140,6 +142,45 @@ class _PersonalPageState extends State<PersonalPage> {
                   ),
                 ),
                 Text("Date of Birth"),
+                InkWell(
+                  onTap: () {
+                    _selectDate(context);
+                  },
+                  child: Container(
+                    width: _width / 1.7,
+                    height: _height / 9,
+                    margin: EdgeInsets.only(top: 30),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(color: Colors.grey[200]),
+                    child: TextFormField(
+                      style: TextStyle(
+                        color: Colors.black54,
+                      ),
+                      textAlign: TextAlign.center,
+                      enabled: false,
+                      keyboardType: TextInputType.text,
+                      validator: (value) {
+                        RegExp emailCheck = RegExp(
+                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+                        if (value.isEmpty) {
+                          return 'Email field Cannot be empty';
+                        } else if (emailCheck.hasMatch(value)) {
+                          return null;
+                        } else {
+                          return "Invalid Email";
+                        }
+                      },
+                      controller: _dateController,
+                      onSaved: (String val) {
+                        print(val);
+                      },
+                      decoration: InputDecoration(
+                          disabledBorder:
+                          UnderlineInputBorder(borderSide: BorderSide.none),
+                          contentPadding: EdgeInsets.only(top: 0.0)),
+                    ),
+                  ),
+                ),
                 GestureDetector(
                   onTap:() => _selectDate(context),
                   child: InputField(

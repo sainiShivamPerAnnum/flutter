@@ -10,7 +10,8 @@ class UiConstants{
   static final Color accentColor = const Color(0xff333333);
   static final Color darkPrimaryColor = const Color.fromARGB(255, 58, 120, 255);
   static final Color secondaryColor = const Color.fromARGB(255, 241, 227, 243);
-  static final Color chipColor = const Color.fromARGB(255, 241, 227, 243);
+  // static final Color chipColor = const Color.fromARGB(255, 241, 227, 243);
+  static final Color chipColor = Colors.grey[200];
 
   static final Color positiveAlertColor = Colors.blueAccent[400];
   static final Color negativeAlertColor = Colors.blueGrey;

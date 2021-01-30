@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/elements/withdraw_dialog.dart';
@@ -88,6 +89,12 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     );
   }
 
+  String _getActionButtonText() {
+    if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID) return 'COMPLETE KYC';
+    if (!baseProvider.myUser.isIciciOnboarded)return 'REGISTER';
+    else return 'DEPOSIT';
+  }
+
   Widget _buildBetaSaveButton() {
     return Container(
       width: double.infinity,
@@ -101,8 +108,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       child: new Material(
         child: MaterialButton(
           child: (!baseProvider.isDepositRouteLogicInProgress)
-              ? Text(
-                  'DEPOSIT',
+              ? Text(_getActionButtonText(),
                   style: Theme.of(context)
                       .textTheme
                       .button
@@ -196,12 +202,13 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   }
 
   Future<bool> onDepositClicked() async {
-    if (baseProvider.myUser.isIciciOnboarded) {
+    if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_VALID
+        && baseProvider.myUser.isIciciOnboarded) {
       //move directly to depositing
       baseProvider.isDepositRouteLogicInProgress = false;
-      Navigator.of(context).pop(); //go back to save tab
+      //Navigator.of(context).pop(); //go back to save tab
       Navigator.of(context).pushNamed('/deposit');
-    }//TODO wrong logic
+    }
     if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID) {
       baseProvider.isDepositRouteLogicInProgress = false;
       Navigator.of(context).pop(); //go back to save tab
@@ -357,7 +364,7 @@ class FundGraph extends StatelessWidget {
       width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: AnimatedLineChart(
+        child: CustomAnimatedLineChart(
           chart,
         ), //Unique key to force animations
       ),
