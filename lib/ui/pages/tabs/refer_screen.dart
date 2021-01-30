@@ -2,6 +2,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -24,6 +25,7 @@ class _ReferScreenState extends State<ReferScreen> {
   Log log = new Log('ReferScreen');
   BaseUtil baseProvider;
   DBModel dbProvider;
+  ICICIModel iProvider;
   FcmHandler fcmProvider;
   String referral_bonus = BaseUtil.remoteConfig.getString('referral_bonus');
   String referral_ticket_bonus = BaseUtil.remoteConfig.getString('referral_ticket_bonus');
@@ -60,7 +62,7 @@ class _ReferScreenState extends State<ReferScreen> {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
     fcmProvider = Provider.of<FcmHandler>(context);
-
+    iProvider = Provider.of<ICICIModel>(context);
     _init();
     return Scaffold(
       //debugShowCheckedModeBanner: false,
@@ -274,16 +276,18 @@ class _ReferScreenState extends State<ReferScreen> {
                       size: 18.0,
                     ),
                     onPressed: () async{
-                      baseProvider.isReferralLinkBuildInProgressWhatsapp = true;
-                      _createDynamicLink(baseProvider.myUser.uid, true, 'Whatsapp').then((url) async{
-                        baseProvider.isReferralLinkBuildInProgressWhatsapp = false;
-                        log.debug(url);
-                        setState(() {});
-                        FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
-                          log.debug(flag);
-                        });
-                      });
-                      setState(() {});
+                      // baseProvider.isReferralLinkBuildInProgressWhatsapp = true;
+                      // _createDynamicLink(baseProvider.myUser.uid, true, 'Whatsapp').then((url) async{
+                      //   baseProvider.isReferralLinkBuildInProgressWhatsapp = false;
+                      //   log.debug(url);
+                      //   setState(() {});
+                      //   FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
+                      //     log.debug(flag);
+                      //   });
+                      // });
+                      // setState(() {});
+                      await iProvider.init();
+                      await iProvider.getBankAcctTypes("AMVPL5308B");
                     },
                     highlightColor: Colors.orange.withOpacity(0.5),
                     splashColor: Colors.orange.withOpacity(0.5),

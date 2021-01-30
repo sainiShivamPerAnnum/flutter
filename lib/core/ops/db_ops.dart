@@ -3,7 +3,9 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/model/User.dart';
+import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +47,26 @@ class DBModel extends ChangeNotifier {
       return true;
     } catch (e) {
       log.error("Failed to update user object: " + e.toString());
+      return false;
+    }
+  }
+
+  Future<UserIciciDetail> getUserIciciDetails(String id) async{
+    try{
+      var doc = await _api.getUserIciciDetailDocument(id);
+      return UserIciciDetail.fromMap(doc.data);
+    }catch(e) {
+      log.error('Failed to fetch user icici details: $e');
+      return null;
+    }
+  }
+
+  Future<bool> updateUserIciciDetails(String userId, UserIciciDetail iciciDetail) async {
+    try {
+      await _api.updateUserIciciDetailDocument(userId, iciciDetail.toJson());
+      return true;
+    } catch (e) {
+      log.error("Failed to update user icici detail object: " + e.toString());
       return false;
     }
   }
@@ -157,6 +179,48 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<Map<String, String>> getActiveAwsApiKey() async {
+    String awsKeyIndex = BaseUtil.remoteConfig.getString('aws_key_index');
+    if(awsKeyIndex == null || awsKeyIndex.isEmpty)awsKeyIndex = '1';
+    int keyIndex = 1;
+    try {
+      keyIndex = int.parse(awsKeyIndex);
+    }catch(e) {
+      log.error('Aws Index key parsing failed: ' + e.toString());
+      keyIndex = 1;
+    }
+    QuerySnapshot querySnapshot = await _api.getCredentialsByType('aws', keyIndex);
+    if(querySnapshot != null && querySnapshot.documents.length == 1) {
+      DocumentSnapshot snapshot = querySnapshot.documents[0];
+      if(snapshot.exists && snapshot.data['apiKey'] != null) {
+        log.debug('Found apiKey: ' + snapshot.data['apiKey']);
+        return {
+          'baseuri': snapshot.data['base_url'],
+          'key': snapshot.data['apiKey']
+        };
+      }
+    }
+
+    return null;
+  }
+
+  Future<Map<String, String>> getActiveSignzyApiKey() async {
+    int keyIndex = 1;
+    QuerySnapshot querySnapshot = await _api.getCredentialsByType('signzy', keyIndex);
+    if(querySnapshot != null && querySnapshot.documents.length == 1) {
+      DocumentSnapshot snapshot = querySnapshot.documents[0];
+      if(snapshot.exists && snapshot.data['apiKey'] != null) {
+        log.debug('Found apiKey: ' + snapshot.data['apiKey']);
+        return {
+          'baseuri': snapshot.data['base_url'],
+          'key': snapshot.data['apiKey']
+        };
+      }
+    }
+
+    return null;
+  }
+
   Future<bool> addCallbackRequest(String uid, String mobile) async{
     try{
       DateTime today = DateTime.now();
@@ -255,6 +319,21 @@ class DBModel extends ChangeNotifier {
         'timestamp': FieldValue.serverTimestamp(),
         'fdbk': fdbk};
       await _api.addFeedbackDocument(fdbkMap);
+      return true;
+    }catch(e) {
+      log.error(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> logFailure(String userId, FailType failType, Map<String, dynamic> data) async{
+    try {
+      Map<String, dynamic> dMap = (data == null)?{}:data;
+      dMap['user_id'] = userId;
+      dMap['fail_type'] = failType.toString();
+      dMap['manually_resolved'] = false;
+      dMap['timestamp'] = FieldValue.serverTimestamp();
+      await _api.addFailedReportDocument(dMap);
       return true;
     }catch(e) {
       log.error(e.toString());

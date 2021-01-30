@@ -27,6 +27,18 @@ class Api {
     ref = _db.collection(Constants.COLN_USERS);
     return ref.document(docId).setData(data, merge: true);
   }
+  
+  Future<DocumentSnapshot> getUserIciciDetailDocument(String userId) {
+    ref = _db.collection(Constants.COLN_USERS).document(userId)
+        .collection(Constants.SUBCOLN_USER_ICICI_DETAILS);
+    return ref.document(Constants.DOC_USER_ICICI_DETAIL).get();
+  }
+
+  Future<void> updateUserIciciDetailDocument(String userId, Map data) {
+    ref = _db.collection(Constants.COLN_USERS).document(userId)
+        .collection(Constants.SUBCOLN_USER_ICICI_DETAILS);
+    return ref.document(Constants.DOC_USER_ICICI_DETAIL).setData(data, merge: true);
+  }
 
   Future<void> createTicketRequest(String userId, Map data) {
     return _db.collection(Constants.COLN_TICKETREQUEST).document().setData(data, merge: false);
@@ -50,8 +62,18 @@ class Api {
     return _db.collection(Constants.COLN_FEEDBACK).add(data);
   }
 
+  Future<void> addFailedReportDocument(Map data) {
+    return _db.collection(Constants.COLN_FAILREPORTS).add(data);
+  }
+
   Future<QuerySnapshot> getWinnersByWeekCde(int weekCde) {
     Query query = _db.collection(Constants.COLN_WINNERS).where('week_code', isEqualTo: weekCde);
+
+    return query.getDocuments();
+  }
+
+  Future<QuerySnapshot> getCredentialsByType(String type, int index) {
+    Query query = _db.collection(Constants.COLN_CREDENTIALS).where('type', isEqualTo: type).where('index', isEqualTo: index);
 
     return query.getDocuments();
   }

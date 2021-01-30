@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/fcm_listener.dart';
@@ -10,17 +8,21 @@ import 'package:felloapp/ui/pages/app_root.dart';
 import 'package:felloapp/ui/pages/faq_page.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
-import 'package:felloapp/ui/pages/onboarding/onboarding_widget.dart';
+import 'package:felloapp/ui/pages/onboarding/app/onboarding_widget.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
+import 'package:felloapp/ui/pages/onboarding/kyc/kyc_onboarding_controller.dart';
+import 'package:felloapp/ui/pages/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/settings_page.dart';
 import 'package:felloapp/ui/pages/tabs/upi_screen.dart';
 import 'package:felloapp/ui/pages/tnc_page.dart';
-import 'package:felloapp/ui/pages/referral_policy_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+// import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/pages/onboarding/app/onboarding_widget.dart';
+import 'core/ops/icici_ops.dart';
 
 void main() {
   setupLocator();
@@ -35,6 +37,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => locator<DBModel>()),
         ChangeNotifierProvider(create: (_) => locator<LocalDBModel>()),
         ChangeNotifierProvider(create: (_) => locator<HttpModel>()),
+        ChangeNotifierProvider(create: (_) => locator<ICICIModel>()),
         ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
         ChangeNotifierProvider(create: (_) => locator<FcmListener>()),
         ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
@@ -43,9 +46,9 @@ class MyApp extends StatelessWidget {
         title: Constants.APP_NAME,
         theme: ThemeData(
           primaryColor: UiConstants.primaryColor,
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.green,
           visualDensity: VisualDensity.adaptivePlatformDensity,
-          // textTheme: GoogleFonts.sourceSansProTextTheme(),
+          textTheme: GoogleFonts.sourceSansProTextTheme(),
         ),
         home: SplashScreen(),
         routes: <String, WidgetBuilder>{
@@ -58,6 +61,8 @@ class MyApp extends StatelessWidget {
           '/deposit': (BuildContext context) => UpiPayment(),
           '/tnc': (BuildContext context) => TnC(),
           '/refpolicy': (BuildContext context) => ReferralPolicy(),
+          '/verifykyc': (BuildContext context) => KycOnboardController(),
+          '/onboardicici': (BuildContext context) => IciciOnboardController()
         },
       ),
     );

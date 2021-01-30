@@ -1,12 +1,13 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/ui/pages/onboarding/input-elements/data_provider.dart';
-import 'package:felloapp/ui/pages/onboarding/input-elements/input_field.dart';
-import 'package:felloapp/ui/pages/onboarding/input-screens/test_file.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-elements/data_provider.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PersonalPage extends StatefulWidget {
+  static const int index = 1;
   final personalForm;
   PersonalPage({@required this.personalForm});
   @override
@@ -15,7 +16,7 @@ class PersonalPage extends StatefulWidget {
 
 class _PersonalPageState extends State<PersonalPage> {
   BaseUtil baseProvider;
-  TestFile testInstance = new TestFile();
+  IciciOnboardController controllerInstance = new IciciOnboardController();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -32,7 +33,7 @@ class _PersonalPageState extends State<PersonalPage> {
                 surface: UiConstants.primaryColor,
                 onSurface: Colors.black,
               ),
-              dialogBackgroundColor: Colors.white,
+              dialogBackgroundColor: Colors.blueGrey[50],
             ),
             child: child,
           );
@@ -48,7 +49,7 @@ class _PersonalPageState extends State<PersonalPage> {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
     baseProvider = Provider.of<BaseUtil>(context);
-    IDP.name.text = baseProvider.myUser.name;
+    IDP.name.text = baseProvider.iciciDetail.panName;
     return SafeArea(
       child: SingleChildScrollView(
         child: Container(
@@ -87,11 +88,13 @@ class _PersonalPageState extends State<PersonalPage> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Text("Name (As Per PAN Card)"),
+                Text("Name as per your PAN Card"),
                 InputField(
                   child: TextFormField(
-                    decoration: inputFieldDecoration(baseProvider.myUser.name),
+                    decoration:
+                        inputFieldDecoration(baseProvider.iciciDetail.panName),
                     controller: IDP.name,
+                    textCapitalization: TextCapitalization.characters,
                     validator: (value) {
                       RegExp nameCheck = RegExp(r"^[a-zA-Z\\s]+$");
                       if (value.isEmpty) {
@@ -110,6 +113,7 @@ class _PersonalPageState extends State<PersonalPage> {
                     // The validator receives the text that the user has entered.
                     decoration: inputFieldDecoration(baseProvider.myUser.email),
                     controller: IDP.email,
+                    keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       RegExp emailCheck = RegExp(
                           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
@@ -137,22 +141,24 @@ class _PersonalPageState extends State<PersonalPage> {
                   ),
                 ),
                 Text("Date of Birth"),
-                InputField(
-                  child: Row(
+                GestureDetector(
+                  onTap: () => _selectDate(context),
+                  child: InputField(
+                      child: Row(
                     children: [
                       Text(
                         "${IDP.selectedDate.toLocal()}".split(' ')[0],
                       ),
                       Spacer(),
                       IconButton(
-                        onPressed: () => _selectDate(context),
+                        onPressed: () {},
                         icon: Icon(
                           Icons.calendar_today,
                           color: UiConstants.primaryColor,
                         ),
                       ),
                     ],
-                  ),
+                  )),
                 ),
                 Spacer(),
                 SizedBox(height: _height * 0.03),

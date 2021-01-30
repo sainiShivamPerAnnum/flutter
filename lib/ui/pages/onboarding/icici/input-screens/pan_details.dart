@@ -1,10 +1,11 @@
-import 'package:felloapp/ui/pages/onboarding/input-elements/data_provider.dart';
-import 'package:felloapp/ui/pages/onboarding/input-elements/input_field.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-elements/data_provider.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class PANPage extends StatelessWidget {
+  static const int index = 0;
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
@@ -14,22 +15,11 @@ class PANPage extends StatelessWidget {
         width: _width,
         height: _height,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Image.asset(
-                  Assets.iciciGraphic,
-                  fit: BoxFit.contain,
-                  height: 100,
-                  width: 100,
-                ),
-                Icon(
-                  Icons.help_outline_rounded,
-                ),
-              ],
+            SizedBox(
+              height: 20,
             ),
             Container(
               child: Column(
@@ -55,6 +45,7 @@ class PANPage extends StatelessWidget {
                     child: TextField(
                       autofocus: false,
                       controller: IDP.panInput,
+                      textCapitalization: TextCapitalization.characters,
                       decoration: inputFieldDecoration("Eg: ABCDXXXXXX"),
                       onSubmitted: (value) {
                         IDP.panInput.text = value;

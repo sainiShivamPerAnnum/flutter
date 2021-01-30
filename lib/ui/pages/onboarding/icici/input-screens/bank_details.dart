@@ -1,9 +1,16 @@
-import 'package:felloapp/ui/pages/onboarding/input-elements/data_provider.dart';
-import 'package:felloapp/ui/pages/onboarding/input-elements/input_field.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-elements/data_provider.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
-class BankDetailsInputScreen extends StatelessWidget {
+class BankDetailsInputScreen extends StatefulWidget{
+  static const int index = 3;
+
+  @override
+  State createState() => _BankDetailsInputScreenState();
+}
+
+class _BankDetailsInputScreenState extends State<BankDetailsInputScreen> {
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
@@ -60,6 +67,9 @@ class BankDetailsInputScreen extends StatelessWidget {
                       keyboardType: TextInputType.number,
                     ),
                   ),
+                  SizedBox(height: 20),
+                  Text("Select your Account Type"),
+                  _buildAcctTypeWidget(IDP.userAcctTypes),
                   Text("IFSC Code"),
                   InputField(
                     child: TextField(
@@ -72,6 +82,30 @@ class BankDetailsInputScreen extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildAcctTypeWidget(List<Map<String, String>> acctTypes) {
+    return InputField(
+      child: DropdownButtonFormField(
+        decoration: InputDecoration(
+          border: InputBorder.none,
+        ),
+        iconEnabledColor: UiConstants.primaryColor,
+        hint: Text("Account Type"),
+        value: IDP.acctTypeChosenValue,
+        onChanged: (String newVal) {
+          setState(() {
+            IDP.acctTypeChosenValue = newVal;
+          });
+        },
+        items: acctTypes.map(
+              (e) => DropdownMenuItem(
+            value: e["CODE"],
+            child: Text(e["NAME"]),
+          ),
+        ).toList(),
       ),
     );
   }

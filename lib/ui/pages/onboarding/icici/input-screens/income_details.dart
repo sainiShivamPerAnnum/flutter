@@ -1,10 +1,11 @@
-import 'package:felloapp/ui/pages/onboarding/input-elements/data_provider.dart';
-import 'package:felloapp/ui/pages/onboarding/input-elements/input_field.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-elements/data_provider.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class IncomeDetailsInputScreen extends StatefulWidget {
+  static const int index = 2;
   @override
   _IncomeDetailsInputScreenState createState() =>
       _IncomeDetailsInputScreenState();
