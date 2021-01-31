@@ -267,6 +267,7 @@ class SubmitUpiPurchase{
 
   static final String resTrnId = "TRANID";
   static final String resTrnDate = "TRXN_DATE";
+  static final String resMultipleId = "MULTIPLE_ID";
   static final String resAmount = "AMOUNT";
 }
 

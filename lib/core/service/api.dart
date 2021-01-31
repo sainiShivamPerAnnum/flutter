@@ -52,6 +52,24 @@ class Api {
     return ref.document(Constants.DOC_USER_KYC_DETAIL).setData(data, merge: true);
   }
 
+  Future<DocumentReference> addUserTransactionDocument(String userId, Map data) {
+    ref = _db.collection(Constants.COLN_USERS).document(userId)
+        .collection(Constants.SUBCOLN_USER_TXNS);
+    return ref.add(data);
+  }
+
+  Future<DocumentSnapshot> getUserTransactionDocument(String userId, String txnId) {
+    ref = _db.collection(Constants.COLN_USERS).document(userId)
+        .collection(Constants.SUBCOLN_USER_TXNS);
+    return ref.document(txnId).get();
+  }
+
+  Future<void> updateUserTransactionDocument(String userId, String txnId, Map data) {
+    ref = _db.collection(Constants.COLN_USERS).document(userId)
+        .collection(Constants.SUBCOLN_USER_TXNS);
+    return ref.document(txnId).setData(data, merge: true);
+  }
+
   Future<void> createTicketRequest(String userId, Map data) {
     return _db.collection(Constants.COLN_TICKETREQUEST).document().setData(data, merge: false);
   }

@@ -38,6 +38,7 @@ class BaseUtil extends ChangeNotifier {
   bool isReferralLinkBuildInProgressWhatsapp = false;
   bool isReferralLinkBuildInProgressOther = false;
   bool isIciciModelInitialized = false;
+  String depositErrorMsg;
   static const String dummyTambolaVal = '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A';
   static const int TOTAL_DRAWS = 35;
   static const int NEW_USER_TICKET_COUNT = 5;

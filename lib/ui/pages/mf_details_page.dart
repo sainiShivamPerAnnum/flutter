@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
+import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/deposit_modal_sheet.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
@@ -10,6 +12,8 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_c
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/icici_api_util.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:fl_animated_linechart/chart/area_line_chart.dart';
 import 'package:fl_animated_linechart/chart/line_chart.dart';
@@ -19,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:upi_pay/upi_applications.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MFDetailsPage extends StatefulWidget {
@@ -27,8 +32,10 @@ class MFDetailsPage extends StatefulWidget {
 }
 
 class _MFDetailsPageState extends State<MFDetailsPage> {
+  Log log = new Log('MFDetails');
   BaseUtil baseProvider;
   DBModel dbProvider;
+  ICICIModel iProvider;
   FcmHandler fcmProvider;
   int acctBalance = 0;
   final depositformKey = GlobalKey<FormState>();
@@ -61,6 +68,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
     fcmProvider = Provider.of<FcmHandler>(context);
+    iProvider = Provider.of<ICICIModel>(context);
     _init();
 
     return Scaffold(
@@ -209,17 +217,15 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
         && baseProvider.myUser.isIciciOnboarded) {
       //move directly to depositing
       baseProvider.isDepositRouteLogicInProgress = false;
-      //Navigator.of(context).pop(); //go back to save tab
-      //Navigator.of(context).pushNamed('/deposit');
       showModalBottomSheet(
           backgroundColor: Colors.transparent,
           context: context,
+          isScrollControlled: true,
           builder: (context) {
             return DepositModalSheet(
-                onDepositConfirmed: (Map<String, dynamic> rMap) {
-
+              onDepositConfirmed: (Map<String, dynamic> rMap) {
+                _onDepositConfirmed(rMap['amount'], rMap['vpa']);
               },
-
               depositForm: depositformKey,
             );
           }
@@ -246,6 +252,51 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       baseProvider.isDepositRouteLogicInProgress = false;
     }
     return true;
+  }
+
+  Future<Map<String, dynamic>> _onDepositConfirmed(String amount, String vpa) async{
+    double amt = double.parse(amount);
+    if(!iProvider.isInit()) await iProvider.init();
+
+    var pRes = await iProvider.initiateUPIPurchase(baseProvider.iciciDetail.appId,
+        baseProvider.iciciDetail.email, baseProvider.iciciDetail.bankCode,
+        baseProvider.iciciDetail.panNumber, baseProvider.iciciDetail.folioNo,
+        baseProvider.iciciDetail.appMode, amount, vpa);
+    if (pRes == null || pRes[QUERY_SUCCESS_FLAG] == QUERY_FAILED) {
+      //log.error('Couldnt fetch an appropriate response');
+      return {
+        'flag': false,
+        'reason': (pRes[QUERY_FAIL_REASON] != null)
+            ? pRes[QUERY_FAIL_REASON]
+            : 'Unknown'
+      };
+    } else {
+      if(pRes[SubmitUpiPurchase.resTrnId]== null) {
+        //Submit transaction not successful
+        //send error response to modal
+        //TODO send error message to modal that txn failed
+      }else{
+        //create transaction
+        //update user obj to show processing flag
+        String tranId = pRes[SubmitUpiPurchase.resTrnId];
+        String multipleId = pRes[SubmitUpiPurchase.resMultipleId];
+        UserTransaction txn = UserTransaction.newMFDeposit(tranId, multipleId, amt, baseProvider.myUser.uid);
+        String userTxnKey = await dbProvider.addUserTransaction(baseProvider.myUser.uid, txn);
+        bool nFlag = (userTxnKey != null);
+        if(nFlag) {
+          txn.docKey = userTxnKey;
+          baseProvider.myUser.pendingTxnId = userTxnKey;
+          bool upFlag = await dbProvider.updateUser(baseProvider.myUser);
+          log.debug('User pending txn id updated: $upFlag');
+          nFlag = nFlag && upFlag;
+        }
+        if(nFlag) {
+
+        }else{
+          //TODO what happens if txn and user not updated
+        }
+      }
+    }
   }
 }
 

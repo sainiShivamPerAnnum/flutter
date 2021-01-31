@@ -6,6 +6,7 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:slider_button/slider_button.dart';
 
@@ -29,6 +30,7 @@ class _DepositModalSheetState extends State<DepositModalSheet> with SingleTicker
   final _vpaController = new TextEditingController();
   final depositformKey2 = GlobalKey<FormState>();
   bool _isInitialized = false;
+  bool _isDepositInProgress = false;
 
   _initFields() {
     if(baseProvider != null) {
@@ -43,6 +45,8 @@ class _DepositModalSheetState extends State<DepositModalSheet> with SingleTicker
     baseProvider = Provider.of<BaseUtil>(context);
     if(!_isInitialized)_initFields();
     return Container(
+      padding:
+      EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       margin: EdgeInsets.only(left: 18, right: 18),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -55,14 +59,14 @@ class _DepositModalSheetState extends State<DepositModalSheet> with SingleTicker
         children: <Widget>[
           new Padding(
             padding: const EdgeInsets.fromLTRB(25.0, 25.0, 25.0, 25.0),
-            child: _costConfirmDialog(),
+            child: _depositDialog(),
           ),
         ],
       ),
     );
   }
 
-  Widget _costConfirmDialog() {
+  Widget _depositDialog() {
     return Container(
       child: Form(
         key: depositformKey2,
@@ -84,6 +88,7 @@ class _DepositModalSheetState extends State<DepositModalSheet> with SingleTicker
 
                   int amount = int.parse(value);
                   if(_isFirstInvestment && amount<100) return 'Your first investment has to be atleast ₹100';
+                  else if(!_isFirstInvestment && amount<1) return 'Please enter a valid amount';
                   else if(amount > 2000) return 'We are currently only accepting a max deposit of ₹2000 per transaction';
                   else return null;
                 },
@@ -137,16 +142,27 @@ class _DepositModalSheetState extends State<DepositModalSheet> with SingleTicker
                 ),
               ],
             ),
+            (baseProvider.depositErrorMsg!=null)?Text(
+              baseProvider.depositErrorMsg,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.redAccent,
+                fontSize: 18
+              )
+            ):Container(),
             SizedBox(
               height: 20,
             ),
-            Padding(
+            (!_isDepositInProgress)?Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: SliderButton(
                 action: () {
                   //widget.onDepositConfirmed();
                   if(depositformKey2.currentState.validate()) {
-                    widget.onDepositConfirmed({});
+                    widget.onDepositConfirmed({
+                      'amount': _amtController.text,
+                      'vpa': _vpaController.text
+                    });
                   }
                 },
                 alignLabel: Alignment.center,
@@ -167,6 +183,12 @@ class _DepositModalSheetState extends State<DepositModalSheet> with SingleTicker
                   Icons.arrow_forward_ios,
                   color: UiConstants.primaryColor,
                 ),
+              ),
+            ):Padding(
+              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+              child: SpinKitRing(
+                color: UiConstants.spinnerColor2,
+                size: 18.0,
               ),
             )
           ],

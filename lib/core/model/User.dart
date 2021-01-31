@@ -20,6 +20,7 @@ class User {
   bool _isInvested;
   bool _isIciciOnboarded;
   int _isKycVerified;
+  String _pendingTxnId;
 
   static final String fldId = "mID";
   static final String fldMobile = "mMobile";
@@ -36,23 +37,28 @@ class User {
   static final String fldDepositBalance = "mDepBalance";
   static final String fldPriBalance = "mPriBalance";
   static final String fldLifeTimeWinnings = "mLifeTimeWin";
+  static final String fldPendingTxnId = "mPendingTxnId";
 
   User(this._uid, this._mobile, this._email, this._name, this._client_token,
       this._ticket_count, this._account_balance, this._deposit_balance,
       this._prize_balance, this._lifetime_winnings, this._pan, this._age,
-      this._isInvested, this._isIciciOnboarded, this._isKycVerified);
+      this._isInvested, this._isIciciOnboarded, this._isKycVerified,
+      this._pendingTxnId);
 
   static List<String> _fldList = [ fldMobile, fldEmail, fldName, fldPan, fldAge ];
 
   User.newUser(String id, String mobile) : this(id, mobile, null, null, null,
-      BaseUtil.NEW_USER_TICKET_COUNT, 0, 0, 0, 0, null, null, false, false, BaseUtil.KYC_UNTESTED);
+      BaseUtil.NEW_USER_TICKET_COUNT, 0, 0, 0, 0, null, null, false, false,
+      BaseUtil.KYC_UNTESTED,null);
 
   User.fromMap(Map<String, dynamic> data, String id, [String client_token]) :
         this(id, data[fldMobile], data[fldEmail], data[fldName], client_token,
           data[fldTicket_count]??BaseUtil.NEW_USER_TICKET_COUNT, data[fldAcctBalance]??0,
           data[fldDepositBalance]??0,data[fldPriBalance]??0, data[fldLifeTimeWinnings]??0,
           data[fldPan],data[fldAge], data[fldIsInvested]??false,
-          data[fldIsIciciOnboarded]??false, data[fldIsKycVerified]??BaseUtil.KYC_UNTESTED);
+          data[fldIsIciciOnboarded]??false, data[fldIsKycVerified]??BaseUtil.KYC_UNTESTED,
+          data[fldPendingTxnId]
+      );
 
   //to send user object to server
   toJson() {
@@ -69,7 +75,8 @@ class User {
       fldAge: _age,
       fldIsInvested: _isInvested,
       fldIsIciciOnboarded: _isIciciOnboarded,
-      fldIsKycVerified: _isKycVerified
+      fldIsKycVerified: _isKycVerified,
+      fldPendingTxnId: _pendingTxnId
     };
   }
 
@@ -248,5 +255,11 @@ class User {
 
   set deposit_balance(int value) {
     _deposit_balance = value;
+  }
+
+  String get pendingTxnId => _pendingTxnId;
+
+  set pendingTxnId(String value) {
+    _pendingTxnId = value;
   }
 }
