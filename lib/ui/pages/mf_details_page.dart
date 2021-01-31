@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
+import 'package:felloapp/ui/elements/deposit_modal_sheet.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/elements/withdraw_dialog.dart';
@@ -9,9 +10,7 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_c
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:fl_animated_linechart/chart/animated_line_chart.dart';
 import 'package:fl_animated_linechart/chart/area_line_chart.dart';
 import 'package:fl_animated_linechart/chart/line_chart.dart';
 import 'package:fl_animated_linechart/common/pair.dart';
@@ -32,6 +31,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   DBModel dbProvider;
   FcmHandler fcmProvider;
   int acctBalance = 0;
+  final depositformKey = GlobalKey<FormState>();
 
   _init() {
     if (fcmProvider != null && baseProvider != null) {
@@ -203,20 +203,35 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   }
 
   Future<bool> onDepositClicked() async {
+    baseProvider.iciciDetail =
+    await dbProvider.getUserIciciDetails(baseProvider.myUser.uid);
     if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_VALID
         && baseProvider.myUser.isIciciOnboarded) {
       //move directly to depositing
       baseProvider.isDepositRouteLogicInProgress = false;
       //Navigator.of(context).pop(); //go back to save tab
-      Navigator.of(context).pushNamed('/deposit');
+      //Navigator.of(context).pushNamed('/deposit');
+      showModalBottomSheet(
+          backgroundColor: Colors.transparent,
+          context: context,
+          builder: (context) {
+            return DepositModalSheet(
+                onDepositConfirmed: (Map<String, dynamic> rMap) {
+
+              },
+
+              depositForm: depositformKey,
+            );
+          }
+      );
+      return true;
     }
     if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID) {
       baseProvider.isDepositRouteLogicInProgress = false;
       Navigator.of(context).pop(); //go back to save tab
       Navigator.of(context).pushNamed('/verifykyc');
+      return true;
     } else {
-      baseProvider.iciciDetail =
-          await dbProvider.getUserIciciDetails(baseProvider.myUser.uid);
       Navigator.of(context).pop(); //go back to save tab
       if(baseProvider.iciciDetail != null && baseProvider.iciciDetail.panNumber != null
       && baseProvider.iciciDetail.appId != null && baseProvider.iciciDetail.panName != null) {
