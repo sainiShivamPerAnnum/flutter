@@ -18,39 +18,43 @@ class MoreInfoDialog extends StatelessWidget {
         borderRadius: BorderRadius.circular(20.0),
       ),
       elevation: 1.0,
-      backgroundColor: Colors.transparent,
-      child: Container(
-        height: _height * 0.6,
-        width: _width,
-        padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 28),
-              ),
-              Divider(),
-              (imagePath != null && imagePath.isNotEmpty)
-                  ? Image.asset(
-                      Assets.iciciGraphic,
-                      fit: BoxFit.contain,
-                      height: 100,
-                      width: 100,
-                    )
-                  : Container(),
-              Text(
-                text,
-                textAlign: TextAlign.justify,
-                style: TextStyle(fontSize: 16),
-              ),
-            ],
-          ),
+      backgroundColor: Colors.white,
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child:Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 24),
+            ),
+            Divider(),
+            SizedBox(
+              height: 5,
+            ),
+            (imagePath != null && imagePath.isNotEmpty)
+                ? Image.asset(
+              imagePath,
+              alignment: Alignment.center,
+              fit: BoxFit.contain,
+              height: 200,
+              width: 200,
+            )
+                : Container(),
+            Text(
+              text,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18),
+            ),
+            SizedBox(
+              height: 10,
+            )
+          ],
         ),
-      ),
+      )
     );
   }
 }

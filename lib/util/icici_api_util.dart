@@ -312,3 +312,16 @@ class GetBankRedemptionDetail{
   static final String res = "Bank_Name";
 //TODO more fields required
 }
+
+
+/**
+ * sample response: {"STATUS":"0","ERR_DESCRIPTION":""}
+ * */
+class GetPaidStatus{
+  static final String path = '/api/getPaidStatus';
+  static final String fldTranId = 'tranid';
+  static final String fldPan = 'firstpan';
+
+  static final String resStatus = 'STATUS';
+  static final String resErrDesc = 'ERR_DESCRIPTION';
+}

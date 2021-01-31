@@ -7,6 +7,7 @@ import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/elements/withdraw_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -216,17 +217,17 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     } else {
       baseProvider.iciciDetail =
           await dbProvider.getUserIciciDetails(baseProvider.myUser.uid);
-      if (baseProvider.iciciDetail == null ||
-          baseProvider.iciciDetail.panNumber == null ||
-          baseProvider.iciciDetail.appId == null ||
-          baseProvider.iciciDetail.kycStatus == null) {
-        Navigator.of(context).pop(); //go back to save tab
+      Navigator.of(context).pop(); //go back to save tab
+      if(baseProvider.iciciDetail != null && baseProvider.iciciDetail.panNumber != null
+      && baseProvider.iciciDetail.appId != null && baseProvider.iciciDetail.panName != null) {
         Navigator.push(context, MaterialPageRoute(
-            builder: (ctx) => IciciOnboardController(startIndex: PANPage.index,),
-          ),
-        );
+          builder: (ctx) => IciciOnboardController(startIndex: PersonalPage.index,appIdExists: true,),
+        ));
+      }else{
+        Navigator.push(context, MaterialPageRoute(
+          builder: (ctx) => IciciOnboardController(startIndex: PANPage.index,appIdExists: false,),
+        ));
       }
-      //TODO add more logic to direct the user to the right page
       baseProvider.isDepositRouteLogicInProgress = false;
     }
     return true;

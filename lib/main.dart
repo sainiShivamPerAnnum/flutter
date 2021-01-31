@@ -6,6 +6,7 @@ import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/pages/app_root.dart';
 import 'package:felloapp/ui/pages/faq_page.dart';
+import 'package:felloapp/ui/pages/kyc_invalid.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
@@ -63,7 +64,8 @@ class MyApp extends StatelessWidget {
           '/tnc': (BuildContext context) => TnC(),
           '/refpolicy': (BuildContext context) => ReferralPolicy(),
           '/verifykyc': (BuildContext context) => KycOnboardController(),
-          '/onboardicici': (BuildContext context) => IciciOnboardController()
+          '/onboardicici': (BuildContext context) => IciciOnboardController(),
+          '/initkyc': (BuildContext context) => KYCInvalid()
         },
       ),
     );

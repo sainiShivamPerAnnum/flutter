@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 class PersonalPage extends StatefulWidget {
   static const int index = 1;
   final personalForm;
-  PersonalPage({@required this.personalForm});
+  final isNameDisabled;
+  PersonalPage({@required this.personalForm, this.isNameDisabled=false});
   @override
   _PersonalPageState createState() => _PersonalPageState();
 }
@@ -51,7 +52,7 @@ class _PersonalPageState extends State<PersonalPage> {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
     baseProvider = Provider.of<BaseUtil>(context);
-    IDP.name.text = baseProvider.iciciDetail.panName;
+    IDP.name.text = (baseProvider.iciciDetail!=null)?baseProvider.iciciDetail.panName:'';
     return SafeArea(
       child: SingleChildScrollView(
         child: Container(
@@ -96,6 +97,7 @@ class _PersonalPageState extends State<PersonalPage> {
                     decoration: inputFieldDecoration(baseProvider.iciciDetail.panName),
                     controller: IDP.name,
                     textCapitalization: TextCapitalization.characters,
+                    enabled: !widget.isNameDisabled,
                     validator: (value) {
                       RegExp nameCheck = RegExp(r"^[a-zA-Z ]+$");
                       if (value.isEmpty) {

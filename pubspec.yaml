@@ -71,5 +71,8 @@ flutter:
     - images/whatsapp.png
     - images/onboard_collage-small.png
     - images/checkmark.json
+    - images/PAN_card.png
+    - images/PAN_card_no_focussed.png
+    - images/kyc_unavailable.png
     - resources/fello_tnc.html
     - resources/referral_policy.html

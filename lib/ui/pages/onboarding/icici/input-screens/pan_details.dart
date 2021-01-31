@@ -85,7 +85,7 @@ class PANPage extends StatelessWidget {
                               builder: (BuildContext context) => MoreInfoDialog(
                                 text: Assets.infoWherePan,
                                 title: 'Where can i find the PAN number?',
-                                imagePath: Assets.dummyPanCard,
+                                imagePath: Assets.dummyPanCardShowNumber,
                               ));
                         },
                       ),

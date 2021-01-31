@@ -13,9 +13,11 @@ class Assets {
   static final String whatsappIcon = 'images/whatsapp.png';
   static final String strikeThroughGraphic = 'images/diagonal-strike.png';
   static final String onboardCollageGraphic = 'images/onboard_collage-small.png';
-  static final String dummyPanCard = 'images/sebi.png';
-  static final String dummyAadharCard = 'images/sebi.png';
+  static final String dummyPanCard = 'images/PAN_card.png';
+  static final String dummyPanCardShowNumber = 'images/PAN_card_no_focussed.png';
   static final String dummyCancelledCheque = 'images/sebi.png';
+  static final String kycUnavailableAsset = 'images/kyc_unavailable.png';
+
 
   static final List<String> onboardingSlide = [
     'images/save-small.png',
@@ -148,5 +150,5 @@ class Assets {
   ];
 
   static final String infoWhyPan = 'Your PAN Card is required by ICICI to set up your investment folio';
-  static final String infoWherePan = 'Your PAN Number is a 10 character ID that can found on your PAN Card';
+  static final String infoWherePan = 'Your PAN Number is a 10 character ID that can be found on your PAN Card';
 }

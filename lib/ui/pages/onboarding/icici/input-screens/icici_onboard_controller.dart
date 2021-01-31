@@ -11,7 +11,7 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-elements/error_dialog.d
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/submit_button.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/bank_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/income_details.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-screens/kyc_invalid.dart';
+import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/pages/kyc_invalid.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/otp_verification.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
@@ -27,9 +27,10 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 class IciciOnboardController extends StatefulWidget {
-  IciciOnboardController({this.startIndex});
+  IciciOnboardController({this.startIndex, this.appIdExists=false});
 
   final int startIndex;
+  final bool appIdExists;
 
   @override
   _IciciOnboardControllerState createState() => _IciciOnboardControllerState();
@@ -126,7 +127,8 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
               _isProcessingComplete = false;
               _isProcessing = false;
               setState(() {
-                onTabTapped(KYCInvalid.index);
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed('/initkyc');
               });
               break;
             }
@@ -167,33 +169,62 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     if (personalDetailsformKey.currentState.validate()) {
       _isProcessing = true;
       setState(() {});
-      onNameEntered(IDP.name.text).then((nameResObj) {
-        if (!nameResObj['flag']) {
-          _isProcessing = false;
-          if (nameResObj['reason'] != null) {
-            //TODO Add error message
-          }
-          setState(() {});
-        } else {
-          onBasicDetailsEntered(
-                  baseProvider.myUser.mobile, IDP.email.text, IDP.selectedDate)
-              .then((basicObj) {
-            if (!basicObj['flag']) {
-              _isProcessing = false;
-              if (nameResObj['reason'] != null) {
-                //TODO Add error message
-              }
-              setState(() {});
-            } else {
-              _isProcessing = false;
-              setState(() {});
-              new Timer(const Duration(milliseconds: 1000), () {
-                onTabTapped(IncomeDetailsInputScreen.index);
-              });
+      if(widget.appIdExists) {
+        //dont generate a new app id again
+        onBasicDetailsEntered(
+            baseProvider.myUser.mobile, IDP.email.text, IDP.selectedDate)
+            .then((basicObj) {
+          if (!basicObj['flag']) {
+            _isProcessing = false;
+            if (basicObj['reason'] != null) {
+              _errorMessage = 'Error: ${basicObj['reason']}';
+            }else{
+              _errorMessage = 'Error: Unknown error occurred. Please try again.';
             }
-          });
-        }
-      });
+            setState(() {});
+          } else {
+            _isProcessing = false;
+            setState(() {});
+            new Timer(const Duration(milliseconds: 1000), () {
+              onTabTapped(IncomeDetailsInputScreen.index);
+            });
+          }
+        });
+      }else{
+        //first generate an app id using name and pannumber
+        //then start adding in the details
+        onNameEntered(IDP.name.text).then((nameResObj) {
+          if (!nameResObj['flag']) {
+            _isProcessing = false;
+            if (nameResObj['reason'] != null) {
+              _errorMessage = 'Error: ${nameResObj['reason']}';
+            }else{
+              _errorMessage = 'Error: Unknown error occurred. Please try again.';
+            }
+            setState(() {});
+          } else {
+            onBasicDetailsEntered(
+                baseProvider.myUser.mobile, IDP.email.text, IDP.selectedDate)
+                .then((basicObj) {
+              if (!basicObj['flag']) {
+                _isProcessing = false;
+                if (basicObj['reason'] != null) {
+                  _errorMessage = 'Error: ${basicObj['reason']}';
+                }else{
+                  _errorMessage = 'Error: Unknown error occurred. Please try again.';
+                }
+                setState(() {});
+              } else {
+                _isProcessing = false;
+                setState(() {});
+                new Timer(const Duration(milliseconds: 1000), () {
+                  onTabTapped(IncomeDetailsInputScreen.index);
+                });
+              }
+            });
+          }
+        });
+      }
     }
   }
 
@@ -981,6 +1012,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
                       PANPage(),
                       PersonalPage(
                         personalForm: personalDetailsformKey,
+                        isNameDisabled: widget.appIdExists, //use previously entered name if appid exists
                       ),
                       IncomeDetailsInputScreen(),
                       BankDetailsInputScreen(),
