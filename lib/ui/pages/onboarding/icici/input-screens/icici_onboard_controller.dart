@@ -33,7 +33,7 @@ class IciciOnboardController extends StatefulWidget {
   final bool appIdExists;
 
   @override
-  _IciciOnboardControllerState createState() => _IciciOnboardControllerState();
+  _IciciOnboardControllerState createState() => _IciciOnboardControllerState(startIndex);
 }
 
 class _IciciOnboardControllerState extends State<IciciOnboardController> {
@@ -161,12 +161,21 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
         }
       });
     } else {
-      showErrorDialog("Oops!", "Invalid PAN!", context);
+      showErrorDialog("Valid PAN required", "Please input your correct PAN Number", context);
     }
   }
 
   verifyPersonalDetails() {
     if (personalDetailsformKey.currentState.validate()) {
+      DateTime dt = IDP.selectedDate;
+      if(dt == null){
+        showErrorDialog('Date of Birth', 'Please enter your date of birth', context);
+        return;
+      }
+      else if(dt != null && !isAdult(dt)){
+        showErrorDialog('Date of Birth', 'You need to be 18 years and above to be eligible', context);
+        return;
+      }
       _isProcessing = true;
       setState(() {});
       if(widget.appIdExists) {
@@ -230,15 +239,15 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
 
   verifyIncomeDetails() {
     if (IDP.occupationChosenValue == null ||
-        IDP.wealthChosenValue == null ||
+        IDP.incomeChosenValue == null ||
         IDP.exposureChosenValue == null) {
       showErrorDialog("Oops!", "All Fields are necessary bruh!", context);
     } else {
       _isProcessing = true;
       setState(() {});
 
-      onIncomeDetailsEntered(IDP.occupationChosenValue, "10 to 25Lacs",
-              IDP.exposureChosenValue, IDP.wealthChosenValue)
+      onIncomeDetailsEntered(IDP.occupationChosenValue, IDP.incomeChosenValue,
+              IDP.exposureChosenValue, '01')
           .then((incomeObj) {
         if (!incomeObj['flag']) {
           _isProcessing = false;
@@ -1172,5 +1181,19 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     if(_pageIndex == PANPage.index)return 'VERIFY';
     else if(_pageIndex == OtpVerification.index)return 'COMPLETE';
     else return 'NEXT';
+  }
+
+
+  bool isAdult(DateTime dt) {
+    // Current time - at this moment
+    DateTime today = DateTime.now();
+    // Date to check but moved 18 years ahead
+    DateTime adultDate = DateTime(
+      dt.year + 18,
+      dt.month,
+      dt.day,
+    );
+
+    return adultDate.isBefore(today);
   }
 }
