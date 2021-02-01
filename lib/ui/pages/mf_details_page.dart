@@ -133,9 +133,18 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
             HapticFeedback.vibrate();
             baseProvider.isDepositRouteLogicInProgress = true;
             setState(() {});
-            onDepositClicked().then((value) {
-              setState(() {});
-            });
+            ///////////DUMMY///////////////////////////////////
+            baseProvider.iciciDetail =
+            await dbProvider.getUserIciciDetails(baseProvider.myUser.uid);
+            Navigator.of(context).pop();
+            Navigator.push(context, MaterialPageRoute(
+              builder: (ctx) => DepositVerification(tranId: '3433559',userTxnId: 'tdcT4bxF0Gyv9qlhqmlx',
+                panNumber: baseProvider.iciciDetail.panNumber,),
+            ));
+            //////////////////////////////////////
+            // onDepositClicked().then((value) {
+            //   setState(() {});
+            // });
           },
           highlightColor: Colors.white30,
           splashColor: Colors.white30,

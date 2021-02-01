@@ -216,8 +216,8 @@ class DepositModalSheetState extends State<DepositModalSheet> with SingleTickerP
               padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
               child: Container(
                 width: _width,
-                child: Text('A previous deposit is currently pending..\n Please '
-                    + 'make a new deposit after the previous one has been successfully processed.',
+                child: Text('A previous deposit is currently pending.\n Please '
+                    + 'wait until it has been successfully processed.',
                   textAlign: TextAlign.center,
                   style:TextStyle(
                     fontSize: 16,

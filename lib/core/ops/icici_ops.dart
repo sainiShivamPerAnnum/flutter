@@ -538,11 +538,11 @@ class ICICIModel extends ChangeNotifier{
         log.error('Returned empty response');
         return null;
       }
-      String dummmy = '[{"TRANID":"3433599","TRXN_DATE":"01/02/2021","TRXN_TIME":"12:47:39 PM","INV_NAME":"SHOURYADITYA RAY LALA",'
-           +'"MOBILE_NO":9986643444,"SCH_NAME":"ICICI Prudential Liquid Fund - Growth","MULTIPLE_ID":"3433598",'
-     + '"AMOUNT":100,"UPI_DATE_TIME":"01/02/2021 12:50 PM","TRIG_SCHEME":null,"USERNAME":null,"TRAN_ID":"3433599",'
-     + '"DISPLAY_NAME":null,"IS_TAX":"N","LTEF_URL":null}]';
-      List<dynamic> rList = json.decode(dummmy);
+     //  String dummmy = '[{"TRANID":"3433599","TRXN_DATE":"01/02/2021","TRXN_TIME":"12:47:39 PM","INV_NAME":"SHOURYADITYA RAY LALA",'
+     //       +'"MOBILE_NO":9986643444,"SCH_NAME":"ICICI Prudential Liquid Fund - Growth","MULTIPLE_ID":"3433598",'
+     // + '"AMOUNT":100,"UPI_DATE_TIME":"01/02/2021 12:50 PM","TRIG_SCHEME":null,"USERNAME":null,"TRAN_ID":"3433599",'
+     // + '"DISPLAY_NAME":null,"IS_TAX":"N","LTEF_URL":null}]';
+      List<dynamic> rList = json.decode(res);
       List<Map<String, dynamic>> refList = new List();
       rList.forEach((element) {
         refList.add({
