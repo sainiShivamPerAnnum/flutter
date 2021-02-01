@@ -1,27 +1,30 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/ui/pages/onboarding/input-elements/data_provider.dart';
-import 'package:felloapp/ui/pages/onboarding/input-elements/input_field.dart';
-import 'package:felloapp/ui/pages/onboarding/input-screens/test_file.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-elements/data_provider.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PersonalPage extends StatefulWidget {
+  static const int index = 1;
   final personalForm;
-  PersonalPage({@required this.personalForm});
+  final isNameDisabled;
+  PersonalPage({@required this.personalForm, this.isNameDisabled=false});
   @override
   _PersonalPageState createState() => _PersonalPageState();
 }
 
 class _PersonalPageState extends State<PersonalPage> {
   BaseUtil baseProvider;
-  TestFile testInstance = new TestFile();
+  IciciOnboardController controllerInstance = new IciciOnboardController();
+  TextEditingController _dateController = new TextEditingController(text: '${IDP.selectedDate.toLocal()}'.split(' ')[0]);
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: IDP.selectedDate,
-        firstDate: DateTime(2015, 8),
+        firstDate: DateTime(1940, 8),
         lastDate: DateTime(2101),
         builder: (BuildContext context, Widget child) {
           return Theme(
@@ -32,7 +35,7 @@ class _PersonalPageState extends State<PersonalPage> {
                 surface: UiConstants.primaryColor,
                 onSurface: Colors.black,
               ),
-              dialogBackgroundColor: Colors.white,
+              dialogBackgroundColor: Colors.blueGrey[50],
             ),
             child: child,
           );
@@ -40,6 +43,7 @@ class _PersonalPageState extends State<PersonalPage> {
     if (picked != null && picked != IDP.selectedDate)
       setState(() {
         IDP.selectedDate = picked;
+        _dateController.text = "${picked.toLocal()}".split(' ')[0];
       });
   }
 
@@ -48,7 +52,8 @@ class _PersonalPageState extends State<PersonalPage> {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
     baseProvider = Provider.of<BaseUtil>(context);
-    IDP.name.text = baseProvider.myUser.name;
+    IDP.name.text = (baseProvider.iciciDetail!=null)?baseProvider.iciciDetail.panName:'';
+    IDP.email.text = (baseProvider.myUser!=null)?baseProvider.myUser.email:'';
     return SafeArea(
       child: SingleChildScrollView(
         child: Container(
@@ -87,13 +92,38 @@ class _PersonalPageState extends State<PersonalPage> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Text("Name (As Per PAN Card)"),
+                Text("Mobile No"),
+                Container(
+                  margin: EdgeInsets.only(
+                    bottom: 20,
+                    top: 5,
+                  ),
+                  padding: EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 15),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding:
+                    const EdgeInsets.only(bottom: 11, top: 11, right: 15),
+                    child: Text(
+                      baseProvider.myUser.mobile,
+                      style: TextStyle(
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
+                ),
+                Text("Name as per your PAN Card"),
                 InputField(
                   child: TextFormField(
-                    decoration: inputFieldDecoration(baseProvider.myUser.name),
+                    decoration: inputFieldDecoration('Enter Full Name'),
                     controller: IDP.name,
+                    textCapitalization: TextCapitalization.characters,
+                    enabled: !widget.isNameDisabled,
                     validator: (value) {
-                      RegExp nameCheck = RegExp(r"^[a-zA-Z\\s]+$");
+                      RegExp nameCheck = RegExp(r"^[a-zA-Z ]+$");
                       if (value.isEmpty) {
                         return 'Name Field Cannot be Empty';
                       } else if (nameCheck.hasMatch(value)) {
@@ -107,9 +137,10 @@ class _PersonalPageState extends State<PersonalPage> {
                 Text("Email"),
                 InputField(
                   child: TextFormField(
-                    // The validator receives the text that the user has entered.
-                    decoration: inputFieldDecoration(baseProvider.myUser.email),
+                    decoration: inputFieldDecoration('Enter email'),
                     controller: IDP.email,
+                    autofillHints: [AutofillHints.email],
+                    keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       RegExp emailCheck = RegExp(
                           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
@@ -123,35 +154,29 @@ class _PersonalPageState extends State<PersonalPage> {
                     },
                   ),
                 ),
-                Text("Mobile No"),
-                InputField(
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 11, top: 11, right: 15),
-                    child: Text(
-                      baseProvider.myUser.mobile,
-                      style: TextStyle(
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ),
-                ),
                 Text("Date of Birth"),
-                InputField(
-                  child: Row(
-                    children: [
-                      Text(
-                        "${IDP.selectedDate.toLocal()}".split(' ')[0],
-                      ),
-                      Spacer(),
-                      IconButton(
-                        onPressed: () => _selectDate(context),
-                        icon: Icon(
+                InkWell(
+                  onTap: () {
+                    _selectDate(context);
+                  },
+                  child: InputField(
+                    child: TextFormField(
+                      textAlign: TextAlign.start,
+                      enabled: false,
+                      keyboardType: TextInputType.text,
+                      validator: (value) {
+                       return null;
+                      },
+                      controller: _dateController,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Enter Date',
+                        suffixIcon: Icon(
                           Icons.calendar_today,
                           color: UiConstants.primaryColor,
                         ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
                 Spacer(),
@@ -163,4 +188,5 @@ class _PersonalPageState extends State<PersonalPage> {
       ),
     );
   }
+
 }

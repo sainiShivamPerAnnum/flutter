@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 class SubmitButton extends StatelessWidget {
   final Function action;
   final String title;
+  final bool isDisabled;
 
-  SubmitButton({@required this.action, @required this.title});
+  SubmitButton({@required this.action, @required this.title, @required this.isDisabled});
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
@@ -13,7 +14,7 @@ class SubmitButton extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 20),
       height: 50,
       width: _width * 0.5,
-      decoration: BoxDecoration(
+      decoration: (!isDisabled)?BoxDecoration(
         gradient: new LinearGradient(
           colors: [
             UiConstants.primaryColor,
@@ -22,7 +23,17 @@ class SubmitButton extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
-        borderRadius: BorderRadius.circular(100),
+        borderRadius: BorderRadius.circular(80),
+      ):BoxDecoration(
+        gradient: new LinearGradient(
+          colors: [
+            Colors.blueGrey,
+            Colors.blueGrey.withBlue(150),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        borderRadius: BorderRadius.circular(80),
       ),
       alignment: Alignment.center,
       child: FlatButton(
@@ -31,6 +42,7 @@ class SubmitButton extends StatelessWidget {
           title,
           style: TextStyle(
             color: Colors.white,
+            fontSize: 16
           ),
         ),
       ),

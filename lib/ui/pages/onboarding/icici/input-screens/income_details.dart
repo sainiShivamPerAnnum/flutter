@@ -1,10 +1,11 @@
-import 'package:felloapp/ui/pages/onboarding/input-elements/data_provider.dart';
-import 'package:felloapp/ui/pages/onboarding/input-elements/input_field.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-elements/data_provider.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class IncomeDetailsInputScreen extends StatefulWidget {
+  static const int index = 2;
   @override
   _IncomeDetailsInputScreenState createState() =>
       _IncomeDetailsInputScreenState();
@@ -38,6 +39,15 @@ class _IncomeDetailsInputScreenState extends State<IncomeDetailsInputScreen> {
     {"NAME": "Prize Money", "CODE": "06"},
     {"NAME": "Royalty", "CODE": "07"},
     {"NAME": "Others", "CODE": "08"}
+  ];
+
+  List<Map<String, String>> incomeGroup = [
+    {"NAME": "Below 1 Lac", "CODE": "Below 1 Lac"},
+    {"NAME": "1-5 Lacs", "CODE": "1-5 Lacs"},
+    {"NAME": "5-10 Lacs", "CODE": "5-10 Lacs"},
+    {"NAME": "10-25 Lacs", "CODE": "10-25 Lacs"},
+    {"NAME": ">25 Lacs-1 crore", "CODE": ">25 Lacs-1 crore"},
+    {"NAME": ">1 crore", "CODE": ">1 crore"},
   ];
 
   List<Map<String, String>> politicalExposure = [
@@ -153,22 +163,22 @@ class _IncomeDetailsInputScreenState extends State<IncomeDetailsInputScreen> {
                         ]),
                   ),
                   SizedBox(height: 20),
-                  Text("Wealth Source"),
+                  Text("Annual Income"),
                   InputField(
                     child: DropdownButtonFormField(
                       decoration: InputDecoration(
                         border: InputBorder.none,
                       ),
                       iconEnabledColor: UiConstants.primaryColor,
-                      hint: Text("Source of Money?"),
-                      value: IDP.wealthChosenValue,
+                      hint: Text("Estimated Annual Income"),
+                      value: IDP.incomeChosenValue,
                       onChanged: (String newVal) {
                         setState(() {
-                          IDP.wealthChosenValue = newVal;
+                          IDP.incomeChosenValue = newVal;
                           print(newVal);
                         });
                       },
-                      items: wealthSource
+                      items: incomeGroup
                           .map(
                             (e) => DropdownMenuItem(
                               value: e["CODE"],
