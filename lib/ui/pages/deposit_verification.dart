@@ -5,6 +5,7 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 
 class DepositVerification extends StatefulWidget{
   DepositVerification({this.tranId, this.panNumber, this.userTxnId});
@@ -25,6 +26,7 @@ class _DepositVerificationState extends State<DepositVerification> {
 
   @override
   Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context);
     _width = MediaQuery.of(context).size.width;
     _height = MediaQuery.of(context).size.height;
     return WillPopScope(
@@ -131,8 +133,10 @@ class _DepositVerificationState extends State<DepositVerification> {
           ),
           onTap: () {
             //TODO add an are you sure dialog here
-            _isPaymentMade = true;
-            setState(() {});
+            baseProvider.runPaymentVerification().then((value) {
+              _isPaymentMade = true;
+              setState(() {});
+            });
           },
         )
       ],
@@ -195,8 +199,11 @@ class _DepositVerificationState extends State<DepositVerification> {
             child: new Text('No'),
           ),
           new FlatButton(
-            onPressed: () =>
-                Navigator.of(context).pop(),
+            onPressed: () {
+              //pop twice to get back to mf details
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+              },
             child: new Text('Yes'),
           ),
         ],

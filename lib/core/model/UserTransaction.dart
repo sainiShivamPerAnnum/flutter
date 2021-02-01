@@ -4,10 +4,11 @@ import 'package:felloapp/util/logger.dart';
 class UserTransaction{
   static Log log = new Log('UserTransaction');
   String _docKey;
-  double _amount;
-  double _closingBalance;
+  int _amount;
+  int _closingBalance;
   String _note;
   String _subType;
+  int _ticketUpCount;
   String _type;
   String _userId;
   String _tranId;
@@ -23,6 +24,7 @@ class UserTransaction{
   static final String fldNote = 'tNote';
   static final String fldSubType = 'tSubtype';
   static final String fldType = 'tType';
+  static final String fldTicketUpCount = 'tTicketUpCount';
   static final String fldUserId = 'tUserId';
   static final String fldTimestamp = 'timestamp';
   static final String fldUpdatedTime = 'tUpdateTime';
@@ -40,16 +42,16 @@ class UserTransaction{
   static const String TRAN_SUBTYPE_ICICI_DEPOSIT = 'ICICI1565';
 
   UserTransaction(this._amount,this._closingBalance,this._note,this._subType,
-      this._type,this._userId,this._tranId,this._multipleId, this._upiTime,
+      this._type,this._ticketUpCount,this._userId,this._tranId,this._multipleId, this._upiTime,
       this._tranStatus, this._timestamp,this._updatedTime);
   
   UserTransaction.fromMap(Map<String, dynamic> data, String documentID):
         this(data[fldAmount], data[fldClosingBalance], data[fldNote], data[fldSubType],
-        data[fldType], data[fldUserId], data[fldTranId], data[fldMultipleId], data[fldUpiTime],
+        data[fldType], data[fldTicketUpCount], data[fldUserId], data[fldTranId], data[fldMultipleId], data[fldUpiTime],
         data[fldTranStatus], data[fldTimestamp], data[fldUpdatedTime]);
   
-  UserTransaction.newMFDeposit(String tranId, String multipleId, String upiTimestamp, double amount, String userId):
-      this(amount,0,'NA',TRAN_SUBTYPE_ICICI_DEPOSIT,TRAN_TYPE_DEPOSIT,userId,tranId,multipleId,
+  UserTransaction.newMFDeposit(String tranId, String multipleId, String upiTimestamp, int amount, String userId):
+      this(amount,0,'NA',TRAN_SUBTYPE_ICICI_DEPOSIT,TRAN_TYPE_DEPOSIT,0,userId,tranId,multipleId,
       upiTimestamp, TRAN_STATUS_PENDING,Timestamp.now(),Timestamp.now());
 
   toJson() {
@@ -59,6 +61,7 @@ class UserTransaction{
       fldNote: _note,
       fldSubType: _subType,
       fldType: _type,
+      fldTicketUpCount: _ticketUpCount,
       fldUserId: _userId,
       fldTimestamp: _timestamp,
       fldUpdatedTime: Timestamp.now(),
@@ -99,6 +102,12 @@ class UserTransaction{
     _type = value;
   }
 
+  int get ticketUpCount => _ticketUpCount;
+
+  set ticketUpCount(int value) {
+    _ticketUpCount = value;
+  }
+
   String get subType => _subType;
 
   set subType(String value) {
@@ -111,15 +120,15 @@ class UserTransaction{
     _note = value;
   }
 
-  double get closingBalance => _closingBalance;
+  int get closingBalance => _closingBalance;
 
-  set closingBalance(double value) {
+  set closingBalance(int value) {
     _closingBalance = value;
   }
 
-  double get amount => _amount;
+  int get amount => _amount;
 
-  set amount(double value) {
+  set amount(int value) {
     _amount = value;
   }
 

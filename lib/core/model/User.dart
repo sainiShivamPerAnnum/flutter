@@ -14,6 +14,7 @@ class User {
   int _account_balance;
   int _deposit_balance;
   int _prize_balance;
+  int _icici_balance;
   int _lifetime_winnings;
   String _pan;
   String _age;
@@ -36,26 +37,27 @@ class User {
   static final String fldIsKycVerified = "mIsKycVerified";
   static final String fldDepositBalance = "mDepBalance";
   static final String fldPriBalance = "mPriBalance";
+  static final String fldICICIBalance = "mICBalance";
   static final String fldLifeTimeWinnings = "mLifeTimeWin";
   static final String fldPendingTxnId = "mPendingTxnId";
 
   User(this._uid, this._mobile, this._email, this._name, this._client_token,
       this._ticket_count, this._account_balance, this._deposit_balance,
-      this._prize_balance, this._lifetime_winnings, this._pan, this._age,
-      this._isInvested, this._isIciciOnboarded, this._isKycVerified,
-      this._pendingTxnId);
+      this._prize_balance, this._icici_balance, this._lifetime_winnings,
+      this._pan, this._age, this._isInvested, this._isIciciOnboarded,
+      this._isKycVerified, this._pendingTxnId);
 
   static List<String> _fldList = [ fldMobile, fldEmail, fldName, fldPan, fldAge ];
 
   User.newUser(String id, String mobile) : this(id, mobile, null, null, null,
-      BaseUtil.NEW_USER_TICKET_COUNT, 0, 0, 0, 0, null, null, false, false,
+      BaseUtil.NEW_USER_TICKET_COUNT, 0, 0, 0, 0, 0, null, null, false, false,
       BaseUtil.KYC_UNTESTED,null);
 
   User.fromMap(Map<String, dynamic> data, String id, [String client_token]) :
         this(id, data[fldMobile], data[fldEmail], data[fldName], client_token,
           data[fldTicket_count]??BaseUtil.NEW_USER_TICKET_COUNT, data[fldAcctBalance]??0,
-          data[fldDepositBalance]??0,data[fldPriBalance]??0, data[fldLifeTimeWinnings]??0,
-          data[fldPan],data[fldAge], data[fldIsInvested]??false,
+          data[fldDepositBalance]??0,data[fldPriBalance]??0, data[fldICICIBalance]??0,
+          data[fldLifeTimeWinnings]??0,data[fldPan],data[fldAge], data[fldIsInvested]??false,
           data[fldIsIciciOnboarded]??false, data[fldIsKycVerified]??BaseUtil.KYC_UNTESTED,
           data[fldPendingTxnId]
       );
@@ -70,6 +72,7 @@ class User {
       fldAcctBalance: _account_balance,
       fldDepositBalance: _deposit_balance,
       fldPriBalance: _prize_balance,
+      fldICICIBalance: _icici_balance,
       fldLifeTimeWinnings: _lifetime_winnings,
       fldPan: _pan,
       fldAge: _age,
@@ -255,6 +258,12 @@ class User {
 
   set deposit_balance(int value) {
     _deposit_balance = value;
+  }
+
+  int get icici_balance => _icici_balance;
+
+  set icici_balance(int value) {
+    _icici_balance = value;
   }
 
   String get pendingTxnId => _pendingTxnId;
