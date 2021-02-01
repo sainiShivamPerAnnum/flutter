@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
           primaryColor: UiConstants.primaryColor,
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
-          // textTheme: GoogleFonts.sourceSansProTextTheme(),
+          textTheme: GoogleFonts.sourceSansProTextTheme(),
         ),
         home: SplashScreen(),
         routes: <String, WidgetBuilder>{
