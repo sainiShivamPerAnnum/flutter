@@ -185,6 +185,10 @@ class BaseUtil extends ChangeNotifier {
     )..show(context);
   }
 
+
+
+
+
   showNoInternetAlert(BuildContext context) {
     Flushbar(
       flushbarPosition: FlushbarPosition.TOP,

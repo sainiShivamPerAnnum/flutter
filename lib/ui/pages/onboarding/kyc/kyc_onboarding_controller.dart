@@ -18,7 +18,6 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
   static BaseUtil baseProvider;
   File image;
 
-  Location location = Location();
 
 
 
@@ -68,7 +67,50 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
 
 
               }),
-              MyButton(title: "Profile", onPressed: () {}),
+              MyButton(title: "Profile", onPressed: () async
+              {
+
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return  AlertDialog(
+                      title: Center(child: Text("Update profile")),
+                      content: Text("Choose image from"),
+                      actions: [
+
+                        new FlatButton(
+                          child: Text('Camera'),
+                          onPressed: () async {
+                            var image = await picker.getImage(source: ImageSource.camera);
+                            var imagePath = image.path;
+
+                            print(imagePath);
+
+                            var result =
+                            await kycModel.updateProfile(imagePath);
+
+                          },
+                        ),
+                        FlatButton(
+                          child: Text('Gallery'),
+                          onPressed: () async {
+                            final image = await picker.getImage(source: ImageSource.gallery);
+                            var imagePath = image.path;
+
+                            await kycModel.updateProfile(imagePath);
+                          },
+                        ),
+
+
+
+
+                      ],
+                    );
+                  },
+                );
+
+
+              }),
 
               MyButton(
                   title: "POI",
@@ -119,6 +161,9 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
                                 await kycModel.executePOI(imagePath);
                               },
                             ),
+
+
+
 
                           ],
                         );
@@ -188,17 +233,42 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
                 await kycModel.generatePdf();
               }),
 
-              MyButton(title: "Location", onPressed: () async{
-
-                await location.getCurrentLocation();
-
-                var lat = location.latitude;
-                var long = location.longitude;
-
-                print("lat is $lat long is $long");
-
+              MyButton(title: "Location", onPressed: () async
+              {
+                kycModel.uploadLocation();
 
               }),
+
+
+              MyButton(
+                  title: "Video",
+                  onPressed: () async{
+
+                    var image = await picker.getVideo(source: ImageSource.camera);
+                    var imagePath = image.path;
+
+                    await kycModel.recordVideo(imagePath);
+
+
+
+
+
+                  }),
+
+              MyButton(
+                  title: "FATCA",
+                  onPressed: () async{
+
+
+                    await kycModel.Fatca();
+
+
+
+
+
+                  }),
+
+
 
 
 

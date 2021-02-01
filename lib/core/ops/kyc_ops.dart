@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:felloapp/core/service/location.dart';
+
 
 /**
  * To get KYC firebase document
@@ -21,6 +23,9 @@ import 'package:shared_preferences/shared_preferences.dart';
     baseProvider.myUser.uid, baseProvider.kycDetail);
  * */
 class KYCModel extends ChangeNotifier {
+
+  Location location = Location();
+
   final Log log = new Log('KYCModel');
   DBModel _dbModel = locator<DBModel>();
   final String defaultBaseUri =
@@ -81,11 +86,15 @@ class KYCModel extends ChangeNotifier {
       print(userName);
 
       await login(userName, password);
-    } else if (response.statusCode == 422) {
+    }
+    else if (response.statusCode == 422)
+    {
       message = "Username already exists please enter a new username";
       res = false;
       log.debug(response.body);
-    } else {
+    }
+
+    else {
       res = false;
       message = "Something went wrong";
       log.debug(response.body);
@@ -163,7 +172,7 @@ class KYCModel extends ChangeNotifier {
       var responseString = String.fromCharCodes(responseData);
       // print("response srrint $responseString");
       imageUrl = jsonDecode(responseString)['file']['directURL'];
-      print(imageUrl);
+      // print(imageUrl);
     } else {
       print("Something went wrong");
       print(response.statusCode);
@@ -248,40 +257,153 @@ class KYCModel extends ChangeNotifier {
     return results;
   }
 
-  //  Future<Map<dynamic,dynamic>> executePOI(var image)async
-  // {
-  //    var tokens = await getId();
-  //
-  //    var auth = tokens['authToken'];
-  //    var merchentId = tokens["merchantId"];
-  //    print(merchentId);
-  //    print("Auth Token = $auth");
-  //
-  //    var data = await convertImages(image);
-  //    var imageUrl = data['imageUrl'];
-  //    print(imageUrl);
-  //
-  //    var headers = {
-  //      'Authorization': '$auth',
-  //      'Content-Type': 'application/json'
-  //    };
-  //    var request = http.Request('POST', Uri.parse('https://multi-channel-preproduction.signzy.tech/api/onboardings/execute'));
-  //    request.body = '''    {\n        "merchantId": "$merchentId",\n        "inputData": {\n            "service": "identity",\n            "type": "individualPan",\n            "task": "autoRecognition",\n            "data": {\n                "images": ["https://5.imimg.com/data5/XZ/BJ/RJ/SELLER-92944351/pancard-500x500-500x500.jpg"],            \n                "toVerifyData": {},\n                "searchParam": {},\n                "proofType": "identity"\n            }\n        }\n    }''';
-  //    request.headers.addAll(headers);
-  //
-  //    http.StreamedResponse response = await request.send();
-  //
-  //    if (response.statusCode == 200) {
-  //      print(await response.stream.bytesToString());
-  //    }
-  //    else {
-  //      print(await response.stream.bytesToString());
-  //      print(response.reasonPhrase);
-  //    }
-  //
-  //
-  //  }
 
+  Future<Map<dynamic, dynamic>> startVideo() async
+  {
+    var tokens = await getId();
+    var object;
+
+    var merchantID = tokens['merchantId'];
+    var authToken = tokens['authToken'];
+
+    bool flag = false;
+    String message = "Bank Verified Successfully";
+
+
+    var headers = {
+      'Authorization': '$authToken',
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST', Uri.parse(KycUrls.execute));
+    request.body = '''{
+    "merchantId":"$merchantID",
+    "inputData":{
+    "service":"video",
+    "type":"video",
+    "task":"start",
+    "data":{}  
+     }
+     }''';
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200)
+    {
+      flag = true;
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      object = jsonDecode(responseString)['object'];
+      print('$object');
+
+    }
+    else if(response.statusCode == 401)
+    {
+      flag = false;
+      message = "Invalid credentials";
+
+
+      print(response.reasonPhrase);
+    }
+    else
+      {
+        message = "something went wrong please try again later";
+      }
+
+    Map<dynamic, dynamic> result =
+    {
+      'flag': flag,
+      'message': message,
+      //this object contains the transactionId and randNumber
+      'object' : object
+    };
+
+    return result;
+  }
+
+
+
+  Future<Map<dynamic, dynamic>> recordVideo(var video) async
+  {
+    var flag = false;
+    var message = "Video Uploaded Successfully";
+
+    var tokens = await getId();
+
+    var auth = tokens['authToken'];
+    var merchentId = tokens["merchantId"];
+    print(merchentId);
+    print("Auth Token = $auth");
+
+    var data = await convertImages(video);
+    var videoUrl = data['imageUrl'];
+    print(videoUrl);
+
+    var getData = await startVideo();
+
+    var object = getData['object'];
+
+    var transactionId = object[0]['transactionId'];
+    print(transactionId);
+
+
+    var headers = {
+      'Authorization': '$auth',
+      'Content-Type': 'application/json'
+    };
+
+    var request = http.Request(
+        'POST',
+        Uri.parse(KycUrls.execute));
+    request.body = '''{
+    "merchantId":"$merchentId",
+    "inputData":{ 
+    "service":"video",
+    "type":"video",
+    "task":"verify",
+    "data":{  
+      "video":"$videoUrl",
+      "transactionId":"$transactionId",
+      "matchImage":"",
+      "seconds":["00:00:02","00:00:04","00:00:06","00:00:08"],    
+      
+      "type":"video"    
+        }
+        }
+        }''';
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200)
+    {
+      flag = true;
+      print(await response.stream.bytesToString());
+    }
+    else if (response.statusCode == 400)
+    {
+      flag = false;
+      message = "Video link expired please upload a new video";
+
+    }
+    else {
+      flag = false;
+      message = "Something went wrong";
+      print(await response.stream.bytesToString());
+      print(response.reasonPhrase);
+    }
+    Map<dynamic,dynamic> results =
+    {
+      "flag" : flag,
+      "message" : message
+
+    };
+    return results;
+  }
+
+
+  //this is not a part of kyc its for testing purpose
   Future<bool> POI(var image) async {
     var imageURL = await convertImages(image);
 
@@ -322,8 +444,7 @@ class KYCModel extends ChangeNotifier {
 
     if (response.statusCode == 201 || response.statusCode == 200) {
       result = true;
-      // print("Success");
-      // whatsapp.sendMessage(order);
+
       print(response.statusCode);
     } else {
       print("Something went wrong");
@@ -338,7 +459,8 @@ class KYCModel extends ChangeNotifier {
     //Get the response from the server
   }
 
-  Future<bool> updateSignature(var image) async {
+  Future<Map<dynamic,dynamic>> updateSignature(var image) async
+  {
     var flag = false;
     var message = "Signature Uploaded Successfully";
     var data = await convertImages(image);
@@ -355,30 +477,106 @@ class KYCModel extends ChangeNotifier {
       'Authorization': "$authToken",
       'Content-Type': 'application/json'
     };
-    var request = http.Request('POST', Uri.parse(KycUrls.updateSignature));
+    var request = http.Request('POST', Uri.parse(KycUrls.update));
     request.body =
-        '''{\n   "merchantId":"$merchantID",\n   "save":"formData",\n   "type":"signature",\n   "data":{\n      "type":"signature",\n      "signatureImageUrl":"$signatureUrl",\n      "consent":"true"\n   }\n}''';
+        '''{ 
+        "merchantId":"$merchantID",
+        "save":"formData",
+        "type":"signature",
+        "data":{ 
+            "type":"signature",
+            "signatureImageUrl":"$signatureUrl",
+            "consent":"true"  
+             }   
+          }''';
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200)
+    {
       flag = true;
-
-      print(await response.stream.bytesToString());
-    } else {
+    }
+    else if(response.statusCode == 422)
+    {
       flag = false;
+    }
+    else
+      {
+      flag = false;
+      message = "Something went wrong please try again later";
       print(response.reasonPhrase);
     }
 
-    // Map<dynamic,dynamic> result =
-    //   {
-    //     'flag' : flag,
-    //     'message' : message
-    //
-    //   };
+    Map<dynamic,dynamic> result =
+      {
+        'flag' : flag,
+        'message' : message
+      };
 
-    return flag;
+    return result;
+  }
+
+  Future<Map<dynamic,dynamic>> updateProfile(var image) async
+  {
+    var flag = false;
+    var message = "Profile Uploaded Successfully";
+    var data = await convertImages(image);
+
+    var profileUrl = data['imageUrl'];
+    print("Signature url is $profileUrl");
+
+    var tokens = await getId();
+
+    var merchantID = tokens['merchantId'];
+    var authToken = tokens['authToken'];
+
+    var headers = {
+      'Authorization': "$authToken",
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST', Uri.parse(KycUrls.update));
+    request.body =
+    '''{
+          "merchantId":"$merchantID",
+          "save":"formData",
+          "type":"userPhoto",
+          "data":{    
+            "photoUrl":"$profileUrl"  
+             }
+            }''';
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200)
+    {
+      flag = true;
+
+      print(await response.stream.bytesToString());
+    }
+    else if(response.statusCode == 422)
+      {
+        flag = false;
+        message = "Invalid Image please try again by selecting new image";
+
+      }
+    else {
+      flag = false;
+      message = "something went wrong";
+      print(response.reasonPhrase);
+    }
+
+    Map<dynamic,dynamic> result =
+      {
+        'flag' : flag,
+        'message' : message
+
+      };
+
+    return Future.value(result);
+
   }
 
 
@@ -389,7 +587,7 @@ class KYCModel extends ChangeNotifier {
     var merchantID = tokens['merchantId'];
     var authToken = tokens['authToken'];
 
-    bool res = false;
+    bool flag = false;
     String message = "Bank Verified Successfully";
 
 
@@ -421,18 +619,25 @@ class KYCModel extends ChangeNotifier {
 
     if (response.statusCode == 200)
     {
+      flag = true;
 
       print(await response.stream.bytesToString());
     }
     else if(response.statusCode == 400)
     {
+      flag = false;
 
       print(response.reasonPhrase);
     }
+    else
+      {
+        flag = false;
+        message = "Something went wrong please try again later";
+      }
 
     Map<dynamic, dynamic> result =
     {
-      'flag': res,
+      'flag': flag,
       'message': message
     };
 
@@ -453,7 +658,7 @@ class KYCModel extends ChangeNotifier {
     var merchantID = tokens['merchantId'];
     var authToken = tokens['authToken'];
 
-    bool res = false;
+    bool flag = false;
     String message = "Bank Verified Successfully";
 
 
@@ -482,22 +687,130 @@ class KYCModel extends ChangeNotifier {
 
     if (response.statusCode == 200)
     {
+      flag = true;
 
       print(await response.stream.bytesToString());
     }
     else if(response.statusCode == 400)
     {
+      flag = false;
+      message = "Please enter a correct image format";
 
       print(response.reasonPhrase);
     }
 
     Map<dynamic, dynamic> result =
     {
-      'flag': res,
+      'flag': flag,
       'message': message
     };
 
     return result;
+  }
+
+
+  Future<Map<dynamic,dynamic>> Fatca() async
+  {
+    var flag = false;
+    var message = "Updated successfully";
+
+    var tokens = await getId();
+
+    var merchantID = tokens['merchantId'];
+    var authToken = tokens['authToken'];
+
+    var headers = {
+      'Authorization': "$authToken",
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST', Uri.parse(KycUrls.update));
+    request.body = '''{ 
+    "merchantId":"$merchantID",
+    "save":"formData",
+    "type":"fatca",
+    "data":{ 
+          "type":"fatca",
+          "fatcaData":
+            {      
+               "pep":"NO",
+               "rpep":"NO", 
+               "residentForTaxInIndia":"NO",
+               "relatedPerson":"NO",
+                "addressType":"...", 
+                "countryCodeJurisdictionResidence":"...", 
+                "countryJurisdictionResidence":"...",   
+                "taxIdentificationNumber":"...",    
+                "placeOfBirth":"...",       
+                "countryCodeOfBirth":"...",
+                "countryOfBirth":"...",
+                "addressCity":"...",
+                "addressDistrict":"...",
+                "addressStateCode":"...",
+                "addressState":"... ...",
+                "addressCountryCode":"...",
+                "addressCountry":"...",
+                "addressPincode": "313001",
+                "address":"...",
+                "relatedPersonType":"NO",
+                "relatedPersonKycNumber":"",
+                "relatedPersonKycNumberExists":"...",
+                "relatedPersonTitle":"....",
+                "relatedPersonIdentityProof":{
+                "name":"AB",
+                "fatherName":"DEMO",
+                "dob":"02/01/1998",
+                "number":"9282"
+                },
+                "relatedPersonName":"",
+                 "relatedPersonIdentityProofType":"..."
+                 }
+                  }
+                    }''';
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200)
+    {
+      flag = true;
+
+      print(await response.stream.bytesToString());
+    }
+    else if(response.statusCode == 422)
+    {
+      flag = false;
+      message = "RelatedPerson must be one of [YES, NO]";
+
+    }
+    else {
+      flag = false;
+      message = "something went wrong";
+      print(response.reasonPhrase);
+    }
+
+    Map<dynamic,dynamic> result =
+    {
+      'flag' : flag,
+      'message' : message
+
+    };
+
+    return Future.value(result);
+
+  }
+
+
+  uploadLocation() async
+  {
+    await location.getCurrentLocation();
+
+    var lat = location.latitude;
+    var long = location.longitude;
+
+    print("lat is $lat long is $long");
+
+
   }
 
 
@@ -553,6 +866,9 @@ class KYCModel extends ChangeNotifier {
 
 
 
+
+
+  // this function is used to fetch the merchant id and Authentication token
   Future<Map<dynamic, dynamic>> getId() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 

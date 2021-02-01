@@ -18,7 +18,7 @@ class KycUrls
   static String login = "https://multi-channel-preproduction.signzy.tech/api/onboardings/login?ns=";
   static String execute = "https://multi-channel-preproduction.signzy.tech/api/onboardings/execute";
 
-  static String updateSignature = "https://multi-channel-preproduction.signzy.tech/api/onboardings/updateForm";
+  static String update = "https://multi-channel-preproduction.signzy.tech/api/onboardings/updateForm";
 
 
 
