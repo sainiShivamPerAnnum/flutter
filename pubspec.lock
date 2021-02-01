@@ -105,7 +105,7 @@ packages:
       name: collection
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.14.13"
+    version: "1.15.0-nullsafety.5"
   confetti:
     dependency: "direct main"
     description:
