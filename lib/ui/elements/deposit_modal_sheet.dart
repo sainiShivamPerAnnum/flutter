@@ -4,6 +4,7 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.da
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -12,37 +13,47 @@ import 'package:slider_button/slider_button.dart';
 
 class DepositModalSheet extends StatefulWidget {
   final ValueChanged<Map<String, dynamic>> onDepositConfirmed;
-  final depositForm;
-  DepositModalSheet({this.depositForm, this.onDepositConfirmed});
+  DepositModalSheet({Key key, this.onDepositConfirmed}):super(key: key);
 
-  _DepositModalSheetState createState() => _DepositModalSheetState();
+  DepositModalSheetState createState() => DepositModalSheetState();
 }
 
-class _DepositModalSheetState extends State<DepositModalSheet> with SingleTickerProviderStateMixin {
-  _DepositModalSheetState();
+class DepositModalSheetState extends State<DepositModalSheet> with SingleTickerProviderStateMixin {
+  DepositModalSheetState();
 
   Log log = new Log('DepositModalSheet');
   var heightOfModalBottomSheet = 100.0;
   bool _isDepositRequested = false;
   bool _isFirstInvestment = true;
+  bool _isPendingTransaction = false;
   BaseUtil baseProvider;
   final _amtController = new TextEditingController();
   final _vpaController = new TextEditingController();
   final depositformKey2 = GlobalKey<FormState>();
   bool _isInitialized = false;
   bool _isDepositInProgress = false;
+  String _errorMessage;
+  double _width;
 
   _initFields() {
     if(baseProvider != null) {
       if(baseProvider.iciciDetail.vpa != null && baseProvider.iciciDetail.vpa.isNotEmpty)
         _vpaController.text = baseProvider.iciciDetail.vpa;
       _isFirstInvestment = baseProvider.iciciDetail.firstInvMade??true;
+      _isPendingTransaction = (baseProvider.myUser.pendingTxnId != null);
       _isInitialized = true;
     }
   }
 
+  onErrorReceived(String msg) {
+    _isDepositInProgress = false;
+    _errorMessage = msg;
+    setState(() {});
+  }
+
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
+    _width = MediaQuery.of(context).size.width;
     if(!_isInitialized)_initFields();
     return Container(
       padding:
@@ -100,7 +111,7 @@ class _DepositModalSheetState extends State<DepositModalSheet> with SingleTicker
                 controller: _vpaController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: inputFieldDecoration(
-                    "Enter your UPI id"
+                    "Enter your UPI Id"
                 ),
                 validator: (value) {
                   RegExp upiRegex = RegExp('[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}');
@@ -121,7 +132,7 @@ class _DepositModalSheetState extends State<DepositModalSheet> with SingleTicker
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => MoreInfoDialog(
-                          text: Assets.infoWhyPan,
+                          text: Assets.infoWhatUPI,
                           title: 'Why is my UPI?',
                         ));
                   },
@@ -134,31 +145,40 @@ class _DepositModalSheetState extends State<DepositModalSheet> with SingleTicker
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => MoreInfoDialog(
-                          text: Assets.infoWherePan,
-                          title: 'Where can i find UPI Id?',
-                          imagePath: Assets.dummyPanCard,
+                          text: Assets.infoWhereUPI,
+                          title: 'Where can i find my UPI Id?',
                         ));
                   },
                 ),
               ],
             ),
-            (baseProvider.depositErrorMsg!=null)?Text(
-              baseProvider.depositErrorMsg,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.redAccent,
-                fontSize: 18
-              )
+            (_errorMessage!=null)?Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: _width,
+                  child: Text(
+                      'Error: $_errorMessage',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 18
+                      )
+                  ),
+                )
+              ],
             ):Container(),
             SizedBox(
               height: 20,
             ),
-            (!_isDepositInProgress)?Padding(
+            (!_isDepositInProgress && !_isPendingTransaction)?Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: SliderButton(
                 action: () {
                   //widget.onDepositConfirmed();
                   if(depositformKey2.currentState.validate()) {
+                    _isDepositInProgress = true;
+                    setState(() {});
                     widget.onDepositConfirmed({
                       'amount': _amtController.text,
                       'vpa': _vpaController.text
@@ -184,13 +204,28 @@ class _DepositModalSheetState extends State<DepositModalSheet> with SingleTicker
                   color: UiConstants.primaryColor,
                 ),
               ),
-            ):Padding(
+            ):Container(),
+            (_isDepositInProgress)?Padding(
               padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
               child: SpinKitRing(
-                color: UiConstants.spinnerColor2,
-                size: 18.0,
+                color: UiConstants.primaryColor,
+                size: 38.0,
               ),
-            )
+            ):Container(),
+            (_isPendingTransaction)?Padding(
+              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+              child: Container(
+                width: _width,
+                child: Text('A previous deposit is currently pending..\n Please '
+                    + 'make a new deposit after the previous one has been successfully processed.',
+                  textAlign: TextAlign.center,
+                  style:TextStyle(
+                    fontSize: 16,
+                    color: UiConstants.accentColor
+                  )
+                ),
+              )
+            ):Container()
           ],
         ),
       ),

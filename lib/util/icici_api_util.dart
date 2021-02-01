@@ -253,6 +253,10 @@ class CreatePortfolio{
    [{"ID_":"752994","SCH_CODE":"1565","MSG":"We are currently unable to process this transaction. Either update your App or
     try again1","STATUS":"We are currently unable to process this transaction. Either update your App or try again1"}]
  *
+ * [{"TRANID":"3433599","TRXN_DATE":"01/02/2021","TRXN_TIME":"12:47:39 PM","INV_NAME":"SHOURYADITYA RAY LALA",
+ * "MOBILE_NO":9986643444,"SCH_NAME":"ICICI Prudential Liquid Fund - Growth","MULTIPLE_ID":"3433598",
+ * "AMOUNT":100,"UPI_DATE_TIME":"01/02/2021 12:50 PM","TRIG_SCHEME":null,"USERNAME":null,"TRAN_ID":"3433599",
+ * "DISPLAY_NAME":null,"IS_TAX":"N","LTEF_URL":null}]
  * */
 class SubmitUpiPurchase{
   static final String path = 'api/submitUpiPurchase';
@@ -267,8 +271,27 @@ class SubmitUpiPurchase{
 
   static final String resTrnId = "TRANID";
   static final String resTrnDate = "TRXN_DATE";
+  static final String resUpiTime = 'UPI_DATE_TIME';
   static final String resMultipleId = "MULTIPLE_ID";
   static final String resAmount = "AMOUNT";
+  static final String resMsg = 'MSG';
+}
+
+/**
+ * {"STATUS":"0","ERR_DESCRIPTION":""}
+ * [{"STATUS":"","ERR_DESCRIPTION":"Reference No does not exist"}]
+ * */
+class GetPaidStatus{
+  static final String path = 'api/getPaidStatus';
+  static final String fldTranId = 'tranid';
+  static final String fldPan = 'firstpan';
+
+  static final String resStatus = 'STATUS';
+  static final String resErrorDesc = 'ERR_DESCRIPTION';
+
+  static const String STATUS_SUCCESS = '1';
+  static const String STATUS_INCOMPLETE = '0';
+  static const String STATUS_REJECTED = '2';
 }
 
 // ignore: slash_for_doc_comments
@@ -288,7 +311,7 @@ class SubmitUpiPurchase{
  * [{"RETURNCODE":"100","ALLOWIMPS":"Y","MESSAGE":"Only Individual folio allowed","SCH_DET":[]}]
  * */
 class CheckIMPSStatus{
-  static final String path = '/api/checkIMPSAllowed';
+  static final String path = 'api/checkIMPSAllowed';
   static final String fldFolioNo = 'foliono';
   static final String fldAmount = 'amount';
 
@@ -306,23 +329,10 @@ class CheckIMPSStatus{
     or if not found: ""
  * */
 class GetBankRedemptionDetail{
-  static final String path = '/api/getRedeemBankDetails';
+  static final String path = 'api/getRedeemBankDetails';
   static final String fldFolioNo = 'foliono';
 
   static final String resBankName = "Bank_Name";
   static final String res = "Bank_Name";
 //TODO more fields required
-}
-
-
-/**
- * sample response: {"STATUS":"0","ERR_DESCRIPTION":""}
- * */
-class GetPaidStatus{
-  static final String path = '/api/getPaidStatus';
-  static final String fldTranId = 'tranid';
-  static final String fldPan = 'firstpan';
-
-  static final String resStatus = 'STATUS';
-  static final String resErrDesc = 'ERR_DESCRIPTION';
 }

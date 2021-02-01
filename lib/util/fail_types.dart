@@ -11,6 +11,7 @@ enum FailType{
   UserICICIOTPResendFailed,
   UserICICIPfCreationFailed,
   UserPfCreatedButFolioFailed,
+  UserTransactionFailed
 }
 
 extension ParseToString on FailType {

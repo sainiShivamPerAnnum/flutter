@@ -8,10 +8,12 @@ import 'package:felloapp/ui/elements/deposit_modal_sheet.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/elements/withdraw_dialog.dart';
+import 'package:felloapp/ui/pages/deposit_verification.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -38,7 +40,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   ICICIModel iProvider;
   FcmHandler fcmProvider;
   int acctBalance = 0;
-  final depositformKey = GlobalKey<FormState>();
+  GlobalKey<DepositModalSheetState> _modalKey = GlobalKey();
 
   _init() {
     if (fcmProvider != null && baseProvider != null) {
@@ -130,8 +132,10 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
           onPressed: () async {
             HapticFeedback.vibrate();
             baseProvider.isDepositRouteLogicInProgress = true;
-            onDepositClicked();
             setState(() {});
+            onDepositClicked().then((value) {
+              setState(() {});
+            });
           },
           highlightColor: Colors.white30,
           splashColor: Colors.white30,
@@ -223,10 +227,15 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
           isScrollControlled: true,
           builder: (context) {
             return DepositModalSheet(
+              key: _modalKey,
               onDepositConfirmed: (Map<String, dynamic> rMap) {
-                _onDepositConfirmed(rMap['amount'], rMap['vpa']);
+                _onDepositConfirmed(rMap['amount'], rMap['vpa']).then((resMap) {
+                  if(!resMap['flag']) {
+                    _modalKey.currentState.onErrorReceived(resMap['reason']);
+                  }
+                  return;
+                });
               },
-              depositForm: depositformKey,
             );
           }
       );
@@ -263,24 +272,52 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
         baseProvider.iciciDetail.panNumber, baseProvider.iciciDetail.folioNo,
         baseProvider.iciciDetail.appMode, amount, vpa);
     if (pRes == null || pRes[QUERY_SUCCESS_FLAG] == QUERY_FAILED) {
-      //log.error('Couldnt fetch an appropriate response');
+      String errReason = (pRes[QUERY_FAIL_REASON] != null)
+          ? pRes[QUERY_FAIL_REASON]
+          : 'Unknown';
+      Map<String, dynamic> failData = {
+        'failReason': errReason
+      };
+      bool failureLogged = await dbProvider.logFailure(
+          baseProvider.myUser.uid,
+          FailType.UserTransactionFailed,
+          failData);
+      log.debug('Failure logged correctly: $failureLogged');
       return {
         'flag': false,
         'reason': (pRes[QUERY_FAIL_REASON] != null)
             ? pRes[QUERY_FAIL_REASON]
-            : 'Unknown'
+            : 'Encountered an unknown error. Please try again in a while'
       };
     } else {
       if(pRes[SubmitUpiPurchase.resTrnId]== null) {
         //Submit transaction not successful
         //send error response to modal
-        //TODO send error message to modal that txn failed
+        String errReason = (pRes[SubmitUpiPurchase.resMsg] != null)?
+        pRes[SubmitUpiPurchase.resMsg]:
+        'The transaction could not be initiated. Please try again in a while';
+        var failData = {
+          'failReason': errReason
+        };
+        bool failureLogged = await dbProvider.logFailure(
+            baseProvider.myUser.uid,
+            FailType.UserTransactionFailed,
+            failData);
+        log.debug('Failure logged correctly: $failureLogged');
+        return {
+          'flag': false,
+          'reason': (pRes[SubmitUpiPurchase.resMsg] != null)?
+          pRes[SubmitUpiPurchase.resMsg]:
+              'The transaction could not be initiated. Please try again in a while'
+        };
       }else{
         //create transaction
         //update user obj to show processing flag
-        String tranId = pRes[SubmitUpiPurchase.resTrnId];
-        String multipleId = pRes[SubmitUpiPurchase.resMultipleId];
-        UserTransaction txn = UserTransaction.newMFDeposit(tranId, multipleId, amt, baseProvider.myUser.uid);
+        String pTranId = pRes[SubmitUpiPurchase.resTrnId];
+        String pMultipleId = pRes[SubmitUpiPurchase.resMultipleId];
+        String pUpiDateTime = pRes[SubmitUpiPurchase.resUpiTime];
+        UserTransaction txn = UserTransaction.newMFDeposit(pTranId, pMultipleId, pUpiDateTime,
+            amt, baseProvider.myUser.uid);
         String userTxnKey = await dbProvider.addUserTransaction(baseProvider.myUser.uid, txn);
         bool nFlag = (userTxnKey != null);
         if(nFlag) {
@@ -291,10 +328,17 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
           nFlag = nFlag && upFlag;
         }
         if(nFlag) {
-
+          Navigator.of(context).pop();
+          Navigator.push(context, MaterialPageRoute(
+            builder: (ctx) => DepositVerification(tranId: pTranId,userTxnId: userTxnKey,
+              panNumber: baseProvider.iciciDetail.panNumber,),
+          ));
         }else{
           //TODO what happens if txn and user not updated
         }
+        return {
+          'flag': true,
+        };
       }
     }
   }

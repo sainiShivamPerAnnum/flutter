@@ -13,8 +13,10 @@ class UserTransaction{
   String _tranId;
   String _multipleId;
   String _tranStatus;
+  String _upiTime;
   Timestamp _timestamp;
   Timestamp _updatedTime;
+
 
   static final String fldAmount = 'tAmount';
   static final String fldClosingBalance = 'tClosingBalance';
@@ -27,6 +29,7 @@ class UserTransaction{
   static final String fldTranId = 'tTranId';
   static final String fldMultipleId = 'tMultipleId';
   static final String fldTranStatus = 'tTranStatus';
+  static final String fldUpiTime = 'tUpiDateTime';
 
   static const String TRAN_STATUS_PENDING = 'PENDING';
   static const String TRAN_STATUS_COMPLETE = 'COMPLETE';
@@ -37,17 +40,17 @@ class UserTransaction{
   static const String TRAN_SUBTYPE_ICICI_DEPOSIT = 'ICICI1565';
 
   UserTransaction(this._amount,this._closingBalance,this._note,this._subType,
-      this._type,this._userId,this._tranId,this._multipleId,this._tranStatus,
-      this._timestamp,this._updatedTime);
+      this._type,this._userId,this._tranId,this._multipleId, this._upiTime,
+      this._tranStatus, this._timestamp,this._updatedTime);
   
   UserTransaction.fromMap(Map<String, dynamic> data, String documentID):
         this(data[fldAmount], data[fldClosingBalance], data[fldNote], data[fldSubType],
-        data[fldType], data[fldUserId], data[fldTranId], data[fldMultipleId],
+        data[fldType], data[fldUserId], data[fldTranId], data[fldMultipleId], data[fldUpiTime],
         data[fldTranStatus], data[fldTimestamp], data[fldUpdatedTime]);
   
-  UserTransaction.newMFDeposit(String tranId, String multipleId, double amount, String userId):
+  UserTransaction.newMFDeposit(String tranId, String multipleId, String upiTimestamp, double amount, String userId):
       this(amount,0,'NA',TRAN_SUBTYPE_ICICI_DEPOSIT,TRAN_TYPE_DEPOSIT,userId,tranId,multipleId,
-      TRAN_STATUS_PENDING,Timestamp.now(),Timestamp.now());
+      upiTimestamp, TRAN_STATUS_PENDING,Timestamp.now(),Timestamp.now());
 
   toJson() {
     return {
@@ -61,7 +64,8 @@ class UserTransaction{
       fldUpdatedTime: Timestamp.now(),
       fldTranId: _tranId,
       fldMultipleId: _multipleId,
-      fldTranStatus: _tranStatus
+      fldTranStatus: _tranStatus,
+      fldUpiTime: _upiTime
     };
   }
 
@@ -117,6 +121,12 @@ class UserTransaction{
 
   set amount(double value) {
     _amount = value;
+  }
+
+  String get upiTime => _upiTime;
+
+  set upiTime(String value) {
+    _upiTime = value;
   }
 
   String get docKey => _docKey;

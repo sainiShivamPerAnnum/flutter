@@ -151,4 +151,6 @@ class Assets {
 
   static final String infoWhyPan = 'Your PAN Card is required by ICICI to set up your investment folio';
   static final String infoWherePan = 'Your PAN Number is a 10 character ID that can be found on your PAN Card';
+  static final String infoWhatUPI = 'TODO';
+  static final String infoWhereUPI = 'TODO';
 }

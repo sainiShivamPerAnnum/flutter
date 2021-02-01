@@ -341,13 +341,39 @@ class ICICIModel extends ChangeNotifier{
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
-    final resList = await processPortfolioResponse(_response);
+    final resList = await processPurchaseResponse(_response);
     if(resList == null) {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     }else{
       Map<String, dynamic> yMap = resList[0];
       if(yMap != null && yMap[SubmitUpiPurchase.resTrnId] != null) {
+        yMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+        return yMap;
+      }else{
+        yMap[QUERY_SUCCESS_FLAG] = QUERY_FAILED;
+        return yMap;
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>> getPaidStatus(String tranId, String panNumber) async{
+    var _params = {
+      GetPaidStatus.fldTranId: tranId,
+      GetPaidStatus.fldPan: panNumber
+    };
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(GetPaidStatus.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resList = await processResponse(_response);
+    if(resList == null) {
+      log.error('Query Failed');
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else{
+      Map<String, dynamic> yMap = resList[0];
+      if(yMap != null && yMap[GetPaidStatus.resStatus] != null) {
         yMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
         return yMap;
       }else{
@@ -484,6 +510,46 @@ class ICICIModel extends ChangeNotifier{
           CreatePortfolio.resAMCRefNo:element[CreatePortfolio.resAMCRefNo]??'',
           CreatePortfolio.resPayoutId:element[CreatePortfolio.resPayoutId]??'',
           CreatePortfolio.resChkDigit:element[CreatePortfolio.resChkDigit]??'',
+        });
+      });
+      log.debug(refList.toString());
+      return refList;
+    }catch(e){
+      log.error('Failed to decode json');
+      return null;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> processPurchaseResponse(http.StreamedResponse response) async{
+    if(response == null){
+      log.error('response is null');
+    }
+    if(response.statusCode != 200) {
+      log.error('Query Failed:: Status:${response.statusCode}, Reason:${response.reasonPhrase}');
+      if(response.statusCode == 502)
+        return null;
+      else
+        return null;
+    }
+    try {
+      String res = await response.stream.bytesToString();
+      log.debug(res);
+      if(res == null || res.isEmpty || res == "\"\"") {
+        log.error('Returned empty response');
+        return null;
+      }
+      String dummmy = '[{"TRANID":"3433599","TRXN_DATE":"01/02/2021","TRXN_TIME":"12:47:39 PM","INV_NAME":"SHOURYADITYA RAY LALA",'
+           +'"MOBILE_NO":9986643444,"SCH_NAME":"ICICI Prudential Liquid Fund - Growth","MULTIPLE_ID":"3433598",'
+     + '"AMOUNT":100,"UPI_DATE_TIME":"01/02/2021 12:50 PM","TRIG_SCHEME":null,"USERNAME":null,"TRAN_ID":"3433599",'
+     + '"DISPLAY_NAME":null,"IS_TAX":"N","LTEF_URL":null}]';
+      List<dynamic> rList = json.decode(dummmy);
+      List<Map<String, dynamic>> refList = new List();
+      rList.forEach((element) {
+        refList.add({
+          SubmitUpiPurchase.resTrnId:element[SubmitUpiPurchase.resTrnId],
+          SubmitUpiPurchase.resMultipleId:element[SubmitUpiPurchase.resMultipleId]??'',
+          SubmitUpiPurchase.resTrnDate:element[SubmitUpiPurchase.resTrnDate],
+          SubmitUpiPurchase.resUpiTime:element[SubmitUpiPurchase.resUpiTime]
         });
       });
       log.debug(refList.toString());
