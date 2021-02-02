@@ -134,17 +134,17 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
             baseProvider.isDepositRouteLogicInProgress = true;
             setState(() {});
             ///////////DUMMY///////////////////////////////////
-            baseProvider.iciciDetail =
-            await dbProvider.getUserIciciDetails(baseProvider.myUser.uid);
-            Navigator.of(context).pop();
-            Navigator.push(context, MaterialPageRoute(
-              builder: (ctx) => DepositVerification(tranId: '3433559',userTxnId: 'tdcT4bxF0Gyv9qlhqmlx',
-                panNumber: baseProvider.iciciDetail.panNumber,),
-            ));
+            // baseProvider.iciciDetail =
+            // await dbProvider.getUserIciciDetails(baseProvider.myUser.uid);
+            // Navigator.of(context).pop();
+            // Navigator.push(context, MaterialPageRoute(
+            //   builder: (ctx) => DepositVerification(tranId: '3433559',userTxnId: 'tdcT4bxF0Gyv9qlhqmlx',
+            //     panNumber: baseProvider.iciciDetail.panNumber,),
+            // ));
             //////////////////////////////////////
-            // onDepositClicked().then((value) {
-            //   setState(() {});
-            // });
+            onDepositClicked().then((value) {
+              setState(() {});
+            });
           },
           highlightColor: Colors.white30,
           splashColor: Colors.white30,
@@ -273,7 +273,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   }
 
   Future<Map<String, dynamic>> _onDepositConfirmed(String amount, String vpa) async{
-    double amt = double.parse(amount);
+    int amt = int.parse(amount);
     if(!iProvider.isInit()) await iProvider.init();
 
     var pRes = await iProvider.initiateUPIPurchase(baseProvider.iciciDetail.appId,
