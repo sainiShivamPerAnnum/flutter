@@ -38,7 +38,9 @@ dependencies:
   google_fonts: ^1.1.1
   confetti: ^0.5.4+1
   lottie: ^0.7.0+1
+  scratcher: "^1.4.0"
   slider_button: ^0.6.0
+
 
   flutter:
     sdk: flutter
@@ -69,10 +71,12 @@ flutter:
     - images/sebi.png
     - images/amfi.png
     - images/whatsapp.png
-    - images/onboard_collage-small.png
-    - images/checkmark.json
+    - images/onboard_collage-small.png    
     - images/PAN_card.png
     - images/PAN_card_no_focussed.png
     - images/kyc_unavailable.png
+    - images/checkmark.json
+    - images/verification.json
     - resources/fello_tnc.html
     - resources/referral_policy.html
+

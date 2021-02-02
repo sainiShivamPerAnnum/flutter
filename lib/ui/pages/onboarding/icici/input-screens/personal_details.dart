@@ -172,6 +172,7 @@ class _PersonalPageState extends State<PersonalPage> {
                         border: InputBorder.none,
                         hintText: 'Enter Date',
                         suffixIcon: Icon(
+
                           Icons.calendar_today,
                           color: UiConstants.primaryColor,
                         ),
