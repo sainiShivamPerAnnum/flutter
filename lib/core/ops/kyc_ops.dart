@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/kyc_util.dart';
 import 'package:felloapp/util/locator.dart';
@@ -23,19 +25,33 @@ import 'package:felloapp/core/service/location.dart';
     baseProvider.myUser.uid, baseProvider.kycDetail);
  * */
 class KYCModel extends ChangeNotifier {
+  final Log log = new Log('KYCModel');
 
   Location location = Location();
-
-  final Log log = new Log('KYCModel');
   DBModel _dbModel = locator<DBModel>();
+  BaseUtil baseProvider = locator<BaseUtil>();
   final String defaultBaseUri =
       'https://multi-channel-preproduction.signzy.tech';
   String _baseUri;
   String _apiKey;
   var headers;
 
+  bool isInit() => (_apiKey != null);
+
+  bool isUserSetup() => (baseProvider.kycDetail != null
+      && baseProvider.kycDetail.merchantId != null
+      && baseProvider.kycDetail.userAccessToken != null);
+
   Future<bool> init() async {
-    if (_dbModel == null) return false;
+    if (_dbModel == null || baseProvider == null) return false;
+
+    //initialize user kyc obj
+    baseProvider.kycDetail = await _dbModel.getUserKycDetails(baseProvider.myUser.uid);
+    return true;
+  }
+
+  Future<bool> setupUser() async{
+    //initialize signzy api key
     Map<String, String> cMap = await _dbModel.getActiveSignzyApiKey();
     if (cMap == null) return false;
 
@@ -47,15 +63,23 @@ class KYCModel extends ChangeNotifier {
       'Content-Type': 'application/json',
       'Authorization': KycUrls.auth
     };
-    return true;
+
+    String email = baseProvider.myUser.email??'';
+    String phone = baseProvider.myUser.mobile;
+    String name = baseProvider.myUser.name;
+    String panNumber = baseProvider.myUser.pan;
+
+    var resObj = await _createOnboardingObj(panNumber, email, phone, name);
+    if(resObj['flag']) {
+      bool upFlag = await _dbModel.updateUserKycDetails(baseProvider.myUser.uid, baseProvider.kycDetail);
+      log.debug('Kyc Details updated:: $upFlag');
+    }
   }
 
-  bool isInit() => (_apiKey != null);
-
-  Future<Map<dynamic, dynamic>> createOnboardingObj() async {
+  Future<Map<dynamic, dynamic>> _createOnboardingObj(String panNumber, String email,
+      String phone, String name) async {
     bool res = false;
     String message = "Object Created Successfully";
-
 
     headers = {
       'Content-Type': 'application/json',
@@ -63,10 +87,10 @@ class KYCModel extends ChangeNotifier {
     };
 
     Map<dynamic, dynamic> body = {
-      "email": "abhisheksoni@gmail.com",
-      "username": "fello2223.",
-      "phone": "9983392727",
-      "name": "Abhishek"
+      "email": email,
+      "username": _generateUserName(panNumber),
+      "phone": phone,
+      "name": name
     };
 
     String jsonBody = json.encode(body);
@@ -79,13 +103,15 @@ class KYCModel extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       res = true;
-      print("Suucess ${response.body}");
+      print("Success ${response.body}");
       var data = jsonDecode(response.body);
       var userName = data['createdObj']['username'];
       var password = data['createdObj']['id'];
       print(userName);
 
-      await login(userName, password);
+      baseProvider.kycDetail = UserKycDetail.newUser(userName, password);
+
+      return await _login(userName, password);
     }
     else if (response.statusCode == 422)
     {
@@ -105,16 +131,13 @@ class KYCModel extends ChangeNotifier {
     return result;
   }
 
-  Future<Map<dynamic, dynamic>> login(var userName, var password) async {
+  Future<Map<dynamic, dynamic>> _login(var userName, var password) async {
     bool res = false;
     String message = "Success";
-
     KycUrls.userName = userName;
-
     Map<dynamic, dynamic> body = {"username": userName, "password": password};
 
     String jsonBody = json.encode(body);
-
     http.Response response = await http.post(
       KycUrls.login,
       body: jsonBody,
@@ -123,16 +146,17 @@ class KYCModel extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       res = true;
-      print("Suucess ${response.body}");
+      print("Success ${response.body}");
       var data = jsonDecode(response.body);
       var token = data['id'];
       var merchantId = data['userId'];
+      var createdTime = data['created'];
+      var ttl = data['ttl'];
 
-      SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
-
-      await sharedPreferences.setString("authToken", token);
-      await sharedPreferences.setString("merchantId", merchantId);
+      baseProvider.kycDetail.merchantId = merchantId;
+      baseProvider.kycDetail.userAccessToken = token;
+      baseProvider.kycDetail.tokenTtl = ttl;
+      baseProvider.kycDetail.createdTime = createdTime;
     } else if (response.statusCode == 422) {
       message = "Username already exists please enter a new username";
       res = false;
@@ -861,13 +885,6 @@ class KYCModel extends ChangeNotifier {
     return result;
   }
 
-
-
-
-
-
-
-
   // this function is used to fetch the merchant id and Authentication token
   Future<Map<dynamic, dynamic>> getId() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -886,9 +903,11 @@ class KYCModel extends ChangeNotifier {
   }
 
 
-
-
-  //commiting to git
-
+  String _generateUserName(String panNumber) {
+    String p = (panNumber??'ABCDE1234E').toLowerCase();
+    var rnd = new Random();
+    int u = rnd.nextInt(10);
+    return 'fello${u.toString()}_$p';
+  }
 
 }
