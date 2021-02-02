@@ -7,6 +7,7 @@ import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/contact_dialog.dart';
 import 'package:felloapp/ui/elements/feedback_dialog.dart';
 import 'package:felloapp/ui/pages/edit_profile_page.dart';
+import 'package:felloapp/ui/pages/onboarding/kyc/kyc_onboarding_controller.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -174,6 +175,14 @@ class _OptionsList extends State<SettingsPage> {
         );
         break;
       }
+      case 'kyc' : {
+        HapticFeedback.vibrate();
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => KycOnboardController()),
+        );
+        break;
+      }
       case 'signOut': {
         showDialog(
             context: context,
@@ -236,6 +245,8 @@ class _OptionsList extends State<SettingsPage> {
       new OptionDetail(key: 'fdbk', value: 'Feedback', isEnabled: true),
       new OptionDetail(key: 'faq', value: 'FAQs', isEnabled: true),
       new OptionDetail(key: 'editProf', value: 'Update Details',isEnabled: true),
+      new OptionDetail(key: 'kyc', value: 'KYC',isEnabled: true),
+
       new OptionDetail(key: 'contUs', value: 'Contact Us', isEnabled: true),
       new OptionDetail(key: 'signOut', value: 'Sign Out', isEnabled: (baseProvider.isSignedIn())),
       // new OptionDetail(key: 'tnc', value: 'Terms of Service', isEnabled: true),
