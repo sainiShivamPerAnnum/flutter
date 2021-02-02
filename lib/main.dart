@@ -4,8 +4,10 @@ import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/check_payment_schedular.dart';
 import 'package:felloapp/ui/pages/app_root.dart';
 import 'package:felloapp/ui/pages/faq_page.dart';
+import 'package:felloapp/ui/pages/kyc_invalid.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/app/onboarding_widget.dart';
@@ -21,8 +23,6 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
-
 import 'core/ops/icici_ops.dart';
 
 void main() {
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
         title: Constants.APP_NAME,
         theme: ThemeData(
           primaryColor: UiConstants.primaryColor,
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.green,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           textTheme: GoogleFonts.sourceSansProTextTheme(),
         ),
@@ -63,7 +63,8 @@ class MyApp extends StatelessWidget {
           '/tnc': (BuildContext context) => TnC(),
           '/refpolicy': (BuildContext context) => ReferralPolicy(),
           '/verifykyc': (BuildContext context) => KycOnboardController(),
-          '/onboardicici': (BuildContext context) => IciciOnboardController()
+          '/onboardicici': (BuildContext context) => IciciOnboardController(),
+          '/initkyc': (BuildContext context) => KYCInvalid()
         },
       ),
     );

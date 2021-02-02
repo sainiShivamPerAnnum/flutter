@@ -1,11 +1,6 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/User.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/api.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';

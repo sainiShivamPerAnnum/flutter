@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 class PersonalPage extends StatefulWidget {
   static const int index = 1;
   final personalForm;
-  PersonalPage({@required this.personalForm});
+  final isNameDisabled;
+  PersonalPage({@required this.personalForm, this.isNameDisabled=false});
   @override
   _PersonalPageState createState() => _PersonalPageState();
 }
@@ -17,6 +18,7 @@ class PersonalPage extends StatefulWidget {
 class _PersonalPageState extends State<PersonalPage> {
   BaseUtil baseProvider;
   IciciOnboardController controllerInstance = new IciciOnboardController();
+  TextEditingController _dateController = new TextEditingController(text: '${IDP.selectedDate.toLocal()}'.split(' ')[0]);
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -41,6 +43,7 @@ class _PersonalPageState extends State<PersonalPage> {
     if (picked != null && picked != IDP.selectedDate)
       setState(() {
         IDP.selectedDate = picked;
+        _dateController.text = "${picked.toLocal()}".split(' ')[0];
       });
   }
 
@@ -49,7 +52,8 @@ class _PersonalPageState extends State<PersonalPage> {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
     baseProvider = Provider.of<BaseUtil>(context);
-    IDP.name.text = baseProvider.iciciDetail.panName;
+    IDP.name.text = (baseProvider.iciciDetail!=null)?baseProvider.iciciDetail.panName:'';
+    IDP.email.text = (baseProvider.myUser!=null)?baseProvider.myUser.email:'';
     return SafeArea(
       child: SingleChildScrollView(
         child: Container(
@@ -88,12 +92,36 @@ class _PersonalPageState extends State<PersonalPage> {
                   ),
                 ),
                 SizedBox(height: 20),
+                Text("Mobile No"),
+                Container(
+                  margin: EdgeInsets.only(
+                    bottom: 20,
+                    top: 5,
+                  ),
+                  padding: EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 15),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding:
+                    const EdgeInsets.only(bottom: 11, top: 11, right: 15),
+                    child: Text(
+                      baseProvider.myUser.mobile,
+                      style: TextStyle(
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
+                ),
                 Text("Name as per your PAN Card"),
                 InputField(
                   child: TextFormField(
-                    decoration: inputFieldDecoration(baseProvider.iciciDetail.panName),
+                    decoration: inputFieldDecoration('Enter Full Name'),
                     controller: IDP.name,
                     textCapitalization: TextCapitalization.characters,
+                    enabled: !widget.isNameDisabled,
                     validator: (value) {
                       RegExp nameCheck = RegExp(r"^[a-zA-Z ]+$");
                       if (value.isEmpty) {
@@ -109,9 +137,9 @@ class _PersonalPageState extends State<PersonalPage> {
                 Text("Email"),
                 InputField(
                   child: TextFormField(
-                    // The validator receives the text that the user has entered.
-                    decoration: inputFieldDecoration(baseProvider.myUser.email),
+                    decoration: inputFieldDecoration('Enter email'),
                     controller: IDP.email,
+                    autofillHints: [AutofillHints.email],
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       RegExp emailCheck = RegExp(
@@ -126,37 +154,30 @@ class _PersonalPageState extends State<PersonalPage> {
                     },
                   ),
                 ),
-                Text("Mobile No"),
-                InputField(
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 11, top: 11, right: 15),
-                    child: Text(
-                      baseProvider.myUser.mobile,
-                      style: TextStyle(
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ),
-                ),
                 Text("Date of Birth"),
-                GestureDetector(
-                  onTap:() => _selectDate(context),
+                InkWell(
+                  onTap: () {
+                    _selectDate(context);
+                  },
                   child: InputField(
-                    child: Row(
-                    children: [
-                      Text(
-                        "${IDP.selectedDate.toLocal()}".split(' ')[0],
-                      ),
-                      Spacer(),
-                      IconButton(
-                        icon: Icon(
+                    child: TextFormField(
+                      textAlign: TextAlign.start,
+                      enabled: false,
+                      keyboardType: TextInputType.text,
+                      validator: (value) {
+                       return null;
+                      },
+                      controller: _dateController,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Enter Date',
+                        suffixIcon: Icon(
+
                           Icons.calendar_today,
                           color: UiConstants.primaryColor,
                         ),
                       ),
-                    ],
-                  )
+                    ),
                   ),
                 ),
                 Spacer(),
@@ -168,4 +189,5 @@ class _PersonalPageState extends State<PersonalPage> {
       ),
     );
   }
+
 }
