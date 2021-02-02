@@ -43,28 +43,6 @@ class _RouletteState extends State<Roulette> {
     return Scaffold(
       body: Center(
         child: Container(
-          height: 100,
-          width: double.infinity,
-          margin: EdgeInsets.all(20),
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Colors.blueGrey[400],
-            boxShadow: [
-              new BoxShadow(
-                color: Colors.black26,
-                offset: Offset.fromDirection(20, 7),
-                blurRadius: 5.0,
-              )
-            ],
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              stops: [0.1, 0.4],
-              colors: [Colors.blueGrey[500], Colors.blueGrey[400]],
-            ),
-          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [

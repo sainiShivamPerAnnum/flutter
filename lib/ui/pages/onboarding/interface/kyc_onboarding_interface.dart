@@ -3,7 +3,6 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:scratcher/scratcher.dart';
 
 class KycOnboardInterface extends StatefulWidget {
   @override
@@ -140,7 +139,7 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
                                       height: 10,
                                     ),
                                     Text(
-                                      "Complete your KYC once and invest anywhere from now on.",
+                                      "Complete your KYC once and invest anywhere afterwards.",
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.poppins(
                                         fontWeight: FontWeight.w700,
@@ -362,7 +361,7 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
             top: _height * 0.013,
             child: SafeArea(
               child: Container(
-                width: 100,
+                width: 130,
                 height: 30,
                 decoration: BoxDecoration(
                   border: Border.all(
@@ -384,7 +383,7 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
                       ),
                     ),
                     Center(
-                      child: Text("${kycGuide.level * 12.5}%"),
+                      child: Text("${kycGuide.level * 12.5}% Completed"),
                     ),
                   ],
                 ),

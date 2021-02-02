@@ -55,7 +55,7 @@ class _HState extends State<PlayHome> {
   bool dailyPickHeaderWithTimings = false;
   String dailyPickHeaderText = 'Today\'s picks';
   List<String> dailyPickTextList = [];
-  List<String> prizeEmoji = ['🥇','🏆',' 🎊',' 🎉'];
+  List<String> prizeEmoji = ['🥇', '🏆', ' 🎊', ' 🎉'];
 
   GlobalKey _showcaseOne = GlobalKey();
   GlobalKey _showcaseTwo = GlobalKey();
@@ -63,6 +63,12 @@ class _HState extends State<PlayHome> {
   GlobalKey _showcaseFour = GlobalKey();
   bool _showTutorial = false;
   Timer _prizeTimer;
+
+  // ScrollController _scrollController1;
+  // ScrollController _scrollController2;
+  // ScrollController _scrollController3;
+  // ScrollController _scrollController4;
+  // ScrollController _scrollController5;
 
   @override
   void initState() {
@@ -73,7 +79,28 @@ class _HState extends State<PlayHome> {
         prizeButtonUp = true;
       });
     });
+    // _scrollController1 = new ScrollController();
+    // _scrollController2 = new ScrollController();
+    // _scrollController3 = new ScrollController();
+    // _scrollController4 = new ScrollController();
+    // _scrollController5 = new ScrollController();
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   _moveDown();
+    // });
   }
+
+  // _moveDown() {
+  //   _scrollController1.animateTo(_scrollController1.position.maxScrollExtent,
+  //       curve: Curves.linear, duration: Duration(milliseconds: 1000));
+  //   _scrollController2.animateTo(_scrollController1.position.maxScrollExtent,
+  //       curve: Curves.linear, duration: Duration(milliseconds: 800));
+  //   _scrollController3.animateTo(_scrollController1.position.maxScrollExtent,
+  //       curve: Curves.linear, duration: Duration(milliseconds: 1200));
+  //   _scrollController4.animateTo(_scrollController1.position.maxScrollExtent,
+  //       curve: Curves.linear, duration: Duration(milliseconds: 1000));
+  //   _scrollController5.animateTo(_scrollController1.position.maxScrollExtent,
+  //       curve: Curves.linear, duration: Duration(milliseconds: 800));
+  // }
 
   initDailyPickFlags() {
     String remoteTime = BaseUtil.remoteConfig.getString('draw_pick_time');
@@ -104,7 +131,7 @@ class _HState extends State<PlayHome> {
       if (!baseProvider.weeklyDrawFetched) {
         log.debug('Requesting for weekly picks');
         dbProvider.getWeeklyPicks().then((picks) {
-         baseProvider.weeklyDrawFetched = true;
+          baseProvider.weeklyDrawFetched = true;
           if (picks != null) baseProvider.weeklyDigits = picks;
           log.debug('Weekly Picks received: $picks');
           setState(() {});
@@ -186,7 +213,7 @@ class _HState extends State<PlayHome> {
     if (dbProvider != null) dbProvider.addUserTicketRequestListener(null);
     if (fcmProvider != null) fcmProvider.addIncomingMessageListener(null, 0);
 
-    if(_prizeTimer.isActive)_prizeTimer.cancel();
+    if (_prizeTimer.isActive) _prizeTimer.cancel();
     balls.forEach((eWidget) {
       // eWidget.dis
     });
@@ -377,11 +404,15 @@ class _HState extends State<PlayHome> {
                       color: Colors.blueGrey[800]))),
         ),
         SizedBox(height: 5.0),
-        _buildCards(baseProvider.weeklyTicksFetched, baseProvider.weeklyDrawFetched,
-            baseProvider.userWeeklyBoards, baseProvider.userTicketsCount),
+        _buildCards(
+            baseProvider.weeklyTicksFetched,
+            baseProvider.weeklyDrawFetched,
+            baseProvider.userWeeklyBoards,
+            baseProvider.userTicketsCount),
         (baseProvider.weeklyTicksFetched &&
                 baseProvider.userWeeklyBoards != null &&
-                baseProvider.userTicketsCount > 0 && _currentBoard != null)
+                baseProvider.userTicketsCount > 0 &&
+                _currentBoard != null)
             ? Padding(
                 padding: EdgeInsets.only(left: 25),
                 child: Text('Ticket #${_currentBoard.getTicketNumber()}'),
@@ -581,7 +612,8 @@ class _HState extends State<PlayHome> {
       _tambolaBoardViews = [];
       _tambolaBoardViews.add(new TambolaBoardView(
         tambolaBoard: baseProvider.userWeeklyBoards[0].tambolaBoard,
-        calledDigits: (baseProvider.weeklyDrawFetched && baseProvider.weeklyDigits != null)
+        calledDigits: (baseProvider.weeklyDrawFetched &&
+                baseProvider.weeklyDigits != null)
             ? baseProvider.weeklyDigits.toList()
             : [],
         boardColor: UiConstants
@@ -661,7 +693,9 @@ class _HState extends State<PlayHome> {
             children: [
               Padding(
                 padding: EdgeInsets.only(top: 10),
-                child: DPTextSlider(infoList: dailyPickTextList,),
+                child: DPTextSlider(
+                  infoList: dailyPickTextList,
+                ),
               ),
               Padding(
                   padding: EdgeInsets.only(top: 10, left: 15, right: 15),
@@ -673,56 +707,80 @@ class _HState extends State<PlayHome> {
 
   Widget _getDrawBallRow(DailyPick draws, int day) {
     balls = [];
+    List pickList = [];
     if (draws != null && draws.getWeekdayDraws(day - 1) != null) {
       draws.getWeekdayDraws(day - 1).forEach((element) {
-        balls.add(_getDrawBall(element));
+        // balls.add(_getDrawBall(
+        //   element,
+        // ));
+        pickList.add(element);
       });
     } else {
       for (int i = 0; i < 5; i++) {
-        balls.add(_getDrawBall(0));
+        // balls.add(_getDrawBall(
+        //   0,
+        // ));
+        pickList.add(0);
       }
     }
+    print(pickList);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: balls,
-    );
-  }
-
-  Widget _getDrawBall(int digit) {
-    double xWidth = MediaQuery.of(context).size.width;
-    double xFont = double.parse((xWidth/18).toStringAsFixed(2));
-  //   log.debug(xFont.toString());
-    return Stack(
       children: [
-        Container(
-          width: 40,
-          height: 40,
-          decoration: new BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-          ),
+        Holes(
+          pick: pickList[0],
         ),
-        Center(
-            child: (digit != null && digit > 0)
-                ? Padding(
-                    padding: EdgeInsets.only(left: xFont/3.3, top:xFont/3),
-                    child: SingleDigit(
-                      initialValue: digit,
-                      textStyle: TextStyle(
-                          color: Colors.black, fontSize: xFont
-                      ),
-                    ))
-                : Padding(
-                    padding: EdgeInsets.only(left: 16, top: 7),
-                    child: Text(
-                      '-',
-                      style: TextStyle(fontSize: 22,
-                      color: Colors.black38),
-                      textAlign: TextAlign.center,
-                    )))
+        Holes(
+          pick: pickList[1],
+        ),
+        Holes(
+          pick: pickList[2],
+        ),
+        Holes(
+          pick: pickList[3],
+        ),
+        Holes(
+          pick: pickList[4],
+        ),
       ],
     );
   }
+
+  // Widget _getDrawBall(
+  //   int digit,
+  // ) {
+  //   double xWidth = MediaQuery.of(context).size.width;
+  //   double xFont = double.parse((xWidth / 18).toStringAsFixed(2));
+  //   return Stack(
+  //     children: [
+  //       Container(
+  //         width: 40,
+  //         height: 40,
+  //         decoration: new BoxDecoration(
+  //           color: Colors.white,
+  //           shape: BoxShape.circle,
+  //         ),
+  //       ),
+  //       Center(
+  //         child: (digit != null && digit > 0)
+  //             ? Padding(
+  //                 padding: EdgeInsets.only(left: xFont / 3.3, top: xFont / 3),
+  //                 child: SingleDigit(
+  //                   initialValue: digit,
+  //                   textStyle: TextStyle(color: Colors.black, fontSize: xFont),
+  //                 ))
+  //             : Padding(
+  //                 padding: EdgeInsets.only(left: 16, top: 7),
+  //                 child: Text(
+  //                   '-',
+  //                   style: TextStyle(fontSize: 22, color: Colors.black38),
+  //                   textAlign: TextAlign.center,
+  //                 ),
+  //               ),
+  //       )
+  //     ],
+  //   );
+  // }
 
   Widget _buildPrizeButton() {
     Random rnnd = new Random();
@@ -754,10 +812,10 @@ class _HState extends State<PlayHome> {
           : BoxDecoration(color: Colors.transparent),
       child: InkWell(
         child: Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
             Text(
               'Prizes',
               style: TextStyle(color: Colors.white70, fontSize: 16),
@@ -766,10 +824,8 @@ class _HState extends State<PlayHome> {
               prizeEmoji[rnnd.nextInt(prizeEmoji.length)],
               style: TextStyle(color: Colors.white70, fontSize: 16),
             ),
-
-            ],
-          )
-        ),
+          ],
+        )),
         onTap: () {
           HapticFeedback.vibrate();
           showDialog(
@@ -895,11 +951,7 @@ class Odds extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    Text(_oOdd,
-                        style: tt.title.apply(
-                            color: Colors.blueGrey
-                        )
-                    ),
+                    Text(_oOdd, style: tt.title.apply(color: Colors.blueGrey)),
                     Text('Best ticket',
                         textAlign: TextAlign.center,
                         style: tt.caption.apply(color: Colors.blue[900]))
@@ -916,5 +968,73 @@ class Odds extends StatelessWidget {
                 },
               )),
             ]));
+  }
+}
+
+class Holes extends StatefulWidget {
+  final int pick;
+  Holes({this.pick});
+
+  @override
+  _HolesState createState() => _HolesState();
+}
+
+class _HolesState extends State<Holes> {
+  ScrollController _scrollController;
+
+  @override
+  void initState() {
+    _scrollController = ScrollController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _moveDown();
+    });
+    super.initState();
+  }
+
+  _moveDown() {
+    _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+        curve: Curves.linear, duration: Duration(milliseconds: 2000));
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double _height = MediaQuery.of(context).size.height;
+    double _width = MediaQuery.of(context).size.width;
+    List pickList = [2, 12, 15, 33, 45, 23, widget.pick];
+    return Container(
+      height: _width * 0.08,
+      width: _width * 0.08,
+      padding: EdgeInsets.all(4),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white,
+      ),
+      child:
+          //  (pick != null && pick > 0)
+          //     ?
+          ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: pickList.length,
+        controller: _scrollController,
+        shrinkWrap: true,
+        itemBuilder: (ctx, i) {
+          return Text(
+            "${pickList[i]}",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: _height * 0.025),
+          );
+        },
+      ),
+      // : Center(
+      //     child: Text("-"),
+      //   ),
+    );
   }
 }
