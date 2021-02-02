@@ -40,8 +40,8 @@ dependencies:
   modal_progress_hud: ^0.1.3
   shared_preferences: ^0.5.7
   scratcher: ^1.4.0
+  geolocator: ^6.1.14
   slider_button: ^0.6.0
-
 
   flutter:
     sdk: flutter
