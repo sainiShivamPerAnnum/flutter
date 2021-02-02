@@ -41,6 +41,15 @@ class _IncomeDetailsInputScreenState extends State<IncomeDetailsInputScreen> {
     {"NAME": "Others", "CODE": "08"}
   ];
 
+  List<Map<String, String>> incomeGroup = [
+    {"NAME": "Below 1 Lac", "CODE": "Below 1 Lac"},
+    {"NAME": "1-5 Lacs", "CODE": "1-5 Lacs"},
+    {"NAME": "5-10 Lacs", "CODE": "5-10 Lacs"},
+    {"NAME": "10-25 Lacs", "CODE": "10-25 Lacs"},
+    {"NAME": ">25 Lacs-1 crore", "CODE": ">25 Lacs-1 crore"},
+    {"NAME": ">1 crore", "CODE": ">1 crore"},
+  ];
+
   List<Map<String, String>> politicalExposure = [
     {"PEP": "I am Politically Exposed Person", "CODE": "01"},
     {"RPEP": "I am Related to Politically Exposed Person", "CODE": "02"},
@@ -154,22 +163,22 @@ class _IncomeDetailsInputScreenState extends State<IncomeDetailsInputScreen> {
                         ]),
                   ),
                   SizedBox(height: 20),
-                  Text("Wealth Source"),
+                  Text("Annual Income"),
                   InputField(
                     child: DropdownButtonFormField(
                       decoration: InputDecoration(
                         border: InputBorder.none,
                       ),
                       iconEnabledColor: UiConstants.primaryColor,
-                      hint: Text("Source of Money?"),
-                      value: IDP.wealthChosenValue,
+                      hint: Text("Estimated Annual Income"),
+                      value: IDP.incomeChosenValue,
                       onChanged: (String newVal) {
                         setState(() {
-                          IDP.wealthChosenValue = newVal;
+                          IDP.incomeChosenValue = newVal;
                           print(newVal);
                         });
                       },
-                      items: wealthSource
+                      items: incomeGroup
                           .map(
                             (e) => DropdownMenuItem(
                               value: e["CODE"],

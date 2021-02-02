@@ -6,6 +6,7 @@ import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/check_payment_schedular.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:get_it/get_it.dart';
 
@@ -21,6 +22,8 @@ void setupLocator() {
   locator.registerLazySingleton(() => BaseUtil());
   locator.registerLazySingleton(() => FcmListener());
   locator.registerLazySingleton(() => FcmHandler());
+  locator.registerLazySingleton(() => PaymentVerificationSchedular());
+
   //....
 }
 

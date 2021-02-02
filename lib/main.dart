@@ -4,8 +4,10 @@ import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/check_payment_schedular.dart';
 import 'package:felloapp/ui/pages/app_root.dart';
 import 'package:felloapp/ui/pages/faq_page.dart';
+import 'package:felloapp/ui/pages/kyc_invalid.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/app/onboarding_widget.dart';
@@ -62,7 +64,8 @@ class MyApp extends StatelessWidget {
           '/tnc': (BuildContext context) => TnC(),
           '/refpolicy': (BuildContext context) => ReferralPolicy(),
           '/verifykyc': (BuildContext context) => KycOnboardController(),
-          '/onboardicici': (BuildContext context) => IciciOnboardController()
+          '/onboardicici': (BuildContext context) => IciciOnboardController(),
+          '/initkyc': (BuildContext context) => KYCInvalid()
         },
       ),
     );

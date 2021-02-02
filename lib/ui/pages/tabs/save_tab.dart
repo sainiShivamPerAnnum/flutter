@@ -5,7 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
-import 'package:felloapp/ui/elements/roulette_trial.dart';
+import 'package:felloapp/ui/elements/roulette.dart';
 import 'package:felloapp/ui/elements/scrolling_text.dart';
 import 'package:felloapp/ui/pages/mf_details_page.dart';
 import 'package:felloapp/ui/pages/onboarding/interface/kyc_onboarding_interface.dart';
@@ -175,28 +175,7 @@ class _SaveScreenState extends State<SaveScreen> {
                       width: 80,
                     ),
                   ],
-                ),
-                SizedBox(height: 10),
-                Container(
-                  alignment: Alignment.center,
-                  width: double.infinity,
-                  height: 50,
-                  color: UiConstants.primaryColor,
-                  child: GestureDetector(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (ctx) => Roulette(),
-                      ),
-                    ),
-                    child: Text(
-                      "Roulette",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
+                ),            
                 SizedBox(height: 10),
                 Container(
                   alignment: Alignment.center,

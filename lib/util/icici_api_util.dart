@@ -43,6 +43,7 @@ class GetKycStatus{
   static final String resStatus = 'STATUS';
   static final String resFatcaStatus = 'FATCA_FLAG_1';
   static final String resPanStatus = 'F_PAN_STATUS';//should be 'OK'
+  static final String resAppMode = 'APP_KYC_MODE';
 
   static const String KYC_STATUS_INVALID = '0';
   static const String KYC_STATUS_VALID = '1';
@@ -219,22 +220,119 @@ class VerifyOtp{
  * [{"Return_Code":"7","Return_Msg":"Input Exceeds Maximum length.","Category":"F"}]
  * or [{"Return_Code":"1","Return_Msg":"Please Enter INV_Address_1,Inv_City"}]
  * or [{"Return_Code":"0","Return_Msg":"Record updated successfully","Exp_Date":"31-Dec-2018","Folio_No":"2000028046"}]
+ * or [{"Return_Code":"0","Return_Msg":"Record updated
+    successfully","Exp_Date":"22-Apr-2021","Folio_No":"16042280","Chk_Digit_No":"01","AMC_Ref_No":"IPRU752990","Payout_ID":"3010208"}]
+    or [{"Return_Code":"237","Return_Msg":"Duplicate transaction - Folio_No: (16042281) already created for this AMC Ref No.","Category":"F"}]
  * */
 class CreatePortfolio{
   static final String path = 'api/createPortfolio';
   static final String fldId = 'appid';
   static final String fldOtpId = 'otpid';
 
-  static final String resReturnCode = "Return Code";
-  static final String resRetMessage = "Return Msg";
-  static final String resFolioNo = "Folio No";
-  static final String resExpiryDate = "Exp Date";
-  static final String parsedRetCodeKey = 'RetCode';
-  static final String parsedRetMsgKey = 'RetMsg';
-  static final String parsedFolioNo = 'folioNo';
-  static final String parsedExpiryDate = 'expDate';
+  static final String resReturnCode = "Return_Code";
+  static final String resRetMessage = "Return_Msg";
+  static final String resFolioNo = "Folio_No";
+  static final String resExpiryDate = "Exp_Date";
+  static final String resAMCRefNo = "AMC_Ref_No";
+  static final String resPayoutId = "Payout_ID";
+  static final String resChkDigit = "Chk_Digit_No";
 
   static const String STATUS_PORTFOLIO_CREATED = '0';
 
   //rest not known yet
+}
+
+/////////////////////TRANSACTION APIS//////////////////////
+// ignore: slash_for_doc_comments
+/**
+ * [{"TRANID":"3433315","TRXN_DATE":"27/01/2021","TRXN_TIME":"12:41:11 PM","INV_NAME":"SHOURYADITYA RAY
+    LALA","MOBILE_NO":7019658746,"SCH_NAME":"ICICI Prudential Liquid Fund -
+    Growth","MULTIPLE_ID":"3433314","AMOUNT":100,"UPI_DATE_TIME":"27/01/2021 12:44
+    PM","TRIG_SCHEME":null,"USERNAME":null,"TRAN_ID":"3433315","DISPLAY_NAME":null,"IS_TAX":"N","LTEF_URL":null}]
+    or
+   [{"ID_":"752994","SCH_CODE":"1565","MSG":"We are currently unable to process this transaction. Either update your App or
+    try again1","STATUS":"We are currently unable to process this transaction. Either update your App or try again1"}]
+ *
+ * [{"TRANID":"3433599","TRXN_DATE":"01/02/2021","TRXN_TIME":"12:47:39 PM","INV_NAME":"SHOURYADITYA RAY LALA",
+ * "MOBILE_NO":9986643444,"SCH_NAME":"ICICI Prudential Liquid Fund - Growth","MULTIPLE_ID":"3433598",
+ * "AMOUNT":100,"UPI_DATE_TIME":"01/02/2021 12:50 PM","TRIG_SCHEME":null,"USERNAME":null,"TRAN_ID":"3433599",
+ * "DISPLAY_NAME":null,"IS_TAX":"N","LTEF_URL":null}]
+ * */
+class SubmitUpiPurchase{
+  static final String path = 'api/submitUpiPurchase';
+  static final String fldId = 'appid';
+  static final String fldEmail = 'email';
+  static final String fldBankCode = 'bankcode';
+  static final String fldPan = 'firstpan';
+  static final String fldFolioNo = 'foliono';
+  static final String fldKycMode = 'kycmode';
+  static final String fldAmount = 'amount';
+  static final String fldVPA = 'vpa';
+
+  static final String resTrnId = "TRANID";
+  static final String resTrnDate = "TRXN_DATE";
+  static final String resUpiTime = 'UPI_DATE_TIME';
+  static final String resMultipleId = "MULTIPLE_ID";
+  static final String resAmount = "AMOUNT";
+  static final String resMsg = 'MSG';
+}
+
+/**
+ * {"STATUS":"0","ERR_DESCRIPTION":""}
+ * [{"STATUS":"","ERR_DESCRIPTION":"Reference No does not exist"}]
+ * */
+class GetPaidStatus{
+  static final String path = 'api/getPaidStatus';
+  static final String fldTranId = 'tranid';
+  static final String fldPan = 'firstpan';
+
+  static final String resStatus = 'STATUS';
+  static final String resErrorDesc = 'ERR_DESCRIPTION';
+
+  static const String STATUS_SUCCESS = '1';
+  static const String STATUS_INCOMPLETE = '0';
+  static const String STATUS_REJECTED = '2';
+}
+
+// ignore: slash_for_doc_comments
+/**
+ * Allowed IMPS Redemption:
+    [{"BAL":"101.988","AUM":"27454.62","RETURNCODE":"000","ALLOWIMPS":"Y","MESSAGE":null,
+    "SCH_DET":[{ SCH_TYPE":"EF","TYPE_NAME":"Equity Funds","SCH_CODE":"8030",
+    "SCH_NAME":"ICICI Prudential Multicap Fund - Direct Plan - Growth","STATUS":"N",
+    "MRED_AMT":500.0,"CUT_OFF":"3:0:0 PM","ALLOW_REDEEM":"Y","RED_ALLOWED":"Y","REDEM_FROM_DAY":0.0,
+    "REDEM_TO_DAY":0.0,"FOLIO_NO":"4189582","TAX_BASED_SCHEME":"N","BAL":58.3030,
+    "AUM":17536.959370,"NAV":300.79,"NAVDATE":"2019-09-20T00:00:00","ALLOW_IMPS":"N"}],
+    "REDEEMABLEAMOUNT":27454.62,"TAMOUNT":28987.63108920,"SESSIONID":"PH10"}]
+    Not Allowed IMPS Redemption :
+    [{"BAL":"0","AUM":"0","RETURNCODE":"222","ALLOWIMPS":"N",
+    "MESSAGE":"For Quick Withdrawal mode , Available Balance should not be nil","SCH_DET":[]}]
+ *or
+ * [{"RETURNCODE":"100","ALLOWIMPS":"Y","MESSAGE":"Only Individual folio allowed","SCH_DET":[]}]
+ * */
+class CheckIMPSStatus{
+  static final String path = 'api/checkIMPSAllowed';
+  static final String fldFolioNo = 'foliono';
+  static final String fldAmount = 'amount';
+
+  static final String resReturnCode = "RETURNCODE";
+  static final String resReturnMsg = "MESSAGE";
+
+  static const String STATUS_ALLOWED = "000";
+}
+
+/**
+ *  [{“Bank_Name”:”ICICI Bank Ltd”,
+    ”Bank_details”:” 001501011212825#ICIC000125#229”,
+    ”Redeem_bank_details”:”ICICI Bank Ltd#001501011212825#SB#null#null#DC-ICIC”,
+    }]
+    or if not found: ""
+ * */
+class GetBankRedemptionDetail{
+  static final String path = 'api/getRedeemBankDetails';
+  static final String fldFolioNo = 'foliono';
+
+  static final String resBankName = "Bank_Name";
+  static final String res = "Bank_Name";
+//TODO more fields required
 }

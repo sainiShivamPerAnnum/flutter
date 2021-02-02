@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
+import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/model/User.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
+import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
@@ -67,6 +69,57 @@ class DBModel extends ChangeNotifier {
       return true;
     } catch (e) {
       log.error("Failed to update user icici detail object: " + e.toString());
+      return false;
+    }
+  }
+
+  Future<UserKycDetail> getUserKycDetails(String id) async{
+    try{
+      var doc = await _api.getUserKycDetailDocument(id);
+      return UserKycDetail.fromMap(doc.data);
+    }catch(e) {
+      log.error('Failed to fetch user kyc details: $e');
+      return null;
+    }
+  }
+
+  Future<bool> updateUserKycDetails(String userId, UserKycDetail iciciDetail) async {
+    try {
+      await _api.updateUserKycDetailDocument(userId, iciciDetail.toJson());
+      return true;
+    } catch (e) {
+      log.error("Failed to update user kyc detail object: " + e.toString());
+      return false;
+    }
+  }
+
+  //returns document key
+  Future<String> addUserTransaction(String userId, UserTransaction txn) async {
+    try {
+      var ref = await _api.addUserTransactionDocument(userId, txn.toJson());
+      return ref.documentID;
+    } catch (e) {
+      log.error("Failed to update user transaction object: " + e.toString());
+      return null;
+    }
+  }
+
+  Future<UserTransaction> getUserTransaction(String userId, String docId) async{
+    try{
+      var doc = await _api.getUserTransactionDocument(userId, docId);
+      return UserTransaction.fromMap(doc.data, doc.documentID);
+    }catch(e) {
+      log.error('Failed to fetch user transaction details: $e');
+      return null;
+    }
+  }
+
+  Future<bool> updateUserTransaction(String userId, UserTransaction txn) async {
+    try {
+      await _api.updateUserTransactionDocument(userId, txn.docKey, txn.toJson());
+      return true;
+    } catch (e) {
+      log.error("Failed to update user transaction object: " + e.toString());
       return false;
     }
   }
@@ -330,7 +383,7 @@ class DBModel extends ChangeNotifier {
     try {
       Map<String, dynamic> dMap = (data == null)?{}:data;
       dMap['user_id'] = userId;
-      dMap['fail_type'] = failType.toString();
+      dMap['fail_type'] = failType.value();
       dMap['manually_resolved'] = false;
       dMap['timestamp'] = FieldValue.serverTimestamp();
       await _api.addFailedReportDocument(dMap);
