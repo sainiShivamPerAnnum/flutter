@@ -1,15 +1,22 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
+import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/icici_ops.dart';
+import 'package:felloapp/ui/elements/animated_line_chrt.dart';
+import 'package:felloapp/ui/elements/deposit_modal_sheet.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/elements/withdraw_dialog.dart';
+import 'package:felloapp/ui/pages/deposit_verification.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:fl_animated_linechart/chart/animated_line_chart.dart';
 import 'package:fl_animated_linechart/chart/area_line_chart.dart';
 import 'package:fl_animated_linechart/chart/line_chart.dart';
 import 'package:fl_animated_linechart/common/pair.dart';
@@ -18,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:upi_pay/upi_applications.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MFDetailsPage extends StatefulWidget {
@@ -26,10 +34,13 @@ class MFDetailsPage extends StatefulWidget {
 }
 
 class _MFDetailsPageState extends State<MFDetailsPage> {
+  Log log = new Log('MFDetails');
   BaseUtil baseProvider;
   DBModel dbProvider;
+  ICICIModel iProvider;
   FcmHandler fcmProvider;
   int acctBalance = 0;
+  GlobalKey<DepositModalSheetState> _modalKey = GlobalKey();
 
   _init() {
     if (fcmProvider != null && baseProvider != null) {
@@ -59,6 +70,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
     fcmProvider = Provider.of<FcmHandler>(context);
+    iProvider = Provider.of<ICICIModel>(context);
     _init();
 
     return Scaffold(
@@ -88,6 +100,12 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     );
   }
 
+  String _getActionButtonText() {
+    if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID) return 'COMPLETE KYC';
+    if (!baseProvider.myUser.isIciciOnboarded)return 'REGISTER';
+    else return 'DEPOSIT';
+  }
+
   Widget _buildBetaSaveButton() {
     return Container(
       width: double.infinity,
@@ -101,8 +119,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       child: new Material(
         child: MaterialButton(
           child: (!baseProvider.isDepositRouteLogicInProgress)
-              ? Text(
-                  'DEPOSIT',
+              ? Text(_getActionButtonText(),
                   style: Theme.of(context)
                       .textTheme
                       .button
@@ -115,8 +132,19 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
           onPressed: () async {
             HapticFeedback.vibrate();
             baseProvider.isDepositRouteLogicInProgress = true;
-            onDepositClicked();
             setState(() {});
+            ///////////DUMMY///////////////////////////////////
+            // baseProvider.iciciDetail =
+            // await dbProvider.getUserIciciDetails(baseProvider.myUser.uid);
+            // Navigator.of(context).pop();
+            // Navigator.push(context, MaterialPageRoute(
+            //   builder: (ctx) => DepositVerification(tranId: '3433559',userTxnId: 'tdcT4bxF0Gyv9qlhqmlx',
+            //     panNumber: baseProvider.iciciDetail.panNumber,),
+            // ));
+            //////////////////////////////////////
+            onDepositClicked().then((value) {
+              setState(() {});
+            });
           },
           highlightColor: Colors.white30,
           splashColor: Colors.white30,
@@ -196,33 +224,132 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   }
 
   Future<bool> onDepositClicked() async {
-    if (baseProvider.myUser.isIciciOnboarded) {
+    baseProvider.iciciDetail =
+    await dbProvider.getUserIciciDetails(baseProvider.myUser.uid);
+    if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_VALID
+        && baseProvider.myUser.isIciciOnboarded) {
       //move directly to depositing
       baseProvider.isDepositRouteLogicInProgress = false;
-      Navigator.of(context).pop(); //go back to save tab
-      Navigator.of(context).pushNamed('/deposit');
-    }//TODO wrong logic
+      showModalBottomSheet(
+          backgroundColor: Colors.transparent,
+          context: context,
+          isScrollControlled: true,
+          builder: (context) {
+            return DepositModalSheet(
+              key: _modalKey,
+              onDepositConfirmed: (Map<String, dynamic> rMap) {
+                _onDepositConfirmed(rMap['amount'], rMap['vpa']).then((resMap) {
+                  if(!resMap['flag']) {
+                    _modalKey.currentState.onErrorReceived(resMap['reason']);
+                  }
+                  return;
+                });
+              },
+            );
+          }
+      );
+      return true;
+    }
     if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID) {
       baseProvider.isDepositRouteLogicInProgress = false;
       Navigator.of(context).pop(); //go back to save tab
       Navigator.of(context).pushNamed('/verifykyc');
+      return true;
     } else {
-      baseProvider.iciciDetail =
-          await dbProvider.getUserIciciDetails(baseProvider.myUser.uid);
-      if (baseProvider.iciciDetail == null ||
-          baseProvider.iciciDetail.panNumber == null ||
-          baseProvider.iciciDetail.appId == null ||
-          baseProvider.iciciDetail.kycStatus == null) {
-        Navigator.of(context).pop(); //go back to save tab
+      Navigator.of(context).pop(); //go back to save tab
+      if(baseProvider.iciciDetail != null && baseProvider.iciciDetail.panNumber != null
+      && baseProvider.iciciDetail.appId != null && baseProvider.iciciDetail.panName != null) {
         Navigator.push(context, MaterialPageRoute(
-            builder: (ctx) => IciciOnboardController(startIndex: PANPage.index,),
-          ),
-        );
+          builder: (ctx) => IciciOnboardController(startIndex: PersonalPage.index,appIdExists: true,),
+        ));
+      }else{
+        Navigator.push(context, MaterialPageRoute(
+          builder: (ctx) => IciciOnboardController(startIndex: PANPage.index,appIdExists: false,),
+        ));
       }
-      //TODO add more logic to direct the user to the right page
       baseProvider.isDepositRouteLogicInProgress = false;
     }
     return true;
+  }
+
+  Future<Map<String, dynamic>> _onDepositConfirmed(String amount, String vpa) async{
+    int amt = int.parse(amount);
+    if(!iProvider.isInit()) await iProvider.init();
+
+    var pRes = await iProvider.initiateUPIPurchase(baseProvider.iciciDetail.appId,
+        baseProvider.iciciDetail.email, baseProvider.iciciDetail.bankCode,
+        baseProvider.iciciDetail.panNumber, baseProvider.iciciDetail.folioNo,
+        baseProvider.iciciDetail.appMode, amount, vpa);
+    if (pRes == null || pRes[QUERY_SUCCESS_FLAG] == QUERY_FAILED) {
+      String errReason = (pRes[QUERY_FAIL_REASON] != null)
+          ? pRes[QUERY_FAIL_REASON]
+          : 'Unknown';
+      Map<String, dynamic> failData = {
+        'failReason': errReason
+      };
+      bool failureLogged = await dbProvider.logFailure(
+          baseProvider.myUser.uid,
+          FailType.UserTransactionFailed,
+          failData);
+      log.debug('Failure logged correctly: $failureLogged');
+      return {
+        'flag': false,
+        'reason': (pRes[QUERY_FAIL_REASON] != null)
+            ? pRes[QUERY_FAIL_REASON]
+            : 'Encountered an unknown error. Please try again in a while'
+      };
+    } else {
+      if(pRes[SubmitUpiPurchase.resTrnId]== null) {
+        //Submit transaction not successful
+        //send error response to modal
+        String errReason = (pRes[SubmitUpiPurchase.resMsg] != null)?
+        pRes[SubmitUpiPurchase.resMsg]:
+        'The transaction could not be initiated. Please try again in a while';
+        var failData = {
+          'failReason': errReason
+        };
+        bool failureLogged = await dbProvider.logFailure(
+            baseProvider.myUser.uid,
+            FailType.UserTransactionFailed,
+            failData);
+        log.debug('Failure logged correctly: $failureLogged');
+        return {
+          'flag': false,
+          'reason': (pRes[SubmitUpiPurchase.resMsg] != null)?
+          pRes[SubmitUpiPurchase.resMsg]:
+              'The transaction could not be initiated. Please try again in a while'
+        };
+      }else{
+        //create transaction
+        //update user obj to show processing flag
+        String pTranId = pRes[SubmitUpiPurchase.resTrnId];
+        String pMultipleId = pRes[SubmitUpiPurchase.resMultipleId];
+        String pUpiDateTime = pRes[SubmitUpiPurchase.resUpiTime];
+        UserTransaction txn = UserTransaction.newMFDeposit(pTranId, pMultipleId, pUpiDateTime,
+            amt, baseProvider.myUser.uid);
+        String userTxnKey = await dbProvider.addUserTransaction(baseProvider.myUser.uid, txn);
+        bool nFlag = (userTxnKey != null);
+        if(nFlag) {
+          txn.docKey = userTxnKey;
+          baseProvider.myUser.pendingTxnId = userTxnKey;
+          bool upFlag = await dbProvider.updateUser(baseProvider.myUser);
+          log.debug('User pending txn id updated: $upFlag');
+          nFlag = nFlag && upFlag;
+        }
+        if(nFlag) {
+          Navigator.of(context).pop();
+          Navigator.push(context, MaterialPageRoute(
+            builder: (ctx) => DepositVerification(tranId: pTranId,userTxnId: userTxnKey,
+              panNumber: baseProvider.iciciDetail.panNumber,),
+          ));
+        }else{
+          //TODO what happens if txn and user not updated
+        }
+        return {
+          'flag': true,
+        };
+      }
+    }
   }
 }
 
@@ -357,7 +484,7 @@ class FundGraph extends StatelessWidget {
       width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: AnimatedLineChart(
+        child: CustomAnimatedLineChart(
           chart,
         ), //Unique key to force animations
       ),
