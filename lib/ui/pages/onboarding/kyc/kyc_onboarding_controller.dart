@@ -27,15 +27,10 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
           child: Column(
             children: [
               MyButton(
-                  title: "Create Object",
+                  title: "Initialise new user",
                   onPressed: () async {
-                    var result = await kycModel.createOnboardingObj('EFGHI1234D',
-                        'shourya@gmail.com','9986643444','Sh');
-                    bool flag = result['flag'];
-                    print(flag);
-                    var message = result['message'];
-
-                    print(message);
+                    var result = await kycModel.init();
+                    print(result);
 
                     // flag == true ? baseProvider.showPositiveAlert('Success',
                     //     '$message', context)
