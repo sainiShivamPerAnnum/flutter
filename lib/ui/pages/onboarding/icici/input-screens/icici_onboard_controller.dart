@@ -414,12 +414,14 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
           baseProvider.myUser.uid, baseProvider.iciciDetail);
       //update flags in user document
       baseProvider.myUser.isKycVerified = BaseUtil.KYC_VALID;
+      baseProvider.myUser.pan = panNumber;
       bool userFlagUpdated = await dbProvider.updateUser(baseProvider.myUser);
       log.debug(
           'Flags for icici update and user update: $iciciUpdated, $userFlagUpdated');
     } else if (fKycStatus == GetKycStatus.KYC_STATUS_ALLOW_VIDEO) {
       log.debug('User is NOT KYC verified');
       baseProvider.myUser.isKycVerified = BaseUtil.KYC_INVALID;
+      baseProvider.myUser.pan = panNumber;
       bool userFlagUpdated = await dbProvider.updateUser(baseProvider.myUser);
       log.debug('Flags for icici update:$userFlagUpdated');
     } else {
