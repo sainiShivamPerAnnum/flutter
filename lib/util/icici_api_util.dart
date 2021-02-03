@@ -309,6 +309,12 @@ class GetPaidStatus{
     "MESSAGE":"For Quick Withdrawal mode , Available Balance should not be nil","SCH_DET":[]}]
  *or
  * [{"RETURNCODE":"100","ALLOWIMPS":"Y","MESSAGE":"Only Individual folio allowed","SCH_DET":[]}]
+ *
+ * [{"BAL":"112.352","AUM":"1011.17","RETURNCODE":"000","ALLOWIMPS":"Y","MESSAGE":null,"SCH_DET":[{"SCH_TYPE":"DF","TYPE_NAME":"Debt
+    Funds","SCH_CODE":"1565","SCH_NAME":"ICICI Prudential Liquid Fund - Growth","STATUS":"N","MRED_AMT":1,"CUT_OFF":"3:0:0
+    PM","ALLOW_REDEEM":"Y","RED_ALLOWED":"Y","REDEM_FROM_DAY":0,"REDEM_TO_DAY":0,"FOLIO_NO":"8490923","TAX_BASED_SCHEME":"N",
+    "BAL":172.352,"AUM":48986.9023168,"NAV":284.2259,"NAVDATE":"2019-09-22T00:00:00","ALLOW_IMPS":"Y"}],"REDEEMABLEAMOUNT":1011.17,
+    "TAMOUNT":31933.3483168,"SESSIONID":"FL1670",":B2":"Y",":B1":"N"}]
  * */
 class CheckIMPSStatus{
   static final String path = 'api/checkIMPSAllowed';
@@ -327,6 +333,16 @@ class CheckIMPSStatus{
     ”Redeem_bank_details”:”ICICI Bank Ltd#001501011212825#SB#null#null#DC-ICIC”,
     }]
     or if not found: ""
+
+    [{"BANK_NAME":"CITI-BANK N.A.","BANK_DETAILS":"5603612223#CNRB0000001#37","REDEEM_BANK_DETAILS":"CITI-BANK
+    N.A.#5603612223#SB#Delhi#DELHI#NEFT"},{"BANK_NAME":"CITI-BANK
+    N.A.","BANK_DETAILS":"5603612223#CNRB0000001#37","REDEEM_BANK_DETAILS":"CITI-BANK N.A.#5603612223#SB#Delhi#NEW
+    DELHI#NEFT"}]
+
+    [{"BANK_NAME":"ICICI BANK LTD","BANK_DETAILS":"003901070908#ICIC0000000#229","REDEEM_BANK_DETAILS":"ICICI BANK
+    LTD#003901070908#SB#PuneShivaji Nagar##DC-ICIC"},{"BANK_NAME":"ICICI BANK
+    LTD","BANK_DETAILS":"003901070908#ICIC0000000#229","REDEEM_BANK_DETAILS":"ICICI BANK LTD#003901070908#SB#PUNE - SHIVAJI
+    NAGAR##DC-ICIC"}]
  * */
 class GetBankRedemptionDetail{
   static final String path = 'api/getRedeemBankDetails';
