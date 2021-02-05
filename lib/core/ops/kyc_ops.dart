@@ -52,21 +52,21 @@ class KYCModel extends ChangeNotifier {
 
   bool isInit() => (_apiKey != null);
 
-  Future<Map<dynamic, dynamic>> createOnboardingObj() async {
+  Future<Map<dynamic, dynamic>> createOnboardingObject(var email,var username, var phone, var name) async {
     bool res = false;
     String message = "Object Created Successfully";
 
 
     headers = {
       'Content-Type': 'application/json',
-      'Authorization': KycUrls.auth
+      'Authorization': "4bljhPFXyZeCGx9toyNTSXlN1FpKdwHduYM7Bmnt7WRqwL7zPpgy4utAq4poA7aY"
     };
 
     Map<dynamic, dynamic> body = {
-      "email": "abhisheksoni@gmail.com",
-      "username": "fello2223.",
-      "phone": "9983392727",
-      "name": "Abhishek"
+      "email": "$email",
+      "username": "$username",
+      "phone": "$phone",
+      "name": "$name"
     };
 
     String jsonBody = json.encode(body);
@@ -188,6 +188,7 @@ class KYCModel extends ChangeNotifier {
 
   Future<Map<dynamic, dynamic>> executePOI(var image) async
   {
+    var fields;
     var flag = false;
     var message = "Uploaded Successfully";
 
@@ -210,7 +211,7 @@ class KYCModel extends ChangeNotifier {
     var request = http.Request(
         'POST',
         Uri.parse(
-            'https://multi-channel-preproduction.signzy.tech/api/onboardings/execute'));
+            KycUrls.execute));
     request.body = '''{
     "merchantId": "$merchentId",
     "inputData":
@@ -234,7 +235,9 @@ class KYCModel extends ChangeNotifier {
     if (response.statusCode == 200)
     {
       flag = true;
-      print(await response.stream.bytesToString());
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      fields = jsonDecode(responseString)['object'];
     }
     else if (response.statusCode == 400)
       {
@@ -251,11 +254,92 @@ class KYCModel extends ChangeNotifier {
     Map<dynamic,dynamic> results =
         {
           "flag" : flag,
-          "message" : message
+          "message" : message,
+          "fields" : fields
 
         };
     return results;
   }
+
+
+  Future<Map<dynamic, dynamic>> coresPOA(var image) async
+  {
+    var fields;
+    var flag = false;
+    var message = "Uploaded Successfully";
+
+    var tokens = await getId();
+
+    var auth = tokens['authToken'];
+    var merchentId = tokens["merchantId"];
+    print(merchentId);
+    print("Auth Token = $auth");
+
+    var data = await convertImages(image);
+    var imageUrl = data['imageUrl'];
+    print(imageUrl);
+
+    var headers = {
+      'Authorization': '$auth',
+      'Content-Type': 'application/json'
+    };
+
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            KycUrls.execute));
+    request.body = '''{
+    "merchantId": "$merchentId",
+    "inputData": {
+      "service": "identity",
+      "type": "aadhaar",
+      "task": "autoRecognition",
+         "data": {
+             "images": ["${imageUrl}"],
+             "toVerifyData": {},
+             "searchParam": {},
+             "proofType": "corrAddress"
+             }
+            }
+           }''';
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200)
+    {
+      flag = true;
+      print(await response.stream.bytesToString());
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      fields = jsonDecode(responseString)['object'];
+    }
+    else if (response.statusCode == 400)
+    {
+      flag = false;
+      message = "Image link expired please select a new Image";
+
+    }
+    else {
+      flag = false;
+      message = "Something went wrong";
+      print(await response.stream.bytesToString());
+      print(response.reasonPhrase);
+    }
+    Map<dynamic,dynamic> results =
+    {
+      "flag" : flag,
+      "message" : message,
+      "fields" : fields
+
+    };
+    return results;
+  }
+
+
+
+
 
 
   Future<Map<dynamic, dynamic>> startVideo() async
@@ -459,6 +543,8 @@ class KYCModel extends ChangeNotifier {
     //Get the response from the server
   }
 
+
+
   Future<Map<dynamic,dynamic>> updateSignature(var image) async
   {
     var flag = false;
@@ -580,8 +666,9 @@ class KYCModel extends ChangeNotifier {
   }
 
 
-  Future<Map<dynamic, dynamic>> bankPennyTransfer() async
+  Future<Map<dynamic, dynamic>> bankPennyTransfer(var beneficiaryAccount,beneficiaryIFSC,beneficiaryName) async
   {
+    var fields;
     var tokens = await getId();
 
     var merchantID = tokens['merchantId'];
@@ -606,9 +693,9 @@ class KYCModel extends ChangeNotifier {
            "images": [],      
            "toVerifyData": {}, 
            "searchParam": {    
-           "beneficiaryAccount": "50100344606311",
-           "beneficiaryIFSC": "HDFC0000119",
-           "beneficiaryName":"Abhishek Soni"
+           "beneficiaryAccount": "$beneficiaryAccount",
+           "beneficiaryIFSC": "$beneficiaryIFSC",
+           "beneficiaryName":"$beneficiaryName"
                      }
                    }
                  }
@@ -622,6 +709,9 @@ class KYCModel extends ChangeNotifier {
       flag = true;
 
       print(await response.stream.bytesToString());
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      fields = jsonDecode(responseString)['object'];
     }
     else if(response.statusCode == 400)
     {
@@ -638,7 +728,8 @@ class KYCModel extends ChangeNotifier {
     Map<dynamic, dynamic> result =
     {
       'flag': flag,
-      'message': message
+      'message': message,
+      "fields" : fields
     };
 
     return result;
@@ -648,6 +739,7 @@ class KYCModel extends ChangeNotifier {
 
   Future<Map<dynamic, dynamic>> cancelledCheque(var image) async
   {
+    var fields;
     var tokens = await getId();
     var data = await convertImages(image);
 
@@ -689,6 +781,11 @@ class KYCModel extends ChangeNotifier {
     {
       flag = true;
 
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      fields = jsonDecode(responseString)['object'];
+
+
       print(await response.stream.bytesToString());
     }
     else if(response.statusCode == 400)
@@ -702,14 +799,16 @@ class KYCModel extends ChangeNotifier {
     Map<dynamic, dynamic> result =
     {
       'flag': flag,
-      'message': message
+      'message': message,
+      'fields' : fields
+
     };
 
     return result;
   }
 
 
-  Future<Map<dynamic,dynamic>> Fatca() async
+  Future<Map<dynamic,dynamic>> Fatca(var pep, var rpep, var residentForTaxInIndia, var relatedPerson, var relatedPersonType) async
   {
     var flag = false;
     var message = "Updated successfully";
@@ -801,7 +900,123 @@ class KYCModel extends ChangeNotifier {
   }
 
 
-  uploadLocation() async
+  Future<Map<dynamic,dynamic>> Forms
+      (
+      var gender,
+      var maritalStatus,
+      var nomineeRelationShip,
+      var fatherTitle,
+      var panNumber,
+      var motherTitle,
+      var residentialStatus,
+      var occupationDescription,
+      var occupationCode,
+      var kycAccountCode,
+      var kycAccountDescription,
+      var communicationAddressCode,
+      var communicationAddressType,
+      var permanentAddressCode,
+      var permanentAddressType,
+      var citizenshipCountryCode,
+      var citizenshipCountry,
+      var applicationStatusCode,
+      var applicationStatusDescription,
+      var mobileNumber,
+      var countryCode,
+      var emailId,
+      var fatherName,
+      // var motherName,
+      // var annualIncome,
+      ) async
+
+  {
+
+    var flag = false;
+    var message = "Updated successfully";
+
+    var tokens = await getId();
+
+    var merchantID = tokens['merchantId'];
+    var authToken = tokens['authToken'];
+
+    var headers = {
+      'Authorization': "$authToken",
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST', Uri.parse(KycUrls.update));
+    request.body = '''{
+    "merchantId": "$merchantID",
+    "save": "formData",
+    "type": "kycdata",
+    "data": {
+        "type": "kycdata",
+        "kycData": {
+        "gender": "$gender",
+        "maritalStatus": "$maritalStatus",
+         "nomineeRelationShip": "$nomineeRelationShip",
+          "fatherTitle": "$fatherTitle.",
+          "maidenTitle": "",
+          "maidenName": "",
+          "panNumber": "$panNumber",
+          "aadhaarNumber": "",
+          "motherTitle": "$motherTitle",
+          "residentialStatus": "$residentialStatus",
+          "occupationDescription": "$occupationDescription",
+          "occupationCode": "$occupationCode",
+          "kycAccountCode": "$kycAccountCode",
+          "kycAccountDescription": "$kycAccountDescription",
+          "communicationAddressCode": "$communicationAddressCode",
+          "communicationAddressType": "$communicationAddressType",
+          "permanentAddressCode": "$permanentAddressCode",
+          "permanentAddressType": "$permanentAddressType",
+          "citizenshipCountryCode": "$citizenshipCountryCode",
+          "citizenshipCountry": "$citizenshipCountry",
+          "applicationStatusCode": "$applicationStatusCode",
+          "applicationStatusDescription": "$applicationStatusDescription",
+          "mobileNumber": "$mobileNumber",
+          "countryCode": $countryCode,
+          "emailId": "$emailId",
+          "fatherName": "$fatherName",
+            }
+            }
+            }''';
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200)
+    {
+      flag = true;
+
+      print(await response.stream.bytesToString());
+    }
+    else if(response.statusCode == 422)
+    {
+      flag = false;
+      message = "Please fill the required fields";
+
+    }
+    else {
+      flag = false;
+      message = "something went wrong";
+      print(response.reasonPhrase);
+    }
+
+    Map<dynamic,dynamic> result =
+    {
+      'flag' : flag,
+      'message' : message
+
+    };
+
+    return Future.value(result);
+
+  }
+
+
+
+  Future<Map<dynamic, dynamic>> uploadLocation() async
   {
     await location.getCurrentLocation();
 
@@ -809,6 +1024,143 @@ class KYCModel extends ChangeNotifier {
     var long = location.longitude;
 
     print("lat is $lat long is $long");
+
+    var tokens = await getId();
+
+    var merchantID = tokens['merchantId'];
+    var authToken = tokens['authToken'];
+
+    bool flag = false;
+    String message = "Bank Verified Successfully";
+
+
+    var headers = {
+      'Authorization': '$authToken',
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST', Uri.parse(KycUrls.execute));
+    request.body = '''{
+    "merchantId": "$merchantID",
+     "save": "formData",
+     "type": "userForensics",
+     "data": {
+          "type": "usersData",
+          "userData": {
+          "identity": {
+          "geoLocationData": {},
+          "browserData": {
+           "browserName": ".......",
+           "cookieEnabled": ".......",
+           "browserLanguage": ".......",
+           "os": ".......",
+           "userAgent": ".......",
+           "pluginsInstalled": ["...."],
+           "browserVersion": ".......",
+           "screenWidth": ".......",
+           "screenHeight": ".......",
+           "screenPixelDepth": ".......",
+           "screenColorDepth": ".......",
+           "deviceInfo": {
+            "complete_device_name": ".......",
+            "form_factor": ".......",
+            "is_mobile": false
+            },
+            "signzyPlatformUsed": "Mobile",
+            "userLat": 12.9833,
+            "userLong": 77.5833
+              },
+              "pageName": "bankaccount"
+               },
+               "address": {
+                "geoLocationData": {},
+                "browserData": {
+                "browserName": ".......",
+                "cookieEnabled": ".......",
+                "browserLanguage": ".......",
+                "os": ".......",
+                "userAgent": ".......",
+                "pluginsInstalled": ["...."],
+                 "browserVersion": ".......",
+                 "screenWidth": ".......",
+                 "screenHeight": ".......",
+                 "screenPixelDepth": ".......",
+                 "screenColorDepth": ".......",
+                 "deviceInfo": {
+                 "complete_device_name": ".......",
+                 "form_factor": ".......",
+                  "is_mobile": false
+                   },
+                   "signzyPlatformUsed": "Mobile",
+                   "userLat": 12.9833,
+                   "userLong": 77.5833
+                   },
+                   "pageName": "bankaccount"
+                   },
+                   "bankaccount": {
+                    "geoLocationData": {},
+                    "browserData": {
+                     "browserName": ".......",
+                     "cookieEnabled": ".......",
+                     "browserLanguage": ".......",
+                     "os": ".......",
+                     "userAgent": ".......",
+                     "pluginsInstalled": ["...."],
+                     "browserVersion": ".......",
+                     "screenWidth": ".......",
+                     "screenHeight": ".......",
+                      
+                      "screenPixelDepth": ".......",
+                      
+                      "screenColorDepth": ".......",
+                      "deviceInfo": {          
+                              "complete_device_name": ".......",
+                                     "form_factor": ".......",
+                                     "is_mobile": false
+                                     },
+                                     "signzyPlatformUsed": "Mobile",
+                                     "userLat": 12.9833,
+                                     "userLong": 77.5833
+                      },
+                      "pageName": "bankaccount"
+                   },
+              "documents": {                           
+                     "geoLocationData": {},
+                      "browserData": {
+                       "browserName": ".......",
+                       "cookieEnabled": ".......",\n     
+                                        "browserLanguage": ".......",\n                    "os": ".......",\n                    "userAgent": ".......",\n                    "pluginsInstalled": ["...."],\n                    "browserVersion": ".......",\n                    "screenWidth": ".......",\n                    "screenHeight": ".......",\n                    "screenPixelDepth": ".......",\n                    "screenColorDepth": ".......",\n                    "deviceInfo": {\n                        "complete_device_name": ".......",\n                        "form_factor": ".......",\n                        "is_mobile": false\n                    },\n                    "signzyPlatformUsed": "Mobile",\n                    "userLat": 12.9833,\n                    "userLong": 77.5833\n                },\n                "pageName": "bankaccount"\n    
+                              }\n        }\n    }\n}''';
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200)
+    {
+      flag = true;
+
+      print(await response.stream.bytesToString());
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+    }
+    else if(response.statusCode == 400)
+    {
+      flag = false;
+
+      print(response.reasonPhrase);
+    }
+    else
+    {
+      flag = false;
+      message = "Something went wrong please try again later";
+    }
+
+    Map<dynamic, dynamic> result =
+    {
+      'flag': flag,
+      'message': message,
+    };
+
+    return result;
 
 
   }
@@ -863,6 +1215,142 @@ class KYCModel extends ChangeNotifier {
 
 
 
+  // to update AAdhar Card
+
+  Future<Map<dynamic, dynamic>> updatePOI(var name,var fatherName,var panNumber, var dob) async
+  {
+    //DOB should be in day/month/year
+    var flag = false;
+    var message = "Updated Successfully";
+
+    var tokens = await getId();
+
+    var auth = tokens['authToken'];
+    var merchentId = tokens["merchantId"];
+    print(merchentId);
+
+    var headers = {
+      'Authorization': '$auth',
+      'Content-Type': 'application/json'
+    };
+
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            KycUrls.update));
+    request.body = '''{
+      "merchantId": "$merchentId", 
+      "save": "formData",
+      "type": "identityProof",
+      "data": {
+            "type": "individualPan",
+            "name": "$name",
+            "fatherName": "$fatherName",
+            "number": "$panNumber",
+            "dob": "$dob"
+            }
+           }''';
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200)
+    {
+      flag = true;
+      print(await response.stream.bytesToString());
+    }
+    else if (response.statusCode == 422)
+    {
+      flag = false;
+      message = "Please fill all the fields";
+
+    }
+    else {
+      flag = false;
+      message = "Something went wrong";
+      print(await response.stream.bytesToString());
+      print(response.reasonPhrase);
+    }
+    Map<dynamic,dynamic> results =
+    {
+      "flag" : flag,
+      "message" : message
+
+    };
+    return results;
+  }
+
+
+
+  // to update PAN Card
+  Future<Map<dynamic, dynamic>> updatePOA(var name,var uid,var address, var city, var state, var district, var pincode, var dob) async
+  {
+    //DOB should be in day/month/year
+    var flag = false;
+    var message = "Updated Successfully";
+
+    var tokens = await getId();
+
+    var auth = tokens['authToken'];
+    var merchentId = tokens["merchantId"];
+    print(merchentId);
+
+    var headers = {
+      'Authorization': '$auth',
+      'Content-Type': 'application/json'
+    };
+
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            KycUrls.update));
+    request.body = '''{
+    "merchantId": "$merchentId",
+     "save": "formData",
+     "type": "corrAddressProof",
+         "data": {
+         "type": "aadhaar",
+         "name": "$name",
+         "uid": "$uid",
+         "address": "$address.",
+          "city": "$city",
+          "state": "$state",
+          "district": "$district",
+          "pincode": "$pincode",
+          "dob": "$dob"
+  
+          }}''';
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200)
+    {
+      flag = true;
+      print(await response.stream.bytesToString());
+    }
+    else if (response.statusCode == 422)
+    {
+      flag = false;
+      message = "Please fill all the fields";
+
+    }
+    else {
+      flag = false;
+      message = "Something went wrong";
+      print(await response.stream.bytesToString());
+      print(response.reasonPhrase);
+    }
+    Map<dynamic,dynamic> results =
+    {
+      "flag" : flag,
+      "message" : message
+
+    };
+    return results;
+  }
 
 
 
