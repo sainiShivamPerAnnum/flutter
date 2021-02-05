@@ -133,10 +133,7 @@ class _DepositVerificationState extends State<DepositVerification> {
           ),
           onTap: () {
             //TODO add an are you sure dialog here
-            baseProvider.runPaymentVerification().then((value) {
-              _isPaymentMade = true;
-              setState(() {});
-            });
+
           },
         )
       ],

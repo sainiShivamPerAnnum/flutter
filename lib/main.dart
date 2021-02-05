@@ -24,6 +24,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import 'core/service/payment_service.dart';
+
 
 void main() {
   setupLocator();
@@ -42,6 +44,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
         ChangeNotifierProvider(create: (_) => locator<FcmListener>()),
         ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
+        ChangeNotifierProvider(create: (_) => locator<PaymentService>()),
       ],
       child: MaterialApp(
         title: Constants.APP_NAME,
