@@ -158,7 +158,7 @@ class KYCModel extends ChangeNotifier {
 
     var request = http.MultipartRequest('POST', Uri.parse(KycUrls.convertImages));
     request.fields.addAll({
-      'ttl': '2 mins'
+      'ttl': 'infinity'
     });
     request.files.add(await http.MultipartFile.fromPath('file', '$image'));
 
@@ -203,7 +203,7 @@ class KYCModel extends ChangeNotifier {
 
     var data = await convertImages(image);
     var imageUrl = data['imageUrl'];
-    print(imageUrl);
+    print("image in poi $imageUrl");
 
     var headers = {
       'Authorization': '$auth',
@@ -239,12 +239,18 @@ class KYCModel extends ChangeNotifier {
       flag = true;
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
+      print(responseString);
       fields = jsonDecode(responseString)['object'];
+      print(fields);
     }
     else if (response.statusCode == 400)
       {
         flag = false;
         message = "Image link expired please select a new Image";
+        var responseData = await response.stream.toBytes();
+        var responseString = String.fromCharCodes(responseData);
+        print(responseString);
+
 
       }
     else {

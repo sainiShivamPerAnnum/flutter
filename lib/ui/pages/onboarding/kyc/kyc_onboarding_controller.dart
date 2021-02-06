@@ -141,7 +141,7 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
                                 print(imagePath);
 
                                var result =
-                               await kycModel.POI(imagePath);
+                               await kycModel.executePOI(imagePath);
 
                                // var flag = result["flag"];
                                //
@@ -183,6 +183,12 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
 
 
                   }),
+
+
+
+
+
+
 
               MyButton(
                   title: "Cancelled Cheque",
