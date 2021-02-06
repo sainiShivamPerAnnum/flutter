@@ -407,3 +407,7 @@ class _DepositVerificationState extends State<DepositVerification> {
   }
 }
 
+// class TransactionHelpDialog extends StatefulWidget{
+//
+// }
+
