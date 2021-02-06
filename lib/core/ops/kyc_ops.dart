@@ -59,7 +59,7 @@ class KYCModel extends ChangeNotifier {
 
     headers = {
       'Content-Type': 'application/json',
-      'Authorization': "4bljhPFXyZeCGx9toyNTSXlN1FpKdwHduYM7Bmnt7WRqwL7zPpgy4utAq4poA7aY"
+      'Authorization': "CWUfGNBCJ02KqBUOzUG9CzAoNPcc9RifdbCv5wvOAT87uLGyDnEnf9gQYu4QYLXm"
     };
 
     Map<dynamic, dynamic> body = {
