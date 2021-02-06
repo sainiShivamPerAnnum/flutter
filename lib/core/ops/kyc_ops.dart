@@ -352,6 +352,7 @@ class KYCModel extends ChangeNotifier {
 
 
 
+
   Future<Map<dynamic, dynamic>> startVideo() async
   {
     var tokens = await getId();
