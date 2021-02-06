@@ -150,45 +150,107 @@ class KYCModel extends ChangeNotifier {
     return result;
   }
 
+  // old function to convert images
+  // Future<Map<dynamic, dynamic>> convertImages(var image) async
+  // {
+  //   print("inside convertImage");
+  //   bool result = false;
+  //   var imageUrl;
+  //
+  //   await getId();
+  //
+  //   var request = http.MultipartRequest('POST', Uri.parse(KycUrls.convertImages));
+  //   request.fields.addAll({
+  //     'ttl': 'infinity'
+  //   });
+  //   request.files.add(await http.MultipartFile.fromPath('file', '$image'));
+  //
+  //
+  //   http.StreamedResponse response = await request.send();
+  //
+  //
+  //
+  //   if (response.statusCode == 201 || response.statusCode == 200)
+  //   {
+  //     result = true;
+  //     print(response.statusCode);
+  //     var responseData = await response.stream.toBytes();
+  //     var responseString = String.fromCharCodes(responseData);
+  //     // print("response srrint $responseString");
+  //     imageUrl = jsonDecode(responseString)['file']['directURL'];
+  //     // print(imageUrl);
+  //   } else {
+  //     print("Something went wrong");
+  //     print(response.statusCode);
+  //     var responseData = await response.stream.toBytes();
+  //     var responseString = String.fromCharCodes(responseData);
+  //
+  //     print(responseString);
+  //   }
+  //   Map<dynamic, dynamic> data = {'flag': result, 'imageUrl': imageUrl};
+  //
+  //   return Future.value(data);
+  // }
+
+
   Future<Map<dynamic, dynamic>> convertImages(var image) async
   {
     print("inside convertImage");
     bool result = false;
     var imageUrl;
 
-    await getId();
 
-    var request = http.MultipartRequest('POST', Uri.parse(KycUrls.convertImages));
-    request.fields.addAll({
-      'ttl': 'infinity'
-    });
-    request.files.add(await http.MultipartFile.fromPath('file', '$image'));
+    final headers =
+    {
+      'Content-Type': 'application/json',
+    };
+
+    var request = http.MultipartRequest('POST',Uri.parse(KycUrls.convertImages));
+
+    request.headers.addAll(headers);
+    request.fields['ttl'] = '10 mins';
 
 
-    http.StreamedResponse response = await request.send();
+    var pic = await http.MultipartFile.fromPath(
+        'file', image
+
+    );
 
 
+    request.files.add(pic);
 
-    if (response.statusCode == 201 || response.statusCode == 200) {
+    var response = await request.send();
+
+    if (response.statusCode == 201 || response.statusCode == 200)
+    {
       result = true;
       print(response.statusCode);
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
       // print("response srrint $responseString");
       imageUrl = jsonDecode(responseString)['file']['directURL'];
-      // print(imageUrl);
-    } else {
+
+
+    }
+    else
+    {
       print("Something went wrong");
       print(response.statusCode);
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
-
       print(responseString);
     }
     Map<dynamic, dynamic> data = {'flag': result, 'imageUrl': imageUrl};
 
     return Future.value(data);
+
+    //Get the response from the server
+
+
   }
+
+
+
 
   Future<Map<dynamic, dynamic>> executePOI(var image) async
   {
@@ -695,7 +757,7 @@ class KYCModel extends ChangeNotifier {
     };
     var request = http.Request('POST', Uri.parse(KycUrls.execute));
     request.body = '''{ 
-      "merchantId": "$merchantID",\n  
+      "merchantId": "$merchantID", 
       "inputData": {     
          "service": "nonRoc",       
           "type": "bankaccountverifications",  
@@ -1110,10 +1172,6 @@ class KYCModel extends ChangeNotifier {
   }
 
 
-
-
-
-
   // to update AAdhar Card
 
   Future<Map<dynamic, dynamic>> updatePOI(var name,var fatherName,var panNumber, var dob) async
@@ -1315,7 +1373,7 @@ class KYCModel extends ChangeNotifier {
 
 
   // this is the final step It will return a url that will redirect to aadhar authentication web site
-  Future<Map<dynamic, dynamic>> generateESign(var url) async
+  Future<Map<dynamic, dynamic>> generateAadharEsignPdf(var url) async
   {
     var fields;
     var tokens = await getId();
@@ -1342,7 +1400,7 @@ class KYCModel extends ChangeNotifier {
      "data": {
       "inputFile": "$url",
        "signatureType": "aadhaaresign",
-      "redirectUrl": "$url"
+      "redirectUrl": ""
        }
        }
        }''';
@@ -1385,6 +1443,141 @@ class KYCModel extends ChangeNotifier {
 
     return result;
   }
+
+
+
+  // this function returns a esignedFile
+  Future<Map<dynamic, dynamic>> saveAadharEsignPdf(var url) async
+  {
+    var fields;
+    var tokens = await getId();
+
+    var merchantID = tokens['merchantId'];
+    var authToken = tokens['authToken'];
+
+    bool res = false;
+    String message = "";
+
+
+
+    var headers = {
+      'Authorization': '$authToken',
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST', Uri.parse(KycUrls.execute));
+    request.body =
+    '''{
+    "merchantId":"$merchantID",
+    "inputData":{
+    "service": "esign",
+    "type": "",
+    "task": "getEsignData",
+    "data":{
+    
+            }  
+         }
+      }
+    ''';
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200)
+    {
+      res = true;
+
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      fields = jsonDecode(responseString)['object'];
+
+    }
+
+    else if (response.statusCode == 400)
+    {
+      res = false;
+      message = "PDF Not generated";
+    }
+
+    else {
+      message = "Something went wrong";
+
+      res = false;
+      print(await response.stream.bytesToString());
+
+      print(response.statusCode);
+    }
+
+    Map<dynamic, dynamic> result = {
+      'flag': res,
+      'message': message,
+      'fields' : fields
+
+
+    };
+
+    return result;
+  }
+
+
+  // the above function returns a signed pdf url that url we need to pass and save it
+  Future<Map<dynamic, dynamic>> saveSignedPdf(var signedPdfUrl) async
+  {
+    var tokens = await getId();
+
+    var merchantID = tokens['merchantId'];
+    var authToken = tokens['authToken'];
+
+    bool flag = false;
+    String message = "Updated Successfully";
+
+
+    var headers = {
+      'Authorization': '$authToken',
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST', Uri.parse(KycUrls.update));
+    request.body = '''{
+    "merchantId": "$merchantID",
+    "save": "esign",
+    "data": {
+    "signedPdf": "$signedPdfUrl"}
+    }''';
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200)
+    {
+      flag = true;
+
+    }
+    else if(response.statusCode == 422)
+    {
+      flag = false;
+      message = "SignedPdf is not allowed to be empty";
+
+      print(response.reasonPhrase);
+    }
+    else
+    {
+      flag = false;
+      message = "Something went wrong please try again later";
+    }
+
+    Map<dynamic, dynamic> result =
+    {
+      'flag': flag,
+      'message': message,
+    };
+
+    return result;
+
+
+  }
+
+
+
+
 
 
 
