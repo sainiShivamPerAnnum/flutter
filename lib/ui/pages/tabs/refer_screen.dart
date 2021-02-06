@@ -4,6 +4,7 @@ import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
+import 'package:felloapp/ui/pages/deposit_verification.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
@@ -16,7 +17,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class ReferScreen extends StatefulWidget{
-
+  static final int index = 2;
   @override
   State<StatefulWidget> createState() => _ReferScreenState();
 }
@@ -286,8 +287,10 @@ class _ReferScreenState extends State<ReferScreen> {
                       //   });
                       // });
                       // setState(() {});
-                      await iProvider.init();
-                      await iProvider.getBankAcctTypes("AMVPL5308B");
+                      Navigator.of(context).pop();
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (ctx) => DepositVerification(),
+                      ));
                     },
                     highlightColor: Colors.orange.withOpacity(0.5),
                     splashColor: Colors.orange.withOpacity(0.5),

@@ -40,7 +40,7 @@ class DepositModalSheetState extends State<DepositModalSheet> with SingleTickerP
     if(baseProvider != null) {
       if(baseProvider.iciciDetail.vpa != null && baseProvider.iciciDetail.vpa.isNotEmpty)
         _vpaController.text = baseProvider.iciciDetail.vpa;
-      _isFirstInvestment = baseProvider.iciciDetail.firstInvMade??true;
+      _isFirstInvestment = (!baseProvider.iciciDetail.firstInvMade)??true;
       _isPendingTransaction = (baseProvider.myUser.pendingTxnId != null);
       String isEnabledStr = BaseUtil.remoteConfig.getString('icici_deposits_enabled');
       try{

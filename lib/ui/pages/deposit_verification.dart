@@ -1,5 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/payment_service.dart';
+import 'package:felloapp/ui/pages/app_root.dart';
+import 'package:felloapp/ui/pages/tabs/save_tab.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -228,7 +230,10 @@ class _DepositVerificationState extends State<DepositVerification> {
           ),
           onTap: () {
             Navigator.pop(context); //back to mf details
-            Navigator.pop(context); //back to save tab
+            // Navigator.pop(context); //back to save tab
+            Navigator.push(context, MaterialPageRoute(
+              builder: (ctx) => AppRoot(pageIndex: SaveScreen.index,),
+            ));
           },
         )
       ],
@@ -244,7 +249,7 @@ class _DepositVerificationState extends State<DepositVerification> {
         Padding(
           padding: EdgeInsets.all(5),
           child: Icon(Icons.new_releases,
-            color: Colors.yellow[300],
+            color: Colors.yellow[400],
             size: 20,
           ),
         ),
@@ -278,7 +283,10 @@ class _DepositVerificationState extends State<DepositVerification> {
           ),
           onTap: () {
             Navigator.pop(context); //back to mf details
-            Navigator.pop(context); //back to save tab
+            // Navigator.pop(context); //back to save tab
+            Navigator.push(context, MaterialPageRoute(
+              builder: (ctx) => AppRoot(pageIndex: SaveScreen.index,),
+            ));
           },
         )
       ],
@@ -294,14 +302,14 @@ class _DepositVerificationState extends State<DepositVerification> {
         Padding(
           padding: EdgeInsets.all(5),
           child: Icon(Icons.access_time,
-            color: Colors.yellow[300],
-            size: 20,
+            color: Colors.yellow[200],
+            size: 60,
           ),
         ),
         SizedBox(
           height: 10,
         ),
-        Text('We could not verify the status of your payment in time.\n'
+        Text('We could not verify the status of your payment in time.\n\n'
             + ' We will continue to check the status in the background and keep you informed.',
           textAlign: TextAlign.center,
           style: TextStyle(
@@ -329,7 +337,10 @@ class _DepositVerificationState extends State<DepositVerification> {
           ),
           onTap: () {
             Navigator.pop(context); //back to mf details
-            Navigator.pop(context); //back to save tab
+            Navigator.push(context, MaterialPageRoute(
+              builder: (ctx) => AppRoot(pageIndex: SaveScreen.index,),
+            ));
+            // Navigator.pop(context); //back to save tab
           },
         )
       ],
@@ -391,8 +402,8 @@ class _DepositVerificationState extends State<DepositVerification> {
         _isPaymentTimeout = true;
         break;
       }
-      setState(() {});
     }
+    setState(() {});
   }
 }
 

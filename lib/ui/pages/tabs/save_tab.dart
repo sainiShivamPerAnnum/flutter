@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SaveScreen extends StatefulWidget {
+  static final int index = (BaseUtil.playScreenFirst)?1:0;
   @override
   _SaveScreenState createState() => _SaveScreenState();
 }
@@ -55,6 +56,7 @@ class _SaveScreenState extends State<SaveScreen> {
               seconds: 5);
         }
       }, 1);
+
       if (baseProvider.myUser.account_balance != null &&
           baseProvider.myUser.account_balance > 0)
         acctBalance = baseProvider.myUser.account_balance;

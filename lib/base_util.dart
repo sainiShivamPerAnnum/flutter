@@ -25,7 +25,7 @@ class BaseUtil extends ChangeNotifier {
   final Log log = new Log("BaseUtil");
   DBModel _dbModel = locator<DBModel>();
   LocalDBModel _lModel = locator<LocalDBModel>();
-  PaymentService _payService = locator<PaymentService>();
+  PaymentService _payService;
   FirebaseUser firebaseUser;
   bool isUserOnboarded = false;
   bool isLoginNextInProgress = false;
@@ -77,7 +77,26 @@ class BaseUtil extends ChangeNotifier {
       String _p = remoteConfig.getString('play_screen_first');
       playScreenFirst = !(_p != null && _p.isNotEmpty && _p == 'false');
 
+    _payService = locator<PaymentService>();
       if(myUser.isIciciOnboarded)_payService.verifyPaymentsIfAny();
+    }
+  }
+
+  acceptNotificationsIfAny(BuildContext context) {
+    if(_payService != null && myUser.pendingTxnId != null) {
+      _payService.addPaymentStatusListener((value) {
+          if(value == PaymentService.TRANSACTION_COMPLETE) {
+            showPositiveAlert(
+                'Transaction Complete', 'Your account balance has been updated!', context,
+                seconds: 5);
+          }else if(value == PaymentService.TRANSACTION_REJECTED) {
+            showPositiveAlert(
+                'Transaction Closed', 'The transaction was not completed', context,
+                seconds: 5);
+          }else{
+            //
+          }
+      });
     }
   }
 

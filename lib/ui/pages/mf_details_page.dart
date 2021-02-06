@@ -197,8 +197,8 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   }
 
   Future<bool> onDepositClicked() async {
-    baseProvider.iciciDetail =
-        await dbProvider.getUserIciciDetails(baseProvider.myUser.uid);
+    baseProvider.iciciDetail = (baseProvider.iciciDetail == null)?
+    (await dbProvider.getUserIciciDetails(baseProvider.myUser.uid)):baseProvider.iciciDetail;
     if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_VALID &&
         baseProvider.myUser.isIciciOnboarded) {
       //move directly to depositing

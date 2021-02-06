@@ -367,18 +367,16 @@ class ICICIModel extends ChangeNotifier{
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
-    final resList = await processResponse(_response);
-    if(resList == null) {
+    final resMap = await processResponse(_response);
+    if(resMap == null) {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     }else{
-      Map<String, dynamic> yMap = resList[0];
-      if(yMap != null && yMap[GetPaidStatus.resStatus] != null) {
-        yMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
-        return yMap;
+      if(resMap[GetPaidStatus.resStatus] != null) {
+        resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+        return resMap;
       }else{
-        yMap[QUERY_SUCCESS_FLAG] = QUERY_FAILED;
-        return yMap;
+        return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
       }
     }
   }

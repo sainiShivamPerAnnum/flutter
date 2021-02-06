@@ -20,6 +20,9 @@ import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 class AppRoot extends StatefulWidget {
+  final int pageIndex;
+  AppRoot({this.pageIndex});
+
   @override
   State createState() => _AppRootState();
 }
@@ -37,6 +40,7 @@ class _AppRootState extends State<AppRoot> {
     super.initState();
     initDynamicLinks();
 
+    _currentIndex = widget.pageIndex;
     _slider = new NavySlider(infoList: Assets.bottomSheetDesc,);
     _playFirst = BaseUtil.playScreenFirst;
   }

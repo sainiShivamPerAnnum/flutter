@@ -21,8 +21,8 @@ class PaymentService extends ChangeNotifier{
   DBModel dbProvider = locator<DBModel>();
   ICICIModel iProvider = locator<ICICIModel>();
   Isolate isolate;
-  static const int CHECK_COUNT = 18;
-  static const int CHECK_INTERVAL = 10;
+  static const int CHECK_COUNT = 3;
+  static const int CHECK_INTERVAL = 12;
   static const int TRANSACTION_PENDING = 0;
   static const int TRANSACTION_COMPLETE = 1;
   static const int TRANSACTION_REJECTED = 2;
@@ -149,6 +149,7 @@ class PaymentService extends ChangeNotifier{
   }
 
   void verifyPayment() async {
+    bool initFlag = await _init();
     baseProvider.currentICICITxn = (baseProvider.currentICICITxn == null)?
     await dbProvider.getUserTransaction(baseProvider.myUser.uid, baseProvider.myUser.pendingTxnId)
         :baseProvider.currentICICITxn;
@@ -214,7 +215,7 @@ class PaymentService extends ChangeNotifier{
         'errReason': 'Invalid fields'
       };
     }else{
-      iProvider.getPaidStatus(tranId, panNumber).then((resObj){
+      return iProvider.getPaidStatus(tranId, panNumber).then((resObj){
         if(resObj == null || resObj['flag'] == false) {
           return {
             'isPaid': false,
@@ -234,13 +235,13 @@ class PaymentService extends ChangeNotifier{
                 'isPaid': true,
                 'isComplete': true,
               };
-            }else if(resObj[GetPaidStatus.resStatus == GetPaidStatus.STATUS_REJECTED]) {
+            }else if(resObj[GetPaidStatus.resStatus] == GetPaidStatus.STATUS_REJECTED) {
               return {
                 'isPaid': false,
                 'isComplete': true,
                 'errReason': 'The transaction was cancelled'
               };
-            }else if(resObj[GetPaidStatus.resStatus == GetPaidStatus.STATUS_INCOMPLETE]) {
+            }else if(resObj[GetPaidStatus.resStatus] == GetPaidStatus.STATUS_INCOMPLETE) {
               return {
                 'isPaid': false,
                 'isComplete': false,
