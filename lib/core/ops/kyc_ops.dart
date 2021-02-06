@@ -22,6 +22,8 @@ import 'package:felloapp/core/service/location.dart';
  * await dbProvider.updateUserKycDetails(
     baseProvider.myUser.uid, baseProvider.kycDetail);
  * */
+
+
 class KYCModel extends ChangeNotifier {
 
   Location location = Location();
