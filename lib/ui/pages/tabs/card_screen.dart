@@ -12,6 +12,7 @@ import 'package:felloapp/ui/elements/daily_pick_text_slider.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/ui/elements/prize_dialog.dart';
 import 'package:felloapp/ui/elements/raffle_digit.dart';
+import 'package:felloapp/ui/elements/roulette.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
 import 'package:felloapp/ui/elements/tambola_dialog.dart';
 import 'package:felloapp/ui/elements/weekly_draw_dialog.dart';
@@ -79,28 +80,7 @@ class _HState extends State<PlayHome> {
         prizeButtonUp = true;
       });
     });
-    // _scrollController1 = new ScrollController();
-    // _scrollController2 = new ScrollController();
-    // _scrollController3 = new ScrollController();
-    // _scrollController4 = new ScrollController();
-    // _scrollController5 = new ScrollController();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   _moveDown();
-    // });
   }
-
-  // _moveDown() {
-  //   _scrollController1.animateTo(_scrollController1.position.maxScrollExtent,
-  //       curve: Curves.linear, duration: Duration(milliseconds: 1000));
-  //   _scrollController2.animateTo(_scrollController1.position.maxScrollExtent,
-  //       curve: Curves.linear, duration: Duration(milliseconds: 800));
-  //   _scrollController3.animateTo(_scrollController1.position.maxScrollExtent,
-  //       curve: Curves.linear, duration: Duration(milliseconds: 1200));
-  //   _scrollController4.animateTo(_scrollController1.position.maxScrollExtent,
-  //       curve: Curves.linear, duration: Duration(milliseconds: 1000));
-  //   _scrollController5.animateTo(_scrollController1.position.maxScrollExtent,
-  //       curve: Curves.linear, duration: Duration(milliseconds: 800));
-  // }
 
   initDailyPickFlags() {
     String remoteTime = BaseUtil.remoteConfig.getString('draw_pick_time');
@@ -665,85 +645,60 @@ class _HState extends State<PlayHome> {
 
   Widget _buildTodaysPicksWidget(DailyPick draws) {
     DateTime date = DateTime.now();
-    return Padding(
-      padding: EdgeInsets.all(10.0),
-      child: Container(
-        width: double.infinity,
-        height: 100,
-        decoration: BoxDecoration(
-          color: Colors.blueGrey[400],
-          boxShadow: [
-            new BoxShadow(
-              color: Colors.black26,
-              offset: Offset.fromDirection(20, 7),
-              blurRadius: 5.0,
-            )
-          ],
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            stops: [0.1, 0.4],
-            colors: [Colors.blueGrey[500], Colors.blueGrey[400]],
-          ),
-        ),
-        child: Column(
-            //mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 10),
-                child: DPTextSlider(
-                  infoList: dailyPickTextList,
-                ),
-              ),
-              Padding(
-                  padding: EdgeInsets.only(top: 10, left: 15, right: 15),
-                  child: _getDrawBallRow(draws, date.weekday)),
-            ]),
-      ),
-    );
+    return Roulette(
+        dailyPickTextList: dailyPickTextList,
+        digits: _getDailyPickData(baseProvider.weeklyDigits, date.weekday));
+    // DateTime date = DateTime.now();
+    // return Padding(
+    //   padding: EdgeInsets.all(10.0),
+    //   child: Container(
+    //     width: double.infinity,
+    //     height: 100,
+    //     decoration: BoxDecoration(
+    //       color: Colors.blueGrey[400],
+    //       boxShadow: [
+    //         new BoxShadow(
+    //           color: Colors.black26,
+    //           offset: Offset.fromDirection(20, 7),
+    //           blurRadius: 5.0,
+    //         )
+    //       ],
+    //       borderRadius: BorderRadius.all(Radius.circular(20)),
+    //       gradient: LinearGradient(
+    //         begin: Alignment.topRight,
+    //         end: Alignment.bottomLeft,
+    //         stops: [0.1, 0.4],
+    //         colors: [Colors.blueGrey[500], Colors.blueGrey[400]],
+    //       ),
+    //     ),
+    //     child: Column(
+    //         //mainAxisAlignment: MainAxisAlignment.center,
+    //         crossAxisAlignment: CrossAxisAlignment.center,
+    //         children: [
+    //           Padding(
+    //             padding: EdgeInsets.only(top: 10),
+    //             child: DPTextSlider(infoList: dailyPickTextList,),
+    //           ),
+    //           Padding(
+    //               padding: EdgeInsets.only(top: 10, left: 15, right: 15),
+    //               child: _getDrawBallRow(draws, date.weekday)),
+    //         ]),
+    //   ),
+    // );
   }
 
-  Widget _getDrawBallRow(DailyPick draws, int day) {
-    balls = [];
-    List pickList = [];
+  List<int> _getDailyPickData(DailyPick draws, int day) {
+    List<int> picks = [];
     if (draws != null && draws.getWeekdayDraws(day - 1) != null) {
       draws.getWeekdayDraws(day - 1).forEach((element) {
-        // balls.add(_getDrawBall(
-        //   element,
-        // ));
-        pickList.add(element);
+        picks.add(element);
       });
     } else {
       for (int i = 0; i < 5; i++) {
-        // balls.add(_getDrawBall(
-        //   0,
-        // ));
-        pickList.add(0);
+        picks.add(-1);
       }
     }
-    print(pickList);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Holes(
-          pick: pickList[0],
-        ),
-        Holes(
-          pick: pickList[1],
-        ),
-        Holes(
-          pick: pickList[2],
-        ),
-        Holes(
-          pick: pickList[3],
-        ),
-        Holes(
-          pick: pickList[4],
-        ),
-      ],
-    );
+    return picks;
   }
 
   // Widget _getDrawBall(
@@ -968,73 +923,5 @@ class Odds extends StatelessWidget {
                 },
               )),
             ]));
-  }
-}
-
-class Holes extends StatefulWidget {
-  final int pick;
-  Holes({this.pick});
-
-  @override
-  _HolesState createState() => _HolesState();
-}
-
-class _HolesState extends State<Holes> {
-  ScrollController _scrollController;
-
-  @override
-  void initState() {
-    _scrollController = ScrollController();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _moveDown();
-    });
-    super.initState();
-  }
-
-  _moveDown() {
-    _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-        curve: Curves.linear, duration: Duration(milliseconds: 2000));
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    double _height = MediaQuery.of(context).size.height;
-    double _width = MediaQuery.of(context).size.width;
-    List pickList = [2, 12, 15, 33, 45, 23, widget.pick];
-    return Container(
-      height: _width * 0.08,
-      width: _width * 0.08,
-      padding: EdgeInsets.all(4),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.white,
-      ),
-      child:
-          //  (pick != null && pick > 0)
-          //     ?
-          ListView.builder(
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: pickList.length,
-        controller: _scrollController,
-        shrinkWrap: true,
-        itemBuilder: (ctx, i) {
-          return Text(
-            "${pickList[i]}",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: _height * 0.025),
-          );
-        },
-      ),
-      // : Center(
-      //     child: Text("-"),
-      //   ),
-    );
   }
 }

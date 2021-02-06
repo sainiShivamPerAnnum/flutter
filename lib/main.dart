@@ -3,14 +3,16 @@ import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
+import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/pages/app_root.dart';
 import 'package:felloapp/ui/pages/faq_page.dart';
+import 'package:felloapp/ui/pages/kyc_invalid.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/app/onboarding_widget.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
-import 'package:felloapp/ui/pages/onboarding/kyc/kyc_onboarding_controller.dart';
+import 'package:felloapp/ui/pages/onboarding/kyc/interface/kyc_onboarding_interface.dart';
 import 'package:felloapp/ui/pages/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/settings_page.dart';
 import 'package:felloapp/ui/pages/tabs/upi_screen.dart';
@@ -21,8 +23,7 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-// import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/pages/onboarding/app/onboarding_widget.dart';
-import 'core/ops/icici_ops.dart';
+
 
 void main() {
   setupLocator();
@@ -61,8 +62,9 @@ class MyApp extends StatelessWidget {
           '/deposit': (BuildContext context) => UpiPayment(),
           '/tnc': (BuildContext context) => TnC(),
           '/refpolicy': (BuildContext context) => ReferralPolicy(),
-          '/verifykyc': (BuildContext context) => KycOnboardController(),
-          '/onboardicici': (BuildContext context) => IciciOnboardController()
+          '/verifykyc': (BuildContext context) => KycOnboardInterface(),
+          '/onboardicici': (BuildContext context) => IciciOnboardController(),
+          '/initkyc': (BuildContext context) => KYCInvalid()
         },
       ),
     );

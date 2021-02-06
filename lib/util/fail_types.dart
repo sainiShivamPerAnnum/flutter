@@ -5,8 +5,17 @@ enum FailType{
   UserICICIBasicFieldUpdateFailed,
   UserICICIIncomeFieldUpdateFailed,
   UserInsufficientBankDetailFailed,
+  UserICICIBankFieldUpdateFailed,
+  UserIFSCNotFound,
   UserICICIOTPSendFailed,
   UserICICIOTPResendFailed,
   UserICICIPfCreationFailed,
-  UserPfCreatedButFolioFailed
+  UserPfCreatedButFolioFailed,
+  UserTransactionFailed
+}
+
+extension ParseToString on FailType {
+  String value() {
+    return this.toString().split('.').last;
+  }
 }

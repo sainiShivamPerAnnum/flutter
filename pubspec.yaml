@@ -17,7 +17,6 @@ dependencies:
   get_it: ^1.0.3+2
   pin_input_text_field: ^2.0.3
   path_provider:
-  #morpheus: ^1.0.2
   flutter_spinkit: ^4.0.0
   cached_network_image: ^2.0.0
   http: ^0.12.0+3
@@ -31,15 +30,18 @@ dependencies:
   #upi_india: ^2.2.0+1
   url_launcher: ^5.7.0
   showcaseview: ^0.1.6
-  #xml: ^4.5.1
-  #flutter_widget_from_html: ^0.5.1+5
   flutter_html: ^1.0.1
   fl_animated_linechart: ^1.1.4
   google_fonts: ^1.1.1
   confetti: ^0.5.4+1
   lottie: ^0.7.0+1
-  scratcher: "^1.4.0"
-
+  signature: ^3.2.0
+  image_picker: ^0.6.7+21
+  modal_progress_hud: ^0.1.3
+  shared_preferences: ^0.5.7
+  scratcher: ^1.4.0
+  geolocator: ^6.1.14
+  slider_button: ^0.6.0
 
   flutter:
     sdk: flutter
@@ -70,9 +72,13 @@ flutter:
     - images/sebi.png
     - images/amfi.png
     - images/whatsapp.png
-    - images/onboard_collage-small.png
+    - images/onboard_collage-small.png    
+    - images/PAN_card.png
+    - images/PAN_card_no_focussed.png
+    - images/kyc_unavailable.png
     - images/checkmark.json
     - images/verification.json
+    - images/scratch-card.png
     - resources/fello_tnc.html
     - resources/referral_policy.html
 

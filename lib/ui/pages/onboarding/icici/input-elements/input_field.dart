@@ -25,6 +25,6 @@ class InputField extends StatelessWidget {
 InputDecoration inputFieldDecoration(String hintText) {
   return InputDecoration(
     border: InputBorder.none,
-    // hintText: hintText,
+    hintText: hintText,
   );
 }

@@ -128,11 +128,14 @@ class ICICIModel extends ChangeNotifier{
     final resMap = await processResponse(_response);
     if(resMap == null) {
       log.error('Query Failed');
-      return {"flag": QUERY_FAILED};
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else if(!resMap[INTERNAL_FAIL_FLAG]){
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED, QUERY_FAIL_REASON: resMap["userMessage"]};
     }else{
-      // log.debug(resMap[SubmitPanDetail.resStatus]);
-      // log.debug(resMap[SubmitPanDetail.resId]);
-      return {"flag": QUERY_PASSED};
+      log.debug(resMap[SubmitInvKYCDetail.resStatus]);
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+
+      return resMap;
     }
   }
 
@@ -165,7 +168,7 @@ class ICICIModel extends ChangeNotifier{
     }else if(!resMap[INTERNAL_FAIL_FLAG]){
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED, QUERY_FAIL_REASON: resMap["userMessage"]};
     }else{
-      resMap[QUERY_SUCCESS_FLAG] = true;
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
       return resMap;
     }
   }
@@ -188,7 +191,7 @@ class ICICIModel extends ChangeNotifier{
     }else if(!resMap[INTERNAL_FAIL_FLAG]){
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED, QUERY_FAIL_REASON: resMap["userMessage"]};
     }else{
-      resMap[QUERY_SUCCESS_FLAG] = true;
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
       return resMap;
     }
   }
@@ -226,7 +229,7 @@ class ICICIModel extends ChangeNotifier{
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     }else{
-      resMap[QUERY_SUCCESS_FLAG] = true;
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
       return resMap;
     }
   }
@@ -248,7 +251,7 @@ class ICICIModel extends ChangeNotifier{
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     }else{
-      resMap[QUERY_SUCCESS_FLAG] = true;
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
       return resMap;
     }
   }
@@ -269,7 +272,7 @@ class ICICIModel extends ChangeNotifier{
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     }else{
-      resMap[QUERY_SUCCESS_FLAG] = true;
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
       return resMap;
     }
   }
@@ -288,11 +291,9 @@ class ICICIModel extends ChangeNotifier{
     final resMap = await processResponse(_response);
     if(resMap == null) {
       log.error('Query Failed');
-      return {"flag": QUERY_FAILED};
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     }else{
-      // log.debug(resMap[SubmitPanDetail.resStatus]);
-      // log.debug(resMap[SubmitPanDetail.resId]);
-      return {"flag": QUERY_PASSED};
+      return {QUERY_SUCCESS_FLAG: QUERY_PASSED};
     }
   }
 
@@ -313,12 +314,93 @@ class ICICIModel extends ChangeNotifier{
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     }else{
       Map<String, dynamic> yMap = resList[0];
-      if(yMap != null && yMap[CreatePortfolio.parsedRetMsgKey] != null) {
-        yMap[QUERY_SUCCESS_FLAG] = true;
+      if(yMap != null && yMap[CreatePortfolio.resReturnCode] != null) {
+        yMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
         return yMap;
       }else{
         return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
       }
+    }
+  }
+
+  Future<Map<String, dynamic>> initiateUPIPurchase(String id,
+      String email, String bankCode, String panNumber, String folioNumber,
+      String kycMode, String amount, String vpaAddress) async{
+    var _params = {
+      SubmitUpiPurchase.fldId:id,
+      SubmitUpiPurchase.fldEmail:email,
+      SubmitUpiPurchase.fldBankCode:bankCode,
+      SubmitUpiPurchase.fldPan:panNumber,
+      SubmitUpiPurchase.fldFolioNo:folioNumber,
+      SubmitUpiPurchase.fldKycMode:kycMode,
+      SubmitUpiPurchase.fldAmount:amount,
+      SubmitUpiPurchase.fldVPA:vpaAddress
+    };
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(SubmitUpiPurchase.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resList = await processPurchaseResponse(_response);
+    if(resList == null) {
+      log.error('Query Failed');
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else{
+      Map<String, dynamic> yMap = resList[0];
+      if(yMap != null && yMap[SubmitUpiPurchase.resTrnId] != null) {
+        yMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+        return yMap;
+      }else{
+        yMap[QUERY_SUCCESS_FLAG] = QUERY_FAILED;
+        return yMap;
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>> getPaidStatus(String tranId, String panNumber) async{
+    var _params = {
+      GetPaidStatus.fldTranId: tranId,
+      GetPaidStatus.fldPan: panNumber
+    };
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(GetPaidStatus.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resList = await processResponse(_response);
+    if(resList == null) {
+      log.error('Query Failed');
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else{
+      Map<String, dynamic> yMap = resList[0];
+      if(yMap != null && yMap[GetPaidStatus.resStatus] != null) {
+        yMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+        return yMap;
+      }else{
+        yMap[QUERY_SUCCESS_FLAG] = QUERY_FAILED;
+        return yMap;
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>> checkIMPSEligible(String folioNumber,
+      String amount) async{
+    var _params = {
+      CheckIMPSStatus.fldFolioNo: folioNumber,
+      CheckIMPSStatus.fldAmount: amount
+    };
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(CheckIMPSStatus.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if(resMap == null) {
+      log.error('Query Failed');
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else{
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+      return resMap;
     }
   }
 
@@ -333,7 +415,7 @@ class ICICIModel extends ChangeNotifier{
         params.forEach((key, value) {
           _p = '$_p$key=$value&';
         });
-        _p = _p.substring(0, _p.length-2);
+        _p = _p.substring(0, _p.length-1);
         _path = '$_path?$_p';
       }
     }
@@ -399,7 +481,7 @@ class ICICIModel extends ChangeNotifier{
     }
   }
 
-  Future<List<Map<String, String>>> processPortfolioResponse(http.StreamedResponse response) async{
+  Future<List<Map<String, dynamic>>> processPortfolioResponse(http.StreamedResponse response) async{
     if(response == null){
       log.error('response is null');
     }
@@ -418,13 +500,56 @@ class ICICIModel extends ChangeNotifier{
         return null;
       }
       List<dynamic> rList = json.decode(res);
-      List<Map<String, String>> refList = new List();
+      List<Map<String, dynamic>> refList = new List();
       rList.forEach((element) {
         refList.add({
-          CreatePortfolio.parsedRetCodeKey:element[CreatePortfolio.resReturnCode],
-          CreatePortfolio.parsedRetMsgKey:element[CreatePortfolio.resRetMessage],
-          CreatePortfolio.parsedFolioNo:element[CreatePortfolio.resFolioNo]??'',
-          CreatePortfolio.parsedExpiryDate:element[CreatePortfolio.resExpiryDate]??'',
+          CreatePortfolio.resReturnCode:element[CreatePortfolio.resReturnCode],
+          CreatePortfolio.resRetMessage:element[CreatePortfolio.resRetMessage],
+          CreatePortfolio.resFolioNo:element[CreatePortfolio.resFolioNo]??'',
+          CreatePortfolio.resExpiryDate:element[CreatePortfolio.resExpiryDate]??'',
+          CreatePortfolio.resAMCRefNo:element[CreatePortfolio.resAMCRefNo]??'',
+          CreatePortfolio.resPayoutId:element[CreatePortfolio.resPayoutId]??'',
+          CreatePortfolio.resChkDigit:element[CreatePortfolio.resChkDigit]??'',
+        });
+      });
+      log.debug(refList.toString());
+      return refList;
+    }catch(e){
+      log.error('Failed to decode json');
+      return null;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> processPurchaseResponse(http.StreamedResponse response) async{
+    if(response == null){
+      log.error('response is null');
+    }
+    if(response.statusCode != 200) {
+      log.error('Query Failed:: Status:${response.statusCode}, Reason:${response.reasonPhrase}');
+      if(response.statusCode == 502)
+        return null;
+      else
+        return null;
+    }
+    try {
+      String res = await response.stream.bytesToString();
+      log.debug(res);
+      if(res == null || res.isEmpty || res == "\"\"") {
+        log.error('Returned empty response');
+        return null;
+      }
+     //  String dummmy = '[{"TRANID":"3433599","TRXN_DATE":"01/02/2021","TRXN_TIME":"12:47:39 PM","INV_NAME":"SHOURYADITYA RAY LALA",'
+     //       +'"MOBILE_NO":9986643444,"SCH_NAME":"ICICI Prudential Liquid Fund - Growth","MULTIPLE_ID":"3433598",'
+     // + '"AMOUNT":100,"UPI_DATE_TIME":"01/02/2021 12:50 PM","TRIG_SCHEME":null,"USERNAME":null,"TRAN_ID":"3433599",'
+     // + '"DISPLAY_NAME":null,"IS_TAX":"N","LTEF_URL":null}]';
+      List<dynamic> rList = json.decode(res);
+      List<Map<String, dynamic>> refList = new List();
+      rList.forEach((element) {
+        refList.add({
+          SubmitUpiPurchase.resTrnId:element[SubmitUpiPurchase.resTrnId],
+          SubmitUpiPurchase.resMultipleId:element[SubmitUpiPurchase.resMultipleId]??'',
+          SubmitUpiPurchase.resTrnDate:element[SubmitUpiPurchase.resTrnDate],
+          SubmitUpiPurchase.resUpiTime:element[SubmitUpiPurchase.resUpiTime]
         });
       });
       log.debug(refList.toString());
