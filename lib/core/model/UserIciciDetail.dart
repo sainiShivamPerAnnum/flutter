@@ -6,6 +6,7 @@ class UserIciciDetail{
   String _appId;
   String _panNumber;
   String _kycStatus;
+  String _appMode;
   String _panName;
   String _hasIssue;
   Timestamp _createdTime;
@@ -18,11 +19,17 @@ class UserIciciDetail{
   String _amcRefNo;
   String _payoutId;
   String _chkDigit;
-
+  String _bankAccNo;
+  String _bankCode;
+  String _bankName;
+  String _bankCity;
+  String _vpa;
+  bool _firstInvMade;
 
   static final String fldAppId = 'iAppId';
   static final String fldPanNumber = 'iPanNumber';
   static final String fldKycStatus = 'iKycStatus';
+  static final String fldAppMode = 'iAppMode';
   static final String fldHasIssue = 'iHasIssue';
   static final String fldPanName = 'iPanName';
   static final String fldVerifiedOtpId = 'iVeriOtpId';
@@ -33,24 +40,33 @@ class UserIciciDetail{
   static final String fldAMCRefNo = 'iAMCRefNo';
   static final String fldPayoutId = 'iPayoutId';
   static final String fldChkDigit = 'iChkDigit';
+  static final String fldBankAccNo = 'iBankAccNo';
+  static final String fldBankCode = 'iBankCode';
+  static final String fldBankName = 'iBankName';
+  static final String fldBankCity = 'iBankCity';
+  static final String fldVpa = 'iVpa';
+  static final String fldFirstInvMade = 'iIsInvested';
 
   static const String NO_ISSUES = "NA";
 
-  UserIciciDetail(this._appId, this._panNumber, this._kycStatus, this._panName
-      , this._hasIssue, this._verifiedOtpId, this._folioNo, this._expDate,
-      this._amcRefNo, this._payoutId, this._chkDigit, this._createdTime,
-      this._updatedTime);
+  UserIciciDetail(this._appId, this._panNumber, this._kycStatus, this._appMode,
+      this._panName, this._hasIssue, this._verifiedOtpId, this._folioNo, this._expDate,
+      this._amcRefNo, this._payoutId, this._chkDigit, this._bankAccNo, this._bankCode,
+      this._bankName, this._bankCity, this._vpa, this._firstInvMade, this._createdTime, this._updatedTime);
 
-  UserIciciDetail.newApplication(String applicationId, String panNumber, String kycStatus):
-      this(applicationId, panNumber, kycStatus, '', NO_ISSUES, null,
-          null, null,null,null,null,Timestamp.now(), Timestamp.now());
+  UserIciciDetail.newApplication(String applicationId, String panNumber,
+      String kycStatus, String appMode):
+      this(applicationId, panNumber, kycStatus, appMode, '', NO_ISSUES, null,
+          null, null,null,null,null,null,null,null,null,null,false,Timestamp.now(), Timestamp.now());
 
   UserIciciDetail.fromMap(Map<String, dynamic> data):
       this(data[fldAppId], data[fldPanNumber], data[fldKycStatus],
-          data[fldPanName], data[fldHasIssue], data[fldVerifiedOtpId],
-          data[fldFolioNo], data[fldExpDate],data[fldAMCRefNo],
-          data[fldPayoutId], data[fldCreatedTime], data[fldChkDigit],
-          data[fldUpdatedTime]);
+          data[fldAppMode], data[fldPanName], data[fldHasIssue],
+          data[fldVerifiedOtpId], data[fldFolioNo], data[fldExpDate],
+          data[fldAMCRefNo], data[fldPayoutId], data[fldChkDigit],
+          data[fldBankAccNo], data[fldBankCode], data[fldBankName],
+          data[fldBankCity], data[fldVpa], data[fldFirstInvMade],
+          data[fldCreatedTime], data[fldUpdatedTime]);
 
   toJson() {
     return {
@@ -58,6 +74,7 @@ class UserIciciDetail{
       fldPanNumber: _panNumber,
       fldKycStatus: _kycStatus,
       fldPanName: _panName,
+      fldAppMode: _appMode,
       fldHasIssue: _hasIssue,
       fldVerifiedOtpId: _verifiedOtpId,
       fldFolioNo: _folioNo,
@@ -65,6 +82,12 @@ class UserIciciDetail{
       fldAMCRefNo: _amcRefNo,
       fldPayoutId: _payoutId,
       fldChkDigit: _chkDigit,
+      fldBankAccNo: _bankAccNo,
+      fldBankCode: _bankCode,
+      fldBankName: _bankName,
+      fldBankCity: _bankCity,
+      fldVpa: _vpa,
+      fldFirstInvMade: _firstInvMade,
       fldCreatedTime: _createdTime,
       fldUpdatedTime: Timestamp.now()
     };
@@ -80,6 +103,12 @@ class UserIciciDetail{
 
   set kycStatus(String value) {
     _kycStatus = value;
+  }
+
+  String get appMode => _appMode;
+
+  set appMode(String value) {
+    _appMode = value;
   }
 
   String get panNumber => _panNumber;
@@ -146,5 +175,41 @@ class UserIciciDetail{
 
   set amcRefNo(String value) {
     _amcRefNo = value;
+  }
+
+  String get bankAccNo => _bankAccNo;
+
+  set bankAccNo(String value) {
+    _bankAccNo = value;
+  }
+
+  String get bankCity => _bankCity;
+
+  set bankCity(String value) {
+    _bankCity = value;
+  }
+
+  String get bankName => _bankName;
+
+  set bankName(String value) {
+    _bankName = value;
+  }
+
+  String get bankCode => _bankCode;
+
+  set bankCode(String value) {
+    _bankCode = value;
+  }
+
+  bool get firstInvMade => _firstInvMade;
+
+  set firstInvMade(bool value) {
+    _firstInvMade = value;
+  }
+
+  String get vpa => _vpa;
+
+  set vpa(String value) {
+    _vpa = value;
   }
 }

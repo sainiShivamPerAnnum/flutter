@@ -1,8 +1,11 @@
+import 'package:felloapp/ui/elements/more_info_dialog.dart';
+import 'package:felloapp/ui/elements/prize_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/data_provider.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class PANPage extends StatelessWidget {
   static const int index = 0;
@@ -45,8 +48,11 @@ class PANPage extends StatelessWidget {
                     child: TextField(
                       autofocus: false,
                       controller: IDP.panInput,
+                      keyboardType: TextInputType.name,
                       textCapitalization: TextCapitalization.characters,
-                      decoration: inputFieldDecoration("Eg: ABCDXXXXXX"),
+                      decoration: inputFieldDecoration(
+                          "Enter your PAN Number"
+                      ),
                       onSubmitted: (value) {
                         IDP.panInput.text = value;
                         print(IDP.panInput.text);
@@ -56,22 +62,41 @@ class PANPage extends StatelessWidget {
                   Wrap(
                     spacing: 20,
                     children: [
-                      Chip(
-                        label: Text("What is a PAN?"),
+                      ActionChip(
+                        label: Text("Why is my PAN required?"),
                         backgroundColor: UiConstants.chipColor,
+                        onPressed: () {
+                          HapticFeedback.vibrate();
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => MoreInfoDialog(
+                                text: Assets.infoWhyPan,
+                                title: 'Why is PAN required?',
+                              ));
+                        },
                       ),
-                      Chip(
-                        label: Text("Why do I need to give my PAN Number?"),
+                      ActionChip(
+                        label: Text("Where do I find it?"),
                         backgroundColor: UiConstants.chipColor,
+                        onPressed: () {
+                          HapticFeedback.vibrate();
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => MoreInfoDialog(
+                                text: Assets.infoWherePan,
+                                title: 'Where can i find the PAN number?',
+                                imagePath: Assets.dummyPanCardShowNumber,
+                              ));
+                        },
                       ),
-                      Chip(
-                        label: Text("Where can I get my PAN?"),
-                        backgroundColor: UiConstants.chipColor,
-                      ),
-                      Chip(
-                        label: Text("How does a PAN look like?"),
-                        backgroundColor: UiConstants.chipColor,
-                      ),
+                      // Chip(
+                      //   label: Text("Where can I get my PAN?"),
+                      //   backgroundColor: UiConstants.chipColor,
+                      // ),
+                      // Chip(
+                      //   label: Text("How does a PAN look like?"),
+                      //   backgroundColor: UiConstants.chipColor,
+                      // ),
                     ],
                   ),
                 ],

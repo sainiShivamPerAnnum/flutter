@@ -6,7 +6,7 @@ class IDP {
   static TextEditingController name = new TextEditingController();
   static TextEditingController email = new TextEditingController();
   static String occupationChosenValue;
-  static String wealthChosenValue;
+  static String incomeChosenValue;
   static String exposureChosenValue;
   static String acctTypeChosenValue;
   static String otpChannels;
