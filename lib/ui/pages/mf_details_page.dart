@@ -217,11 +217,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                   }else{
                     Navigator.of(context).pop();
                     Navigator.push(context, MaterialPageRoute(
-                      builder: (ctx) => DepositVerification(
-                        tranId: baseProvider.currentICICITxn.tranId,
-                        userTxnId: baseProvider.currentICICITxn.docKey,
-                        panNumber: baseProvider.iciciDetail.panNumber,
-                      ),
+                      builder: (ctx) => DepositVerification(),
                     ));
                   }
                   return;

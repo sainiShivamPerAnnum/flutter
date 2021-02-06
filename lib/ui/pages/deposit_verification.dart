@@ -1,5 +1,5 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/ops/icici_ops.dart';
+import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,10 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class DepositVerification extends StatefulWidget{
-  DepositVerification({this.tranId, this.panNumber, this.userTxnId});
-  final String tranId;
-  final String panNumber;
-  final String userTxnId;
+  DepositVerification();
 
   @override
   State createState() => _DepositVerificationState();
@@ -19,14 +16,18 @@ class DepositVerification extends StatefulWidget{
 
 class _DepositVerificationState extends State<DepositVerification> {
   BaseUtil baseProvider;
-  ICICIModel iProvider;
+  PaymentService payService;
   bool _isPaymentMade = false;
+  bool _isPaymentConfirmed = false;
+  bool _isPaymentRejected = false;
+  bool _isPaymentTimeout = false;
   double _width;
   double _height;
 
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
+    payService = Provider.of<PaymentService>(context);
     _width = MediaQuery.of(context).size.width;
     _height = MediaQuery.of(context).size.height;
     return WillPopScope(
@@ -78,8 +79,7 @@ class _DepositVerificationState extends State<DepositVerification> {
                     ),
                     child: Padding(
                         padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                        child: (!_isPaymentMade)?_paymentNotMadeLayout()
-                            :_paymentMadeLayout()
+                        child: _getActiveLayout()
                     ),
                   ),
                 )
@@ -88,6 +88,18 @@ class _DepositVerificationState extends State<DepositVerification> {
           )
       ),
     );
+  }
+
+  Widget _getActiveLayout() {
+    if(!_isPaymentMade)return _paymentNotMadeLayout();
+    Widget wx;
+    if(_isPaymentMade) wx = _paymentMadeLayout();
+
+    if(_isPaymentConfirmed) wx = _paymentConfirmed();
+    else if(_isPaymentRejected) wx = _paymentRejected();
+    else if(_isPaymentTimeout)wx = _paymentTimeout();
+
+    return wx;
   }
 
   Widget _paymentNotMadeLayout() {
@@ -133,7 +145,10 @@ class _DepositVerificationState extends State<DepositVerification> {
           ),
           onTap: () {
             //TODO add an are you sure dialog here
-
+            _isPaymentMade = true;
+            setState(() {});
+            payService.addPaymentStatusListener(_onPaymentStatusReceived);
+            payService.verifyPayment();
           },
         )
       ],
@@ -165,6 +180,158 @@ class _DepositVerificationState extends State<DepositVerification> {
         SizedBox(
           height: 10,
         ),
+      ],
+    );
+  }
+
+  Widget _paymentConfirmed() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: EdgeInsets.all(5),
+          child:  Icon(
+            Icons.check_circle_outline,
+            color: UiConstants.primaryColor,
+            size: 20,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text('Payment completed successfully! 🎉',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 18
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Divider(
+          thickness: 1.5,
+        ),
+        InkWell(
+          child: Container(
+              height: 30,
+              child: Center(
+                child: Text('Okay',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
+              )
+          ),
+          onTap: () {
+            Navigator.pop(context); //back to mf details
+            Navigator.pop(context); //back to save tab
+          },
+        )
+      ],
+    );
+  }
+
+  Widget _paymentRejected() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: EdgeInsets.all(5),
+          child: Icon(Icons.new_releases,
+            color: Colors.yellow[300],
+            size: 20,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text('We have verified that the payment was not completed.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 18
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Divider(
+          thickness: 1.5,
+        ),
+        InkWell(
+          child: Container(
+              height: 30,
+              child: Center(
+                child: Text('Okay',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
+              )
+          ),
+          onTap: () {
+            Navigator.pop(context); //back to mf details
+            Navigator.pop(context); //back to save tab
+          },
+        )
+      ],
+    );
+  }
+
+  Widget _paymentTimeout() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: EdgeInsets.all(5),
+          child: Icon(Icons.access_time,
+            color: Colors.yellow[300],
+            size: 20,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text('We could not verify the status of your payment in time.\n'
+            + ' We will continue to check the status in the background and keep you informed.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 18
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Divider(
+          thickness: 1.5,
+        ),
+        InkWell(
+          child: Container(
+              height: 30,
+              child: Center(
+                child: Text('Okay',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
+              )
+          ),
+          onTap: () {
+            Navigator.pop(context); //back to mf details
+            Navigator.pop(context); //back to save tab
+          },
+        )
       ],
     );
   }
@@ -207,6 +374,25 @@ class _DepositVerificationState extends State<DepositVerification> {
       ),
     ) ??
         false;
+  }
+
+  _onPaymentStatusReceived(int status) {
+    switch(status) {
+      case PaymentService.TRANSACTION_COMPLETE: {
+        _isPaymentConfirmed = true;
+        break;
+      }
+      case PaymentService.TRANSACTION_REJECTED: {
+        _isPaymentRejected = true;
+        break;
+      }
+      case PaymentService.TRANSACTION_CHECK_TIMEOUT:
+      case PaymentService.TRANSACTION_PENDING: {
+        _isPaymentTimeout = true;
+        break;
+      }
+      setState(() {});
+    }
   }
 }
 

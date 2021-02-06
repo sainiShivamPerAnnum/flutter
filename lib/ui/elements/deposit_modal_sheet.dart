@@ -26,6 +26,7 @@ class DepositModalSheetState extends State<DepositModalSheet> with SingleTickerP
   bool _isDepositRequested = false;
   bool _isFirstInvestment = true;
   bool _isPendingTransaction = false;
+  bool _isDepositsEnabled = true;
   BaseUtil baseProvider;
   final _amtController = new TextEditingController();
   final _vpaController = new TextEditingController();
@@ -41,6 +42,13 @@ class DepositModalSheetState extends State<DepositModalSheet> with SingleTickerP
         _vpaController.text = baseProvider.iciciDetail.vpa;
       _isFirstInvestment = baseProvider.iciciDetail.firstInvMade??true;
       _isPendingTransaction = (baseProvider.myUser.pendingTxnId != null);
+      String isEnabledStr = BaseUtil.remoteConfig.getString('icici_deposits_enabled');
+      try{
+        int t = (isEnabledStr!=null)?int.parse(isEnabledStr):1;
+        _isDepositsEnabled = (t==1);
+      }catch(e) {
+        _isDepositsEnabled = true;
+      }
       _isInitialized = true;
     }
   }
@@ -171,7 +179,7 @@ class DepositModalSheetState extends State<DepositModalSheet> with SingleTickerP
             SizedBox(
               height: 20,
             ),
-            (!_isDepositInProgress && !_isPendingTransaction)?Padding(
+            (_isDepositsEnabled && !_isDepositInProgress && !_isPendingTransaction)?Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: SliderButton(
                 action: () {
@@ -225,6 +233,20 @@ class DepositModalSheetState extends State<DepositModalSheet> with SingleTickerP
                   )
                 ),
               )
+            ):Container(),
+            (!_isDepositsEnabled)?Padding(
+                padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                child: Container(
+                  width: _width,
+                  child: Text('We are currently not accepting deposits for '
+                      + 'the ICICI Prudential Liquid Fund - Growth',
+                      textAlign: TextAlign.center,
+                      style:TextStyle(
+                          fontSize: 16,
+                          color: UiConstants.accentColor
+                      )
+                  ),
+                )
             ):Container()
           ],
         ),

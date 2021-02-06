@@ -14,8 +14,8 @@ import 'package:flutter/material.dart';
 
 class PaymentService extends ChangeNotifier{
   static Log log = new Log('PaymentService');
-  final ValueChanged<int> onProcessComplete;
-  PaymentService({this.onProcessComplete});
+  ValueChanged<int> _onProcessComplete;
+  PaymentService();
 
   BaseUtil baseProvider = locator<BaseUtil>();
   DBModel dbProvider = locator<DBModel>();
@@ -167,13 +167,13 @@ class PaymentService extends ChangeNotifier{
                   //transaction successful
                   _onTransactionCompleted().then((flag) {
                     if(flag)stopVerification();
-                    if(onProcessComplete!=null)onProcessComplete(TRANSACTION_COMPLETE);
+                    if(_onProcessComplete!=null)_onProcessComplete(TRANSACTION_COMPLETE);
                   });
                 }else{
                   //transaction rejected
                   _onTransactionRejected().then((flag) {
                     if(flag)stopVerification();
-                    if(onProcessComplete!=null)onProcessComplete(TRANSACTION_REJECTED);
+                    if(_onProcessComplete!=null)_onProcessComplete(TRANSACTION_REJECTED);
                   });
                 }
               }
@@ -182,7 +182,7 @@ class PaymentService extends ChangeNotifier{
       if(counter <= 0) {
         stopVerification();
         _onTransactionProcessingFailed().then((flag) {
-          if(onProcessComplete!=null)onProcessComplete(TRANSACTION_CHECK_TIMEOUT);
+          if(_onProcessComplete!=null)_onProcessComplete(TRANSACTION_CHECK_TIMEOUT);
         });
       }
     });
@@ -334,5 +334,9 @@ class PaymentService extends ChangeNotifier{
     log.debug('Failure logged correctly: $failureLogged');
 
     return failureLogged;
+  }
+
+  addPaymentStatusListener(ValueChanged<int> listener) {
+   _onProcessComplete = listener;
   }
 }

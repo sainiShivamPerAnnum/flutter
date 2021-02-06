@@ -94,7 +94,8 @@ class BaseUtil extends ChangeNotifier {
       'tambola_win_full': '10,000',
       'referral_bonus': '25',
       'referral_ticket_bonus': '10',
-      'aws_key_index': '1'
+      'aws_key_index': '1',
+      'icici_deposits_enabled': '1'
     });
     try {
       // Using default duration to force fetching from remote server.
