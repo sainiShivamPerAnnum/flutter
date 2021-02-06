@@ -5,7 +5,7 @@ class KycUrls
   static String channelId = "6007e4edf3be1f1190757519";
   static String userName = "";
 
-  static String auth = "4bljhPFXyZeCGx9toyNTSXlN1FpKdwHduYM7Bmnt7WRqwL7zPpgy4utAq4poA7aY";
+  static String auth = "CWUfGNBCJ02KqBUOzUG9CzAoNPcc9RifdbCv5wvOAT87uLGyDnEnf9gQYu4QYLXm";
 
 
   // URlS

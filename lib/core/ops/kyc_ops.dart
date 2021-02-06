@@ -156,14 +156,16 @@ class KYCModel extends ChangeNotifier {
 
     await getId();
 
-    var request =
-        http.MultipartRequest('POST', Uri.parse(KycUrls.convertImages));
+    var request = http.MultipartRequest('POST', Uri.parse(KycUrls.convertImages));
+    request.fields.addAll({
+      'ttl': '2 mins'
+    });
+    request.files.add(await http.MultipartFile.fromPath('file', '$image'));
 
-    var convertedImage = await http.MultipartFile.fromPath('file', image);
 
-    request.files.add(convertedImage);
+    http.StreamedResponse response = await request.send();
 
-    var response = await request.send();
+
 
     if (response.statusCode == 201 || response.statusCode == 200) {
       result = true;
@@ -1020,10 +1022,10 @@ class KYCModel extends ChangeNotifier {
   {
     await location.getCurrentLocation();
 
-    var lat = location.latitude;
-    var long = location.longitude;
+    var latitude = location.latitude;
+    var longitude = location.longitude;
 
-    print("lat is $lat long is $long");
+    print("lat is $latitude long is $longitude");
 
     var tokens = await getId();
 
@@ -1031,7 +1033,7 @@ class KYCModel extends ChangeNotifier {
     var authToken = tokens['authToken'];
 
     bool flag = false;
-    String message = "Bank Verified Successfully";
+    String message = "Updated Successfully";
 
 
     var headers = {
@@ -1041,95 +1043,28 @@ class KYCModel extends ChangeNotifier {
     var request = http.Request('POST', Uri.parse(KycUrls.execute));
     request.body = '''{
     "merchantId": "$merchantID",
-     "save": "formData",
-     "type": "userForensics",
-     "data": {
-          "type": "usersData",
-          "userData": {
-          "identity": {
-          "geoLocationData": {},
-          "browserData": {
-           "browserName": ".......",
-           "cookieEnabled": ".......",
-           "browserLanguage": ".......",
-           "os": ".......",
-           "userAgent": ".......",
-           "pluginsInstalled": ["...."],
-           "browserVersion": ".......",
-           "screenWidth": ".......",
-           "screenHeight": ".......",
-           "screenPixelDepth": ".......",
-           "screenColorDepth": ".......",
-           "deviceInfo": {
-            "complete_device_name": ".......",
-            "form_factor": ".......",
-            "is_mobile": false
-            },
-            "signzyPlatformUsed": "Mobile",
-            "userLat": 12.9833,
-            "userLong": 77.5833
-              },
-              "pageName": "bankaccount"
-               },
-               "address": {
-                "geoLocationData": {},
-                "browserData": {
-                "browserName": ".......",
-                "cookieEnabled": ".......",
-                "browserLanguage": ".......",
-                "os": ".......",
-                "userAgent": ".......",
-                "pluginsInstalled": ["...."],
-                 "browserVersion": ".......",
-                 "screenWidth": ".......",
-                 "screenHeight": ".......",
-                 "screenPixelDepth": ".......",
-                 "screenColorDepth": ".......",
-                 "deviceInfo": {
-                 "complete_device_name": ".......",
-                 "form_factor": ".......",
-                  "is_mobile": false
-                   },
-                   "signzyPlatformUsed": "Mobile",
-                   "userLat": 12.9833,
-                   "userLong": 77.5833
-                   },
-                   "pageName": "bankaccount"
-                   },
-                   "bankaccount": {
-                    "geoLocationData": {},
-                    "browserData": {
-                     "browserName": ".......",
-                     "cookieEnabled": ".......",
-                     "browserLanguage": ".......",
-                     "os": ".......",
-                     "userAgent": ".......",
-                     "pluginsInstalled": ["...."],
-                     "browserVersion": ".......",
-                     "screenWidth": ".......",
-                     "screenHeight": ".......",
-                      
-                      "screenPixelDepth": ".......",
-                      
-                      "screenColorDepth": ".......",
-                      "deviceInfo": {          
-                              "complete_device_name": ".......",
-                                     "form_factor": ".......",
-                                     "is_mobile": false
-                                     },
-                                     "signzyPlatformUsed": "Mobile",
-                                     "userLat": 12.9833,
-                                     "userLong": 77.5833
-                      },
-                      "pageName": "bankaccount"
-                   },
-              "documents": {                           
-                     "geoLocationData": {},
-                      "browserData": {
-                       "browserName": ".......",
-                       "cookieEnabled": ".......",\n     
-                                        "browserLanguage": ".......",\n                    "os": ".......",\n                    "userAgent": ".......",\n                    "pluginsInstalled": ["...."],\n                    "browserVersion": ".......",\n                    "screenWidth": ".......",\n                    "screenHeight": ".......",\n                    "screenPixelDepth": ".......",\n                    "screenColorDepth": ".......",\n                    "deviceInfo": {\n                        "complete_device_name": ".......",\n                        "form_factor": ".......",\n                        "is_mobile": false\n                    },\n                    "signzyPlatformUsed": "Mobile",\n                    "userLat": 12.9833,\n                    "userLong": 77.5833\n                },\n                "pageName": "bankaccount"\n    
-                              }\n        }\n    }\n}''';
+    "save": "formData",
+    "type": "userForensics",
+    "data": {
+    "type": "usersData",
+    "userData": {
+    "identity": {
+     "geoLocationData": {
+     "userLat": $latitude,
+     "userLong": $longitude
+     }        
+     },
+     "documents": {
+     "geoLocationData": {},
+     "browserData": {
+      "signzyPlatformUsed": "Mobile",
+      "userLat": $latitude,
+      "userLong": $longitude
+      }
+      }
+      }
+      }
+      }''';
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
@@ -1167,51 +1102,6 @@ class KYCModel extends ChangeNotifier {
 
 
 
-  Future<Map<dynamic, dynamic>> generatePdf() async
-  {
-    var tokens = await getId();
-
-    var merchantID = tokens['merchantId'];
-    var authToken = tokens['authToken'];
-
-    bool res = false;
-    String message = "Bank Verified Successfully";
-
-
-
-    var headers = {
-      'Authorization': '$authToken',
-      'Content-Type': 'application/json'
-    };
-    var request = http.Request('POST', Uri.parse(KycUrls.execute));
-    request.body = '''{
-    "merchantId":"$merchantID",  
-     "inputData":{  
-         "service":"esign",  
-            "type":"",
-               "task":"createPdf",
-                 "data":{ 
-                     }
-                       }
-                       }''';
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200)
-    {
-      print(await response.stream.bytesToString());
-    }
-    else {
-      print(await response.stream.bytesToString());
-
-      print(response.statusCode);
-    }
-
-    Map<dynamic, dynamic> result = {'flag': res, 'message': message};
-
-    return result;
-  }
 
 
 
@@ -1351,6 +1241,144 @@ class KYCModel extends ChangeNotifier {
     };
     return results;
   }
+
+
+
+  // this is unsigned PDF
+  Future<Map<dynamic, dynamic>> generatePdf() async
+  {
+    var fields;
+    var tokens = await getId();
+
+    var merchantID = tokens['merchantId'];
+    var authToken = tokens['authToken'];
+
+    bool res = false;
+    String message = "Pdf generated";
+
+
+
+    var headers = {
+      'Authorization': '$authToken',
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST', Uri.parse(KycUrls.execute));
+    request.body = '''{
+    "merchantId":"$merchantID",  
+     "inputData":{  
+         "service":"esign",  
+            "type":"",
+               "task":"createPdf",
+                 "data":{ 
+                     }
+                       }
+                       }''';
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200)
+    {
+      res = true;
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      fields = jsonDecode(responseString)['object'];
+    }
+    else {
+      message = "Something went wrong";
+      res = false;
+      print(await response.stream.bytesToString());
+
+      // print(response.statusCode);
+    }
+
+    Map<dynamic, dynamic> result =
+    {
+      'flag': res,
+      'message' : message,
+      'fields' : fields
+
+    };
+
+    return result;
+  }
+
+
+
+  // this is the final step It will return a url that will redirect to aadhar authentication web site
+  Future<Map<dynamic, dynamic>> generateESign(var url) async
+  {
+    var fields;
+    var tokens = await getId();
+
+    var merchantID = tokens['merchantId'];
+    var authToken = tokens['authToken'];
+
+    bool res = false;
+    String message = "";
+
+
+
+    var headers = {
+      'Authorization': '$authToken',
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST', Uri.parse(KycUrls.execute));
+    request.body = '''{
+    "merchantId":"$merchantID",
+     "inputData":{
+     "service": "esign",
+     "type": "",
+     "task": "createEsignUrl",
+     "data": {
+      "inputFile": "$url",
+       "signatureType": "aadhaaresign",
+      "redirectUrl": "$url"
+       }
+       }
+       }''';
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200)
+    {
+      res = true;
+
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      fields = jsonDecode(responseString)['object'];
+
+    }
+
+    else if (response.statusCode == 400)
+      {
+        res = false;
+        message = "This is not a valid PDF File";
+      }
+
+    else {
+      message = "Something went wrong";
+
+      res = false;
+      print(await response.stream.bytesToString());
+
+      print(response.statusCode);
+    }
+
+    Map<dynamic, dynamic> result = {
+      'flag': res,
+      'message': message,
+      'fields' : fields
+
+
+    };
+
+    return result;
+  }
+
+
+
 
 
 

@@ -14,8 +14,7 @@ class KycWebviewState extends State<KycWebview> {
   void initState() {
     super.initState();
     // Enable hybrid composition.
-
-
+    
   }
 
   @override
