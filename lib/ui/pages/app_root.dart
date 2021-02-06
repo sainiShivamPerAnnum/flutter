@@ -8,20 +8,18 @@ import 'package:felloapp/ui/pages/tabs/card_screen.dart';
 import 'package:felloapp/ui/pages/tabs/refer_screen.dart';
 import 'package:felloapp/ui/pages/tabs/save_tab.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-// import 'package:morpheus/widgets/morpheus_tab_view.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 class AppRoot extends StatefulWidget {
   final int pageIndex;
-  AppRoot({this.pageIndex});
+  AppRoot({this.pageIndex=0});
 
   @override
   State createState() => _AppRootState();
@@ -46,9 +44,16 @@ class _AppRootState extends State<AppRoot> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    if(baseProvider != null) baseProvider.cancelIncomingNotifications();
+  }
+
+  @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
     httpModel = Provider.of<HttpModel>(context);
+    baseProvider.acceptNotificationsIfAny(context);
     return Scaffold(
       // appBar: BaseUtil.getAppBar(),
       body:

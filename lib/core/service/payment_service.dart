@@ -39,9 +39,6 @@ class PaymentService extends ChangeNotifier{
   }
 
   Future<Map<String, dynamic>> verifyPaymentsIfAny() async{
-    bool initFlag = await _init();
-    if(!initFlag)return {'flag': false, 'reason': 'App restart required'};//should never happen
-
     if(baseProvider.myUser.pendingTxnId != null) {
       //currently pending payment found
       verifyPayment();
@@ -68,8 +65,6 @@ class PaymentService extends ChangeNotifier{
           ? pRes[QUERY_FAIL_REASON]
           : 'Unknown';
       Map<String, dynamic> failData = {
-        'tranid': baseProvider.currentICICITxn.tranId,
-        'userTxnId': baseProvider.currentICICITxn.docKey,
         'failReason': errReason
       };
       bool failureLogged = await dbProvider.logFailure(
@@ -91,8 +86,6 @@ class PaymentService extends ChangeNotifier{
         pRes[SubmitUpiPurchase.resMsg]:
         'The transaction could not be initiated. Please try again in a while';
         var failData = {
-          'tranid': baseProvider.currentICICITxn.tranId,
-          'userTxnId': baseProvider.currentICICITxn.docKey,
           'failReason': errReason
         };
         bool failureLogged = await dbProvider.logFailure(
@@ -132,6 +125,8 @@ class PaymentService extends ChangeNotifier{
         }else{
           //transaction initiated, however the details were not stored with Firebase correctly
           var failData = {
+            'tranid': baseProvider.currentICICITxn.tranId,
+            // 'userTxnId': baseProvider.currentICICITxn.docKey,
             'failReason': 'Txn updated: ${nFlag.toString()} and user updated: ${upFlag.toString()}'
           };
           bool failureLogged = await dbProvider.logFailure(
@@ -285,7 +280,6 @@ class PaymentService extends ChangeNotifier{
     int iBal = baseProvider.myUser.icici_balance??0;
     int totalBal = baseProvider.myUser.account_balance??0;
     int iTckCnt = baseProvider.myUser.ticket_count??0;
-    baseProvider.currentICICITxn = null;
     baseProvider.myUser.pendingTxnId = null;
     baseProvider.myUser.icici_balance = iBal + amt;
     baseProvider.myUser.account_balance = totalBal + amt;
@@ -298,6 +292,7 @@ class PaymentService extends ChangeNotifier{
     }
     bool usFlag = await dbProvider.updateUser(baseProvider.myUser);
     bool txnFlag = await dbProvider.updateUserTransaction(baseProvider.myUser.uid, baseProvider.currentICICITxn);
+    baseProvider.currentICICITxn = null;
     log.debug('Updated all flags:: $icFlag\t$usFlag\t$txnFlag');
 
     return (icFlag&&usFlag&&txnFlag);

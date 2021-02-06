@@ -56,7 +56,6 @@ class _SaveScreenState extends State<SaveScreen> {
               seconds: 5);
         }
       }, 1);
-
       if (baseProvider.myUser.account_balance != null &&
           baseProvider.myUser.account_balance > 0)
         acctBalance = baseProvider.myUser.account_balance;

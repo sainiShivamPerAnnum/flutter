@@ -8,7 +8,6 @@ import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/elements/board_selector.dart';
-import 'package:felloapp/ui/elements/daily_pick_text_slider.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/ui/elements/prize_dialog.dart';
 import 'package:felloapp/ui/elements/raffle_digit.dart';

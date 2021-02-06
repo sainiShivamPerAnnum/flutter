@@ -6,11 +6,9 @@ import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -83,6 +81,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   acceptNotificationsIfAny(BuildContext context) {
+    //if payment completed in the background:
     if(_payService != null && myUser.pendingTxnId != null) {
       _payService.addPaymentStatusListener((value) {
           if(value == PaymentService.TRANSACTION_COMPLETE) {
@@ -94,10 +93,14 @@ class BaseUtil extends ChangeNotifier {
                 'Transaction Closed', 'The transaction was not completed', context,
                 seconds: 5);
           }else{
-            //
+            log.debug('Received notif for pending transaction: $value');
           }
       });
     }
+    //
+  }
+  cancelIncomingNotifications() {
+    _payService.addPaymentStatusListener(null);
   }
 
   initRemoteConfig() async {
