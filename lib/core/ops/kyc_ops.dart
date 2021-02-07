@@ -1,17 +1,13 @@
 import 'dart:convert';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/location.dart';
 import 'package:felloapp/util/kyc_util.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
-
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:felloapp/core/service/location.dart';
-
 
 /**
  * To get KYC firebase document
@@ -23,9 +19,7 @@ import 'package:felloapp/core/service/location.dart';
     baseProvider.myUser.uid, baseProvider.kycDetail);
  * */
 
-
 class KYCModel extends ChangeNotifier {
-
   Location location = Location();
 
   final Log log = new Log('KYCModel');
@@ -54,14 +48,15 @@ class KYCModel extends ChangeNotifier {
 
   bool isInit() => (_apiKey != null);
 
-  Future<Map<dynamic, dynamic>> createOnboardingObject(var email,var username, var phone, var name) async {
+  Future<Map<dynamic, dynamic>> createOnboardingObject(
+      var email, var username, var phone, var name) async {
     bool res = false;
     String message = "Object Created Successfully";
 
-
     headers = {
       'Content-Type': 'application/json',
-      'Authorization': "CWUfGNBCJ02KqBUOzUG9CzAoNPcc9RifdbCv5wvOAT87uLGyDnEnf9gQYu4QYLXm"
+      'Authorization':
+          "CWUfGNBCJ02KqBUOzUG9CzAoNPcc9RifdbCv5wvOAT87uLGyDnEnf9gQYu4QYLXm"
     };
 
     Map<dynamic, dynamic> body = {
@@ -88,15 +83,11 @@ class KYCModel extends ChangeNotifier {
       print(userName);
 
       await login(userName, password);
-    }
-    else if (response.statusCode == 422)
-    {
+    } else if (response.statusCode == 422) {
       message = "Username already exists please enter a new username";
       res = false;
       log.debug(response.body);
-    }
-
-    else {
+    } else {
       res = false;
       message = "Something went wrong";
       log.debug(response.body);
@@ -192,48 +183,35 @@ class KYCModel extends ChangeNotifier {
   //   return Future.value(data);
   // }
 
-
-  Future<Map<dynamic, dynamic>> convertImages(var image) async
-  {
+  Future<Map<dynamic, dynamic>> convertImages(var image) async {
     print("inside convertImage");
     bool result = false;
     var imageUrl;
 
-
-    final headers =
-    {
+    final headers = {
       'Content-Type': 'application/json',
     };
 
-    var request = http.MultipartRequest('POST',Uri.parse(KycUrls.convertImages));
+    var request =
+        http.MultipartRequest('POST', Uri.parse(KycUrls.convertImages));
 
     request.headers.addAll(headers);
     request.fields['ttl'] = '10 mins';
 
-
-    var pic = await http.MultipartFile.fromPath(
-        'file', image
-
-    );
-
+    var pic = await http.MultipartFile.fromPath('file', image);
 
     request.files.add(pic);
 
     var response = await request.send();
 
-    if (response.statusCode == 201 || response.statusCode == 200)
-    {
+    if (response.statusCode == 201 || response.statusCode == 200) {
       result = true;
       print(response.statusCode);
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
       // print("response srrint $responseString");
       imageUrl = jsonDecode(responseString)['file']['directURL'];
-
-
-    }
-    else
-    {
+    } else {
       print("Something went wrong");
       print(response.statusCode);
       var responseData = await response.stream.toBytes();
@@ -245,15 +223,9 @@ class KYCModel extends ChangeNotifier {
     return Future.value(data);
 
     //Get the response from the server
-
-
   }
 
-
-
-
-  Future<Map<dynamic, dynamic>> executePOI(var image) async
-  {
+  Future<Map<dynamic, dynamic>> executePOI(var image) async {
     var fields;
     var flag = false;
     var message = "Uploaded Successfully";
@@ -274,10 +246,7 @@ class KYCModel extends ChangeNotifier {
       'Content-Type': 'application/json'
     };
 
-    var request = http.Request(
-        'POST',
-        Uri.parse(
-            KycUrls.execute));
+    var request = http.Request('POST', Uri.parse(KycUrls.execute));
     request.body = '''{
     "merchantId": "$merchentId",
     "inputData":
@@ -298,44 +267,34 @@ class KYCModel extends ChangeNotifier {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200)
-    {
+    if (response.statusCode == 200) {
       flag = true;
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
       print(responseString);
       fields = jsonDecode(responseString)['object'];
       print(fields);
-    }
-    else if (response.statusCode == 400)
-      {
-        flag = false;
-        message = "Image link expired please select a new Image";
-        var responseData = await response.stream.toBytes();
-        var responseString = String.fromCharCodes(responseData);
-        print(responseString);
-
-
-      }
-    else {
+    } else if (response.statusCode == 400) {
+      flag = false;
+      message = "Image link expired please select a new Image";
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      print(responseString);
+    } else {
       flag = false;
       message = "Something went wrong";
       print(await response.stream.bytesToString());
       print(response.reasonPhrase);
     }
-    Map<dynamic,dynamic> results =
-        {
-          "flag" : flag,
-          "message" : message,
-          "fields" : fields
-
-        };
+    Map<dynamic, dynamic> results = {
+      "flag": flag,
+      "message": message,
+      "fields": fields
+    };
     return results;
   }
 
-
-  Future<Map<dynamic, dynamic>> coresPOA(var image) async
-  {
+  Future<Map<dynamic, dynamic>> coresPOA(var image) async {
     var fields;
     var flag = false;
     var message = "Uploaded Successfully";
@@ -356,10 +315,7 @@ class KYCModel extends ChangeNotifier {
       'Content-Type': 'application/json'
     };
 
-    var request = http.Request(
-        'POST',
-        Uri.parse(
-            KycUrls.execute));
+    var request = http.Request('POST', Uri.parse(KycUrls.execute));
     request.body = '''{
     "merchantId": "$merchentId",
     "inputData": {
@@ -379,44 +335,30 @@ class KYCModel extends ChangeNotifier {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200)
-    {
+    if (response.statusCode == 200) {
       flag = true;
       print(await response.stream.bytesToString());
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
       fields = jsonDecode(responseString)['object'];
-    }
-    else if (response.statusCode == 400)
-    {
+    } else if (response.statusCode == 400) {
       flag = false;
       message = "Image link expired please select a new Image";
-
-    }
-    else {
+    } else {
       flag = false;
       message = "Something went wrong";
       print(await response.stream.bytesToString());
       print(response.reasonPhrase);
     }
-    Map<dynamic,dynamic> results =
-    {
-      "flag" : flag,
-      "message" : message,
-      "fields" : fields
-
+    Map<dynamic, dynamic> results = {
+      "flag": flag,
+      "message": message,
+      "fields": fields
     };
     return results;
   }
 
-
-
-
-
-
-
-  Future<Map<dynamic, dynamic>> startVideo() async
-  {
+  Future<Map<dynamic, dynamic>> startVideo() async {
     var tokens = await getId();
     var object;
 
@@ -425,7 +367,6 @@ class KYCModel extends ChangeNotifier {
 
     bool flag = false;
     String message = "Bank Verified Successfully";
-
 
     var headers = {
       'Authorization': '$authToken',
@@ -445,43 +386,32 @@ class KYCModel extends ChangeNotifier {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200)
-    {
+    if (response.statusCode == 200) {
       flag = true;
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
       object = jsonDecode(responseString)['object'];
       print('$object');
-
-    }
-    else if(response.statusCode == 401)
-    {
+    } else if (response.statusCode == 401) {
       flag = false;
       message = "Invalid credentials";
 
-
       print(response.reasonPhrase);
+    } else {
+      message = "something went wrong please try again later";
     }
-    else
-      {
-        message = "something went wrong please try again later";
-      }
 
-    Map<dynamic, dynamic> result =
-    {
+    Map<dynamic, dynamic> result = {
       'flag': flag,
       'message': message,
       //this object contains the transactionId and randNumber
-      'object' : object
+      'object': object
     };
 
     return result;
   }
 
-
-
-  Future<Map<dynamic, dynamic>> recordVideo(var video) async
-  {
+  Future<Map<dynamic, dynamic>> recordVideo(var video) async {
     var flag = false;
     var message = "Video Uploaded Successfully";
 
@@ -503,15 +433,12 @@ class KYCModel extends ChangeNotifier {
     var transactionId = object[0]['transactionId'];
     print(transactionId);
 
-
     var headers = {
       'Authorization': '$auth',
       'Content-Type': 'application/json'
     };
 
-    var request = http.Request(
-        'POST',
-        Uri.parse(KycUrls.execute));
+    var request = http.Request('POST', Uri.parse(KycUrls.execute));
     request.body = '''{
     "merchantId":"$merchentId",
     "inputData":{ 
@@ -533,32 +460,21 @@ class KYCModel extends ChangeNotifier {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200)
-    {
+    if (response.statusCode == 200) {
       flag = true;
       print(await response.stream.bytesToString());
-    }
-    else if (response.statusCode == 400)
-    {
+    } else if (response.statusCode == 400) {
       flag = false;
       message = "Video link expired please upload a new video";
-
-    }
-    else {
+    } else {
       flag = false;
       message = "Something went wrong";
       print(await response.stream.bytesToString());
       print(response.reasonPhrase);
     }
-    Map<dynamic,dynamic> results =
-    {
-      "flag" : flag,
-      "message" : message
-
-    };
+    Map<dynamic, dynamic> results = {"flag": flag, "message": message};
     return results;
   }
-
 
   //this is not a part of kyc its for testing purpose
   Future<bool> POI(var image) async {
@@ -616,10 +532,7 @@ class KYCModel extends ChangeNotifier {
     //Get the response from the server
   }
 
-
-
-  Future<Map<dynamic,dynamic>> updateSignature(var image) async
-  {
+  Future<Map<dynamic, dynamic>> updateSignature(var image) async {
     var flag = false;
     var message = "Signature Uploaded Successfully";
     var data = await convertImages(image);
@@ -637,8 +550,7 @@ class KYCModel extends ChangeNotifier {
       'Content-Type': 'application/json'
     };
     var request = http.Request('POST', Uri.parse(KycUrls.update));
-    request.body =
-        '''{ 
+    request.body = '''{ 
         "merchantId":"$merchantID",
         "save":"formData",
         "type":"signature",
@@ -652,32 +564,22 @@ class KYCModel extends ChangeNotifier {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200)
-    {
+    if (response.statusCode == 200) {
       flag = true;
-    }
-    else if(response.statusCode == 422)
-    {
+    } else if (response.statusCode == 422) {
       flag = false;
-    }
-    else
-      {
+    } else {
       flag = false;
       message = "Something went wrong please try again later";
       print(response.reasonPhrase);
     }
 
-    Map<dynamic,dynamic> result =
-      {
-        'flag' : flag,
-        'message' : message
-      };
+    Map<dynamic, dynamic> result = {'flag': flag, 'message': message};
 
     return result;
   }
 
-  Future<Map<dynamic,dynamic>> updateProfile(var image) async
-  {
+  Future<Map<dynamic, dynamic>> updateProfile(var image) async {
     var flag = false;
     var message = "Profile Uploaded Successfully";
     var data = await convertImages(image);
@@ -695,8 +597,7 @@ class KYCModel extends ChangeNotifier {
       'Content-Type': 'application/json'
     };
     var request = http.Request('POST', Uri.parse(KycUrls.update));
-    request.body =
-    '''{
+    request.body = '''{
           "merchantId":"$merchantID",
           "save":"formData",
           "type":"userPhoto",
@@ -709,38 +610,26 @@ class KYCModel extends ChangeNotifier {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200)
-    {
+    if (response.statusCode == 200) {
       flag = true;
 
       print(await response.stream.bytesToString());
-    }
-    else if(response.statusCode == 422)
-      {
-        flag = false;
-        message = "Invalid Image please try again by selecting new image";
-
-      }
-    else {
+    } else if (response.statusCode == 422) {
+      flag = false;
+      message = "Invalid Image please try again by selecting new image";
+    } else {
       flag = false;
       message = "something went wrong";
       print(response.reasonPhrase);
     }
 
-    Map<dynamic,dynamic> result =
-      {
-        'flag' : flag,
-        'message' : message
-
-      };
+    Map<dynamic, dynamic> result = {'flag': flag, 'message': message};
 
     return Future.value(result);
-
   }
 
-
-  Future<Map<dynamic, dynamic>> bankPennyTransfer(var beneficiaryAccount,beneficiaryIFSC,beneficiaryName) async
-  {
+  Future<Map<dynamic, dynamic>> bankPennyTransfer(
+      var beneficiaryAccount, beneficiaryIFSC, beneficiaryName) async {
     var fields;
     var tokens = await getId();
 
@@ -749,7 +638,6 @@ class KYCModel extends ChangeNotifier {
 
     bool flag = false;
     String message = "Bank Verified Successfully";
-
 
     var headers = {
       'Authorization': '$authToken',
@@ -777,41 +665,32 @@ class KYCModel extends ChangeNotifier {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200)
-    {
+    if (response.statusCode == 200) {
       flag = true;
 
       print(await response.stream.bytesToString());
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
       fields = jsonDecode(responseString)['object'];
-    }
-    else if(response.statusCode == 400)
-    {
+    } else if (response.statusCode == 400) {
       flag = false;
 
       print(response.reasonPhrase);
+    } else {
+      flag = false;
+      message = "Something went wrong please try again later";
     }
-    else
-      {
-        flag = false;
-        message = "Something went wrong please try again later";
-      }
 
-    Map<dynamic, dynamic> result =
-    {
+    Map<dynamic, dynamic> result = {
       'flag': flag,
       'message': message,
-      "fields" : fields
+      "fields": fields
     };
 
     return result;
   }
 
-
-
-  Future<Map<dynamic, dynamic>> cancelledCheque(var image) async
-  {
+  Future<Map<dynamic, dynamic>> cancelledCheque(var image) async {
     var fields;
     var tokens = await getId();
     var data = await convertImages(image);
@@ -819,13 +698,11 @@ class KYCModel extends ChangeNotifier {
     var imageUrl = data['imageUrl'];
     print("imge is $imageUrl");
 
-
     var merchantID = tokens['merchantId'];
     var authToken = tokens['authToken'];
 
     bool flag = false;
     String message = "Bank Verified Successfully";
-
 
     var headers = {
       'Authorization': '$authToken',
@@ -850,39 +727,36 @@ class KYCModel extends ChangeNotifier {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200)
-    {
+    if (response.statusCode == 200) {
       flag = true;
 
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
       fields = jsonDecode(responseString)['object'];
 
-
       print(await response.stream.bytesToString());
-    }
-    else if(response.statusCode == 400)
-    {
+    } else if (response.statusCode == 400) {
       flag = false;
       message = "Please enter a correct image format";
 
       print(response.reasonPhrase);
     }
 
-    Map<dynamic, dynamic> result =
-    {
+    Map<dynamic, dynamic> result = {
       'flag': flag,
       'message': message,
-      'fields' : fields
-
+      'fields': fields
     };
 
     return result;
   }
 
-
-  Future<Map<dynamic,dynamic>> Fatca(var pep, var rpep, var residentForTaxInIndia, var relatedPerson, var relatedPersonType) async
-  {
+  Future<Map<dynamic, dynamic>> Fatca(
+      var pep,
+      var rpep,
+      var residentForTaxInIndia,
+      var relatedPerson,
+      var relatedPersonType) async {
     var flag = false;
     var message = "Updated successfully";
 
@@ -943,67 +817,51 @@ class KYCModel extends ChangeNotifier {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200)
-    {
+    if (response.statusCode == 200) {
       flag = true;
 
       print(await response.stream.bytesToString());
-    }
-    else if(response.statusCode == 422)
-    {
+    } else if (response.statusCode == 422) {
       flag = false;
       message = "RelatedPerson must be one of [YES, NO]";
-
-    }
-    else {
+    } else {
       flag = false;
       message = "something went wrong";
       print(response.reasonPhrase);
     }
 
-    Map<dynamic,dynamic> result =
-    {
-      'flag' : flag,
-      'message' : message
-
-    };
+    Map<dynamic, dynamic> result = {'flag': flag, 'message': message};
 
     return Future.value(result);
-
   }
 
-
-  Future<Map<dynamic,dynamic>> Forms
-      (
-      var gender,
-      var maritalStatus,
-      var nomineeRelationShip,
-      var fatherTitle,
-      var panNumber,
-      var motherTitle,
-      var residentialStatus,
-      var occupationDescription,
-      var occupationCode,
-      var kycAccountCode,
-      var kycAccountDescription,
-      var communicationAddressCode,
-      var communicationAddressType,
-      var permanentAddressCode,
-      var permanentAddressType,
-      var citizenshipCountryCode,
-      var citizenshipCountry,
-      var applicationStatusCode,
-      var applicationStatusDescription,
-      var mobileNumber,
-      var countryCode,
-      var emailId,
-      var fatherName,
-      // var motherName,
-      // var annualIncome,
-      ) async
-
-  {
-
+  Future<Map<dynamic, dynamic>> Forms(
+    var gender,
+    var maritalStatus,
+    var nomineeRelationShip,
+    var fatherTitle,
+    var panNumber,
+    var motherTitle,
+    var residentialStatus,
+    var occupationDescription,
+    var occupationCode,
+    var kycAccountCode,
+    var kycAccountDescription,
+    var communicationAddressCode,
+    var communicationAddressType,
+    var permanentAddressCode,
+    var permanentAddressType,
+    var citizenshipCountryCode,
+    var citizenshipCountry,
+    var applicationStatusCode,
+    var applicationStatusDescription,
+    var mobileNumber,
+    var countryCode,
+    var emailId,
+    var fatherName,
+    // var motherName,
+    // var annualIncome,
+  ) async {
     var flag = false;
     var message = "Updated successfully";
 
@@ -1058,39 +916,25 @@ class KYCModel extends ChangeNotifier {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200)
-    {
+    if (response.statusCode == 200) {
       flag = true;
 
       print(await response.stream.bytesToString());
-    }
-    else if(response.statusCode == 422)
-    {
+    } else if (response.statusCode == 422) {
       flag = false;
       message = "Please fill the required fields";
-
-    }
-    else {
+    } else {
       flag = false;
       message = "something went wrong";
       print(response.reasonPhrase);
     }
 
-    Map<dynamic,dynamic> result =
-    {
-      'flag' : flag,
-      'message' : message
-
-    };
+    Map<dynamic, dynamic> result = {'flag': flag, 'message': message};
 
     return Future.value(result);
-
   }
 
-
-
-  Future<Map<dynamic, dynamic>> uploadLocation() async
-  {
+  Future<Map<dynamic, dynamic>> uploadLocation() async {
     await location.getCurrentLocation();
 
     var latitude = location.latitude;
@@ -1105,7 +949,6 @@ class KYCModel extends ChangeNotifier {
 
     bool flag = false;
     String message = "Updated Successfully";
-
 
     var headers = {
       'Authorization': '$authToken',
@@ -1140,42 +983,33 @@ class KYCModel extends ChangeNotifier {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200)
-    {
+    if (response.statusCode == 200) {
       flag = true;
 
       print(await response.stream.bytesToString());
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
-    }
-    else if(response.statusCode == 400)
-    {
+    } else if (response.statusCode == 400) {
       flag = false;
 
       print(response.reasonPhrase);
-    }
-    else
-    {
+    } else {
       flag = false;
       message = "Something went wrong please try again later";
     }
 
-    Map<dynamic, dynamic> result =
-    {
+    Map<dynamic, dynamic> result = {
       'flag': flag,
       'message': message,
     };
 
     return result;
-
-
   }
-
 
   // to update AAdhar Card
 
-  Future<Map<dynamic, dynamic>> updatePOI(var name,var fatherName,var panNumber, var dob) async
-  {
+  Future<Map<dynamic, dynamic>> updatePOI(
+      var name, var fatherName, var panNumber, var dob) async {
     //DOB should be in day/month/year
     var flag = false;
     var message = "Updated Successfully";
@@ -1191,10 +1025,7 @@ class KYCModel extends ChangeNotifier {
       'Content-Type': 'application/json'
     };
 
-    var request = http.Request(
-        'POST',
-        Uri.parse(
-            KycUrls.update));
+    var request = http.Request('POST', Uri.parse(KycUrls.update));
     request.body = '''{
       "merchantId": "$merchentId", 
       "save": "formData",
@@ -1212,37 +1043,25 @@ class KYCModel extends ChangeNotifier {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200)
-    {
+    if (response.statusCode == 200) {
       flag = true;
       print(await response.stream.bytesToString());
-    }
-    else if (response.statusCode == 422)
-    {
+    } else if (response.statusCode == 422) {
       flag = false;
       message = "Please fill all the fields";
-
-    }
-    else {
+    } else {
       flag = false;
       message = "Something went wrong";
       print(await response.stream.bytesToString());
       print(response.reasonPhrase);
     }
-    Map<dynamic,dynamic> results =
-    {
-      "flag" : flag,
-      "message" : message
-
-    };
+    Map<dynamic, dynamic> results = {"flag": flag, "message": message};
     return results;
   }
 
-
-
   // to update PAN Card
-  Future<Map<dynamic, dynamic>> updatePOA(var name,var uid,var address, var city, var state, var district, var pincode, var dob) async
-  {
+  Future<Map<dynamic, dynamic>> updatePOA(var name, var uid, var address,
+      var city, var state, var district, var pincode, var dob) async {
     //DOB should be in day/month/year
     var flag = false;
     var message = "Updated Successfully";
@@ -1258,10 +1077,7 @@ class KYCModel extends ChangeNotifier {
       'Content-Type': 'application/json'
     };
 
-    var request = http.Request(
-        'POST',
-        Uri.parse(
-            KycUrls.update));
+    var request = http.Request('POST', Uri.parse(KycUrls.update));
     request.body = '''{
     "merchantId": "$merchentId",
      "save": "formData",
@@ -1283,37 +1099,24 @@ class KYCModel extends ChangeNotifier {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200)
-    {
+    if (response.statusCode == 200) {
       flag = true;
       print(await response.stream.bytesToString());
-    }
-    else if (response.statusCode == 422)
-    {
+    } else if (response.statusCode == 422) {
       flag = false;
       message = "Please fill all the fields";
-
-    }
-    else {
+    } else {
       flag = false;
       message = "Something went wrong";
       print(await response.stream.bytesToString());
       print(response.reasonPhrase);
     }
-    Map<dynamic,dynamic> results =
-    {
-      "flag" : flag,
-      "message" : message
-
-    };
+    Map<dynamic, dynamic> results = {"flag": flag, "message": message};
     return results;
   }
 
-
-
   // this is unsigned PDF
-  Future<Map<dynamic, dynamic>> generatePdf() async
-  {
+  Future<Map<dynamic, dynamic>> generatePdf() async {
     var fields;
     var tokens = await getId();
 
@@ -1322,8 +1125,6 @@ class KYCModel extends ChangeNotifier {
 
     bool res = false;
     String message = "Pdf generated";
-
-
 
     var headers = {
       'Authorization': '$authToken',
@@ -1344,14 +1145,12 @@ class KYCModel extends ChangeNotifier {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200)
-    {
+    if (response.statusCode == 200) {
       res = true;
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
       fields = jsonDecode(responseString)['object'];
-    }
-    else {
+    } else {
       message = "Something went wrong";
       res = false;
       print(await response.stream.bytesToString());
@@ -1359,22 +1158,17 @@ class KYCModel extends ChangeNotifier {
       // print(response.statusCode);
     }
 
-    Map<dynamic, dynamic> result =
-    {
+    Map<dynamic, dynamic> result = {
       'flag': res,
-      'message' : message,
-      'fields' : fields
-
+      'message': message,
+      'fields': fields
     };
 
     return result;
   }
 
-
-
   // this is the final step It will return a url that will redirect to aadhar authentication web site
-  Future<Map<dynamic, dynamic>> generateAadharEsignPdf(var url) async
-  {
+  Future<Map<dynamic, dynamic>> generateAadharEsignPdf(var url) async {
     var fields;
     var tokens = await getId();
 
@@ -1383,8 +1177,6 @@ class KYCModel extends ChangeNotifier {
 
     bool res = false;
     String message = "";
-
-
 
     var headers = {
       'Authorization': '$authToken',
@@ -1408,23 +1200,16 @@ class KYCModel extends ChangeNotifier {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200)
-    {
+    if (response.statusCode == 200) {
       res = true;
 
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
       fields = jsonDecode(responseString)['object'];
-
-    }
-
-    else if (response.statusCode == 400)
-      {
-        res = false;
-        message = "This is not a valid PDF File";
-      }
-
-    else {
+    } else if (response.statusCode == 400) {
+      res = false;
+      message = "This is not a valid PDF File";
+    } else {
       message = "Something went wrong";
 
       res = false;
@@ -1436,19 +1221,14 @@ class KYCModel extends ChangeNotifier {
     Map<dynamic, dynamic> result = {
       'flag': res,
       'message': message,
-      'fields' : fields
-
-
+      'fields': fields
     };
 
     return result;
   }
 
-
-
   // this function returns a esignedFile
-  Future<Map<dynamic, dynamic>> saveAadharEsignPdf(var url) async
-  {
+  Future<Map<dynamic, dynamic>> saveAadharEsignPdf(var url) async {
     var fields;
     var tokens = await getId();
 
@@ -1458,15 +1238,12 @@ class KYCModel extends ChangeNotifier {
     bool res = false;
     String message = "";
 
-
-
     var headers = {
       'Authorization': '$authToken',
       'Content-Type': 'application/json'
     };
     var request = http.Request('POST', Uri.parse(KycUrls.execute));
-    request.body =
-    '''{
+    request.body = '''{
     "merchantId":"$merchantID",
     "inputData":{
     "service": "esign",
@@ -1482,23 +1259,16 @@ class KYCModel extends ChangeNotifier {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200)
-    {
+    if (response.statusCode == 200) {
       res = true;
 
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
       fields = jsonDecode(responseString)['object'];
-
-    }
-
-    else if (response.statusCode == 400)
-    {
+    } else if (response.statusCode == 400) {
       res = false;
       message = "PDF Not generated";
-    }
-
-    else {
+    } else {
       message = "Something went wrong";
 
       res = false;
@@ -1510,18 +1280,14 @@ class KYCModel extends ChangeNotifier {
     Map<dynamic, dynamic> result = {
       'flag': res,
       'message': message,
-      'fields' : fields
-
-
+      'fields': fields
     };
 
     return result;
   }
 
-
   // the above function returns a signed pdf url that url we need to pass and save it
-  Future<Map<dynamic, dynamic>> saveSignedPdf(var signedPdfUrl) async
-  {
+  Future<Map<dynamic, dynamic>> saveSignedPdf(var signedPdfUrl) async {
     var tokens = await getId();
 
     var merchantID = tokens['merchantId'];
@@ -1529,7 +1295,6 @@ class KYCModel extends ChangeNotifier {
 
     bool flag = false;
     String message = "Updated Successfully";
-
 
     var headers = {
       'Authorization': '$authToken',
@@ -1546,45 +1311,25 @@ class KYCModel extends ChangeNotifier {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200)
-    {
+    if (response.statusCode == 200) {
       flag = true;
-
-    }
-    else if(response.statusCode == 422)
-    {
+    } else if (response.statusCode == 422) {
       flag = false;
       message = "SignedPdf is not allowed to be empty";
 
       print(response.reasonPhrase);
-    }
-    else
-    {
+    } else {
       flag = false;
       message = "Something went wrong please try again later";
     }
 
-    Map<dynamic, dynamic> result =
-    {
+    Map<dynamic, dynamic> result = {
       'flag': flag,
       'message': message,
     };
 
     return result;
-
-
   }
-
-
-
-
-
-
-
-
-
-
-
 
   // this function is used to fetch the merchant id and Authentication token
   Future<Map<dynamic, dynamic>> getId() async {
@@ -1603,10 +1348,6 @@ class KYCModel extends ChangeNotifier {
     return Future.value(data);
   }
 
-
-
-
-  //commiting to git
-
+//commiting to git
 
 }
