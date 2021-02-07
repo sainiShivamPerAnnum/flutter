@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/util/logger.dart';
 
-class UserKycDetail{
+class UserKycDetail {
   static Log log = new Log('UserKycDetail');
   String _userAccessToken;
   String _merchantId;
@@ -9,7 +9,19 @@ class UserKycDetail{
   String _username;
   String _password;
   int _tokenTtl;
-  List<bool> _isStepComplete; //add bool flag for all steps here to keep track
+  List<int> _isStepComplete = [
+    2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+  ]; //add bool flag for all steps here to keep track
   Timestamp _createdTime;
   Timestamp _updatedTime;
 
@@ -23,20 +35,34 @@ class UserKycDetail{
   static final String fldCreatedTime = 'kCreatedTime';
   static final String fldUpdatedTime = 'kUpdatedTime';
 
+  UserKycDetail(
+      this._username,
+      this._password,
+      this._merchantId,
+      this._userAccessToken,
+      this._tokenCreatedTime,
+      this._tokenTtl,
+      this._isStepComplete,
+      this._createdTime,
+      this._updatedTime);
 
-  UserKycDetail(this._username, this._password,  this._merchantId,
-      this._userAccessToken, this._tokenCreatedTime, this._tokenTtl,
-      this._isStepComplete, this._createdTime, this._updatedTime);
+  UserKycDetail.newUser(String username, String password)
+      : this(username, password, null, null, null, null, null, Timestamp.now(),
+            Timestamp.now());
 
-  UserKycDetail.newUser(String username, String password):
-        this(username, password, null, null, null, null, null,
-          Timestamp.now(), Timestamp.now());
-
-  UserKycDetail.fromMap(Map<String, dynamic> data):
-        this(data[fldUsername], data[fldPassword], data[fldMerchantID],
-          data[fldAccessToken], data[fldCreatedTime], data[fldTokenTtl],
-          (data[fldIsStepComplete]!=null)?List.from(data[fldIsStepComplete]):null,
-          data[fldCreatedTime], data[fldUpdatedTime]);
+  UserKycDetail.fromMap(Map<String, dynamic> data)
+      : this(
+            data[fldUsername],
+            data[fldPassword],
+            data[fldMerchantID],
+            data[fldAccessToken],
+            data[fldTokenCreatedTime],
+            data[fldTokenTtl],
+            (data[fldIsStepComplete] != null)
+                ? List.from(data[fldIsStepComplete])
+                : null,
+            data[fldCreatedTime],
+            data[fldUpdatedTime]);
 
   toJson() {
     return {
@@ -44,7 +70,7 @@ class UserKycDetail{
       fldPassword: _password,
       fldMerchantID: _merchantId,
       fldAccessToken: _userAccessToken,
-      fldCreatedTime: _tokenCreatedTime,
+      fldTokenCreatedTime: _tokenCreatedTime,
       fldTokenTtl: _tokenTtl,
       fldIsStepComplete: _isStepComplete,
       fldCreatedTime: _createdTime,
@@ -88,9 +114,9 @@ class UserKycDetail{
     _password = value;
   }
 
-  List<bool> get isStepComplete => _isStepComplete;
+  List<int> get isStepComplete => _isStepComplete;
 
-  set isStepComplete(List<bool> value) {
+  set isStepComplete(List<int> value) {
     _isStepComplete = value;
   }
 }

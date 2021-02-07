@@ -1,6 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/kyc_ops.dart';
-import 'package:felloapp/core/service/location.dart';
+import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/signature.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -68,6 +68,7 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
 
                                 var result =
                                     await kycModel.updateProfile(imagePath);
+                                if (result["flag"] == true) {}
                               },
                             ),
                             FlatButton(
@@ -77,7 +78,8 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
                                     source: ImageSource.gallery);
                                 var imagePath = image.path;
 
-                                await kycModel.updateProfile(imagePath);
+                                var result =
+                                    await kycModel.updateProfile(imagePath);
                               },
                             ),
                           ],
@@ -177,7 +179,7 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
               MyButton(
                   title: "Penny Transfer",
                   onPressed: () async {
-                    await kycModel.bankPennyTransfer();
+                    // await kycModel.bankPennyTransfer();
                   }),
               MyButton(
                   title: "PDF",
@@ -201,7 +203,7 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
               MyButton(
                   title: "FATCA",
                   onPressed: () async {
-                    await kycModel.Fatca();
+                    // await kycModel.Fatca();
                   }),
             ],
           ),

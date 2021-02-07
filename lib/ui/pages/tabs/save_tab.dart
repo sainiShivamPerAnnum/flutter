@@ -176,7 +176,7 @@ class _SaveScreenState extends State<SaveScreen> {
                       width: 80,
                     ),
                   ],
-                ),            
+                ),
                 SizedBox(height: 10),
                 Container(
                   alignment: Alignment.center,

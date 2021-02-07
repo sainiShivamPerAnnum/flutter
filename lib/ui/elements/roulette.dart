@@ -6,6 +6,7 @@ class Roulette extends StatelessWidget {
 
   final List<String> dailyPickTextList;
   final List<int> digits;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -83,7 +84,7 @@ class _HolesState extends State<Holes> {
 
   @override
   void initState() {
-    if (widget.pick != 0) {
+    if (widget.pick != -1) {
       _scrollController = ScrollController();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _moveDown();
@@ -99,7 +100,7 @@ class _HolesState extends State<Holes> {
 
   @override
   void dispose() {
-    if (widget.pick != 0) {
+    if (widget.pick != -1) {
       _scrollController.dispose();
     }
     super.dispose();
@@ -126,23 +127,27 @@ class _HolesState extends State<Holes> {
         shape: BoxShape.circle,
         color: Colors.white,
       ),
-      child: widget.pick != 0
+
+      child: widget.pick != -1
           ? ListView.builder(
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: pickList.length,
-        controller: _scrollController,
-        shrinkWrap: true,
-        itemBuilder: (ctx, i) {
-          return Text(
-            "${pickList[i]}",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: _height * 0.028),
-          );
-        },
-      )
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: pickList.length,
+              controller: _scrollController,
+              shrinkWrap: true,
+              itemBuilder: (ctx, i) {
+                return Text(
+                  "${pickList[i]}",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: _height * 0.028),
+                );
+              },
+            )
           : Center(
-        child: Text("-"),
-      ),
+              child: Text(
+                "-",
+                style: TextStyle(fontSize: _height * 0.028),
+              ),
+            ),
     );
   }
 }

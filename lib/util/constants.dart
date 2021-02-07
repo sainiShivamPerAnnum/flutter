@@ -12,7 +12,6 @@ class Constants {
   static final String COLN_FAILREPORTS = "failreports";
   static final String COLN_CREDENTIALS = "credentials";
 
-
   //Sub-collections
   static final String SUBCOLN_USER_FCM = "fcm";
   static final String SUBCOLN_USER_TICKETS = "tickets";
@@ -30,8 +29,4 @@ class Constants {
   static const int ROW_TWO_COMPLETED = 2;
   static const int ROW_THREE_COMPLETED = 3;
   static const int FULL_HOUSE_COMPLETED = 4;
-
-
-
-
 }
