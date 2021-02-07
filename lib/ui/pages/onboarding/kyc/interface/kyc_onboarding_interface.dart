@@ -92,8 +92,8 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface>
 
   getStepStatus() async {
     await kycModel.init();
-    baseProvider.kycDetail =
-        await dbProvider.getUserKycDetails(baseProvider.myUser.uid);
+    // baseProvider.kycDetail =
+    //     await dbProvider.getUserKycDetails(baseProvider.myUser.uid);
     kycDetailsFetched = true;
     setState(() {});
   }
@@ -414,9 +414,7 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface>
     );
   }
 
-  _createCardList(
-    List stepStatus,
-  ) {
+  _createCardList(List stepStatus) {
     List<Widget> cardList = [];
     for (int i = 0; i < 10; i++) {
       cardList.add(

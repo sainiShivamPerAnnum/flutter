@@ -4,6 +4,7 @@ import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
+import 'package:felloapp/core/ops/kyc_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/payment_service.dart';
@@ -19,6 +20,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => LocalDBModel());
   locator.registerLazySingleton(() => HttpModel());
   locator.registerLazySingleton(() => ICICIModel());
+  locator.registerLazySingleton(() => KYCModel());
   locator.registerLazySingleton(() => BaseUtil());
   locator.registerLazySingleton(() => FcmListener());
   locator.registerLazySingleton(() => FcmHandler());

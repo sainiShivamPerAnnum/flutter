@@ -9,19 +9,7 @@ class UserKycDetail {
   String _username;
   String _password;
   int _tokenTtl;
-  List<int> _isStepComplete = [
-    2,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-  ]; //add bool flag for all steps here to keep track
+  List<int> _isStepComplete; //add bool flag for all steps here to keep track
   Timestamp _createdTime;
   Timestamp _updatedTime;
 
@@ -34,6 +22,9 @@ class UserKycDetail {
   static final String fldIsStepComplete = 'kStepsCompleteArr';
   static final String fldCreatedTime = 'kCreatedTime';
   static final String fldUpdatedTime = 'kUpdatedTime';
+  static const List <int> _initStepList = [
+    2,0,0,0,0,0,0,0,0,0,0,
+  ];
 
   UserKycDetail(
       this._username,
@@ -47,7 +38,7 @@ class UserKycDetail {
       this._updatedTime);
 
   UserKycDetail.newUser(String username, String password)
-      : this(username, password, null, null, null, null, null, Timestamp.now(),
+      : this(username, password, null, null, null, null, _initStepList, Timestamp.now(),
             Timestamp.now());
 
   UserKycDetail.fromMap(Map<String, dynamic> data)

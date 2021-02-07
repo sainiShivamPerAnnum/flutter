@@ -10,6 +10,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 /**
  * To get KYC firebase document
@@ -47,7 +48,7 @@ class KYCModel extends ChangeNotifier {
     if (_dbModel == null || baseProvider == null) return false;
 
     //initialize user kyc obj
-    baseProvider.kycDetail =
+    baseProvider.kycDetail = baseProvider.kycDetail??
         await _dbModel.getUserKycDetails(baseProvider.myUser.uid);
     if (!isUserSetup()) {
       bool setupFlag = await _setupUser();
@@ -194,103 +195,96 @@ class KYCModel extends ChangeNotifier {
     return result;
   }
 
-  // old function to convert images
-  // Future<Map<dynamic, dynamic>> convertImages(var image) async
-  // {
-  //   print("inside convertImage");
-  //   bool result = false;
-  //   var imageUrl;
-  //
-  //   await getId();
-  //
-  //   var request = http.MultipartRequest('POST', Uri.parse(KycUrls.convertImages));
-  //   request.fields.addAll({
-  //     'ttl': 'infinity'
-  //   });
-  //   request.files.add(await http.MultipartFile.fromPath('file', '$image'));
-  //
-  //
-  //   http.StreamedResponse response = await request.send();
-  //
-  //
-  //
-  //   if (response.statusCode == 201 || response.statusCode == 200)
-  //   {
-  //     result = true;
-  //     print(response.statusCode);
-  //     var responseData = await response.stream.toBytes();
-  //     var responseString = String.fromCharCodes(responseData);
-  //     // print("response srrint $responseString");
-  //     imageUrl = jsonDecode(responseString)['file']['directURL'];
-  //     // print(imageUrl);
-  //   } else {
-  //     print("Something went wrong");
-  //     print(response.statusCode);
-  //     var responseData = await response.stream.toBytes();
-  //     var responseString = String.fromCharCodes(responseData);
-  //
-  //     print(responseString);
-  //   }
-  //   Map<dynamic, dynamic> data = {'flag': result, 'imageUrl': imageUrl};
-  //
-  //   return Future.value(data);
-  // }
+  Future<Map<dynamic, dynamic>> ccImage(String imagePath) async {
+    print(imagePath);
+    var headers = {
+      'Content-Type': 'application/json'
+    };
+    var request = http.MultipartRequest('POST', Uri.parse('https://persist.signzy.tech/api/files/upload'));
+    request.fields.addAll({
+      'ttl': '10 mins'
+    });
+    MediaType a = new MediaType('image', 'jpg');
+    var multipartFile = http.MultipartFile.fromPath('file',imagePath,contentType: a);
 
-  Future<Map<dynamic, dynamic>> convertImages(var image) async {
+    request.files.add(await multipartFile);
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      String rx = await response.stream.bytesToString();
+      String imageUrl = jsonDecode(rx)['file']['directURL'];
+      return {'flag': true, 'imageUrl': imageUrl};
+    }
+    else {
+      print(response.reasonPhrase);
+      return {'flag': false, 'imageUrl': null};
+    }
+  }
+
+
+  Future<Map<dynamic, dynamic>> convertImages(String imagePath) async {
     print("inside convertImage");
     bool result = false;
     var imageUrl;
-
     final headers = {
       'Content-Type': 'application/json',
     };
+    
+    List<String> fs = imagePath.split('.');
+    String fileType = fs[fs.length-1];
+    if(fileType != 'jpg' && fileType != 'jpeg' && fileType != 'png') {
+      return {'flag': false, 'imageUrl': null, 'message': 'Please upload a jpg or png image'};
+    }
+    
+    var request = http.MultipartRequest('POST', Uri.parse('https://persist.signzy.tech/api/files/upload'));
+    request.fields.addAll({
+      'ttl': '10 mins'
+    });    
+    MediaType mt = new MediaType('image', fileType);
+    var multipartFile = http.MultipartFile.fromPath('file',imagePath,contentType: mt);
 
-    var request =
-        http.MultipartRequest('POST', Uri.parse(KycUrls.convertImages));
-
+    request.files.add(await multipartFile);
     request.headers.addAll(headers);
-    request.fields['ttl'] = '10 mins';
 
-    var pic = await http.MultipartFile.fromPath('file', image);
-
-    request.files.add(pic);
-
-    var response = await request.send();
+    http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 201 || response.statusCode == 200) {
       result = true;
       print(response.statusCode);
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
-      // print("response srrint $responseString");
       imageUrl = jsonDecode(responseString)['file']['directURL'];
+      
+      return {'flag': result, 'imageUrl': imageUrl};
     } else {
       print("Something went wrong");
       print(response.statusCode);
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
       print(responseString);
+
+      return {'flag': false, 'imageUrl': null, 'message': 'Failed to upload the image. Please try again in a while'};
     }
-    Map<dynamic, dynamic> data = {'flag': result, 'imageUrl': imageUrl};
 
-    return Future.value(data);
-
-    //Get the response from the server
   }
 
-  Future<Map<dynamic, dynamic>> executePOI(var image) async {
+  Future<Map<dynamic, dynamic>> executePOI(String imagePath) async {
     var fields;
     var flag = false;
     var message = "Uploaded Successfully";
 
     var tokens = await getId();
-
     var auth = tokens['authToken'];
     var merchentId = tokens["merchantId"];
     print(merchentId);
     print("Auth Token = $auth");
 
-    var data = await convertImages(image);
+    var data = await convertImages(imagePath);       
+    if(!data['flag']) {
+      return {"flag": false, "message": data['message']??'Operation failed. Please try again in sometime'};
+    }
     var imageUrl = data['imageUrl'];
     print("image in poi $imageUrl");
 
@@ -308,14 +302,13 @@ class KYCModel extends ChangeNotifier {
      "type": "individualPan",
      "task": "autoRecognition",  
      "data": {
-     "images": ["${imageUrl}"],            
+     "images": ["$imageUrl"],            
      "toVerifyData": {},            
      "searchParam": {},  
      "proofType": "identity"   
           } 
        }  
      }''';
-
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
@@ -325,7 +318,8 @@ class KYCModel extends ChangeNotifier {
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
       print(responseString);
-      fields = jsonDecode(responseString)['object'];
+      var fd = jsonDecode(responseString)['object'];
+      if(fd != null)fields = fd['result'];
       print(fields);
     } else if (response.statusCode == 400) {
       flag = false;
@@ -393,10 +387,11 @@ class KYCModel extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       flag = true;
-      print(await response.stream.bytesToString());
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
-      fields = jsonDecode(responseString)['object'];
+      print(responseString);
+      var fd = jsonDecode(responseString)['object'];
+      if(fd!=null)fields = fd['result'];
     } else if (response.statusCode == 400) {
       flag = false;
       message = "Image link expired please select a new Image";
@@ -588,10 +583,13 @@ class KYCModel extends ChangeNotifier {
     //Get the response from the server
   }
 
-  Future<Map<dynamic, dynamic>> updateSignature(var image) async {
+  Future<Map<dynamic, dynamic>> updateSignature(String imagePath) async {
     var flag = false;
     var message = "Signature Uploaded Successfully";
-    var data = await convertImages(image);
+    var data = await convertImages(imagePath);       
+    if(!data['flag']) {
+      return {"flag": false, "message": data['message']??'Operation failed. Please try again in sometime'};
+    };
 
     var signatureUrl = data['imageUrl'];
     print("Signature url is $signatureUrl");
@@ -635,10 +633,13 @@ class KYCModel extends ChangeNotifier {
     return result;
   }
 
-  Future<Map<dynamic, dynamic>> updateProfile(var image) async {
+  Future<Map<dynamic, dynamic>> updateProfile(String imagePath) async {
     var flag = false;
     var message = "Profile Uploaded Successfully";
-    var data = await convertImages(image);
+    var data = await convertImages(imagePath);       
+    if(!data['flag']) {
+      return {"flag": false, "message": data['message']??'Operation failed. Please try again in sometime'};
+    };
 
     var profileUrl = data['imageUrl'];
     print("Signature url is $profileUrl");
@@ -746,13 +747,16 @@ class KYCModel extends ChangeNotifier {
     return result;
   }
 
-  Future<Map<dynamic, dynamic>> cancelledCheque(var image) async {
+  Future<Map<dynamic, dynamic>> cancelledCheque(String imagePath) async {
     var fields;
     var tokens = await getId();
-    var data = await convertImages(image);
+    var data = await convertImages(imagePath);       
+    if(!data['flag']) {
+      return {"flag": false, "message": data['message']??'Operation failed. Please try again in sometime'};
+    }
 
     var imageUrl = data['imageUrl'];
-    print("imge is $imageUrl");
+    print("image is $imageUrl");
 
     var merchantID = tokens['merchantId'];
     var authToken = tokens['authToken'];
@@ -794,6 +798,16 @@ class KYCModel extends ChangeNotifier {
     } else if (response.statusCode == 400) {
       flag = false;
       message = "Please enter a correct image format";
+
+      print(response.reasonPhrase);
+    }else if(response.statusCode == 422){
+      flag = false;
+      message = "Please provide a clearer image";
+
+      print(response.reasonPhrase);
+    }else{
+      flag = false;
+      message = "Upload failed. Please verify the image and try again";
 
       print(response.reasonPhrase);
     }

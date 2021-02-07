@@ -284,7 +284,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
 
       }
     }
-    iProvider.submitFatcaDetails(baseProvider.iciciDetail.appId, baseProvider.iciciDetail.panNumber, data)
+    //iProvider.submitFatcaDetails(baseProvider.iciciDetail.appId, baseProvider.iciciDetail.panNumber, data)
   }
 
   verifyIncomeDetails() {
