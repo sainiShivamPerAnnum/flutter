@@ -1,43 +1,122 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/util/logger.dart';
 
-class UserKycDetail{
+class UserKycDetail {
   static Log log = new Log('UserKycDetail');
-  String _accessToken;
-  String _signzyUserId;
-  String _signzyPassword;
+  String _userAccessToken;
+  String _merchantId;
+  String _tokenCreatedTime;
+  String _username;
+  String _password;
+  int _tokenTtl;
+  List<int> _isStepComplete = [
+    2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+  ]; //add bool flag for all steps here to keep track
+  Timestamp _createdTime;
+  Timestamp _updatedTime;
 
-  UserKycDetail(this._signzyUserId, this._signzyPassword, this._accessToken);
+  static final String fldUsername = 'kUsername';
+  static final String fldPassword = 'kPassword';
+  static final String fldMerchantID = 'kMerchantId';
+  static final String fldAccessToken = 'kUserAccessToken';
+  static final String fldTokenCreatedTime = 'kTokenCreatedTime';
+  static final String fldTokenTtl = 'kTokenTtl';
+  static final String fldIsStepComplete = 'kStepsCompleteArr';
+  static final String fldCreatedTime = 'kCreatedTime';
+  static final String fldUpdatedTime = 'kUpdatedTime';
 
-  UserKycDetail.newApplication(String userId, String password, String accessToken):
-        this(userId, password, accessToken);
+  UserKycDetail(
+      this._username,
+      this._password,
+      this._merchantId,
+      this._userAccessToken,
+      this._tokenCreatedTime,
+      this._tokenTtl,
+      this._isStepComplete,
+      this._createdTime,
+      this._updatedTime);
 
-  UserKycDetail.fromMap(Map<String, dynamic> data):
-        this(data['user_id'], data['password'], data['access_token']);
+  UserKycDetail.newUser(String username, String password)
+      : this(username, password, null, null, null, null, null, Timestamp.now(),
+            Timestamp.now());
+
+  UserKycDetail.fromMap(Map<String, dynamic> data)
+      : this(
+            data[fldUsername],
+            data[fldPassword],
+            data[fldMerchantID],
+            data[fldAccessToken],
+            data[fldTokenCreatedTime],
+            data[fldTokenTtl],
+            (data[fldIsStepComplete] != null)
+                ? List.from(data[fldIsStepComplete])
+                : null,
+            data[fldCreatedTime],
+            data[fldUpdatedTime]);
 
   toJson() {
     return {
-      'user_id': _signzyUserId,
-      'password': _signzyPassword,
-      'access_token': _accessToken
+      fldUsername: _username,
+      fldPassword: _password,
+      fldMerchantID: _merchantId,
+      fldAccessToken: _userAccessToken,
+      fldTokenCreatedTime: _tokenCreatedTime,
+      fldTokenTtl: _tokenTtl,
+      fldIsStepComplete: _isStepComplete,
+      fldCreatedTime: _createdTime,
+      fldUpdatedTime: Timestamp.now()
     };
   }
 
-  String get signzyPassword => _signzyPassword;
+  String get username => _username;
 
-  set signzyPassword(String value) {
-    _signzyPassword = value;
+  set username(String value) {
+    _username = value;
   }
 
-  String get signzyUserId => _signzyUserId;
+  int get tokenTtl => _tokenTtl;
 
-  set signzyUserId(String value) {
-    _signzyUserId = value;
+  set tokenTtl(int value) {
+    _tokenTtl = value;
   }
 
-  String get accessToken => _accessToken;
+  String get tokenCreatedTime => _tokenCreatedTime;
 
-  set accessToken(String value) {
-    _accessToken = value;
+  set tokenCreatedTime(String value) {
+    _tokenCreatedTime = value;
+  }
+
+  String get merchantId => _merchantId;
+
+  set merchantId(String value) {
+    _merchantId = value;
+  }
+
+  String get userAccessToken => _userAccessToken;
+
+  set userAccessToken(String value) {
+    _userAccessToken = value;
+  }
+
+  String get password => _password;
+
+  set password(String value) {
+    _password = value;
+  }
+
+  List<int> get isStepComplete => _isStepComplete;
+
+  set isStepComplete(List<int> value) {
+    _isStepComplete = value;
   }
 }

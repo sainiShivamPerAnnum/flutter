@@ -8,7 +8,7 @@ import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/ui/elements/roulette.dart';
 import 'package:felloapp/ui/elements/scrolling_text.dart';
 import 'package:felloapp/ui/pages/mf_details_page.dart';
-import 'package:felloapp/ui/pages/onboarding/interface/kyc_onboarding_interface.dart';
+import 'package:felloapp/ui/pages/onboarding/kyc/interface/kyc_onboarding_interface.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SaveScreen extends StatefulWidget {
+  static final int index = (BaseUtil.playScreenFirst)?1:0;
   @override
   _SaveScreenState createState() => _SaveScreenState();
 }
@@ -175,7 +176,7 @@ class _SaveScreenState extends State<SaveScreen> {
                       width: 80,
                     ),
                   ],
-                ),            
+                ),
                 SizedBox(height: 10),
                 Container(
                   alignment: Alignment.center,
@@ -186,6 +187,7 @@ class _SaveScreenState extends State<SaveScreen> {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
+
                         builder: (ctx) => KycOnboardInterface(),
                       ),
                     ),

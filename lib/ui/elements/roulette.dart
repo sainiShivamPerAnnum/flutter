@@ -1,136 +1,123 @@
 import 'package:felloapp/ui/elements/daily_pick_text_slider.dart';
 import 'package:flutter/material.dart';
 
-class Roulette extends StatefulWidget {
+class Roulette extends StatelessWidget {
   Roulette({this.dailyPickTextList, this.digits});
 
   final List<String> dailyPickTextList;
   final List<int> digits;
-  @override
-  _RouletteState createState() => _RouletteState();
-}
-
-class _RouletteState extends State<Roulette> {
-  ScrollController _scrollController1;
-  ScrollController _scrollController2;
-  ScrollController _scrollController3;
-  ScrollController _scrollController4;
-  ScrollController _scrollController5;
-
-  @override
-  void initState() {
-    _scrollController1 = new ScrollController();
-    _scrollController2 = new ScrollController();
-    _scrollController3 = new ScrollController();
-    _scrollController4 = new ScrollController();
-    _scrollController5 = new ScrollController();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _moveDown();
-    });
-    super.initState();
-  }
-
-  _moveDown() {
-    _scrollController1.animateTo(_scrollController1.position.maxScrollExtent,
-        curve: Curves.linear, duration: Duration(milliseconds: 1000));
-    _scrollController2.animateTo(_scrollController1.position.maxScrollExtent,
-        curve: Curves.linear, duration: Duration(milliseconds: 800));
-    _scrollController3.animateTo(_scrollController1.position.maxScrollExtent,
-        curve: Curves.linear, duration: Duration(milliseconds: 1200));
-    _scrollController4.animateTo(_scrollController1.position.maxScrollExtent,
-        curve: Curves.linear, duration: Duration(milliseconds: 1000));
-    _scrollController5.animateTo(_scrollController1.position.maxScrollExtent,
-        curve: Curves.linear, duration: Duration(milliseconds: 800));
-  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
-      width: double.infinity,
-      margin: EdgeInsets.fromLTRB(10,10,10,0),
-      padding: EdgeInsets.all(10),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Colors.blueGrey[400],
-        boxShadow: [
-          new BoxShadow(
-            color: Colors.black26,
-            offset: Offset.fromDirection(20, 7),
-            blurRadius: 5.0,
-          )
-        ],
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          stops: [0.1, 0.4],
-          colors: [Colors.blueGrey[500], Colors.blueGrey[400]],
-        ),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 0),
-              child: DPTextSlider(infoList: widget.dailyPickTextList,),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Holes(
-                    scrollController: _scrollController1,
-                    getchild: (int i) {
-                      return (i).toString();
-                    },
-                  ),
-                  Holes(
-                    scrollController: _scrollController2,
-                    getchild: (int i) {
-                      return (i * 2).toString();
-                    },
-                  ),
-                  Holes(
-                    scrollController: _scrollController3,
-                    getchild: (int i) {
-                      return (i * 3).toString();
-                    },
-                  ),
-                  Holes(
-                    scrollController: _scrollController4,
-                    getchild: (int i) {
-                      return (i * 4).toString();
-                    },
-                  ),
-                  Holes(
-                    scrollController: _scrollController5,
-                    getchild: (int i) {
-                      return (i * 5).toString();
-                    },
-                  ),
-                ],
-              ),
+        height: 100,
+        width: double.infinity,
+        margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+        padding: EdgeInsets.all(10),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Colors.blueGrey[400],
+          boxShadow: [
+            new BoxShadow(
+              color: Colors.black26,
+              offset: Offset.fromDirection(20, 7),
+              blurRadius: 5.0,
             )
           ],
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            stops: [0.1, 0.4],
+            colors: [Colors.blueGrey[500], Colors.blueGrey[400]],
+          ),
         ),
-      )
-    );
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 0),
+                child: DPTextSlider(
+                  infoList: dailyPickTextList,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Holes(
+                      pick: digits[0],
+                    ),
+                    Holes(
+                      pick: digits[1],
+                    ),
+                    Holes(
+                      pick: digits[2],
+                    ),
+                    Holes(
+                      pick: digits[3],
+                    ),
+                    Holes(
+                      pick: digits[4],
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ));
   }
 }
 
-class Holes extends StatelessWidget {
-  final ScrollController scrollController;
-  final Function getchild;
+class Holes extends StatefulWidget {
+  final int pick;
+  Holes({this.pick});
 
-  Holes({this.scrollController, this.getchild});
+  @override
+  _HolesState createState() => _HolesState();
+}
+
+class _HolesState extends State<Holes> {
+  ScrollController _scrollController;
+
+  @override
+  void initState() {
+    if (widget.pick != -1) {
+      _scrollController = ScrollController();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _moveDown();
+      });
+    }
+    super.initState();
+  }
+
+  _moveDown() {
+    _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+        curve: Curves.linear, duration: Duration(milliseconds: 1000));
+  }
+
+  @override
+  void dispose() {
+    if (widget.pick != -1) {
+      _scrollController.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
+    List pickList = [
+      widget.pick - 2,
+      widget.pick + 4,
+      widget.pick + 10,
+      widget.pick - 14,
+      widget.pick + 8,
+      widget.pick
+    ];
     return Container(
       height: _width * 0.10,
       width: _width * 0.10,
@@ -140,19 +127,27 @@ class Holes extends StatelessWidget {
         shape: BoxShape.circle,
         color: Colors.white,
       ),
-      child: ListView.builder(
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: 10,
-        controller: scrollController,
-        shrinkWrap: true,
-        itemBuilder: (ctx, i) {
-          return Text(
-            getchild(i),
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: _height * 0.028),
-          );
-        },
-      ),
+
+      child: widget.pick != -1
+          ? ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: pickList.length,
+              controller: _scrollController,
+              shrinkWrap: true,
+              itemBuilder: (ctx, i) {
+                return Text(
+                  "${pickList[i]}",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: _height * 0.028),
+                );
+              },
+            )
+          : Center(
+              child: Text(
+                "-",
+                style: TextStyle(fontSize: _height * 0.028),
+              ),
+            ),
     );
   }
 }

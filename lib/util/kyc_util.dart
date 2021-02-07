@@ -1,12 +1,12 @@
 class KycUrls {
   // Values or Id's
+  static final String defaultBaseUri =
+      'https://multi-channel-preproduction.signzy.tech';
   static String channelId = "6007e4edf3be1f1190757519";
   static String userName = "";
 
   static String auth =
       "CWUfGNBCJ02KqBUOzUG9CzAoNPcc9RifdbCv5wvOAT87uLGyDnEnf9gQYu4QYLXm";
-
-  // URlS
 
   static String createOnboardingObject =
       "https://multi-channel-preproduction.signzy.tech/api/channels/$channelId/onboardings";
