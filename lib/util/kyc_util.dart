@@ -6,9 +6,8 @@ class KycUrls {
   static String userName = "";
 
   static String auth =
-      "4bljhPFXyZeCGx9toyNTSXlN1FpKdwHduYM7Bmnt7WRqwL7zPpgy4utAq4poA7aY";
+      "CWUfGNBCJ02KqBUOzUG9CzAoNPcc9RifdbCv5wvOAT87uLGyDnEnf9gQYu4QYLXm";
 
-  // URlS
   static String createOnboardingObject =
       "https://multi-channel-preproduction.signzy.tech/api/channels/$channelId/onboardings";
 
