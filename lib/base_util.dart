@@ -117,7 +117,8 @@ class BaseUtil extends ChangeNotifier {
       'referral_bonus': '25',
       'referral_ticket_bonus': '10',
       'aws_key_index': '1',
-      'icici_deposits_enabled': '1'
+      'icici_deposits_enabled': '1',
+      'kyc_completion_prize':'You have won ₹50 and 10 Tambola tickets!'
     });
     try {
       // Using default duration to force fetching from remote server.

@@ -791,6 +791,7 @@ class KycOnboardData {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Image.network(
+                                //TODO BaseUtil.remoteConfig.getString('kyc_completion_prize');
                                 "https://babblesports.com/wp-content/uploads/2020/06/Untitled-design-7-1200x675.jpg",
                                 fit: BoxFit.cover,
                               ),
