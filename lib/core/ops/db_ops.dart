@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
-import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/model/User.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
+import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
@@ -77,7 +77,7 @@ class DBModel extends ChangeNotifier {
   Future<UserKycDetail> getUserKycDetails(String id) async {
     try {
       var doc = await _api.getUserKycDetailDocument(id);
-      print(UserKycDetail.fromMap(doc.data));
+      // print(UserKycDetail.fromMap(doc.data));
       return UserKycDetail.fromMap(doc.data);
     } catch (e) {
       log.error('Failed to fetch user kyc details: $e');
@@ -155,6 +155,7 @@ class DBModel extends ChangeNotifier {
       return false;
     }
   }
+
   //
   // Future<List<TambolaBoard>> refreshUserTickets(User user) async{
   //   List<TambolaBoard> requestedBoards = [];

@@ -6,6 +6,7 @@ class Roulette extends StatelessWidget {
 
   final List<String> dailyPickTextList;
   final List<int> digits;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -72,6 +73,7 @@ class Roulette extends StatelessWidget {
 
 class Holes extends StatefulWidget {
   final int pick;
+
   Holes({this.pick});
 
   @override
@@ -118,8 +120,8 @@ class _HolesState extends State<Holes> {
       widget.pick
     ];
     return Container(
-      height: _width * 0.08,
-      width: _width * 0.08,
+      height: _width * 0.10,
+      width: _width * 0.10,
       padding: EdgeInsets.all(4),
       alignment: Alignment.center,
       decoration: BoxDecoration(
@@ -136,14 +138,14 @@ class _HolesState extends State<Holes> {
                 return Text(
                   "${pickList[i]}",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: _height * 0.025),
+                  style: TextStyle(fontSize: _height * 0.028),
                 );
               },
             )
           : Center(
               child: Text(
                 "-",
-                style: TextStyle(fontSize: _height * 0.025),
+                style: TextStyle(fontSize: _height * 0.028),
               ),
             ),
     );

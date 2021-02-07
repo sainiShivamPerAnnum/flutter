@@ -11,7 +11,6 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-elements/error_dialog.d
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/submit_button.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/bank_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/income_details.dart';
-// import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/pages/kyc_invalid.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/otp_verification.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
@@ -24,7 +23,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 
 class IciciOnboardController extends StatefulWidget {
   IciciOnboardController({this.startIndex, this.appIdExists = false});
