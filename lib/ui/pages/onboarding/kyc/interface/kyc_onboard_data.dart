@@ -1,19 +1,18 @@
 import 'dart:io';
+
 import 'package:confetti/confetti.dart';
-import 'package:felloapp/core/model/UserKycDetail.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/kyc_ops.dart';
 import 'package:felloapp/core/service/location.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/fatcaforms.dart';
+import 'package:felloapp/ui/pages/onboarding/kyc/signature.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:scratcher/widgets.dart';
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/ops/kyc_ops.dart';
-import 'package:felloapp/ui/pages/onboarding/kyc/signature.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+import 'package:scratcher/widgets.dart';
 
 class KycOnboardData {
   static bool isLoading = false;

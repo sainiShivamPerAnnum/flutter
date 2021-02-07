@@ -31,19 +31,19 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
               MyButton(
                   title: "Create Object",
                   onPressed: () async {
-                    var email = "finalTest@gmail.com";
-                    var username = "fello272sg";
-                    var phone = "9811111111";
-                    var name = "Fello";
-
-                    var result = await kycModel.createOnboardingObject(
-                        email, username, phone, name);
-
-                    bool flag = result['flag'];
-                    print(flag);
-                    var message = result['message'];
-
-                    print(message);
+                    // var email = "finalTest@gmail.com";
+                    // var username = "fello272sg";
+                    // var phone = "9811111111";
+                    // var name = "Fello";
+                    //
+                    // var result = await kycModel.createOnboardingObject(
+                    //     email, username, phone, name);
+                    //
+                    // bool flag = result['flag'];
+                    // print(flag);
+                    // var message = result['message'];
+                    //
+                    // print(message);
 
                     // flag == true ? baseProvider.showPositiveAlert('Success',
                     //     '$message', context)

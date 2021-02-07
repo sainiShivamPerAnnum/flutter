@@ -1,15 +1,12 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/kyc_ops.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:signature/signature.dart';
-import 'package:felloapp/ui/pages/onboarding/kyc/interface/kyc_onboard_data.dart';
-import 'package:image/image.dart'
-    as I; //So that this does not conflict with the Image widget
 
 class SignatureScreen extends StatefulWidget {
   // final String status;

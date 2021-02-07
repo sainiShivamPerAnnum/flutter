@@ -43,6 +43,7 @@ dependencies:
   geolocator: ^6.1.14
   webview_flutter: any
   slider_button: ^0.6.0
+  scratcher: ^1.4.0
 
   flutter:
     sdk: flutter
