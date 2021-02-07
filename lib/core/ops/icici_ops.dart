@@ -137,6 +137,37 @@ class ICICIModel extends ChangeNotifier{
     }
   }
 
+  Future<Map<String, dynamic>> submitFatcaDetails(String id, String panNumber, bool fatcaOption) async{
+    var _params = {
+      SubmitFatca.fldId:id,
+      SubmitFatca.fldPan:panNumber,
+      SubmitFatca.fldTaxId:'',
+      SubmitFatca.fldIdType:'PAN',
+      SubmitFatca.fldFatcaOption:fatcaOption?'Y':'N',
+      SubmitFatca.fldBirthplace:'',
+      SubmitFatca.fldTinResn:'A',
+      SubmitFatca.fldTinResnText:''
+    };
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(SubmitFatca.path,_params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if(resMap == null) {
+      log.error('Query Failed');
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else if(!resMap[INTERNAL_FAIL_FLAG]){
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED, QUERY_FAIL_REASON: resMap["userMessage"]};
+    }else{
+      log.debug(resMap[SubmitFatca.resStatus]);
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+
+      return resMap;
+    }
+  }
+
+
   Future<Map<String, dynamic>> submitBankDetails(String appid,
       String panNumber, String paymode, String acctype, String accno,
       String bankname, String bankcode, String ifsc, String city,

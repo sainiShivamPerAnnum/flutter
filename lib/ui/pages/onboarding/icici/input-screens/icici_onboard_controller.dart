@@ -224,17 +224,59 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
                 }
                 setState(() {});
               } else {
-                _isProcessing = false;
-                setState(() {});
-                new Timer(const Duration(milliseconds: 1000), () {
-                  onTabTapped(IncomeDetailsInputScreen.index);
-                });
+                runFatcaCheck();
+
               }
             });
           }
         });
       }
     }
+  }
+
+  runFatcaCheck() async{
+    if(baseProvider.iciciDetail.fatcaFlag == null || baseProvider.iciciDetail.fatcaFlag.isEmpty){
+      _isProcessing = false;
+      setState(() {});
+      new Timer(const Duration(milliseconds: 1000), () {
+        onTabTapped(BankDetailsInputScreen.index);
+      });
+      return;
+    }
+    switch(baseProvider.iciciDetail.fatcaFlag) {
+      case GetKycStatus.FATCA_FLAG_NN:{
+        onTabTapped(BankDetailsInputScreen.index);
+        break;
+      }
+      case GetKycStatus.FATCA_FLAG_YY:{
+        bool data = await showDialog(
+          context: context,
+          child: new AlertDialog(
+            title: new Text('Is any of the applicant\'s/guardian/Power of Attorney '
+                + 'holder\'s country of birth/citizenship/nationality/tax residency'
+                    ' status other than India?'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
+              ),
+              new FlatButton(
+                onPressed: () {
+                  //pop twice to get back to mf details
+                  Navigator.of(context).pop(true);
+                },
+                child: new Text('Yes'),
+              ),
+            ],
+          ),
+        )??false;
+        break;
+      }
+      case GetKycStatus.FATCA_FLAG_UN: {
+
+      }
+    }
+    iProvider.submitFatcaDetails(baseProvider.iciciDetail.appId, baseProvider.iciciDetail.panNumber, data)
   }
 
   verifyIncomeDetails() {
@@ -387,12 +429,13 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     String fKycStatus = kObj[GetKycStatus.resStatus];
     String fKycName = kObj[GetKycStatus.resName];
     String fAppMode = kObj[GetKycStatus.resAppMode];
+    String fFatcaFlag = kObj[GetKycStatus.resFatcaStatus];
     if (fKycStatus == GetKycStatus.KYC_STATUS_VALID) {
       log.debug('User is KYC verified!');
       //create user icici obj
       if (baseProvider.iciciDetail == null) {
         baseProvider.iciciDetail = UserIciciDetail.newApplication(
-            null, panNumber, fKycStatus, fAppMode);
+            null, panNumber, fKycStatus, fAppMode, fFatcaFlag);
       } else {
         baseProvider.iciciDetail.panNumber = panNumber;
         baseProvider.iciciDetail.kycStatus = fKycStatus;
@@ -966,37 +1009,6 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     }
   }
 
-  String getMonth(int mt) {
-    switch (mt) {
-      case 1:
-        return 'Jan';
-      case 2:
-        return 'Feb';
-      case 3:
-        return 'Mar';
-      case 4:
-        return 'Apr';
-      case 5:
-        return 'May';
-      case 6:
-        return 'June';
-      case 7:
-        return 'July';
-      case 8:
-        return 'Aug';
-      case 9:
-        return 'Sep';
-      case 10:
-        return 'Oct';
-      case 11:
-        return 'Nov';
-      case 12:
-        return 'Dec';
-      default:
-        return 'Jan';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
@@ -1197,5 +1209,36 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     );
 
     return adultDate.isBefore(today);
+  }
+
+  String getMonth(int mt) {
+    switch (mt) {
+      case 1:
+        return 'Jan';
+      case 2:
+        return 'Feb';
+      case 3:
+        return 'Mar';
+      case 4:
+        return 'Apr';
+      case 5:
+        return 'May';
+      case 6:
+        return 'June';
+      case 7:
+        return 'July';
+      case 8:
+        return 'Aug';
+      case 9:
+        return 'Sep';
+      case 10:
+        return 'Oct';
+      case 11:
+        return 'Nov';
+      case 12:
+        return 'Dec';
+      default:
+        return 'Jan';
+    }
   }
 }

@@ -50,6 +50,13 @@ class GetKycStatus{
   static const String KYC_STATUS_FETCH_FAILED = '2';
   static const String KYC_STATUS_SERVICE_DOWN = '3';
   static const String KYC_STATUS_ALLOW_VIDEO = '4';
+
+  static const String FATCA_FLAG_NN = 'NN';
+  static const String FATCA_FLAG_YY = 'YY';
+  static const String FATCA_FLAG_UN = 'UN';
+  static const String FATCA_FLAG_PC = 'PC';
+  static const String FATCA_FLAG_UC = 'UC';
+
 }
 
 /**
@@ -74,6 +81,20 @@ class SubmitInvoiceDetail{
   static final String fldEmail = 'email'; //encoded
   static final String fldMobile = 'mobile'; //919986643444
   static final String fldPan = 'firstpan';
+
+  static final String resStatus = 'STATUS';
+}
+
+class SubmitFatca{
+  static final String path = 'api/submitFatca';
+  static final String fldId = 'appid';
+  static final String fldPan = 'firstpan';
+  static final String fldTaxId = 'taxid';
+  static final String fldIdType = 'idtype';
+  static final String fldFatcaOption = 'fatcaop';
+  static final String fldBirthplace = 'birthplace';
+  static final String fldTinResn = 'tinresn';//'A'
+  static final String fldTinResnText = 'tinresntext';//no idea
 
   static final String resStatus = 'STATUS';
 }
