@@ -42,6 +42,7 @@ dependencies:
   shared_preferences: ^0.5.7
   geolocator: ^6.1.14
   webview_flutter: any
+  slider_button: ^0.6.0
 
   flutter:
     sdk: flutter
@@ -73,6 +74,9 @@ flutter:
     - images/amfi.png
     - images/whatsapp.png
     - images/onboard_collage-small.png
+    - images/PAN_card.png
+    - images/PAN_card_no_focussed.png
+    - images/kyc_unavailable.png
     - images/checkmark.json
     - images/verification.json
     - images/scratch-card.png
