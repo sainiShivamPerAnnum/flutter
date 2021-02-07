@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SaveScreen extends StatefulWidget {
+  static final int index = (BaseUtil.playScreenFirst)?1:0;
   @override
   _SaveScreenState createState() => _SaveScreenState();
 }
@@ -186,6 +187,7 @@ class _SaveScreenState extends State<SaveScreen> {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
+
                         builder: (ctx) => KycOnboardInterface(),
                       ),
                     ),

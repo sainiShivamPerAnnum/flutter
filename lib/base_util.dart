@@ -6,11 +6,9 @@ import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/core/service/check_payment_schedular.dart';
+import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -25,8 +23,7 @@ class BaseUtil extends ChangeNotifier {
   final Log log = new Log("BaseUtil");
   DBModel _dbModel = locator<DBModel>();
   LocalDBModel _lModel = locator<LocalDBModel>();
-  ICICIModel _iProvider = locator<ICICIModel>();
-  PaymentVerificationSchedular _pSchedular;
+  PaymentService _payService;
   FirebaseUser firebaseUser;
   bool isUserOnboarded = false;
   bool isLoginNextInProgress = false;
@@ -36,6 +33,7 @@ class BaseUtil extends ChangeNotifier {
   List<TambolaBoard> userWeeklyBoards;
   UserIciciDetail _iciciDetail;
   UserKycDetail _kycDetail;
+  UserTransaction _currentICICITxn;
   int referCount = 0;
   int userTicketsCount = 0;
   bool weeklyDrawFetched = false;
@@ -44,7 +42,8 @@ class BaseUtil extends ChangeNotifier {
   bool isReferralLinkBuildInProgressWhatsapp = false;
   bool isReferralLinkBuildInProgressOther = false;
   bool isIciciModelInitialized = false;
-  static const String dummyTambolaVal = '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A';
+  static const String dummyTambolaVal =
+      '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A';
   static const int TOTAL_DRAWS = 35;
   static const int NEW_USER_TICKET_COUNT = 5;
   static const int KYC_UNTESTED = 0;
@@ -67,14 +66,41 @@ class BaseUtil extends ChangeNotifier {
     //fetch on-boarding status and User details
     firebaseUser = await FirebaseAuth.instance.currentUser();
     // isUserOnboarded = await _lModel.isUserOnboarded()==1;
-    if (firebaseUser != null)_myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
-    isUserOnboarded = (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
+    if (firebaseUser != null)
+      _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
+    isUserOnboarded =
+        (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
     if (isUserOnboarded) {
       await initRemoteConfig();
       String _p = remoteConfig.getString('play_screen_first');
       playScreenFirst = !(_p != null && _p.isNotEmpty && _p == 'false');
-      _checkPendingTransactions();
+
+    _payService = locator<PaymentService>();
+      if(myUser.isIciciOnboarded)_payService.verifyPaymentsIfAny();
     }
+  }
+
+  acceptNotificationsIfAny(BuildContext context) {
+    //if payment completed in the background:
+    if(_payService != null && myUser.pendingTxnId != null) {
+      _payService.addPaymentStatusListener((value) {
+          if(value == PaymentService.TRANSACTION_COMPLETE) {
+            showPositiveAlert(
+                'Transaction Complete', 'Your account balance has been updated!', context,
+                seconds: 5);
+          }else if(value == PaymentService.TRANSACTION_REJECTED) {
+            showPositiveAlert(
+                'Transaction Closed', 'The transaction was not completed', context,
+                seconds: 5);
+          }else{
+            log.debug('Received notif for pending transaction: $value');
+          }
+      });
+    }
+    //
+  }
+  cancelIncomingNotifications() {
+    _payService.addPaymentStatusListener(null);
   }
 
   initRemoteConfig() async {
@@ -83,14 +109,15 @@ class BaseUtil extends ChangeNotifier {
       'draw_pick_time': '18',
       'deposit_upi_address': '9769637379@okbizaxis',
       'play_screen_first': 'true',
-      'tambola_win_corner':'500',
-      'tambola_win_top':'1500',
-      'tambola_win_middle':'1500',
-      'tambola_win_bottom':'1500',
-      'tambola_win_full':'10,000',
-      'referral_bonus':'25',
-      'referral_ticket_bonus':'10',
-      'aws_key_index':'1'
+      'tambola_win_corner': '500',
+      'tambola_win_top': '1500',
+      'tambola_win_middle': '1500',
+      'tambola_win_bottom': '1500',
+      'tambola_win_full': '10,000',
+      'referral_bonus': '25',
+      'referral_ticket_bonus': '10',
+      'aws_key_index': '1',
+      'icici_deposits_enabled': '1'
     });
     try {
       // Using default duration to force fetching from remote server.
@@ -100,69 +127,24 @@ class BaseUtil extends ChangeNotifier {
       // Fetch throttled.
       print(exception);
     } catch (exception) {
-      print('Unable to fetch remote config. Cached or default values will be used');
+      print(
+          'Unable to fetch remote config. Cached or default values will be used');
     }
   }
 
-  _checkPendingTransactions() async{
-    if(_myUser.pendingTxnId != null) {
+  _checkPendingTransactions() async {
+    if (_myUser.pendingTxnId != null) {
       //there is a pending icici transaction
       iciciDetail = await _dbModel.getUserIciciDetails(_myUser.uid);
-      UserTransaction txn = await _dbModel.getUserTransaction(_myUser.uid, _myUser.pendingTxnId);
-      if(txn != null && txn.tranStatus == UserTransaction.TRAN_STATUS_PENDING) {
-
-      }else{
+      UserTransaction txn =
+          await _dbModel.getUserTransaction(_myUser.uid, _myUser.pendingTxnId);
+      if (txn != null &&
+          txn.tranStatus == UserTransaction.TRAN_STATUS_PENDING) {
+      } else {
         //transaction doesnt exist or is no longer in PENDING status
 
       }
     }
-  }
-
-  Future<bool> _onTransactionCompleted() async{
-    //update base user object
-    //update transaction
-    //update first investment flag in icicidetail
-    //update user balance
-    //update user ticket count
-    UserTransaction txn = await _dbModel.getUserTransaction(_myUser.uid, _myUser.pendingTxnId);
-    iciciDetail = iciciDetail??(await _dbModel.getUserIciciDetails(_myUser.uid));
-    txn.tranStatus = UserTransaction.TRAN_STATUS_COMPLETE;
-
-    int amt = txn.amount;
-    int ticketCount = (amt/BALANCE_TO_TICKET_RATIO).floor();
-    txn.ticketUpCount = ticketCount;
-
-    int iBal = _myUser.icici_balance??0;
-    int iTckCnt = _myUser.ticket_count??0;
-    _myUser.pendingTxnId = null;
-    _myUser.icici_balance = iBal + amt;
-    _myUser.ticket_count = iTckCnt + ticketCount;
-
-    bool icFlag = true;
-    if(!iciciDetail.firstInvMade) {
-      iciciDetail.firstInvMade = true;
-      icFlag = await _dbModel.updateUserIciciDetails(_myUser.uid, iciciDetail);
-    }
-    bool usFlag = await _dbModel.updateUser(_myUser);
-    bool txnFlag = await _dbModel.updateUserTransaction(_myUser.uid, txn);
-    log.debug('Updated all flags:: $icFlag\t$usFlag\t$txnFlag');
-
-    return (icFlag&&usFlag&&txnFlag);
-  }
-
-  Future<bool> _onTransactionRejected() async{
-    //update base user object
-    //update transaction
-    UserTransaction txn = await _dbModel.getUserTransaction(_myUser.uid, _myUser.pendingTxnId);
-    txn.tranStatus = UserTransaction.TRAN_STATUS_CANCELLED;
-
-    _myUser.pendingTxnId = null;
-
-    bool usFlag = await _dbModel.updateUser(_myUser);
-    bool txnFlag = await _dbModel.updateUserTransaction(_myUser.uid, txn);
-    log.debug('Updated all flags:: $usFlag\t$txnFlag');
-
-    return (usFlag&&txnFlag);
   }
 
   static Widget getAppBar() {
@@ -182,18 +164,22 @@ class BaseUtil extends ChangeNotifier {
               color: Colors.blueGrey[100],
               height: 25.0,
               child: Padding(
-                  padding: EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
-                  child:Row(
+                  padding:
+                      EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('We are currently in Beta',
+                      Text(
+                        'We are currently in Beta',
                         style: TextStyle(color: Colors.black54),
                       ),
-                      Icon(Icons.info_outline, size: 20,color: Colors.black54,)
+                      Icon(
+                        Icons.info_outline,
+                        size: 20,
+                        color: Colors.black54,
+                      )
                     ],
-                  )
-              )
-          ),
+                  ))),
           preferredSize: Size.fromHeight(25.0)),
     );
   }
@@ -253,10 +239,6 @@ class BaseUtil extends ChangeNotifier {
       ],
     )..show(context);
   }
-
-
-
-
 
   showNoInternetAlert(BuildContext context) {
     Flushbar(
@@ -339,79 +321,6 @@ class BaseUtil extends ChangeNotifier {
     return 0;
   }
 
-  Future<Map<String, dynamic>> getTransactionStatus(String tranId, String panNumber) async{
-    if(tranId == null || tranId.isEmpty || panNumber == null || panNumber.isEmpty) {
-      return {
-        'flag': false,
-        'reason': 'Invalid fields'
-      };
-    }
-    if(!_iProvider.isInit())_iProvider.init();
-    _iProvider.getPaidStatus(tranId, panNumber).then((resObj){
-      if(resObj == null || resObj['flag'] == false) {
-        return {
-          'flag': false,
-          'reason': 'Request failed. Please try again'
-        };
-      }
-      else{
-        if(resObj[GetPaidStatus.resStatus] == null) {
-          return {
-            'flag': false,
-            'reason': resObj[GetPaidStatus.resErrorDesc]??'Request could not be processed. Please try again'
-          };
-        }else{
-          if(resObj[GetPaidStatus.resStatus]==GetPaidStatus.STATUS_SUCCESS) {
-            return {
-              'flag': true,
-            };
-          }else if(resObj[GetPaidStatus.resStatus == GetPaidStatus.STATUS_REJECTED]) {
-            return {
-              'flag': false,
-              'reason': 'The transaction was cancelled or rejected.'
-            };
-          }else{
-            return {
-              'flag': false,
-              'reason': 'The transaction has not been registered or completed yet'
-            };
-          }
-        }
-      }
-    }).catchError((err) {
-      return {
-        'flag': false,
-        'reason': 'Request failed. Please try again'
-      };
-    });
-  }
-
-  Future<bool> runPaymentVerification() async{
-    _pSchedular = new PaymentVerificationSchedular();
-    //psch.start();
-    await _pSchedular.start();
-    return true;
-  }
-
-  User get myUser => _myUser;
-
-  set myUser(User value) {
-    _myUser = value;
-  }
-
-  UserIciciDetail get iciciDetail => _iciciDetail;
-
-  set iciciDetail(UserIciciDetail value) {
-    _iciciDetail = value;
-  }
-
-
-  UserKycDetail get kycDetail => _kycDetail;
-
-  set kycDetail(UserKycDetail value) {
-    _kycDetail = value;
-  }
-
   static int getWeekNumber() {
     DateTime tdt = new DateTime.now();
     int dayn = tdt.weekday;
@@ -426,10 +335,37 @@ class BaseUtil extends ChangeNotifier {
       x = (tdt.weekday == 7) ? 0 : tdt.weekday;
       tdt = new DateTime(tdt.year, 1, 1 + ((5 - x) + 7) % 7);
     }
-    int n = 1 + ((firstThursday.millisecondsSinceEpoch
-        - tdt.millisecondsSinceEpoch)/604800000).ceil();
+    int n = 1 +
+        ((firstThursday.millisecondsSinceEpoch - tdt.millisecondsSinceEpoch) /
+                604800000)
+            .ceil();
     //log.debug("Current week number: " + n.toString());
     return n;
+  }
+
+
+  User get myUser => _myUser;
+
+  set myUser(User value) {
+    _myUser = value;
+  }
+
+  UserIciciDetail get iciciDetail => _iciciDetail;
+
+  set iciciDetail(UserIciciDetail value) {
+    _iciciDetail = value;
+  }
+
+  UserKycDetail get kycDetail => _kycDetail;
+
+  set kycDetail(UserKycDetail value) {
+    _kycDetail = value;
+  }
+
+  UserTransaction get currentICICITxn => _currentICICITxn;
+
+  set currentICICITxn(UserTransaction value) {
+    _currentICICITxn = value;
   }
 
   bool isSignedIn() => (firebaseUser != null && firebaseUser.uid != null);

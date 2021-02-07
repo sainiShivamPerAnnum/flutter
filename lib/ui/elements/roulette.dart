@@ -73,7 +73,6 @@ class Roulette extends StatelessWidget {
 
 class Holes extends StatefulWidget {
   final int pick;
-
   Holes({this.pick});
 
   @override
@@ -128,6 +127,7 @@ class _HolesState extends State<Holes> {
         shape: BoxShape.circle,
         color: Colors.white,
       ),
+
       child: widget.pick != -1
           ? ListView.builder(
               physics: NeverScrollableScrollPhysics(),

@@ -1,14 +1,12 @@
 import 'dart:convert';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:felloapp/util/icici_api_util.dart';
 
 class ICICIModel extends ChangeNotifier{
   final Log log = new Log('ICICIModel');
@@ -138,6 +136,37 @@ class ICICIModel extends ChangeNotifier{
       return resMap;
     }
   }
+
+  Future<Map<String, dynamic>> submitFatcaDetails(String id, String panNumber, bool fatcaOption) async{
+    var _params = {
+      SubmitFatca.fldId:id,
+      SubmitFatca.fldPan:panNumber,
+      SubmitFatca.fldTaxId:'',
+      SubmitFatca.fldIdType:'PAN',
+      SubmitFatca.fldFatcaOption:fatcaOption?'Y':'N',
+      SubmitFatca.fldBirthplace:'',
+      SubmitFatca.fldTinResn:'A',
+      SubmitFatca.fldTinResnText:''
+    };
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(SubmitFatca.path,_params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if(resMap == null) {
+      log.error('Query Failed');
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else if(!resMap[INTERNAL_FAIL_FLAG]){
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED, QUERY_FAIL_REASON: resMap["userMessage"]};
+    }else{
+      log.debug(resMap[SubmitFatca.resStatus]);
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+
+      return resMap;
+    }
+  }
+
 
   Future<Map<String, dynamic>> submitBankDetails(String appid,
       String panNumber, String paymode, String acctype, String accno,
@@ -366,19 +395,17 @@ class ICICIModel extends ChangeNotifier{
         Uri.parse(constructRequest(GetPaidStatus.path, _params)));
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
-
-    final resList = await processResponse(_response);
-    if(resList == null) {
+    return {"STATUS":"1","ERR_DESCRIPTION":""};
+    final resMap = await processResponse(_response);
+    if(resMap == null) {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     }else{
-      Map<String, dynamic> yMap = resList[0];
-      if(yMap != null && yMap[GetPaidStatus.resStatus] != null) {
-        yMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
-        return yMap;
+      if(resMap[GetPaidStatus.resStatus] != null) {
+        resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+        return resMap;
       }else{
-        yMap[QUERY_SUCCESS_FLAG] = QUERY_FAILED;
-        return yMap;
+        return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
       }
     }
   }

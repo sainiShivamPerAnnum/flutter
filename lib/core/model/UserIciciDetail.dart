@@ -24,6 +24,7 @@ class UserIciciDetail{
   String _bankName;
   String _bankCity;
   String _vpa;
+  String _fatcaFlag;
   bool _firstInvMade;
 
   static final String fldAppId = 'iAppId';
@@ -45,6 +46,7 @@ class UserIciciDetail{
   static final String fldBankName = 'iBankName';
   static final String fldBankCity = 'iBankCity';
   static final String fldVpa = 'iVpa';
+  static final String fldFatcaFlag = 'iFatcaFlag';
   static final String fldFirstInvMade = 'iIsInvested';
 
   static const String NO_ISSUES = "NA";
@@ -52,12 +54,14 @@ class UserIciciDetail{
   UserIciciDetail(this._appId, this._panNumber, this._kycStatus, this._appMode,
       this._panName, this._hasIssue, this._verifiedOtpId, this._folioNo, this._expDate,
       this._amcRefNo, this._payoutId, this._chkDigit, this._bankAccNo, this._bankCode,
-      this._bankName, this._bankCity, this._vpa, this._firstInvMade, this._createdTime, this._updatedTime);
+      this._bankName, this._bankCity, this._vpa, this._fatcaFlag, this._firstInvMade,
+      this._createdTime, this._updatedTime);
 
   UserIciciDetail.newApplication(String applicationId, String panNumber,
-      String kycStatus, String appMode):
+      String kycStatus, String appMode, String fatcaFlag):
       this(applicationId, panNumber, kycStatus, appMode, '', NO_ISSUES, null,
-          null, null,null,null,null,null,null,null,null,null,false,Timestamp.now(), Timestamp.now());
+          null, null,null,null,null,null,null,null,null,null,fatcaFlag,false,
+          Timestamp.now(), Timestamp.now());
 
   UserIciciDetail.fromMap(Map<String, dynamic> data):
       this(data[fldAppId], data[fldPanNumber], data[fldKycStatus],
@@ -65,8 +69,8 @@ class UserIciciDetail{
           data[fldVerifiedOtpId], data[fldFolioNo], data[fldExpDate],
           data[fldAMCRefNo], data[fldPayoutId], data[fldChkDigit],
           data[fldBankAccNo], data[fldBankCode], data[fldBankName],
-          data[fldBankCity], data[fldVpa], data[fldFirstInvMade],
-          data[fldCreatedTime], data[fldUpdatedTime]);
+          data[fldBankCity], data[fldVpa], data[fldFatcaFlag],
+          data[fldFirstInvMade], data[fldCreatedTime], data[fldUpdatedTime]);
 
   toJson() {
     return {
@@ -87,6 +91,7 @@ class UserIciciDetail{
       fldBankName: _bankName,
       fldBankCity: _bankCity,
       fldVpa: _vpa,
+      fldFatcaFlag: _fatcaFlag,
       fldFirstInvMade: _firstInvMade,
       fldCreatedTime: _createdTime,
       fldUpdatedTime: Timestamp.now()
@@ -199,6 +204,12 @@ class UserIciciDetail{
 
   set bankCode(String value) {
     _bankCode = value;
+  }
+
+  String get fatcaFlag => _fatcaFlag;
+
+  set fatcaFlag(String value) {
+    _fatcaFlag = value;
   }
 
   bool get firstInvMade => _firstInvMade;
