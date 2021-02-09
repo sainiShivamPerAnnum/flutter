@@ -3,6 +3,7 @@ enum FailType{
   UserKYCFlagFetchFailed,
   UserICICAppCreationFailed,
   UserICICIBasicFieldUpdateFailed,
+  UserICICIFatcaFieldUpdateFailed,
   UserICICIIncomeFieldUpdateFailed,
   UserInsufficientBankDetailFailed,
   UserICICIBankFieldUpdateFailed,

@@ -16,7 +16,10 @@ class _BankDetailsInputScreenState extends State<BankDetailsInputScreen> {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
+        child: SingleChildScrollView(
         child: Container(
           height: _height,
           width: _width,
@@ -82,6 +85,7 @@ class _BankDetailsInputScreenState extends State<BankDetailsInputScreen> {
             ),
           ),
         ),
+        )
       ),
     );
   }

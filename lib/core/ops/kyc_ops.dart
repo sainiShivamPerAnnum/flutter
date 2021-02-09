@@ -417,7 +417,7 @@ class KYCModel extends ChangeNotifier {
     var authToken = tokens['authToken'];
 
     bool flag = false;
-    String message = "Bank Verified Successfully";
+    String message = "Video Verified Successfully";
 
     var headers = {
       'Authorization': '$authToken',

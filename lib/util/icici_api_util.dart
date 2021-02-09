@@ -53,7 +53,7 @@ class GetKycStatus{
 
   static const String FATCA_FLAG_NN = 'NN';
   static const String FATCA_FLAG_YY = 'YY';
-  static const String FATCA_FLAG_UN = 'UN';
+  static const String FATCA_FLAG_YN = 'YN';
   static const String FATCA_FLAG_PC = 'PC';
   static const String FATCA_FLAG_UC = 'UC';
 

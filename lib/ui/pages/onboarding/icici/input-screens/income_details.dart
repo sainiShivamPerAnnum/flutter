@@ -74,7 +74,7 @@ class _IncomeDetailsInputScreenState extends State<IncomeDetailsInputScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "LIL BIT ",
+                    "A FEW DETAILS",
                     style: TextStyle(
                       fontSize: 50,
                       color: Colors.black87,

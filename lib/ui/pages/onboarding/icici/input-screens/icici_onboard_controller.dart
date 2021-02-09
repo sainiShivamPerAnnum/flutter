@@ -6,6 +6,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/ui/elements/contact_dialog.dart';
 import 'package:felloapp/ui/elements/milestone_progress.dart';
+import 'package:felloapp/ui/pages/mf_details_page.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/data_provider.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/error_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/submit_button.dart';
@@ -99,7 +100,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     panText = panText.toUpperCase();
     RegExp panCheck = RegExp(r"[A-Z]{5}[0-9]{4}[A-Z]{1}");
     if (panText.isEmpty) {
-      showErrorDialog("Oops!", "Field cannot be empty!", context);
+      showErrorDialog("Error", "Please enter your PAN number", context);
     } else if (panCheck.hasMatch(panText) && panText.length == 10) {
       _isProcessing = true;
       setState(() {});
@@ -169,6 +170,10 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     }
   }
 
+  /// - first create an application id if doesnt exist
+  /// - next, add in the basic details to that application
+  /// - next check the fatca flag returned checkKYC
+  /// - decide whether income screen is required and move accordingly
   verifyPersonalDetails() {
     if (personalDetailsformKey.currentState.validate()) {
       DateTime dt = IDP.selectedDate;
@@ -185,26 +190,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
       setState(() {});
       if (widget.appIdExists) {
         //dont generate a new app id again
-        onBasicDetailsEntered(
-                baseProvider.myUser.mobile, IDP.email.text, IDP.selectedDate)
-            .then((basicObj) {
-          if (!basicObj['flag']) {
-            _isProcessing = false;
-            if (basicObj['reason'] != null) {
-              _errorMessage = 'Error: ${basicObj['reason']}';
-            } else {
-              _errorMessage =
-                  'Error: Unknown error occurred. Please try again.';
-            }
-            setState(() {});
-          } else {
-            _isProcessing = false;
-            setState(() {});
-            new Timer(const Duration(milliseconds: 1000), () {
-              onTabTapped(IncomeDetailsInputScreen.index);
-            });
-          }
-        });
+        runBasicDetailsAndFatcaApi();
       } else {
         //first generate an app id using name and pannumber
         //then start adding in the details
@@ -219,41 +205,61 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
             }
             setState(() {});
           } else {
-            onBasicDetailsEntered(baseProvider.myUser.mobile, IDP.email.text,
-                    IDP.selectedDate)
-                .then((basicObj) {
-              if (!basicObj['flag']) {
-                _isProcessing = false;
-                if (basicObj['reason'] != null) {
-                  _errorMessage = 'Error: ${basicObj['reason']}';
-                } else {
-                  _errorMessage =
-                      'Error: Unknown error occurred. Please try again.';
-                }
-                setState(() {});
-              } else {
-                runFatcaCheck();
-
-              }
-            });
+            runBasicDetailsAndFatcaApi();
           }
         });
       }
     }
   }
 
-  runFatcaCheck() async{
+  Future<bool> runBasicDetailsAndFatcaApi() {
+    onBasicDetailsEntered(
+        baseProvider.myUser.mobile, IDP.email.text, IDP.selectedDate)
+        .then((basicObj) {
+      if (!basicObj['flag']) {
+        _isProcessing = false;
+        if (basicObj['reason'] != null) {
+          _errorMessage = 'Error: ${basicObj['reason']}';
+        } else {
+          _errorMessage =
+          'Error: Unknown error occurred. Please try again.';
+        }
+        setState(() {});
+      } else {
+        //success
+        //now before moving to next screen, confirm fatca
+        runFatcaCheck().then((moveToIncomeScreen) {
+          _isProcessing = false;
+          setState(() {});
+          if(moveToIncomeScreen) {
+            new Timer(const Duration(milliseconds: 1000), () {
+              onTabTapped(IncomeDetailsInputScreen.index);
+            });
+          }else{
+            getBankAccountTypes(baseProvider.iciciDetail.panNumber).then((userAcctList) {
+                if (userAcctList != null) IDP.userAcctTypes = userAcctList;
+                new Timer(const Duration(milliseconds: 500), () {
+                  onTabTapped(BankDetailsInputScreen.index);
+                });
+            });
+          }
+        });
+      }
+    });
+  }
+
+  Future<bool> runFatcaCheck() async{
+    bool flag = true;
+    bool fatcaFlag = true;
     if(baseProvider.iciciDetail.fatcaFlag == null || baseProvider.iciciDetail.fatcaFlag.isEmpty){
-      _isProcessing = false;
-      setState(() {});
-      new Timer(const Duration(milliseconds: 1000), () {
-        onTabTapped(BankDetailsInputScreen.index);
-      });
-      return;
+      //fatca status unknown. disregard it
+      return flag;
     }
     switch(baseProvider.iciciDetail.fatcaFlag) {
-      case GetKycStatus.FATCA_FLAG_NN:{
-        onTabTapped(BankDetailsInputScreen.index);
+      case GetKycStatus.FATCA_FLAG_NN: {
+        //move directly to bank screen
+        flag = false;
+        fatcaFlag = true; //make fatca true
         break;
       }
       case GetKycStatus.FATCA_FLAG_YY:{
@@ -270,7 +276,6 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
               ),
               new FlatButton(
                 onPressed: () {
-                  //pop twice to get back to mf details
                   Navigator.of(context).pop(true);
                 },
                 child: new Text('Yes'),
@@ -278,20 +283,97 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
             ],
           ),
         )??false;
+
+        fatcaFlag = data;
+        flag = false;//move directly to bank screen
         break;
       }
-      case GetKycStatus.FATCA_FLAG_UN: {
+      case GetKycStatus.FATCA_FLAG_YN: {
+        bool data = await showDialog(
+          context: context,
+          child: new AlertDialog(
+            title: new Text('As per ICICI, FATCA Status for your record is \'Unable to confirm\''
+                + '. Do you wish to update the FATCA?'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
+              ),
+              new FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: new Text('Yes'),
+              ),
+            ],
+          ),
+        )??false;
 
+        flag = data;
+        fatcaFlag = data;
+        break;
+      }
+      case GetKycStatus.FATCA_FLAG_UC: {
+        bool data = await showDialog(
+          context: context,
+          child: new AlertDialog(
+            title: new Text('US/Canada Person(s) are not allowed '
+                + 'to do the subscription/Switch In transaction.'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('Okay'),
+              ),
+            ],
+          ),
+        )??false;
+
+        flag = true;
+        fatcaFlag = true;
+        break;
+      }
+      case GetKycStatus.FATCA_FLAG_PC: {
+        bool data = await showDialog(
+          context: context,
+          child: new AlertDialog(
+            title: new Text('As per ICICI, your additional KYC, FATCA '
+                + 'and CRS Self declaration information is not '
+                + 'available, Kindly submit the same.'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('Okay'),
+              ),
+            ],
+          ),
+        )??false;
+
+        flag = true;
+        fatcaFlag = true;
+        break;
       }
     }
-    //iProvider.submitFatcaDetails(baseProvider.iciciDetail.appId, baseProvider.iciciDetail.panNumber, data)
+    //not update fatca to icici
+    var resMap = await iProvider.submitFatcaDetails(baseProvider.iciciDetail.appId,
+        baseProvider.iciciDetail.panNumber, fatcaFlag);
+    if(resMap == null || resMap[SubmitFatca.resStatus] != 'Y'){
+      Map<String, dynamic> failData = {
+        'appid': baseProvider.iciciDetail.appId,
+        'fatcaKey': baseProvider.iciciDetail.fatcaFlag
+      };
+      bool failureLogged = await dbProvider.logFailure(
+          baseProvider.myUser.uid, FailType.UserICICIFatcaFieldUpdateFailed, failData);
+      log.debug('Failure logged correctly: $failureLogged');
+    }
+
+    return flag;
   }
 
   verifyIncomeDetails() {
     if (IDP.occupationChosenValue == null ||
         IDP.incomeChosenValue == null ||
         IDP.exposureChosenValue == null) {
-      showErrorDialog("Oops!", "All Fields are necessary bruh!", context);
+      showErrorDialog("Error", "Please input all the fields", context);
     } else {
       _isProcessing = true;
       setState(() {});
@@ -302,7 +384,9 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
         if (!incomeObj['flag']) {
           _isProcessing = false;
           if (incomeObj['reason'] != null) {
-            //TODO Add error message
+            _errorMessage = 'Error: ${incomeObj['reason']}';
+          }else{
+            _errorMessage = 'Error: Unknown error occurred. Please try again.';
           }
           setState(() {});
         } else {
@@ -322,9 +406,9 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     if (IDP.accNo.text == "" ||
         IDP.cnfAccNo.text == "" ||
         IDP.ifsc.text == "") {
-      showErrorDialog("Oops!", "All fields are necessary", context);
+      showErrorDialog("Error", "Please provide a valid input for all the fields.", context);
     } else if (IDP.accNo.text != IDP.cnfAccNo.text) {
-      showErrorDialog("Oops", "Please confirm account numbers", context);
+      showErrorDialog("Error", "The account numbers provided do not match.", context);
     } else {
       // showErrorDialog("Hurry", "All Good,Now you can Invest", context);
       _isProcessing = true;
@@ -335,7 +419,9 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
         if (!resObj['flag']) {
           _isProcessing = false;
           if (resObj['reason'] != null) {
-            //TODO Add error message
+            _errorMessage = 'Error: ${resObj['reason']}';
+          }else{
+            _errorMessage = 'Error: Unknown error occurred. Please try again.';
           }
           setState(() {});
         } else {
@@ -344,7 +430,9 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
             if (!otpObj['flag']) {
               _isProcessing = false;
               if (otpObj['reason'] != null) {
-                //TODO what can the user do if the otp was not sent?
+                _errorMessage = 'Error: ${otpObj['reason']}';
+              }else{
+                _errorMessage = 'Error: Unknown error occurred. Please try again.';
               }
               setState(() {});
             } else {
@@ -368,7 +456,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     if (IDP.otpInput.text == null ||
         IDP.otpInput.text.isEmpty ||
         IDP.otpInput.text.length != 5) {
-      showErrorDialog("Oops!", "All fields are necessary", context);
+      showErrorDialog("Error", "Please provide a valid input for all the fields", context);
     } else {
       _isProcessing = true;
       setState(() {});
@@ -377,7 +465,11 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
         onOtpVerified().then((rObj) {
           if (!rObj['flag']) {
             _isProcessing = false;
-            //TODO add error
+            if (rObj['reason'] != null) {
+              _errorMessage = 'Error: ${rObj['reason']}';
+            }else{
+              _errorMessage = 'Error: Unknown error occurred. Please try again.';
+            }
             setState(() {});
           } else {
             _isProcessingComplete = true;
@@ -398,7 +490,11 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
         onOtpEntered(IDP.otpInput.text).then((resObj) {
           if (!resObj['flag']) {
             _isProcessing = false;
-            //TODO add error
+            if (resObj['reason'] != null) {
+              _errorMessage = 'Error: ${resObj['reason']}';
+            }else{
+              _errorMessage = 'Error: Unknown error occurred. Please try again.';
+            }
             setState(() {});
           } else {
             _isProcessingComplete = true;
@@ -409,7 +505,13 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
               _isProcessing = false;
               setState(() {});
               new Timer(const Duration(milliseconds: 1000), () {
-                //TODO move back home
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (ctx) => MFDetailsPage(),
+                  ),
+                );
                 //setState(() {});
               });
             });
@@ -448,8 +550,10 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
         baseProvider.iciciDetail.panNumber = panNumber;
         baseProvider.iciciDetail.kycStatus = fKycStatus;
       }
-      if (fKycName != null || fKycStatus.isNotEmpty)
+      if (fKycName != null && fKycName.isNotEmpty)
         baseProvider.iciciDetail.panName = fKycName;
+      if (fFatcaFlag != null && fFatcaFlag.isNotEmpty)
+        baseProvider.iciciDetail.fatcaFlag = fFatcaFlag;
       //update user icici obj
       bool iciciUpdated = await dbProvider.updateUserIciciDetails(
           baseProvider.myUser.uid, baseProvider.iciciDetail);
@@ -651,13 +755,8 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
           //bool icicUpFlag = await dbProvider.updateUserIciciDetails(baseProvider.myUser.uid, baseProvider.iciciDetail);;
           log.debug('Application ID added successfully');
           //get and update user Bank accounts
-          var defaultAcctTypes = [
-            {'CODE': 'SB', 'NAME': 'Savings Account'},
-            {'CODE': 'CA', 'NAME': 'Current Account'},
-          ];
-          var userAcctTypes = await iProvider
-              .getBankAcctTypes(baseProvider.iciciDetail.panNumber);
-          return {'flag': true, 'userAccts': userAcctTypes ?? defaultAcctTypes};
+          var accTypes = await getBankAccountTypes(baseProvider.iciciDetail.panNumber);
+          return {'flag': true, 'userAccts': accTypes};
         }
       }
     } else {
@@ -809,7 +908,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
         'flag': false,
         'reason': (otpResObj[QUERY_FAIL_REASON] != null)
             ? otpResObj[QUERY_FAIL_REASON]
-            : 'Couldn\'t send an otp to provided email/mobile'
+            : 'Couldn\'t send an otp to provided email/mobile. Please try again.'
       };
     } else {
       log.debug('Otp Success');
@@ -1018,6 +1117,17 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
         }
       }
     }
+  }
+
+  Future<List<Map<String,String>>> getBankAccountTypes(String panNumber) async{
+    var defaultAcctTypes = [
+      {'CODE': 'SB', 'NAME': 'Savings Account'},
+      {'CODE': 'CA', 'NAME': 'Current Account'},
+    ];
+    var userAcctTypes = await iProvider
+        .getBankAcctTypes(panNumber);
+
+    return userAcctTypes??defaultAcctTypes;
   }
 
   @override
