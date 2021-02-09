@@ -1,13 +1,16 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/kyc_ops.dart';
+import 'package:felloapp/ui/pages/onboarding/kyc/interface/instructions_tab.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/interface/kyc_onboard_data.dart';
+import 'package:felloapp/ui/pages/onboarding/kyc/interface/summary_tab.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class KycOnboardInterface extends StatefulWidget {
   @override
@@ -28,14 +31,13 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface>
   final GlobalKey<ScaffoldState> _kycOnboardScaffoldKey =
       GlobalKey<ScaffoldState>();
   KYCModel kycModel = KYCModel();
+  bool isSummChecked = false;
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       getStepStatus();
-      if (kycDetailsFetched) {
-        _animatePoll(baseProvider.kycDetail.isStepComplete);
-      }
+      getReadStatus();
     });
     _rippleController = AnimationController(
       vsync: this,
@@ -78,24 +80,45 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface>
     });
   }
 
+  delete() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool("summCheck", null);
+  }
+
   _animatePoll(List stepStatus) {
+    print(stepStatus);
     int i = 0;
-    int _stepsReached = -1;
-    while (stepStatus[i] != 0) {
+    int stepsReached = 0;
+    while (stepStatus[i] == 1) {
       i++;
-      _stepsReached++;
+      stepsReached++;
     }
     setState(() {
-      _pollHeight = 130.0 * _stepsReached;
+      _pollHeight = 132.0 * stepsReached;
     });
   }
 
   getStepStatus() async {
     await kycModel.init();
-    // baseProvider.kycDetail =
-    //     await dbProvider.getUserKycDetails(baseProvider.myUser.uid);
+    baseProvider.kycDetail =
+        await dbProvider.getUserKycDetails(baseProvider.myUser.uid);
+    _animatePoll(baseProvider.kycDetail.isStepComplete);
     kycDetailsFetched = true;
     setState(() {});
+  }
+
+  getReadStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool("summCheck") == null) {
+      prefs.setBool("summCheck", true);
+      setState(() {
+        isSummChecked = true;
+      });
+    } else {
+      setState(() {
+        isSummChecked = false;
+      });
+    }
   }
 
   double _calculateProgress(List stepStatus) {
@@ -105,7 +128,7 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface>
       i++;
       stepsCompleted++;
     }
-    return stepsCompleted * 10.0;
+    return stepsCompleted * 1.0;
   }
 
   @override
@@ -143,55 +166,56 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface>
                       decoration: BoxDecoration(
                         gradient: new LinearGradient(
                           colors: [
-                            Colors.white.withOpacity(1),
+                            Colors.white.withOpacity(0.5),
                             Colors.white,
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                         ),
                       ),
-                      child: Stack(
+                      child: Column(
                         children: [
-                          SafeArea(
-                            minimum: EdgeInsets.all(_height * 0.1),
-                            child: Lottie.asset("images/verification.json"),
+                          Expanded(
+                            child: SafeArea(
+                              minimum: EdgeInsets.only(
+                                  top: MediaQuery.of(context).padding.top +
+                                      kToolbarHeight),
+                              child: Image.asset("images/kyc_unavailable.png"),
+                            ),
                           ),
-                          Positioned(
-                            bottom: 0,
-                            child: Container(
-                                width: _width,
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: _width * 0.1,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Get Your KYC Done",
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xff00587a),
-                                        fontSize: _width * 0.09,
-                                      ),
+                          Container(
+                              width: _width,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: _width * 0.1,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Get Your KYC Done",
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xff00587a),
+                                      fontSize: _width * 0.09,
                                     ),
-                                    SizedBox(
-                                      height: 10,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    "Complete your KYC once and invest anywhere afterwards.",
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xff00587a),
+                                      fontSize: 16,
                                     ),
-                                    Text(
-                                      "Complete your KYC once and invest anywhere afterwards.",
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xff00587a),
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: _height * 0.03,
-                                    ),
-                                  ],
-                                )),
-                          ),
+                                  ),
+                                  SizedBox(
+                                    height: _height * 0.03,
+                                  ),
+                                ],
+                              )),
                         ],
                       ),
                     ),
@@ -236,33 +260,59 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface>
                                   onTap: () => _slide(1, _width),
                                   child: Text(
                                     "Application",
-                                    style: TextStyle(
-                                      fontWeight: currentPage == 0
-                                          ? FontWeight.w700
-                                          : FontWeight.w300,
-                                    ),
+                                    style: currentPage == 0
+                                        ? TextStyle(
+                                            fontSize: 22,
+                                            color: KycOnboardData.titleColor,
+                                            fontWeight: FontWeight.w700)
+                                        : TextStyle(
+                                            fontSize: 18,
+                                          ),
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: () => _slide(2, _width),
-                                  child: Text(
-                                    "Details",
-                                    style: TextStyle(
-                                      fontWeight: currentPage == 1
-                                          ? FontWeight.w700
-                                          : FontWeight.w300,
-                                    ),
+                                  onTap: () {
+                                    isSummChecked = false;
+                                    _slide(2, _width);
+                                  },
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Summary",
+                                        style: currentPage == 1
+                                            ? TextStyle(
+                                                fontSize: 22,
+                                                color:
+                                                    KycOnboardData.titleColor,
+                                                fontWeight: FontWeight.w700)
+                                            : TextStyle(
+                                                fontSize: 18,
+                                              ),
+                                      ),
+                                      isSummChecked
+                                          ? CircleAvatar(
+                                              radius: 3,
+                                              backgroundColor:
+                                                  UiConstants.primaryColor,
+                                            )
+                                          : SizedBox(),
+                                    ],
                                   ),
                                 ),
                                 GestureDetector(
                                   onTap: () => _slide(3, _width),
                                   child: Text(
-                                    "Requirements",
-                                    style: TextStyle(
-                                      fontWeight: currentPage == 2
-                                          ? FontWeight.w700
-                                          : FontWeight.w300,
-                                    ),
+                                    "Instructions",
+                                    style: currentPage == 2
+                                        ? TextStyle(
+                                            fontSize: 22,
+                                            color: KycOnboardData.titleColor,
+                                            fontWeight: FontWeight.w700)
+                                        : TextStyle(
+                                            fontSize: 18,
+                                          ),
                                   ),
                                 ),
                               ],
@@ -291,7 +341,7 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface>
                                   children: [
                                     AnimatedContainer(
                                       duration: Duration(
-                                        milliseconds: 8000,
+                                        milliseconds: 5000,
                                       ),
                                       width: 5,
                                       height: _pollHeight,
@@ -348,20 +398,8 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface>
                                 ),
                               ),
                             ),
-                            Container(
-                              width: _width,
-                              child: Image.network(
-                                "https://i.redd.it/vdx6ey95lu211.jpg",
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Container(
-                              width: _width,
-                              child: Image.network(
-                                "https://static.zerochan.net/Ryuk.full.2728160.jpg",
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                            SummaryTab(),
+                            InstructionsTab(),
                           ],
                         ),
                       ),
@@ -388,7 +426,8 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface>
                     FractionallySizedBox(
                       widthFactor: kycDetailsFetched
                           ? _calculateProgress(
-                              baseProvider.kycDetail.isStepComplete)
+                                  baseProvider.kycDetail.isStepComplete) /
+                              10
                           : 0.0,
                       alignment: Alignment.centerLeft,
                       child: Container(
@@ -400,7 +439,7 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface>
                     ),
                     Center(
                       child: Text(
-                          "${kycDetailsFetched ? _calculateProgress(baseProvider.kycDetail.isStepComplete) : [
+                          "${kycDetailsFetched ? _calculateProgress(baseProvider.kycDetail.isStepComplete) * 10 : [
                               0
                             ]}% Completed"),
                     ),
@@ -483,9 +522,13 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface>
         Expanded(
           child: GestureDetector(
             onTap: () async {
-              await KycOnboardData().stepButtonAction(
-                  level, _kycOnboardScaffoldKey.currentContext);
-              await getStepStatus();
+              await KycOnboardData()
+                  .stepButtonAction(
+                      level, _kycOnboardScaffoldKey.currentContext)
+                  .then((value) {
+                print(value);
+                setState(() {});
+              });
             },
             child: level == 9
                 ? Container(

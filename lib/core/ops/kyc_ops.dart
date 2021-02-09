@@ -48,7 +48,7 @@ class KYCModel extends ChangeNotifier {
     if (_dbModel == null || baseProvider == null) return false;
 
     //initialize user kyc obj
-    baseProvider.kycDetail = baseProvider.kycDetail??
+    baseProvider.kycDetail = baseProvider.kycDetail ??
         await _dbModel.getUserKycDetails(baseProvider.myUser.uid);
     if (!isUserSetup()) {
       bool setupFlag = await _setupUser();
@@ -197,15 +197,13 @@ class KYCModel extends ChangeNotifier {
 
   Future<Map<dynamic, dynamic>> ccImage(String imagePath) async {
     print(imagePath);
-    var headers = {
-      'Content-Type': 'application/json'
-    };
-    var request = http.MultipartRequest('POST', Uri.parse('https://persist.signzy.tech/api/files/upload'));
-    request.fields.addAll({
-      'ttl': '10 mins'
-    });
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('https://persist.signzy.tech/api/files/upload'));
+    request.fields.addAll({'ttl': '10 mins'});
     MediaType a = new MediaType('image', 'jpg');
-    var multipartFile = http.MultipartFile.fromPath('file',imagePath,contentType: a);
+    var multipartFile =
+        http.MultipartFile.fromPath('file', imagePath, contentType: a);
 
     request.files.add(await multipartFile);
     request.headers.addAll(headers);
@@ -216,13 +214,11 @@ class KYCModel extends ChangeNotifier {
       String rx = await response.stream.bytesToString();
       String imageUrl = jsonDecode(rx)['file']['directURL'];
       return {'flag': true, 'imageUrl': imageUrl};
-    }
-    else {
+    } else {
       print(response.reasonPhrase);
       return {'flag': false, 'imageUrl': null};
     }
   }
-
 
   Future<Map<dynamic, dynamic>> convertImages(String imagePath) async {
     print("inside convertImage");
@@ -231,19 +227,23 @@ class KYCModel extends ChangeNotifier {
     final headers = {
       'Content-Type': 'application/json',
     };
-    
+
     List<String> fs = imagePath.split('.');
-    String fileType = fs[fs.length-1];
-    if(fileType != 'jpg' && fileType != 'jpeg' && fileType != 'png') {
-      return {'flag': false, 'imageUrl': null, 'message': 'Please upload a jpg or png image'};
+    String fileType = fs[fs.length - 1];
+    if (fileType != 'jpg' && fileType != 'jpeg' && fileType != 'png') {
+      return {
+        'flag': false,
+        'imageUrl': null,
+        'message': 'Please upload a jpg or png image'
+      };
     }
-    
-    var request = http.MultipartRequest('POST', Uri.parse('https://persist.signzy.tech/api/files/upload'));
-    request.fields.addAll({
-      'ttl': '10 mins'
-    });    
+
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('https://persist.signzy.tech/api/files/upload'));
+    request.fields.addAll({'ttl': '10 mins'});
     MediaType mt = new MediaType('image', fileType);
-    var multipartFile = http.MultipartFile.fromPath('file',imagePath,contentType: mt);
+    var multipartFile =
+        http.MultipartFile.fromPath('file', imagePath, contentType: mt);
 
     request.files.add(await multipartFile);
     request.headers.addAll(headers);
@@ -256,7 +256,7 @@ class KYCModel extends ChangeNotifier {
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
       imageUrl = jsonDecode(responseString)['file']['directURL'];
-      
+
       return {'flag': result, 'imageUrl': imageUrl};
     } else {
       print("Something went wrong");
@@ -265,9 +265,12 @@ class KYCModel extends ChangeNotifier {
       var responseString = String.fromCharCodes(responseData);
       print(responseString);
 
-      return {'flag': false, 'imageUrl': null, 'message': 'Failed to upload the image. Please try again in a while'};
+      return {
+        'flag': false,
+        'imageUrl': null,
+        'message': 'Failed to upload the image. Please try again in a while'
+      };
     }
-
   }
 
   Future<Map<dynamic, dynamic>> executePOI(String imagePath) async {
@@ -281,9 +284,13 @@ class KYCModel extends ChangeNotifier {
     print(merchentId);
     print("Auth Token = $auth");
 
-    var data = await convertImages(imagePath);       
-    if(!data['flag']) {
-      return {"flag": false, "message": data['message']??'Operation failed. Please try again in sometime'};
+    var data = await convertImages(imagePath);
+    if (!data['flag']) {
+      return {
+        "flag": false,
+        "message":
+            data['message'] ?? 'Operation failed. Please try again in sometime'
+      };
     }
     var imageUrl = data['imageUrl'];
     print("image in poi $imageUrl");
@@ -319,7 +326,7 @@ class KYCModel extends ChangeNotifier {
       var responseString = String.fromCharCodes(responseData);
       print(responseString);
       var fd = jsonDecode(responseString)['object'];
-      if(fd != null)fields = fd['result'];
+      if (fd != null) fields = fd['result'];
       print(fields);
     } else if (response.statusCode == 400) {
       flag = false;
@@ -391,7 +398,7 @@ class KYCModel extends ChangeNotifier {
       var responseString = String.fromCharCodes(responseData);
       print(responseString);
       var fd = jsonDecode(responseString)['object'];
-      if(fd!=null)fields = fd['result'];
+      if (fd != null) fields = fd['result'];
     } else if (response.statusCode == 400) {
       flag = false;
       message = "Image link expired please select a new Image";
@@ -586,10 +593,15 @@ class KYCModel extends ChangeNotifier {
   Future<Map<dynamic, dynamic>> updateSignature(String imagePath) async {
     var flag = false;
     var message = "Signature Uploaded Successfully";
-    var data = await convertImages(imagePath);       
-    if(!data['flag']) {
-      return {"flag": false, "message": data['message']??'Operation failed. Please try again in sometime'};
-    };
+    var data = await convertImages(imagePath);
+    if (!data['flag']) {
+      return {
+        "flag": false,
+        "message":
+            data['message'] ?? 'Operation failed. Please try again in sometime'
+      };
+    }
+    ;
 
     var signatureUrl = data['imageUrl'];
     print("Signature url is $signatureUrl");
@@ -636,10 +648,15 @@ class KYCModel extends ChangeNotifier {
   Future<Map<dynamic, dynamic>> updateProfile(String imagePath) async {
     var flag = false;
     var message = "Profile Uploaded Successfully";
-    var data = await convertImages(imagePath);       
-    if(!data['flag']) {
-      return {"flag": false, "message": data['message']??'Operation failed. Please try again in sometime'};
-    };
+    var data = await convertImages(imagePath);
+    if (!data['flag']) {
+      return {
+        "flag": false,
+        "message":
+            data['message'] ?? 'Operation failed. Please try again in sometime'
+      };
+    }
+    ;
 
     var profileUrl = data['imageUrl'];
     print("Signature url is $profileUrl");
@@ -750,9 +767,13 @@ class KYCModel extends ChangeNotifier {
   Future<Map<dynamic, dynamic>> cancelledCheque(String imagePath) async {
     var fields;
     var tokens = await getId();
-    var data = await convertImages(imagePath);       
-    if(!data['flag']) {
-      return {"flag": false, "message": data['message']??'Operation failed. Please try again in sometime'};
+    var data = await convertImages(imagePath);
+    if (!data['flag']) {
+      return {
+        "flag": false,
+        "message":
+            data['message'] ?? 'Operation failed. Please try again in sometime'
+      };
     }
 
     var imageUrl = data['imageUrl'];
@@ -800,12 +821,12 @@ class KYCModel extends ChangeNotifier {
       message = "Please enter a correct image format";
 
       print(response.reasonPhrase);
-    }else if(response.statusCode == 422){
+    } else if (response.statusCode == 422) {
       flag = false;
       message = "Please provide a clearer image";
 
       print(response.reasonPhrase);
-    }else{
+    } else {
       flag = false;
       message = "Upload failed. Please verify the image and try again";
 
@@ -1133,6 +1154,8 @@ class KYCModel extends ChangeNotifier {
   Future<Map<dynamic, dynamic>> updatePOA(var name, var uid, var address,
       var city, var state, var district, var pincode, var dob) async {
     //DOB should be in day/month/year
+    print(
+        "name: $name-----uid: $uid-----address: $address----city: $city-----state: $state---district: $district-----pincode: $pincode----dob: $dob");
     var flag = false;
     var message = "Updated Successfully";
 
