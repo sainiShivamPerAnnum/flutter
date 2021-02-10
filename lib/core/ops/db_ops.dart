@@ -8,6 +8,7 @@ import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
@@ -241,16 +242,17 @@ class DBModel extends ChangeNotifier {
 
   Future<Map<String, String>> getActiveAwsApiKey() async {
     String awsKeyIndex = BaseUtil.remoteConfig.getString('aws_key_index');
-    if (awsKeyIndex == null || awsKeyIndex.isEmpty) awsKeyIndex = '1';
-    int keyIndex = 1;
+    if (awsKeyIndex == null || awsKeyIndex.isEmpty) awsKeyIndex = '3';
+    int keyIndex = 3;
     try {
       keyIndex = int.parse(awsKeyIndex);
     } catch (e) {
       log.error('Aws Index key parsing failed: ' + e.toString());
-      keyIndex = 1;
+      keyIndex = 3;
     }
     QuerySnapshot querySnapshot =
-        await _api.getCredentialsByType('aws', keyIndex);
+        await _api.getCredentialsByTypeAndStage('aws',
+            BaseUtil.activeAwsStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.documents.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.documents[0];
       if (snapshot.exists && snapshot.data['apiKey'] != null) {
@@ -268,7 +270,8 @@ class DBModel extends ChangeNotifier {
   Future<Map<String, String>> getActiveSignzyApiKey() async {
     int keyIndex = 1;
     QuerySnapshot querySnapshot =
-        await _api.getCredentialsByType('signzy', keyIndex);
+        await _api.getCredentialsByTypeAndStage('signzy',
+            BaseUtil.activeSignzyStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.documents.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.documents[0];
       if (snapshot.exists && snapshot.data['apiKey'] != null) {

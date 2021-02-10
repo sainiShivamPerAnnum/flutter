@@ -12,7 +12,7 @@ class ICICIModel extends ChangeNotifier {
   final Log log = new Log('ICICIModel');
   DBModel _dbModel = locator<DBModel>();
   final String defaultBaseUri =
-      'https://r3bb6bx3p6.execute-api.ap-south-1.amazonaws.com/dev';
+      'https://jh4sg5o8n2.execute-api.ap-south-1.amazonaws.com/prod';
   String _baseUri;
   String _apiKey;
   var headers;

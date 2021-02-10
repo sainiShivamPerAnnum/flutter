@@ -62,7 +62,7 @@ class KYCInvalid extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "You\'re KYC verification is required",
+                          "Your KYC verification is required",
                           style: TextStyle(
                             fontSize: 36,
                             color: Colors.black87,

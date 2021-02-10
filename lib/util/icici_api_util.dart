@@ -280,7 +280,8 @@ class CreatePortfolio{
  * "DISPLAY_NAME":null,"IS_TAX":"N","LTEF_URL":null}]
  * */
 class SubmitUpiPurchase{
-  static final String path = 'api/submitUpiPurchase';
+  //static final String path = 'api/submitUpiPurchase';
+  static final String path = 'api/submitIBankUpiPurchase';
   static final String fldId = 'appid';
   static final String fldEmail = 'email';
   static final String fldBankCode = 'bankcode';
