@@ -119,15 +119,14 @@ class _HolesState extends State<Holes> {
       widget.pick
     ];
     return Container(
-      height: _width * 0.10,
-      width: _width * 0.10,
+      height: _width * 0.08,
+      width: _width * 0.08,
       padding: EdgeInsets.all(4),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.white,
       ),
-
       child: widget.pick != -1
           ? ListView.builder(
               physics: NeverScrollableScrollPhysics(),

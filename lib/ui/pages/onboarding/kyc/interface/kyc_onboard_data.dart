@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -7,6 +8,7 @@ import 'package:felloapp/core/ops/kyc_ops.dart';
 import 'package:felloapp/core/service/location.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/fatcaforms.dart';
+import 'package:felloapp/ui/pages/onboarding/kyc/interface/cam.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/signature.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -15,6 +17,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:scratcher/widgets.dart';
 
 class KycOnboardData {
+  static Color titleColor = Color(0xff00587a);
   static bool isLoading = false;
   ConfettiController _confeticontroller = new ConfettiController(
     duration: new Duration(seconds: 5),
@@ -27,6 +30,7 @@ class KycOnboardData {
   KYCModel kycModel = locator<KYCModel>();
   final _formKey = GlobalKey<FormState>();
   var imagef, imageb;
+  double _height, _width;
   TextEditingController _accNo = new TextEditingController();
   TextEditingController _ifsc = new TextEditingController();
   TextEditingController _accHoldName = new TextEditingController();
@@ -42,8 +46,8 @@ class KycOnboardData {
   TextEditingController _district = new TextEditingController();
 
   //---------------------------------SHOW DIALOG BOX-----------------------------------------------------------//
-  showStepDialog(BuildContext context, String title, String caption, Widget subtitle,
-      List<Widget> actions) {
+  showStepDialog(BuildContext context, String title, String caption,
+      Widget subtitle, List<Widget> actions) {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -56,10 +60,7 @@ class KycOnboardData {
             title: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title),
-                Text(caption)
-              ],
+              children: [Text(title), Text(caption)],
             ),
             content: subtitle,
             actions: actions,
@@ -302,7 +303,10 @@ class KycOnboardData {
       _fname.text = result["fields"]["fatherName"];
       _pan.text = result["fields"]["number"];
       showStepDialog(
-          context, "Here are the details we extracted",'Kindly update if required and confirm', createForm(createPANFields()), [
+          context,
+          "Here are the details we extracted",
+          'Kindly update if required and confirm',
+          createForm(createPANFields()), [
         FlatButton(
           child: Text("Confirm"),
           onPressed: () async {
@@ -316,14 +320,18 @@ class KycOnboardData {
                 Navigator.pop(context);
                 showSuccessDialog(context);
               } else {
-                showErrorDialog(context, result['message']??'Something went wrong. Please try again');
+                showErrorDialog(
+                    context,
+                    result['message'] ??
+                        'Something went wrong. Please try again');
               }
             }
           },
         ),
       ]);
     } else {
-      showErrorDialog(context, result['message']??'Something went wrong. Please try again');
+      showErrorDialog(context,
+          result['message'] ?? 'Something went wrong. Please try again');
     }
   }
 
@@ -338,7 +346,7 @@ class KycOnboardData {
       _accHoldName.text = result["fields"]["name"];
       _ifsc.text = result["fields"]["ifsc"];
       showStepDialog(
-          context, "Penny Transfer",'', createForm(createBankFormFields()), [
+          context, "Penny Transfer", '', createForm(createBankFormFields()), [
         FlatButton(
           child: Text("Cancle"),
           onPressed: () => Navigator.pop(context),
@@ -356,14 +364,18 @@ class KycOnboardData {
                 _markStepCompleted(2);
                 showSuccessDialog(context);
               } else {
-                showErrorDialog(context, result['message']??'Something went wrong. Please try again');
+                showErrorDialog(
+                    context,
+                    result['message'] ??
+                        'Something went wrong. Please try again');
               }
             }
           },
         ),
       ]);
     } else {
-      showErrorDialog(context, result['message']??'Something went wrong. Please try again');
+      showErrorDialog(context,
+          result['message'] ?? 'Something went wrong. Please try again');
     }
   }
 
@@ -376,7 +388,8 @@ class KycOnboardData {
       _markStepCompleted(6);
       showSuccessDialog(context);
     } else {
-      showErrorDialog(context, result['message']??'Something went wrong. Please try again');
+      showErrorDialog(context,
+          result['message'] ?? 'Something went wrong. Please try again');
     }
   }
 
@@ -385,12 +398,13 @@ class KycOnboardData {
       onTap: () {
         showStepDialog(
             context,
-            face == 0 ? "Front-Side Upload" : "Back-Side Upload",'',
+            face == 0 ? "Front-Side Upload" : "Back-Side Upload",
+            '',
             Text("Choose image from"), [
           new FlatButton(
             child: Text('Camera'),
             onPressed: () async {
-              _markStepAttempted(0);
+              _markStepAttempted(1);
               face == 0
                   ? imagef = await picker.getImage(source: ImageSource.camera)
                   : imageb = await picker.getImage(source: ImageSource.camera);
@@ -404,7 +418,7 @@ class KycOnboardData {
           FlatButton(
             child: Text('Gallery'),
             onPressed: () async {
-              _markStepAttempted(0);
+              _markStepAttempted(1);
               face == 0
                   ? imagef = await picker.getImage(source: ImageSource.gallery)
                   : imageb = await picker.getImage(source: ImageSource.gallery);
@@ -437,9 +451,12 @@ class KycOnboardData {
                       Text("Front Side of Aadhaar"),
                     ],
                   )
-                : Image.file(
-                    File(imagef.path),
-                    fit: BoxFit.cover,
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.file(
+                      File(imagef.path),
+                      fit: BoxFit.cover,
+                    ),
                   ))
             : (imageb == null
                 ? Column(
@@ -453,9 +470,12 @@ class KycOnboardData {
                       Text("Back Side of Aadhaar"),
                     ],
                   )
-                : Image.file(
-                    File(imageb.path),
-                    fit: BoxFit.cover,
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.file(
+                      File(imageb.path),
+                      fit: BoxFit.cover,
+                    ),
                   )),
       ),
     );
@@ -485,29 +505,30 @@ class KycOnboardData {
     ];
   }
 
-  stepButtonAction(int step, BuildContext context) async {
+  Future<bool> stepButtonAction(int step, BuildContext context) async {
     baseProvider.kycDetail =
         await dbProvider.getUserKycDetails(baseProvider.myUser.uid);
+    _height = MediaQuery.of(context).size.height;
+    _width = MediaQuery.of(context).size.width;
     // -----------------------------CODE TO EXECUTE STEPS SEQUENTILY--------------------------------------------//
-    // if (step != 0 && baseProvider.kycDetail.isStepComplete[step - 1] == 0) {
-    //   showStepDialog(
-    //     context,
-    //     Text("Oops!"),
-    //     Text("You missed a step in between"),
-    //     [
-    //       FlatButton(
-    //         child: Text("OK"),
-    //         onPressed: () => Navigator.pop(context),
-    //       ),
-    //     ],
-    //   );
-    // } else
-    // --------------------------------------------------------------------------------------------------------//
-
-    if (baseProvider.kycDetail.isStepComplete[step] == 1) {
+    if (step != 0 && baseProvider.kycDetail.isStepComplete[step - 1] != 1) {
       showStepDialog(
         context,
-        "Oops",'',
+        "!Oops",
+        "You missed a step in between",
+        Text(""),
+        [
+          FlatButton(
+            child: Text("OK"),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ],
+      );
+    } else if (baseProvider.kycDetail.isStepComplete[step] == 1) {
+      showStepDialog(
+        context,
+        "Oops",
+        '',
         Text("You have already completed this process"),
         [
           FlatButton(
@@ -526,7 +547,7 @@ class KycOnboardData {
         //   null,
         // );
         // baseProvider.kycDetail.isStepComplete = [
-        //   0,
+        //   2,
         //   0,
         //   0,
         //   0,
@@ -542,7 +563,7 @@ class KycOnboardData {
         // Navigator.pop(context);
         // ---------------------------------------------------------------------------//
         showStepDialog(
-            context, "PAN Card Upload",'', Text("Choose image from"), [
+            context, "PAN Card Upload", '', Text("Choose image from"), [
           new FlatButton(
             child: Text('Camera'),
             onPressed: () async {
@@ -586,7 +607,8 @@ class KycOnboardData {
                     FlatButton(
                         onPressed: () async {
                           if (imagef == null || imageb == null) {
-                            showErrorDialog(context, "Both front and back image required");
+                            showErrorDialog(context,
+                                "Both front and back images are required");
                           } else {
                             showLoadingDialog(context);
                             var result = await kycModel.coresPOA(
@@ -597,16 +619,18 @@ class KycOnboardData {
                             Navigator.pop(context);
                             if (result["flag"] == true) {
                               _uid.text = result["fields"]["uid"];
-                              _pin.text = result["fields"]["pincode"];
+                              _pin.text =
+                                  result["fields"]["splitAddress"]["pincode"];
                               _address.text = result["fields"]["address"];
                               _name.text = result["fields"]["name"];
                               _dob.text = result["fields"]["dob"];
-                              _city.text = result["fields"]["city"];
-                              _state.text = result["fields"]["state"];
-                              _district.text = result["fields"]["district"];
-                              showStepDialog(
-                                  context,
-                                  "Confirm you Details",'',
+                              // _city.text =
+                              //     result["fields"]["splitAddress"]["city"];
+                              // _state.text =
+                              //     result["fields"]["splitAddress"]["state"];
+                              // _district.text =
+                              //     result["fields"]["splitAddress"]["district"];
+                              showStepDialog(context, "Confirm you Details", '',
                                   createForm(createADDFields()), [
                                 FlatButton(
                                   child: Text("Confirm"),
@@ -622,20 +646,27 @@ class KycOnboardData {
                                           _district.text,
                                           _pin.text,
                                           _dob.text);
+                                      isLoading = false;
+                                      Navigator.pop(context);
                                       if (result["flag"]) {
                                         _markStepCompleted(0);
-                                        Navigator.pop(context);
+
                                         showSuccessDialog(context);
                                       } else {
                                         showErrorDialog(
-                                            context, result['message']??'Something went wrong. Please try again');
+                                            context,
+                                            result['message'] ??
+                                                'Something went wrong. Please try again');
                                       }
                                     }
                                   },
                                 ),
                               ]);
                             } else {
-                              showErrorDialog(context, result['message']??'Something went wrong. Please try again');
+                              showErrorDialog(
+                                  context,
+                                  result['message'] ??
+                                      'Something went wrong. Please try again');
                             }
                           }
                         },
@@ -648,7 +679,8 @@ class KycOnboardData {
         print("Cancelled Cheque");
         showStepDialog(
           context,
-          "Cancelled Cheque",'',
+          "Cancelled Cheque",
+          '',
           Text("Choose image from"),
           [
             new FlatButton(
@@ -679,8 +711,9 @@ class KycOnboardData {
       else if (step == 3) {
         print("Signature");
         _markStepAttempted(3);
-        final result = Navigator.push(context,
+        final result = await Navigator.push(context,
             MaterialPageRoute(builder: (context) => SignatureScreen()));
+        print(result);
       }
       //------------------------------------------------------FATCA-------------------------------------------------//
       else if (step == 4) {
@@ -699,7 +732,8 @@ class KycOnboardData {
           _markStepCompleted(5);
           showSuccessDialog(context);
         } else {
-          showErrorDialog(context, result['message']??'Something went wrong. Please try again');
+          showErrorDialog(context,
+              result['message'] ?? 'Something went wrong. Please try again');
         }
       }
       //--------------------------------------------------PROFILE PICTURE---------------------------------------------//
@@ -707,7 +741,8 @@ class KycOnboardData {
         print("profile Picture");
         showStepDialog(
           context,
-          "Update profile",'',
+          "Update profile",
+          '',
           Text("Choose image from"),
           [
             new FlatButton(
@@ -733,18 +768,39 @@ class KycOnboardData {
       }
       //-----------------------------------------------------------VIDEO VERIFICATION-----------------------------------//
       else if (step == 7) {
-        print("Video Verification");
-        var image = await picker.getVideo(source: ImageSource.camera);
-        _markStepAttempted(7);
-        var imagePath = image.path;
         showLoadingDialog(context);
-        var result = await kycModel.recordVideo(imagePath);
-        Navigator.pop(context);
+        print("Video Verification");
+        var result = await kycModel.startVideo();
         if (result["flag"] == true) {
-          _markStepCompleted(7);
-          showSuccessDialog(context);
-        } else {
-          showErrorDialog(context, result['message']??'Something went wrong. Please try again');
+          isLoading = false;
+          Navigator.pop(context);
+          List<CameraDescription> cameras = [];
+          try {
+            WidgetsFlutterBinding.ensureInitialized();
+            cameras = await availableCameras();
+          } on CameraException catch (e) {
+            logError(e.code, e.description);
+          }
+          var imagePath = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (ctx) => MyCam(
+                  cameras: cameras, randNum: result["object"][0]["randNumber"]),
+            ),
+          );
+          // var result = await kycModel.recordVideo(imagePath);
+          print("-----------------------------Data recieved: $imagePath");
+        }
+        // _markStepAttempted(7);
+        //showLoadingDialog(context);
+        // Navigator.pop(context);
+        // if (result["flag"] == true) {
+        //   _markStepCompleted(7);
+        //   showSuccessDialog(context);
+        // }
+        else {
+          showErrorDialog(context,
+              result['message'] ?? 'Something went wrong. Please try again');
         }
       }
       //--------------------------------------------PDF REVIEW--------------------------------------------------------//
@@ -775,27 +831,67 @@ class KycOnboardData {
                           ),
                           onChange: (value) {
                             print("Scratch progress: $value%");
-                            if (value > 90) {
+                            if (value > 70 && value < 90) {
                               _confeticontroller.play();
                             }
                           },
                           onThreshold: () =>
                               print("Threshold reached, you won!"),
                           child: Container(
-                            // height: 170,
-                            // width: double.infinity,
+                            height: _height * 0.3,
+                            width: _height * 0.3,
                             decoration: BoxDecoration(
-                              color: Colors.blue,
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                //TODO BaseUtil.remoteConfig.getString('kyc_completion_prize');
-                                "https://babblesports.com/wp-content/uploads/2020/06/Untitled-design-7-1200x675.jpg",
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                                borderRadius: BorderRadius.circular(10),
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                        child: Image.asset(
+                                            "images/winners-small.png")),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Material(
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 20.0),
+                                        child: Text(
+                                            BaseUtil.remoteConfig.getString(
+                                                'kyc_completion_prize'),
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 30,
+                                            )),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Material(
+                                      child: Text(
+                                        "Reward will be automatically credited to your account",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: KycOnboardData.titleColor,
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    )
+                                  ],
+                                )
+                                // Image.network(
+                                //   //TODO BaseUtil.remoteConfig.getString('kyc_completion_prize');
+                                //   "https://babblesports.com/wp-content/uploads/2020/06/Untitled-design-7-1200x675.jpg",
+                                //   fit: BoxFit.cover,
+                                // ),
+                                ),
                           ),
                         ),
                       ),
@@ -825,6 +921,7 @@ class KycOnboardData {
             });
       }
     }
+    return true;
   }
 
   static List<Map<String, String>> stageCardData = [
@@ -850,7 +947,8 @@ class KycOnboardData {
     },
     {
       "title": "Confirm Location",
-      "subtitle": "This is required to verify that you are in the country at present",
+      "subtitle":
+          "This is required to verify that you are in the country at present",
     },
     {
       "title": "Profile Picture",
@@ -858,7 +956,8 @@ class KycOnboardData {
     },
     {
       "title": "Video Verification",
-      "subtitle": "This is required to verify that you are completing your own KYC",
+      "subtitle":
+          "This is required to verify that you are completing your own KYC",
     },
     {
       "title": "Application Review",
@@ -869,4 +968,51 @@ class KycOnboardData {
       "subtitle": "Hurray, you did a great job. this is your reward",
     },
   ];
+
+  static getTitleStyle() {
+    return TextStyle(
+      color: titleColor,
+      fontWeight: FontWeight.w700,
+      fontSize: 22,
+    );
+  }
+
+  static getSubtitleStyle() {
+    return TextStyle(
+      color: Colors.black,
+      fontSize: 18,
+      height: 1.5,
+    );
+  }
+
+  static getNotes(String note) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Icon(
+              Icons.arrow_forward_ios_outlined,
+              size: 15,
+              color: titleColor,
+            ),
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Expanded(
+            child: Text(
+              note,
+              style: KycOnboardData.getSubtitleStyle(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void logError(String code, String message) =>
+      print('Error: $code\nError Message: $message');
 }

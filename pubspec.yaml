@@ -44,6 +44,9 @@ dependencies:
   webview_flutter: any
   slider_button: ^0.6.0
   scratcher: ^1.4.0
+  video_player: 
+  camera:
+  path:
 
   flutter:
     sdk: flutter
@@ -81,5 +84,7 @@ flutter:
     - images/checkmark.json
     - images/verification.json
     - images/scratch-card.png
+    - images/Aadhar_card.jpg
+    - images/Cancelled_cheque.png
     - resources/fello_tnc.html
     - resources/referral_policy.html
