@@ -143,14 +143,14 @@ class Assets {
   ];
 
   static final List<String> mfTableDetailsInfo = [
-    "I am learning to build apps in Flutter. Now I have come to alert dialogs. I have done them before in Android and iOS, but how do I make an alert in Flutter?",
-    "I am learning to build apps in Flutter. Now I have come to alert dialogs. I have done them before in Android and iOS, but how do I make an alert in Flutter?",
-    "I am learning to build apps in Flutter. Now I have come to alert dialogs. I have done them before in Android and iOS, but how do I make an alert in Flutter?",
-    "I am learning to build apps in Flutter. Now I have come to alert dialogs. I have done them before in Android and iOS, but how do I make an alert in Flutter?",
+    "The compound annual growth rate(CAGR) is the mean annual growth rate of an investment over a specified period of time longer than one year",
+    "Net asset value(NAV) is the value of per share of a mutual fund or an exchange-traded fund on a specified date or time",
+    "The number of years completed since the inception of the scheme",
+    "Assets under management is the total market value of assets that an investment company manages on behalf of the investors",
   ];
 
   static final String infoWhyPan = 'Your PAN Card is required by ICICI to set up your investment folio';
   static final String infoWherePan = 'Your PAN Number is a 10 character ID that can be found on your PAN Card';
-  static final String infoWhatUPI = 'TODO';
-  static final String infoWhereUPI = 'TODO';
+  static final String infoWhatUPI = 'UPI is a banking system for money transfers on payment apps. Your UPI ID is your unique address that identifies you on UPI';
+  static final String infoWhereUPI = 'Your UPI ID will be present in the profile section or payment settings section of the UPI app that you use. Typical UPI ID will be of the format \'username@bankname\'';
 }

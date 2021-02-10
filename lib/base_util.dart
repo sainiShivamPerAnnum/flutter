@@ -58,7 +58,7 @@ class BaseUtil extends ChangeNotifier {
   static int infoSliderIndex = 0;
   static bool playScreenFirst = true;
   static const int BALANCE_TO_TICKET_RATIO = 100;
-  static const AWSStage activeAwsStage = AWSStage.DEV;
+  static const AWSStage activeAwsStage = AWSStage.PROD;
   static const SignzyStage activeSignzyStage = SignzyStage.DEV;
 
   BaseUtil() {
@@ -119,7 +119,7 @@ class BaseUtil extends ChangeNotifier {
       'tambola_win_full': '10,000',
       'referral_bonus': '25',
       'referral_ticket_bonus': '10',
-      'aws_key_index': '1',
+      'aws_key_index': '3',
       'icici_deposits_enabled': '1',
       'kyc_completion_prize':'You have won ₹50 and 10 Tambola tickets!'
     });

@@ -143,7 +143,7 @@ class DepositModalSheetState extends State<DepositModalSheet>
               spacing: 20,
               children: [
                 ActionChip(
-                  label: Text("What is my UPI?"),
+                  label: Text("What is my UPI ID?"),
                   backgroundColor: UiConstants.chipColor,
                   onPressed: () {
                     HapticFeedback.vibrate();
@@ -151,7 +151,7 @@ class DepositModalSheetState extends State<DepositModalSheet>
                         context: context,
                         builder: (BuildContext context) => MoreInfoDialog(
                               text: Assets.infoWhatUPI,
-                              title: 'Why is my UPI?',
+                              title: 'Why is my UPI ID?',
                             ));
                   },
                 ),

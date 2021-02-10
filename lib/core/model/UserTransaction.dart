@@ -13,6 +13,7 @@ class UserTransaction{
   String _userId;
   String _tranId;
   String _multipleId;
+  String _sessionId;
   String _tranStatus;
   String _upiTime;
   Timestamp _timestamp;
@@ -30,6 +31,7 @@ class UserTransaction{
   static final String fldUpdatedTime = 'tUpdateTime';
   static final String fldTranId = 'tTranId';
   static final String fldMultipleId = 'tMultipleId';
+  static final String fldSessionId = 'tSessionId';
   static final String fldTranStatus = 'tTranStatus';
   static final String fldUpiTime = 'tUpiDateTime';
 
@@ -42,17 +44,23 @@ class UserTransaction{
   static const String TRAN_SUBTYPE_ICICI_DEPOSIT = 'ICICI1565';
 
   UserTransaction(this._amount,this._closingBalance,this._note,this._subType,
-      this._type,this._ticketUpCount,this._userId,this._tranId,this._multipleId, this._upiTime,
+      this._type,this._ticketUpCount,this._userId,this._tranId,this._multipleId,this._sessionId, this._upiTime,
       this._tranStatus, this._timestamp,this._updatedTime);
   
   UserTransaction.fromMap(Map<String, dynamic> data, String documentID):
         this(data[fldAmount], data[fldClosingBalance], data[fldNote], data[fldSubType],
-        data[fldType], data[fldTicketUpCount], data[fldUserId], data[fldTranId], data[fldMultipleId], data[fldUpiTime],
-        data[fldTranStatus], data[fldTimestamp], data[fldUpdatedTime]);
-  
+        data[fldType], data[fldTicketUpCount], data[fldUserId], data[fldTranId], data[fldMultipleId],
+        data[fldUpiTime], data[fldSessionId], data[fldTranStatus], data[fldTimestamp], data[fldUpdatedTime]);
+
+  //investment by new investor
   UserTransaction.newMFDeposit(String tranId, String multipleId, String upiTimestamp, int amount, String userId):
-      this(amount,0,'NA',TRAN_SUBTYPE_ICICI_DEPOSIT,TRAN_TYPE_DEPOSIT,0,userId,tranId,multipleId,
+      this(amount,0,'NA',TRAN_SUBTYPE_ICICI_DEPOSIT,TRAN_TYPE_DEPOSIT,0,userId,tranId,multipleId,null,
       upiTimestamp, TRAN_STATUS_PENDING,Timestamp.now(),Timestamp.now());
+
+  //investment by existing investor
+  UserTransaction.extMFDeposit(String tranId, String sesionId, int amount, String userId):
+        this(amount,0,'NA',TRAN_SUBTYPE_ICICI_DEPOSIT,TRAN_TYPE_DEPOSIT,0,userId,tranId,
+          null,sesionId,null, TRAN_STATUS_PENDING,Timestamp.now(),Timestamp.now());
 
   toJson() {
     return {
@@ -67,6 +75,7 @@ class UserTransaction{
       fldUpdatedTime: Timestamp.now(),
       fldTranId: _tranId,
       fldMultipleId: _multipleId,
+      fldSessionId: _sessionId,
       fldTranStatus: _tranStatus,
       fldUpiTime: _upiTime
     };
@@ -82,6 +91,12 @@ class UserTransaction{
 
   set multipleId(String value) {
     _multipleId = value;
+  }
+
+  String get sessionId => _sessionId;
+
+  set sessionId(String value) {
+    _sessionId = value;
   }
 
   String get tranId => _tranId;

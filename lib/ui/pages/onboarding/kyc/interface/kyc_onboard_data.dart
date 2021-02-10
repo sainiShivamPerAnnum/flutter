@@ -994,7 +994,7 @@ class KycOnboardData {
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Icon(
-              Icons.arrow_forward_ios_outlined,
+              Icons.arrow_forward_ios,
               size: 15,
               color: titleColor,
             ),

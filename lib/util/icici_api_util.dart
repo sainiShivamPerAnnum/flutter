@@ -279,7 +279,7 @@ class CreatePortfolio{
  * "AMOUNT":100,"UPI_DATE_TIME":"01/02/2021 12:50 PM","TRIG_SCHEME":null,"USERNAME":null,"TRAN_ID":"3433599",
  * "DISPLAY_NAME":null,"IS_TAX":"N","LTEF_URL":null}]
  * */
-class SubmitUpiPurchase{
+class SubmitUpiNewInvestor{
   //static final String path = 'api/submitUpiPurchase';
   static final String path = 'api/submitIBankUpiPurchase';
   static final String fldId = 'appid';
@@ -296,6 +296,21 @@ class SubmitUpiPurchase{
   static final String resUpiTime = 'UPI_DATE_TIME';
   static final String resMultipleId = "MULTIPLE_ID";
   static final String resAmount = "AMOUNT";
+  static final String resMsg = 'MSG';
+}
+
+class SubmitUpiExistingInvestor{
+  static final String path = 'api/submitIBankUpiPurchaseExt';
+  static final String fldFolioNo = 'foliono';
+  static final String fldChkDigit = 'chkdigit';
+  static final String fldAmount = 'amount';
+  static final String fldBankCode = 'bankcode';
+  static final String fldBankAccNo = 'bankaccno';
+  static final String fldPan = 'firstpan';
+  static final String fldVPA = 'vpa';
+
+  static final String resTrnId = "TRANID";
+  static final String resSessionId = "SESSION";
   static final String resMsg = 'MSG';
 }
 

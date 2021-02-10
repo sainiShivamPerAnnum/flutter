@@ -375,7 +375,7 @@ class ICICIModel extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> initiateUPIPurchase(
+  Future<Map<String, dynamic>> initiateUPIPurchaseForNewInvestor(
       String id,
       String email,
       String bankCode,
@@ -385,17 +385,17 @@ class ICICIModel extends ChangeNotifier {
       String amount,
       String vpaAddress) async {
     var _params = {
-      SubmitUpiPurchase.fldId: id,
-      SubmitUpiPurchase.fldEmail: email,
-      SubmitUpiPurchase.fldBankCode: bankCode,
-      SubmitUpiPurchase.fldPan: panNumber,
-      SubmitUpiPurchase.fldFolioNo: folioNumber,
-      SubmitUpiPurchase.fldKycMode: kycMode,
-      SubmitUpiPurchase.fldAmount: amount,
-      SubmitUpiPurchase.fldVPA: vpaAddress
+      SubmitUpiNewInvestor.fldId: id,
+      SubmitUpiNewInvestor.fldEmail: email,
+      SubmitUpiNewInvestor.fldBankCode: bankCode,
+      SubmitUpiNewInvestor.fldPan: panNumber,
+      SubmitUpiNewInvestor.fldFolioNo: folioNumber,
+      SubmitUpiNewInvestor.fldKycMode: kycMode,
+      SubmitUpiNewInvestor.fldAmount: amount,
+      SubmitUpiNewInvestor.fldVPA: vpaAddress
     };
     var _request = http.Request(
-        'GET', Uri.parse(constructRequest(SubmitUpiPurchase.path, _params)));
+        'GET', Uri.parse(constructRequest(SubmitUpiNewInvestor.path, _params)));
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
@@ -405,7 +405,44 @@ class ICICIModel extends ChangeNotifier {
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     } else {
       Map<String, dynamic> yMap = resList[0];
-      if (yMap != null && yMap[SubmitUpiPurchase.resTrnId] != null) {
+      if (yMap != null && yMap[SubmitUpiNewInvestor.resTrnId] != null) {
+        yMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+        return yMap;
+      } else {
+        yMap[QUERY_SUCCESS_FLAG] = QUERY_FAILED;
+        return yMap;
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>> initiateUPIPurchaseForExistingInvestor(
+      String folioNumber,
+      String chkDigit,
+      String amount,
+      String bankCode,
+      String bankAccNo,
+      String panNumber,
+      String vpaAddress) async {
+    var _params = {
+      SubmitUpiExistingInvestor.fldFolioNo: folioNumber,
+      SubmitUpiExistingInvestor.fldChkDigit: chkDigit,
+      SubmitUpiExistingInvestor.fldAmount: amount,
+      SubmitUpiExistingInvestor.fldBankCode: bankCode,
+      SubmitUpiExistingInvestor.fldBankAccNo: bankAccNo,
+      SubmitUpiExistingInvestor.fldPan: panNumber,
+      SubmitUpiExistingInvestor.fldVPA: vpaAddress,
+    };
+    var _request = http.Request(
+        'GET', Uri.parse(constructRequest(SubmitUpiExistingInvestor.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final yMap = await processResponse(_response);
+    if (yMap == null) {
+      log.error('Query Failed');
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    } else {
+      if (yMap[SubmitUpiNewInvestor.resTrnId] != null) {
         yMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
         return yMap;
       } else {
@@ -629,11 +666,11 @@ class ICICIModel extends ChangeNotifier {
       List<Map<String, dynamic>> refList = new List();
       rList.forEach((element) {
         refList.add({
-          SubmitUpiPurchase.resTrnId: element[SubmitUpiPurchase.resTrnId],
-          SubmitUpiPurchase.resMultipleId:
-              element[SubmitUpiPurchase.resMultipleId] ?? '',
-          SubmitUpiPurchase.resTrnDate: element[SubmitUpiPurchase.resTrnDate],
-          SubmitUpiPurchase.resUpiTime: element[SubmitUpiPurchase.resUpiTime]
+          SubmitUpiNewInvestor.resTrnId: element[SubmitUpiNewInvestor.resTrnId],
+          SubmitUpiNewInvestor.resMultipleId:
+              element[SubmitUpiNewInvestor.resMultipleId] ?? '',
+          SubmitUpiNewInvestor.resTrnDate: element[SubmitUpiNewInvestor.resTrnDate],
+          SubmitUpiNewInvestor.resUpiTime: element[SubmitUpiNewInvestor.resUpiTime]
         });
       });
       log.debug(refList.toString());

@@ -177,28 +177,28 @@ class _SaveScreenState extends State<SaveScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
-                Container(
-                  alignment: Alignment.center,
-                  width: double.infinity,
-                  height: 50,
-                  color: UiConstants.primaryColor,
-                  child: GestureDetector(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-
-                        builder: (ctx) => KycOnboardInterface(),
-                      ),
-                    ),
-                    child: Text(
-                      "KYC Onboard Interface",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
+                // SizedBox(height: 10),
+                // Container(
+                //   alignment: Alignment.center,
+                //   width: double.infinity,
+                //   height: 50,
+                //   color: UiConstants.primaryColor,
+                //   child: GestureDetector(
+                //     onTap: () => Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //
+                //         builder: (ctx) => KycOnboardInterface(),
+                //       ),
+                //     ),
+                //     child: Text(
+                //       "KYC Onboard Interface",
+                //       style: TextStyle(
+                //         color: Colors.white,
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

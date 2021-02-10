@@ -300,25 +300,25 @@ class FundDetailsTable extends StatelessWidget {
               children: [
                 TableRow(children: [
                   FundDetailsCell(
-                    title: "Current Price",
-                    data: "999",
+                    title: "NAV",
+                    data: "₹301.72",
                     info: Assets.mfTableDetailsInfo[0],
                   ),
                   FundDetailsCell(
-                    title: "CAGR%",
-                    data: "5.0",
+                    title: "CAGR",
+                    data: "7.51%",
                     info: Assets.mfTableDetailsInfo[1],
                   ),
                 ]),
                 TableRow(children: [
                   FundDetailsCell(
                     title: "Age",
-                    data: "15",
+                    data: "15 yrs",
                     info: Assets.mfTableDetailsInfo[2],
                   ),
                   FundDetailsCell(
-                    title: "Yeild%",
-                    data: "4.55",
+                    title: "AUM",
+                    data: "42176.95cr",
                     info: Assets.mfTableDetailsInfo[3],
                   ),
                 ]),
@@ -341,7 +341,7 @@ class FundDetailsTable extends StatelessWidget {
                               decoration: TextDecoration.underline),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () async {
-                              const url = 'https://flutter.dev';
+                              const url = 'https://www.icicipruamc.com/mutual-fund/debt-funds/icici-prudential-liquid-fund';
                               if (await canLaunch(url)) {
                                 await launch(url);
                               } else {

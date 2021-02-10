@@ -277,20 +277,20 @@ class _ReferScreenState extends State<ReferScreen> {
                       size: 18.0,
                     ),
                     onPressed: () async{
-                      // baseProvider.isReferralLinkBuildInProgressWhatsapp = true;
-                      // _createDynamicLink(baseProvider.myUser.uid, true, 'Whatsapp').then((url) async{
-                      //   baseProvider.isReferralLinkBuildInProgressWhatsapp = false;
-                      //   log.debug(url);
-                      //   setState(() {});
-                      //   FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
-                      //     log.debug(flag);
-                      //   });
-                      // });
-                      // setState(() {});
-                      Navigator.of(context).pop();
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (ctx) => DepositVerification(),
-                      ));
+                      baseProvider.isReferralLinkBuildInProgressWhatsapp = true;
+                      _createDynamicLink(baseProvider.myUser.uid, true, 'Whatsapp').then((url) async{
+                        baseProvider.isReferralLinkBuildInProgressWhatsapp = false;
+                        log.debug(url);
+                        setState(() {});
+                        FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
+                          log.debug(flag);
+                        });
+                      });
+                      setState(() {});
+                      // Navigator.of(context).pop();
+                      // Navigator.push(context, MaterialPageRoute(
+                      //   builder: (ctx) => DepositVerification(),
+                      // ));
                     },
                     highlightColor: Colors.orange.withOpacity(0.5),
                     splashColor: Colors.orange.withOpacity(0.5),

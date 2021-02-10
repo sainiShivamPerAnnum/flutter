@@ -119,8 +119,8 @@ class _HolesState extends State<Holes> {
       widget.pick
     ];
     return Container(
-      height: _width * 0.08,
-      width: _width * 0.08,
+      height: _width * 0.1,
+      width: _width * 0.10,
       padding: EdgeInsets.all(4),
       alignment: Alignment.center,
       decoration: BoxDecoration(
