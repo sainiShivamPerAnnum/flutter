@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/icici_api_util.dart';
@@ -488,13 +489,113 @@ class ICICIModel extends ChangeNotifier {
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
+    final resList = await processCheckIMPSResponse(_response);
+    if (resList == null) {
+      log.error('Query Failed');
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    } else {
+      Map<String, dynamic>  resMap = resList[0];
+      if(resMap[CheckIMPSStatus.resReturnCode] == null){
+        resMap[QUERY_SUCCESS_FLAG] = QUERY_FAILED;
+        return resMap;
+      }else{
+        resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+        return resMap;
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>> getExitLoadStatus(
+      String folioNumber, String amount) async {
+    var _params = {
+      GetExitLoad.fldFolioNo: folioNumber,
+      GetExitLoad.fldAmount: amount
+    };
+    var _request = http.Request(
+        'GET', Uri.parse(constructRequest(CheckIMPSStatus.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
     final resMap = await processResponse(_response);
     if (resMap == null) {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     } else {
-      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
-      return resMap;
+      if(resMap[GetExitLoad.resPopUpFlag] == null){
+        resMap[QUERY_SUCCESS_FLAG] = QUERY_FAILED;
+        return resMap;
+      }else {
+        resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+        return resMap;
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>> getBankRedeemDetails(String folioNumber) async {
+    var _params = {
+      GetBankRedemptionDetail.fldFolioNo: folioNumber,
+    };
+    var _request = http.Request(
+        'GET', Uri.parse(constructRequest(CheckIMPSStatus.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resList = await processBankRedeemDetailResponse(_response);
+    if (resList == null) {
+      log.error('Query Failed');
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    } else {
+      Map<String, dynamic>  resMap = resList[0];
+      if(resMap[GetBankRedemptionDetail.resCombinedAccountDetails] == null
+      || resMap[GetBankRedemptionDetail.resCombinedBankDetails] == null){
+        resMap[QUERY_SUCCESS_FLAG] = QUERY_FAILED;
+        return resMap;
+      }else{
+        resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+        return resMap;
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>> submitInstantWithdrawal(
+      String folioNumber, String amount, String bankCode, String mobile,
+      String bankName, String accNo, String accType, String bankBranch,
+      String bankCity, String redeemMode, String ifsc, String exitLoadTick,
+      String apprxLoadAmt) async {
+    var _params = {
+      SubmitRedemption.fldFolioNo: folioNumber,
+      SubmitRedemption.fldAmount: amount,
+      SubmitRedemption.fldBankCode: bankCode,
+      SubmitRedemption.fldMobile: mobile,
+      SubmitRedemption.fldBankName: bankName,
+      SubmitRedemption.fldAccNo: accNo,
+      SubmitRedemption.fldAccType: accType,
+      SubmitRedemption.fldBankBranch: bankBranch,
+      SubmitRedemption.fldBankCity: bankCode,
+      SubmitRedemption.fldRedeemMode: redeemMode,
+      SubmitRedemption.fldIfsc: ifsc,
+    };
+    if(exitLoadTick != null && apprxLoadAmt != null) {
+      _params[SubmitRedemption.fldExitLoadTick] = exitLoadTick;
+      _params[SubmitRedemption.fldApproxLoadAmount] = apprxLoadAmt;
+    }
+    var _request = http.Request(
+        'GET', Uri.parse(constructRequest(CheckIMPSStatus.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if (resMap == null) {
+      log.error('Query Failed');
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    } else {
+      if(resMap[SubmitRedemption.resTranId] == null){
+        resMap[QUERY_SUCCESS_FLAG] = QUERY_FAILED;
+        return resMap;
+      }else {
+        resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+        return resMap;
+      }
     }
   }
 
@@ -671,6 +772,82 @@ class ICICIModel extends ChangeNotifier {
               element[SubmitUpiNewInvestor.resMultipleId] ?? '',
           SubmitUpiNewInvestor.resTrnDate: element[SubmitUpiNewInvestor.resTrnDate],
           SubmitUpiNewInvestor.resUpiTime: element[SubmitUpiNewInvestor.resUpiTime]
+        });
+      });
+      log.debug(refList.toString());
+      return refList;
+    } catch (e) {
+      log.error('Failed to decode json');
+      return null;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> processCheckIMPSResponse(
+      http.StreamedResponse response) async {
+    if (response == null) {
+      log.error('response is null');
+    }
+    if (response.statusCode != 200) {
+      log.error(
+          'Query Failed:: Status:${response.statusCode}, Reason:${response.reasonPhrase}');
+      if (response.statusCode == 502)
+        return null;
+      else
+        return null;
+    }
+    try {
+      String res = await response.stream.bytesToString();
+      log.debug(res);
+      if (res == null || res.isEmpty || res == "\"\"") {
+        log.error('Returned empty response');
+        return null;
+      }
+      List<dynamic> rList = json.decode(res);
+      List<Map<String, dynamic>> refList = new List();
+      rList.forEach((element) {
+        refList.add({
+          CheckIMPSStatus.resReturnCode: element[CheckIMPSStatus.resReturnCode],
+          CheckIMPSStatus.resAllowIMPSFlag: element[CheckIMPSStatus.resAllowIMPSFlag],
+          CheckIMPSStatus.resReturnMsg: element[CheckIMPSStatus.resReturnMsg],
+          CheckIMPSStatus.resInstantBalance: element[CheckIMPSStatus.resInstantBalance],
+          CheckIMPSStatus.resTotalBalance: element[CheckIMPSStatus.resTotalBalance]
+        });
+      });
+      log.debug(refList.toString());
+      return refList;
+    } catch (e) {
+      log.error('Failed to decode json');
+      return null;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> processBankRedeemDetailResponse(
+      http.StreamedResponse response) async {
+    if (response == null) {
+      log.error('response is null');
+    }
+    if (response.statusCode != 200) {
+      log.error(
+          'Query Failed:: Status:${response.statusCode}, Reason:${response.reasonPhrase}');
+      if (response.statusCode == 502)
+        return null;
+      else
+        return null;
+    }
+    try {
+      String res = await response.stream.bytesToString();
+      log.debug(res);
+      if (res == null || res.isEmpty || res == "\"\"") {
+        log.error('Returned empty response');
+        return null;
+      }
+      List<dynamic> rList = json.decode(res);
+      List<Map<String, dynamic>> refList = new List();
+      rList.forEach((element) {
+        refList.add({
+          GetBankRedemptionDetail.resBankName: element[GetBankRedemptionDetail.fldFolioNo],
+          GetBankRedemptionDetail.resCombinedAccountDetails: element[GetBankRedemptionDetail.resCombinedAccountDetails],
+          GetBankRedemptionDetail.resCombinedBankDetails: element[GetBankRedemptionDetail.resCombinedBankDetails],
         });
       });
       log.debug(refList.toString());
