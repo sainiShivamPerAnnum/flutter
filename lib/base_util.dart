@@ -58,7 +58,7 @@ class BaseUtil extends ChangeNotifier {
   static int infoSliderIndex = 0;
   static bool playScreenFirst = true;
   static const int BALANCE_TO_TICKET_RATIO = 100;
-  static const AWSStage activeAwsStage = AWSStage.PROD;
+  static const AWSStage activeAwsStage = AWSStage.DEV;
   static const SignzyStage activeSignzyStage = SignzyStage.DEV;
 
   BaseUtil() {
