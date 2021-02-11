@@ -13,9 +13,11 @@ class Assets {
   static final String whatsappIcon = 'images/whatsapp.png';
   static final String strikeThroughGraphic = 'images/diagonal-strike.png';
   static final String onboardCollageGraphic = 'images/onboard_collage-small.png';
+
   static final String dummyPanCard = 'images/PAN_card.png';
   static final String dummyPanCardShowNumber = 'images/PAN_card_no_focussed.png';
-  static final String dummyCancelledCheque = 'images/sebi.png';
+  static final String dummyAadhaarCard = 'images/Aadhar_card.jpg';
+  static final String dummyCancelledCheque = 'images/Cancelled_cheque.png';
   static final String kycUnavailableAsset = 'images/kyc_unavailable.png';
 
 

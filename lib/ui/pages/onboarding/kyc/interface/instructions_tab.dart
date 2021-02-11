@@ -1,5 +1,6 @@
 import 'package:felloapp/ui/elements/contact_us_button.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/interface/kyc_onboard_data.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -18,11 +19,11 @@ class InstructionsTab extends StatelessWidget {
         getInstruction(
             "Aadhar Card",
             "Upload the front and back image of your Aadhaar card. We will read the aadhaar number and address from it automatically,",
-            "images/Aadhar_card.jpg"),
+            Assets.dummyAadhaarCard),
         getInstruction(
             "Cancelled Cheque",
             "Upload a cancelled cheque of your primary bank account. This will be used to fetch your bank details and perform a deposit to your account for confirmation",
-            "images/Cancelled_cheque.png"),
+            Assets.dummyCancelledCheque),
         getInstruction(
             "Signature",
             "Provide your signature that is used by you for all official purposes",
