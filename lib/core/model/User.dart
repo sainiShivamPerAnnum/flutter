@@ -14,7 +14,7 @@ class User {
   int _account_balance;
   int _deposit_balance;
   int _prize_balance;
-  int _icici_balance;
+  double _icici_balance;
   int _lifetime_winnings;
   String _pan;
   String _age;
@@ -260,9 +260,9 @@ class User {
     _deposit_balance = value;
   }
 
-  int get icici_balance => _icici_balance;
+  double get icici_balance => _icici_balance;
 
-  set icici_balance(int value) {
+  set icici_balance(double value) {
     _icici_balance = value;
   }
 

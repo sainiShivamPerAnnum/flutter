@@ -474,4 +474,6 @@ class SubmitRedemption{
   static final String resBankRnn = 'BANK_RNN';
   static final String resIMPSCode = 'IMPS_CODE';
   static final String resIMPSStatus = 'IMPS_STATUS';
+
+  static const String IMPS_TRANSACTION_SUCCESS = '0';
 }

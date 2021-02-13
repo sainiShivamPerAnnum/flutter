@@ -314,6 +314,11 @@ class ICICIModel extends ChangeNotifier {
     if (resMap == null) {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else if (!resMap[INTERNAL_FAIL_FLAG]) {
+      return {
+        QUERY_SUCCESS_FLAG: QUERY_FAILED,
+        QUERY_FAIL_REASON: resMap["userMessage"]
+      };
     } else {
       resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
       return resMap;
@@ -331,7 +336,12 @@ class ICICIModel extends ChangeNotifier {
     if (resMap == null) {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
-    } else {
+    } else if (!resMap[INTERNAL_FAIL_FLAG]) {
+      return {
+        QUERY_SUCCESS_FLAG: QUERY_FAILED,
+        QUERY_FAIL_REASON: resMap["userMessage"]
+      };
+    }else {
       resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
       return resMap;
     }
@@ -442,6 +452,11 @@ class ICICIModel extends ChangeNotifier {
     if (yMap == null) {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else if (!yMap[INTERNAL_FAIL_FLAG]) {
+      return {
+        QUERY_SUCCESS_FLAG: QUERY_FAILED,
+        QUERY_FAIL_REASON: yMap["userMessage"]
+      };
     } else {
       if (yMap[SubmitUpiNewInvestor.resTrnId] != null) {
         yMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
@@ -463,11 +478,16 @@ class ICICIModel extends ChangeNotifier {
         'GET', Uri.parse(constructRequest(GetPaidStatus.path, _params)));
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
-    return {"STATUS": "1", "ERR_DESCRIPTION": ""};
+    //return {"STATUS": "1", "ERR_DESCRIPTION": ""};
     final resMap = await processResponse(_response);
     if (resMap == null) {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else if (!resMap[INTERNAL_FAIL_FLAG]) {
+      return {
+        QUERY_SUCCESS_FLAG: QUERY_FAILED,
+        QUERY_FAIL_REASON: resMap["userMessage"]
+      };
     } else {
       if (resMap[GetPaidStatus.resStatus] != null) {
         resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
@@ -520,6 +540,11 @@ class ICICIModel extends ChangeNotifier {
     if (resMap == null) {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else if (!resMap[INTERNAL_FAIL_FLAG]) {
+      return {
+        QUERY_SUCCESS_FLAG: QUERY_FAILED,
+        QUERY_FAIL_REASON: resMap["userMessage"]
+      };
     } else {
       if(resMap[GetExitLoad.resPopUpFlag] == null){
         resMap[QUERY_SUCCESS_FLAG] = QUERY_FAILED;
@@ -588,14 +613,14 @@ class ICICIModel extends ChangeNotifier {
     if (resMap == null) {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else if (!resMap[INTERNAL_FAIL_FLAG]) {
+      return {
+        QUERY_SUCCESS_FLAG: QUERY_FAILED,
+        QUERY_FAIL_REASON: resMap["userMessage"]
+      };
     } else {
-      if(resMap[SubmitRedemption.resTranId] == null){
-        resMap[QUERY_SUCCESS_FLAG] = QUERY_FAILED;
-        return resMap;
-      }else {
-        resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
-        return resMap;
-      }
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+      return resMap;
     }
   }
 

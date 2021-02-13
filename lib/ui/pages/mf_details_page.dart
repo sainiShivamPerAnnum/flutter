@@ -4,8 +4,8 @@ import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/deposit_modal_sheet.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
+import 'package:felloapp/ui/elements/icici_withdraw_dialog.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
-import 'package:felloapp/ui/elements/withdraw_dialog.dart';
 import 'package:felloapp/ui/pages/deposit_verification.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
@@ -34,6 +34,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   DBModel dbProvider;
   PaymentService payService;
   GlobalKey<DepositModalSheetState> _modalKey = GlobalKey();
+  GlobalKey<IciciWithdrawDialogState> _withdrawalDialogKey = GlobalKey();
   double containerHeight = 10;
 
   @override
@@ -170,22 +171,23 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
           ),
           onPressed: () async {
             HapticFeedback.vibrate();
-            showDialog(
-                context: context,
-                builder: (BuildContext context) => WithdrawDialog(
-                      balance: baseProvider.myUser.account_balance,
-                      withdrawAction: (String wAmount, String recUpiAddress) {
-                        Navigator.of(context).pop();
-                        baseProvider.showPositiveAlert(
-                            'Withdrawal Request Added',
-                            'Your withdrawal amount shall be credited shortly',
-                            context);
-                        dbProvider
-                            .addFundWithdrawal(
-                                baseProvider.myUser.uid, wAmount, recUpiAddress)
-                            .then((value) {});
-                      },
-                    ));
+            onWithdrawalClicked();
+            // showDialog(
+            //     context: context,
+            //     builder: (BuildContext context) => WithdrawDialog(
+            //           balance: baseProvider.myUser.account_balance,
+            //           withdrawAction: (String wAmount, String recUpiAddress) {
+            //             Navigator.of(context).pop();
+            //             baseProvider.showPositiveAlert(
+            //                 'Withdrawal Request Added',
+            //                 'Your withdrawal amount shall be credited shortly',
+            //                 context);
+            //             dbProvider
+            //                 .addFundWithdrawal(
+            //                     baseProvider.myUser.uid, wAmount, recUpiAddress)
+            //                 .then((value) {});
+            //           },
+            //         ));
           },
           highlightColor: Colors.orange.withOpacity(0.5),
           splashColor: Colors.orange.withOpacity(0.5),
@@ -197,8 +199,9 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   }
 
   Future<bool> onDepositClicked() async {
-    baseProvider.iciciDetail = (baseProvider.iciciDetail == null)?
-    (await dbProvider.getUserIciciDetails(baseProvider.myUser.uid)):baseProvider.iciciDetail;
+    baseProvider.iciciDetail = (baseProvider.iciciDetail == null)
+        ? (await dbProvider.getUserIciciDetails(baseProvider.myUser.uid))
+        : baseProvider.iciciDetail;
     if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_VALID &&
         baseProvider.myUser.isIciciOnboarded) {
       //move directly to depositing
@@ -211,14 +214,19 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
             return DepositModalSheet(
               key: _modalKey,
               onDepositConfirmed: (Map<String, dynamic> rMap) {
-                payService.initiateTransaction(rMap['amount'], rMap['vpa']).then((resMap) {
+                payService
+                    .initiateTransaction(rMap['amount'], rMap['vpa'])
+                    .then((resMap) {
                   if (!resMap['flag']) {
-                    _modalKey.currentState.onErrorReceived(resMap['reason']??'Error: Unknown. Please restart the app');
-                  }else{
+                    _modalKey.currentState.onErrorReceived(resMap['reason'] ??
+                        'Error: Unknown. Please restart the app');
+                  } else {
                     Navigator.of(context).pop();
-                    Navigator.push(context, MaterialPageRoute(
-                      builder: (ctx) => DepositVerification(),
-                    ));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (ctx) => DepositVerification(),
+                        ));
                   }
                   return;
                 });
@@ -259,6 +267,53 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       baseProvider.isDepositRouteLogicInProgress = false;
     }
     return true;
+  }
+
+  onWithdrawalClicked() {
+    if (!baseProvider.myUser.isIciciOnboarded) {
+      baseProvider.showNegativeAlert(
+          'Not onboarded', 'You havent been onboarded to ICICI yet', context);
+    } else if (baseProvider.myUser.icici_balance == null ||
+        baseProvider.myUser.icici_balance == 0) {
+      baseProvider.showNegativeAlert(
+          'No balance', 'Your ICICI wallet has no balance presently', context);
+    } else {
+      HapticFeedback.vibrate();
+      payService.getWithdrawalDetails().then((withdrawalDetailsMap){
+        //refresh dialog state once balance received
+        if(!withdrawalDetailsMap['flag']) {
+          _withdrawalDialogKey.currentState.onDetailsReceived(
+              0, 0, false, withdrawalDetailsMap['reason']
+          );
+        }else{
+          _withdrawalDialogKey.currentState.onDetailsReceived(
+              withdrawalDetailsMap['instant_balance'], withdrawalDetailsMap['total_balance'],
+              withdrawalDetailsMap['is_imps_allowed'], withdrawalDetailsMap['reason']
+          );
+        }
+      });
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => IciciWithdrawDialog(
+                key: _withdrawalDialogKey,
+                currentBalance: baseProvider.myUser.icici_balance,
+                onAmountConfirmed: (double wAmount) {
+                  // Navigator.of(context).pop();
+                  // baseProvider.showPositiveAlert(
+                  //     'Withdrawal Request Added',
+                  //     'Your withdrawal amount shall be credited shortly',
+                  //     context);
+                  // dbProvider
+                  //     .addFundWithdrawal(
+                  //         baseProvider.myUser.uid, wAmount, recUpiAddress)
+                  //     .then((value) {});
+                  payService.preProcessWithdrawal(wAmount.toString()).then((combDetailsMap){
+                    //check if dialog required
+
+                  });
+                },
+              ));
+    }
   }
 }
 
@@ -341,7 +396,8 @@ class FundDetailsTable extends StatelessWidget {
                               decoration: TextDecoration.underline),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () async {
-                              const url = 'https://www.icicipruamc.com/mutual-fund/debt-funds/icici-prudential-liquid-fund';
+                              const url =
+                                  'https://www.icicipruamc.com/mutual-fund/debt-funds/icici-prudential-liquid-fund';
                               if (await canLaunch(url)) {
                                 await launch(url);
                               } else {

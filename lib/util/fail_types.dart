@@ -14,7 +14,11 @@ enum FailType{
   UserPfCreatedButFolioFailed,
   UserTransactionInitiateFailed,
   UserTransactionDetailSaveFailed,
-  UserTransactionVerifyTimeoutFailed
+  UserTransactionVerifyTimeoutFailed,
+  UserWithdrawalCheckIMPSFailed,
+  UserWithdrawalGetRedeemFailed,
+  UserWithdrawalExitLoadFailed,
+  UserWithdrawalSubmitFailed
 }
 
 extension ParseToString on FailType {
