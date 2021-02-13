@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/elements/withdraw_dialog.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:upi_pay/upi_pay.dart';
@@ -197,7 +199,7 @@ class _UpiPaymentState extends State<UpiPayment> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text('Deposit Portal',
+                            Text('Transaction Portal',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 20,
@@ -387,6 +389,17 @@ class _UpiPaymentState extends State<UpiPayment> {
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text('OR',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 28,
+                            color: Colors.blueGrey
+                        ),
+                      ),
+                    ),
+                    _buildBetaWithdrawButton()
                   ],
                 ),
               ):Container()
@@ -412,6 +425,59 @@ class _UpiPaymentState extends State<UpiPayment> {
           ),
           borderRadius: new BorderRadius.circular(80.0),
         )
+    );
+  }
+
+  Widget _buildBetaWithdrawButton() {
+    return Container(
+      width: double.infinity,
+      height: 50.0,
+      decoration: BoxDecoration(
+        gradient: new LinearGradient(colors: [
+          Colors.blueGrey,
+          Colors.blueGrey[600],
+        ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
+        borderRadius: new BorderRadius.circular(10.0),
+      ),
+      child: new Material(
+        child: MaterialButton(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'WITHDRAW ',
+                style: Theme.of(context)
+                    .textTheme
+                    .button
+                    .copyWith(color: Colors.white),
+              ),
+            ],
+          ),
+          onPressed: () async {
+            HapticFeedback.vibrate();
+            showDialog(
+                context: context,
+                builder: (BuildContext context) => WithdrawDialog(
+                      balance: baseProvider.myUser.account_balance,
+                      withdrawAction: (String wAmount, String recUpiAddress) {
+                        Navigator.of(context).pop();
+                        baseProvider.showPositiveAlert(
+                            'Withdrawal Request Added',
+                            'Your withdrawal amount shall be credited shortly',
+                            context);
+                        dbProvider
+                            .addFundWithdrawal(
+                                baseProvider.myUser.uid, wAmount, recUpiAddress)
+                            .then((value) {});
+                      },
+                    ));
+          },
+          highlightColor: Colors.orange.withOpacity(0.5),
+          splashColor: Colors.orange.withOpacity(0.5),
+        ),
+        color: Colors.transparent,
+        borderRadius: new BorderRadius.circular(20.0),
+      ),
     );
   }
 }

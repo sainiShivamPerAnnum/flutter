@@ -11,12 +11,16 @@ class IciciWithdrawDialog extends StatefulWidget {
   final ValueChanged<double> onAmountConfirmed;
   final ValueChanged<bool> onOptionConfirmed;
 
-  IciciWithdrawDialog({Key key, this.currentBalance, this.onAmountConfirmed, this.onOptionConfirmed}) : super(key: key);
+  IciciWithdrawDialog(
+      {Key key,
+      this.currentBalance,
+      this.onAmountConfirmed,
+      this.onOptionConfirmed})
+      : super(key: key);
 
   @override
   State createState() => IciciWithdrawDialogState();
 }
-
 
 class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
   final Log log = new Log('IciciWithdrawDialog');
@@ -31,17 +35,12 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
   double _width;
   double _instantBalance = 0;
   double _totalBalance = 0;
-  final TextStyle tTextStyle = TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.w300
-  );
+  final TextStyle tTextStyle =
+      TextStyle(fontSize: 18, fontWeight: FontWeight.w300);
 
   @override
   Widget build(BuildContext context) {
-    _width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    _width = MediaQuery.of(context).size.width;
     return Dialog(
       insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
       shape: RoundedRectangleBorder(
@@ -61,8 +60,8 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
           SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Padding(
-                padding: EdgeInsets.only(
-                    top: 30, bottom: 40, left: 35, right: 35),
+                padding:
+                    EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -76,58 +75,64 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
                       width: 150,
                       height: 150,
                     ),
-                    Text('WITHDRAW',
+                    Text(
+                      'WITHDRAW',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.w700,
-                          color: UiConstants.primaryColor
-                      ),
+                          color: UiConstants.primaryColor),
                     ),
                     (!_isLoading && _isBalanceAvailble)
-                        ? _buildBalanceTextWidget(_instantBalance, _totalBalance):Container(),
-                      (_errorMessage != null && !_isLoading)
+                        ? _buildBalanceTextWidget(
+                            _instantBalance, _totalBalance)
+                        : Container(),
+                    (_errorMessage != null && !_isLoading)
                         ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: _width * 0.7,
-                          child: Text('Error: $_errorMessage',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.redAccent, fontSize: 16)),
-                        )
-                      ],
-                    ) : Container(),
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: _width * 0.7,
+                                child: Text('Error: $_errorMessage',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.redAccent, fontSize: 16)),
+                              )
+                            ],
+                          )
+                        : Container(),
                     SizedBox(
                       height: 10,
                     ),
-                    (!_isLoading) ? Container(
-                      margin: EdgeInsets.only(top: 32),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: TextField(
-                              controller: _amountController,
-                              readOnly: false,
-                              enabled: true,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: 'Amount',
-                              ),
+                    (!_isLoading)
+                        ? Container(
+                            margin: EdgeInsets.only(top: 32),
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: TextField(
+                                    controller: _amountController,
+                                    readOnly: false,
+                                    enabled: true,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Amount',
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ) : Container(),
-                    (!_isLoading && _amountError != null) ?
-                    Container(
-                      margin: EdgeInsets.only(top: 4, left: 12),
-                      child: Text(
-                        _amountError,
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ) : Container(),
+                          )
+                        : Container(),
+                    (!_isLoading && _amountError != null)
+                        ? Container(
+                            margin: EdgeInsets.only(top: 4, left: 12),
+                            child: Text(
+                              _amountError,
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          )
+                        : Container(),
                     SizedBox(
                       height: 15,
                     ),
@@ -136,27 +141,28 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
                       height: 10,
                     ),
                   ],
-                )
-            ),
+                )),
           )
-        ]
-    );
+        ]);
   }
 
   onDetailsReceived(double instantBalance, double totalBalance,
       bool isIMPSAllowed, String errMsg) {
     _isLoading = false;
     if (!isIMPSAllowed) {
-      _errorMessage = errMsg??'Unknown error occured. Please try again in a while';
+      _errorMessage =
+          errMsg ?? 'Unknown error occured. Please try again in a while';
     }
 
-    if(instantBalance != null && totalBalance != null) {
+    if (instantBalance != null && totalBalance != null) {
       _instantBalance = instantBalance;
       _totalBalance = totalBalance;
       _isBalanceAvailble = true;
     }
     setState(() {});
   }
+
+  onShowLoadDialog() {}
 
   Widget _buildBalanceTextWidget(double instantBalance, double totalBalance) {
     final DateTime tomorrow = DateTime.now().add(new Duration(hours: 24));
@@ -172,24 +178,13 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Total balance: ',
+              Text(
+                'Total balance: ',
                 textAlign: TextAlign.center,
                 style: tTextStyle,
               ),
-              Text('₹$totalBalance',
-                textAlign: TextAlign.center,
-                style: tTextStyle,
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Available for immediate withdrawal: ',
-                textAlign: TextAlign.center,
-                style: tTextStyle,
-              ),
-              Text('₹$instantBalance',
+              Text(
+                '₹$totalBalance',
                 textAlign: TextAlign.center,
                 style: tTextStyle,
               ),
@@ -198,11 +193,28 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Available by $formatted: ',
+              Text(
+                'Available for immediate withdrawal: ',
                 textAlign: TextAlign.center,
                 style: tTextStyle,
               ),
-              Text('₹${totalBalance - instantBalance}',
+              Text(
+                '₹$instantBalance',
+                textAlign: TextAlign.center,
+                style: tTextStyle,
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Available by $formatted: ',
+                textAlign: TextAlign.center,
+                style: tTextStyle,
+              ),
+              Text(
+                '₹${totalBalance - instantBalance}',
                 textAlign: TextAlign.center,
                 style: tTextStyle,
               ),
@@ -215,31 +227,23 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
 
   Widget _buildSubmitButton(BuildContext context) {
     return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width - 40,
+      width: MediaQuery.of(context).size.width - 40,
       height: 50.0,
       decoration: BoxDecoration(
-        gradient: new LinearGradient(
-            colors: [
-              UiConstants.primaryColor,
-              UiConstants.primaryColor.withBlue(190),
-            ],
-            begin: Alignment(0.5, -1.0),
-            end: Alignment(0.5, 1.0)
-        ),
+        gradient: new LinearGradient(colors: [
+          UiConstants.primaryColor,
+          UiConstants.primaryColor.withBlue(190),
+        ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
         borderRadius: new BorderRadius.circular(10.0),
-
       ),
       child: new Material(
         child: MaterialButton(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('WITHDRAW ',
-                style: Theme
-                    .of(context)
+              Text(
+                'WITHDRAW ',
+                style: Theme.of(context)
                     .textTheme
                     .button
                     .copyWith(color: Colors.white),
@@ -261,7 +265,8 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
             if (_amountError == null) {
               _isLoading = true;
               setState(() {});
-              return widget.onAmountConfirmed(double.parse(_amountController.text));
+              return widget
+                  .onAmountConfirmed(double.parse(_amountController.text));
             }
           },
           highlightColor: Colors.orange.withOpacity(0.5),
@@ -279,8 +284,11 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
     }
     try {
       double amount = double.parse(value);
-      if (amount > widget.currentBalance || (_totalBalance !=0 && amount > _totalBalance)) return 'Insufficient balance';
-      if (amount < 1) return 'Please enter value more than ₹1';
+      if (amount > widget.currentBalance ||
+          (_totalBalance != 0 && amount > _totalBalance))
+        return 'Insufficient balance';
+      if (amount < 1)
+        return 'Please enter value more than ₹1';
       //else if(amount > 1500) return 'We are currently only accepting deposits below ₹1500';
       else
         return null;

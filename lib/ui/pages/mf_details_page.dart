@@ -1,16 +1,18 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
+import 'package:felloapp/ui/dialogs/integrated_icici_diabled_dialog.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/deposit_modal_sheet.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
-import 'package:felloapp/ui/elements/icici_withdraw_dialog.dart';
+import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/dialogs/icici_withdraw_dialog.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/pages/deposit_verification.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:fl_animated_linechart/chart/area_line_chart.dart';
@@ -36,6 +38,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   GlobalKey<DepositModalSheetState> _modalKey = GlobalKey();
   GlobalKey<IciciWithdrawDialogState> _withdrawalDialogKey = GlobalKey();
   double containerHeight = 10;
+  Map<String, dynamic> _withdrawalRequestDetails;
 
   @override
   Widget build(BuildContext context) {
@@ -68,15 +71,6 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
         ],
       ),
     );
-  }
-
-  String _getActionButtonText() {
-    if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID)
-      return 'COMPLETE KYC';
-    if (!baseProvider.myUser.isIciciOnboarded)
-      return 'REGISTER';
-    else
-      return 'DEPOSIT';
   }
 
   Widget _buildBetaSaveButton() {
@@ -172,22 +166,6 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
           onPressed: () async {
             HapticFeedback.vibrate();
             onWithdrawalClicked();
-            // showDialog(
-            //     context: context,
-            //     builder: (BuildContext context) => WithdrawDialog(
-            //           balance: baseProvider.myUser.account_balance,
-            //           withdrawAction: (String wAmount, String recUpiAddress) {
-            //             Navigator.of(context).pop();
-            //             baseProvider.showPositiveAlert(
-            //                 'Withdrawal Request Added',
-            //                 'Your withdrawal amount shall be credited shortly',
-            //                 context);
-            //             dbProvider
-            //                 .addFundWithdrawal(
-            //                     baseProvider.myUser.uid, wAmount, recUpiAddress)
-            //                 .then((value) {});
-            //           },
-            //         ));
           },
           highlightColor: Colors.orange.withOpacity(0.5),
           splashColor: Colors.orange.withOpacity(0.5),
@@ -198,10 +176,32 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     );
   }
 
+  String _getActionButtonText() {
+    if (baseProvider.myUser.isIciciEnabled == null ||
+        !baseProvider.myUser.isIciciEnabled) {
+      return 'UNAVAILABLE';
+    }
+    if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID)
+      return 'COMPLETE KYC';
+    if (!baseProvider.myUser.isIciciOnboarded)
+      return 'REGISTER';
+    else
+      return 'DEPOSIT';
+  }
+
   Future<bool> onDepositClicked() async {
     baseProvider.iciciDetail = (baseProvider.iciciDetail == null)
         ? (await dbProvider.getUserIciciDetails(baseProvider.myUser.uid))
         : baseProvider.iciciDetail;
+    if (baseProvider.myUser.isIciciEnabled == null ||
+        !baseProvider.myUser.isIciciEnabled) {
+      //icici deposits not enabled. show disabled dialog
+      baseProvider.isDepositRouteLogicInProgress = false;
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => IntegratedIciciDisabled());
+      return true;
+    }
     if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_VALID &&
         baseProvider.myUser.isIciciOnboarded) {
       //move directly to depositing
@@ -279,17 +279,17 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
           'No balance', 'Your ICICI wallet has no balance presently', context);
     } else {
       HapticFeedback.vibrate();
-      payService.getWithdrawalDetails().then((withdrawalDetailsMap){
+      payService.getWithdrawalDetails().then((withdrawalDetailsMap) {
         //refresh dialog state once balance received
-        if(!withdrawalDetailsMap['flag']) {
+        if (!withdrawalDetailsMap['flag']) {
+          _withdrawalDialogKey.currentState
+              .onDetailsReceived(0, 0, false, withdrawalDetailsMap['reason']);
+        } else {
           _withdrawalDialogKey.currentState.onDetailsReceived(
-              0, 0, false, withdrawalDetailsMap['reason']
-          );
-        }else{
-          _withdrawalDialogKey.currentState.onDetailsReceived(
-              withdrawalDetailsMap['instant_balance'], withdrawalDetailsMap['total_balance'],
-              withdrawalDetailsMap['is_imps_allowed'], withdrawalDetailsMap['reason']
-          );
+              withdrawalDetailsMap['instant_balance'],
+              withdrawalDetailsMap['total_balance'],
+              withdrawalDetailsMap['is_imps_allowed'],
+              withdrawalDetailsMap['reason']);
         }
       });
       showDialog(
@@ -298,22 +298,50 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                 key: _withdrawalDialogKey,
                 currentBalance: baseProvider.myUser.icici_balance,
                 onAmountConfirmed: (double wAmount) {
-                  // Navigator.of(context).pop();
-                  // baseProvider.showPositiveAlert(
-                  //     'Withdrawal Request Added',
-                  //     'Your withdrawal amount shall be credited shortly',
-                  //     context);
-                  // dbProvider
-                  //     .addFundWithdrawal(
-                  //         baseProvider.myUser.uid, wAmount, recUpiAddress)
-                  //     .then((value) {});
-                  payService.preProcessWithdrawal(wAmount.toString()).then((combDetailsMap){
+                  payService
+                      .preProcessWithdrawal(wAmount.toString())
+                      .then((combDetailsMap) {
+                    _withdrawalRequestDetails = combDetailsMap;
                     //check if dialog required
-
+                    if (combDetailsMap[GetExitLoad.resPopUpFlag] ==
+                        GetExitLoad.SHOW_POPUP) {
+                      _withdrawalDialogKey.currentState.onShowLoadDialog();
+                    } else {
+                      onInitiateWithdrawal(_withdrawalRequestDetails);
+                    }
                   });
+                },
+                onOptionConfirmed: (bool flag) {
+                  if (flag) {
+                    _withdrawalRequestDetails[
+                        SubmitRedemption.fldExitLoadTick] = 'Y';
+                    _withdrawalRequestDetails[
+                            SubmitRedemption.fldApproxLoadAmount] =
+                        _withdrawalRequestDetails[GetExitLoad.resApproxLoadAmt];
+                    onInitiateWithdrawal(_withdrawalRequestDetails);
+                  } else {
+                    Navigator.of(context).pop();
+                    baseProvider.showNegativeAlert(
+                        'Withdrawal Cancelled',
+                        'Please contact us if you need any further details',
+                        context);
+                  }
                 },
               ));
     }
+  }
+
+  Future<bool> onInitiateWithdrawal(Map<String, dynamic> fieldMap) {
+    payService.processWithdrawal(fieldMap).then((wMap) {
+      Navigator.of(context).pop();
+      if (!wMap['flag']) {
+        baseProvider.showNegativeAlert(
+            'Withdrawal Failed', 'Error: ${wMap['reason']}', context);
+      } else {
+        baseProvider.showPositiveAlert('Withdrawal Successful',
+            'Processed in less than 30 seconds!', context);
+      }
+    });
   }
 }
 
@@ -574,9 +602,10 @@ class FundDetailsCell extends StatelessWidget {
           Expanded(
             child: Center(
               child: Text(data,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
-                    fontSize: 28,
+                    fontSize: 22,
                     color: Colors.black54,
                   )),
             ),

@@ -151,6 +151,9 @@ class Assets {
     "Assets under management is the total market value of assets that an investment company manages on behalf of the investors",
   ];
 
+  static final String integratedICICIUnavailable = "We are slowly moving towards a fully automated system of deposits and withdrawals. "
+      + "Currently, we have started integrated transactions with only a small set of users.\n\n Please use manual deposits in the meanwhile!";
+
   static final String infoWhyPan = 'Your PAN Card is required by ICICI to set up your investment folio';
   static final String infoWherePan = 'Your PAN Number is a 10 character ID that can be found on your PAN Card';
   static final String infoWhatUPI = 'UPI is a banking system for money transfers on payment apps. Your UPI ID is your unique address that identifies you on UPI';

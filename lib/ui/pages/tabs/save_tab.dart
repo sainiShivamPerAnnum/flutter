@@ -19,7 +19,8 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SaveScreen extends StatefulWidget {
-  static final int index = (BaseUtil.playScreenFirst)?1:0;
+  static final int index = (BaseUtil.playScreenFirst) ? 1 : 0;
+
   @override
   _SaveScreenState createState() => _SaveScreenState();
 }
@@ -31,6 +32,8 @@ class _SaveScreenState extends State<SaveScreen> {
   int acctBalance = 0;
   bool displayInfoText = false;
   bool displayTransactionText = false;
+  double _width;
+  double _height;
 
   @override
   void initState() {
@@ -73,6 +76,14 @@ class _SaveScreenState extends State<SaveScreen> {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
     fcmProvider = Provider.of<FcmHandler>(context);
+    _width = MediaQuery
+        .of(context)
+        .size
+        .width;
+    _height = MediaQuery
+        .of(context)
+        .size
+        .height;
     _init();
 
     return Stack(
@@ -91,9 +102,15 @@ class _SaveScreenState extends State<SaveScreen> {
             ),
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.elliptical(
-                  MediaQuery.of(context).size.width * 0.50, 18),
+                  MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.50, 18),
               bottomRight: Radius.elliptical(
-                  MediaQuery.of(context).size.width * 0.50, 18),
+                  MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.50, 18),
             ),
           ),
         ),
@@ -146,79 +163,46 @@ class _SaveScreenState extends State<SaveScreen> {
 
         SafeArea(
             child: Align(
-          alignment: Alignment.bottomCenter,
-          child: Padding(
-            padding: EdgeInsets.only(bottom: 35),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 35),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    SizedBox(
-                      child: Opacity(
-                          opacity: 0.5,
-                          child: Image(
-                            image: AssetImage(Assets.sebiGraphic),
-                            fit: BoxFit.contain,
-                          )),
-                      height: 80,
-                      width: 80,
-                    ),
-                    SizedBox(
-                      child: Opacity(
-                          opacity: 0.5,
-                          child: Image(
-                            image: AssetImage(Assets.amfiGraphic),
-                            fit: BoxFit.contain,
-                          )),
-                      height: 80,
-                      width: 80,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                          child: Opacity(
+                              opacity: 0.5,
+                              child: Image(
+                                image: AssetImage(Assets.sebiGraphic),
+                                fit: BoxFit.contain,
+                              )),
+                          height: 80,
+                          width: 80,
+                        ),
+                        SizedBox(
+                          child: Opacity(
+                              opacity: 0.5,
+                              child: Image(
+                                image: AssetImage(Assets.amfiGraphic),
+                                fit: BoxFit.contain,
+                              )),
+                          height: 80,
+                          width: 80,
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                // SizedBox(height: 10),
-                // Container(
-                //   alignment: Alignment.center,
-                //   width: double.infinity,
-                //   height: 50,
-                //   color: UiConstants.primaryColor,
-                //   child: GestureDetector(
-                //     onTap: () => Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //
-                //         builder: (ctx) => KycOnboardInterface(),
-                //       ),
-                //     ),
-                //     child: Text(
-                //       "KYC Onboard Interface",
-                //       style: TextStyle(
-                //         color: Colors.white,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-              ],
-            ),
-          ),
-        )),
+              ),
+            )),
         SafeArea(
             child: Padding(
-                padding: EdgeInsets.only(top: 130), child: _buildLayout())),
-        // SafeArea(
-        //   child: Align(
-        //     alignment: Alignment.bottomCenter,
-        //     child: Padding(
-        //       padding: EdgeInsets.only(bottom: 55),
-        //       child: _buildDepositInfoDialogs(),
-        //     ),
-        //   ),
-        // )
-        // Align(
-        //   alignment: Alignment.bottomCenter,
-        //   child: _buildButton()
-        // )
+                padding: EdgeInsets.only(top: 150), child: _buildLayout()
+            )
+        ),
       ],
     );
   }
@@ -227,31 +211,106 @@ class _SaveScreenState extends State<SaveScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        _buildFundList2(),
+        _buildIciciManualButton(
+            'Manual', () => Navigator.of(context).pushNamed('/deposit')),
         SizedBox(
           height: 10,
         ),
-        // _buildDividerText(),
-        // SizedBox(
-        //   height: 20,
-        // ),
-        // Padding(
-        //   padding: EdgeInsets.only(left: 20, right: 20),
-        //   child: _buildBetaSaveButton(),
-        // ),
-        // //_buildDepositButtonRow(),
-        // SizedBox(
-        //   height: 15,
-        // ),
-        // Padding(
-        //   padding: EdgeInsets.only(left: 20, right: 20),
-        //   child: _buildBetaWithdrawButton(),
-        // ),
-        // SizedBox(
-        //   height: 60,
-        // ),
+        _buildIciciManualButton('Integrated', () =>
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (ctx) => MFDetailsPage(),
+              ),
+            )),
       ],
     );
+  }
+
+  _buildIciciManualButton(String type, Function action) {
+    return Padding(
+        padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
+        child: GestureDetector(
+          onTap: action,
+          child: Container(
+              height: _height * 0.1,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                    offset: Offset(10, 1),
+                    blurRadius: 10,
+                    color: Colors.black.withOpacity(0.2),
+                    // spreadRadius: 0,
+                  ),
+                ],
+              ),
+              child: Stack(children: [
+                Column(
+                  children: [
+                    Container(
+                      width: _width * 0.9,
+                      padding: EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: _width * 0.3,
+                            child: Opacity(
+                              opacity: 0.8,
+                              child: Image(
+                                image: AssetImage(Assets.iciciGraphic),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                              child: Padding(
+                                  padding: EdgeInsets.fromLTRB(10, 5, 5, 5),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .start,
+                                    children: [
+                                      Text('ICICI Mutual Fund',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w400,
+                                            color: UiConstants.primaryColor
+                                        ),
+                                      ),
+                                      Text(type,
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w700,
+                                            color: UiConstants.accentColor
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                              )
+                          ),
+                          Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Icon(
+                                Icons.arrow_forward_ios,
+                                size: 20,
+                                color: Colors.black54,
+                              )
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ])),
+        ));
   }
 
   // Widget _buildDepositInfoDialogs() {
@@ -398,37 +457,37 @@ class _SaveScreenState extends State<SaveScreen> {
   //   );
   // }
 
-  Widget _buildDividerText() {
-    return Padding(
-      padding: EdgeInsets.only(left: 10, right: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Divider(
-              indent: 20,
-              endIndent: 5,
-              color: Colors.blueGrey[200],
-            ),
-          ),
-          Expanded(
-            child: Text(
-              'Other methods',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.blueGrey[300]),
-            ),
-          ),
-          Expanded(
-            child: Divider(
-              indent: 5,
-              endIndent: 20,
-              color: Colors.blueGrey[200],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildDividerText() {
+  //   return Padding(
+  //     padding: EdgeInsets.only(left: 10, right: 10),
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: [
+  //         Expanded(
+  //           child: Divider(
+  //             indent: 20,
+  //             endIndent: 5,
+  //             color: Colors.blueGrey[200],
+  //           ),
+  //         ),
+  //         Expanded(
+  //           child: Text(
+  //             'Other methods',
+  //             textAlign: TextAlign.center,
+  //             style: TextStyle(color: Colors.blueGrey[300]),
+  //           ),
+  //         ),
+  //         Expanded(
+  //           child: Divider(
+  //             indent: 5,
+  //             endIndent: 20,
+  //             color: Colors.blueGrey[200],
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   // Widget _buildBetaSaveButton() {
   //   return Container(
@@ -551,133 +610,97 @@ class _SaveScreenState extends State<SaveScreen> {
   //   );
   // }
 
-  _buildFundList2() {
-    return Padding(
-        padding: EdgeInsets.all(40.0),
-        child: GestureDetector(
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (ctx) => MFDetailsPage(),
-            ),
-          ),
-          child: Container(
-              height: 210,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    offset: Offset(0, 10),
-                    blurRadius: 10,
-                    color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 0,
-                  ),
-                ],
-              ),
-              child: Stack(children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      height: 100,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: UiConstants.primaryColor.withGreen(160),
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(20),
-                          bottomRight: Radius.circular(20),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                      ),
-                      child: Opacity(
-                        opacity: 0.6,
-                        child: Image(
-                          image: AssetImage(Assets.iciciGraphic),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      width: 500,
-                    ),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: new LinearGradient(
-                            colors: [
-                              UiConstants.primaryColor.withGreen(160),
-                              UiConstants.primaryColor,
-                            ],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "SAVE NOW",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                // Center(
-                //   child: Padding(
-                //       padding: EdgeInsets.only(bottom: 40, left: 10, right: 10),
-                //       child: ScrollingText(
-                //         text: 'Direct deposits are coming soon!  ',
-                //         textStyle: TextStyle(
-                //             fontSize: 36,
-                //             fontStyle: FontStyle.italic,
-                //             fontWeight: FontWeight.w300,
-                //             color: Colors.blueGrey[900]),
-                //       )),
-                // ),
-                // Align(
-                //   alignment: Alignment.topCenter,
-                //   child: Padding(
-                //     padding: EdgeInsets.only(top: 10),
-                //     child: InkWell(
-                //       child: Text('More about the fund',
-                //         textAlign: TextAlign.center,
-                //         style: TextStyle(
-                //           fontSize: 15,
-                //           color: Colors.blueGrey[200],
-                //           decoration: TextDecoration.underline,
-                //         ),
-                //       ),
-                //       onTap: () async{
-                //         const url = "https://www.icicipruamc.com/mutual-fund/debt-funds/icici-prudential-liquid-fund";
-                //         if (await canLaunch(url)) {
-                //           await launch(url);
-                //         }
-                //         else {
-                //           baseProvider.showNegativeAlert('Unable to launch', 'Please try again later', context);
-                //         }
-                //       },
-                //     ),
-                //   ),
-                // )
-              ])),
-        ));
-  }
+  // _buildFundList2() {
+  //   return Padding(
+  //       padding: EdgeInsets.all(20.0),
+  //       child: GestureDetector(
+  //         onTap: () => Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (ctx) => MFDetailsPage(),
+  //           ),
+  //         ),
+  //         child: Container(
+  //             height: 210,
+  //             width: double.infinity,
+  //             decoration: BoxDecoration(
+  //               borderRadius: BorderRadius.all(Radius.circular(20)),
+  //               boxShadow: <BoxShadow>[
+  //                 BoxShadow(
+  //                   offset: Offset(0, 10),
+  //                   blurRadius: 10,
+  //                   color: Colors.black.withOpacity(0.2),
+  //                   spreadRadius: 0,
+  //                 ),
+  //               ],
+  //             ),
+  //             child: Stack(children: [
+  //               Column(
+  //                 mainAxisAlignment: MainAxisAlignment.end,
+  //                 children: [
+  //                   Container(
+  //                     height: 100,
+  //                     width: double.infinity,
+  //                     decoration: BoxDecoration(
+  //                       color: UiConstants.primaryColor.withGreen(160),
+  //                       borderRadius: BorderRadius.only(
+  //                         bottomLeft: Radius.circular(20),
+  //                         bottomRight: Radius.circular(20),
+  //                       ),
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //               Column(
+  //                 children: [
+  //                   Container(
+  //                     padding: EdgeInsets.all(8.0),
+  //                     decoration: BoxDecoration(
+  //                       color: Colors.white,
+  //                       borderRadius: BorderRadius.all(Radius.circular(20)),
+  //                     ),
+  //                     child: Opacity(
+  //                       opacity: 0.6,
+  //                       child: Image(
+  //                         image: AssetImage(Assets.iciciGraphic),
+  //                         fit: BoxFit.contain,
+  //                       ),
+  //                     ),
+  //                     width: 500,
+  //                   ),
+  //                   Expanded(
+  //                     child: Container(
+  //                       decoration: BoxDecoration(
+  //                         gradient: new LinearGradient(
+  //                           colors: [
+  //                             UiConstants.primaryColor.withGreen(160),
+  //                             UiConstants.primaryColor,
+  //                           ],
+  //                           begin: Alignment.topCenter,
+  //                           end: Alignment.bottomCenter,
+  //                         ),
+  //                         borderRadius: BorderRadius.only(
+  //                           bottomLeft: Radius.circular(20),
+  //                           bottomRight: Radius.circular(20),
+  //                         ),
+  //                       ),
+  //                       child: Center(
+  //                         child: Text(
+  //                           "SAVE NOW",
+  //                           style: TextStyle(
+  //                             color: Colors.white,
+  //                             fontWeight: FontWeight.w700,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //
+  //             ])),
+  //       ));
+  // }
 
   _buildFundList() {
     return Padding(
@@ -710,7 +733,7 @@ class _SaveScreenState extends State<SaveScreen> {
                     padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                     child: Text(
                       'ICICI Prudential Liquid Mutual Fund is a'
-                      ' popular fund that has consistently given an annual return of 6-7%.',
+                          ' popular fund that has consistently given an annual return of 6-7%.',
                       textAlign: TextAlign.center,
                       style: TextStyle(color: UiConstants.accentColor),
                     ),
@@ -742,7 +765,7 @@ class _SaveScreenState extends State<SaveScreen> {
                         TextSpan(
                             text: 'Read more about it here.',
                             style:
-                                TextStyle(decoration: TextDecoration.underline),
+                            TextStyle(decoration: TextDecoration.underline),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () async {
                                 const url =
