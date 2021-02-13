@@ -1,11 +1,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
-import 'package:felloapp/ui/dialogs/integrated_icici_diabled_dialog.dart';
+import 'package:felloapp/ui/dialogs/integrated_icici_disabled_dialog.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/deposit_modal_sheet.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
-import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/dialogs/icici_withdraw_dialog.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/pages/deposit_verification.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
@@ -24,6 +23,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/dialogs/icici_withdraw_dialog.dart';
 
 class MFDetailsPage extends StatefulWidget {
   @override
@@ -293,6 +294,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
         }
       });
       showDialog(
+          barrierColor: Colors.black87,
           context: context,
           builder: (BuildContext context) => IciciWithdrawDialog(
                 key: _withdrawalDialogKey,
@@ -301,13 +303,19 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                   payService
                       .preProcessWithdrawal(wAmount.toString())
                       .then((combDetailsMap) {
-                    _withdrawalRequestDetails = combDetailsMap;
-                    //check if dialog required
-                    if (combDetailsMap[GetExitLoad.resPopUpFlag] ==
-                        GetExitLoad.SHOW_POPUP) {
-                      _withdrawalDialogKey.currentState.onShowLoadDialog();
+                    if (combDetailsMap['flag']) {
+                      _withdrawalRequestDetails = combDetailsMap;
+                      //check if dialog required
+                      if (combDetailsMap[GetExitLoad.resPopUpFlag] ==
+                          GetExitLoad.SHOW_POPUP) {
+                        _withdrawalDialogKey.currentState.onShowLoadDialog();
+                      } else {
+                        onInitiateWithdrawal(_withdrawalRequestDetails);
+                      }
                     } else {
-                      onInitiateWithdrawal(_withdrawalRequestDetails);
+                      Navigator.of(context).pop();
+                      baseProvider.showNegativeAlert('Withdrawal Failed',
+                          'Error: ${combDetailsMap['reason']}', context);
                     }
                   });
                 },

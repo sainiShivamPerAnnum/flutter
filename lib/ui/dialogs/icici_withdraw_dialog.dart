@@ -4,6 +4,7 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
 class IciciWithdrawDialog extends StatefulWidget {
@@ -37,6 +38,8 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
   double _totalBalance = 0;
   final TextStyle tTextStyle =
       TextStyle(fontSize: 18, fontWeight: FontWeight.w300);
+  final TextStyle gTextStyle =
+  TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +86,12 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
                           fontWeight: FontWeight.w700,
                           color: UiConstants.primaryColor),
                     ),
+                    (_isLoading)?Padding(
+                        padding: EdgeInsets.all(30),
+                        child: SpinKitWave(
+                          color: UiConstants.primaryColor,
+                        )
+                    ):Container(),
                     (!_isLoading && _isBalanceAvailble)
                         ? _buildBalanceTextWidget(
                             _instantBalance, _totalBalance)
@@ -106,12 +115,13 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
                     ),
                     (!_isLoading)
                         ? Container(
-                            margin: EdgeInsets.only(top: 32),
+                            margin: EdgeInsets.only(top: 12),
                             child: Row(
                               children: <Widget>[
                                 Expanded(
                                   child: TextField(
                                     controller: _amountController,
+                                    keyboardType: TextInputType.number,
                                     readOnly: false,
                                     enabled: true,
                                     decoration: InputDecoration(
@@ -175,51 +185,60 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Total balance: ',
-                textAlign: TextAlign.center,
-                style: tTextStyle,
-              ),
-              Text(
-                '₹$totalBalance',
-                textAlign: TextAlign.center,
-                style: tTextStyle,
-              ),
-            ],
+          Container(
+            width: _width*0.7,
+            child: Wrap(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Total balance: ',
+                  textAlign: TextAlign.center,
+                  style: tTextStyle,
+                ),
+                Text(
+                  '₹${totalBalance.toStringAsFixed(2)}',
+                  textAlign: TextAlign.center,
+                  style: gTextStyle,
+                ),
+              ],
+            ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Available for immediate withdrawal: ',
-                textAlign: TextAlign.center,
-                style: tTextStyle,
-              ),
-              Text(
-                '₹$instantBalance',
-                textAlign: TextAlign.center,
-                style: tTextStyle,
-              ),
-            ],
+          Container(
+            width: _width*0.7,
+            child: Wrap(
+             // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Available for immediate withdrawal: ',
+                  textAlign: TextAlign.center,
+                  style: tTextStyle,
+                ),
+                Text(
+                  '₹${instantBalance.toStringAsFixed(2)}',
+                  textAlign: TextAlign.center,
+                  style: gTextStyle,
+                ),
+              ],
+            ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Available by $formatted: ',
-                textAlign: TextAlign.center,
-                style: tTextStyle,
-              ),
-              Text(
-                '₹${totalBalance - instantBalance}',
-                textAlign: TextAlign.center,
-                style: tTextStyle,
-              ),
-            ],
-          )
+          Container(
+            width: _width*0.7,
+            child: Wrap(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Available by $formatted: ',
+                  textAlign: TextAlign.center,
+                  style: tTextStyle,
+                ),
+                Text(
+                  '₹${(totalBalance - instantBalance).toStringAsFixed(2)}',
+                  textAlign: TextAlign.center,
+                  style: gTextStyle,
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

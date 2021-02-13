@@ -454,7 +454,7 @@ class GetBankRedemptionDetail{
     PM","BANK_RRN":"104220778133","IMPS_CODE":"0","IMPS_STATUS":"Transaction Successful"}
  * */
 class SubmitRedemption{
-  static final String path = 'api/getRedeemBankDetails';
+  static final String path = 'api/submitRedemption';
   static final String fldFolioNo = 'foliono';
   static final String fldAmount = 'amount';
   static final String fldBankCode = 'bankcode';

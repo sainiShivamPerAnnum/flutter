@@ -532,7 +532,7 @@ class ICICIModel extends ChangeNotifier {
       GetExitLoad.fldAmount: amount
     };
     var _request = http.Request(
-        'GET', Uri.parse(constructRequest(CheckIMPSStatus.path, _params)));
+        'GET', Uri.parse(constructRequest(GetExitLoad.path, _params)));
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
@@ -561,7 +561,7 @@ class ICICIModel extends ChangeNotifier {
       GetBankRedemptionDetail.fldFolioNo: folioNumber,
     };
     var _request = http.Request(
-        'GET', Uri.parse(constructRequest(CheckIMPSStatus.path, _params)));
+        'GET', Uri.parse(constructRequest(GetBankRedemptionDetail.path, _params)));
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
@@ -605,7 +605,7 @@ class ICICIModel extends ChangeNotifier {
       _params[SubmitRedemption.fldApproxLoadAmount] = apprxLoadAmt;
     }
     var _request = http.Request(
-        'GET', Uri.parse(constructRequest(CheckIMPSStatus.path, _params)));
+        'GET', Uri.parse(constructRequest(SubmitRedemption.path, _params)));
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
@@ -870,7 +870,7 @@ class ICICIModel extends ChangeNotifier {
       List<Map<String, dynamic>> refList = new List();
       rList.forEach((element) {
         refList.add({
-          GetBankRedemptionDetail.resBankName: element[GetBankRedemptionDetail.fldFolioNo],
+          GetBankRedemptionDetail.resBankName: element[GetBankRedemptionDetail.resBankName],
           GetBankRedemptionDetail.resCombinedAccountDetails: element[GetBankRedemptionDetail.resCombinedAccountDetails],
           GetBankRedemptionDetail.resCombinedBankDetails: element[GetBankRedemptionDetail.resCombinedBankDetails],
         });
