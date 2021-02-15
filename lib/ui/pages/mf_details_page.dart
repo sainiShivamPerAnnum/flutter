@@ -239,7 +239,8 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID) {
       baseProvider.isDepositRouteLogicInProgress = false;
       Navigator.of(context).pop(); //go back to save tab
-      Navigator.of(context).pushNamed('/verifykyc');
+      // Navigator.of(context).pushNamed('/verifykyc');
+      Navigator.of(context).pushNamed('/initkyc');
       return true;
     } else {
       Navigator.of(context).pop(); //go back to save tab

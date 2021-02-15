@@ -261,7 +261,7 @@ class PaymentService extends ChangeNotifier {
         String pTranId = pRes[SubmitUpiExistingInvestor.resTrnId];
         String pMultipleId = pRes[SubmitUpiExistingInvestor.resMultipleId];
         String pUpiDateTime = pRes[SubmitUpiExistingInvestor.resUpiTime];
-
+        localVpa = vpa;
         baseProvider.currentICICITxn = UserTransaction.extMFDeposit(pTranId,
             pMultipleId, amtDouble, pUpiDateTime, baseProvider.myUser.uid);
         String userTxnKey = await dbProvider.addUserTransaction(
@@ -462,14 +462,15 @@ class PaymentService extends ChangeNotifier {
     //update first investment flag in icicidetail
     //update user balance
     //update user ticket count
+    if (baseProvider.myUser.pendingTxnId == null) {
+      //rare cases where transaction has already completed but schedular is still running
+      return true;
+    }
     baseProvider.currentICICITxn = (baseProvider.currentICICITxn == null)
         ? await dbProvider.getUserTransaction(
             baseProvider.myUser.uid, baseProvider.myUser.pendingTxnId)
         : baseProvider.currentICICITxn;
-    if (baseProvider.currentICICITxn == null) {
-      //rare cases where transaction has already completed but schedular is still running
-      return true;
-    }
+
     //baseProvider.iciciDetail = baseProvider.iciciDetail??(await dbProvider.getUserIciciDetails(baseProvider.myUser.uid));
     baseProvider.currentICICITxn.tranStatus =
         UserTransaction.TRAN_STATUS_COMPLETE;
@@ -518,14 +519,14 @@ class PaymentService extends ChangeNotifier {
   Future<bool> _onTransactionRejected() async {
     //update base user object
     //update transaction
+    if (baseProvider.myUser.pendingTxnId == null) {
+      //rare cases where transaction has already completed but schedular is still running
+      return true;
+    }
     baseProvider.currentICICITxn = (baseProvider.currentICICITxn == null)
         ? await dbProvider.getUserTransaction(
             baseProvider.myUser.uid, baseProvider.myUser.pendingTxnId)
         : baseProvider.currentICICITxn;
-    if (baseProvider.currentICICITxn == null) {
-      //rare cases where transaction has already completed but schedular is still running
-      return true;
-    }
 
     //update transaction fields
     baseProvider.currentICICITxn.tranStatus =
