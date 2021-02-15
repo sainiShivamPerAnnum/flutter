@@ -17,15 +17,14 @@ class TransactionHelpDialog extends StatelessWidget {
     new HelpDetail(HelpType.TxnTimeTooLongHelp,
         'The transaction is taking too long to be verified'),
     new HelpDetail(HelpType.TxnCompletedButNotAcceptedHelp,
-        'I completed the transaction but it was not processed by ${Constants
-            .APP_NAME}'),
+        'I completed the transaction but it was not processed by ${Constants.APP_NAME}'),
     new HelpDetail(HelpType.TxnRequestNotReceivedHelp,
         'I did not receive any notification or request on my UPI App'),
     new HelpDetail(HelpType.TxnFailedOnUpiAppHelp,
         'The transaction is failing on my UPI App'),
     new HelpDetail(HelpType.TxnHowToHelp,
-        'I am still not about how to complete the transaction'),
-    new HelpDetail(HelpType.TxnOtherQueryHelp, 'Other query about transaction'),
+        'I am still not sure about how to complete my transaction'),
+    new HelpDetail(HelpType.TxnOtherQueryHelp, 'Other query about my transaction'),
   ];
 
   @override
@@ -41,26 +40,45 @@ class TransactionHelpDialog extends StatelessWidget {
       ),
       elevation: 0.0,
       backgroundColor: Colors.white,
-      child: dialogContent(context),
+      child: Padding(
+        padding: EdgeInsets.all(30),
+        child: dialogContent(context),
+      ),
     );
   }
 
   dialogContent(BuildContext context) {
-    return Container(
-      width:_width*0.8,
-      height: _height*0.6,
-      child: Column(
+    return Column(
         //overflow: Overflow.visible,
         //alignment: Alignment.topCenter,
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Please select the issue you are facing and we will personally look into it and help you in resolving it',
-              style: TextStyle(color: Colors.white70, fontSize: 20),
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'Please select the issue you are facing',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.black54,
+                fontSize: 20,
+              fontWeight: FontWeight.bold
             ),
-            ListView.builder(
-              padding: const EdgeInsets.all(16.0),
+          ),
+          Text(
+            'We will look into your query and help you easily resolve it',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.black54,
+                fontSize: 16
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            width: _width * 0.8,
+            height: _height * 0.5,
+            child: ListView.builder(
+              padding: const EdgeInsets.all(6.0),
               itemBuilder: /*1*/ (context, i) {
                 if (i.isOdd) return Divider();
                 /*2*/
@@ -68,9 +86,9 @@ class TransactionHelpDialog extends StatelessWidget {
                 return _buildRow(context, _helpOptions[index]);
               },
               itemCount: _helpOptions.length * 2,
-            )
-          ]),
-    );
+            ),
+          )
+        ]);
   }
 
   Widget _buildRow(BuildContext _context, HelpDetail option) {
@@ -81,7 +99,7 @@ class TransactionHelpDialog extends StatelessWidget {
           HapticFeedback.vibrate();
           dbProvider
               .addHelpRequest(baseProvider.myUser.uid, baseProvider.myUser.name,
-              baseProvider.myUser.mobile, option.key)
+                  baseProvider.myUser.mobile, option.key)
               .then((flag) {
             if (flag) {
               Navigator.of(_context).pop();

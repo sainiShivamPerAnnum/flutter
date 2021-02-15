@@ -277,6 +277,7 @@ class _ReferScreenState extends State<ReferScreen> {
                       size: 18.0,
                     ),
                     onPressed: () async{
+                      ////////////////////////////////
                       baseProvider.isReferralLinkBuildInProgressWhatsapp = true;
                       _createDynamicLink(baseProvider.myUser.uid, true, 'Whatsapp').then((url) async{
                         baseProvider.isReferralLinkBuildInProgressWhatsapp = false;
@@ -287,6 +288,7 @@ class _ReferScreenState extends State<ReferScreen> {
                         });
                       });
                       setState(() {});
+                      ////////////////////////
                       // Navigator.of(context).pop();
                       // Navigator.push(context, MaterialPageRoute(
                       //   builder: (ctx) => DepositVerification(),

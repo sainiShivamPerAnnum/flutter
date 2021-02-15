@@ -314,6 +314,7 @@ class DBModel extends ChangeNotifier {
       Map<String, dynamic> data = {};
       data['user_id'] = uid;
       data['mobile'] = mobile;
+      data['name'] = name;
       data['issue_type'] = helpType.value();
       data['timestamp'] = Timestamp.now();
 
