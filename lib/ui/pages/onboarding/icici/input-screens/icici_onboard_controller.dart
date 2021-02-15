@@ -1208,7 +1208,8 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
                                                 .addCallbackRequest(
                                                     baseProvider
                                                         .firebaseUser.uid,
-                                                    baseProvider.myUser.mobile)
+                                                baseProvider.myUser.name,
+                                                baseProvider.myUser.mobile)
                                                 .then((flag) {
                                               if (flag) {
                                                 Navigator.of(context).pop();

@@ -76,6 +76,7 @@ class _SaveScreenState extends State<SaveScreen> {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
     fcmProvider = Provider.of<FcmHandler>(context);
+    acctBalance = baseProvider.myUser.account_balance;
     _width = MediaQuery
         .of(context)
         .size

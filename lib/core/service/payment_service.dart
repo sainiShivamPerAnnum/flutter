@@ -29,6 +29,7 @@ class PaymentService extends ChangeNotifier {
   static const int TRANSACTION_REJECTED = 2;
   static const int TRANSACTION_CHECK_TIMEOUT = 3;
   String errResponses = '';
+  String localVpa;
 
   Future<bool> _init() async {
     if (baseProvider == null ||
@@ -143,8 +144,9 @@ class PaymentService extends ChangeNotifier {
         String pTranId = pRes[SubmitUpiNewInvestor.resTrnId];
         String pMultipleId = pRes[SubmitUpiNewInvestor.resMultipleId];
         String pUpiDateTime = pRes[SubmitUpiNewInvestor.resUpiTime];
-        baseProvider.currentICICITxn = UserTransaction.newMFDeposit(
-            pTranId, pMultipleId, pUpiDateTime, amtDouble, baseProvider.myUser.uid);
+        localVpa = vpa;
+        baseProvider.currentICICITxn = UserTransaction.newMFDeposit(pTranId,
+            pMultipleId, pUpiDateTime, amtDouble, baseProvider.myUser.uid);
         String userTxnKey = await dbProvider.addUserTransaction(
             baseProvider.myUser.uid, baseProvider.currentICICITxn);
         bool nFlag = (userTxnKey != null);
@@ -257,10 +259,11 @@ class PaymentService extends ChangeNotifier {
         //create transaction
         //add current live txn dockey to user obj
         String pTranId = pRes[SubmitUpiExistingInvestor.resTrnId];
-        int sid = pRes[SubmitUpiExistingInvestor.resSessionId];
-        String pSessionId = (sid != null) ? sid.toString() : '';
-        baseProvider.currentICICITxn = UserTransaction.extMFDeposit(
-            pTranId, pSessionId, amtDouble, baseProvider.myUser.uid);
+        String pMultipleId = pRes[SubmitUpiExistingInvestor.resMultipleId];
+        String pUpiDateTime = pRes[SubmitUpiExistingInvestor.resUpiTime];
+
+        baseProvider.currentICICITxn = UserTransaction.extMFDeposit(pTranId,
+            pMultipleId, amtDouble, pUpiDateTime, baseProvider.myUser.uid);
         String userTxnKey = await dbProvider.addUserTransaction(
             baseProvider.myUser.uid, baseProvider.currentICICITxn);
         bool nFlag = (userTxnKey != null);
@@ -303,6 +306,29 @@ class PaymentService extends ChangeNotifier {
         ? await dbProvider.getUserTransaction(
             baseProvider.myUser.uid, baseProvider.myUser.pendingTxnId)
         : baseProvider.currentICICITxn;
+    if (baseProvider.currentICICITxn != null &&
+        baseProvider.currentICICITxn.isExpired()) {
+      //Transaction expired
+      //run one final check then close transaction
+      _getTransactionStatus(baseProvider.currentICICITxn.tranId,
+              baseProvider.iciciDetail.panNumber)
+          .then((resMap) {
+        if (resMap != null && resMap['isComplete'] && resMap['isPaid']) {
+          //transaction successful
+          _onTransactionCompleted().then((flag) {
+            if (_onProcessComplete != null)
+              _onProcessComplete(TRANSACTION_COMPLETE);
+          });
+        } else {
+          _onTransactionRejected().then((flag) {
+            if (_onProcessComplete != null)
+              _onProcessComplete(TRANSACTION_REJECTED);
+          });
+        }
+      });
+      return;
+    }
+
     ReceivePort receivePort =
         ReceivePort(); //port for this main isolate to receive messages.
     isolate = await Isolate.spawn(startTimer, receivePort.sendPort);
@@ -466,8 +492,17 @@ class PaymentService extends ChangeNotifier {
     baseProvider.myUser.ticket_count = iTckCnt + ticketCount;
 
     bool icFlag = true;
-    if (!baseProvider.iciciDetail.firstInvMade) {
-      baseProvider.iciciDetail.firstInvMade = true;
+    //check if the user vpa needs to be added
+    bool vpaUpdateFlag =
+        ((baseProvider.iciciDetail.vpa == null && localVpa != null) ||
+            baseProvider.iciciDetail.vpa != null &&
+                localVpa != null &&
+                baseProvider.iciciDetail.vpa != localVpa);
+    //check if its the user's first investment
+    if (!baseProvider.iciciDetail.firstInvMade || vpaUpdateFlag) {
+      if (!baseProvider.iciciDetail.firstInvMade)
+        baseProvider.iciciDetail.firstInvMade = true;
+      if(vpaUpdateFlag)baseProvider.iciciDetail.vpa = localVpa;
       icFlag = await dbProvider.updateUserIciciDetails(
           baseProvider.myUser.uid, baseProvider.iciciDetail);
     }
@@ -543,14 +578,15 @@ class PaymentService extends ChangeNotifier {
     baseProvider.myUser.icici_balance = iBal - amt;
     baseProvider.myUser.account_balance = totalBal - amt.toInt();
     baseProvider.myUser.ticket_count = iTckCnt - ticketCount;
-    if(baseProvider.myUser.ticket_count < 0)baseProvider.myUser.ticket_count = 0;
+    if (baseProvider.myUser.ticket_count < 0)
+      baseProvider.myUser.ticket_count = 0;
 
     bool usFlag = await dbProvider.updateUser(baseProvider.myUser);
-    String txnDocId = await dbProvider.addUserTransaction(
-        baseProvider.myUser.uid, txn);
-    log.debug('Updated all flags:: $usFlag\t${txnDocId!=null}');
+    String txnDocId =
+        await dbProvider.addUserTransaction(baseProvider.myUser.uid, txn);
+    log.debug('Updated all flags:: $usFlag\t${txnDocId != null}');
 
-    return (usFlag && (txnDocId!=null));
+    return (usFlag && (txnDocId != null));
   }
 
   addPaymentStatusListener(ValueChanged<int> listener) {
@@ -642,7 +678,10 @@ class PaymentService extends ChangeNotifier {
       }; //should never happen
 
     Map<String, dynamic> _bankDetails = await _getBankDetails();
-    if (!_bankDetails['flag']) return _bankDetails;
+    if (!_bankDetails['flag'])
+      return _bankDetails;
+    else
+      _bankDetails[SubmitRedemption.fldAmount] = amount;
     Map<String, dynamic> _exitLoadDetails = await _getExitLoadDetails(amount);
 
     if (_exitLoadDetails['flag']) {
@@ -738,21 +777,21 @@ class PaymentService extends ChangeNotifier {
             'reason': redemptionMap[SubmitRedemption.resIMPSStatus] ??
                 'Withdrawal failed. Please try again in sometime. We will verify the transaction from our end as well!'
           };
-        }else{
+        } else {
           double amt = 0;
-          try{
+          try {
             amt = double.parse(withdrawalMap['amount']);
-          }catch(e){}
+          } catch (e) {}
           //Transaction ID generated and IMPS code is success
-          UserTransaction withTxn = UserTransaction.extMFWithdrawal(redemptionMap[SubmitRedemption.resTranId],
+          UserTransaction withTxn = UserTransaction.extMFWithdrawal(
+              redemptionMap[SubmitRedemption.resTranId],
               redemptionMap[SubmitRedemption.resBankRnn],
-              redemptionMap[SubmitRedemption.resIMPSStatus]??'NA',
+              redemptionMap[SubmitRedemption.resIMPSStatus] ?? 'NA',
               redemptionMap[SubmitRedemption.resTrnTime],
-              amt, baseProvider.myUser.uid);
+              amt,
+              baseProvider.myUser.uid);
           bool fFlag = await _onWithdrawalCompleted(withTxn);
-          return {
-            'flag': fFlag
-          };
+          return {'flag': fFlag};
         }
       }
     }

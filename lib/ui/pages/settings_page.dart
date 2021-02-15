@@ -153,7 +153,7 @@ class _OptionsList extends State<SettingsPage> {
                   return;
                 }
                 if(baseProvider.isSignedIn() && baseProvider.isActiveUser()) {
-                  reqProvider.addCallbackRequest(baseProvider.firebaseUser.uid, baseProvider.myUser.mobile).then((flag) {
+                  reqProvider.addCallbackRequest(baseProvider.firebaseUser.uid, baseProvider.myUser.name, baseProvider.myUser.mobile).then((flag) {
                     if(flag) {
                       Navigator.of(context).pop();
                       baseProvider.showPositiveAlert('Callback placed!', 'We\'ll contact you soon on your registered mobile', context);

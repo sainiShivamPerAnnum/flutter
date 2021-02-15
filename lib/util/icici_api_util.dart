@@ -299,6 +299,13 @@ class SubmitUpiNewInvestor{
   static final String resMsg = 'MSG';
 }
 
+/**
+ *  [{"TRANID":"16376097","TRXN_DATE":"15/02/2021","TRXN_TIME":"11:41:26 AM","TRANID1":"16376097",
+ *  "MULTIPLE_ID":"16376098","AMOUNT":10,"IS_TAX":"N","UPI_DATE_TIME":"15/02/2021 11:44 AM",
+ *  "SCH_NAME":"ICICI Prudential Liquid Fund - Growth","SCH_CODE":"1565","TAX_STATUS":"01",
+ *  "MINOR_FOLIO":"N","OperationCode":"92","OperationErrorMessage":"Transaction initiated successfully.
+ *  Please accept the request in your bank UPI App within 3 minutes to complete the transaction."}]
+ * */
 class SubmitUpiExistingInvestor{
   static final String path = 'api/submitIBankUpiPurchaseExt';
   static final String fldFolioNo = 'foliono';
@@ -311,6 +318,8 @@ class SubmitUpiExistingInvestor{
 
   static final String resTrnId = "TRANID";
   static final String resSessionId = "SESSION";
+  static final String resUpiTime = 'UPI_DATE_TIME';
+  static final String resMultipleId = "MULTIPLE_ID";
   static final String resMsg = 'MSG';
 }
 

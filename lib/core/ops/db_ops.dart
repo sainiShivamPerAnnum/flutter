@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/credentials_stage.dart';
+import 'package:felloapp/util/help_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class DBModel extends ChangeNotifier {
     try {
       //String id = user.mobile;
       String id = user.uid;
-      var dMap = {'token': token, 'timestamp': FieldValue.serverTimestamp()};
+      var dMap = {'token': token, 'timestamp': Timestamp.now()};
       await _api.updateUserClientToken(id, dMap);
       return true;
     } catch (e) {
@@ -147,7 +148,7 @@ class DBModel extends ChangeNotifier {
         'manual': false,
         'count': count,
         'week_code': _getWeekCode(),
-        'timestamp': FieldValue.serverTimestamp()
+        'timestamp': Timestamp.now()
       };
       await _api.createTicketRequest(_uid, rMap);
       return true;
@@ -286,17 +287,35 @@ class DBModel extends ChangeNotifier {
     return null;
   }
 
-  Future<bool> addCallbackRequest(String uid, String mobile) async {
+  Future<bool> addCallbackRequest(String uid, String name, String mobile) async {
     try {
       DateTime today = DateTime.now();
       String year = today.year.toString();
       String monthCde = getCurrentMonthCode(today.month);
-      int date = today.day;
       Map<String, dynamic> data = {};
-      data['date'] = date;
+      data['user_id'] = uid;
+      data['name'] = name;
+      data['mobile'] = mobile;
+      data['timestamp'] = Timestamp.now();
+
+      await _api.addCallbackDocument(year, monthCde, data);
+      return true;
+    } catch (e) {
+      log.error("Error adding callback doc: " + e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> addHelpRequest(String uid, String name, String mobile, HelpType helpType) async {
+    try {
+      DateTime today = DateTime.now();
+      String year = today.year.toString();
+      String monthCde = getCurrentMonthCode(today.month);
+      Map<String, dynamic> data = {};
       data['user_id'] = uid;
       data['mobile'] = mobile;
-      data['timestamp'] = FieldValue.serverTimestamp();
+      data['issue_type'] = helpType.value();
+      data['timestamp'] = Timestamp.now();
 
       await _api.addCallbackDocument(year, monthCde, data);
       return true;
@@ -315,7 +334,7 @@ class DBModel extends ChangeNotifier {
       data['user_id'] = uid;
       data['week_code'] = weekCde;
       data['ticket_cat_map'] = resMap;
-      data['timestamp'] = FieldValue.serverTimestamp();
+      data['timestamp'] = Timestamp.now();
 
       await _api.addClaimDocument(data);
       return true;
@@ -349,7 +368,7 @@ class DBModel extends ChangeNotifier {
       data['amount'] = amount;
       data['raw_response'] = rawResponse;
       data['status'] = status;
-      data['timestamp'] = FieldValue.serverTimestamp();
+      data['timestamp'] = Timestamp.now();
 
       await _api.addDepositDocument(year, monthCde, data);
       return true;
@@ -371,7 +390,7 @@ class DBModel extends ChangeNotifier {
       data['user_id'] = uid;
       data['amount'] = amount;
       data['rec_upi_address'] = upiAddress;
-      data['timestamp'] = FieldValue.serverTimestamp();
+      data['timestamp'] = Timestamp.now();
 
       await _api.addWithdrawalDocument(year, monthCde, data);
       return true;
@@ -385,7 +404,7 @@ class DBModel extends ChangeNotifier {
     try {
       Map<String, dynamic> fdbkMap = {
         'user_id': userId,
-        'timestamp': FieldValue.serverTimestamp(),
+        'timestamp': Timestamp.now(),
         'fdbk': fdbk
       };
       await _api.addFeedbackDocument(fdbkMap);
@@ -403,7 +422,7 @@ class DBModel extends ChangeNotifier {
       dMap['user_id'] = userId;
       dMap['fail_type'] = failType.value();
       dMap['manually_resolved'] = false;
-      dMap['timestamp'] = FieldValue.serverTimestamp();
+      dMap['timestamp'] = Timestamp.now();
       await _api.addFailedReportDocument(dMap);
       return true;
     } catch (e) {

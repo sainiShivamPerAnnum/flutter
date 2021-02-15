@@ -1,7 +1,5 @@
-import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +14,7 @@ class TambolaDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      insetPadding: EdgeInsets.only(left:20, top:50, bottom: 80, right:20),
+      insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
@@ -30,21 +28,18 @@ class TambolaDialog extends StatelessWidget {
     return Column(
         //overflow: Overflow.visible,
         //alignment: Alignment.topCenter,
-      mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-           TambolaBoardView(
-             tambolaBoard: this.board.tambolaBoard,
-             calledDigits: this.digits,
-             boardColor: UiConstants.primaryColor,
-           ),
-          Text('Ticket #' + this.board.getTicketNumber(),
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: 20
-            ),
+          TambolaBoardView(
+            tambolaBoard: this.board.tambolaBoard,
+            calledDigits: this.digits,
+            boardColor: UiConstants.primaryColor,
           ),
-        ]
-    );
+          Text(
+            'Ticket #' + this.board.getTicketNumber(),
+            style: TextStyle(color: Colors.white70, fontSize: 20),
+          ),
+        ]);
   }
 }

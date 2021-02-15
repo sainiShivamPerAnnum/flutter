@@ -129,7 +129,7 @@ class DepositModalSheetState extends State<DepositModalSheet>
                 decoration: inputFieldDecoration("Enter your UPI Id"),
                 validator: (value) {
                   RegExp upiRegex =
-                      RegExp('[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}');
+                      RegExp('[-a-zA-Z0-9._]{2,256}@[a-zA-Z]{2,64}');
                   if (value == null || value.isEmpty)
                     return 'Please enter your UPI ID';
                   else if (!upiRegex.hasMatch(value))
