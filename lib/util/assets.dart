@@ -12,14 +12,15 @@ class Assets {
   static final String winnersGraphic = 'images/winners-small.png';
   static final String whatsappIcon = 'images/whatsapp.png';
   static final String strikeThroughGraphic = 'images/diagonal-strike.png';
-  static final String onboardCollageGraphic = 'images/onboard_collage-small.png';
+  static final String onboardCollageGraphic =
+      'images/onboard_collage-small.png';
 
   static final String dummyPanCard = 'images/PAN_card.png';
-  static final String dummyPanCardShowNumber = 'images/PAN_card_no_focussed.png';
+  static final String dummyPanCardShowNumber =
+      'images/PAN_card_no_focussed.png';
   static final String dummyAadhaarCard = 'images/Aadhar_card.jpg';
   static final String dummyCancelledCheque = 'images/Cancelled_cheque.png';
   static final String kycUnavailableAsset = 'images/kyc_unavailable.png';
-
 
   static final List<String> onboardingSlide = [
     'images/save-small.png',
@@ -118,6 +119,26 @@ class Assets {
         'so on! Isn’t that amazing?! :D',
   ];
 
+  static final List<String> mfFaqHeaders = [
+    'What kind of fund is this?',
+    'What does a liquid debt fund mean?',
+    'What is required to save with this fund',
+    'How does the transaction work?',
+    'What is the minimum amount that I can deposit?',
+    'How can I withdraw from this fund?',
+    'How much time does it take to receive my money?',
+  ];
+
+  static final List<String> mfFaqAnswers = [
+    'This is the ICICI Prudential Liquid Mutual Fund-Growth. This is a liquid debt mutual fund',
+    'Liquid funds are categorised as low risk products from liquidity and interest rate risk perspective. This is because they hold very short term instruments where the chances of interest rate fluctuations are less. ',
+    'To save in this fund, you simply need to follow the 3 step onboarding process, post which you\'re all set to deposit and withdraw. Please not that you need to be a KYC verified customer',
+    'Transactions are very smooth. After onboarding, simply enter your UPI ID and the amount you wish to save and you will be able to complete the transaction on your UPI App, just like a normal UPI payment!',
+    'The very first transaction that you make needs to be atleast ₹100. After this, you can save any amount you want, even ₹1!',
+    'Withdrawals take simply 2 clicks. Click on withdrawal, confirm the amount you wish to withdraw and it will get immediately deposited to your added bank account',
+    '90% of your funds are withdrawn within minutes. The remaining 10% will be available within the next day. So if you had saved ₹100 and wish to withdraw the entire amount, ₹90 gets withdrawn within 2 minutes, and the rest within the next day!',
+  ];
+
   static final List<String> onboardDialogDesc = [
     'Welcome to Fello! We have added 5 game tickets to your account to get you started.',
     'Save your money in diverse and stable funds. We have onboarded ICICI Prudential Liquid Fund as our first partner.',
@@ -151,11 +172,20 @@ class Assets {
     "Assets under management is the total market value of assets that an investment company manages on behalf of the investors",
   ];
 
-  static final String integratedICICIUnavailable = "We are slowly moving towards a fully automated system of deposits and withdrawals. "
-      + "Currently, we have started integrated transactions with only a small set of users.\n\n Please use manual deposits in the meanwhile!";
+  static final String integratedICICIUnavailable =
+      "We are slowly moving towards a fully automated system of deposits and withdrawals. " +
+          "Currently, we have started integrated transactions with only a small set of users.\n\n Please use manual deposits in the meanwhile!";
 
-  static final String infoWhyPan = 'Your PAN Card is required by ICICI to set up your investment folio';
-  static final String infoWherePan = 'Your PAN Number is a 10 character ID that can be found on your PAN Card';
-  static final String infoWhatUPI = 'UPI is a banking system for money transfers on payment apps. Your UPI ID is your unique address that identifies you on UPI';
-  static final String infoWhereUPI = 'Your UPI ID will be present in the profile section or payment settings section of the UPI app that you use. Typical UPI ID will be of the format \'username@bankname\'';
+  static final String infoWhyPan =
+      'Your PAN Card is required by ICICI to set up your investment folio';
+  static final String infoWherePan =
+      'Your PAN Number is a 10 character ID that can be found on your PAN Card';
+  static final String infoWhatUPI =
+      'UPI is a banking system for money transfers on payment apps. Your UPI ID is your unique address that identifies you on UPI';
+  static final String infoWhereUPI =
+      'Your UPI ID will be present in the profile section or payment settings section of the UPI app that you use. Typical UPI ID will be of the format \'username@bankname\'';
+  static final String infoWhatKYC =
+      '\'Know Your Customer\' is process where we verify your identity by requesting you to submit certain documents. This verification is a one time process across all services';
+  static final String infoWhyKYC =
+      'RBI has made KYC mandatory to verify the identity of all customers who carry out financial transactions. This process unlocks all equity and mutual funds for you to invest in!';
 }

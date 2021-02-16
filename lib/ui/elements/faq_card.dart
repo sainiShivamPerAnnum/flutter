@@ -37,7 +37,7 @@ class FAQCard extends StatelessWidget {
           ),
           ListView.builder(
             shrinkWrap: true,
-            itemCount: Assets.faqHeaders.length,
+            itemCount: Assets.mfFaqHeaders.length,
             itemBuilder: (ctx, i) {
               return FAQCardItems(idx: i);
             },
@@ -77,7 +77,7 @@ class _FAQCardItemsState extends State<FAQCardItems> {
           children: [
             Expanded(
               child: Text(
-                Assets.faqHeaders[widget.idx],
+                Assets.mfFaqHeaders[widget.idx],
                 softWrap: true,
                 maxLines: 2,
               ),
@@ -98,7 +98,7 @@ class _FAQCardItemsState extends State<FAQCardItems> {
             right: 30,
           ),
           width: double.infinity,
-          child: Text(Assets.faqAnswers[widget.idx]),
+          child: Text(Assets.mfFaqAnswers[widget.idx]),
         ),
       ],
     );

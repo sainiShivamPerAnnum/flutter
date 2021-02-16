@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/ui/elements/more_info_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -94,17 +95,31 @@ class KYCInvalid extends StatelessWidget {
                           Wrap(
                             spacing: 20,
                             children: [
-                              Chip(
+                              ActionChip(
                                 label: Text("What is KYC?"),
                                 backgroundColor: UiConstants.chipColor,
+                                onPressed: () {
+                                  HapticFeedback.vibrate();
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) => MoreInfoDialog(
+                                        text: Assets.infoWhatKYC,
+                                        title: 'What is KYC?',
+                                      ));
+                                },
                               ),
-                              Chip(
-                                label: Text("Why do I need to do it?"),
+                              ActionChip(
+                                label: Text("Why is it required?"),
                                 backgroundColor: UiConstants.chipColor,
-                              ),
-                              Chip(
-                                label: Text("I\'m not very sure yet"),
-                                backgroundColor: UiConstants.chipColor,
+                                onPressed: () {
+                                  HapticFeedback.vibrate();
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) => MoreInfoDialog(
+                                        text: Assets.infoWhyKYC,
+                                        title: 'Why is it required?',
+                                      ));
+                                },
                               ),
                             ],
                           ),
