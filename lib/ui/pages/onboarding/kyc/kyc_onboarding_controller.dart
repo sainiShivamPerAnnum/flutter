@@ -1,11 +1,12 @@
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/kyc_ops.dart';
-import 'package:felloapp/core/service/location.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/signature.dart';
+import 'package:felloapp/ui/pages/onboarding/kyc/verify_kyc_webview.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
 class KycOnboardController extends StatefulWidget {
   @override
@@ -15,6 +16,7 @@ class KycOnboardController extends StatefulWidget {
 class _KycOnboardControllerState extends State<KycOnboardController> {
   static BaseUtil baseProvider;
   File image;
+
   KYCModel kycModel = KYCModel();
   final picker = ImagePicker();
 
@@ -27,10 +29,21 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
           child: Column(
             children: [
               MyButton(
-                  title: "Initialise new user",
+                  title: "Create Object",
                   onPressed: () async {
-                    var result = await kycModel.init();
-                    print(result);
+                    // var email = "finalTest@gmail.com";
+                    // var username = "fello272sg";
+                    // var phone = "9811111111";
+                    // var name = "Fello";
+                    //
+                    // var result = await kycModel.createOnboardingObject(
+                    //     email, username, phone, name);
+                    //
+                    // bool flag = result['flag'];
+                    // print(flag);
+                    // var message = result['message'];
+                    //
+                    // print(message);
 
                     // flag == true ? baseProvider.showPositiveAlert('Success',
                     //     '$message', context)
@@ -38,6 +51,7 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
                     //     'user already exists',
                     //     context);
                   }),
+
               MyButton(
                   title: "Siganture",
                   onPressed: () {
@@ -85,6 +99,7 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
                       },
                     );
                   }),
+
               MyButton(
                   title: "POI",
                   onPressed: () {
@@ -104,7 +119,8 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
 
                                 print(imagePath);
 
-                                var result = await kycModel.POI(imagePath);
+                                var result =
+                                    await kycModel.executePOI(imagePath);
 
                                 // var flag = result["flag"];
                                 //
@@ -136,6 +152,7 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
                       },
                     );
                   }),
+
               MyButton(
                   title: "Cancelled Cheque",
                   onPressed: () {
@@ -174,35 +191,80 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
                       },
                     );
                   }),
+
               MyButton(
                   title: "Penny Transfer",
                   onPressed: () async {
-                    await kycModel.bankPennyTransfer();
+                    var accountNumber = "50100344606311";
+                    var ifscCode = "HDFC0000119";
+                    var name = "Abhishek";
+
+                    await kycModel.bankPennyTransfer(
+                        accountNumber, ifscCode, name);
                   }),
+
               MyButton(
                   title: "PDF",
                   onPressed: () async {
                     await kycModel.generatePdf();
                   }),
-              MyButton(
-                  title: "Location",
-                  onPressed: () async {
-                    kycModel.uploadLocation();
-                  }),
-              MyButton(
-                  title: "Video",
-                  onPressed: () async {
-                    var image =
-                        await picker.getVideo(source: ImageSource.camera);
-                    var imagePath = image.path;
 
-                    await kycModel.recordVideo(imagePath);
-                  }),
+              // MyButton(title: "Location", onPressed: () async
+              // {
+              //   kycModel.uploadLocation();
+              //
+              // }),
+              //
+              //
+              // MyButton(
+              //     title: "Video",
+              //     onPressed: () async{
+              //
+              //       var image = await picker.getVideo(source: ImageSource.camera);
+              //       var imagePath = image.path;
+              //
+              //       await kycModel.recordVideo(imagePath);
+              //
+              //
+              //
+              //
+              //
+              //     }),
+              //
+              // MyButton(
+              //     title: "FATCA",
+              //     onPressed: () async{
+              //
+              //
+              //       // await kycModel.Fatca();
+              //
+              //
+              //
+              //
+              //
+              //     }),
+
               MyButton(
-                  title: "FATCA",
+                  title: "Web View",
                   onPressed: () async {
-                    await kycModel.Fatca();
-                  }),
+                    var url =
+                        "https://esign-preproduction.signzy.tech/nsdl-esign-customer2/5b2e4ddd84b5cd6c465019ed/token/8aBTTkfgtqiOZvUotD6GJ1yaalNTTmBAg04RTOzSsLSvGAbFAvC1l3mvjiCX1612553003805";
+
+                    // if (await canLaunch(url)) {
+                    //   await launch(url);
+                    // } else {
+                    //   throw 'Could not launch $url';
+                    // }
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => KycWebview()),
+                    );
+                  }
+
+                  // await kycModel.Fatca();
+
+                  ),
             ],
           ),
         ),

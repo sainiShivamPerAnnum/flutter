@@ -50,6 +50,13 @@ class GetKycStatus{
   static const String KYC_STATUS_FETCH_FAILED = '2';
   static const String KYC_STATUS_SERVICE_DOWN = '3';
   static const String KYC_STATUS_ALLOW_VIDEO = '4';
+
+  static const String FATCA_FLAG_NN = 'NN';
+  static const String FATCA_FLAG_YY = 'YY';
+  static const String FATCA_FLAG_YN = 'YN';
+  static const String FATCA_FLAG_PC = 'PC';
+  static const String FATCA_FLAG_UC = 'UC';
+
 }
 
 /**
@@ -74,6 +81,20 @@ class SubmitInvoiceDetail{
   static final String fldEmail = 'email'; //encoded
   static final String fldMobile = 'mobile'; //919986643444
   static final String fldPan = 'firstpan';
+
+  static final String resStatus = 'STATUS';
+}
+
+class SubmitFatca{
+  static final String path = 'api/submitFatca';
+  static final String fldId = 'appid';
+  static final String fldPan = 'firstpan';
+  static final String fldTaxId = 'taxid';
+  static final String fldIdType = 'idtype';
+  static final String fldFatcaOption = 'fatcaop';
+  static final String fldBirthplace = 'birthplace';
+  static final String fldTinResn = 'tinresn';//'A'
+  static final String fldTinResnText = 'tinresntext';//no idea
 
   static final String resStatus = 'STATUS';
 }
@@ -258,8 +279,9 @@ class CreatePortfolio{
  * "AMOUNT":100,"UPI_DATE_TIME":"01/02/2021 12:50 PM","TRIG_SCHEME":null,"USERNAME":null,"TRAN_ID":"3433599",
  * "DISPLAY_NAME":null,"IS_TAX":"N","LTEF_URL":null}]
  * */
-class SubmitUpiPurchase{
-  static final String path = 'api/submitUpiPurchase';
+class SubmitUpiNewInvestor{
+  //static final String path = 'api/submitUpiPurchase';
+  static final String path = 'api/submitIBankUpiPurchase';
   static final String fldId = 'appid';
   static final String fldEmail = 'email';
   static final String fldBankCode = 'bankcode';
@@ -274,6 +296,30 @@ class SubmitUpiPurchase{
   static final String resUpiTime = 'UPI_DATE_TIME';
   static final String resMultipleId = "MULTIPLE_ID";
   static final String resAmount = "AMOUNT";
+  static final String resMsg = 'MSG';
+}
+
+/**
+ *  [{"TRANID":"16376097","TRXN_DATE":"15/02/2021","TRXN_TIME":"11:41:26 AM","TRANID1":"16376097",
+ *  "MULTIPLE_ID":"16376098","AMOUNT":10,"IS_TAX":"N","UPI_DATE_TIME":"15/02/2021 11:44 AM",
+ *  "SCH_NAME":"ICICI Prudential Liquid Fund - Growth","SCH_CODE":"1565","TAX_STATUS":"01",
+ *  "MINOR_FOLIO":"N","OperationCode":"92","OperationErrorMessage":"Transaction initiated successfully.
+ *  Please accept the request in your bank UPI App within 3 minutes to complete the transaction."}]
+ * */
+class SubmitUpiExistingInvestor{
+  static final String path = 'api/submitIBankUpiPurchaseExt';
+  static final String fldFolioNo = 'foliono';
+  static final String fldChkDigit = 'chkdigit';
+  static final String fldAmount = 'amount';
+  static final String fldBankCode = 'bankcode';
+  static final String fldBankAccNo = 'bankaccno';
+  static final String fldPan = 'firstpan';
+  static final String fldVPA = 'vpa';
+
+  static final String resTrnId = "TRANID";
+  static final String resSessionId = "SESSION";
+  static final String resUpiTime = 'UPI_DATE_TIME';
+  static final String resMultipleId = "MULTIPLE_ID";
   static final String resMsg = 'MSG';
 }
 
@@ -294,6 +340,23 @@ class GetPaidStatus{
   static const String STATUS_REJECTED = '2';
 }
 
+////////////////////////////REDEMPTION QUERIES////////////////////////////////
+/**
+ * [{"BAL":"0.291","AUM":"78.88","RETURNCODE":"000","ALLOWIMPS":"Y","MESSAGE":null,"SCH_DET":[{"SCH_TYPE":"DF","TYPE_NAME":"Debt
+    Funds","SCH_CODE":"1565","SCH_NAME":"ICICI Prudential Liquid Fund - Growth","STATUS":"N","MRED_AMT":1,"CUT_OFF":"3:0:0
+    PM","ALLOW_REDEEM":"Y","RED_ALLOWED":"Y","REDEM_FROM_DAY":0,"REDEM_TO_DAY":0,"FOLIO_NO":"16832662","TAX_BASED_SCHEME":"N",
+    "BAL":0.331,"AUM":99.8725307,"NAV":301.7297,"NAVDATE":"2021-02-10T00:00:00","ALLOW_IMPS":"Y"}],"REDEEMABLEAMOUNT":78.88,
+    "TAMOUNT":87.8033427,"SESSIONID":"FL178407",":B2":"Y",":B1":"N"}]
+ *
+ */
+class CheckFolioBalance{
+  static final String path = 'api/checkIMPSAllowed';
+  static final String fldFolioNo = 'foliono';
+
+  static final String resInstantBalance = "REDEEMABLEAMOUNT";
+  static final String resTotalBalance = "TAMOUNT";
+}
+
 // ignore: slash_for_doc_comments
 /**
  * Allowed IMPS Redemption:
@@ -309,6 +372,12 @@ class GetPaidStatus{
     "MESSAGE":"For Quick Withdrawal mode , Available Balance should not be nil","SCH_DET":[]}]
  *or
  * [{"RETURNCODE":"100","ALLOWIMPS":"Y","MESSAGE":"Only Individual folio allowed","SCH_DET":[]}]
+ *
+ * [{"BAL":"112.352","AUM":"1011.17","RETURNCODE":"000","ALLOWIMPS":"Y","MESSAGE":null,"SCH_DET":[{"SCH_TYPE":"DF","TYPE_NAME":"Debt
+    Funds","SCH_CODE":"1565","SCH_NAME":"ICICI Prudential Liquid Fund - Growth","STATUS":"N","MRED_AMT":1,"CUT_OFF":"3:0:0
+    PM","ALLOW_REDEEM":"Y","RED_ALLOWED":"Y","REDEM_FROM_DAY":0,"REDEM_TO_DAY":0,"FOLIO_NO":"8490923","TAX_BASED_SCHEME":"N",
+    "BAL":172.352,"AUM":48986.9023168,"NAV":284.2259,"NAVDATE":"2019-09-22T00:00:00","ALLOW_IMPS":"Y"}],"REDEEMABLEAMOUNT":1011.17,
+    "TAMOUNT":31933.3483168,"SESSIONID":"FL1670",":B2":"Y",":B1":"N"}]
  * */
 class CheckIMPSStatus{
   static final String path = 'api/checkIMPSAllowed';
@@ -317,8 +386,34 @@ class CheckIMPSStatus{
 
   static final String resReturnCode = "RETURNCODE";
   static final String resReturnMsg = "MESSAGE";
+  static final String resAllowIMPSFlag =  "ALLOWIMPS";
+  static final String resInstantBalance = "REDEEMABLEAMOUNT";
+  static final String resTotalBalance = "TAMOUNT";
 
   static const String STATUS_ALLOWED = "000";
+  static const String STATUS_LESS_THAN_MIN_ALLOWED = "101";
+  static const String STATUS_BALANCE_NIL_1 = "222";
+  static const String STATUS_BALANCE_NIL_2 = "333";
+  static const String STATUS_REQUEST_AMT_EXCEEDED_1 = "444";
+  static const String STATUS_ERROR = "555";
+  static const String STATUS_ONCE_A_DAY_ALLOWED = "666";
+  static const String STATUS_REQUEST_AMT_EXCEEDED_2 = "777";
+  static const String STATUS_FOLIO_NOT_MAPPED = "888";
+}
+
+/**
+ * {"ApproxLoadAmt": "0.00","PopUpFlag": "N"}
+ * */
+class GetExitLoad{
+  static final String path = 'api/getExitLoad';
+  static final String fldFolioNo = 'foliono';
+  static final String fldAmount = 'amount';
+
+  static final String resApproxLoadAmt = 'ApproxLoadAmt';
+  static final String resPopUpFlag = 'PopUpFlag';
+
+  static const String SHOW_POPUP = 'Y';
+  static const String DONT_SHOW_POPUP = 'N';
 }
 
 /**
@@ -327,12 +422,67 @@ class CheckIMPSStatus{
     ”Redeem_bank_details”:”ICICI Bank Ltd#001501011212825#SB#null#null#DC-ICIC”,
     }]
     or if not found: ""
+
+    [{"BANK_NAME":"CITI-BANK N.A.","BANK_DETAILS":"5603612223#CNRB0000001#37","REDEEM_BANK_DETAILS":"CITI-BANK
+    N.A.#5603612223#SB#Delhi#DELHI#NEFT"},{"BANK_NAME":"CITI-BANK
+    N.A.","BANK_DETAILS":"5603612223#CNRB0000001#37","REDEEM_BANK_DETAILS":"CITI-BANK N.A.#5603612223#SB#Delhi#NEW
+    DELHI#NEFT"}]
+
+    [{"BANK_NAME":"ICICI BANK LTD","BANK_DETAILS":"003901070908#ICIC0000000#229","REDEEM_BANK_DETAILS":"ICICI BANK
+    LTD#003901070908#SB#PuneShivaji Nagar##DC-ICIC"},{"BANK_NAME":"ICICI BANK
+    LTD","BANK_DETAILS":"003901070908#ICIC0000000#229","REDEEM_BANK_DETAILS":"ICICI BANK LTD#003901070908#SB#PUNE - SHIVAJI
+    NAGAR##DC-ICIC"}]
+
+    [{"BANK_NAME":"IndusInd Bank Ltd","BANK_DETAILS":"159986643444#INDB0001394#234","REDEEM_BANK_DETAILS":"IndusInd Bank
+    Ltd#159986643444#SB#DWARKA NEW DELHI##NEFT"}]
  * */
 class GetBankRedemptionDetail{
   static final String path = 'api/getRedeemBankDetails';
   static final String fldFolioNo = 'foliono';
 
-  static final String resBankName = "Bank_Name";
-  static final String res = "Bank_Name";
-//TODO more fields required
+  static final String resBankName = "BANK_NAME";
+  static final String resCombinedAccountDetails = "BANK_DETAILS";
+  static final String resCombinedBankDetails = "REDEEM_BANK_DETAILS";
+  
+  static String getBankAccNo(String rawStr) =>  rawStr.split('#')[0];
+  static String getBankIfsc(String rawStr) =>  rawStr.split('#')[1];
+  static String getBankCode(String rawStr) =>  rawStr.split('#')[2];
+
+  static String getBankAccType(String rawStr) =>  rawStr.split('#')[2];
+  static String getBankBranch(String rawStr) =>  rawStr.split('#')[3];
+  static String getBankCity(String rawStr) =>  rawStr.split('#')[4];
+  static String getRedeemMode(String rawStr) =>  rawStr.split('#')[5];
+}
+
+/**
+ *
+    {"TRANID":"16338804","TRXN_DATE":"11/02/2021","TRXN_TIME":"08:05:39
+    PM","BANK_RRN":"","IMPS_CODE":"1005","IMPS_STATUS":"The Redemption transaction value is more than the eligible amount."}
+
+    {"TRANID":"16338811","TRXN_DATE":"11/02/2021","TRXN_TIME":"08:06:23
+    PM","BANK_RRN":"104220778133","IMPS_CODE":"0","IMPS_STATUS":"Transaction Successful"}
+ * */
+class SubmitRedemption{
+  static final String path = 'api/submitRedemption';
+  static final String fldFolioNo = 'foliono';
+  static final String fldAmount = 'amount';
+  static final String fldBankCode = 'bankcode';
+  static final String fldMobile = 'mobile'; //'919986643444' format
+  static final String fldBankName = 'bankname';
+  static final String fldAccNo = 'accno';
+  static final String fldAccType = 'acctype';
+  static final String fldBankBranch = 'bankbranch';
+  static final String fldBankCity = 'bankcity';
+  static final String fldRedeemMode = 'redeemmode';
+  static final String fldIfsc = 'ifsc';
+  static final String fldExitLoadTick = 'exitloadtick';
+  static final String fldApproxLoadAmount = 'approxloadamt';
+
+  static final String resTranId = 'TRANID';
+  static final String resTrnTime = 'TRXN_TIME';
+  static final String resBankRnn = 'BANK_RNN';
+  static final String resIMPSCode = 'IMPS_CODE';
+  static final String resIMPSStatus = 'IMPS_STATUS';
+
+  static const String IMPS_TRANSACTION_SUCCESS = '0';
 }

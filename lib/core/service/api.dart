@@ -102,8 +102,11 @@ class Api {
     return query.getDocuments();
   }
 
-  Future<QuerySnapshot> getCredentialsByType(String type, int index) {
-    Query query = _db.collection(Constants.COLN_CREDENTIALS).where('type', isEqualTo: type).where('index', isEqualTo: index);
+  Future<QuerySnapshot> getCredentialsByTypeAndStage(String type, String stage, int index) {
+    Query query = _db.collection(Constants.COLN_CREDENTIALS)
+        .where('type', isEqualTo: type)
+        .where('stage', isEqualTo: stage)
+        .where('index', isEqualTo: index);
 
     return query.getDocuments();
   }

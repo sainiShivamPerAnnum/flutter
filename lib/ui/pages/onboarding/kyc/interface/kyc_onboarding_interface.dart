@@ -1,22 +1,57 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/kyc_ops.dart';
+import 'package:felloapp/ui/pages/onboarding/kyc/interface/instructions_tab.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/interface/kyc_onboard_data.dart';
+import 'package:felloapp/ui/pages/onboarding/kyc/interface/summary_tab.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:scratcher/scratcher.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class KycOnboardInterface extends StatefulWidget {
   @override
   _KycOnboardInterfaceState createState() => _KycOnboardInterfaceState();
 }
 
-class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
+class _KycOnboardInterfaceState extends State<KycOnboardInterface>
+    with SingleTickerProviderStateMixin {
   double sliderPos = 10;
   PageController _pageController = new PageController();
   int currentPage = 0;
   double _pollHeight = 0;
-  int level = 5;
-  KycOnboardData kycGuide = new KycOnboardData();
+  BaseUtil baseProvider;
+  DBModel dbProvider;
+  List stepStatus = [];
+  bool kycDetailsFetched = false;
+  AnimationController _rippleController;
+  final GlobalKey<ScaffoldState> _kycOnboardScaffoldKey =
+      GlobalKey<ScaffoldState>();
+  KYCModel kycModel = KYCModel();
+  bool isSummChecked = false;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getStepStatus();
+      getReadStatus();
+    });
+    _rippleController = AnimationController(
+      vsync: this,
+      lowerBound: 0.5,
+      duration: Duration(seconds: 3),
+    )..repeat();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _rippleController.dispose();
+    super.dispose();
+  }
 
   _slide(int pos, double deviceWidth) {
     setState(() {
@@ -45,26 +80,65 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
     });
   }
 
-  _animatePoll(int level) {
+  delete() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool("summCheck", null);
+  }
+
+  _animatePoll(List stepStatus) {
+    print(stepStatus);
+    int i = 0;
+    int stepsReached = 0;
+    while (stepStatus[i] == 1) {
+      i++;
+      stepsReached++;
+    }
     setState(() {
-      _pollHeight = 130.0 * kycGuide.level;
+      _pollHeight = 132.0 * stepsReached;
     });
   }
 
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _animatePoll(level - 1);
-    });
+  getStepStatus() async {
+    await kycModel.init();
+    baseProvider.kycDetail =
+        await dbProvider.getUserKycDetails(baseProvider.myUser.uid);
+    _animatePoll(baseProvider.kycDetail.isStepComplete);
+    kycDetailsFetched = true;
+    setState(() {});
+  }
 
-    super.initState();
+  getReadStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool("summCheck") == null) {
+      prefs.setBool("summCheck", true);
+      setState(() {
+        isSummChecked = true;
+      });
+    } else {
+      setState(() {
+        isSummChecked = false;
+      });
+    }
+  }
+
+  double _calculateProgress(List stepStatus) {
+    int i = 0;
+    int stepsCompleted = 0;
+    while (stepStatus[i] == 1) {
+      i++;
+      stepsCompleted++;
+    }
+    return stepsCompleted * 1.0;
   }
 
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
+    baseProvider = Provider.of<BaseUtil>(context);
+    dbProvider = Provider.of<DBModel>(context);
     return Scaffold(
+      key: _kycOnboardScaffoldKey,
       body: Stack(
         children: [
           NestedScrollView(
@@ -85,19 +159,6 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
                   ),
                   automaticallyImplyLeading: false,
                   flexibleSpace: FlexibleSpaceBar(
-                    // centerTitle: true,
-                    // title: SafeArea(
-                    //   child: Container(
-                    //     height: 100,
-                    //     width: double.infinity,
-                    //     child: Text(
-                    //       "KYC Verification",
-                    //       style: GoogleFonts.quicksand(
-                    //         fontWeight: FontWeight.w500,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
                     collapseMode: CollapseMode.parallax,
                     background: Container(
                       width: MediaQuery.of(context).size.width,
@@ -105,55 +166,56 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
                       decoration: BoxDecoration(
                         gradient: new LinearGradient(
                           colors: [
-                            Colors.white.withOpacity(1),
+                            Colors.white.withOpacity(0.5),
                             Colors.white,
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                         ),
                       ),
-                      child: Stack(
+                      child: Column(
                         children: [
-                          SafeArea(
-                            minimum: EdgeInsets.all(_height * 0.1),
-                            child: Lottie.asset("images/verification.json"),
+                          Expanded(
+                            child: SafeArea(
+                              minimum: EdgeInsets.only(
+                                  top: MediaQuery.of(context).padding.top +
+                                      kToolbarHeight),
+                              child: Image.asset("images/kyc_unavailable.png"),
+                            ),
                           ),
-                          Positioned(
-                            bottom: 0,
-                            child: Container(
-                                width: _width,
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: _width * 0.1,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Get Your KYC Done",
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xff00587a),
-                                        fontSize: _width * 0.09,
-                                      ),
+                          Container(
+                              width: _width,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: _width * 0.1,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Get Your KYC Done",
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xff00587a),
+                                      fontSize: _width * 0.09,
                                     ),
-                                    SizedBox(
-                                      height: 10,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    "Complete your KYC once and invest anywhere afterwards.",
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xff00587a),
+                                      fontSize: 16,
                                     ),
-                                    Text(
-                                      "Complete your KYC once and invest anywhere from now on.",
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xff00587a),
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: _height * 0.03,
-                                    ),
-                                  ],
-                                )),
-                          ),
+                                  ),
+                                  SizedBox(
+                                    height: _height * 0.03,
+                                  ),
+                                ],
+                              )),
                         ],
                       ),
                     ),
@@ -198,33 +260,59 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
                                   onTap: () => _slide(1, _width),
                                   child: Text(
                                     "Application",
-                                    style: TextStyle(
-                                      fontWeight: currentPage == 0
-                                          ? FontWeight.w700
-                                          : FontWeight.w300,
-                                    ),
+                                    style: currentPage == 0
+                                        ? TextStyle(
+                                            fontSize: 22,
+                                            color: KycOnboardData.titleColor,
+                                            fontWeight: FontWeight.w700)
+                                        : TextStyle(
+                                            fontSize: 18,
+                                          ),
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: () => _slide(2, _width),
-                                  child: Text(
-                                    "Details",
-                                    style: TextStyle(
-                                      fontWeight: currentPage == 1
-                                          ? FontWeight.w700
-                                          : FontWeight.w300,
-                                    ),
+                                  onTap: () {
+                                    isSummChecked = false;
+                                    _slide(2, _width);
+                                  },
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Summary",
+                                        style: currentPage == 1
+                                            ? TextStyle(
+                                                fontSize: 22,
+                                                color:
+                                                    KycOnboardData.titleColor,
+                                                fontWeight: FontWeight.w700)
+                                            : TextStyle(
+                                                fontSize: 18,
+                                              ),
+                                      ),
+                                      isSummChecked
+                                          ? CircleAvatar(
+                                              radius: 3,
+                                              backgroundColor:
+                                                  UiConstants.primaryColor,
+                                            )
+                                          : SizedBox(),
+                                    ],
                                   ),
                                 ),
                                 GestureDetector(
                                   onTap: () => _slide(3, _width),
                                   child: Text(
-                                    "Requirements",
-                                    style: TextStyle(
-                                      fontWeight: currentPage == 2
-                                          ? FontWeight.w700
-                                          : FontWeight.w300,
-                                    ),
+                                    "Instructions",
+                                    style: currentPage == 2
+                                        ? TextStyle(
+                                            fontSize: 22,
+                                            color: KycOnboardData.titleColor,
+                                            fontWeight: FontWeight.w700)
+                                        : TextStyle(
+                                            fontSize: 18,
+                                          ),
                                   ),
                                 ),
                               ],
@@ -247,13 +335,13 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
                             SingleChildScrollView(
                               child: Container(
                                 width: _width,
-                                height: 8 * 145.0,
+                                height: 10 * 145.0,
                                 padding: EdgeInsets.only(left: 5, right: 10),
                                 child: Stack(
                                   children: [
                                     AnimatedContainer(
                                       duration: Duration(
-                                        milliseconds: 8000,
+                                        milliseconds: 5000,
                                       ),
                                       width: 5,
                                       height: _pollHeight,
@@ -282,74 +370,36 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
                                             right: 10,
                                           ),
                                           child: Column(
-                                            children: [
-                                              StepCard(
-                                                status: 1,
-                                                level: 0,
-                                              ),
-                                              StepCard(
-                                                status: 1,
-                                                level: 1,
-                                              ),
-                                              StepCard(
-                                                status: -1,
-                                                level: 2,
-                                              ),
-                                              StepCard(
-                                                status: 1,
-                                                level: 3,
-                                              ),
-                                              StepCard(
-                                                status: 1,
-                                                level: 4,
-                                              ),
-                                              StepCard(
-                                                status: 0,
-                                                level: 5,
-                                              ),
-                                              StepCard(
-                                                status: 0,
-                                                level: 6,
-                                              ),
-                                              StepCard(
-                                                status: 0,
-                                                level: 7,
-                                              ),
-                                            ],
+                                            children: kycDetailsFetched
+                                                ? _createCardList(baseProvider
+                                                    .kycDetail.isStepComplete)
+                                                : [
+                                                    Padding(
+                                                      //Loader
+                                                      padding:
+                                                          EdgeInsets.all(10),
+                                                      child: Container(
+                                                        width: double.infinity,
+                                                        height: 200,
+                                                        child: Center(
+                                                          child: SpinKitWave(
+                                                            color: UiConstants
+                                                                .primaryColor,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
                                           ),
                                         ),
-                                        // Container(
-                                        //   margin: EdgeInsets.only(
-                                        //     top: 40,
-                                        //     left: 10,
-                                        //     right: 5,
-                                        //   ),
-                                        //   decoration: BoxDecoration(
-                                        //     borderRadius:
-                                        //         BorderRadius.circular(20),
-                                        //   ),
-                                        //   child:
-                                        // )
                                       ],
                                     ),
                                   ],
                                 ),
                               ),
                             ),
-                            Container(
-                              width: _width,
-                              child: Image.network(
-                                "https://i.redd.it/vdx6ey95lu211.jpg",
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Container(
-                              width: _width,
-                              child: Image.network(
-                                "https://static.zerochan.net/Ryuk.full.2728160.jpg",
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                            SummaryTab(),
+                            InstructionsTab(),
                           ],
                         ),
                       ),
@@ -362,7 +412,7 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
             top: _height * 0.013,
             child: SafeArea(
               child: Container(
-                width: 100,
+                width: 130,
                 height: 30,
                 decoration: BoxDecoration(
                   border: Border.all(
@@ -374,7 +424,11 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
                 child: Stack(
                   children: [
                     FractionallySizedBox(
-                      widthFactor: 0.125 * kycGuide.level,
+                      widthFactor: kycDetailsFetched
+                          ? _calculateProgress(
+                                  baseProvider.kycDetail.isStepComplete) /
+                              10
+                          : 0.0,
                       alignment: Alignment.centerLeft,
                       child: Container(
                         decoration: BoxDecoration(
@@ -384,7 +438,10 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
                       ),
                     ),
                     Center(
-                      child: Text("${kycGuide.level * 12.5}%"),
+                      child: Text(
+                          "${kycDetailsFetched ? _calculateProgress(baseProvider.kycDetail.isStepComplete) * 10 : [
+                              0
+                            ]}% Completed"),
                     ),
                   ],
                 ),
@@ -395,54 +452,32 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
       ),
     );
   }
-}
 
-class StepCard extends StatefulWidget {
-  final int status;
-  final int level;
-
-  StepCard({@required this.status, @required this.level});
-
-  @override
-  _StepCardState createState() => _StepCardState();
-}
-
-class _StepCardState extends State<StepCard>
-    with SingleTickerProviderStateMixin {
-  Color _focusColor;
-  KycOnboardData kycGuide = new KycOnboardData();
-
-  String text;
-
-  AnimationController _controller;
-
-  @override
-  void initState() {
-    _controller = AnimationController(
-      vsync: this,
-      lowerBound: 0.5,
-      duration: Duration(seconds: 3),
-    )..repeat();
-    super.initState();
+  _createCardList(List stepStatus) {
+    List<Widget> cardList = [];
+    for (int i = 0; i < 10; i++) {
+      cardList.add(
+        _stepCard(stepStatus[i], i),
+      );
+    }
+    return cardList;
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (widget.status == 0 || widget.level > kycGuide.level) {
-      _focusColor = Colors.grey;
-      text = "Start";
-    } else if (widget.status == -1 && widget.level < kycGuide.level) {
-      _focusColor = Colors.amber;
-      text = "Retry";
-    } else if (widget.status == 1 || widget.level < kycGuide.level) {
-      _focusColor = UiConstants.primaryColor;
-      text = "Completed";
+  _stepCard(int status, int level) {
+    Color _cardColor;
+    String _cardText;
+    if (status == 2) {
+      _cardColor = UiConstants.primaryColor;
+      _cardText = "Start";
+    } else if (status == 0) {
+      _cardColor = Colors.grey;
+      _cardText = "Incomplete";
+    } else if (status == 1) {
+      _cardColor = UiConstants.primaryColor;
+      _cardText = "Completed";
+    } else if (status == -1) {
+      _cardColor = Colors.amber;
+      _cardText = "Retry";
     }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -452,37 +487,30 @@ class _StepCardState extends State<StepCard>
           width: 50,
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.all(5),
-          child: widget.level == kycGuide.level
+          child: status == 2
               ? _buildBody(
                   Container(
                     margin: EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       gradient: new LinearGradient(
                         colors: [
-                          _focusColor,
-                          _focusColor.withGreen(160),
+                          _cardColor,
+                          _cardColor.withGreen(160),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: _focusColor.withOpacity(0.2),
-                          blurRadius: 5,
-                          spreadRadius: 5,
-                        ),
-                      ],
                     ),
                   ),
-                )
+                  _cardColor)
               : Container(
                   margin: EdgeInsets.all(7),
                   decoration: BoxDecoration(
                     gradient: new LinearGradient(
                       colors: [
-                        _focusColor,
-                        _focusColor.withGreen(160),
+                        _cardColor,
+                        _cardColor.withGreen(160),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -493,37 +521,83 @@ class _StepCardState extends State<StepCard>
         ),
         Expanded(
           child: GestureDetector(
-            onTap: () => kycGuide.stepButtonAction(widget.level, context),
-            child: Container(
-              height: 100,
-              margin: EdgeInsets.only(
-                top: 30,
-              ),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 2,
-                  color: _focusColor,
-                ),
-                borderRadius: BorderRadius.circular(10),
-                color: _focusColor.withOpacity(0.05),
-              ),
-              child: Center(
-                child: ListTile(
-                  contentPadding: EdgeInsets.all(10),
-                  title: Text("PAN"),
-                  leading: widget.level != 7 ? null : Icon(Icons.lock),
-                  subtitle: Text("Your PAN is required for verification"),
-                  trailing: Text(
-                    text + "    ",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: _focusColor,
-                      fontSize: 15,
+            onTap: () async {
+              await KycOnboardData()
+                  .stepButtonAction(
+                      level, _kycOnboardScaffoldKey.currentContext)
+                  .then((value) {
+                print(value);
+                setState(() {});
+              });
+            },
+            child: level == 9
+                ? Container(
+                    height: 100,
+                    margin: EdgeInsets.only(
+                      top: 30,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: AssetImage("images/scratch-card.png"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.lock,
+                            color: Colors.white,
+                            size: 50,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "REWARD",
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : Container(
+                    height: 100,
+                    margin: EdgeInsets.only(
+                      top: 30,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 2,
+                        color: _cardColor,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                      color: _cardColor.withOpacity(0.05),
+                    ),
+                    child: Center(
+                      child: ListTile(
+                        contentPadding: EdgeInsets.all(10),
+                        title:
+                            Text(KycOnboardData.stageCardData[level]["title"]),
+                        subtitle: Text(
+                            KycOnboardData.stageCardData[level]["subtitle"]),
+                        trailing: Text(
+                          _cardText + "    ",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: _cardColor,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ),
           ),
         )
       ],
@@ -532,19 +606,19 @@ class _StepCardState extends State<StepCard>
 
 // RIPPLE EFFECT BUILD
 
-  Widget _buildBody(Widget core) {
+  Widget _buildBody(Widget core, Color rippleColor) {
     return AnimatedBuilder(
-      animation:
-          CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn),
+      animation: CurvedAnimation(
+          parent: _rippleController, curve: Curves.fastOutSlowIn),
       builder: (context, child) {
         return Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            _buildContainer(30 * _controller.value),
-            _buildContainer(35 * _controller.value),
-            _buildContainer(40 * _controller.value),
-            _buildContainer(45 * _controller.value),
-            _buildContainer(50 * _controller.value),
+            _buildContainer(30 * _rippleController.value, rippleColor),
+            _buildContainer(35 * _rippleController.value, rippleColor),
+            _buildContainer(40 * _rippleController.value, rippleColor),
+            _buildContainer(45 * _rippleController.value, rippleColor),
+            _buildContainer(50 * _rippleController.value, rippleColor),
             Align(child: core),
           ],
         );
@@ -552,13 +626,13 @@ class _StepCardState extends State<StepCard>
     );
   }
 
-  Widget _buildContainer(double radius) {
+  Widget _buildContainer(double radius, Color rippleColor) {
     return Container(
       width: radius,
       height: radius,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: _focusColor.withOpacity(1 - _controller.value),
+        color: rippleColor.withOpacity(1 - _rippleController.value),
       ),
     );
   }

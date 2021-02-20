@@ -153,7 +153,7 @@ class _OptionsList extends State<SettingsPage> {
                   return;
                 }
                 if(baseProvider.isSignedIn() && baseProvider.isActiveUser()) {
-                  reqProvider.addCallbackRequest(baseProvider.firebaseUser.uid, baseProvider.myUser.mobile).then((flag) {
+                  reqProvider.addCallbackRequest(baseProvider.firebaseUser.uid, baseProvider.myUser.name, baseProvider.myUser.mobile).then((flag) {
                     if(flag) {
                       Navigator.of(context).pop();
                       baseProvider.showPositiveAlert('Callback placed!', 'We\'ll contact you soon on your registered mobile', context);
@@ -245,7 +245,7 @@ class _OptionsList extends State<SettingsPage> {
       new OptionDetail(key: 'fdbk', value: 'Feedback', isEnabled: true),
       new OptionDetail(key: 'faq', value: 'FAQs', isEnabled: true),
       new OptionDetail(key: 'editProf', value: 'Update Details',isEnabled: true),
-      new OptionDetail(key: 'kyc', value: 'KYC',isEnabled: true),
+      // new OptionDetail(key: 'kyc', value: 'KYC',isEnabled: true),
 
       new OptionDetail(key: 'contUs', value: 'Contact Us', isEnabled: true),
       new OptionDetail(key: 'signOut', value: 'Sign Out', isEnabled: (baseProvider.isSignedIn())),

@@ -3,6 +3,7 @@ enum FailType{
   UserKYCFlagFetchFailed,
   UserICICAppCreationFailed,
   UserICICIBasicFieldUpdateFailed,
+  UserICICIFatcaFieldUpdateFailed,
   UserICICIIncomeFieldUpdateFailed,
   UserInsufficientBankDetailFailed,
   UserICICIBankFieldUpdateFailed,
@@ -11,7 +12,13 @@ enum FailType{
   UserICICIOTPResendFailed,
   UserICICIPfCreationFailed,
   UserPfCreatedButFolioFailed,
-  UserTransactionFailed
+  UserTransactionInitiateFailed,
+  UserTransactionDetailSaveFailed,
+  UserTransactionVerifyTimeoutFailed,
+  UserWithdrawalCheckIMPSFailed,
+  UserWithdrawalGetRedeemFailed,
+  UserWithdrawalExitLoadFailed,
+  UserWithdrawalSubmitFailed
 }
 
 extension ParseToString on FailType {

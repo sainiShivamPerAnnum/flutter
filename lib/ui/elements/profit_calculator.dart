@@ -9,8 +9,8 @@ class ProfitCalculator extends StatefulWidget {
 class _ProfitCalculatorState extends State<ProfitCalculator> {
   TextEditingController inputPrice = new TextEditingController();
   int months = 1;
-  double price = 100;
-  double outputprice = 100;
+  double price = 1000;
+  double outputprice = 1007;
   List<double> chipAmountList = [100, 500, 1000, 5000];
 
   Widget amoutChip(double amt) {
@@ -31,7 +31,7 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
-    outputprice = price + price * 0.0353 * months;
+    outputprice = price + price * (0.06/12) * months;
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: _height * 0.02,

@@ -8,10 +8,8 @@ import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/elements/board_selector.dart';
-import 'package:felloapp/ui/elements/daily_pick_text_slider.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/ui/elements/prize_dialog.dart';
-import 'package:felloapp/ui/elements/raffle_digit.dart';
 import 'package:felloapp/ui/elements/roulette.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
 import 'package:felloapp/ui/elements/tambola_dialog.dart';
@@ -29,6 +27,7 @@ import 'package:showcaseview/showcase.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 class PlayHome extends StatefulWidget {
+  static final int index = (BaseUtil.playScreenFirst) ? 0 : 1;
   @override
   _HState createState() => _HState();
 }
@@ -64,6 +63,12 @@ class _HState extends State<PlayHome> {
   GlobalKey _showcaseFour = GlobalKey();
   bool _showTutorial = false;
   Timer _prizeTimer;
+
+  // ScrollController _scrollController1;
+  // ScrollController _scrollController2;
+  // ScrollController _scrollController3;
+  // ScrollController _scrollController4;
+  // ScrollController _scrollController5;
 
   @override
   void initState() {
@@ -695,57 +700,95 @@ class _HState extends State<PlayHome> {
     return picks;
   }
 
-  Widget _getDrawBallRow(DailyPick draws, int day) {
-    balls = [];
-    if (draws != null && draws.getWeekdayDraws(day - 1) != null) {
-      draws.getWeekdayDraws(day - 1).forEach((element) {
-        balls.add(_getDrawBall(element));
-      });
-    } else {
-      for (int i = 0; i < 5; i++) {
-        balls.add(_getDrawBall(0));
-      }
-    }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: balls,
-    );
-  }
+// <<<<<<< HEAD
+//   Widget _getDrawBallRow(DailyPick draws, int day) {
+//     balls = [];
+//     if (draws != null && draws.getWeekdayDraws(day - 1) != null) {
+//       draws.getWeekdayDraws(day - 1).forEach((element) {
+//         balls.add(_getDrawBall(element));
+//       });
+//     } else {
+//       for (int i = 0; i < 5; i++) {
+//         balls.add(_getDrawBall(0));
+//       }
+//     }
+//     return Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//       children: balls,
+//     );
+//   }
 
-  Widget _getDrawBall(int digit) {
-    double xWidth = MediaQuery.of(context).size.width;
-    double xFont = double.parse((xWidth / 18).toStringAsFixed(2));
-    //   log.debug(xFont.toString());
-    return Stack(
-      children: [
-        Container(
-          width: 40,
-          height: 40,
-          decoration: new BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-          ),
-        ),
-        Center(
-          child: (digit != null && digit > 0)
-              ? Padding(
-                  padding: EdgeInsets.only(left: xFont / 3.3, top: xFont / 3),
-                  child: SingleDigit(
-                    initialValue: digit,
-                    textStyle: TextStyle(color: Colors.black, fontSize: xFont),
-                  ))
-              : Padding(
-                  padding: EdgeInsets.only(left: 16, top: 7),
-                  child: Text(
-                    '-',
-                    style: TextStyle(fontSize: 22, color: Colors.black38),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-        )
-      ],
-    );
-  }
+//   Widget _getDrawBall(int digit) {
+//     double xWidth = MediaQuery.of(context).size.width;
+//     double xFont = double.parse((xWidth / 18).toStringAsFixed(2));
+//     //   log.debug(xFont.toString());
+//     return Stack(
+//       children: [
+//         Container(
+//           width: 40,
+//           height: 40,
+//           decoration: new BoxDecoration(
+//             color: Colors.white,
+//             shape: BoxShape.circle,
+//           ),
+//         ),
+//         Center(
+//           child: (digit != null && digit > 0)
+//               ? Padding(
+//                   padding: EdgeInsets.only(left: xFont / 3.3, top: xFont / 3),
+//                   child: SingleDigit(
+//                     initialValue: digit,
+//                     textStyle: TextStyle(color: Colors.black, fontSize: xFont),
+//                   ))
+//               : Padding(
+//                   padding: EdgeInsets.only(left: 16, top: 7),
+//                   child: Text(
+//                     '-',
+//                     style: TextStyle(fontSize: 22, color: Colors.black38),
+//                     textAlign: TextAlign.center,
+//                   ),
+//                 ),
+//         )
+//       ],
+//     );
+//   }
+// =======
+  // Widget _getDrawBall(
+  //   int digit,
+  // ) {
+  //   double xWidth = MediaQuery.of(context).size.width;
+  //   double xFont = double.parse((xWidth / 18).toStringAsFixed(2));
+  //   return Stack(
+  //     children: [
+  //       Container(
+  //         width: 40,
+  //         height: 40,
+  //         decoration: new BoxDecoration(
+  //           color: Colors.white,
+  //           shape: BoxShape.circle,
+  //         ),
+  //       ),
+  //       Center(
+  //         child: (digit != null && digit > 0)
+  //             ? Padding(
+  //                 padding: EdgeInsets.only(left: xFont / 3.3, top: xFont / 3),
+  //                 child: SingleDigit(
+  //                   initialValue: digit,
+  //                   textStyle: TextStyle(color: Colors.black, fontSize: xFont),
+  //                 ))
+  //             : Padding(
+  //                 padding: EdgeInsets.only(left: 16, top: 7),
+  //                 child: Text(
+  //                   '-',
+  //                   style: TextStyle(fontSize: 22, color: Colors.black38),
+  //                   textAlign: TextAlign.center,
+  //                 ),
+  //               ),
+  //       )
+  //     ],
+  //   );
+  // }
+//>>>>>>> fe967712be963b72ac3e0241fe9b31044dee0fa8
 
   Widget _buildPrizeButton() {
     Random rnnd = new Random();

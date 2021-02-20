@@ -14,7 +14,7 @@ class User {
   int _account_balance;
   int _deposit_balance;
   int _prize_balance;
-  int _icici_balance;
+  double _icici_balance;
   int _lifetime_winnings;
   String _pan;
   String _age;
@@ -22,6 +22,7 @@ class User {
   bool _isIciciOnboarded;
   int _isKycVerified;
   String _pendingTxnId;
+  bool _isIciciEnabled;
 
   static final String fldId = "mID";
   static final String fldMobile = "mMobile";
@@ -34,6 +35,7 @@ class User {
   static final String fldAge = "mAge";
   static final String fldIsInvested = "mIsInvested";
   static final String fldIsIciciOnboarded = "mIsIciciOnboarded";
+  static final String fldIsIciciEnabled = "mIsIciciEnabled";
   static final String fldIsKycVerified = "mIsKycVerified";
   static final String fldDepositBalance = "mDepBalance";
   static final String fldPriBalance = "mPriBalance";
@@ -45,13 +47,13 @@ class User {
       this._ticket_count, this._account_balance, this._deposit_balance,
       this._prize_balance, this._icici_balance, this._lifetime_winnings,
       this._pan, this._age, this._isInvested, this._isIciciOnboarded,
-      this._isKycVerified, this._pendingTxnId);
+      this._isKycVerified, this._pendingTxnId, this._isIciciEnabled);
 
   static List<String> _fldList = [ fldMobile, fldEmail, fldName, fldPan, fldAge ];
 
   User.newUser(String id, String mobile) : this(id, mobile, null, null, null,
       BaseUtil.NEW_USER_TICKET_COUNT, 0, 0, 0, 0, 0, null, null, false, false,
-      BaseUtil.KYC_UNTESTED,null);
+      BaseUtil.KYC_UNTESTED,null,null);
 
   User.fromMap(Map<String, dynamic> data, String id, [String client_token]) :
         this(id, data[fldMobile], data[fldEmail], data[fldName], client_token,
@@ -59,12 +61,12 @@ class User {
           data[fldDepositBalance]??0,data[fldPriBalance]??0, data[fldICICIBalance]??0,
           data[fldLifeTimeWinnings]??0,data[fldPan],data[fldAge], data[fldIsInvested]??false,
           data[fldIsIciciOnboarded]??false, data[fldIsKycVerified]??BaseUtil.KYC_UNTESTED,
-          data[fldPendingTxnId]
+          data[fldPendingTxnId],data[fldIsIciciEnabled]
       );
 
   //to send user object to server
   toJson() {
-    return {
+    var userObj = {
       fldMobile: _mobile,
       fldName: _name,
       fldEmail: _email,
@@ -81,6 +83,9 @@ class User {
       fldIsKycVerified: _isKycVerified,
       fldPendingTxnId: _pendingTxnId
     };
+    if(_isIciciEnabled != null)userObj[fldIsIciciEnabled]=_isIciciEnabled;
+
+    return userObj;
   }
 
   //to compile from cache
@@ -260,9 +265,9 @@ class User {
     _deposit_balance = value;
   }
 
-  int get icici_balance => _icici_balance;
+  double get icici_balance => _icici_balance;
 
-  set icici_balance(int value) {
+  set icici_balance(double value) {
     _icici_balance = value;
   }
 
@@ -270,5 +275,11 @@ class User {
 
   set pendingTxnId(String value) {
     _pendingTxnId = value;
+  }
+
+  bool get isIciciEnabled => _isIciciEnabled;
+
+  set isIciciEnabled(bool value) {
+    _isIciciEnabled = value;
   }
 }

@@ -13,12 +13,14 @@ import 'package:slider_button/slider_button.dart';
 
 class DepositModalSheet extends StatefulWidget {
   final ValueChanged<Map<String, dynamic>> onDepositConfirmed;
-  DepositModalSheet({Key key, this.onDepositConfirmed}):super(key: key);
+
+  DepositModalSheet({Key key, this.onDepositConfirmed}) : super(key: key);
 
   DepositModalSheetState createState() => DepositModalSheetState();
 }
 
-class DepositModalSheetState extends State<DepositModalSheet> with SingleTickerProviderStateMixin {
+class DepositModalSheetState extends State<DepositModalSheet>
+    with SingleTickerProviderStateMixin {
   DepositModalSheetState();
 
   Log log = new Log('DepositModalSheet');
@@ -26,6 +28,7 @@ class DepositModalSheetState extends State<DepositModalSheet> with SingleTickerP
   bool _isDepositRequested = false;
   bool _isFirstInvestment = true;
   bool _isPendingTransaction = false;
+  bool _isDepositsEnabled = true;
   BaseUtil baseProvider;
   final _amtController = new TextEditingController();
   final _vpaController = new TextEditingController();
@@ -36,11 +39,20 @@ class DepositModalSheetState extends State<DepositModalSheet> with SingleTickerP
   double _width;
 
   _initFields() {
-    if(baseProvider != null) {
-      if(baseProvider.iciciDetail.vpa != null && baseProvider.iciciDetail.vpa.isNotEmpty)
+    if (baseProvider != null) {
+      if (baseProvider.iciciDetail.vpa != null &&
+          baseProvider.iciciDetail.vpa.isNotEmpty)
         _vpaController.text = baseProvider.iciciDetail.vpa;
-      _isFirstInvestment = baseProvider.iciciDetail.firstInvMade??true;
+      _isFirstInvestment = (!baseProvider.iciciDetail.firstInvMade) ?? true;
       _isPendingTransaction = (baseProvider.myUser.pendingTxnId != null);
+      String isEnabledStr =
+          BaseUtil.remoteConfig.getString('icici_deposits_enabled');
+      try {
+        int t = (isEnabledStr != null) ? int.parse(isEnabledStr) : 1;
+        _isDepositsEnabled = (t == 1);
+      } catch (e) {
+        _isDepositsEnabled = true;
+      }
       _isInitialized = true;
     }
   }
@@ -54,10 +66,10 @@ class DepositModalSheetState extends State<DepositModalSheet> with SingleTickerP
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
     _width = MediaQuery.of(context).size.width;
-    if(!_isInitialized)_initFields();
+    if (!_isInitialized) _initFields();
     return Container(
       padding:
-      EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       margin: EdgeInsets.only(left: 18, right: 18),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -89,19 +101,23 @@ class DepositModalSheetState extends State<DepositModalSheet> with SingleTickerP
                 autofocus: false,
                 controller: _amtController,
                 keyboardType: TextInputType.number,
-                decoration: inputFieldDecoration(
-                    "Enter an amount"
-                ),
+                decoration: inputFieldDecoration("Enter an amount"),
                 validator: (value) {
                   RegExp amRegex = RegExp(r"[0-9]");
-                  if(value.isEmpty) return 'Please enter an amount';
-                  else if(!amRegex.hasMatch(value))return 'Please enter a valid amount';
+                  if (value.isEmpty)
+                    return 'Please enter an amount';
+                  else if (!amRegex.hasMatch(value))
+                    return 'Please enter a valid amount';
 
                   int amount = int.parse(value);
-                  if(_isFirstInvestment && amount<100) return 'Your first investment has to be atleast ₹100';
-                  else if(!_isFirstInvestment && amount<1) return 'Please enter a valid amount';
-                  else if(amount > 2000) return 'We are currently only accepting a max deposit of ₹2000 per transaction';
-                  else return null;
+                  if (_isFirstInvestment && amount < 100)
+                    return 'Your first investment has to be atleast ₹100';
+                  else if (!_isFirstInvestment && amount < 1)
+                    return 'Please enter a valid amount';
+                  else if (amount > 2000)
+                    return 'We are currently only accepting a max deposit of ₹2000 per transaction';
+                  else
+                    return null;
                 },
               ),
             ),
@@ -110,14 +126,16 @@ class DepositModalSheetState extends State<DepositModalSheet> with SingleTickerP
                 autofocus: false,
                 controller: _vpaController,
                 keyboardType: TextInputType.emailAddress,
-                decoration: inputFieldDecoration(
-                    "Enter your UPI Id"
-                ),
+                decoration: inputFieldDecoration("Enter your UPI Id"),
                 validator: (value) {
-                  RegExp upiRegex = RegExp('[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}');
-                  if(value == null || value.isEmpty)return 'Please enter your UPI ID';
-                  else if(!upiRegex.hasMatch(value))return 'Please enter a valid UPI ID';
-                  else return null;
+                  RegExp upiRegex =
+                      RegExp('[-a-zA-Z0-9._]{2,256}@[a-zA-Z]{2,64}');
+                  if (value == null || value.isEmpty)
+                    return 'Please enter your UPI ID';
+                  else if (!upiRegex.hasMatch(value))
+                    return 'Please enter a valid UPI ID';
+                  else
+                    return null;
                 },
               ),
             ),
@@ -125,16 +143,16 @@ class DepositModalSheetState extends State<DepositModalSheet> with SingleTickerP
               spacing: 20,
               children: [
                 ActionChip(
-                  label: Text("What is my UPI?"),
+                  label: Text("What is my UPI ID?"),
                   backgroundColor: UiConstants.chipColor,
                   onPressed: () {
                     HapticFeedback.vibrate();
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => MoreInfoDialog(
-                          text: Assets.infoWhatUPI,
-                          title: 'Why is my UPI?',
-                        ));
+                              text: Assets.infoWhatUPI,
+                              title: 'Why is my UPI ID?',
+                            ));
                   },
                 ),
                 ActionChip(
@@ -145,87 +163,104 @@ class DepositModalSheetState extends State<DepositModalSheet> with SingleTickerP
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => MoreInfoDialog(
-                          text: Assets.infoWhereUPI,
-                          title: 'Where can i find my UPI Id?',
-                        ));
+                              text: Assets.infoWhereUPI,
+                              title: 'Where can i find my UPI Id?',
+                            ));
                   },
                 ),
               ],
             ),
-            (_errorMessage!=null)?Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: _width,
-                  child: Text(
-                      'Error: $_errorMessage',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.redAccent,
-                          fontSize: 18
+            (_errorMessage != null)
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: _width * 0.7,
+                        child: Text('Error: $_errorMessage',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.redAccent, fontSize: 16)),
                       )
-                  ),
-                )
-              ],
-            ):Container(),
+                    ],
+                  )
+                : Container(),
             SizedBox(
               height: 20,
             ),
-            (!_isDepositInProgress && !_isPendingTransaction)?Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-              child: SliderButton(
-                action: () {
-                  //widget.onDepositConfirmed();
-                  if(depositformKey2.currentState.validate()) {
-                    _isDepositInProgress = true;
-                    setState(() {});
-                    widget.onDepositConfirmed({
-                      'amount': _amtController.text,
-                      'vpa': _vpaController.text
-                    });
-                  }
-                },
-                alignLabel: Alignment.center,
-                label: Text('Slide to confirm',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Color(0xff4a4a4a),
-                      fontWeight: FontWeight.w500,
-                      fontSize: 17),
-                ),
-                buttonSize: 50,
-                height: 50,
-                radius: 16,
-                width: double.infinity,
-                dismissible: false,
-                dismissThresholds: 0.8,
-                icon: Icon(
-                  Icons.arrow_forward_ios,
-                  color: UiConstants.primaryColor,
-                ),
-              ),
-            ):Container(),
-            (_isDepositInProgress)?Padding(
-              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-              child: SpinKitRing(
-                color: UiConstants.primaryColor,
-                size: 38.0,
-              ),
-            ):Container(),
-            (_isPendingTransaction)?Padding(
-              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-              child: Container(
-                width: _width,
-                child: Text('A previous deposit is currently pending.\n Please '
-                    + 'wait until it has been successfully processed.',
-                  textAlign: TextAlign.center,
-                  style:TextStyle(
-                    fontSize: 16,
-                    color: UiConstants.accentColor
+            (_isDepositsEnabled &&
+                    !_isDepositInProgress &&
+                    !_isPendingTransaction)
+                ? Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: SliderButton(
+                      action: () {
+                        //widget.onDepositConfirmed();
+                        if (depositformKey2.currentState.validate()) {
+                          _isDepositInProgress = true;
+                          setState(() {});
+                          widget.onDepositConfirmed({
+                            'amount': _amtController.text,
+                            'vpa': _vpaController.text
+                          });
+                        }
+                      },
+                      alignLabel: Alignment.center,
+                      label: Text(
+                        'Slide to confirm',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Color(0xff4a4a4a),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 17),
+                      ),
+                      buttonSize: 50,
+                      height: 50,
+                      radius: 16,
+                      width: double.infinity,
+                      dismissible: false,
+                      dismissThresholds: 0.8,
+                      icon: Icon(
+                        Icons.arrow_forward_ios,
+                        color: UiConstants.primaryColor,
+                      ),
+                    ),
                   )
-                ),
-              )
-            ):Container()
+                : Container(),
+            (_isDepositInProgress)
+                ? Padding(
+                    padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                    child: SpinKitRing(
+                      color: UiConstants.primaryColor,
+                      size: 38.0,
+                    ),
+                  )
+                : Container(),
+            (_isPendingTransaction)
+                ? Padding(
+                    padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                    child: Container(
+                      width: _width,
+                      child: Text(
+                          'A previous deposit is currently pending.\n Please ' +
+                              'wait until it has been successfully processed.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 16, color: UiConstants.accentColor)),
+                    ))
+                : Container(),
+            (!_isDepositsEnabled)
+                ? Padding(
+                    padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                    child: Container(
+                      width: _width,
+                      child: Text(
+                          'We are currently not accepting deposits for ' +
+                              'the ICICI Prudential Liquid Fund - Growth',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 16, color: UiConstants.accentColor)),
+                    ))
+                : Container()
           ],
         ),
       ),
