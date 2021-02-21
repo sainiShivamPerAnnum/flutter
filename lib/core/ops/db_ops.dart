@@ -7,8 +7,8 @@ import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/service/api.dart';
-import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/credentials_stage.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/help_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -251,9 +251,8 @@ class DBModel extends ChangeNotifier {
       log.error('Aws Index key parsing failed: ' + e.toString());
       keyIndex = 3;
     }
-    QuerySnapshot querySnapshot =
-        await _api.getCredentialsByTypeAndStage('aws',
-            BaseUtil.activeAwsStage.value(), keyIndex);
+    QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
+        'aws', BaseUtil.activeAwsStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.documents.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.documents[0];
       if (snapshot.exists && snapshot.data['apiKey'] != null) {
@@ -270,9 +269,8 @@ class DBModel extends ChangeNotifier {
 
   Future<Map<String, String>> getActiveSignzyApiKey() async {
     int keyIndex = 1;
-    QuerySnapshot querySnapshot =
-        await _api.getCredentialsByTypeAndStage('signzy',
-            BaseUtil.activeSignzyStage.value(), keyIndex);
+    QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
+        'signzy', BaseUtil.activeSignzyStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.documents.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.documents[0];
       if (snapshot.exists && snapshot.data['apiKey'] != null) {
@@ -287,7 +285,8 @@ class DBModel extends ChangeNotifier {
     return null;
   }
 
-  Future<bool> addCallbackRequest(String uid, String name, String mobile) async {
+  Future<bool> addCallbackRequest(
+      String uid, String name, String mobile) async {
     try {
       DateTime today = DateTime.now();
       String year = today.year.toString();
@@ -306,7 +305,8 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> addHelpRequest(String uid, String name, String mobile, HelpType helpType) async {
+  Future<bool> addHelpRequest(
+      String uid, String name, String mobile, HelpType helpType) async {
     try {
       DateTime today = DateTime.now();
       String year = today.year.toString();
@@ -326,13 +326,17 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> addWinClaim(String uid, Map<String, int> resMap) async {
+  Future<bool> addWinClaim(String uid, String name, String mobile,
+      int currentTickCount, Map<String, int> resMap) async {
     try {
       DateTime date = new DateTime.now();
       int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
 
       Map<String, dynamic> data = {};
       data['user_id'] = uid;
+      data['mobile'] = mobile;
+      data['name'] = name;
+      data['tck_count'] = currentTickCount;
       data['week_code'] = weekCde;
       data['ticket_cat_map'] = resMap;
       data['timestamp'] = Timestamp.now();

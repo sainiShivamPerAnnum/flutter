@@ -27,7 +27,8 @@ import 'package:showcaseview/showcase.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 class PlayHome extends StatefulWidget {
-  static final int index = (BaseUtil.playScreenFirst)?0:1;
+  static final int index = (BaseUtil.playScreenFirst) ? 0 : 1;
+
   @override
   _HState createState() => _HState();
 }
@@ -497,7 +498,12 @@ class _HState extends State<PlayHome> {
 
     if (ticketCodeWinIndex.length > 0) {
       dbProvider
-          .addWinClaim(baseProvider.myUser.uid, ticketCodeWinIndex)
+          .addWinClaim(
+              baseProvider.myUser.uid,
+              baseProvider.myUser.name,
+              baseProvider.myUser.mobile,
+              baseProvider.myUser.ticket_count,
+              ticketCodeWinIndex)
           .then((flag) {
         log.debug('Added claim document');
       });

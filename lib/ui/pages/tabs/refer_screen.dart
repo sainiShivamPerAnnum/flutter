@@ -285,6 +285,9 @@ class _ReferScreenState extends State<ReferScreen> {
                         setState(() {});
                         FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
                           log.debug(flag);
+                        }).catchError((err){
+                          log.error('Share to whatsapp failed');
+                          log.error(err);
                         });
                       });
                       setState(() {});
