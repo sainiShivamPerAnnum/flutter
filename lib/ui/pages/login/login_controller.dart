@@ -123,7 +123,7 @@ class _LoginControllerState extends State<LoginController> {
         phoneNumber: this.verificationId,
         codeAutoRetrievalTimeout: autoRetrieve,
         codeSent: smsCodeSent,
-        timeout: const Duration(seconds: 10),
+        timeout: const Duration(seconds: 30),
         verificationCompleted: verifiedSuccess,
         verificationFailed: veriFailed);
   }
