@@ -270,7 +270,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   AuthCredential generateAuthCredential(String verificationId, String smsCode) {
-    final AuthCredential credential = PhoneAuthProvider.getCredential(
+    final AuthCredential credential = PhoneAuthProvider.credential(
       verificationId: verificationId,
       smsCode: smsCode,
     );

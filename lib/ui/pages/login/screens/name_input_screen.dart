@@ -49,9 +49,9 @@ class NameInputScreenState extends State<NameInputScreen> {
               ? new TextEditingController(text: authProvider.myUser.email)
               : new TextEditingController();
       _ageFieldController =
-      (authProvider.myUser != null && authProvider.myUser.age != null)
-          ? new TextEditingController(text: authProvider.myUser.age)
-          : new TextEditingController();
+          (authProvider.myUser != null && authProvider.myUser.age != null)
+              ? new TextEditingController(text: authProvider.myUser.age)
+              : new TextEditingController();
     }
     return Form(
         key: _formKey,
@@ -129,55 +129,50 @@ class NameInputScreenState extends State<NameInputScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 18.0),
-              child: Column(
-                children: [
-                  Text('Have you ever invested in mutual funds before?',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[600],
-                      fontStyle: FontStyle.italic
+                padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 18.0),
+                child: Column(
+                  children: [
+                    Text(
+                      'Have you ever invested in mutual funds before?',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.grey[600],
+                          fontStyle: FontStyle.italic),
                     ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  ToggleButtons(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Column(
-                          children: [
-                            Icon(Icons.check),
-                            Text('YES')
-                          ],
+                    SizedBox(
+                      height: 20,
+                    ),
+                    ToggleButtons(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(15),
+                          child: Column(
+                            children: [Icon(Icons.check), Text('YES')],
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Column(
-                          children: [
-                            Icon(Icons.clear),
-                            Text('NO')
-                          ],
+                        Padding(
+                          padding: EdgeInsets.all(15),
+                          child: Column(
+                            children: [Icon(Icons.clear), Text('NO')],
+                          ),
                         ),
-                      ),
-                    ],
-                    fillColor: UiConstants.primaryColor.withOpacity(0.3),
-                    isSelected: _selections,
-                    selectedColor: UiConstants.primaryColor,
-                    disabledColor: UiConstants.accentColor,
-                    onPressed: (int index) {
-                      _selections[index] = !_selections[index];
-                      if(index==0)_selections[1] = !_selections[1];
-                      else _selections[0] = !_selections[0];
-                      setState(() {});
-                    },
-                  )
-                ],
-              )
-            ),
+                      ],
+                      fillColor: UiConstants.primaryColor.withOpacity(0.3),
+                      isSelected: _selections,
+                      selectedColor: UiConstants.primaryColor,
+                      disabledColor: UiConstants.accentColor,
+                      onPressed: (int index) {
+                        _selections[index] = !_selections[index];
+                        if (index == 0)
+                          _selections[1] = !_selections[1];
+                        else
+                          _selections[0] = !_selections[0];
+                        setState(() {});
+                      },
+                    )
+                  ],
+                )),
           ],
         )
         //    )
@@ -210,7 +205,6 @@ class NameInputScreenState extends State<NameInputScreen> {
   set age(String value) {
     _ageFieldController.text = value;
   }
-
 
   bool get isInvested => _selections[0];
 
