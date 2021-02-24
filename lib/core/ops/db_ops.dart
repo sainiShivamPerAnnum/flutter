@@ -36,7 +36,7 @@ class DBModel extends ChangeNotifier {
   Future<BaseUser> getUser(String id) async {
     try {
       var doc = await _api.getUserById(id);
-      return BaseUser.fromMap(doc.data, id);
+      return BaseUser.fromMap(doc.data(), id);
     } catch (e) {
       log.error("Error fetch User details: " + e.toString());
       return null;
@@ -58,7 +58,7 @@ class DBModel extends ChangeNotifier {
   Future<UserIciciDetail> getUserIciciDetails(String id) async {
     try {
       var doc = await _api.getUserIciciDetailDocument(id);
-      return UserIciciDetail.fromMap(doc.data);
+      return UserIciciDetail.fromMap(doc.data());
     } catch (e) {
       log.error('Failed to fetch user icici details: $e');
       return null;
@@ -79,8 +79,8 @@ class DBModel extends ChangeNotifier {
   Future<UserKycDetail> getUserKycDetails(String id) async {
     try {
       var doc = await _api.getUserKycDetailDocument(id);
-      // print(UserKycDetail.fromMap(doc.data));
-      return UserKycDetail.fromMap(doc.data);
+      // print(UserKycDetail.fromMap(doc.data()));
+      return UserKycDetail.fromMap(doc.data());
     } catch (e) {
       log.error('Failed to fetch user kyc details: $e');
       return null;
@@ -102,7 +102,7 @@ class DBModel extends ChangeNotifier {
   Future<String> addUserTransaction(String userId, UserTransaction txn) async {
     try {
       var ref = await _api.addUserTransactionDocument(userId, txn.toJson());
-      return ref.documentID;
+      return ref.id;
     } catch (e) {
       log.error("Failed to update user transaction object: " + e.toString());
       return null;
@@ -113,7 +113,7 @@ class DBModel extends ChangeNotifier {
       String userId, String docId) async {
     try {
       var doc = await _api.getUserTransactionDocument(userId, docId);
-      return UserTransaction.fromMap(doc.data, doc.documentID);
+      return UserTransaction.fromMap(doc.data(), doc.id);
     } catch (e) {
       log.error('Failed to fetch user transaction details: $e');
       return null;
@@ -185,10 +185,10 @@ class DBModel extends ChangeNotifier {
           _api.getValidUserTickets(_id, _getWeekCode());
       _stream.listen((querySnapshot) {
         List<TambolaBoard> requestedBoards = [];
-        querySnapshot.documents.forEach((docSnapshot) {
+        querySnapshot.docs.forEach((docSnapshot) {
           if (docSnapshot.exists)
             log.debug('Received snapshot: ' + docSnapshot.data.toString());
-          TambolaBoard board = TambolaBoard.fromMap(docSnapshot.data);
+          TambolaBoard board = TambolaBoard.fromMap(docSnapshot.data());
           if (board.isValid()) requestedBoards.add(board);
         });
         log.debug(
@@ -208,11 +208,11 @@ class DBModel extends ChangeNotifier {
       int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
       QuerySnapshot querySnapshot = await _api.getWeekPickByCde(weekCde);
 
-      if (querySnapshot.documents.length != 1) {
+      if (querySnapshot.docs.length != 1) {
         log.error('Did not receive a single doc. Error staged');
         return null;
       } else {
-        return DailyPick.fromMap(querySnapshot.documents[0].data);
+        return DailyPick.fromMap(querySnapshot.docs[0].data());
       }
     } catch (e) {
       log.error("Error fetch Dailypick details: " + e.toString());
@@ -226,10 +226,10 @@ class DBModel extends ChangeNotifier {
       int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
 
       QuerySnapshot querySnapshot = await _api.getWinnersByWeekCde(weekCde);
-      if (querySnapshot != null && querySnapshot.documents.length == 1) {
-        DocumentSnapshot snapshot = querySnapshot.documents[0];
-        if (snapshot.exists && snapshot.data['winners'] != null) {
-          Map<String, dynamic> rMap = snapshot.data['winners'];
+      if (querySnapshot != null && querySnapshot.docs.length == 1) {
+        DocumentSnapshot snapshot = querySnapshot.docs[0];
+        if (snapshot.exists && snapshot.data()['winners'] != null) {
+          Map<String, dynamic> rMap = snapshot.data()['winners'];
           log.debug(rMap.toString());
           return rMap;
         }
@@ -253,13 +253,13 @@ class DBModel extends ChangeNotifier {
     }
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
         'aws', BaseUtil.activeAwsStage.value(), keyIndex);
-    if (querySnapshot != null && querySnapshot.documents.length == 1) {
-      DocumentSnapshot snapshot = querySnapshot.documents[0];
-      if (snapshot.exists && snapshot.data['apiKey'] != null) {
-        log.debug('Found apiKey: ' + snapshot.data['apiKey']);
+    if (querySnapshot != null && querySnapshot.docs.length == 1) {
+      DocumentSnapshot snapshot = querySnapshot.docs[0];
+      if (snapshot.exists && snapshot.data()['apiKey'] != null) {
+        log.debug('Found apiKey: ' + snapshot.data()['apiKey']);
         return {
-          'baseuri': snapshot.data['base_url'],
-          'key': snapshot.data['apiKey']
+          'baseuri': snapshot.data()['base_url'],
+          'key': snapshot.data()['apiKey']
         };
       }
     }
@@ -271,13 +271,13 @@ class DBModel extends ChangeNotifier {
     int keyIndex = 1;
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
         'signzy', BaseUtil.activeSignzyStage.value(), keyIndex);
-    if (querySnapshot != null && querySnapshot.documents.length == 1) {
-      DocumentSnapshot snapshot = querySnapshot.documents[0];
-      if (snapshot.exists && snapshot.data['apiKey'] != null) {
-        log.debug('Found apiKey: ' + snapshot.data['apiKey']);
+    if (querySnapshot != null && querySnapshot.docs.length == 1) {
+      DocumentSnapshot snapshot = querySnapshot.docs[0];
+      if (snapshot.exists && snapshot.data()['apiKey'] != null) {
+        log.debug('Found apiKey: ' + snapshot.data()['apiKey']);
         return {
-          'baseuri': snapshot.data['base_url'],
-          'key': snapshot.data['apiKey']
+          'baseuri': snapshot.data()['base_url'],
+          'key': snapshot.data()['apiKey']
         };
       }
     }
@@ -352,8 +352,8 @@ class DBModel extends ChangeNotifier {
   Future<int> getReferCount(String uid) async {
     try {
       var docs = await _api.getReferedDocs(uid);
-      if (docs != null && docs.documents != null && docs.documents.length > 0)
-        return docs.documents.length;
+      if (docs != null && docs.docs != null && docs.docs.length > 0)
+        return docs.docs.length;
     } catch (e) {
       log.error("Error fetch referrals details: " + e.toString());
     }
