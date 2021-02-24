@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:felloapp/core/model/DailyPick.dart';
-import 'package:felloapp/core/model/User.dart';
+import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
@@ -25,11 +25,11 @@ class BaseUtil extends ChangeNotifier {
   DBModel _dbModel = locator<DBModel>();
   LocalDBModel _lModel = locator<LocalDBModel>();
   PaymentService _payService;
-  FirebaseUser firebaseUser;
+  User firebaseUser;
   bool isUserOnboarded = false;
   bool isLoginNextInProgress = false;
   bool isDepositRouteLogicInProgress = false;
-  User _myUser;
+  BaseUser _myUser;
   DailyPick weeklyDigits;
   List<TambolaBoard> userWeeklyBoards;
   UserIciciDetail _iciciDetail;
@@ -67,7 +67,7 @@ class BaseUtil extends ChangeNotifier {
 
   Future init() async {
     //fetch on-boarding status and User details
-    firebaseUser = await FirebaseAuth.instance.currentUser();
+    firebaseUser = FirebaseAuth.instance.currentUser;
     // isUserOnboarded = await _lModel.isUserOnboarded()==1;
     if (firebaseUser != null)
       _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
@@ -348,9 +348,9 @@ class BaseUtil extends ChangeNotifier {
   }
 
 
-  User get myUser => _myUser;
+  BaseUser get myUser => _myUser;
 
-  set myUser(User value) {
+  set myUser(BaseUser value) {
     _myUser = value;
   }
 

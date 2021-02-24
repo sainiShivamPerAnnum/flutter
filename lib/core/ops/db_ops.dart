@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
-import 'package:felloapp/core/model/User.dart';
+import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
@@ -20,7 +20,7 @@ class DBModel extends ChangeNotifier {
   VoidCallback userTicketsRequested;
   final Log log = new Log("DBModel");
 
-  Future<bool> updateClientToken(User user, String token) async {
+  Future<bool> updateClientToken(BaseUser user, String token) async {
     try {
       //String id = user.mobile;
       String id = user.uid;
@@ -33,17 +33,17 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<User> getUser(String id) async {
+  Future<BaseUser> getUser(String id) async {
     try {
       var doc = await _api.getUserById(id);
-      return User.fromMap(doc.data, id);
+      return BaseUser.fromMap(doc.data, id);
     } catch (e) {
       log.error("Error fetch User details: " + e.toString());
       return null;
     }
   }
 
-  Future<bool> updateUser(User user) async {
+  Future<bool> updateUser(BaseUser user) async {
     try {
       //String id = user.mobile;
       String id = user.uid;
@@ -140,7 +140,7 @@ class DBModel extends ChangeNotifier {
   //   }
   // }
 
-  Future<bool> pushTicketRequest(User user, int count) async {
+  Future<bool> pushTicketRequest(BaseUser user, int count) async {
     try {
       String _uid = user.uid;
       var rMap = {
@@ -178,7 +178,7 @@ class DBModel extends ChangeNotifier {
   //   return requestedBoards;
   // }
 
-  bool subscribeUserTickets(User user) {
+  bool subscribeUserTickets(BaseUser user) {
     try {
       String _id = user.uid;
       Stream<QuerySnapshot> _stream =

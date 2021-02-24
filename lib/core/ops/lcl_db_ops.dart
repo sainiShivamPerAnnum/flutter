@@ -1,4 +1,4 @@
-import 'package:felloapp/core/model/User.dart';
+import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -8,17 +8,17 @@ class LocalDBModel extends ChangeNotifier {
   LocalApi _api = locator<LocalApi>();
   final Log log = new Log("LocalDBModel");
 
-  Future<User> getUser() async {
+  Future<BaseUser> getUser() async {
     try{
       List<String> contents = await _api.readUserFile();
-      return User.parseFile(contents);
+      return BaseUser.parseFile(contents);
     }catch(e) {
       log.error("Unable to fetch user from local store." + e.toString());
       return null;
     }
   }
 
-  Future<bool> saveUser(User user) async{
+  Future<bool> saveUser(BaseUser user) async{
     try {
       await _api.writeUserFile(user.toFileString());
       return true;
