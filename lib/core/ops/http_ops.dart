@@ -13,7 +13,7 @@ class HttpModel extends ChangeNotifier{
   Future<http.Response> postReferral(String userId, String referee) async{
     String idToken;
     if(_baseUtil != null && _baseUtil.firebaseUser != null) {
-      idToken = (await _baseUtil.firebaseUser.getIdToken()).token;
+      idToken = await _baseUtil.firebaseUser.getIdToken();
       log.debug('Fetched user IDToken: ' + idToken);
       try {
         return http.post(
