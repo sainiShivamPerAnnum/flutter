@@ -23,6 +23,7 @@ class FcmListener extends ChangeNotifier{
 //
 //   //TODO INTERNET MESSAGE PlatformException(Error performing get, Failed to get document because the client is offline., null)
 //   Future<FirebaseMessaging> setupFcm() async {
+
 //     _fcm = FirebaseMessaging();
 // //     _fcm.configure(
 // //       onMessage: (Map<String, dynamic> message) async {
