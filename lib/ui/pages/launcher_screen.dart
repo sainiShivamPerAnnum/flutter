@@ -50,7 +50,7 @@ class LogoFadeIn extends State<SplashScreen> {
     final baseProvider = Provider.of<BaseUtil>(context);
     final fcmProvider = Provider.of<FcmListener>(context);
     await baseProvider.init();
-    await fcmProvider.setupFcm();
+    // await fcmProvider.setupFcm();
     _timer3.cancel();
     if(!baseProvider.isUserOnboarded) {
       log.debug("New user. Moving to Onboarding..");

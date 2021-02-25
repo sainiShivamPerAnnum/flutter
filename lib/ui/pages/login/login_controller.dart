@@ -408,7 +408,7 @@ class _LoginControllerState extends State<LoginController> {
     if (flag) {
       log.debug("User object saved locally");
       await baseProvider.init();
-      await fcmProvider.setupFcm();
+      // await fcmProvider.setupFcm();
       // Navigator.of(context).pop();
       Navigator.of(context).pushReplacementNamed('/approot');
       baseProvider.showPositiveAlert(
