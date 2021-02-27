@@ -60,6 +60,7 @@ class BaseUtil extends ChangeNotifier {
   static const int BALANCE_TO_TICKET_RATIO = 100;
   static const AWSStage activeAwsStage = AWSStage.PROD;
   static const SignzyStage activeSignzyStage = SignzyStage.DEV;
+  static const RazorpayStage activeRazorpayStage = RazorpayStage.DEV;
 
   BaseUtil() {
     //init();
