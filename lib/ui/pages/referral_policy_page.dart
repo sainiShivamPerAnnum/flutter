@@ -30,8 +30,7 @@ class _ReferralPolicyState extends State<ReferralPolicy> {
     File downloadToFile;
     try {
       Directory appDirectory = await getApplicationDocumentsDirectory();
-      downloadToFile =
-          File('${appDirectory.path}/policy.html');
+      downloadToFile = File('${appDirectory.path}/policy.html');
     } catch (e) {
       log.error('Failed to get app directory instance');
       log.error(e.toString());
@@ -55,7 +54,7 @@ class _ReferralPolicyState extends State<ReferralPolicy> {
 
     try {
       htmlString = downloadToFile.readAsStringSync();
-          //await rootBundle.loadString(downloadToFile.readAsStringSync());
+      //await rootBundle.loadString(downloadToFile.readAsStringSync());
     } catch (onerr) {
       log.error('Failed to load sync string from download file: $onerr');
       _isLoadComplete = true;
@@ -80,32 +79,36 @@ class _ReferralPolicyState extends State<ReferralPolicy> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  (_isLoadComplete && !_downloadFailed)?Html(
-                    data: htmlString ?? '',
-                  ):Container(),
-                  (_isLoadComplete && _downloadFailed)?Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Text('Failed to load the Referral Policy at the moment. Please try again later',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w300,
-                          color: UiConstants.accentColor
-                        ),
-                      ),
-                    ),
-                  ):Container(),
-                  (!_isLoadComplete)?Center(
-                    child: Padding(
-                        padding: EdgeInsets.all(30),
-                        child: SpinKitWave(
-                          color: UiConstants.primaryColor,
-                        )),
-                  ):Container()
+                  (_isLoadComplete && !_downloadFailed)
+                      ? Html(
+                          data: htmlString ?? '',
+                        )
+                      : Container(),
+                  (_isLoadComplete && _downloadFailed)
+                      ? Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Text(
+                              'Failed to load the Referral Policy at the moment. Please try again later',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w300,
+                                  color: UiConstants.accentColor),
+                            ),
+                          ),
+                        )
+                      : Container(),
+                  (!_isLoadComplete)
+                      ? Center(
+                          child: Padding(
+                              padding: EdgeInsets.all(30),
+                              child: SpinKitWave(
+                                color: UiConstants.primaryColor,
+                              )),
+                        )
+                      : Container()
                 ],
               ),
-            )
-        )
-    );
+            )));
   }
 }
