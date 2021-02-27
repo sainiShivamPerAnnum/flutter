@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:felloapp/util/credentials_stage.dart';
 import 'dart:io';
+import 'dart:convert';
 
 class HttpModel extends ChangeNotifier{
   BaseUtil _baseUtil = locator<BaseUtil>(); //required to fetch client token
@@ -32,7 +33,7 @@ class HttpModel extends ChangeNotifier{
 
   //amount must be integer
   //sample url: https://us-central1-fello-d3a9c.cloudfunctions.net/razorpayops/dev/api/orderid?amount=121&notes=hellp
-  Future<http.Response> getRzpOrderId(int amount, String notes) async{
+  Future<Map<String, dynamic>> getRzpOrderId(int amount, String notes) async{
     String idToken;
     if(_baseUtil != null && _baseUtil.firebaseUser != null && amount != null) {
       idToken = await _baseUtil.firebaseUser.getIdToken();
@@ -47,7 +48,9 @@ class HttpModel extends ChangeNotifier{
             headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'}
         );
         log.debug(response.body);
-        return response;
+        Map<String, dynamic> parsed = jsonDecode(response.body);
+        //log.debug(parsed);
+        return parsed;
       }catch(e) {
         log.error('Http post failed: ' + e.toString());
         return null;

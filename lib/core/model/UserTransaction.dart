@@ -19,7 +19,6 @@ class UserTransaction{
   Timestamp _timestamp;
   Timestamp _updatedTime;
 
-
   static final String fldAmount = 'tAmount';
   static final String fldClosingBalance = 'tClosingBalance';
   static final String fldNote = 'tNote';
