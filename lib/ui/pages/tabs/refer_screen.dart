@@ -279,45 +279,47 @@ class _ReferScreenState extends State<ReferScreen> {
                           ),
                     onPressed: () async {
                       ////////////////////////////////
-                      // baseProvider.isReferralLinkBuildInProgressWhatsapp = true;
-                      // setState(() {});
-                      // String url;
-                      // try {
-                      //   url = await _createDynamicLink(
-                      //       baseProvider.myUser.uid, true, 'Whatsapp');
-                      // } catch (e) {
-                      //   log.error('Failed to create dynamic link');
-                      //   log.error(e);
-                      // }
-                      // baseProvider.isReferralLinkBuildInProgressWhatsapp = false;
-                      // setState(() {});
-                      // if (url == null)return;
-                      // else log.debug(url);
-                      //
-                      // FlutterShareMe()
-                      //     .shareToWhatsApp(msg: _shareMsg + url)
-                      //     .then((flag) {
-                      //   log.debug(flag);
-                      // }).catchError((err) {
-                      //   log.error('Share to whatsapp failed');
-                      //   log.error(err);
-                      //   FlutterShareMe()
-                      //       .shareToWhatsApp4Biz(msg: _shareMsg + url)
-                      //       .then((value) {
-                      //     log.debug(value);
-                      //   }).catchError((err) {
-                      //         log.error('Share to whatsapp biz failed as well');
-                      //   });
-                      // });
-                      ////////////////////////
+                      baseProvider.isReferralLinkBuildInProgressWhatsapp = true;
+                      setState(() {});
+                      String url;
+                      try {
+                        url = await _createDynamicLink(
+                            baseProvider.myUser.uid, true, 'Whatsapp');
+                      } catch (e) {
+                        log.error('Failed to create dynamic link');
+                        log.error(e);
+                      }
+                      baseProvider.isReferralLinkBuildInProgressWhatsapp =
+                          false;
+                      setState(() {});
+                      if (url == null)
+                        return;
+                      else
+                        log.debug(url);
 
-                      rProvider.submitAugmontTransaction(
-                          UserTransaction.extMFDeposit('', '', 100.23, '', baseProvider.myUser.uid),
-                          baseProvider.myUser.mobile,
-                          baseProvider.myUser.email, null);
-                      rProvider.setTransactionListener((resTxn) {
-                        //log.debug(resTxn);
+                      FlutterShareMe()
+                          .shareToWhatsApp(msg: _shareMsg + url)
+                          .then((flag) {
+                        log.debug(flag);
+                      }).catchError((err) {
+                        log.error('Share to whatsapp failed');
+                        log.error(err);
+                        FlutterShareMe()
+                            .shareToWhatsApp4Biz(msg: _shareMsg + url)
+                            .then((value) {
+                          log.debug(value);
+                        }).catchError((err) {
+                          log.error('Share to whatsapp biz failed as well');
+                        });
                       });
+                      ////////////////////////
+                      // rProvider.submitAugmontTransaction(
+                      //     UserTransaction.extMFDeposit('', '', 100.23, '', baseProvider.myUser.uid),
+                      //     baseProvider.myUser.mobile,
+                      //     baseProvider.myUser.email, null);
+                      // rProvider.setTransactionListener((resTxn) {
+                      //   //log.debug(resTxn);
+                      // });
                     },
                     highlightColor: Colors.orange.withOpacity(0.5),
                     splashColor: Colors.orange.withOpacity(0.5),
