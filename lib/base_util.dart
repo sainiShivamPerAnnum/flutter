@@ -1,20 +1,19 @@
 import 'dart:async';
 
-import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
+import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
-import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +35,7 @@ class BaseUtil extends ChangeNotifier {
   UserIciciDetail _iciciDetail;
   UserKycDetail _kycDetail;
   UserTransaction _currentICICITxn;
+  UserTransaction _currentAugmontTxn;
   int referCount = 0;
   int userTicketsCount = 0;
   bool weeklyDrawFetched = false;
@@ -43,7 +43,6 @@ class BaseUtil extends ChangeNotifier {
   bool referCountFetched = false;
   bool isReferralLinkBuildInProgressWhatsapp = false;
   bool isReferralLinkBuildInProgressOther = false;
-  bool isIciciModelInitialized = false;
   static const String dummyTambolaVal =
       '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A';
   static const int TOTAL_DRAWS = 35;
@@ -61,6 +60,7 @@ class BaseUtil extends ChangeNotifier {
   static const int BALANCE_TO_TICKET_RATIO = 100;
   static const AWSStage activeAwsStage = AWSStage.PROD;
   static const SignzyStage activeSignzyStage = SignzyStage.DEV;
+  static const RazorpayStage activeRazorpayStage = RazorpayStage.DEV;
 
   BaseUtil() {
     //init();
