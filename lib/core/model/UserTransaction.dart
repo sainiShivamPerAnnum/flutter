@@ -16,6 +16,7 @@ class UserTransaction{
   String _bankRnn;
   String _tranStatus;
   String _upiTime;
+  Map<String, dynamic> _rzp;
   Timestamp _timestamp;
   Timestamp _updatedTime;
 
@@ -31,42 +32,52 @@ class UserTransaction{
   static final String fldTranId = 'tTranId';
   static final String fldMultipleId = 'tMultipleId';
   static final String fldBankRnn = 'tBankRnn';
+  static final String fldRzpMap = 'tRzpMap';
   static final String fldTranStatus = 'tTranStatus';
   static final String fldUpiTime = 'tUpiDateTime';
+
+  static final String subFldRzpOrderId = 'rOrderId';
+  static final String subFldRzpPaymentId = 'rPaymentId';
+  static final String subFldRzpStatus = 'rStatus';
 
   static const String TRAN_STATUS_PENDING = 'PENDING';
   static const String TRAN_STATUS_COMPLETE = 'COMPLETE';
   static const String TRAN_STATUS_CANCELLED = 'CANCELLED';
 
+  static const String RZP_TRAN_STATUS_NEW = 'NEW';
+  static const String RZP_TRAN_STATUS_FAILED = 'FAILED';
+  static const String RZP_TRAN_STATUS_COMPLETE = 'COMPLETE';
+
   static const String TRAN_TYPE_DEPOSIT = 'DEPOSIT';
   static const String TRAN_TYPE_WITHDRAW = 'WITHDRAWAL';
   static const String TRAN_SUBTYPE_ICICI_DEPOSIT = 'ICICI1565';
+  static const String TRAN_SUBTYPE_AUGMONT_DEPOSIT = 'AUG99';
 
   UserTransaction(this._amount,this._closingBalance,this._note,this._subType,
       this._type,this._ticketUpCount,this._userId,this._tranId,this._multipleId,
-      this._bankRnn, this._upiTime, this._tranStatus, this._timestamp,this._updatedTime);
+      this._bankRnn, this._upiTime, this._tranStatus, this._rzp, this._timestamp,this._updatedTime);
 
   UserTransaction.fromMap(Map<String, dynamic> data, String documentID):
         this(data[fldAmount], data[fldClosingBalance], data[fldNote], data[fldSubType],
         data[fldType], data[fldTicketUpCount], data[fldUserId], data[fldTranId], data[fldMultipleId],
-        data[fldBankRnn], data[fldUpiTime], data[fldTranStatus], data[fldTimestamp],
+        data[fldBankRnn], data[fldUpiTime], data[fldTranStatus], data[fldRzpMap],data[fldTimestamp],
         data[fldUpdatedTime]);
 
   //investment by new investor
   UserTransaction.newMFDeposit(String tranId, String multipleId, String upiTimestamp, double amount, String userId):
       this(amount,0,'NA',TRAN_SUBTYPE_ICICI_DEPOSIT,TRAN_TYPE_DEPOSIT,0,userId,tranId,multipleId,
-      null, upiTimestamp, TRAN_STATUS_PENDING,Timestamp.now(),Timestamp.now());
+      null, upiTimestamp, TRAN_STATUS_PENDING, null,Timestamp.now(),Timestamp.now());
 
   //investment by existing investor
   UserTransaction.extMFDeposit(String tranId, String multipleId, double amount, String upiTimestamp, String userId):
         this(amount,0,'NA',TRAN_SUBTYPE_ICICI_DEPOSIT,TRAN_TYPE_DEPOSIT,0,userId,tranId,
-          multipleId, null,upiTimestamp, TRAN_STATUS_PENDING,Timestamp.now(),Timestamp.now());
+          multipleId, null,upiTimestamp, TRAN_STATUS_PENDING, null,Timestamp.now(),Timestamp.now());
 
   //withdrawal by active investor
   UserTransaction.extMFWithdrawal(String tranId, String bankRnn, String note, String upiTimestamp,
       double amount, String userId):
         this(amount,0,note??'NA',TRAN_SUBTYPE_ICICI_DEPOSIT,TRAN_TYPE_WITHDRAW,0,userId,tranId,
-          null, bankRnn, upiTimestamp, TRAN_STATUS_COMPLETE,Timestamp.now(),Timestamp.now());
+          null, bankRnn, upiTimestamp, TRAN_STATUS_COMPLETE, null,Timestamp.now(),Timestamp.now());
 
   toJson() {
     return {
@@ -82,6 +93,7 @@ class UserTransaction{
       fldTranId: _tranId,
       fldMultipleId: _multipleId,
       fldBankRnn: _bankRnn,
+      fldRzpMap: _rzp,
       fldTranStatus: _tranStatus,
       fldUpiTime: _upiTime
     };
@@ -165,6 +177,12 @@ class UserTransaction{
 
   set upiTime(String value) {
     _upiTime = value;
+  }
+
+  Map<String, dynamic> get rzp => _rzp;
+
+  set rzp(Map<String, dynamic> value) {
+    _rzp = value;
   }
 
   String get docKey => _docKey;

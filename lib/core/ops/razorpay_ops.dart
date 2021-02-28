@@ -15,10 +15,15 @@ class RazorpayModel extends ChangeNotifier {
   final Log log = new Log('RazorpayModel');
   DBModel _dbModel = locator<DBModel>();
   HttpModel _httpModel = locator<HttpModel>();
+  UserTransaction _currentTxn;
+  ValueChanged<UserTransaction> _txnUpdateListener;
   Razorpay _razorpay;
 
-  bool init() {
+  bool _init(UserTransaction txn) {
     if (_dbModel == null) return false;
+    this._currentTxn = txn;
+    if (_currentTxn.amount == null) return false;
+
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
@@ -27,8 +32,44 @@ class RazorpayModel extends ChangeNotifier {
     return true;
   }
 
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    log.debug("SUCCESS: " + response.paymentId);
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    String paymentId = response.paymentId;
+    String checkoutOrderId = response.orderId;
+    String paySignature = response.signature;
+    log.debug(
+        "SUCCESS: " + paymentId + " " + checkoutOrderId + " " + paySignature);
+
+    _currentTxn.rzp[UserTransaction.subFldRzpPaymentId] = paymentId;
+    if (_currentTxn.rzp[UserTransaction.subFldRzpOrderId] != checkoutOrderId) {
+      //Received success for a different transaction. Discard this
+      _currentTxn.rzp[UserTransaction.subFldRzpStatus] = UserTransaction.RZP_TRAN_STATUS_FAILED;
+      if (_txnUpdateListener != null) _txnUpdateListener(_currentTxn);
+      return;
+    }
+
+    Map<String, dynamic> signDetails = await _httpModel.generateRzpSignature(
+        _currentTxn.rzp[UserTransaction.subFldRzpOrderId],
+        _currentTxn.rzp[UserTransaction.subFldRzpPaymentId]);
+    if (signDetails == null ||
+        signDetails['gen_signature'] == null ||
+        signDetails['gen_signature'].isEmpty) {
+      log.error('Failed to generate signature');
+      _currentTxn.rzp[UserTransaction.subFldRzpStatus] = UserTransaction.RZP_TRAN_STATUS_FAILED;
+      if (_txnUpdateListener != null) _txnUpdateListener(_currentTxn);
+      return;
+    } else {
+      if(paySignature == signDetails['gen_signature']) {
+        log.debug('signature verified. Transaction complete');
+        _currentTxn.rzp[UserTransaction.subFldRzpStatus] = UserTransaction.RZP_TRAN_STATUS_COMPLETE;
+        if (_txnUpdateListener != null) _txnUpdateListener(_currentTxn);
+        return;
+      }else{
+        log.error('Signature did not match');
+        _currentTxn.rzp[UserTransaction.subFldRzpStatus] = UserTransaction.RZP_TRAN_STATUS_FAILED;
+        if (_txnUpdateListener != null) _txnUpdateListener(_currentTxn);
+        return;
+      }
+    }
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -41,40 +82,45 @@ class RazorpayModel extends ChangeNotifier {
 
   void cleanListeners() {
     if (_razorpay != null) _razorpay.clear();
-  }
-
-  Future<Map<String, dynamic>> _generateOrderId(int amount, String notes) async{
-    if(amount != null && amount>0) {
-      return await _httpModel.getRzpOrderId(amount, notes);
-      //
-    }else return null;
+    if(_txnUpdateListener != null) _txnUpdateListener = null;
   }
 
   //generate order id
   //create transaction
   //create map
   //open gateway
-  submitAugmontTransaction(UserTransaction txn, String mobile, String email) async{
-    String _keyid = RZP_KEY[BaseUtil.activeRazorpayStage.value()];
-    Map<String, dynamic> orderDetails = await _generateOrderId(txn.amount.round(), null);
-    if(orderDetails == null) {
+  submitAugmontTransaction(
+      UserTransaction txn, String mobile, String email, String note) async {
+    if (!_init(txn)) return null; //initialise razorpay
+
+    Map<String, dynamic> orderDetails =
+        await _httpModel.generateRzpOrderId(_currentTxn.amount.round(), note);
+    if (orderDetails == null) {
       log.error('Failed to generate order id');
       return null;
     }
-    //TODO store order id and created time in txn
+
+    if (_currentTxn.rzp == null) {
+      _currentTxn.rzp = {};
+    }
+    _currentTxn.rzp[UserTransaction.subFldRzpOrderId] =
+        orderDetails['order_id'];
+
+    String _keyId = RZP_KEY[BaseUtil.activeRazorpayStage.value()];
     var options = {
-      'key': _keyid,
+      'key': _keyId,
       'amount': txn.amount.round(),
       'name': 'Augmont Gold',
       'order_id': orderDetails['order_id'],
       'description': 'Gold Purchase',
       'timeout': 60, // in seconds
-      'prefill': {
-        'contact': mobile,
-        'email': email
-      }
+      'prefill': {'contact': mobile, 'email': email}
     };
 
     _razorpay.open(options);
+  }
+
+  setTransactionListener(ValueChanged<UserTransaction> listener) {
+   _txnUpdateListener = listener;
   }
 }

@@ -310,11 +310,14 @@ class _ReferScreenState extends State<ReferScreen> {
                       //   });
                       // });
                       ////////////////////////
-                      rProvider.init();
+
                       rProvider.submitAugmontTransaction(
                           UserTransaction.extMFDeposit('', '', 100.23, '', baseProvider.myUser.uid),
                           baseProvider.myUser.mobile,
-                          baseProvider.myUser.email);
+                          baseProvider.myUser.email, null);
+                      rProvider.setTransactionListener((resTxn) {
+                        //log.debug(resTxn);
+                      });
                     },
                     highlightColor: Colors.orange.withOpacity(0.5),
                     splashColor: Colors.orange.withOpacity(0.5),

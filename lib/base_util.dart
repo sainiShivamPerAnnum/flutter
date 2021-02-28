@@ -35,6 +35,7 @@ class BaseUtil extends ChangeNotifier {
   UserIciciDetail _iciciDetail;
   UserKycDetail _kycDetail;
   UserTransaction _currentICICITxn;
+  UserTransaction _currentAugmontTxn;
   int referCount = 0;
   int userTicketsCount = 0;
   bool weeklyDrawFetched = false;
