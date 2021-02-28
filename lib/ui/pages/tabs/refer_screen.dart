@@ -1,7 +1,9 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
+import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
+import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/ui/pages/deposit_verification.dart';
 import 'package:felloapp/util/assets.dart';
@@ -26,7 +28,7 @@ class _ReferScreenState extends State<ReferScreen> {
   Log log = new Log('ReferScreen');
   BaseUtil baseProvider;
   DBModel dbProvider;
-  ICICIModel iProvider;
+  RazorpayModel rProvider;
   FcmHandler fcmProvider;
   String referral_bonus = BaseUtil.remoteConfig.getString('referral_bonus');
   String referral_ticket_bonus =
@@ -73,7 +75,7 @@ class _ReferScreenState extends State<ReferScreen> {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
     fcmProvider = Provider.of<FcmHandler>(context);
-    iProvider = Provider.of<ICICIModel>(context);
+    rProvider = Provider.of<RazorpayModel>(context);
     _init();
     return Scaffold(
         //debugShowCheckedModeBanner: false,
@@ -287,10 +289,13 @@ class _ReferScreenState extends State<ReferScreen> {
                         log.error('Failed to create dynamic link');
                         log.error(e);
                       }
-                      baseProvider.isReferralLinkBuildInProgressWhatsapp = false;
+                      baseProvider.isReferralLinkBuildInProgressWhatsapp =
+                          false;
                       setState(() {});
-                      if (url == null)return;
-                      else log.debug(url);
+                      if (url == null)
+                        return;
+                      else
+                        log.debug(url);
 
                       FlutterShareMe()
                           .shareToWhatsApp(msg: _shareMsg + url)
@@ -304,14 +309,17 @@ class _ReferScreenState extends State<ReferScreen> {
                             .then((value) {
                           log.debug(value);
                         }).catchError((err) {
-                              log.error('Share to whatsapp biz failed as well');
+                          log.error('Share to whatsapp biz failed as well');
                         });
                       });
                       ////////////////////////
-                      // Navigator.of(context).pop();
-                      // Navigator.push(context, MaterialPageRoute(
-                      //   builder: (ctx) => DepositVerification(),
-                      // ));
+                      // rProvider.submitAugmontTransaction(
+                      //     UserTransaction.extMFDeposit('', '', 100.23, '', baseProvider.myUser.uid),
+                      //     baseProvider.myUser.mobile,
+                      //     baseProvider.myUser.email, null);
+                      // rProvider.setTransactionListener((resTxn) {
+                      //   //log.debug(resTxn);
+                      // });
                     },
                     highlightColor: Colors.orange.withOpacity(0.5),
                     splashColor: Colors.orange.withOpacity(0.5),

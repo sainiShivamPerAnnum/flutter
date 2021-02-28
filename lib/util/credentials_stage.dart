@@ -19,3 +19,14 @@ extension ParseSignzyToString on SignzyStage {
     return this.toString().split('.').last.toLowerCase();
   }
 }
+
+enum RazorpayStage{
+  DEV,
+  PROD
+}
+
+extension ParseRazorpayToString on RazorpayStage {
+  String value() {
+    return this.toString().split('.').last.toLowerCase();
+  }
+}

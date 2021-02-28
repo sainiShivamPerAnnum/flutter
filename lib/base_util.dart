@@ -35,6 +35,7 @@ class BaseUtil extends ChangeNotifier {
   UserIciciDetail _iciciDetail;
   UserKycDetail _kycDetail;
   UserTransaction _currentICICITxn;
+  UserTransaction _currentAugmontTxn;
   int referCount = 0;
   int userTicketsCount = 0;
   bool weeklyDrawFetched = false;
@@ -42,7 +43,6 @@ class BaseUtil extends ChangeNotifier {
   bool referCountFetched = false;
   bool isReferralLinkBuildInProgressWhatsapp = false;
   bool isReferralLinkBuildInProgressOther = false;
-  bool isIciciModelInitialized = false;
   static const String dummyTambolaVal =
       '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A';
   static const int TOTAL_DRAWS = 35;
@@ -60,6 +60,7 @@ class BaseUtil extends ChangeNotifier {
   static const int BALANCE_TO_TICKET_RATIO = 100;
   static const AWSStage activeAwsStage = AWSStage.PROD;
   static const SignzyStage activeSignzyStage = SignzyStage.DEV;
+  static const RazorpayStage activeRazorpayStage = RazorpayStage.DEV;
 
   BaseUtil() {
     //init();
