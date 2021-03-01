@@ -20,7 +20,7 @@ class ICICIModel extends ChangeNotifier {
 
   Future<bool> init() async {
     if (_dbModel == null) return false;
-    Map<String, String> cMap = await _dbModel.getActiveAwsApiKey();
+    Map<String, String> cMap = await _dbModel.getActiveAwsIciciApiKey();
     if (cMap == null) return false;
 
     _baseUri = (cMap['baseuri'] == null || cMap['baseuri'].isEmpty)

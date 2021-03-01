@@ -1,9 +1,20 @@
-enum AWSStage{
+enum AWSIciciStage{
   DEV,
   PROD
 }
 
-extension ParseAwsToString on AWSStage {
+extension ParseAwsIciciToString on AWSIciciStage {
+  String value() {
+    return this.toString().split('.').last.toLowerCase();
+  }
+}
+
+enum AWSAugmontStage{
+  DEV,
+  PROD
+}
+
+extension ParseAugmontIciciToString on AWSAugmontStage {
   String value() {
     return this.toString().split('.').last.toLowerCase();
   }

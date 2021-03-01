@@ -241,18 +241,44 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, String>> getActiveAwsApiKey() async {
-    String awsKeyIndex = BaseUtil.remoteConfig.getString('aws_key_index');
-    if (awsKeyIndex == null || awsKeyIndex.isEmpty) awsKeyIndex = '3';
+  Future<Map<String, String>> getActiveAwsIciciApiKey() async {
+    String _awsKeyIndex = BaseUtil.remoteConfig.getString('aws_icici_key_index');
+    if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
     int keyIndex = 3;
     try {
-      keyIndex = int.parse(awsKeyIndex);
+      keyIndex = int.parse(_awsKeyIndex);
     } catch (e) {
       log.error('Aws Index key parsing failed: ' + e.toString());
       keyIndex = 3;
     }
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'aws', BaseUtil.activeAwsStage.value(), keyIndex);
+        'aws-icici', BaseUtil.activeAwsIciciStage.value(), keyIndex);
+    if (querySnapshot != null && querySnapshot.docs.length == 1) {
+      DocumentSnapshot snapshot = querySnapshot.docs[0];
+      if (snapshot.exists && snapshot.data()['apiKey'] != null) {
+        log.debug('Found apiKey: ' + snapshot.data()['apiKey']);
+        return {
+          'baseuri': snapshot.data()['base_url'],
+          'key': snapshot.data()['apiKey']
+        };
+      }
+    }
+
+    return null;
+  }
+
+  Future<Map<String, String>> getActiveAwsAugmontApiKey() async {
+    String _awsKeyIndex = BaseUtil.remoteConfig.getString('aws_augmont_key_index');
+    if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
+    int keyIndex = 3;
+    try {
+      keyIndex = int.parse(_awsKeyIndex);
+    } catch (e) {
+      log.error('Aws Index key parsing failed: ' + e.toString());
+      keyIndex = 3;
+    }
+    QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
+        'aws-augmont', BaseUtil.activeAwsAugmontStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
       if (snapshot.exists && snapshot.data()['apiKey'] != null) {
