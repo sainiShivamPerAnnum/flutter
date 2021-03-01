@@ -3,6 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
+import 'package:felloapp/core/service/location.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/ui/pages/deposit_verification.dart';
 import 'package:felloapp/util/assets.dart';
@@ -15,6 +16,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+//share package that supports iOS
+import 'package:share/share.dart';
+
 
 class ReferScreen extends StatefulWidget{
   static final int index = 2;
@@ -283,6 +287,7 @@ class _ReferScreenState extends State<ReferScreen> {
                         baseProvider.isReferralLinkBuildInProgressWhatsapp = false;
                         log.debug(url);
                         setState(() {});
+
                         FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
                           log.debug(flag);
                         }).catchError((err){
@@ -347,9 +352,17 @@ class _ReferScreenState extends State<ReferScreen> {
                         log.debug(url);
                         baseProvider.isReferralLinkBuildInProgressOther = false;
                         setState(() {});
-                        FlutterShareMe().shareToSystem(msg: _shareMsg + url).then((flag) {
-                          log.debug(flag);
-                        });
+                        // FlutterShareMe().shareToSystem(msg: _shareMsg + url).then((flag) {
+                        //   log.debug(flag);
+                        // });
+                        // Location location = Location();
+                        // await location.getCurrentLocation();
+                        //
+                        // var latitude = location.latitude;
+                        // var longitude = location.longitude;
+                        // log.debug("lat is $latitude long is $longitude");
+
+                        Share.share('$_shareMsg $url');
                       });
                       setState(() {});
                     },
