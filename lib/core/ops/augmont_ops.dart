@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class AugmontModel extends ChangeNotifier {
   final Log log = new Log('AugmontModel');
   DBModel _dbModel = locator<DBModel>();
-  final String defaultBaseUri = ''; //TODO
+  final String defaultBaseUri = 'https://ug0949ai64.execute-api.ap-south-1.amazonaws.com/dev';
   String _baseUri;
   String _apiKey;
   var headers;
@@ -22,5 +26,95 @@ class AugmontModel extends ChangeNotifier {
     _apiKey = cMap['key'];
     headers = {'x-api-key': _apiKey};
     return true;
+  }
+
+  bool isInit() => (_apiKey != null);
+
+  Future<Map<String, dynamic>> createUser(String mobile, String id, String username, String stateId) async {
+    var _params = {
+      CreateUser.fldMobile: mobile,
+      CreateUser.fldID: id,
+      CreateUser.fldUserName: username,
+      CreateUser.fldStateId: stateId,
+    };
+
+    var _request = http.Request(
+        'GET', Uri.parse(constructRequest(CreateUser.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if (resMap == null) {
+      log.error('Query Failed');
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    } else if (!resMap[INTERNAL_FAIL_FLAG]) {
+      return {
+        QUERY_SUCCESS_FLAG: QUERY_FAILED,
+        QUERY_FAIL_REASON: resMap["userMessage"]
+      };
+    } else {
+      log.debug(resMap[CreateUser.resStatusCode].toString());
+      resMap["flag"] = QUERY_PASSED;
+
+      return resMap;
+    }
+  }
+
+  String constructRequest(String subPath, Map<String, String> params) {
+    String _path = '$_baseUri/$subPath';
+    if (params != null && params.length > 0) {
+      String _p = '';
+      if (params.length == 1) {
+        _p = params.keys.elementAt(0) +
+            '=' +
+            Uri.encodeComponent(params.values.elementAt(0));
+        _path = '$_path?$_p';
+      } else {
+        params.forEach((key, value) {
+          _p = '$_p$key=$value&';
+        });
+        _p = _p.substring(0, _p.length - 1);
+        _path = '$_path?$_p';
+      }
+    }
+    return _path;
+  }
+
+  Future<Map<String, dynamic>> processResponse(
+      http.StreamedResponse response) async {
+    if (response == null) {
+      log.error('response is null');
+    }
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      log.error(
+          'Query Failed:: Status:${response.statusCode}, Reason:${response.reasonPhrase}');
+      if (response.statusCode == 502)
+        return {
+          INTERNAL_FAIL_FLAG: false,
+          "userMessage": "ICICI did not respond correctly"
+        };
+      else
+        return {
+          INTERNAL_FAIL_FLAG: false,
+          "userMessage": "Unknown error occurred while sending request"
+        };
+    }
+    try {
+      String res = await response.stream.bytesToString();
+      log.debug(res);
+      if (res == null || res.isEmpty || res == "\"\"") {
+        log.error('Returned empty response');
+        return {
+          INTERNAL_FAIL_FLAG: false,
+          "userMessage": "The entered data was not accepted"
+        };
+      }
+      var rMap = json.decode(res);
+      rMap[INTERNAL_FAIL_FLAG] = true;
+      return rMap;
+    } catch (e) {
+      log.error('Failed to decode json');
+      return null;
+    }
   }
 }

@@ -244,12 +244,12 @@ class DBModel extends ChangeNotifier {
   Future<Map<String, String>> getActiveAwsIciciApiKey() async {
     String _awsKeyIndex = BaseUtil.remoteConfig.getString('aws_icici_key_index');
     if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
-    int keyIndex = 3;
+    int keyIndex = 1;
     try {
       keyIndex = int.parse(_awsKeyIndex);
     } catch (e) {
       log.error('Aws Index key parsing failed: ' + e.toString());
-      keyIndex = 3;
+      keyIndex = 1;
     }
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
         'aws-icici', BaseUtil.activeAwsIciciStage.value(), keyIndex);
@@ -270,12 +270,12 @@ class DBModel extends ChangeNotifier {
   Future<Map<String, String>> getActiveAwsAugmontApiKey() async {
     String _awsKeyIndex = BaseUtil.remoteConfig.getString('aws_augmont_key_index');
     if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
-    int keyIndex = 3;
+    int keyIndex = 1;
     try {
       keyIndex = int.parse(_awsKeyIndex);
     } catch (e) {
       log.error('Aws Index key parsing failed: ' + e.toString());
-      keyIndex = 3;
+      keyIndex = 1;
     }
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
         'aws-augmont', BaseUtil.activeAwsAugmontStage.value(), keyIndex);

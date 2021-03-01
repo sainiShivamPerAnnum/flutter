@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
@@ -28,8 +29,8 @@ class _ReferScreenState extends State<ReferScreen> {
   Log log = new Log('ReferScreen');
   BaseUtil baseProvider;
   DBModel dbProvider;
-  RazorpayModel rProvider;
   FcmHandler fcmProvider;
+  AugmontModel aProvider;
   String referral_bonus = BaseUtil.remoteConfig.getString('referral_bonus');
   String referral_ticket_bonus =
       BaseUtil.remoteConfig.getString('referral_ticket_bonus');
@@ -75,7 +76,7 @@ class _ReferScreenState extends State<ReferScreen> {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
     fcmProvider = Provider.of<FcmHandler>(context);
-    rProvider = Provider.of<RazorpayModel>(context);
+    aProvider = Provider.of<AugmontModel>(context);
     _init();
     return Scaffold(
         //debugShowCheckedModeBanner: false,
@@ -279,40 +280,41 @@ class _ReferScreenState extends State<ReferScreen> {
                           ),
                     onPressed: () async {
                       ////////////////////////////////
-                      baseProvider.isReferralLinkBuildInProgressWhatsapp = true;
-                      setState(() {});
-                      String url;
-                      try {
-                        url = await _createDynamicLink(
-                            baseProvider.myUser.uid, true, 'Whatsapp');
-                      } catch (e) {
-                        log.error('Failed to create dynamic link');
-                        log.error(e);
-                      }
-                      baseProvider.isReferralLinkBuildInProgressWhatsapp =
-                          false;
-                      setState(() {});
-                      if (url == null)
-                        return;
-                      else
-                        log.debug(url);
-
-                      FlutterShareMe()
-                          .shareToWhatsApp(msg: _shareMsg + url)
-                          .then((flag) {
-                        log.debug(flag);
-                      }).catchError((err) {
-                        log.error('Share to whatsapp failed');
-                        log.error(err);
-                        FlutterShareMe()
-                            .shareToWhatsApp4Biz(msg: _shareMsg + url)
-                            .then((value) {
-                          log.debug(value);
-                        }).catchError((err) {
-                          log.error('Share to whatsapp biz failed as well');
-                        });
-                      });
+                      // baseProvider.isReferralLinkBuildInProgressWhatsapp = true;
+                      // setState(() {});
+                      // String url;
+                      // try {
+                      //   url = await _createDynamicLink(
+                      //       baseProvider.myUser.uid, true, 'Whatsapp');
+                      // } catch (e) {
+                      //   log.error('Failed to create dynamic link');
+                      //   log.error(e);
+                      // }
+                      // baseProvider.isReferralLinkBuildInProgressWhatsapp =
+                      //     false;
+                      // setState(() {});
+                      // if (url == null)
+                      //   return;
+                      // else
+                      //   log.debug(url);
+                      //
+                      // FlutterShareMe()
+                      //     .shareToWhatsApp(msg: _shareMsg + url)
+                      //     .then((flag) {
+                      //   log.debug(flag);
+                      // }).catchError((err) {
+                      //   log.error('Share to whatsapp failed');
+                      //   log.error(err);
+                      //   FlutterShareMe()
+                      //       .shareToWhatsApp4Biz(msg: _shareMsg + url)
+                      //       .then((value) {
+                      //     log.debug(value);
+                      //   }).catchError((err) {
+                      //     log.error('Share to whatsapp biz failed as well');
+                      //   });
+                      // });
                       ////////////////////////
+                      //TESTING RAZORPAY
                       // rProvider.submitAugmontTransaction(
                       //     UserTransaction.extMFDeposit('', '', 100.23, '', baseProvider.myUser.uid),
                       //     baseProvider.myUser.mobile,
@@ -320,6 +322,12 @@ class _ReferScreenState extends State<ReferScreen> {
                       // rProvider.setTransactionListener((resTxn) {
                       //   //log.debug(resTxn);
                       // });
+                      //////////////////////////
+                      //TESTING AUGMONT
+                      if (!aProvider.isInit()) await aProvider.init();
+
+                      var kObj = await aProvider.createUser('9988776655', 'AMVPL5308BB', 'shouryaditya.ray', 'wk9PrqnK');
+                      log.debug(kObj.toString());
                     },
                     highlightColor: Colors.orange.withOpacity(0.5),
                     splashColor: Colors.orange.withOpacity(0.5),
