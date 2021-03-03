@@ -4,7 +4,7 @@ const String QUERY_SUCCESS_FLAG = "flag";
 const String QUERY_FAIL_REASON = "reason";
 const String INTERNAL_FAIL_FLAG = "fello_flag";
 
-class CreateUser{
+class CreateUser {
   static final String path = 'api/createUser';
   static final String fldMobile = 'mobile';
   static final String fldID = 'uid';
@@ -12,4 +12,68 @@ class CreateUser{
   static final String fldStateId = 'stateid';
 
   static final String resStatusCode = 'statusCode';
+}
+
+class GetRates {
+  static final String path = 'api/rates';
+
+  static final String resRates = 'rates';
+  static final String resGoldBuyRate = 'gBuy';
+  static final String resSilverBuyRate = 'sBuy';
+  static final String resGoldSellRate = 'gSell';
+  static final String resSilverSellRate = 'sSell';
+  static final String resBlockId = 'blockId';
+}
+
+/**
+ * {"quantity":"0.1051","totalAmount":"500.00","preTaxAmount":"485.44",
+ * "metalType":"gold","rate":"4614.80","uniqueId":"fello_AMVPL5308BX",
+ * "transactionId":"FL524816147746361350085490","userName":"shouryaditya.ray.lala",
+ * "merchantTransactionId":"abcd-1342234-zxsweesa","mobileNumber":"9986643444",
+ * "goldBalance":"0.4204","silverBalance":"0.0000","taxes":{"totalTaxAmount":"14.56",
+ * "taxSplit":[{"type":"CGST","taxPerc":"1.50","taxAmount":"7.28"},{"type":"SGST",
+ * "taxPerc":"1.50","taxAmount":"7.28"}]},"invoiceNumber":"GFL032104"}
+ * */
+class SubmitGoldPurchase {
+  static final String path = 'api/submitGoldPurchase';
+  static final String fldLockPrice = 'lockprice';
+  static final String fldAmount = 'amount';
+  static final String fldMobile = 'mobile';
+  static final String fldUid = 'uid';
+  static final String fldPaymode = 'paymode';
+  static final String fldUsername = 'uname';
+  static final String fldStateId = 'stateid';
+  static final String fldBlockId = 'blockid';
+
+  static final String resTranId = 'merchantTransactionId';
+  static final String resGoldBalance = 'goldBalance';
+  static final String resPreTaxAmount = 'preTaxAmount';
+  static final String resAugTranId = 'transactionId';
+}
+
+/**
+ * {"merchantId":11055,"quantity":"0.0157","totalAmount":"70.00",
+ * "preTaxAmount":"70.00","metalType":"gold","rate":"4441.50",
+ * "uniqueId":"fello_AMVPL5308B","transactionId":"FL535216147821702650085173",
+ * "userName":"shouryaditya.ray.lala","merchantTransactionId":"defg-2323dazxpst",
+ * "mobileNumber":"9986643444","goldBalance":"0.0869","silverBalance":"0.0000",
+ * "bankInfo":{"accountName":"INDUSIND BANK","accountNumber":"159986643444",
+ * "ifscCode":"INDB0001394"}}
+ * */
+class SubmitGoldSell {
+  static final String path = 'api/submitGoldSell';
+  static final String fldLockPrice = 'lockprice';
+  static final String fldAmount = 'amount';
+  static final String fldMobile = 'mobile';
+  static final String fldUid = 'uid';
+  static final String fldUsername = 'uname';
+  static final String fldAccHolderName = 'acctname';
+  static final String fldAccNo = 'accno';
+  static final String fldIfsc = 'ifsc';
+  static final String fldBlockId = 'blockid';
+
+  static final String resTranId = 'merchantTransactionId';
+  static final String resGoldBalance = 'goldBalance';
+  static final String resPreTaxAmount = 'preTaxAmount';
+  static final String resAugTranId = 'transactionId';
 }

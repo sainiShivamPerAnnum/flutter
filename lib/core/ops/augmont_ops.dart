@@ -60,6 +60,30 @@ class AugmontModel extends ChangeNotifier {
     }
   }
 
+  Future<Map<String, dynamic>> getRates() async {
+
+    var _request = http.Request(
+        'GET', Uri.parse(constructRequest(GetRates.path, null)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if (resMap == null) {
+      log.error('Query Failed');
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    } else if (!resMap[INTERNAL_FAIL_FLAG]) {
+      return {
+        QUERY_SUCCESS_FLAG: QUERY_FAILED,
+        QUERY_FAIL_REASON: resMap["userMessage"]
+      };
+    } else {
+      log.debug(resMap[CreateUser.resStatusCode].toString());
+      resMap["flag"] = QUERY_PASSED;
+
+      return resMap;
+    }
+  }
+
   String constructRequest(String subPath, Map<String, String> params) {
     String _path = '$_baseUri/$subPath';
     if (params != null && params.length > 0) {
@@ -117,4 +141,41 @@ class AugmontModel extends ChangeNotifier {
       return null;
     }
   }
+
+  // Future<List<Map<String, dynamic>>> processRates(
+  //     http.StreamedResponse response) async {
+  //   if (response == null) {
+  //     log.error('response is null');
+  //   }
+  //   if (response.statusCode != 200 && response.statusCode != 201) {
+  //     log.error(
+  //         'Query Failed:: Status:${response.statusCode}, Reason:${response.reasonPhrase}');
+  //     if (response.statusCode == 502)
+  //       return null;
+  //     else
+  //       return null;
+  //   }
+  //   try {
+  //     String res = await response.stream.bytesToString();
+  //     log.debug(res);
+  //     if (res == null || res.isEmpty || res == "\"\"") {
+  //       log.error('Returned empty response');
+  //       return null;
+  //     }
+  //     List<dynamic> rList = json.decode(res);
+  //     List<Map<String, dynamic>> refList = new List();
+  //     rList.forEach((element) {
+  //       refList.add({
+  //         GetRates.resRates: element[GetRates.path.resBankName],
+  //         GetBankRedemptionDetail.resCombinedAccountDetails: element[GetBankRedemptionDetail.resCombinedAccountDetails],
+  //         GetBankRedemptionDetail.resCombinedBankDetails: element[GetBankRedemptionDetail.resCombinedBankDetails],
+  //       });
+  //     });
+  //     log.debug(refList.toString());
+  //     return refList;
+  //   } catch (e) {
+  //     log.error('Failed to decode json');
+  //     return null;
+  //   }
+  // }
 }

@@ -326,8 +326,13 @@ class _ReferScreenState extends State<ReferScreen> {
                       //TESTING AUGMONT
                       if (!aProvider.isInit()) await aProvider.init();
 
-                      var kObj = await aProvider.createUser('9988776655', 'AMVPL5308BB', 'shouryaditya.ray', 'wk9PrqnK');
+                      // var kObj = await aProvider.createUser('9988776655', 'AMVPL5308BB', 'shouryaditya.ray', 'wk9PrqnK');
+                      var kObj = await aProvider.getRates();
+
                       log.debug(kObj.toString());
+                      log.debug(kObj['rates']['gBuy']);
+                      log.debug(kObj['taxes'][0]['type']);
+
                     },
                     highlightColor: Colors.orange.withOpacity(0.5),
                     splashColor: Colors.orange.withOpacity(0.5),
