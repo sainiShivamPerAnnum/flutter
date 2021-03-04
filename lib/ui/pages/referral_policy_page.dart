@@ -54,7 +54,7 @@ class _ReferralPolicyState extends State<ReferralPolicy> {
 
     try {
       htmlString = downloadToFile.readAsStringSync();
-      //await rootBundle.loadString(downloadToFile.readAsStringSync());
+      // await rootBundle.loadString(downloadToFile.readAsStringSync());
     } catch (onerr) {
       log.error('Failed to load sync string from download file: $onerr');
       _isLoadComplete = true;

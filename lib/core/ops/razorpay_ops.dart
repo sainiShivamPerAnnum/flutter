@@ -8,7 +8,8 @@ import 'package:felloapp/util/razorpay_api_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-class RazorpayModel extends ChangeNotifier {
+class RazorpayModel extends ChangeNotifier
+{
   final Log log = new Log('RazorpayModel');
   HttpModel _httpModel = locator<HttpModel>();
   UserTransaction _currentTxn;
