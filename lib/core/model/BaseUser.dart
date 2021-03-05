@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/logger.dart';
 
-class User {
+class BaseUser {
   static Log log = new Log("User");
   String _uid;
   String _mobile;
@@ -43,7 +43,7 @@ class User {
   static final String fldLifeTimeWinnings = "mLifeTimeWin";
   static final String fldPendingTxnId = "mPendingTxnId";
 
-  User(this._uid, this._mobile, this._email, this._name, this._client_token,
+  BaseUser(this._uid, this._mobile, this._email, this._name, this._client_token,
       this._ticket_count, this._account_balance, this._deposit_balance,
       this._prize_balance, this._icici_balance, this._lifetime_winnings,
       this._pan, this._age, this._isInvested, this._isIciciOnboarded,
@@ -51,11 +51,11 @@ class User {
 
   static List<String> _fldList = [ fldMobile, fldEmail, fldName, fldPan, fldAge ];
 
-  User.newUser(String id, String mobile) : this(id, mobile, null, null, null,
+  BaseUser.newUser(String id, String mobile) : this(id, mobile, null, null, null,
       BaseUtil.NEW_USER_TICKET_COUNT, 0, 0, 0, 0, 0, null, null, false, false,
       BaseUtil.KYC_UNTESTED,null,null);
 
-  User.fromMap(Map<String, dynamic> data, String id, [String client_token]) :
+  BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token]) :
         this(id, data[fldMobile], data[fldEmail], data[fldName], client_token,
           data[fldTicket_count]??BaseUtil.NEW_USER_TICKET_COUNT, data[fldAcctBalance]??0,
           data[fldDepositBalance]??0,data[fldPriBalance]??0, data[fldICICIBalance]??0,
@@ -89,7 +89,7 @@ class User {
   }
 
   //to compile from cache
-  static User parseFile(List<String> contents) {
+  static BaseUser parseFile(List<String> contents) {
     try {
       Map<String, dynamic> gData = new HashMap();
       String id;
@@ -145,7 +145,7 @@ class User {
           });
         }
       }
-      return User.fromMap(gData, id, client_token);
+      return BaseUser.fromMap(gData, id, client_token);
     }catch(e) {
       log.error("Caught Exception while parsing local User file: " + e.toString());
       return null;

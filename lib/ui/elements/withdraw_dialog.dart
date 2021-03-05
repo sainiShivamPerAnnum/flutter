@@ -1,6 +1,7 @@
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -12,7 +13,6 @@ class WithdrawDialog extends StatefulWidget {
   @override
   State createState() => WithdrawDialogState();
 }
-
 
 class WithdrawDialogState extends State<WithdrawDialog> {
   final Log log = new Log('WithdrawDialog');  
@@ -138,7 +138,7 @@ class WithdrawDialogState extends State<WithdrawDialog> {
                     SizedBox(
                       height: 10,
                     ),
-                    Text('* Only users who have previously deposited are eligible for withdrawals',
+                    Text('* Only users who have previously saved at least ₹100 are eligible for withdrawals',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 12,
@@ -146,7 +146,28 @@ class WithdrawDialogState extends State<WithdrawDialog> {
                             color: UiConstants.accentColor,
                             fontWeight: FontWeight.w300
                         )
-                    )
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.all(0),
+                        child: RichText(
+                          text: TextSpan(
+                              text: "* To read more about about the eligibility rules, please refer to our ",
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                              children: [
+                                TextSpan(
+                                    text: 'Referral Policy',
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        decoration: TextDecoration.underline),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () async {
+                                        HapticFeedback.vibrate();
+                                        Navigator.of(context).pushNamed('/refpolicy');
+                                      }),
+                              ]),
+                        )),
                   ],
                 )
             ),

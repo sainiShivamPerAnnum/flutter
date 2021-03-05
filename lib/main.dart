@@ -6,6 +6,7 @@ import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/kyc_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/ui/pages/app_root.dart';
 import 'package:felloapp/ui/pages/faq_page.dart';
 import 'package:felloapp/ui/pages/kyc_invalid.dart';
@@ -21,6 +22,7 @@ import 'package:felloapp/ui/pages/tnc_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +30,9 @@ import 'package:provider/provider.dart';
 import 'core/service/payment_service.dart';
 
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   setupLocator();
   runApp(MyApp());
 }
@@ -43,6 +47,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => locator<HttpModel>()),
         ChangeNotifierProvider(create: (_) => locator<ICICIModel>()),
         ChangeNotifierProvider(create: (_) => locator<KYCModel>()),
+        ChangeNotifierProvider(create: (_) => locator<RazorpayModel>()),
         ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
         ChangeNotifierProvider(create: (_) => locator<FcmListener>()),
         ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),

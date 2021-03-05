@@ -1,15 +1,15 @@
 import 'dart:async';
 
+import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
-import 'package:felloapp/core/model/User.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
-import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -25,16 +25,17 @@ class BaseUtil extends ChangeNotifier {
   DBModel _dbModel = locator<DBModel>();
   LocalDBModel _lModel = locator<LocalDBModel>();
   PaymentService _payService;
-  FirebaseUser firebaseUser;
+  User firebaseUser;
   bool isUserOnboarded = false;
   bool isLoginNextInProgress = false;
   bool isDepositRouteLogicInProgress = false;
-  User _myUser;
+  BaseUser _myUser;
   DailyPick weeklyDigits;
   List<TambolaBoard> userWeeklyBoards;
   UserIciciDetail _iciciDetail;
   UserKycDetail _kycDetail;
   UserTransaction _currentICICITxn;
+  UserTransaction _currentAugmontTxn;
   int referCount = 0;
   int userTicketsCount = 0;
   bool weeklyDrawFetched = false;
@@ -42,7 +43,6 @@ class BaseUtil extends ChangeNotifier {
   bool referCountFetched = false;
   bool isReferralLinkBuildInProgressWhatsapp = false;
   bool isReferralLinkBuildInProgressOther = false;
-  bool isIciciModelInitialized = false;
   static const String dummyTambolaVal =
       '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A';
   static const int TOTAL_DRAWS = 35;
@@ -60,6 +60,7 @@ class BaseUtil extends ChangeNotifier {
   static const int BALANCE_TO_TICKET_RATIO = 100;
   static const AWSStage activeAwsStage = AWSStage.PROD;
   static const SignzyStage activeSignzyStage = SignzyStage.DEV;
+  static const RazorpayStage activeRazorpayStage = RazorpayStage.DEV;
 
   BaseUtil() {
     //init();
@@ -67,7 +68,7 @@ class BaseUtil extends ChangeNotifier {
 
   Future init() async {
     //fetch on-boarding status and User details
-    firebaseUser = await FirebaseAuth.instance.currentUser();
+    firebaseUser = FirebaseAuth.instance.currentUser;
     // isUserOnboarded = await _lModel.isUserOnboarded()==1;
     if (firebaseUser != null)
       _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
@@ -270,7 +271,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   AuthCredential generateAuthCredential(String verificationId, String smsCode) {
-    final AuthCredential credential = PhoneAuthProvider.getCredential(
+    final AuthCredential credential = PhoneAuthProvider.credential(
       verificationId: verificationId,
       smsCode: smsCode,
     );
@@ -348,9 +349,9 @@ class BaseUtil extends ChangeNotifier {
   }
 
 
-  User get myUser => _myUser;
+  BaseUser get myUser => _myUser;
 
-  set myUser(User value) {
+  set myUser(BaseUser value) {
     _myUser = value;
   }
 

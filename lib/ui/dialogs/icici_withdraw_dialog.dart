@@ -39,7 +39,7 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
   final TextStyle tTextStyle =
       TextStyle(fontSize: 18, fontWeight: FontWeight.w300);
   final TextStyle gTextStyle =
-  TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+      TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
 
   @override
   Widget build(BuildContext context) {
@@ -86,12 +86,13 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
                           fontWeight: FontWeight.w700,
                           color: UiConstants.primaryColor),
                     ),
-                    (_isLoading)?Padding(
-                        padding: EdgeInsets.all(30),
-                        child: SpinKitWave(
-                          color: UiConstants.primaryColor,
-                        )
-                    ):Container(),
+                    (_isLoading)
+                        ? Padding(
+                            padding: EdgeInsets.all(30),
+                            child: SpinKitWave(
+                              color: UiConstants.primaryColor,
+                            ))
+                        : Container(),
                     (!_isLoading && _isBalanceAvailble)
                         ? _buildBalanceTextWidget(
                             _instantBalance, _totalBalance)
@@ -186,7 +187,7 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: _width*0.7,
+            width: _width * 0.7,
             child: Wrap(
               // mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -204,9 +205,9 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
             ),
           ),
           Container(
-            width: _width*0.7,
+            width: _width * 0.7,
             child: Wrap(
-             // mainAxisAlignment: MainAxisAlignment.center,
+              // mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   'Available for immediate withdrawal: ',
@@ -222,7 +223,7 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
             ),
           ),
           Container(
-            width: _width*0.7,
+            width: _width * 0.7,
             child: Wrap(
               // mainAxisAlignment: MainAxisAlignment.center,
               children: [

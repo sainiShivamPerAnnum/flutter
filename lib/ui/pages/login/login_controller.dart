@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_listener.dart';
-import 'package:felloapp/core/model/User.dart';
+import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
@@ -47,6 +47,7 @@ class _LoginControllerState extends State<LoginController> {
   final _mobileScreenKey = new GlobalKey<MobileInputScreenState>();
   final _otpScreenKey = new GlobalKey<OtpInputScreenState>();
   final _nameScreenKey = new GlobalKey<NameInputScreenState>();
+
   // final _addressScreenKey = new GlobalKey<AddressInputScreenState>();
 
   @override
@@ -105,7 +106,8 @@ class _LoginControllerState extends State<LoginController> {
       }
     };
 
-    final PhoneVerificationFailed veriFailed = (AuthException exception) {
+    final PhoneVerificationFailed veriFailed =
+        (FirebaseAuthException exception) {
       //codes: 'quotaExceeded'
       if (exception.code == 'quotaExceeded') {
         log.error("Quota for otps exceeded");
@@ -121,7 +123,7 @@ class _LoginControllerState extends State<LoginController> {
         phoneNumber: this.verificationId,
         codeAutoRetrievalTimeout: autoRetrieve,
         codeSent: smsCodeSent,
-        timeout: const Duration(seconds: 10),
+        timeout: const Duration(seconds: 30),
         verificationCompleted: verifiedSuccess,
         verificationFailed: veriFailed);
   }
@@ -162,33 +164,31 @@ class _LoginControllerState extends State<LoginController> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                (_currentPage==MobileInputScreen.index)?Padding(
-                    padding: EdgeInsets.fromLTRB(10,10,10,0),
-                    child: RichText(
-                      text: new TextSpan(
-                        children: [
-                          new TextSpan(
-                            text: 'By continuing, you agree to our ',
-                            style: new TextStyle(
-                                color: Colors.black45
-                            ),
+                (_currentPage == MobileInputScreen.index)
+                    ? Padding(
+                        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        child: RichText(
+                          text: new TextSpan(
+                            children: [
+                              new TextSpan(
+                                text: 'By continuing, you agree to our ',
+                                style: new TextStyle(color: Colors.black45),
+                              ),
+                              new TextSpan(
+                                text: 'Terms of Service',
+                                style: new TextStyle(
+                                    color: Colors.black45,
+                                    decoration: TextDecoration.underline),
+                                recognizer: new TapGestureRecognizer()
+                                  ..onTap = () {
+                                    HapticFeedback.vibrate();
+                                    Navigator.of(context).pushNamed('/tnc');
+                                  },
+                              ),
+                            ],
                           ),
-                          new TextSpan(
-                            text: 'Terms of Service',
-                            style: new TextStyle(
-                                color: Colors.black45,
-                                decoration: TextDecoration.underline
-                            ),
-                            recognizer: new TapGestureRecognizer()
-                              ..onTap = () {
-                                HapticFeedback.vibrate();
-                                Navigator.of(context).pushNamed('/tnc');
-                              },
-                          ),
-                        ],
-                      ),
-                    )
-                ):Container(),
+                        ))
+                    : Container(),
                 Padding(
                   padding: EdgeInsets.fromLTRB(20, 10, 20, 20.0),
                   child: Row(
@@ -196,30 +196,32 @@ class _LoginControllerState extends State<LoginController> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       new Container(
-                        width: MediaQuery.of(context).size.width-50,
+                        width: MediaQuery.of(context).size.width - 50,
                         height: 50.0,
                         decoration: BoxDecoration(
-                          gradient: new LinearGradient(colors: [
-                            UiConstants.primaryColor,
-                            UiConstants.primaryColor.withBlue(200),
-                          ],
-                              begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
+                          gradient: new LinearGradient(
+                              colors: [
+                                UiConstants.primaryColor,
+                                UiConstants.primaryColor.withBlue(200),
+                              ],
+                              begin: Alignment(0.5, -1.0),
+                              end: Alignment(0.5, 1.0)),
                           borderRadius: new BorderRadius.circular(10.0),
                         ),
                         child: new Material(
                           child: MaterialButton(
                             child: (!baseProvider.isLoginNextInProgress)
                                 ? Text(
-                              'NEXT',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .button
-                                  .copyWith(color: Colors.white),
-                            )
+                                    'NEXT',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .button
+                                        .copyWith(color: Colors.white),
+                                  )
                                 : SpinKitThreeBounce(
-                              color: UiConstants.spinnerColor2,
-                              size: 18.0,
-                            ),
+                                    color: UiConstants.spinnerColor2,
+                                    size: 18.0,
+                                  ),
                             onPressed: () {
                               if (!baseProvider.isLoginNextInProgress)
                                 processScreenInput(_currentPage);
@@ -237,7 +239,6 @@ class _LoginControllerState extends State<LoginController> {
               ],
             ),
           ),
-
         ],
       )),
     );
@@ -299,7 +300,8 @@ class _LoginControllerState extends State<LoginController> {
           if (_nameScreenKey.currentState.formKey.currentState.validate()) {
             if (baseProvider.myUser == null) {
               //firebase user should never be null at this point
-              baseProvider.myUser = User.newUser(baseProvider.firebaseUser.uid,
+              baseProvider.myUser = BaseUser.newUser(
+                  baseProvider.firebaseUser.uid,
                   formatMobileNumber(baseProvider.firebaseUser.phoneNumber));
             }
             //baseProvider.myUser.name = nameInScreen.getName();
@@ -311,11 +313,11 @@ class _LoginControllerState extends State<LoginController> {
             }
 
             String age = _nameScreenKey.currentState.age;
-            if(age != null && age.isNotEmpty){
+            if (age != null && age.isNotEmpty) {
               baseProvider.myUser.age = age;
             }
             bool isInv = _nameScreenKey.currentState.isInvested;
-            if(isInv != null)baseProvider.myUser.isInvested = isInv;
+            if (isInv != null) baseProvider.myUser.isInvested = isInv;
             //currentPage = AddressInputScreen.index;
             bool flag = await dbProvider.updateUser(baseProvider.myUser);
             if (flag) {
@@ -376,14 +378,9 @@ class _LoginControllerState extends State<LoginController> {
 
   void onSignInSuccess() async {
     log.debug("User authenticated. Now check if details previously available.");
-    //FirebaseAuth.instance.currentUser().then((fUser) => baseProvider.firebaseUser);
-    baseProvider.firebaseUser =
-        await FirebaseAuth.instance.currentUser(); //.then((fUser) {
-    //baseProvider.firebaseUser = fUser;
+    baseProvider.firebaseUser = FirebaseAuth.instance.currentUser;
     log.debug("User is set: " + baseProvider.firebaseUser.uid);
-    //dbProvider.getUser(this.userMobile).then((user) {
-    User user = await dbProvider
-        .getUser(baseProvider.firebaseUser.uid); //.then((user) {
+    BaseUser user = await dbProvider.getUser(baseProvider.firebaseUser.uid);
     //user variable is pre cast into User object
     //dbProvider.logDeviceId(fUser.uid); //TODO do someday
     if (baseProvider.isLoginNextInProgress == true) {
@@ -393,15 +390,14 @@ class _LoginControllerState extends State<LoginController> {
     if (user == null || (user != null && user.hasIncompleteDetails())) {
       log.debug(
           "No existing user details found or found incomplete details for user. Moving to details page");
-      baseProvider.myUser =
-          user ?? User.newUser(baseProvider.firebaseUser.uid, this.userMobile);
+      baseProvider.myUser = user ??
+          BaseUser.newUser(baseProvider.firebaseUser.uid, this.userMobile);
       //Move to name input page
       //_currentPage = NameInputScreen.index;
       _controller.animateToPage(NameInputScreen.index,
           duration: Duration(milliseconds: 300), curve: Curves.easeIn);
     } else {
-      log.debug("User details available: Name: " +
-          user.name);
+      log.debug("User details available: Name: " + user.name);
       baseProvider.myUser = user;
       onSignUpComplete();
     }

@@ -497,7 +497,12 @@ class _HState extends State<PlayHome> {
 
     if (ticketCodeWinIndex.length > 0) {
       dbProvider
-          .addWinClaim(baseProvider.myUser.uid, ticketCodeWinIndex)
+          .addWinClaim(
+              baseProvider.myUser.uid,
+              baseProvider.myUser.name,
+              baseProvider.myUser.mobile,
+              baseProvider.myUser.ticket_count,
+              ticketCodeWinIndex)
           .then((flag) {
         log.debug('Added claim document');
       });
