@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:felloapp/core/model/AugGoldRates.dart';
+import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -10,7 +13,9 @@ import 'package:http/http.dart' as http;
 class AugmontModel extends ChangeNotifier {
   final Log log = new Log('AugmontModel');
   DBModel _dbModel = locator<DBModel>();
-  final String defaultBaseUri = 'https://ug0949ai64.execute-api.ap-south-1.amazonaws.com/dev';
+  RazorpayModel _rzpGateway = locator<RazorpayModel>();
+  final String defaultBaseUri =
+      'https://ug0949ai64.execute-api.ap-south-1.amazonaws.com/dev';
   String _baseUri;
   String _apiKey;
   var headers;
@@ -30,11 +35,18 @@ class AugmontModel extends ChangeNotifier {
 
   bool isInit() => (_apiKey != null);
 
-  Future<Map<String, dynamic>> createUser(String mobile, String id, String username, String stateId) async {
+  String _constructUid(String pan) => 'fello$pan';
+
+  String _constructUsername(String mobile) => 'fello$mobile';
+
+  Future<UserAugmontDetail> createUser(
+      String mobile, String pan, String stateId) async {
+    String _uid = _constructUid(pan);
+    String _uname = _constructUsername(mobile);
     var _params = {
       CreateUser.fldMobile: mobile,
-      CreateUser.fldID: id,
-      CreateUser.fldUserName: username,
+      CreateUser.fldID: _uid,
+      CreateUser.fldUserName: _uname,
       CreateUser.fldStateId: stateId,
     };
 
@@ -44,44 +56,39 @@ class AugmontModel extends ChangeNotifier {
     http.StreamedResponse _response = await _request.send();
 
     final resMap = await processResponse(_response);
-    if (resMap == null) {
+    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
       log.error('Query Failed');
-      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
-    } else if (!resMap[INTERNAL_FAIL_FLAG]) {
-      return {
-        QUERY_SUCCESS_FLAG: QUERY_FAILED,
-        QUERY_FAIL_REASON: resMap["userMessage"]
-      };
+      return null;
     } else {
       log.debug(resMap[CreateUser.resStatusCode].toString());
       resMap["flag"] = QUERY_PASSED;
 
-      return resMap;
+      return UserAugmontDetail.newUser(_uid, _uname, stateId);
     }
   }
 
-  Future<Map<String, dynamic>> getRates() async {
-
-    var _request = http.Request(
-        'GET', Uri.parse(constructRequest(GetRates.path, null)));
+  Future<AugmontRates> getRates() async {
+    var _request =
+        http.Request('GET', Uri.parse(constructRequest(GetRates.path, null)));
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
     final resMap = await processResponse(_response);
-    if (resMap == null) {
+    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
       log.error('Query Failed');
-      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
-    } else if (!resMap[INTERNAL_FAIL_FLAG]) {
-      return {
-        QUERY_SUCCESS_FLAG: QUERY_FAILED,
-        QUERY_FAIL_REASON: resMap["userMessage"]
-      };
+      return null;
     } else {
       log.debug(resMap[CreateUser.resStatusCode].toString());
       resMap["flag"] = QUERY_PASSED;
 
-      return resMap;
+      return AugmontRates.fromMap(resMap);
     }
+  }
+
+  //
+  Future<Map<String, dynamic>> initiateGoldPurchase(
+      AugmontRates rates, double amount) async {
+
   }
 
   String constructRequest(String subPath, Map<String, String> params) {
@@ -115,7 +122,7 @@ class AugmontModel extends ChangeNotifier {
       if (response.statusCode == 502)
         return {
           INTERNAL_FAIL_FLAG: false,
-          "userMessage": "ICICI did not respond correctly"
+          "userMessage": "Augmont did not respond correctly"
         };
       else
         return {
@@ -142,40 +149,40 @@ class AugmontModel extends ChangeNotifier {
     }
   }
 
-  // Future<List<Map<String, dynamic>>> processRates(
-  //     http.StreamedResponse response) async {
-  //   if (response == null) {
-  //     log.error('response is null');
-  //   }
-  //   if (response.statusCode != 200 && response.statusCode != 201) {
-  //     log.error(
-  //         'Query Failed:: Status:${response.statusCode}, Reason:${response.reasonPhrase}');
-  //     if (response.statusCode == 502)
-  //       return null;
-  //     else
-  //       return null;
-  //   }
-  //   try {
-  //     String res = await response.stream.bytesToString();
-  //     log.debug(res);
-  //     if (res == null || res.isEmpty || res == "\"\"") {
-  //       log.error('Returned empty response');
-  //       return null;
-  //     }
-  //     List<dynamic> rList = json.decode(res);
-  //     List<Map<String, dynamic>> refList = new List();
-  //     rList.forEach((element) {
-  //       refList.add({
-  //         GetRates.resRates: element[GetRates.path.resBankName],
-  //         GetBankRedemptionDetail.resCombinedAccountDetails: element[GetBankRedemptionDetail.resCombinedAccountDetails],
-  //         GetBankRedemptionDetail.resCombinedBankDetails: element[GetBankRedemptionDetail.resCombinedBankDetails],
-  //       });
-  //     });
-  //     log.debug(refList.toString());
-  //     return refList;
-  //   } catch (e) {
-  //     log.error('Failed to decode json');
-  //     return null;
-  //   }
-  // }
+// Future<List<Map<String, dynamic>>> processRates(
+//     http.StreamedResponse response) async {
+//   if (response == null) {
+//     log.error('response is null');
+//   }
+//   if (response.statusCode != 200 && response.statusCode != 201) {
+//     log.error(
+//         'Query Failed:: Status:${response.statusCode}, Reason:${response.reasonPhrase}');
+//     if (response.statusCode == 502)
+//       return null;
+//     else
+//       return null;
+//   }
+//   try {
+//     String res = await response.stream.bytesToString();
+//     log.debug(res);
+//     if (res == null || res.isEmpty || res == "\"\"") {
+//       log.error('Returned empty response');
+//       return null;
+//     }
+//     List<dynamic> rList = json.decode(res);
+//     List<Map<String, dynamic>> refList = new List();
+//     rList.forEach((element) {
+//       refList.add({
+//         GetRates.resRates: element[GetRates.path.resBankName],
+//         GetBankRedemptionDetail.resCombinedAccountDetails: element[GetBankRedemptionDetail.resCombinedAccountDetails],
+//         GetBankRedemptionDetail.resCombinedBankDetails: element[GetBankRedemptionDetail.resCombinedBankDetails],
+//       });
+//     });
+//     log.debug(refList.toString());
+//     return refList;
+//   } catch (e) {
+//     log.error('Failed to decode json');
+//     return null;
+//   }
+// }
 }

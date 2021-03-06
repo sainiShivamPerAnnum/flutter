@@ -1,0 +1,39 @@
+import 'package:felloapp/util/logger.dart';
+
+class AugmontRates {
+  static Log log = new Log('AugmontRates');
+  String _blockId;
+  double _goldBuyPrice;
+  double _goldSellPrice;
+  double _silverBuyPrice;
+  double _silverSellPrice;
+  double _cgstPercent;
+  double _sgstPercent;
+
+  AugmontRates(this._blockId, this._goldBuyPrice, this._goldSellPrice,
+      this._silverBuyPrice, this._silverSellPrice, this._cgstPercent,
+      this._sgstPercent);
+
+  AugmontRates.fromMap(Map<String, dynamic> data) :this(
+      data['blockId'],
+      data['rates']['gBuy'],
+      data['rates']['gSell'],
+      data['rates']['sBuy'],
+      data['rates']['sSell'],
+      data['taxes'][0]['taxPerc'],
+      data['taxes'][1]['taxPerc']);
+
+  double get sgstPercent => _sgstPercent;
+
+  double get cgstPercent => _cgstPercent;
+
+  double get silverSellPrice => _silverSellPrice;
+
+  double get silverBuyPrice => _silverBuyPrice;
+
+  double get goldSellPrice => _goldSellPrice;
+
+  double get goldBuyPrice => _goldBuyPrice;
+
+  String get blockId => _blockId;
+}

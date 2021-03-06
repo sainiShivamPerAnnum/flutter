@@ -131,15 +131,6 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  // Future<bool> setTicketGenerationInProgress(User user) async{
-  //   try {
-  //     Map x =  await _api.setTicketGenInProcess(user.uid);
-  //     return x['flag'];
-  //   }catch(e) {
-  //     return false;
-  //   }
-  // }
-
   Future<bool> pushTicketRequest(BaseUser user, int count) async {
     try {
       String _uid = user.uid;
@@ -157,26 +148,6 @@ class DBModel extends ChangeNotifier {
       return false;
     }
   }
-
-  //
-  // Future<List<TambolaBoard>> refreshUserTickets(User user) async{
-  //   List<TambolaBoard> requestedBoards = [];
-  //   try{
-  //     String _id = user.uid;
-  //     QuerySnapshot querySnapshot = await _api.getValidUserTickets(_id, _getWeekCode());
-  //     if(querySnapshot != null && querySnapshot.documents.length > 0) {
-  //       querySnapshot.documents.forEach((docSnapshot) {
-  //         if(docSnapshot.exists)
-  //         log.debug('Received snapshot: ' + docSnapshot.data.toString());
-  //         TambolaBoard board = TambolaBoard.fromMap(docSnapshot.data);
-  //         if(board.isValid())requestedBoards.add(board);
-  //       });
-  //     }
-  //   }catch(err) {
-  //     log.error('Failed to fetch tambola boards');
-  //   }
-  //   return requestedBoards;
-  // }
 
   bool subscribeUserTickets(BaseUser user) {
     try {
