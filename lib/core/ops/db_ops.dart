@@ -3,6 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
+import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
@@ -94,6 +95,27 @@ class DBModel extends ChangeNotifier {
       return true;
     } catch (e) {
       log.error("Failed to update user kyc detail object: " + e.toString());
+      return false;
+    }
+  }
+
+  Future<UserAugmontDetail> getUserAugmontDetails(String id) async {
+    try {
+      var doc = await _api.getUserAugmontDetailDocument(id);
+      return UserAugmontDetail.fromMap(doc.data());
+    } catch (e) {
+      log.error('Failed to fetch user Augmont details: $e');
+      return null;
+    }
+  }
+
+  Future<bool> updateUserAugmontDetails(
+      String userId, UserAugmontDetail augDetail) async {
+    try {
+      await _api.updateUserAugmontDetailDocument(userId, augDetail.toJson());
+      return true;
+    } catch (e) {
+      log.error("Failed to update user augmont detail object: " + e.toString());
       return false;
     }
   }

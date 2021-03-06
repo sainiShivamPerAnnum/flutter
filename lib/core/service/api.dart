@@ -39,6 +39,18 @@ class Api {
     return ref.doc(Constants.DOC_USER_ICICI_DETAIL).set(data, SetOptions(merge: true));
   }
 
+  Future<DocumentSnapshot> getUserAugmontDetailDocument(String userId) {
+    ref = _db.collection(Constants.COLN_USERS).doc(userId)
+        .collection(Constants.SUBCOLN_USER_AUGMONT_DETAILS);
+    return ref.doc(Constants.DOC_USER_AUGMONT_DETAIL).get();
+  }
+
+  Future<void> updateUserAugmontDetailDocument(String userId, Map data) {
+    ref = _db.collection(Constants.COLN_USERS).doc(userId)
+        .collection(Constants.SUBCOLN_USER_AUGMONT_DETAILS);
+    return ref.doc(Constants.DOC_USER_AUGMONT_DETAIL).set(data, SetOptions(merge: true));
+  }
+
   Future<DocumentSnapshot> getUserKycDetailDocument(String userId) {
     ref = _db.collection(Constants.COLN_USERS).doc(userId)
         .collection(Constants.SUBCOLN_USER_KYC_DETAILS);

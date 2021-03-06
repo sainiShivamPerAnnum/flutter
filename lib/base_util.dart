@@ -19,58 +19,60 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
 import 'core/model/TambolaBoard.dart';
+import 'core/model/UserAugmontDetail.dart';
 
 class BaseUtil extends ChangeNotifier {
   final Log log = new Log("BaseUtil");
   DBModel _dbModel = locator<DBModel>();
   LocalDBModel _lModel = locator<LocalDBModel>();
-  PaymentService _payService;
+  BaseUser _myUser;
   User firebaseUser;
+  static RemoteConfig remoteConfig;
+  PaymentService _payService;
+  ///Tambola global objects
+  DailyPick weeklyDigits;
+  List<TambolaBoard> userWeeklyBoards;
+  ///ICICI global objects
+  UserIciciDetail _iciciDetail;
+  UserTransaction _currentICICITxn;
+  ///Augmont global objects
+  UserAugmontDetail _augmontDetail;
+  UserTransaction _currentAugmontTxn;
+  ///KYC global object
+  UserKycDetail _kycDetail;
+
+  int referCount = 0;
+  int userTicketsCount = 0;
   bool isUserOnboarded = false;
   bool isLoginNextInProgress = false;
   bool isDepositRouteLogicInProgress = false;
-  BaseUser _myUser;
-  DailyPick weeklyDigits;
-  List<TambolaBoard> userWeeklyBoards;
-  UserIciciDetail _iciciDetail;
-  UserKycDetail _kycDetail;
-  UserTransaction _currentICICITxn;
-  UserTransaction _currentAugmontTxn;
-  int referCount = 0;
-  int userTicketsCount = 0;
   bool weeklyDrawFetched = false;
   bool weeklyTicksFetched = false;
   bool referCountFetched = false;
   bool isReferralLinkBuildInProgressWhatsapp = false;
   bool isReferralLinkBuildInProgressOther = false;
-  static const String dummyTambolaVal =
-      '3a21c43e52f71h19k36m56o61p86r9s24u48w65y88A';
+
   static const int TOTAL_DRAWS = 35;
   static const int NEW_USER_TICKET_COUNT = 5;
   static const int KYC_UNTESTED = 0;
   static const int KYC_INVALID = 1;
   static const int KYC_VALID = 2;
   static const int INVESTMENT_AMOUNT_FOR_TICKET = 100;
+  static const int BALANCE_TO_TICKET_RATIO = 100;
   static bool isDeviceOffline = false;
   static bool ticketRequestSent = false;
   static int ticketCountBeforeRequest = NEW_USER_TICKET_COUNT;
-  static RemoteConfig remoteConfig;
   static int infoSliderIndex = 0;
   static bool playScreenFirst = true;
-  static const int BALANCE_TO_TICKET_RATIO = 100;
+  ///STAGES - IMPORTANT
   static const AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;
   static const AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.DEV;
   static const SignzyStage activeSignzyStage = SignzyStage.DEV;
   static const RazorpayStage activeRazorpayStage = RazorpayStage.DEV;
 
-  BaseUtil() {
-    //init();
-  }
-
   Future init() async {
     //fetch on-boarding status and User details
     firebaseUser = FirebaseAuth.instance.currentUser;
-    // isUserOnboarded = await _lModel.isUserOnboarded()==1;
     if (firebaseUser != null)
       _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
     isUserOnboarded =
@@ -375,7 +377,20 @@ class BaseUtil extends ChangeNotifier {
     _currentICICITxn = value;
   }
 
+
+  UserAugmontDetail get augmontDetail => _augmontDetail;
+
+  set augmontDetail(UserAugmontDetail value) {
+    _augmontDetail = value;
+  }
+
   bool isSignedIn() => (firebaseUser != null && firebaseUser.uid != null);
 
   bool isActiveUser() => (_myUser != null && !_myUser.hasIncompleteDetails());
+
+  UserTransaction get currentAugmontTxn => _currentAugmontTxn;
+
+  set currentAugmontTxn(UserTransaction value) {
+    _currentAugmontTxn = value;
+  }
 }

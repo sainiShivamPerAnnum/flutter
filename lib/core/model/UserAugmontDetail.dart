@@ -18,6 +18,8 @@ class UserAugmontDetail {
   static final String fldBankAccNo = 'aAccNo';
   static final String fldBankHolderName = 'aBankHolderName';
   static final String fldStateId = 'aStateId';
+  static final String fldFirstInvMade = 'aIsInvested';
+  static final String fldHasIssue = 'aHasIssue';
   static final String fldCreatedTime = 'aCreatedTime';
   static final String fldUpdatedTime = 'aUpdatedTime';
 
@@ -36,6 +38,18 @@ class UserAugmontDetail {
       : this(uid, uname, null, null, stateId, false, null, Timestamp.now(),
             Timestamp.now());
 
+  UserAugmontDetail.fromMap(Map<String, dynamic> data)
+      : this(
+            data[fldUserId],
+            data[fldUserName],
+            data[fldBankAccNo],
+            data[fldBankHolderName],
+            data[fldStateId],
+            data[fldFirstInvMade],
+            data[fldHasIssue],
+            data[fldCreatedTime],
+            data[fldUpdatedTime]);
+
   toJson() {
     return {
       fldUserId: _userId,
@@ -46,5 +60,53 @@ class UserAugmontDetail {
       fldCreatedTime: _createdTime,
       fldUpdatedTime: Timestamp.now()
     };
+  }
+
+  Timestamp get createdTime => _createdTime;
+
+  set createdTime(Timestamp value) {
+    _createdTime = value;
+  }
+
+  bool get firstInvMade => _firstInvMade;
+
+  set firstInvMade(bool value) {
+    _firstInvMade = value;
+  }
+
+  String get userStateId => _userStateId;
+
+  set userStateId(String value) {
+    _userStateId = value;
+  }
+
+  String get bankHolderName => _bankHolderName;
+
+  set bankHolderName(String value) {
+    _bankHolderName = value;
+  }
+
+  String get bankAccNo => _bankAccNo;
+
+  set bankAccNo(String value) {
+    _bankAccNo = value;
+  }
+
+  String get userName => _userName;
+
+  set userName(String value) {
+    _userName = value;
+  }
+
+  String get userId => _userId;
+
+  set userId(String value) {
+    _userId = value;
+  }
+
+  String get hasIssue => _hasIssue;
+
+  set hasIssue(String value) {
+    _hasIssue = value;
   }
 }

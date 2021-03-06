@@ -117,6 +117,7 @@ class RazorpayModel extends ChangeNotifier {
     };
 
     _razorpay.open(options);
+    return _currentTxn;
   }
 
   void cleanListeners() {
