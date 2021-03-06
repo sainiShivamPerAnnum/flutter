@@ -45,7 +45,7 @@ class UserAugmontDetail {
             data[fldBankAccNo],
             data[fldBankHolderName],
             data[fldStateId],
-            data[fldFirstInvMade],
+            data[fldFirstInvMade]??false,
             data[fldHasIssue],
             data[fldCreatedTime],
             data[fldUpdatedTime]);
@@ -57,6 +57,7 @@ class UserAugmontDetail {
       fldBankAccNo: _bankAccNo,
       fldBankHolderName: _bankHolderName,
       fldStateId: _userStateId,
+      fldFirstInvMade: _firstInvMade,
       fldCreatedTime: _createdTime,
       fldUpdatedTime: Timestamp.now()
     };

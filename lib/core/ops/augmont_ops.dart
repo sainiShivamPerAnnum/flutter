@@ -5,12 +5,13 @@ import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -20,6 +21,7 @@ class AugmontModel extends ChangeNotifier {
   DBModel _dbModel = locator<DBModel>();
   RazorpayModel _rzpGateway = locator<RazorpayModel>();
   BaseUtil _baseProvider = locator<BaseUtil>();
+  ICICIModel _iProvider = locator<ICICIModel>(); //required to fetch user full name
   ValueChanged<UserTransaction> _augmontTxnProcessListener;
   final String defaultBaseUri =
       'https://ug0949ai64.execute-api.ap-south-1.amazonaws.com/dev';
@@ -42,14 +44,24 @@ class AugmontModel extends ChangeNotifier {
 
   bool isInit() => (_apiKey != null);
 
-  String _constructUid(String pan) => 'fello$pan';
+  String _constructUid(String pan) => 'fello3$pan';
 
-  String _constructUsername(String mobile) => 'fello$mobile';
+  String _constructUsername() => 'fello${_baseProvider.myUser.uid.replaceAll(new RegExp(r"[0-9]"), "")}';
+
+  // Future<String> _getPanHolderName(String pan) async{
+  //   if(!_iProvider.isInit())await _iProvider.init();
+  //   final kycMap = await _iProvider.getKycStatus(pan);
+  //   if(kycMap == null || kycMap[GetKycStatus.resName] == null) {
+  //     return null;
+  //   }else{
+  //     return kycMap[GetKycStatus.resName];
+  //   }
+  // }
 
   Future<UserAugmontDetail> createUser(
       String mobile, String pan, String stateId) async {
     String _uid = _constructUid(pan);
-    String _uname = _constructUsername(mobile);
+    String _uname = _constructUsername();
     var _params = {
       CreateUser.fldMobile: mobile,
       CreateUser.fldID: _uid,
@@ -70,7 +82,10 @@ class AugmontModel extends ChangeNotifier {
       log.debug(resMap[CreateUser.resStatusCode].toString());
       resMap["flag"] = QUERY_PASSED;
 
-      return UserAugmontDetail.newUser(_uid, _uname, stateId);
+      _baseProvider.augmontDetail = UserAugmontDetail.newUser(_uid, _uname, stateId);
+      await _dbModel.updateUserAugmontDetails(_baseProvider.myUser.uid, _baseProvider.augmontDetail);
+
+      return _baseProvider.augmontDetail;
     }
   }
 
@@ -108,12 +123,16 @@ class AugmontModel extends ChangeNotifier {
     }
     _baseProvider.currentAugmontTxn = UserTransaction.newGoldDeposit(amount, buyRates.blockId,
         buyRates.goldBuyPrice, 'RZP', _baseProvider.myUser.uid);
-    _baseProvider.currentAugmontTxn = _rzpGateway.submitAugmontTransaction(
+    UserTransaction tTxn = await _rzpGateway.submitAugmontTransaction(
         _baseProvider.currentAugmontTxn,
         _baseProvider.myUser.mobile,
         _baseProvider.myUser.email,
+        //'');
         'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}');
-    _rzpGateway.setTransactionListener(_onRazorpayPaymentProcessed);
+    if(tTxn != null) {
+      _baseProvider.currentAugmontTxn = tTxn;
+      _rzpGateway.setTransactionListener(_onRazorpayPaymentProcessed);
+    }
 
     String _docKey =
         await _dbModel.addUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
@@ -139,14 +158,14 @@ class AugmontModel extends ChangeNotifier {
   ///submit gold purchase augmont api
   ///update object
   _onPaymentComplete() async {
-    var _params = {
+    Map<String, String> _params = {
       SubmitGoldPurchase.fldMobile: _baseProvider.myUser.mobile,
       SubmitGoldPurchase.fldStateId: _baseProvider.augmontDetail.userStateId,
       SubmitGoldPurchase.fldAmount: _baseProvider.currentAugmontTxn.amount.toString(),
       SubmitGoldPurchase.fldUsername: _baseProvider.augmontDetail.userName,
       SubmitGoldPurchase.fldUid: _baseProvider.augmontDetail.userId,
       SubmitGoldPurchase.fldBlockId: _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugBlockId],
-      SubmitGoldPurchase.fldLockPrice: _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugLockPrice],
+      SubmitGoldPurchase.fldLockPrice: _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugLockPrice].toString(),
       SubmitGoldPurchase.fldPaymode: _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugPaymode],
     };
     var _request = http.Request(
@@ -155,7 +174,7 @@ class AugmontModel extends ChangeNotifier {
     http.StreamedResponse _response = await _request.send();
 
     final resMap = await processResponse(_response);
-    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG] || resMap[SubmitGoldPurchase.resTranId] == null) {
+    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG] || resMap['result']['data'][SubmitGoldPurchase.resTranId] == null) {
       log.error('Query Failed');
       var _failMap = {
         'txnDocId': _baseProvider.currentAugmontTxn.docKey
@@ -165,8 +184,8 @@ class AugmontModel extends ChangeNotifier {
     } else {
       //success
       _baseProvider.currentAugmontTxn.tranStatus = UserTransaction.TRAN_STATUS_COMPLETE;
-      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] = resMap[SubmitGoldPurchase.resAugTranId];
-      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] = resMap[SubmitGoldPurchase.resTranId];
+      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] = resMap['result']['data'][SubmitGoldPurchase.resAugTranId];
+      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] = resMap['result']['data'][SubmitGoldPurchase.resTranId];
       bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
       if(!_baseProvider.augmontDetail.firstInvMade){
         _baseProvider.augmontDetail.firstInvMade = true;

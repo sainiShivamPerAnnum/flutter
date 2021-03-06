@@ -327,12 +327,21 @@ class _ReferScreenState extends State<ReferScreen> {
                       if (!aProvider.isInit()) await aProvider.init();
 
                       // var kObj = await aProvider.createUser('9988776655', 'AMVPL5308BB', 'shouryaditya.ray', 'wk9PrqnK');
-                      var kObj = await aProvider.getRates();
+                      final _rates = await aProvider.getRates();
 
-                      log.debug(kObj.toString());
-                      log.debug(kObj['rates']['gBuy']);
-                      log.debug(kObj['taxes'][0]['type']);
+                      log.debug(_rates.blockId);
+                      log.debug(_rates.goldBuyPrice.toString());
+                      log.debug(_rates.cgstPercent.toString());
 
+                      //baseProvider.augmontDetail = await aProvider.createUser(baseProvider.myUser.mobile, baseProvider.myUser.pan, 'wk9PrqnK');
+                      baseProvider.augmontDetail = await dbProvider.getUserAugmontDetails(baseProvider.myUser.uid);
+                      if(baseProvider.augmontDetail != null)log.debug(baseProvider.augmontDetail.userId);
+
+                      UserTransaction _txn = await aProvider.initiateGoldPurchase(_rates, 22.1);
+                      if(_txn != null)log.debug(_txn.augmnt.toString());
+                      aProvider.setAugmontTxnProcessListener((txn) {
+                        log.debug('Received txn callback');
+                      });
                     },
                     highlightColor: Colors.orange.withOpacity(0.5),
                     splashColor: Colors.orange.withOpacity(0.5),
