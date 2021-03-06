@@ -1,5 +1,9 @@
+import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:felloapp/ui/elements/game-poll-dialog.dart';
+import 'package:felloapp/util/size_config.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -17,7 +21,7 @@ class HomePage extends StatelessWidget {
         child: Stack(
           children: [
             Container(
-              height: height * 0.45,
+              height: SizeConfig.screenHeight * 0.45,
               width: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -78,7 +82,7 @@ class HomePage extends StatelessWidget {
                                   style: GoogleFonts.montserrat(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w700,
-                                      fontSize: height * 0.03),
+                                      fontSize: SizeConfig.largeTextSize),
                                 ),
                                 Text(
                                   "Robert",
@@ -98,7 +102,13 @@ class HomePage extends StatelessWidget {
                         subtitle:
                             "New to Fello?? No worries.\nLet's get started with a new way of saving money.",
                         buttonText: "Learn how Fello works",
-                        onPressed: () {},
+                        onPressed: () {
+                          HapticFeedback.vibrate();
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => GuideDialog(),
+                          );
+                        },
                         gradient: [
                           Color(0xffACB6E5),
                           Color(0xff74EBD5),
@@ -122,7 +132,13 @@ class HomePage extends StatelessWidget {
                         subtitle:
                             "What other games you'd like to paly on Fello? We are planning to add another game.",
                         buttonText: "Vote now",
-                        onPressed: () {},
+                        onPressed: () {
+                          HapticFeedback.vibrate();
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => GamePoll(),
+                          );
+                        },
                         gradient: [
                           Color(0xff2495B2),
                           Color(0xff67D0E8),
@@ -214,12 +230,12 @@ class HomeCard extends StatelessWidget {
                         )
                       ],
                       fontWeight: FontWeight.w700,
-                      fontSize: width * 0.08),
+                      fontSize: SizeConfig.cardTitleTextSize),
                 ),
                 Text(
                   subtitle,
                   style: GoogleFonts.montserrat(
-                      color: Colors.white, fontSize: width * 0.035),
+                      color: Colors.white, fontSize: SizeConfig.mediumTextSize),
                 ),
                 GestureDetector(
                   onTap: onPressed,

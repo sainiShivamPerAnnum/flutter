@@ -7,10 +7,10 @@ class TravelCardRenderer extends StatelessWidget {
   final double offset;
   final double cardWidth;
   final double cardHeight;
-  final City city;
+  final Game game;
 
   const TravelCardRenderer(this.offset,
-      {Key key, this.cardWidth, @required this.city, this.cardHeight})
+      {Key key, this.cardWidth, @required this.game, this.cardHeight})
       : super(key: key);
 
   @override
@@ -83,7 +83,7 @@ class TravelCardRenderer extends StatelessWidget {
         SizedBox(width: double.infinity, height: cardHeight * .5),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: Text(city.title,
+          child: Text(game.title,
               style: GoogleFonts.montserrat(
                   color: Color(0xff272768),
                   fontWeight: FontWeight.w700,
@@ -92,7 +92,7 @@ class TravelCardRenderer extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: Text(city.description,
+          child: Text(game.description,
               style: GoogleFonts.montserrat(
                 color: Color(0xff272768),
               ),

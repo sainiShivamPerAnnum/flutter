@@ -3,18 +3,18 @@ import 'package:felloapp/ui/elements/Parallax-card/card_renderer.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'rotation_3d.dart';
 
-class TravelCardList extends StatefulWidget {
-  final List<City> cities;
-  final Function onCityChange;
+class GameCardList extends StatefulWidget {
+  final List<Game> games;
+  final Function onGameChange;
 
-  const TravelCardList({Key key, this.cities, @required this.onCityChange})
+  const GameCardList({Key key, this.games, @required this.onGameChange})
       : super(key: key);
 
   @override
-  TravelCardListState createState() => TravelCardListState();
+  GameCardListState createState() => GameCardListState();
 }
 
-class TravelCardListState extends State<TravelCardList>
+class GameCardListState extends State<GameCardList>
     with SingleTickerProviderStateMixin {
   final double _maxRotation = 20;
 
@@ -78,8 +78,8 @@ class TravelCardListState extends State<TravelCardList>
         child: TravelCardRenderer(
           //Pass in the offset, renderer can update it's own view from there
           _normalizedOffset,
-          //Pass in city path for the image asset links
-          city: widget.cities[itemIndex % widget.cities.length],
+          //Pass in Game path for the image asset links
+          game: widget.games[itemIndex % widget.games.length],
           cardWidth: _cardWidth,
           cardHeight: _cardHeight,
         ),
@@ -100,8 +100,8 @@ class TravelCardListState extends State<TravelCardList>
       _prevScrollX = notification.metrics.pixels;
       //Calculate the index closest to middle
       //_focusedIndex = (_prevScrollX / (_itemWidth + _listItemPadding)).round();
-      widget.onCityChange(widget.cities
-          .elementAt(_pageController.page.round() % widget.cities.length));
+      widget.onGameChange(widget.games
+          .elementAt(_pageController.page.round() % widget.games.length));
     }
     //Scroll Start
     else if (notification is ScrollStartNotification) {

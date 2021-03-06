@@ -1,19 +1,18 @@
 import 'dart:math';
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games_screen.dart';
 import 'package:felloapp/ui/pages/tabs/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/profile_screen.dart';
-
-class NavBarItemData {
-  final String title;
-  final IconData icon;
-  final double width;
-
-  NavBarItemData(this.title, this.icon, this.width);
-}
+import 'package:felloapp/util/logger.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:felloapp/ui/elements/hamburger-dialog.dart';
 
 class Root extends StatefulWidget {
   @override
@@ -21,13 +20,17 @@ class Root extends StatefulWidget {
 }
 
 class _RootState extends State<Root> {
+  Log log = new Log("Root");
   List<NavBarItemData> _navBarItems;
-  int _selectedNavIndex = 0;
+  int selectedNavIndex = 0;
+  BaseUtil baseProvider;
+  HttpModel httpModel;
 
   List<Widget> _viewsByIndex;
 
   @override
   void initState() {
+    initDynamicLinks();
     //Declare some buttons for our tab bar
     _navBarItems = [
       NavBarItemData("Home", Icons.home, 110),
@@ -47,6 +50,12 @@ class _RootState extends State<Root> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    if (baseProvider != null) baseProvider.cancelIncomingNotifications();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var accentColor = UiConstants.primaryColor;
 
@@ -54,11 +63,11 @@ class _RootState extends State<Root> {
     var navBar = NavBar(
       items: _navBarItems,
       itemTapped: _handleNavBtnTapped,
-      currentIndex: _selectedNavIndex,
+      currentIndex: selectedNavIndex,
     );
     //Display the correct child view for the current index
     var contentView =
-        _viewsByIndex[min(_selectedNavIndex, _viewsByIndex.length - 1)];
+        _viewsByIndex[min(selectedNavIndex, _viewsByIndex.length - 1)];
     //Wrap our custom navbar + contentView with the app Scaffold
     final GlobalKey<ScaffoldState> _scaffoldKey =
         new GlobalKey<ScaffoldState>();
@@ -107,11 +116,16 @@ class _RootState extends State<Root> {
                         //   begin: Alignment.topLeft,
                         //   end: Alignment.bottomRight,
                         // ),
-                        border: Border.all(color: Colors.black, width: 3),
+                        border: Border.all(color: Colors.white, width: 3),
                       ),
                       child: GestureDetector(
                         onTap: () {
-                          _scaffoldKey.currentState.openDrawer();
+                          HapticFeedback.vibrate();
+                          showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (BuildContext context) => HamburgerMenu(),
+                          );
                         },
                         child: Container(
                           height: 5,
@@ -140,7 +154,53 @@ class _RootState extends State<Root> {
     //Save the new index and trigger a rebuild
     setState(() {
       //This will be passed into the NavBar and change it's selected state, also controls the active content page
-      _selectedNavIndex = index;
+      selectedNavIndex = index;
     });
   }
+
+  void initDynamicLinks() async {
+    FirebaseDynamicLinks.instance.onLink(
+        onSuccess: (PendingDynamicLinkData dynamicLink) async {
+      final Uri deepLink = dynamicLink?.link;
+
+      if (deepLink != null) {
+        log.debug('Received deep link');
+        log.debug(deepLink.toString());
+        submitReferral(baseProvider.myUser.uid, deepLink);
+      }
+    }, onError: (OnLinkErrorException e) async {
+      log.error('Error in fetching deeplink');
+      log.error(e);
+    });
+
+    final PendingDynamicLinkData data =
+        await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri deepLink = data?.link;
+
+    if (deepLink != null) {
+      log.debug('Received deep link');
+      log.debug(deepLink.toString());
+      submitReferral(baseProvider.myUser.uid, deepLink);
+    }
+  }
+
+  Future<http.Response> submitReferral(String userId, Uri deepLink) {
+    String prefix = 'https://fello.in/';
+    String dLink = deepLink.toString();
+    if (dLink.startsWith(prefix)) {
+      String referee = dLink.replaceAll(prefix, '');
+      log.debug(referee);
+      if (prefix.length > 0 && prefix != userId)
+        httpModel.postReferral(userId, referee);
+    }
+    return null;
+  }
+}
+
+class NavBarItemData {
+  final String title;
+  final IconData icon;
+  final double width;
+
+  NavBarItemData(this.title, this.icon, this.width);
 }
