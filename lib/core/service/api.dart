@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
+import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 
@@ -108,6 +109,16 @@ class Api {
         .where('index', isEqualTo: index);
 
     return query.get();
+  }
+
+  Stream<QuerySnapshot> getUserTransactionsByField(String user_id, String type, String subtype, int limit) {
+    Query query = _db.collection(Constants.COLN_USERS).doc(user_id).collection(Constants.SUBCOLN_USER_TXNS);
+    if(type != null)query = query.where(UserTransaction.fldType, isEqualTo: type);
+    if(subtype != null)query = query.where(UserTransaction.fldSubType, isEqualTo: subtype);
+    if(limit != -1 && limit > 10) query = query.limit(limit);
+    query = query.orderBy(UserTransaction.fldUpdatedTime);
+
+    return query.snapshots();
   }
 
   Future<void> addCallbackDocument(String year, String monthCde, Map data) {

@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
-import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
+import 'package:felloapp/core/model/UserMiniTransaction.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -283,6 +284,35 @@ class DBModel extends ChangeNotifier {
     }
 
     return null;
+  }
+
+  Future<List<UserMiniTransaction>> getFilteredUserTransactions(BaseUser user, String type, String subtype, int limit) {
+    try {
+      String _id = user.uid;
+      Stream<QuerySnapshot> _stream = _api.getUserTransactionsByField(user.uid, type, subtype, limit);
+      List<UserMiniTransaction> requestedTxns = [];
+      _stream.listen((querySnapshot) {
+        querySnapshot.docs.forEach((docSnapshot) {
+          if (docSnapshot.exists)
+            log.debug('Received snapshot: ' + docSnapshot.data.toString());
+          UserMiniTransaction txn;
+          try {
+             txn = UserMiniTransaction.fromMap(
+                docSnapshot.data());
+          }catch(e) {
+            log.error('Transaction parse error');
+            txn = null;
+          }
+          if (txn != null && txn.amount > 0) requestedTxns.add(txn);
+        });
+        log.debug(
+            'Post stream update-> count: ${requestedTxns.length}');
+        return requestedTxns;
+      });
+    } catch (err) {
+      log.error('Failed to fetch tambola boards');
+      return null;
+    }
   }
 
   Future<bool> addCallbackRequest(
