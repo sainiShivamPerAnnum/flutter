@@ -320,6 +320,9 @@ class _ReferScreenState extends State<ReferScreen> {
                       // rProvider.setTransactionListener((resTxn) {
                       //   //log.debug(resTxn);
                       // });
+
+                      // var x = await dbProvider.getFilteredUserTransactions(baseProvider.myUser, null, null, 0);
+                      // log.debug(x);
                     },
                     highlightColor: Colors.orange.withOpacity(0.5),
                     splashColor: Colors.orange.withOpacity(0.5),

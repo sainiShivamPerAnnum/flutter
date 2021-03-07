@@ -1,16 +1,31 @@
+import 'dart:developer';
+import 'package:felloapp/core/fcm_handler.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flat_icons_flutter/flat_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_share_me/flutter_share_me.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/ui/pages/transactions.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
+  BaseUtil baseProvider;
+
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    baseProvider = Provider.of<BaseUtil>(context);
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.02),
       decoration: BoxDecoration(
@@ -34,7 +49,7 @@ class ProfilePage extends StatelessWidget {
             Container(
               // margin: EdgeInsets.symmetric(
               //     horizontal: height * 0.008),
-              height: height * 0.24,
+              height: SizeConfig.screenHeight * 0.24,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(
@@ -44,7 +59,7 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               child: Container(
-                padding: EdgeInsets.all(height * 0.008),
+                padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
                 width: double.infinity,
                 child: Column(
                   children: [
@@ -69,23 +84,23 @@ class ProfilePage extends StatelessWidget {
                         children: [
                           Image.asset(
                             "images/profile.png",
-                            height: width * 0.25,
+                            height: SizeConfig.screenWidth * 0.25,
                             fit: BoxFit.cover,
                           ),
                           SizedBox(
-                            width: width * 0.05,
+                            width: SizeConfig.screenWidth * 0.05,
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                width: width * 0.5,
+                                width: SizeConfig.screenWidth * 0.5,
                                 child: Text(
                                   "Username ",
                                   style: GoogleFonts.montserrat(
                                     color: Colors.white,
-                                    fontSize: height * 0.03,
+                                    fontSize: SizeConfig.cardTitleTextSize,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -97,7 +112,7 @@ class ProfilePage extends StatelessWidget {
                                 "Member since 1947",
                                 style: GoogleFonts.montserrat(
                                   color: Colors.black,
-                                  fontSize: height * 0.015,
+                                  fontSize: SizeConfig.smallTextSize,
                                 ),
                               ),
                             ],
@@ -133,7 +148,7 @@ class ProfilePage extends StatelessWidget {
             ),
             Container(
               padding: EdgeInsets.symmetric(
-                horizontal: width * 0.05,
+                horizontal: SizeConfig.screenWidth * 0.05,
               ),
               child: Column(
                 children: [
@@ -155,7 +170,7 @@ class ProfilePage extends StatelessWidget {
                   ProfileTabTile(
                     logo: "images/referrals.png",
                     title: "Referrals",
-                    value: "06",
+                    value: baseProvider.referCount.toString(),
                     onPress: () {},
                   ),
                 ],
@@ -194,13 +209,15 @@ class Social extends StatelessWidget {
           ),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             CircleAvatar(
-              backgroundColor: UiConstants.primaryColor,
-              child: Icon(
-                FlatIcons.con_instagram,
-                size: 16,
-                color: Colors.white,
-              ),
-            ),
+                backgroundColor: UiConstants.primaryColor,
+                child: IconButton(
+                  onPressed: () async => launchUrl("www.instagram.com"),
+                  icon: Icon(
+                    FlatIcons.con_instagram,
+                    size: 16,
+                    color: Colors.white,
+                  ),
+                )),
             SizedBox(
               width: 12,
             ),
@@ -223,8 +240,27 @@ class Social extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
+            SizedBox(
+              width: 12,
+            ),
+            CircleAvatar(
+              backgroundColor: UiConstants.primaryColor,
+              child: Icon(
+                Icons.call,
+                size: 16,
+                color: Colors.white,
+              ),
+            ),
           ])
         ]));
+  }
+}
+
+void launchUrl(String url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
   }
 }
 
@@ -318,15 +354,7 @@ class ShareCard extends StatelessWidget {
                       SizedBox(
                         width: 20,
                       ),
-                      CardButton(
-                        gradient: [
-                          Color(0xff4E4376),
-                          Color(0xff2B5876),
-                        ],
-                        icon: FlatIcons.con_whatsapp,
-                        onPressed: () {},
-                        text: "Share on whatsapp",
-                      ),
+                      ShareWhatsapp(),
                     ],
                   )
                 ],
@@ -336,6 +364,182 @@ class ShareCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class ShareWhatsapp extends StatefulWidget {
+  @override
+  _ShareWhatsappState createState() => _ShareWhatsappState();
+}
+
+class _ShareWhatsappState extends State<ShareWhatsapp> {
+  Log log = new Log('ReferScreen');
+  BaseUtil baseProvider;
+  DBModel dbProvider;
+  RazorpayModel rProvider;
+  FcmHandler fcmProvider;
+  String referral_bonus = BaseUtil.remoteConfig.getString('referral_bonus');
+  String referral_ticket_bonus =
+      BaseUtil.remoteConfig.getString('referral_ticket_bonus');
+  String _shareMsg;
+
+  _init() {
+    referral_bonus = (referral_bonus == null || referral_bonus.isEmpty)
+        ? '25'
+        : referral_bonus;
+    referral_ticket_bonus =
+        (referral_ticket_bonus == null || referral_ticket_bonus.isEmpty)
+            ? '10'
+            : referral_ticket_bonus;
+    _shareMsg =
+        'Hey I am gifting you ₹$referral_bonus and $referral_ticket_bonus free Tambola tickets. Lets start saving and playing together! ';
+
+    if (fcmProvider != null && baseProvider != null && dbProvider != null) {
+      fcmProvider.addIncomingMessageListener((valueMap) {
+        if (valueMap['title'] != null && valueMap['body'] != null) {
+          baseProvider.showPositiveAlert(
+              valueMap['title'], valueMap['body'], context,
+              seconds: 5);
+        }
+      }, 2);
+
+      if (!baseProvider.referCountFetched)
+        dbProvider.getReferCount(baseProvider.myUser.uid).then((count) {
+          baseProvider.referCountFetched = true;
+          baseProvider.referCount = count;
+          if (count > 0) setState(() {});
+        });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (fcmProvider != null) fcmProvider.addIncomingMessageListener(null, 2);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context);
+    dbProvider = Provider.of<DBModel>(context);
+    fcmProvider = Provider.of<FcmHandler>(context);
+    rProvider = Provider.of<RazorpayModel>(context);
+    _init();
+    return MaterialButton(
+      child: (!baseProvider.isReferralLinkBuildInProgressWhatsapp)
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'SHARE ON WHATSAPP',
+                  style: Theme.of(context)
+                      .textTheme
+                      .button
+                      .copyWith(color: Colors.white),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                SizedBox(
+                  child: Image(
+                    image: AssetImage(Assets.whatsappIcon),
+                    fit: BoxFit.contain,
+                  ),
+                  width: 15,
+                )
+              ],
+            )
+          : SpinKitThreeBounce(
+              color: UiConstants.spinnerColor2,
+              size: 18.0,
+            ),
+      onPressed: () async {
+        ////////////////////////////////
+        baseProvider.isReferralLinkBuildInProgressWhatsapp = true;
+        setState(() {});
+        String url;
+        try {
+          url = await _createDynamicLink(
+              baseProvider.myUser.uid, true, 'Whatsapp');
+        } catch (e) {
+          log.error('Failed to create dynamic link');
+          log.error(e);
+        }
+        baseProvider.isReferralLinkBuildInProgressWhatsapp = false;
+        setState(() {});
+        if (url == null)
+          return;
+        else
+          log.debug(url);
+
+        FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
+          log.debug(flag);
+        }).catchError((err) {
+          log.error('Share to whatsapp failed');
+          log.error(err);
+          FlutterShareMe()
+              .shareToWhatsApp4Biz(msg: _shareMsg + url)
+              .then((value) {
+            log.debug(value);
+          }).catchError((err) {
+            log.error('Share to whatsapp biz failed as well');
+          });
+        });
+        ////////////////////////
+        // rProvider.submitAugmontTransaction(
+        //     UserTransaction.extMFDeposit('', '', 100.23, '', baseProvider.myUser.uid),
+        //     baseProvider.myUser.mobile,
+        //     baseProvider.myUser.email, null);
+        // rProvider.setTransactionListener((resTxn) {
+        //   //log.debug(resTxn);
+        // });
+
+        // var x = await dbProvider.getFilteredUserTransactions(baseProvider.myUser, null, null, 0);
+        // log.debug(x);
+      },
+      highlightColor: Colors.orange.withOpacity(0.5),
+      splashColor: Colors.orange.withOpacity(0.5),
+    );
+  }
+
+  Future<String> _createDynamicLink(
+      String userId, bool short, String source) async {
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: 'https://fello.page.link',
+      link: Uri.parse('https://fello.in/$userId'),
+      socialMetaTagParameters: SocialMetaTagParameters(
+          title: 'Download ${Constants.APP_NAME}',
+          description:
+              'Fello makes saving a lot more fun, and investing a lot more simple!',
+          imageUrl: Uri.parse(
+              'https://play-lh.googleusercontent.com/yA_k3_efLEwy4slB6RUa-aBzJNuS5Bta7LudVRxYAThc0wnU0jgNih7lt95gHDgR_Ew=s360-rw')),
+      googleAnalyticsParameters: GoogleAnalyticsParameters(
+        campaign: 'referrals',
+        medium: 'social',
+        source: source,
+      ),
+      androidParameters: AndroidParameters(
+        packageName: 'in.fello.felloapp',
+        minimumVersion: 0,
+      ),
+      dynamicLinkParametersOptions: DynamicLinkParametersOptions(
+        shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
+      ),
+      iosParameters: IosParameters(
+        bundleId: 'com.google.FirebaseCppDynamicLinksTestApp.dev',
+        minimumVersion: '0',
+      ),
+    );
+
+    Uri url;
+    if (short) {
+      final ShortDynamicLink shortLink = await parameters.buildShortLink();
+      url = shortLink.shortUrl;
+    } else {
+      url = await parameters.buildUrl();
+    }
+
+    return url.toString();
   }
 }
 

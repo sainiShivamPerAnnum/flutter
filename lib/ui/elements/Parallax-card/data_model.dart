@@ -34,8 +34,8 @@ class DemoData {
       color: Color(0xffdee5cf),
     ),
     Game(
-      name: 'Budapest',
-      title: 'Upcomming',
+      name: 'GamePoll',
+      title: 'Next Game',
       description: 'Vote for the next game you want on fello',
       color: Color(0xffdaf3f7),
     ),

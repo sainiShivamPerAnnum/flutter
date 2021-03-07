@@ -10,6 +10,7 @@ import 'package:felloapp/ui/pages/edit_profile_page.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/kyc_onboarding_controller.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
+import 'package:flat_icons_flutter/flat_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -42,38 +43,53 @@ class HamburgerMenu extends StatelessWidget {
   }
 
   dialogContent(BuildContext context) {
-    return Wrap(
-      children: [
-        Container(
-            child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              // Text(
-              //   "Menu",
-              //   style: GoogleFonts.montserrat(
-              //     color: Colors.black,
-              //     fontWeight: FontWeight.w700,
-              //     fontSize: SizeConfig.largeTextSize,
-              //   ),
-              // ),
-              // Divider(),
-              Container(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.all(16.0),
-                  itemBuilder: /*1*/ (context, i) {
-                    if (i.isOdd) return Divider(); /*2*/
-                    final index = i ~/ 2; /*3*/
-                    return _buildRow(_optionsList[index], context);
-                  },
-                  itemCount: _optionsList.length * 2,
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Text(
+            //   "Menu",
+            //   style: GoogleFonts.montserrat(
+            //     color: Colors.black,
+            //     fontWeight: FontWeight.w700,
+            //     fontSize: SizeConfig.largeTextSize,
+            //   ),
+            // ),
+            // Divider(),
+            Container(
+              child: ListView.builder(
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(16.0),
+                itemBuilder: /*1*/ (context, i) {
+                  if (i.isOdd) return Divider(); /*2*/
+                  final index = i ~/ 2; /*3*/
+                  return _buildRow(_optionsList[index], context);
+                },
+                itemCount: _optionsList.length * 2,
+              ),
+            ),
+            Container(
+              width: SizeConfig.screenHeight * 0.1,
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    width: 2,
+                    color: Colors.white,
+                  )),
+              child: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(
+                  Icons.cancel_rounded,
+                  color: Colors.white,
                 ),
-              )
-            ],
-          ),
-        )),
-      ],
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 

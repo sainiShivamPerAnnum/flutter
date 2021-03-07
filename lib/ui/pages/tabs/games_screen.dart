@@ -1,7 +1,7 @@
 import 'package:felloapp/ui/pages/root.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:felloapp/ui/elements/Parallax-card/travel_card_list.dart';
+import 'package:felloapp/ui/elements/Parallax-card/game_card_list.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'package:felloapp/ui/elements/week-winners.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
@@ -303,7 +303,8 @@ class GameOfferCardButton extends StatelessWidget {
   GameOfferCardButton({this.onPressed, this.title});
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Expanded(
+        child: GestureDetector(
       onTap: onPressed,
       child: Container(
         padding: EdgeInsets.all(8),
@@ -324,10 +325,11 @@ class GameOfferCardButton extends StatelessWidget {
         ),
         child: Text(
           title,
+          textAlign: TextAlign.center,
           style: GoogleFonts.montserrat(
               color: Colors.white, fontSize: SizeConfig.mediumTextSize),
         ),
       ),
-    );
+    ));
   }
 }

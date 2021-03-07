@@ -64,12 +64,12 @@ class TravelCardRenderer extends StatelessWidget {
       child: Stack(
         alignment: Alignment.bottomRight,
         children: <Widget>[
-          _buildPositionedLayer("images/Tambola/back.png", containerWidth,
+          _buildPositionedLayer("images/${game.name}/back.png", containerWidth,
               maxParallax * .1, globalOffset),
-          _buildPositionedLayer("images/Tambola/middle.png",
+          _buildPositionedLayer("images/${game.name}/middle.png",
               containerWidth * .9, maxParallax * .6, globalOffset),
-          _buildPositionedLayer("images/Tambola/top.png", containerWidth * .9,
-              maxParallax, globalOffset),
+          _buildPositionedLayer("images/${game.name}/top.png",
+              containerWidth * .9, maxParallax, globalOffset),
         ],
       ),
     );

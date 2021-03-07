@@ -1,6 +1,10 @@
+import 'package:felloapp/ui/elements/game-poll-dialog.dart';
+import 'package:felloapp/ui/pages/tabs/card_screen.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/ui/elements/Parallax-card/card_renderer.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
+import 'package:flutter/services.dart';
 import 'rotation_3d.dart';
 
 class GameCardList extends StatefulWidget {
@@ -20,8 +24,8 @@ class GameCardListState extends State<GameCardList>
 
   PageController _pageController;
 
-  double _cardWidth = 300;
-  double _cardHeight = 200;
+  double _cardWidth = SizeConfig.screenWidth * 0.9;
+  double _cardHeight = SizeConfig.screenWidth * 0.9;
   double _normalizedOffset = 0;
   double _prevScrollX = 0;
   bool _isScrolling = false;
@@ -30,16 +34,26 @@ class GameCardListState extends State<GameCardList>
   AnimationController _tweenController;
   Tween<double> _tween;
   Animation<double> _tweenAnim;
+  List<Function> gameRoutes;
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    _cardHeight = (size.width).clamp(300.0, 400.0);
-    _cardWidth = _cardHeight * .8;
+    gameRoutes = [
+      () => Navigator.push(
+          context, MaterialPageRoute(builder: (ctx) => PlayHome())),
+      () {
+        HapticFeedback.vibrate();
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => GamePoll(),
+        );
+      },
+    ];
+    //Size size = MediaQuery.of(context).size;
+    // _cardHeight = (size.width).clamp(300.0, 400.0);
+    // _cardWidth = _cardHeight * .8;
     //Calculate the viewPort fraction for this aspect ratio, since PageController does not accept pixel based size values
-    _pageController = PageController(
-      initialPage: 0,
-    );
+    _pageController = PageController(initialPage: 0, viewportFraction: 0.9);
 
     //Create our main list
     Widget listContent = Container(
@@ -50,7 +64,7 @@ class GameCardListState extends State<GameCardList>
         //Use bounce-style scroll physics, feels better with this demo
         physics: BouncingScrollPhysics(),
         controller: _pageController,
-        itemCount: 2,
+        itemCount: widget.games.length,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, i) => _buildItemRenderer(i),
       ),
@@ -70,18 +84,21 @@ class GameCardListState extends State<GameCardList>
 
   //Create a renderer for each list item
   Widget _buildItemRenderer(int itemIndex) {
-    return Container(
-      //Vertically pad all the non-selected items, to make them smaller. AnimatedPadding widget handles the animation.
-      child: Rotation3d(
-        rotationY: _normalizedOffset * _maxRotation,
-        //Create the actual content renderer for our list
-        child: TravelCardRenderer(
-          //Pass in the offset, renderer can update it's own view from there
-          _normalizedOffset,
-          //Pass in Game path for the image asset links
-          game: widget.games[itemIndex % widget.games.length],
-          cardWidth: _cardWidth,
-          cardHeight: _cardHeight,
+    return GestureDetector(
+      onTap: gameRoutes[itemIndex],
+      child: Container(
+        //Vertically pad all the non-selected items, to make them smaller. AnimatedPadding widget handles the animation.
+        child: Rotation3d(
+          rotationY: _normalizedOffset * _maxRotation,
+          //Create the actual content renderer for our list
+          child: TravelCardRenderer(
+            //Pass in the offset, renderer can update it's own view from there
+            _normalizedOffset,
+            //Pass in Game path for the image asset links
+            game: widget.games[itemIndex % widget.games.length],
+            cardWidth: _cardWidth,
+            cardHeight: _cardHeight,
+          ),
         ),
       ),
     );

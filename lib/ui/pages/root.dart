@@ -55,6 +55,22 @@ class _RootState extends State<Root> {
     if (baseProvider != null) baseProvider.cancelIncomingNotifications();
   }
 
+  Color getBurgerBorder() {
+    if (selectedNavIndex == 0 || selectedNavIndex == 1) {
+      return Colors.white;
+    } else {
+      return Colors.black;
+    }
+  }
+
+  String getBurgerImage() {
+    if (selectedNavIndex == 0 || selectedNavIndex == 1) {
+      return "images/menu-white.png";
+    } else {
+      return "images/menu.png";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var accentColor = UiConstants.primaryColor;
@@ -98,35 +114,36 @@ class _RootState extends State<Root> {
                 width: width,
                 child: Row(
                   children: [
-                    Container(
-                      height: height * 0.05,
-                      width: height * 0.05,
-                      margin: EdgeInsets.only(
-                        left: height * 0.016,
-                        top: height * 0.016,
-                      ),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        // gradient: new LinearGradient(
-                        //   colors: [
-                        //     kPrimarColor.withGreen(200),
-                        //     kPrimarColor.withGreen(400),
-                        //     kPrimarColor.withGreen(600)
-                        //   ],
-                        //   begin: Alignment.topLeft,
-                        //   end: Alignment.bottomRight,
-                        // ),
-                        border: Border.all(color: Colors.white, width: 3),
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          HapticFeedback.vibrate();
-                          showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (BuildContext context) => HamburgerMenu(),
-                          );
-                        },
+                    GestureDetector(
+                      onTap: () {
+                        HapticFeedback.vibrate();
+                        showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (BuildContext context) => HamburgerMenu(),
+                        );
+                      },
+                      child: Container(
+                        height: height * 0.05,
+                        width: height * 0.05,
+                        margin: EdgeInsets.only(
+                          left: height * 0.016,
+                          top: height * 0.016,
+                        ),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          // gradient: new LinearGradient(
+                          //   colors: [
+                          //     kPrimarColor.withGreen(200),
+                          //     kPrimarColor.withGreen(400),
+                          //     kPrimarColor.withGreen(600)
+                          //   ],
+                          //   begin: Alignment.topLeft,
+                          //   end: Alignment.bottomRight,
+                          // ),
+                          border:
+                              Border.all(color: getBurgerBorder(), width: 3),
+                        ),
                         child: Container(
                           height: 5,
                           width: 5,
@@ -134,7 +151,7 @@ class _RootState extends State<Root> {
                             width * 0.03,
                           ),
                           child: Image.asset(
-                            "images/menu.png",
+                            getBurgerImage(),
                           ),
                         ),
                       ),

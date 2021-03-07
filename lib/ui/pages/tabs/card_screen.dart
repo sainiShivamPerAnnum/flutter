@@ -27,7 +27,6 @@ import 'package:showcaseview/showcase.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 class PlayHome extends StatefulWidget {
-  static final int index = (BaseUtil.playScreenFirst) ? 0 : 1;
   @override
   _HState createState() => _HState();
 }
