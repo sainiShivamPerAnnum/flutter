@@ -12,6 +12,13 @@ class GamePoll extends StatefulWidget {
 
 class _GamePollState extends State<GamePoll> {
   bool isVoted = false;
+
+  vote() {
+    setState(() {
+      isVoted = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BackdropFilter(
@@ -58,64 +65,121 @@ class _GamePollState extends State<GamePoll> {
             height: SizeConfig.screenHeight * 0.04,
           ),
           Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: pollItemList.length,
-              itemBuilder: (ctx, i) {
-                return ListTile(
-                  // height: SizeConfig.screenHeight * 0.08,
-                  // width: double.infinity,
-                  // padding: EdgeInsets.symmetric(
-                  //   vertical: SizeConfig.blockSizeVertical * 2,
-                  //   horizontal: SizeConfig.screenHeight * 0.02,
-                  // ),
-                  title: Text(
-                    pollItemList[i].name,
-                    style: GoogleFonts.montserrat(
-                      color: Colors.white,
-                      fontSize: SizeConfig.mediumTextSize,
-                    ),
-                  ),
-                  trailing: Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.blockSizeHorizontal * 4,
-                        vertical: SizeConfig.blockSizeHorizontal * 2),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 1,
-                        color: Colors.white,
-                      ),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isVoted = true;
-                        });
-                      },
-                      child: Text(
-                        isVoted
-                            ? (pollItemList[i].votes * 100).toString()
-                            : "Vote",
-                        style: GoogleFonts.montserrat(
-                          color: Colors.white,
-                          fontSize: SizeConfig.mediumTextSize,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GameTile(
+                  isVoted: isVoted,
+                  ontap: vote,
+                  pollItem: pollItemList[0],
+                ),
+                GameTile(
+                  isVoted: isVoted,
+                  ontap: vote,
+                  pollItem: pollItemList[1],
+                ),
+                GameTile(
+                  isVoted: isVoted,
+                  ontap: vote,
+                  pollItem: pollItemList[2],
+                ),
+                GameTile(
+                  isVoted: isVoted,
+                  ontap: vote,
+                  pollItem: pollItemList[3],
+                ),
+              ],
             ),
           ),
-          Text(
-            "Just Tap on your favourite",
-            style: GoogleFonts.montserrat(
-              color: Colors.white,
-              fontSize: SizeConfig.smallTextSize,
+          SizedBox(
+            height: SizeConfig.blockSizeVertical * 3,
+            child: Center(
+              child: Text(
+                isVoted
+                    ? "Just Tap on your favourite"
+                    : "Your Vote recorded. Thank you",
+                style: GoogleFonts.montserrat(
+                  color: Colors.white,
+                  fontSize: SizeConfig.smallTextSize,
+                ),
+              ),
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+class GameTile extends StatefulWidget {
+  final bool isVoted;
+  final PollItem pollItem;
+  final Function ontap;
+  GameTile({this.isVoted, this.pollItem, this.ontap});
+
+  @override
+  _GameTileState createState() => _GameTileState();
+}
+
+class _GameTileState extends State<GameTile> {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: widget.ontap,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInSine,
+        height: SizeConfig.screenHeight * 0.05,
+        margin: EdgeInsets.symmetric(
+          horizontal: SizeConfig.blockSizeHorizontal * 3,
+        ),
+        child: Stack(
+          children: [
+            // FractionallySizedBox(
+            //   widthFactor: widget.isVoted ? widget.pollItem.votes : 1,
+            //   heightFactor: 1,
+            //child:
+            AnimatedContainer(
+              duration: Duration(milliseconds: 600),
+              curve: Curves.easeInSine,
+              width: widget.isVoted
+                  ? SizeConfig.screenWidth * widget.pollItem.votes
+                  : SizeConfig.screenWidth,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            // ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      widget.pollItem.name,
+                      style: GoogleFonts.montserrat(
+                        color: Colors.white,
+                        fontSize: SizeConfig.mediumTextSize,
+                      ),
+                    ),
+                    Spacer(),
+                    widget.isVoted
+                        ? Text(
+                            widget.pollItem.votes.toString(),
+                            style: GoogleFonts.montserrat(
+                              color: Colors.white,
+                              fontSize: SizeConfig.mediumTextSize,
+                            ),
+                          )
+                        : SizedBox(),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

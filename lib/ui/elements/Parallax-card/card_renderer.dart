@@ -44,7 +44,7 @@ class TravelCardRenderer extends StatelessWidget {
             ),
           ),
           // City image, out of card by 15px
-          Positioned(top: -15, child: _buildCityImage()),
+          Positioned(left: -15, child: _buildGameImage()),
           // City information
           _buildCityData()
         ],
@@ -52,7 +52,7 @@ class TravelCardRenderer extends StatelessWidget {
     );
   }
 
-  Widget _buildCityImage() {
+  Widget _buildGameImage() {
     double maxParallax = 30;
     double globalOffset = offset * maxParallax * 2;
     double cardPadding = 28;

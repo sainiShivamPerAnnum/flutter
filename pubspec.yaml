@@ -51,6 +51,8 @@ dependencies:
   razorpay_flutter: '1.1.0'
   pie_chart: ^4.0.1
   flat_icons_flutter: ^1.0.2
+  flutter_svg: 
+
 
 
   flutter:
@@ -94,4 +96,6 @@ flutter:
     - images/
     - images/Tambola/
     - images/GamePoll/
+    - images/svgs/
+    - images/lottie/
 

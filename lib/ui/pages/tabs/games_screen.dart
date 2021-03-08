@@ -6,8 +6,11 @@ import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'package:felloapp/ui/elements/week-winners.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
 import 'package:felloapp/util/size_config.dart';
+import 'package:lottie/lottie.dart';
 
 class GamePage extends StatefulWidget {
+  final ValueChanged<int> tabChange;
+  GamePage({this.tabChange});
   @override
   _GamePageState createState() => _GamePageState();
 }
@@ -88,7 +91,43 @@ class _GamePageState extends State<GamePage> {
                       ),
                       Expanded(
                         flex: 2,
-                        child: GameOfferCardList(),
+                        child: Container(
+                          width: SizeConfig.screenWidth,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            physics: BouncingScrollPhysics(),
+                            children: [
+                              GameCard(
+                                gradient: [
+                                  Color(0xffACB6E5),
+                                  Color(0xff74EBD5),
+                                ],
+                                title: "Want more tickets?",
+                                action: [
+                                  GameOfferCardButton(
+                                    onPressed: () => widget.tabChange(2),
+                                    title: "Invest",
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  GameOfferCardButton(
+                                    onPressed: () => widget.tabChange(3),
+                                    title: "Share",
+                                  ),
+                                ],
+                              ),
+                              GameCard(
+                                gradient: [
+                                  Color(0xffD4AC5B),
+                                  Color(0xffDECBA4),
+                                ],
+                                title: "Vote for your next game on fello.",
+                                action: [],
+                              )
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   )),
@@ -113,17 +152,9 @@ class _GamePageState extends State<GamePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.swap_vert_circle_outlined,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "SWIPE",
-                          style: GoogleFonts.montserrat(
-                            fontSize: 16,
-                          ),
+                        LottieBuilder.asset(
+                          'images/lottie/swipeup.json',
+                          height: SizeConfig.screenHeight * 0.05,
                         ),
                         Text(
                           "Swipe up to see prizes and leaderboards",
@@ -161,54 +192,6 @@ class TicketCount extends StatelessWidget {
             style: GoogleFonts.montserrat(
                 color: Colors.white, fontSize: SizeConfig.mediumTextSize),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class GameOfferCardList extends StatefulWidget {
-  @override
-  _GameOfferCardListState createState() => _GameOfferCardListState();
-}
-
-class _GameOfferCardListState extends State<GameOfferCardList> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: SizeConfig.screenWidth,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        physics: BouncingScrollPhysics(),
-        children: [
-          GameCard(
-            gradient: [
-              Color(0xffACB6E5),
-              Color(0xff74EBD5),
-            ],
-            title: "Want more tickets?",
-            action: [
-              GameOfferCardButton(
-                onPressed: () {},
-                title: "Invest",
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              GameOfferCardButton(
-                onPressed: () {},
-                title: "Share",
-              ),
-            ],
-          ),
-          GameCard(
-            gradient: [
-              Color(0xffD4AC5B),
-              Color(0xffDECBA4),
-            ],
-            title: "Vote for your next game on fello.",
-            action: [],
-          )
         ],
       ),
     );

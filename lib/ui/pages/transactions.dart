@@ -22,9 +22,6 @@ class _TransactionsState extends State<Transactions> {
   /// Will used to access the Animated list
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
 
-  /// This holds the items
-  List<int> _items = [1, 2, 3, 4, 5];
-
   @override
   void initState() {
     //getTransactions();
@@ -39,14 +36,12 @@ class _TransactionsState extends State<Transactions> {
           .getFilteredUserTransactions(baseProvider.myUser, null, null, 0)
           .then((value) {
         transactionList = value;
+        if (isLoading) {
+          setState(() {
+            isLoading = false;
+          });
+        }
       });
-      print("------------------------------------------>" +
-          transactionList.toString());
-      if (isLoading) {
-        setState(() {
-          isLoading = false;
-        });
-      }
     }
   }
 
@@ -67,97 +62,107 @@ class _TransactionsState extends State<Transactions> {
             ),
           ),
         ),
-        body: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.blockSizeHorizontal * 3),
-              height: SizeConfig.screenHeight * 0.08,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Text(
-                  //   "Filters",
-                  //   style: GoogleFonts.montserrat(
-                  //       fontSize: SizeConfig.mediumTextSize,
-                  //       fontWeight: FontWeight.w700),
-                  // ),
-                  DropdownButton(
-                      value: selectedValue,
-                      items: [
-                        DropdownMenuItem(
-                          child: Text(
-                            "All",
-                            style: GoogleFonts.montserrat(
-                                fontSize: SizeConfig.mediumTextSize),
+        body: Container(
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.blockSizeHorizontal * 3),
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.blockSizeHorizontal * 3),
+                height: SizeConfig.screenHeight * 0.08,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Text(
+                    //   "Filters",
+                    //   style: GoogleFonts.montserrat(
+                    //       fontSize: SizeConfig.mediumTextSize,
+                    //       fontWeight: FontWeight.w700),
+                    // ),
+                    DropdownButton(
+                        value: selectedValue,
+                        items: [
+                          DropdownMenuItem(
+                            child: Text(
+                              "All",
+                              style: GoogleFonts.montserrat(
+                                  fontSize: SizeConfig.mediumTextSize),
+                            ),
+                            value: 1,
                           ),
-                          value: 1,
-                        ),
-                        DropdownMenuItem(
-                          child: Text(
-                            "Invest",
-                            style: GoogleFonts.montserrat(
-                                fontSize: SizeConfig.mediumTextSize),
+                          DropdownMenuItem(
+                            child: Text(
+                              "Invest",
+                              style: GoogleFonts.montserrat(
+                                  fontSize: SizeConfig.mediumTextSize),
+                            ),
+                            value: 2,
                           ),
-                          value: 2,
-                        ),
-                        DropdownMenuItem(
-                            child: Text(
-                              "Withdrawal",
-                              style: GoogleFonts.montserrat(
-                                  fontSize: SizeConfig.mediumTextSize),
-                            ),
-                            value: 3),
-                        DropdownMenuItem(
-                            child: Text(
-                              "ICICI",
-                              style: GoogleFonts.montserrat(
-                                  fontSize: SizeConfig.mediumTextSize),
-                            ),
-                            value: 4),
-                        DropdownMenuItem(
-                            child: Text(
-                              "Augmont",
-                              style: GoogleFonts.montserrat(
-                                  fontSize: SizeConfig.mediumTextSize),
-                            ),
-                            value: 5),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          selectedValue = value;
-                        });
-                      }),
-                ],
+                          DropdownMenuItem(
+                              child: Text(
+                                "Withdrawal",
+                                style: GoogleFonts.montserrat(
+                                    fontSize: SizeConfig.mediumTextSize),
+                              ),
+                              value: 3),
+                          DropdownMenuItem(
+                              child: Text(
+                                "ICICI",
+                                style: GoogleFonts.montserrat(
+                                    fontSize: SizeConfig.mediumTextSize),
+                              ),
+                              value: 4),
+                          DropdownMenuItem(
+                              child: Text(
+                                "Augmont",
+                                style: GoogleFonts.montserrat(
+                                    fontSize: SizeConfig.mediumTextSize),
+                              ),
+                              value: 5),
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            selectedValue = value;
+                          });
+                        }),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: isLoading
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : AnimatedList(
-                      key: listKey,
-                      initialItemCount: _items.length,
-                      itemBuilder: (context, index, animation) {
-                        return ListTile(
-                          title: Text(
-                            'Item $index',
-                            style: GoogleFonts.montserrat(
-                              fontSize: SizeConfig.mediumTextSize,
+              Expanded(
+                child: isLoading
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : AnimatedList(
+                        key: listKey,
+                        initialItemCount: transactionList.length,
+                        itemBuilder: (context, index, animation) {
+                          return ListTile(
+                            title: Text(
+                              transactionList[index].updatedTime.toString(),
+                              style: GoogleFonts.montserrat(
+                                fontSize: SizeConfig.mediumTextSize,
+                              ),
                             ),
-                          ),
-                          subtitle: Text(
-                            "ICICI",
-                            style: GoogleFonts.montserrat(
-                              fontSize: SizeConfig.mediumTextSize,
+                            subtitle: Text(
+                              transactionList[index].subType,
+                              style: GoogleFonts.montserrat(
+                                fontSize: SizeConfig.mediumTextSize,
+                              ),
                             ),
-                          ),
-                        ); // Refer step 3
-                      },
-                    ),
-            ),
-          ],
+                            trailing: Text(
+                              transactionList[index].amount.toString(),
+                              style: GoogleFonts.montserrat(
+                                fontSize: SizeConfig.mediumTextSize,
+                              ),
+                            ),
+                          ); // Refer step 3
+                        },
+                      ),
+              ),
+            ],
+          ),
         ));
   }
 }

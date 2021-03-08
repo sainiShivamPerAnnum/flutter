@@ -22,7 +22,7 @@ class Root extends StatefulWidget {
 class _RootState extends State<Root> {
   Log log = new Log("Root");
   List<NavBarItemData> _navBarItems;
-  int selectedNavIndex = 0;
+  static int selectedNavIndex = 0;
   BaseUtil baseProvider;
   HttpModel httpModel;
 
@@ -33,16 +33,30 @@ class _RootState extends State<Root> {
     initDynamicLinks();
     //Declare some buttons for our tab bar
     _navBarItems = [
-      NavBarItemData("Home", Icons.home, 110),
-      NavBarItemData("Play", Icons.games, 110),
-      NavBarItemData("Save", Icons.wallet_giftcard, 115),
-      NavBarItemData("Profile", Icons.verified_user, 115),
+      NavBarItemData("Home", Icons.home, 110, "images/svgs/home.svg"),
+      NavBarItemData("Play", Icons.games, 110, "images/svgs/game.svg"),
+      NavBarItemData(
+          "Save", Icons.wallet_giftcard, 115, "images/svgs/save.svg"),
+      NavBarItemData(
+          "Profile", Icons.verified_user, 115, "images/svgs/profile.svg"),
     ];
 
     //Create the views which will be mapped to the indices for our nav btns
     _viewsByIndex = <Widget>[
-      HomePage(),
-      GamePage(),
+      HomePage(
+        tabChange: (int i) {
+          setState(() {
+            selectedNavIndex = i;
+          });
+        },
+      ),
+      GamePage(
+        tabChange: (int i) {
+          setState(() {
+            selectedNavIndex = i;
+          });
+        },
+      ),
       FinancePage(),
       ProfilePage(),
     ];
@@ -93,7 +107,6 @@ class _RootState extends State<Root> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
-      drawer: Drawer(),
       body: Stack(
         children: [
           Container(
@@ -217,7 +230,8 @@ class _RootState extends State<Root> {
 class NavBarItemData {
   final String title;
   final IconData icon;
+  final String iconImage;
   final double width;
 
-  NavBarItemData(this.title, this.icon, this.width);
+  NavBarItemData(this.title, this.icon, this.width, this.iconImage);
 }

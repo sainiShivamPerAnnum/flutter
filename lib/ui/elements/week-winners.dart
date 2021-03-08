@@ -1,3 +1,4 @@
+import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -60,13 +61,12 @@ class WeekWinnerBoard extends StatelessWidget {
             Expanded(
               child: ListView.builder(
                 physics: BouncingScrollPhysics(),
-                padding:
-                    EdgeInsets.only(right: height * 0.03, left: height * 0.02),
                 itemCount: weekWinnersList.length,
                 itemBuilder: (ctx, i) {
                   return ListTile(
-                    contentPadding: EdgeInsets.all(
-                      height * 0.01,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.blockSizeHorizontal * 6,
+                      vertical: SizeConfig.blockSizeVertical * 0.8,
                     ),
                     leading: ClipOval(
                       child: Image.network(weekWinnersList[i].avatar),
@@ -75,14 +75,14 @@ class WeekWinnerBoard extends StatelessWidget {
                       weekWinnersList[i].name,
                       style: GoogleFonts.montserrat(
                         color: Colors.white,
-                        fontSize: height * 0.018,
+                        fontSize: SizeConfig.mediumTextSize,
                       ),
                     ),
                     trailing: Text(
                       weekWinnersList[i].prize,
                       style: GoogleFonts.montserrat(
                         color: Colors.white,
-                        fontSize: height * 0.018,
+                        fontSize: SizeConfig.mediumTextSize,
                       ),
                     ),
                   );

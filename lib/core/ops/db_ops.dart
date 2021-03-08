@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/model/UserMiniTransaction.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/help_types.dart';
@@ -288,28 +289,41 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<List<UserMiniTransaction>> getFilteredUserTransactions(
-      BaseUser user, String type, String subtype, int limit) {
+      BaseUser user, String type, String subtype, int limit) async {
     try {
+      final FirebaseFirestore _db = FirebaseFirestore.instance;
       String _id = user.uid;
-      Stream<QuerySnapshot> _stream =
-          _api.getUserTransactionsByField(_id, type, subtype, limit);
+      Query query = _db
+          .collection(Constants.COLN_USERS)
+          .doc(_id)
+          .collection(Constants.SUBCOLN_USER_TXNS);
+
+      QuerySnapshot txnSnapshot = await query.get();
+      // Stream<QuerySnapshot> _stream =
+      //     _api.getUserTransactionsByField(_id, type, subtype, limit);
       List<UserMiniTransaction> requestedTxns = [];
-      _stream.listen((querySnapshot) {
-        querySnapshot.docs.forEach((docSnapshot) {
-          if (docSnapshot.exists)
-            log.debug('Received snapshot: ' + docSnapshot.data.toString());
-          UserMiniTransaction txn;
-          try {
-            txn = UserMiniTransaction.fromMap(docSnapshot.data());
-          } catch (e) {
-            log.error('Transaction parse error');
-            txn = null;
-          }
-          if (txn != null && txn.amount > 0) requestedTxns.add(txn);
-          print(requestedTxns);
-        });
-        log.debug('Post stream update-> count: ${requestedTxns.length}');
+      txnSnapshot.docs.forEach((t) {
+        UserMiniTransaction txn = UserMiniTransaction.fromMap(t.data());
+        requestedTxns.add(txn);
       });
+      print(requestedTxns.length);
+      return requestedTxns;
+      // _stream.listen((querySnapshot) {
+      //   querySnapshot.docs.forEach((docSnapshot) {
+      //     if (docSnapshot.exists)
+      //       log.debug('Received snapshot: ' + docSnapshot.data.toString());
+      //     UserMiniTransaction txn;
+      //     try {
+      //       txn = UserMiniTransaction.fromMap(docSnapshot.data());
+      //     } catch (e) {
+      //       log.error('Transaction parse error');
+      //       txn = null;
+      //     }
+      //     if (txn != null && txn.amount > 0) requestedTxns.add(txn);
+      //     print(requestedTxns);
+      //   });
+      //   log.debug('Post stream update-> count: ${requestedTxns.length}');
+      // });
     } catch (err) {
       log.error('Failed to fetch tambola boards');
       return null;

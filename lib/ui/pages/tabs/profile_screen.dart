@@ -1,7 +1,9 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/ui/pages/edit_profile_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/base_util.dart';
@@ -11,21 +13,23 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flat_icons_flutter/flat_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/parser.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/ui/pages/transactions.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
+import 'package:felloapp/ui/pages/root.dart';
 
 class ProfilePage extends StatelessWidget {
   BaseUtil baseProvider;
-
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
-
     return Container(
       padding: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.02),
       decoration: BoxDecoration(
@@ -44,124 +48,133 @@ class ProfilePage extends StatelessWidget {
           physics: BouncingScrollPhysics(),
           children: [
             Container(
-              height: AppBar().preferredSize.height * 1.5,
+              height: AppBar().preferredSize.height * 1.6,
             ),
-            Container(
-              // margin: EdgeInsets.symmetric(
-              //     horizontal: height * 0.008),
-              height: SizeConfig.screenHeight * 0.24,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(
-                    "images/profile-card.png",
-                  ),
-                  fit: BoxFit.contain,
-                ),
-              ),
+            GestureDetector(
+              onTap: () {
+                HapticFeedback.vibrate();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => EditProfile()),
+                );
+              },
               child: Container(
-                padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
-                width: double.infinity,
-                child: Column(
-                  children: [
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.end,
-                    //   children: [
-                    //     IconButton(
-                    //       icon: Icon(
-                    //         Icons.edit,
-                    //         color: Colors.white,
-                    //       ),
-                    //       onPressed: () {},
-                    //     )
-                    //   ],
-                    // ),
-                    SizedBox(
-                      height: SizeConfig.screenHeight * 0.02,
+                height: SizeConfig.screenHeight * 0.24,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(
+                      "images/profile-card.png",
                     ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            "images/profile.png",
-                            height: SizeConfig.screenWidth * 0.25,
-                            fit: BoxFit.cover,
-                          ),
-                          SizedBox(
-                            width: SizeConfig.screenWidth * 0.05,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: SizeConfig.screenWidth * 0.5,
-                                child: Text(
-                                  "Username ",
-                                  style: GoogleFonts.montserrat(
-                                    color: Colors.white,
-                                    fontSize: SizeConfig.cardTitleTextSize,
-                                    fontWeight: FontWeight.w500,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                child: Container(
+                  padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: [
+                      //     IconButton(
+                      //       icon: Icon(
+                      //         Icons.edit,
+                      //         color: Colors.white,
+                      //       ),
+                      //       onPressed: () {},
+                      //     )
+                      //   ],
+                      // ),
+                      SizedBox(
+                        height: SizeConfig.screenHeight * 0.02,
+                      ),
+
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              "images/profile.png",
+                              height: SizeConfig.screenWidth * 0.25,
+                              fit: BoxFit.cover,
+                            ),
+                            SizedBox(
+                              width: SizeConfig.screenWidth * 0.05,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: SizeConfig.screenWidth * 0.5,
+                                  child: Text(
+                                    baseProvider.myUser.name,
+                                    style: GoogleFonts.montserrat(
+                                      color: Colors.white,
+                                      fontSize: SizeConfig.cardTitleTextSize,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              Text(
-                                "Member since 1947",
-                                style: GoogleFonts.montserrat(
-                                  color: Colors.black,
-                                  fontSize: SizeConfig.smallTextSize,
+                                SizedBox(
+                                  height: 8,
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  "Member since 1947",
+                                  style: GoogleFonts.montserrat(
+                                    color: Colors.black,
+                                    fontSize: SizeConfig.smallTextSize,
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.edit,
+                            color: Colors.white,
+                            size: SizeConfig.blockSizeHorizontal * 4,
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            "Tap to edit details",
+                            style: GoogleFonts.montserrat(
+                              color: Colors.white,
+                            ),
                           )
                         ],
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                          size: SizeConfig.blockSizeHorizontal * 4,
-                        ),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Text(
-                          "Tap to edit details",
-                          style: GoogleFonts.montserrat(
-                            color: Colors.white,
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    )
-                  ],
+                      SizedBox(
+                        height: 10,
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
             Container(
               padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.screenWidth * 0.05,
+                horizontal: SizeConfig.blockSizeHorizontal * 2,
               ),
               child: Column(
                 children: [
                   ProfileTabTile(
                     logo: "images/contact-book.png",
                     title: "Username",
-                    value: "@HELPK0874L",
+                    value: baseProvider.myUser.uid.toString().toLowerCase(),
                     onPress: () {},
                   ),
                   ProfileTabTile(
                     logo: "images/transaction.png",
                     title: "Transactions",
-                    value: "12",
+                    value: "See All",
                     onPress: () {
                       Navigator.push(context,
                           CupertinoPageRoute(builder: (ctx) => Transactions()));
@@ -208,51 +221,40 @@ class Social extends StatelessWidget {
             height: 10,
           ),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            CircleAvatar(
-                backgroundColor: UiConstants.primaryColor,
-                child: IconButton(
-                  onPressed: () async => launchUrl("www.instagram.com"),
-                  icon: Icon(
-                    FlatIcons.con_instagram,
-                    size: 16,
-                    color: Colors.white,
-                  ),
-                )),
-            SizedBox(
-              width: 12,
-            ),
-            CircleAvatar(
-              backgroundColor: UiConstants.primaryColor,
-              child: Icon(
-                FlatIcons.con_linkedin,
-                size: 16,
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(
-              width: 12,
-            ),
-            CircleAvatar(
-              backgroundColor: UiConstants.primaryColor,
-              child: Icon(
-                FlatIcons.worldwide,
-                size: 16,
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(
-              width: 12,
-            ),
-            CircleAvatar(
-              backgroundColor: UiConstants.primaryColor,
-              child: Icon(
-                Icons.call,
-                size: 16,
-                color: Colors.white,
-              ),
-            ),
+            socialButton("images/svgs/instagram.svg",
+                "https://www.instagram.com/fellofinance/"),
+            socialButton("images/svgs/linkedin.svg",
+                "https://www.linkedin.com/company/fellofinance/"),
+            socialButton(
+                "images/svgs/whatsapp.svg",
+                Platform.isAndroid
+                    ? "https://wa.me/${917993252690}/?text=Hello Fello"
+                    : "https://api.whatsapp.com/send?phone=${917993252690}=Hello Fello"),
+            socialButton("images/svgs/mail.svg", "mailto:hello@fello.in"),
+            socialButton("images/svgs/web.svg", "https://fello.in"),
           ])
         ]));
+  }
+
+  Widget socialButton(String asset, String url) {
+    return GestureDetector(
+      onTap: () async => launchUrl(url),
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: UiConstants.primaryColor,
+        ),
+        padding: EdgeInsets.all(12),
+        margin: EdgeInsets.symmetric(horizontal: 6),
+        child: SvgPicture.asset(
+          asset,
+          color: Colors.white,
+          fit: BoxFit.contain,
+          height: SizeConfig.blockSizeVertical * 1.5,
+          width: SizeConfig.blockSizeVertical * 1.5,
+        ),
+      ),
+    );
   }
 }
 
@@ -307,8 +309,8 @@ class ShareCard extends StatelessWidget {
                 opacity: 0.3,
                 child: Image.asset(
                   "images/share-card.png",
-                  height: SizeConfig.screenHeight * 0.25,
-                  width: SizeConfig.screenWidth * 0.5,
+                  // height: SizeConfig.screenHeight * 0.5,
+                  // width: SizeConfig.screenWidth * 0.5,
                 ),
               ),
             ),
@@ -339,24 +341,7 @@ class ShareCard extends StatelessWidget {
                         color: Colors.white,
                         fontSize: SizeConfig.mediumTextSize),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CardButton(
-                        gradient: [
-                          Color(0xff4E4376),
-                          Color(0xff2B5876),
-                        ],
-                        icon: FlatIcons.share,
-                        onPressed: () {},
-                        text: "Share",
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      ShareWhatsapp(),
-                    ],
-                  )
+                  ShareOptions(),
                 ],
               ),
             )
@@ -367,12 +352,12 @@ class ShareCard extends StatelessWidget {
   }
 }
 
-class ShareWhatsapp extends StatefulWidget {
+class ShareOptions extends StatefulWidget {
   @override
-  _ShareWhatsappState createState() => _ShareWhatsappState();
+  _ShareOptionsState createState() => _ShareOptionsState();
 }
 
-class _ShareWhatsappState extends State<ShareWhatsapp> {
+class _ShareOptionsState extends State<ShareOptions> {
   Log log = new Log('ReferScreen');
   BaseUtil baseProvider;
   DBModel dbProvider;
@@ -425,80 +410,139 @@ class _ShareWhatsappState extends State<ShareWhatsapp> {
     fcmProvider = Provider.of<FcmHandler>(context);
     rProvider = Provider.of<RazorpayModel>(context);
     _init();
-    return MaterialButton(
-      child: (!baseProvider.isReferralLinkBuildInProgressWhatsapp)
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'SHARE ON WHATSAPP',
-                  style: Theme.of(context)
-                      .textTheme
-                      .button
-                      .copyWith(color: Colors.white),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                SizedBox(
-                  child: Image(
-                    image: AssetImage(Assets.whatsappIcon),
-                    fit: BoxFit.contain,
-                  ),
-                  width: 15,
-                )
-              ],
-            )
-          : SpinKitThreeBounce(
-              color: UiConstants.spinnerColor2,
-              size: 18.0,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              width: 2,
+              color: Colors.white,
             ),
-      onPressed: () async {
-        ////////////////////////////////
-        baseProvider.isReferralLinkBuildInProgressWhatsapp = true;
-        setState(() {});
-        String url;
-        try {
-          url = await _createDynamicLink(
-              baseProvider.myUser.uid, true, 'Whatsapp');
-        } catch (e) {
-          log.error('Failed to create dynamic link');
-          log.error(e);
-        }
-        baseProvider.isReferralLinkBuildInProgressWhatsapp = false;
-        setState(() {});
-        if (url == null)
-          return;
-        else
-          log.debug(url);
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(100),
+          ),
+          child: MaterialButton(
+            child: (!baseProvider.isReferralLinkBuildInProgressOther)
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'SHARE',
+                        style: Theme.of(context)
+                            .textTheme
+                            .button
+                            .copyWith(color: Colors.white),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      SvgPicture.asset(
+                        "images/svgs/plane.svg",
+                        color: Colors.white,
+                        height: SizeConfig.blockSizeHorizontal * 4,
+                      )
+                    ],
+                  )
+                : SpinKitThreeBounce(
+                    color: UiConstants.spinnerColor2,
+                    size: 18.0,
+                  ),
+            onPressed: () async {
+              baseProvider.isReferralLinkBuildInProgressOther = true;
+              _createDynamicLink(baseProvider.myUser.uid, true, 'Other')
+                  .then((url) async {
+                log.debug(url);
+                baseProvider.isReferralLinkBuildInProgressOther = false;
+                setState(() {});
+                FlutterShareMe()
+                    .shareToSystem(msg: _shareMsg + url)
+                    .then((flag) {
+                  log.debug(flag);
+                });
+              });
+              setState(() {});
+            },
+            highlightColor: Colors.orange.withOpacity(0.5),
+            splashColor: Colors.orange.withOpacity(0.5),
+          ),
+        ),
+        SizedBox(
+          width: 20,
+        ),
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              width: 2,
+              color: Colors.white,
+            ),
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(100),
+          ),
+          child: MaterialButton(
+            child: (!baseProvider.isReferralLinkBuildInProgressWhatsapp)
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('SHARE ON WHATSAPP',
+                          style: GoogleFonts.montserrat(
+                            fontSize: SizeConfig.mediumTextSize,
+                            color: Colors.white,
+                          )),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      SvgPicture.asset(
+                        "images/svgs/whatsapp.svg",
+                        color: Colors.white,
+                        height: SizeConfig.blockSizeHorizontal * 4,
+                      )
+                    ],
+                  )
+                : SpinKitThreeBounce(
+                    color: UiConstants.spinnerColor2,
+                    size: 18.0,
+                  ),
+            onPressed: () async {
+              ////////////////////////////////
+              baseProvider.isReferralLinkBuildInProgressWhatsapp = true;
+              setState(() {});
+              String url;
+              try {
+                url = await _createDynamicLink(
+                    baseProvider.myUser.uid, true, 'Whatsapp');
+              } catch (e) {
+                log.error('Failed to create dynamic link');
+                log.error(e);
+              }
+              baseProvider.isReferralLinkBuildInProgressWhatsapp = false;
+              setState(() {});
+              if (url == null)
+                return;
+              else
+                log.debug(url);
 
-        FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
-          log.debug(flag);
-        }).catchError((err) {
-          log.error('Share to whatsapp failed');
-          log.error(err);
-          FlutterShareMe()
-              .shareToWhatsApp4Biz(msg: _shareMsg + url)
-              .then((value) {
-            log.debug(value);
-          }).catchError((err) {
-            log.error('Share to whatsapp biz failed as well');
-          });
-        });
-        ////////////////////////
-        // rProvider.submitAugmontTransaction(
-        //     UserTransaction.extMFDeposit('', '', 100.23, '', baseProvider.myUser.uid),
-        //     baseProvider.myUser.mobile,
-        //     baseProvider.myUser.email, null);
-        // rProvider.setTransactionListener((resTxn) {
-        //   //log.debug(resTxn);
-        // });
-
-        // var x = await dbProvider.getFilteredUserTransactions(baseProvider.myUser, null, null, 0);
-        // log.debug(x);
-      },
-      highlightColor: Colors.orange.withOpacity(0.5),
-      splashColor: Colors.orange.withOpacity(0.5),
+              FlutterShareMe()
+                  .shareToWhatsApp(msg: _shareMsg + url)
+                  .then((flag) {
+                log.debug(flag);
+              }).catchError((err) {
+                log.error('Share to whatsapp failed');
+                log.error(err);
+                FlutterShareMe()
+                    .shareToWhatsApp4Biz(msg: _shareMsg + url)
+                    .then((value) {
+                  log.debug(value);
+                }).catchError((err) {
+                  log.error('Share to whatsapp biz failed as well');
+                });
+              });
+            },
+            highlightColor: Colors.orange.withOpacity(0.5),
+            splashColor: Colors.orange.withOpacity(0.5),
+          ),
+        ),
+      ],
     );
   }
 

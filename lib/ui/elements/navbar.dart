@@ -1,8 +1,11 @@
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/ui/pages/root.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:core';
 import 'dart:math';
+
+import 'package:flutter_svg/parser.dart';
 
 class NavBar extends StatelessWidget {
   final ValueChanged<int> itemTapped;
@@ -99,13 +102,19 @@ class _NavbarButtonState extends State<NavbarButton>
       children: <Widget>[
         //Rotate the icon using the current animation value
         Rotation3d(
-          rotationY: 180 * _iconAnimController.value,
-          child: Icon(
-            widget.data.icon,
-            size: 24,
-            color: widget.isSelected ? Colors.white : Color(0xffcccccc),
-          ),
-        ),
+            rotationY: 180 * _iconAnimController.value,
+            child: SvgPicture.asset(
+              widget.data.iconImage,
+              height: 24,
+              color: widget.isSelected ? Colors.white : Color(0xffcccccc),
+            )
+
+            // Icon(
+            //   widget.data.icon,
+            //   size: 24,
+            //   color: widget.isSelected ? Colors.white : Color(0xffcccccc),
+            // ),
+            ),
         //Add some hz spacing
         SizedBox(width: 12),
         //Label

@@ -6,7 +6,7 @@ import 'package:pie_chart/pie_chart.dart';
 import 'package:felloapp/util/size_config.dart';
 
 class FinancePage extends StatelessWidget {
-  final bool hasFund = true;
+  final bool hasFund = false;
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -35,7 +35,7 @@ class FinancePage extends StatelessWidget {
                     height: AppBar().preferredSize.height,
                   ),
                   Container(
-                    child: hasFund ? FundChartView() : EmptyChartView(),
+                    child: hasFund ? FundChartView() : ZeroBalView(),
                   ),
                   Divider(),
                   Text(
@@ -176,41 +176,33 @@ class FundChartView extends StatelessWidget {
   }
 }
 
-class EmptyChartView extends StatelessWidget {
+class ZeroBalView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      height: MediaQuery.of(context).size.height * 0.3,
-      child: PieChart(
-        dataMap: {'Null': 10},
-        animationDuration: Duration(milliseconds: 800),
-        chartLegendSpacing: 40,
-        chartRadius: MediaQuery.of(context).size.width / 2,
-        colorList: [Colors.grey[400]],
-        initialAngleInDegree: 0,
-        chartType: ChartType.ring,
-        ringStrokeWidth: 5,
-        centerText: "₹ 0",
-        legendOptions: LegendOptions(
-          showLegendsInRow: false,
-          legendPosition: LegendPosition.left,
-          showLegends: false,
-          legendShape: BoxShape.circle,
-          legendTextStyle: GoogleFonts.montserrat(
-            fontWeight: FontWeight.bold,
+      height: SizeConfig.screenHeight * 0.3,
+      padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+      child: Row(
+        children: [
+          Expanded(
+            child: Center(
+              child: Image.asset(
+                "images/zero-balance.png",
+                fit: BoxFit.contain,
+              ),
+            ),
           ),
-        ),
-        chartValuesOptions: ChartValuesOptions(
-          showChartValueBackground: true,
-          showChartValues: false,
-          chartValueStyle: GoogleFonts.montserrat(
-            fontSize: 40,
-            color: Colors.grey[400],
-          ),
-          showChartValuesInPercentage: false,
-          showChartValuesOutside: false,
-        ),
+          // Expanded(
+          //   flex: 4,
+          //   child: Text(
+          //     "Wallet Empty!!\n\nKickstart your investing journey today with Fello",
+          //     style: GoogleFonts.montserrat(
+          //       fontSize: SizeConfig.mediumTextSize,
+          //       color: Colors.black87,
+          //     ),
+          //   ),
+          // )
+        ],
       ),
     );
   }

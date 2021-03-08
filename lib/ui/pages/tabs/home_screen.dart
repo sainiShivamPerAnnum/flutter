@@ -4,8 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:felloapp/ui/elements/game-poll-dialog.dart';
 import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/ui/pages/root.dart';
 
 class HomePage extends StatelessWidget {
+  final ValueChanged<int> tabChange;
+  HomePage({this.tabChange});
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -120,7 +123,7 @@ class HomePage extends StatelessWidget {
                         subtitle:
                             "Refer a friend Fello and we'll throw tickets worth of ₹1000 to both the accounts",
                         buttonText: "Share now",
-                        onPressed: () {},
+                        onPressed: () => tabChange(3),
                         gradient: [
                           Color(0xffD4AC5B),
                           Color(0xffDECBA4),
@@ -206,7 +209,7 @@ class HomeCard extends StatelessWidget {
               opacity: 0.3,
               child: Image.asset(
                 asset,
-                height: height * 0.25,
+                //height: height * 0.25,
                 width: width * 0.5,
               ),
             ),
