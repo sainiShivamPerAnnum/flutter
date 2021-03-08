@@ -1,18 +1,33 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:felloapp/ui/elements/game-poll-dialog.dart';
 import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/ui/pages/root.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   final ValueChanged<int> tabChange;
   HomePage({this.tabChange});
+  String getGreeting() {
+    int hour = DateTime.now().hour;
+    print(hour);
+    if (hour >= 5 && hour <= 12) {
+      return "Good Morning,";
+    } else if (hour > 12 && hour <= 17) {
+      return "Good Afternoon,";
+    } else if (hour >= 18 && hour <= 22) {
+      return "Good Evening,";
+    } else
+      return "Hello,";
+  }
+
+  BaseUtil baseProvider;
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    baseProvider = Provider.of<BaseUtil>(context);
+
     return Container(
         decoration: BoxDecoration(
           color: Color(0xfff1f1f1),
@@ -40,12 +55,12 @@ class HomePage extends StatelessWidget {
                   bottomRight: Radius.circular(50),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.only(left: width * 0.05),
+                  padding: EdgeInsets.only(left: SizeConfig.screenWidth * 0.05),
                   child: ListView(
                     physics: BouncingScrollPhysics(),
                     children: [
                       Container(
-                        height: height * 0.08,
+                        height: AppBar().preferredSize.height * 1.5,
                       ),
                       Container(
                         decoration: BoxDecoration(
@@ -59,8 +74,8 @@ class HomePage extends StatelessWidget {
                         child: Row(
                           children: [
                             Container(
-                              height: width * 0.25,
-                              width: width * 0.25,
+                              height: SizeConfig.screenWidth * 0.25,
+                              width: SizeConfig.screenWidth * 0.25,
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
@@ -81,18 +96,18 @@ class HomePage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "GOOD MORNING!",
+                                  getGreeting().toUpperCase(),
                                   style: GoogleFonts.montserrat(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w700,
                                       fontSize: SizeConfig.largeTextSize),
                                 ),
                                 Text(
-                                  "Robert",
+                                  baseProvider.myUser.name,
                                   textAlign: TextAlign.start,
                                   style: GoogleFonts.montserrat(
                                       color: Colors.white,
-                                      fontSize: height * 0.02),
+                                      fontSize: SizeConfig.largeTextSize),
                                 ),
                               ],
                             )

@@ -54,9 +54,10 @@ class _GamePollState extends State<GamePoll> {
         children: [
           SizedBox(height: 20),
           Text(
-            "What will be our next game ??",
+            "Which game would you like to play?",
             textAlign: TextAlign.center,
             style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.w500,
               fontSize: SizeConfig.largeTextSize,
               color: Colors.white,
             ),
@@ -66,7 +67,7 @@ class _GamePollState extends State<GamePoll> {
           ),
           Expanded(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 GameTile(
                   isVoted: isVoted,
@@ -95,7 +96,7 @@ class _GamePollState extends State<GamePoll> {
             height: SizeConfig.blockSizeVertical * 3,
             child: Center(
               child: Text(
-                isVoted
+                !isVoted
                     ? "Just Tap on your favourite"
                     : "Your Vote recorded. Thank you",
                 style: GoogleFonts.montserrat(
@@ -167,7 +168,7 @@ class _GameTileState extends State<GameTile> {
                     Spacer(),
                     widget.isVoted
                         ? Text(
-                            widget.pollItem.votes.toString(),
+                            "${(widget.pollItem.votes * 100).toString()}%",
                             style: GoogleFonts.montserrat(
                               color: Colors.white,
                               fontSize: SizeConfig.mediumTextSize,
