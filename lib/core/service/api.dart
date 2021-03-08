@@ -14,7 +14,10 @@ class Api {
   Api();
 
   Future<void> updateUserClientToken(String userId, Map data) {
-    ref = _db.collection(Constants.COLN_USERS).doc(userId).collection(Constants.SUBCOLN_USER_FCM);
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_FCM);
     return ref.doc(Constants.DOC_USER_FCM_TOKEN).set(data);
   }
 
@@ -27,55 +30,82 @@ class Api {
     ref = _db.collection(Constants.COLN_USERS);
     return ref.doc(docId).set(data, SetOptions(merge: true));
   }
-  
+
   Future<DocumentSnapshot> getUserIciciDetailDocument(String userId) {
-    ref = _db.collection(Constants.COLN_USERS).doc(userId)
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
         .collection(Constants.SUBCOLN_USER_ICICI_DETAILS);
     return ref.doc(Constants.DOC_USER_ICICI_DETAIL).get();
   }
 
   Future<void> updateUserIciciDetailDocument(String userId, Map data) {
-    ref = _db.collection(Constants.COLN_USERS).doc(userId)
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
         .collection(Constants.SUBCOLN_USER_ICICI_DETAILS);
-    return ref.doc(Constants.DOC_USER_ICICI_DETAIL).set(data, SetOptions(merge: true));
+    return ref
+        .doc(Constants.DOC_USER_ICICI_DETAIL)
+        .set(data, SetOptions(merge: true));
   }
 
   Future<DocumentSnapshot> getUserKycDetailDocument(String userId) {
-    ref = _db.collection(Constants.COLN_USERS).doc(userId)
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
         .collection(Constants.SUBCOLN_USER_KYC_DETAILS);
     return ref.doc(Constants.DOC_USER_KYC_DETAIL).get();
   }
 
   Future<void> updateUserKycDetailDocument(String userId, Map data) {
-    ref = _db.collection(Constants.COLN_USERS).doc(userId)
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
         .collection(Constants.SUBCOLN_USER_KYC_DETAILS);
-    return ref.doc(Constants.DOC_USER_KYC_DETAIL).set(data, SetOptions(merge: true));
+    return ref
+        .doc(Constants.DOC_USER_KYC_DETAIL)
+        .set(data, SetOptions(merge: true));
   }
 
-  Future<DocumentReference> addUserTransactionDocument(String userId, Map data) {
-    ref = _db.collection(Constants.COLN_USERS).doc(userId)
+  Future<DocumentReference> addUserTransactionDocument(
+      String userId, Map data) {
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
         .collection(Constants.SUBCOLN_USER_TXNS);
     return ref.add(data);
   }
 
-  Future<DocumentSnapshot> getUserTransactionDocument(String userId, String txnId) {
-    ref = _db.collection(Constants.COLN_USERS).doc(userId)
+  Future<DocumentSnapshot> getUserTransactionDocument(
+      String userId, String txnId) {
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
         .collection(Constants.SUBCOLN_USER_TXNS);
     return ref.doc(txnId).get();
   }
 
-  Future<void> updateUserTransactionDocument(String userId, String txnId, Map data) {
-    ref = _db.collection(Constants.COLN_USERS).doc(userId)
+  Future<void> updateUserTransactionDocument(
+      String userId, String txnId, Map data) {
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
         .collection(Constants.SUBCOLN_USER_TXNS);
     return ref.doc(txnId).set(data, SetOptions(merge: true));
   }
 
   Future<void> createTicketRequest(String userId, Map data) {
-    return _db.collection(Constants.COLN_TICKETREQUEST).doc().set(data, SetOptions(merge: false));
+    return _db
+        .collection(Constants.COLN_TICKETREQUEST)
+        .doc()
+        .set(data, SetOptions(merge: false));
   }
 
   Stream<QuerySnapshot> getValidUserTickets(String user_id, int weekCode) {
-    Query query = _db.collection(Constants.COLN_USERS).doc(user_id).collection(Constants.SUBCOLN_USER_TICKETS);
+    Query query = _db
+        .collection(Constants.COLN_USERS)
+        .doc(user_id)
+        .collection(Constants.SUBCOLN_USER_TICKETS);
     query = query.where(TambolaBoard.fldWeekCode, isEqualTo: weekCode);
 
     return query.snapshots();
@@ -83,7 +113,9 @@ class Api {
   }
 
   Future<QuerySnapshot> getWeekPickByCde(int weekCde) {
-    Query query = _db.collection(Constants.COLN_DAILYPICKS).where(DailyPick.fldWeekCode, isEqualTo: weekCde);
+    Query query = _db
+        .collection(Constants.COLN_DAILYPICKS)
+        .where(DailyPick.fldWeekCode, isEqualTo: weekCde);
 
     return query.get();
   }
@@ -97,13 +129,17 @@ class Api {
   }
 
   Future<QuerySnapshot> getWinnersByWeekCde(int weekCde) {
-    Query query = _db.collection(Constants.COLN_WINNERS).where('week_code', isEqualTo: weekCde);
+    Query query = _db
+        .collection(Constants.COLN_WINNERS)
+        .where('week_code', isEqualTo: weekCde);
 
     return query.get();
   }
 
-  Future<QuerySnapshot> getCredentialsByTypeAndStage(String type, String stage, int index) {
-    Query query = _db.collection(Constants.COLN_CREDENTIALS)
+  Future<QuerySnapshot> getCredentialsByTypeAndStage(
+      String type, String stage, int index) {
+    Query query = _db
+        .collection(Constants.COLN_CREDENTIALS)
         .where('type', isEqualTo: type)
         .where('stage', isEqualTo: stage)
         .where('index', isEqualTo: index);
@@ -111,26 +147,47 @@ class Api {
     return query.get();
   }
 
-  Stream<QuerySnapshot> getUserTransactionsByField(String user_id, String type, String subtype, int limit) {
-    Query query = _db.collection(Constants.COLN_USERS).doc(user_id).collection(Constants.SUBCOLN_USER_TXNS);
-    if(type != null)query = query.where(UserTransaction.fldType, isEqualTo: type);
-    if(subtype != null)query = query.where(UserTransaction.fldSubType, isEqualTo: subtype);
-    if(limit != -1 && limit > 10) query = query.limit(limit);
+  Stream<QuerySnapshot> getUserTransactionsByField(
+      String user_id, String type, String subtype, int limit) {
+    Query query = _db
+        .collection(Constants.COLN_USERS)
+        .doc(user_id)
+        .collection(Constants.SUBCOLN_USER_TXNS);
+    if (type != null)
+      query = query.where(UserTransaction.fldType, isEqualTo: type);
+    if (subtype != null)
+      query = query.where(UserTransaction.fldSubType, isEqualTo: subtype);
+    if (limit != -1 && limit > 10) query = query.limit(limit);
     query = query.orderBy(UserTransaction.fldUpdatedTime);
 
     return query.snapshots();
   }
 
   Future<void> addCallbackDocument(String year, String monthCde, Map data) {
-    return _db.collection('callbacks').doc(year).collection(monthCde).doc().set(data, SetOptions(merge: false));
+    return _db
+        .collection('callbacks')
+        .doc(year)
+        .collection(monthCde)
+        .doc()
+        .set(data, SetOptions(merge: false));
   }
 
   Future<void> addDepositDocument(String year, String monthCde, Map data) {
-    return _db.collection('deposits').doc(year).collection(monthCde).doc().set(data, SetOptions(merge: false));
+    return _db
+        .collection('deposits')
+        .doc(year)
+        .collection(monthCde)
+        .doc()
+        .set(data, SetOptions(merge: false));
   }
 
   Future<void> addWithdrawalDocument(String year, String monthCde, Map data) {
-    return _db.collection('withdrawals').doc(year).collection(monthCde).doc().set(data, SetOptions(merge: false));
+    return _db
+        .collection('withdrawals')
+        .doc(year)
+        .collection(monthCde)
+        .doc()
+        .set(data, SetOptions(merge: false));
   }
 
   Future<void> addClaimDocument(Map data) {

@@ -1,5 +1,5 @@
-import 'dart:async';
-
+import 'dart:developer';
+import 'dart:ui';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/aboutus_dialog.dart';
@@ -8,104 +8,108 @@ import 'package:felloapp/ui/elements/contact_dialog.dart';
 import 'package:felloapp/ui/elements/feedback_dialog.dart';
 import 'package:felloapp/ui/pages/edit_profile_page.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/kyc_onboarding_controller.dart';
-import 'package:felloapp/ui/pages/root.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/logger.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:felloapp/util/size_config.dart';
+import 'package:flat_icons_flutter/flat_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:felloapp/ui/pages/settings_page.dart';
 import 'package:provider/provider.dart';
+import 'package:felloapp/util/logger.dart';
 
-class SettingsPage extends StatefulWidget {
-  SettingsPage({this.onPush});
-  final ValueChanged<String> onPush;
-  @override
-  State createState() {
-    return _OptionsList(onPush: onPush);
-  }
-}
-
-class _OptionsList extends State<SettingsPage> {
-  _OptionsList({this.onPush});
-  final ValueChanged<String> onPush;
-  Log log = new Log('SettingsPage');
+class HamburgerMenu extends StatelessWidget {
+  static List<OptionDetail> _optionsList;
   BaseUtil baseProvider;
   DBModel reqProvider;
-  static List<OptionDetail> _optionsList;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
     reqProvider = Provider.of<DBModel>(context);
     _optionsList = _loadOptionsList();
-    return new Scaffold(
-        appBar: BaseUtil.getAppBar(),
-        bottomSheet: Row(
+
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+      child: Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        child: dialogContent(context),
+      ),
+    );
+  }
+
+  dialogContent(BuildContext context) {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
-              child: InkWell(
-                child: Text(
-                  'Terms of Service',
-                  style: TextStyle(
-                      color: Colors.grey, decoration: TextDecoration.underline),
-                ),
-                onTap: () {
-                  HapticFeedback.vibrate();
-                  Navigator.of(context).pushNamed('/tnc');
+            // Text(
+            //   "Menu",
+            //   style: GoogleFonts.montserrat(
+            //     color: Colors.black,
+            //     fontWeight: FontWeight.w700,
+            //     fontSize: SizeConfig.largeTextSize,
+            //   ),
+            // ),
+            // Divider(),
+            Container(
+              child: ListView.builder(
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(16.0),
+                itemBuilder: /*1*/ (context, i) {
+                  if (i.isOdd) return Divider(); /*2*/
+                  final index = i ~/ 2; /*3*/
+                  return _buildRow(_optionsList[index], context);
                 },
+                itemCount: _optionsList.length * 2,
               ),
             ),
-            Text(
-              '•',
-              style: TextStyle(color: Colors.grey),
-            ),
-            Padding(
-              padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
-              child: InkWell(
-                child: Text(
-                  'Referral Policy',
-                  style: TextStyle(
-                      color: Colors.grey, decoration: TextDecoration.underline),
+            Container(
+              width: SizeConfig.screenHeight * 0.1,
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    width: 2,
+                    color: Colors.white,
+                  )),
+              child: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(
+                  Icons.cancel_rounded,
+                  color: Colors.white,
                 ),
-                onTap: () {
-                  HapticFeedback.vibrate();
-                  Navigator.of(context).pushNamed('/refpolicy');
-                },
               ),
             )
           ],
         ),
-        body: ListView.builder(
-          padding: const EdgeInsets.all(16.0),
-          itemBuilder: /*1*/ (context, i) {
-            if (i.isOdd) return Divider(); /*2*/
-            final index = i ~/ 2; /*3*/
-            return _buildRow(_optionsList[index]);
-          },
-          itemCount: _optionsList.length * 2,
-        ));
+      ),
+    );
   }
 
-  Widget _buildRow(OptionDetail option) {
+  Widget _buildRow(OptionDetail option, BuildContext context) {
     return ListTile(
         title: Text(option.value,
+            textAlign: TextAlign.center,
             style: (option.isEnabled)
-                ? TextStyle(fontSize: 18.0, color: Colors.black)
+                ? GoogleFonts.montserrat(
+                    fontSize: 24.0,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500)
                 : TextStyle(fontSize: 18.0, color: Colors.grey[400])),
         onTap: () {
           HapticFeedback.vibrate();
-          if (option.isEnabled) _routeOptionRequest(option.key);
+          if (option.isEnabled) _routeOptionRequest(option.key, context);
         });
   }
 
-  _routeOptionRequest(String key) {
+  _routeOptionRequest(String key, BuildContext context) {
     switch (key) {
       case 'upAddress':
         {
@@ -180,15 +184,15 @@ class _OptionsList extends State<SettingsPage> {
           );
           break;
         }
-      case 'ui2':
-        {
-          HapticFeedback.vibrate();
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Root()),
-          );
-          break;
-        }
+      // case 'ui2':
+      //   {
+      //     HapticFeedback.vibrate();
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => Root()),
+      //     );
+      //     break;
+      //   }
       case 'kyc':
         {
           HapticFeedback.vibrate();
@@ -210,7 +214,8 @@ class _OptionsList extends State<SettingsPage> {
                       HapticFeedback.vibrate();
                       baseProvider.signOut().then((flag) {
                         if (flag) {
-                          log.debug('Sign out process complete');
+                          //log.debug('Sign out process complete');
+
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
                           Navigator.of(context)
@@ -221,7 +226,7 @@ class _OptionsList extends State<SettingsPage> {
                           Navigator.of(context).pop();
                           baseProvider.showNegativeAlert('Sign out failed',
                               'Couldn\'t signout. Please try again', context);
-                          log.error('Sign out process failed');
+                          //log.error('Sign out process failed');
                         }
                       });
                     },
@@ -274,7 +279,6 @@ class _OptionsList extends State<SettingsPage> {
       new OptionDetail(
           key: 'editProf', value: 'Update Details', isEnabled: true),
       // new OptionDetail(key: 'kyc', value: 'KYC',isEnabled: true),
-      new OptionDetail(key: "ui2", value: "UI 2.0", isEnabled: true),
       new OptionDetail(key: 'contUs', value: 'Contact Us', isEnabled: true),
       new OptionDetail(
           key: 'signOut',
@@ -284,11 +288,4 @@ class _OptionsList extends State<SettingsPage> {
       // new OptionDetail(key: 'refpolicy', value: 'Referral Policy', isEnabled: true),
     ];
   }
-}
-
-class OptionDetail {
-  final String key;
-  final String value;
-  final bool isEnabled;
-  OptionDetail({this.key, this.value, this.isEnabled});
 }

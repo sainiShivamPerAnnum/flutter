@@ -17,6 +17,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:scratcher/widgets.dart';
 
 class KycOnboardData {
+  int level;
   static Color titleColor = Color(0xff00587a);
   static bool isLoading = false;
   ConfettiController _confeticontroller = new ConfettiController(

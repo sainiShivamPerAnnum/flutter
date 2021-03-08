@@ -313,6 +313,14 @@ class _ReferScreenState extends State<ReferScreen> {
                         });
                       });
                       ////////////////////////
+                      // rProvider.submitAugmontTransaction(
+                      //     UserTransaction.extMFDeposit('', '', 100.23, '', baseProvider.myUser.uid),
+                      //     baseProvider.myUser.mobile,
+                      //     baseProvider.myUser.email, null);
+                      // rProvider.setTransactionListener((resTxn) {
+                      //   //log.debug(resTxn);
+                      // });
+
                       // var x = await dbProvider.getFilteredUserTransactions(baseProvider.myUser, null, null, 0);
                       // log.debug(x);
                     },
