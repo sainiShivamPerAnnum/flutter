@@ -210,4 +210,27 @@ class Api {
     ref = _db.collection(Constants.COLN_REFERRALS);
     return ref.where('ref_by', isEqualTo: id).get();
   }
+
+  Future<DocumentSnapshot> getPollDocument(String id) {
+    ref = _db.collection(Constants.COLN_POLLS);
+    return ref.doc(id).get();
+  }
+  
+  Future<dynamic> incrementPollDocument(String id, String field) {
+    ref = _db.collection(Constants.COLN_POLLS);
+    var upObj = {};
+    upObj[field] = FieldValue.increment(1);
+
+    return ref.doc(id).update(upObj);
+  }
+
+  Future<DocumentSnapshot> addUserPollResponseDocument(String id, String pollId, Map data) {
+    ref = _db.collection(Constants.COLN_USERS).doc(id).collection(Constants.SUBCOLN_USER_POLL_RESPONSES);
+    return ref.doc(pollId).set(data, SetOptions(merge: false));
+  }
+
+  Future<DocumentSnapshot> getUserPollResponseDocument(String id, String pollId) {
+    ref = _db.collection(Constants.COLN_USERS).doc(id).collection(Constants.SUBCOLN_USER_POLL_RESPONSES);
+    return ref.doc(pollId).get();
+  }
 }

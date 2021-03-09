@@ -390,6 +390,70 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  ///Sample response:
+  ///{ op_1: 52
+  /// op_2: 65
+  /// op_3: 37
+  /// op_4: 75
+  /// op_5: 99}
+  Future<Map<String, int>> getPollCount([String pollId = Constants.POLL_NEXTGAME_ID]) async{
+    try {
+      DocumentSnapshot snapshot = await _api.getPollDocument(pollId);
+      if(snapshot.exists && snapshot.data().length > 0) {
+        return snapshot.data();
+      }
+    } catch (e) {
+      log.error("Error fetch poll details: " + e.toString());
+    }
+    return null;
+  }
+
+  ///response parameter should be the index of the poll option = 1,2,3,4,5
+  Future<bool> addUserPollResponse(String uid, int response, [String pollId = Constants.POLL_NEXTGAME_ID]) async{
+    bool incrementFlag = true;
+    try{
+      await _api.incrementPollDocument(pollId, 'op_$response');
+      incrementFlag = true;
+    }catch(e){
+      log.error(e);
+      incrementFlag = false;
+    }
+    if(incrementFlag) {
+      //poll incremented, now update user subcoln response
+      try{
+        Map<String, dynamic> pRes = {
+          'pResponse': response,
+          'pUserId': uid,
+          'timestamp': Timestamp.now()
+        };
+        await _api.addUserPollResponseDocument(uid, pollId,pRes);
+        return true;
+      }catch(e) {
+        return false;
+      }
+    }else {
+      return false;
+    }
+  }
+
+  ///If response = -1, user has not added a poll response yet
+  ///else response is option index, 1,2,3,4,5
+  Future<int> getUserPollResponse(String uid, [String pollId = Constants.POLL_NEXTGAME_ID]) async{
+    try{
+      DocumentSnapshot docSnapshot = await _api.getUserPollResponseDocument(uid, pollId);
+      if(docSnapshot.exists) {
+        Map<String, dynamic> docData = docSnapshot.data();
+        if(docData != null && docData['pResponse'] != null){
+          log.debug('Found existing response from user: ${docData['pResponse']}');
+          return docData['pResponse'];
+        }
+      }
+    }catch(e) {
+      log.error(e);
+    }
+    return -1;
+  }
+
   Future<int> getReferCount(String uid) async {
     try {
       var docs = await _api.getReferedDocs(uid);
