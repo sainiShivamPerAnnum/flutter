@@ -25,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
+// import 'package:http/http.dart' as http;
 class IciciOnboardController extends StatefulWidget {
   IciciOnboardController({this.startIndex, this.appIdExists = false});
 
@@ -190,6 +191,28 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
       setState(() {});
       if (widget.appIdExists) {
         //dont generate a new app id again
+// <<<<<<< HEAD
+//         onBasicDetailsEntered(
+//                 baseProvider.myUser.mobile, IDP.email.text, IDP.selectedDate)
+//             .then((basicObj) {
+//           if (!basicObj['flag']) {
+//             _isProcessing = false;
+//             if (basicObj['reason'] != null) {
+//               _errorMessage = 'Error: ${basicObj['reason']}';
+//             } else {
+//               _errorMessage =
+//                   'Error: Unknown error occurred. Please try again.';
+//             }
+//             setState(() {});
+//           } else {
+//             _isProcessing = false;
+//             setState(() {});
+//             new Timer(const Duration(milliseconds: 1000), () {
+//               onTabTapped(IncomeDetailsInputScreen.index);
+//             });
+//           }
+//         });
+// =======
         runBasicDetailsAndFatcaApi();
       } else {
         //first generate an app id using name and pannumber
@@ -205,6 +228,25 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
             }
             setState(() {});
           } else {
+// <<<<<<< HEAD
+//             onBasicDetailsEntered(baseProvider.myUser.mobile, IDP.email.text,
+//                     IDP.selectedDate)
+//                 .then((basicObj) {
+//               if (!basicObj['flag']) {
+//                 _isProcessing = false;
+//                 if (basicObj['reason'] != null) {
+//                   _errorMessage = 'Error: ${basicObj['reason']}';
+//                 } else {
+//                   _errorMessage =
+//                       'Error: Unknown error occurred. Please try again.';
+//                 }
+//                 setState(() {});
+//               } else {
+//                 _isProcessing = false;
+//                 setState(() {});
+//                 new Timer(const Duration(milliseconds: 1000), () {
+//                   onTabTapped(IncomeDetailsInputScreen.index);
+// =======
             runBasicDetailsAndFatcaApi();
           }
         });
@@ -214,15 +256,14 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
 
   Future<bool> runBasicDetailsAndFatcaApi() {
     onBasicDetailsEntered(
-        baseProvider.myUser.mobile, IDP.email.text, IDP.selectedDate)
+            baseProvider.myUser.mobile, IDP.email.text, IDP.selectedDate)
         .then((basicObj) {
       if (!basicObj['flag']) {
         _isProcessing = false;
         if (basicObj['reason'] != null) {
           _errorMessage = 'Error: ${basicObj['reason']}';
         } else {
-          _errorMessage =
-          'Error: Unknown error occurred. Please try again.';
+          _errorMessage = 'Error: Unknown error occurred. Please try again.';
         }
         setState(() {});
       } else {
@@ -231,16 +272,18 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
         runFatcaCheck().then((moveToIncomeScreen) {
           _isProcessing = false;
           setState(() {});
-          if(moveToIncomeScreen) {
+          if (moveToIncomeScreen) {
             new Timer(const Duration(milliseconds: 1000), () {
               onTabTapped(IncomeDetailsInputScreen.index);
             });
-          }else{
-            getBankAccountTypes(baseProvider.iciciDetail.panNumber).then((userAcctList) {
-                if (userAcctList != null) IDP.userAcctTypes = userAcctList;
-                new Timer(const Duration(milliseconds: 500), () {
-                  onTabTapped(BankDetailsInputScreen.index);
-                });
+          } else {
+            getBankAccountTypes(baseProvider.iciciDetail.panNumber)
+                .then((userAcctList) {
+              if (userAcctList != null) IDP.userAcctTypes = userAcctList;
+              new Timer(const Duration(milliseconds: 500), () {
+                onTabTapped(BankDetailsInputScreen.index);
+// >>>>>>> fe967712be963b72ac3e0241fe9b31044dee0fa8
+              });
             });
           }
         });
@@ -248,121 +291,135 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     });
   }
 
-  Future<bool> runFatcaCheck() async{
+  Future<bool> runFatcaCheck() async {
     bool flag = true;
     bool fatcaFlag = true;
-    if(baseProvider.iciciDetail.fatcaFlag == null || baseProvider.iciciDetail.fatcaFlag.isEmpty){
+    if (baseProvider.iciciDetail.fatcaFlag == null ||
+        baseProvider.iciciDetail.fatcaFlag.isEmpty) {
       //fatca status unknown. disregard it
       return flag;
     }
-    switch(baseProvider.iciciDetail.fatcaFlag) {
-      case GetKycStatus.FATCA_FLAG_NN: {
-        //move directly to bank screen
-        flag = false;
-        fatcaFlag = true; //make fatca true
-        break;
-      }
-      case GetKycStatus.FATCA_FLAG_YY:{
-        bool data = await showDialog(
-          context: context,
-          child: new AlertDialog(
-            title: new Text('Is any of the applicant\'s/guardian/Power of Attorney '
-                + 'holder\'s country of birth/citizenship/nationality/tax residency'
-                    ' status other than India?'),
-            actions: <Widget>[
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: new Text('No'),
-              ),
-              new FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: new Text('Yes'),
-              ),
-            ],
-          ),
-        )??false;
+    switch (baseProvider.iciciDetail.fatcaFlag) {
+      case GetKycStatus.FATCA_FLAG_NN:
+        {
+          //move directly to bank screen
+          flag = false;
+          fatcaFlag = true; //make fatca true
+          break;
+        }
+      case GetKycStatus.FATCA_FLAG_YY:
+        {
+          bool data = await showDialog(
+                context: context,
+                child: new AlertDialog(
+                  title: new Text(
+                      'Is any of the applicant\'s/guardian/Power of Attorney ' +
+                          'holder\'s country of birth/citizenship/nationality/tax residency'
+                              ' status other than India?'),
+                  actions: <Widget>[
+                    new FlatButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: new Text('No'),
+                    ),
+                    new FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: new Text('Yes'),
+                    ),
+                  ],
+                ),
+              ) ??
+              false;
 
-        fatcaFlag = data;
-        flag = false;//move directly to bank screen
-        break;
-      }
-      case GetKycStatus.FATCA_FLAG_YN: {
-        bool data = await showDialog(
-          context: context,
-          child: new AlertDialog(
-            title: new Text('As per ICICI, FATCA Status for your record is \'Unable to confirm\''
-                + '. Do you wish to update the FATCA?'),
-            actions: <Widget>[
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: new Text('No'),
-              ),
-              new FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: new Text('Yes'),
-              ),
-            ],
-          ),
-        )??false;
+          fatcaFlag = data;
+          flag = false; //move directly to bank screen
+          break;
+        }
+      case GetKycStatus.FATCA_FLAG_YN:
+        {
+          bool data = await showDialog(
+                context: context,
+                child: new AlertDialog(
+                  title: new Text(
+                      'As per ICICI, FATCA Status for your record is \'Unable to confirm\'' +
+                          '. Do you wish to update the FATCA?'),
+                  actions: <Widget>[
+                    new FlatButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: new Text('No'),
+                    ),
+                    new FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: new Text('Yes'),
+                    ),
+                  ],
+                ),
+              ) ??
+              false;
 
-        flag = data;
-        fatcaFlag = data;
-        break;
-      }
-      case GetKycStatus.FATCA_FLAG_UC: {
-        bool data = await showDialog(
-          context: context,
-          child: new AlertDialog(
-            title: new Text('US/Canada Person(s) are not allowed '
-                + 'to do the subscription/Switch In transaction.'),
-            actions: <Widget>[
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: new Text('Okay'),
-              ),
-            ],
-          ),
-        )??false;
+          flag = data;
+          fatcaFlag = data;
+          break;
+        }
+      case GetKycStatus.FATCA_FLAG_UC:
+        {
+          bool data = await showDialog(
+                context: context,
+                child: new AlertDialog(
+                  title: new Text('US/Canada Person(s) are not allowed ' +
+                      'to do the subscription/Switch In transaction.'),
+                  actions: <Widget>[
+                    new FlatButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: new Text('Okay'),
+                    ),
+                  ],
+                ),
+              ) ??
+              false;
 
-        flag = true;
-        fatcaFlag = true;
-        break;
-      }
-      case GetKycStatus.FATCA_FLAG_PC: {
-        bool data = await showDialog(
-          context: context,
-          child: new AlertDialog(
-            title: new Text('As per ICICI, your additional KYC, FATCA '
-                + 'and CRS Self declaration information is not '
-                + 'available, Kindly submit the same.'),
-            actions: <Widget>[
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: new Text('Okay'),
-              ),
-            ],
-          ),
-        )??false;
+          flag = true;
+          fatcaFlag = true;
+          break;
+        }
+      case GetKycStatus.FATCA_FLAG_PC:
+        {
+          bool data = await showDialog(
+                context: context,
+                child: new AlertDialog(
+                  title: new Text('As per ICICI, your additional KYC, FATCA ' +
+                      'and CRS Self declaration information is not ' +
+                      'available, Kindly submit the same.'),
+                  actions: <Widget>[
+                    new FlatButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: new Text('Okay'),
+                    ),
+                  ],
+                ),
+              ) ??
+              false;
 
-        flag = true;
-        fatcaFlag = true;
-        break;
-      }
+          flag = true;
+          fatcaFlag = true;
+          break;
+        }
     }
     //not update fatca to icici
-    var resMap = await iProvider.submitFatcaDetails(baseProvider.iciciDetail.appId,
-        baseProvider.iciciDetail.panNumber, fatcaFlag);
-    if(resMap == null || resMap[SubmitFatca.resStatus] != 'Y'){
+    var resMap = await iProvider.submitFatcaDetails(
+        baseProvider.iciciDetail.appId,
+        baseProvider.iciciDetail.panNumber,
+        fatcaFlag);
+    if (resMap == null || resMap[SubmitFatca.resStatus] != 'Y') {
       Map<String, dynamic> failData = {
         'appid': baseProvider.iciciDetail.appId,
         'fatcaKey': baseProvider.iciciDetail.fatcaFlag
       };
-      bool failureLogged = await dbProvider.logFailure(
-          baseProvider.myUser.uid, FailType.UserICICIFatcaFieldUpdateFailed, failData);
+      bool failureLogged = await dbProvider.logFailure(baseProvider.myUser.uid,
+          FailType.UserICICIFatcaFieldUpdateFailed, failData);
       log.debug('Failure logged correctly: $failureLogged');
     }
 
@@ -385,7 +442,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
           _isProcessing = false;
           if (incomeObj['reason'] != null) {
             _errorMessage = 'Error: ${incomeObj['reason']}';
-          }else{
+          } else {
             _errorMessage = 'Error: Unknown error occurred. Please try again.';
           }
           setState(() {});
@@ -406,9 +463,11 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     if (IDP.accNo.text == "" ||
         IDP.cnfAccNo.text == "" ||
         IDP.ifsc.text == "") {
-      showErrorDialog("Error", "Please provide a valid input for all the fields.", context);
+      showErrorDialog(
+          "Error", "Please provide a valid input for all the fields.", context);
     } else if (IDP.accNo.text != IDP.cnfAccNo.text) {
-      showErrorDialog("Error", "The account numbers provided do not match.", context);
+      showErrorDialog(
+          "Error", "The account numbers provided do not match.", context);
     } else {
       // showErrorDialog("Hurry", "All Good,Now you can Invest", context);
       _isProcessing = true;
@@ -420,7 +479,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
           _isProcessing = false;
           if (resObj['reason'] != null) {
             _errorMessage = 'Error: ${resObj['reason']}';
-          }else{
+          } else {
             _errorMessage = 'Error: Unknown error occurred. Please try again.';
           }
           setState(() {});
@@ -431,8 +490,9 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
               _isProcessing = false;
               if (otpObj['reason'] != null) {
                 _errorMessage = 'Error: ${otpObj['reason']}';
-              }else{
-                _errorMessage = 'Error: Unknown error occurred. Please try again.';
+              } else {
+                _errorMessage =
+                    'Error: Unknown error occurred. Please try again.';
               }
               setState(() {});
             } else {
@@ -456,7 +516,8 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     if (IDP.otpInput.text == null ||
         IDP.otpInput.text.isEmpty ||
         IDP.otpInput.text.length != 5) {
-      showErrorDialog("Error", "Please provide a valid input for all the fields", context);
+      showErrorDialog(
+          "Error", "Please provide a valid input for all the fields", context);
     } else {
       _isProcessing = true;
       setState(() {});
@@ -467,8 +528,9 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
             _isProcessing = false;
             if (rObj['reason'] != null) {
               _errorMessage = 'Error: ${rObj['reason']}';
-            }else{
-              _errorMessage = 'Error: Unknown error occurred. Please try again.';
+            } else {
+              _errorMessage =
+                  'Error: Unknown error occurred. Please try again.';
             }
             setState(() {});
           } else {
@@ -492,8 +554,9 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
             _isProcessing = false;
             if (resObj['reason'] != null) {
               _errorMessage = 'Error: ${resObj['reason']}';
-            }else{
-              _errorMessage = 'Error: Unknown error occurred. Please try again.';
+            } else {
+              _errorMessage =
+                  'Error: Unknown error occurred. Please try again.';
             }
             setState(() {});
           } else {
@@ -755,7 +818,8 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
           //bool icicUpFlag = await dbProvider.updateUserIciciDetails(baseProvider.myUser.uid, baseProvider.iciciDetail);;
           log.debug('Application ID added successfully');
           //get and update user Bank accounts
-          var accTypes = await getBankAccountTypes(baseProvider.iciciDetail.panNumber);
+          var accTypes =
+              await getBankAccountTypes(baseProvider.iciciDetail.panNumber);
           return {'flag': true, 'userAccts': accTypes};
         }
       }
@@ -1119,15 +1183,15 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     }
   }
 
-  Future<List<Map<String,String>>> getBankAccountTypes(String panNumber) async{
+  Future<List<Map<String, String>>> getBankAccountTypes(
+      String panNumber) async {
     var defaultAcctTypes = [
       {'CODE': 'SB', 'NAME': 'Savings Account'},
       {'CODE': 'CA', 'NAME': 'Current Account'},
     ];
-    var userAcctTypes = await iProvider
-        .getBankAcctTypes(panNumber);
+    var userAcctTypes = await iProvider.getBankAcctTypes(panNumber);
 
-    return userAcctTypes??defaultAcctTypes;
+    return userAcctTypes ?? defaultAcctTypes;
   }
 
   @override
@@ -1208,8 +1272,12 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
                                                 .addCallbackRequest(
                                                     baseProvider
                                                         .firebaseUser.uid,
-                                                baseProvider.myUser.name,
-                                                baseProvider.myUser.mobile)
+// <<<<<<< HEAD
+//                                                     baseProvider.myUser.mobile)
+// =======
+                                                    baseProvider.myUser.name,
+                                                    baseProvider.myUser.mobile)
+// >>>>>>> fe967712be963b72ac3e0241fe9b31044dee0fa8
                                                 .then((flag) {
                                               if (flag) {
                                                 Navigator.of(context).pop();

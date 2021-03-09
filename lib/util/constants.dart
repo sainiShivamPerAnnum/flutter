@@ -16,6 +16,7 @@ class Constants {
   static final String SUBCOLN_USER_FCM = "fcm";
   static final String SUBCOLN_USER_TICKETS = "tickets";
   static final String SUBCOLN_USER_ICICI_DETAILS = "icici";
+  static final String SUBCOLN_USER_AUGMONT_DETAILS = "augmont";
   static final String SUBCOLN_USER_KYC_DETAILS = "kyc";
   static final String SUBCOLN_USER_TXNS = "txns";
 
@@ -23,6 +24,7 @@ class Constants {
   static final String DOC_USER_FCM_TOKEN = "client_token";
   static final String DOC_USER_ICICI_DETAIL = "detail";
   static final String DOC_USER_KYC_DETAIL = "detail";
+  static final String DOC_USER_AUGMONT_DETAIL = "detail";
 
   static const int CORNERS_COMPLETED = 0;
   static const int ROW_ONE_COMPLETED = 1;

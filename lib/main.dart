@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/fcm_listener.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
@@ -16,6 +17,7 @@ import 'package:felloapp/ui/pages/onboarding/app/onboarding_widget.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/interface/kyc_onboarding_interface.dart';
 import 'package:felloapp/ui/pages/referral_policy_page.dart';
+import 'package:felloapp/ui/pages/root.dart';
 import 'package:felloapp/ui/pages/settings_page.dart';
 import 'package:felloapp/ui/pages/tabs/upi_screen.dart';
 import 'package:felloapp/ui/pages/tnc_page.dart';
@@ -26,11 +28,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
 import 'core/service/payment_service.dart';
 
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   setupLocator();
@@ -48,6 +48,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => locator<ICICIModel>()),
         ChangeNotifierProvider(create: (_) => locator<KYCModel>()),
         ChangeNotifierProvider(create: (_) => locator<RazorpayModel>()),
+        ChangeNotifierProvider(create: (_) => locator<AugmontModel>()),
         ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
         ChangeNotifierProvider(create: (_) => locator<FcmListener>()),
         ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
@@ -64,7 +65,7 @@ class MyApp extends StatelessWidget {
         home: SplashScreen(),
         routes: <String, WidgetBuilder>{
           '/launcher': (BuildContext context) => SplashScreen(),
-          '/approot': (BuildContext context) => AppRoot(),
+          '/approot': (BuildContext context) => Root(),
           '/onboarding': (BuildContext context) => OnboardingMainPage(),
           '/login': (BuildContext context) => LoginController(),
           '/settings': (BuildContext context) => SettingsPage(),

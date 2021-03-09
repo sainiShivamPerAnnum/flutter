@@ -17,6 +17,8 @@ class NameInputScreen extends StatefulWidget {
 
 class NameInputScreenState extends State<NameInputScreen> {
   Log log = new Log("NameInputScreen");
+  RegExp _emailRegex = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   String _name;
   String _email;
   String _age;
@@ -69,19 +71,15 @@ class NameInputScreenState extends State<NameInputScreen> {
                   prefixIcon: Icon(Icons.person),
                 ),
                 validator: (value) {
-                  return (value != null && value.isNotEmpty)
+                  return (value != null &&
+                          value.isNotEmpty &&
+                          _emailRegex.hasMatch(value))
                       ? null
-                      : 'Please enter your name';
+                      : 'Please enter a valid email';
                 },
                 onFieldSubmitted: (v) {
                   FocusScope.of(context).nextFocus();
                 },
-//                        onChanged: (value) {
-//                          //this._name = value;
-//                          if (!_validate) setState(() {
-//                            _validate = true;
-//                          });
-//                        },
               ),
             ),
             Padding(
@@ -90,17 +88,14 @@ class NameInputScreenState extends State<NameInputScreen> {
                 controller: _emailFieldController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
-                  //hintText: 'Email(optional)',
-                  //errorText: _validate ? null : "Invalid!",
-                  labelText: 'Email (optional)',
+                  labelText: 'Email',
                   prefixIcon: Icon(Icons.email),
                 ),
-//                        onChanged: (value) {
-                //this._email = value;
-//                    if(!_validate) setState(() {
-//                      _validate = true;
-//                    });
-//                        },
+                validator: (value) {
+                  return (value != null && value.isNotEmpty)
+                      ? null
+                      : 'Please enter your name';
+                },
               ),
             ),
             Padding(
@@ -120,12 +115,6 @@ class NameInputScreenState extends State<NameInputScreen> {
                 onFieldSubmitted: (v) {
                   FocusScope.of(context).nextFocus();
                 },
-//                        onChanged: (value) {
-//                          //this._name = value;
-//                          if (!_validate) setState(() {
-//                            _validate = true;
-//                          });
-//                        },
               ),
             ),
             Padding(
