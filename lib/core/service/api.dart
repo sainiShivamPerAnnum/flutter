@@ -233,4 +233,9 @@ class Api {
     ref = _db.collection(Constants.COLN_USERS).doc(id).collection(Constants.SUBCOLN_USER_POLL_RESPONSES);
     return ref.doc(pollId).get();
   }
+
+  Future<QuerySnapshot> getLeaderboardDocument(String category, int weekCde) {
+    Query _query = _db.collection(Constants.COLN_LEADERBOARD).where('category', isEqualTo: category).where('week_code', isEqualTo: weekCde);
+    return _query.get();
+  }
 }

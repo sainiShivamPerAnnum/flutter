@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
+import 'package:felloapp/core/model/PrizeLeader.dart';
+import 'package:felloapp/core/model/ReferralLeader.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
@@ -312,6 +314,7 @@ class DBModel extends ChangeNotifier {
     try {
       String _id = user.uid;
       QuerySnapshot _querySnapshot = await _api.getUserTransactionsByField(_id, type, subtype, limit);
+      if(_querySnapshot == null || _querySnapshot.size == 0) return requestedTxns;
       _querySnapshot.docs.forEach((txn) {
         try{
           if(txn.exists)requestedTxns.add(UserMiniTransaction.fromMap(txn.data()));
@@ -452,6 +455,68 @@ class DBModel extends ChangeNotifier {
       log.error(e);
     }
     return -1;
+  }
+  
+  Future<List<ReferralLeader>> getReferralLeaderboard() async{
+    try{
+      int weekCode = _getWeekCode();
+      QuerySnapshot _querySnapshot = await _api.getLeaderboardDocument('referral', weekCode);
+      if(_querySnapshot == null || _querySnapshot.size != 1) return null;
+
+      DocumentSnapshot _docSnapshot = _querySnapshot.docs[0];
+      if(!_docSnapshot.exists || _docSnapshot.data()['leaders'] == null) return null;
+      Map<String, dynamic> leaderMap = _docSnapshot.data()['leaders'];
+      log.debug('Referral Leader Map: $leaderMap');
+
+      List<ReferralLeader> leaderList = [];
+      leaderMap.forEach((key, value) {
+        try {
+          String uid = key;
+          String usrName = value.name;
+          int usrRefCount = value.ref_count;
+          log.debug('Leader details:: $uid, $usrName, $usrRefCount');
+          leaderList.add(ReferralLeader(uid, usrName, usrRefCount));
+        }catch(err){
+          log.error('Item skipped');
+        }
+      });
+
+      return leaderList;
+    }catch(e) {
+      log.error(e);
+      return null;
+    }    
+  }
+
+  Future<List<PrizeLeader>> getPrizeLeaderboard() async{
+    try{
+      int weekCode = _getWeekCode();
+      QuerySnapshot _querySnapshot = await _api.getLeaderboardDocument('prize', weekCode);
+      if(_querySnapshot == null || _querySnapshot.size != 1) return null;
+
+      DocumentSnapshot _docSnapshot = _querySnapshot.docs[0];
+      if(!_docSnapshot.exists || _docSnapshot.data()['leaders'] == null) return null;
+      Map<String, dynamic> leaderMap = _docSnapshot.data()['leaders'];
+      log.debug('Prize Leader Map: $leaderMap');
+
+      List<PrizeLeader> leaderList = [];
+      leaderMap.forEach((key, value) {
+        try {
+          String uid = key;
+          String usrName = value.name;
+          double usrRefCount = value.win_total;
+          log.debug('Leader details:: $uid, $usrName, $usrRefCount');
+          leaderList.add(PrizeLeader(uid, usrName, usrRefCount));
+        }catch(err){
+          log.error('Item skipped');
+        }
+      });
+
+      return leaderList;
+    }catch(e) {
+      log.error(e);
+      return null;
+    }
   }
 
   Future<int> getReferCount(String uid) async {

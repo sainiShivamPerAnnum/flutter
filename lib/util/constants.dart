@@ -12,6 +12,7 @@ class Constants {
   static final String COLN_FAILREPORTS = "failreports";
   static final String COLN_CREDENTIALS = "credentials";
   static final String COLN_POLLS = "polls";
+  static final String COLN_LEADERBOARD = "leaderboard";
 
   //Sub-collections
   static final String SUBCOLN_USER_FCM = "fcm";
