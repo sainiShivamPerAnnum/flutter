@@ -1,18 +1,18 @@
 import 'dart:math';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
+import 'package:felloapp/ui/elements/hamburger-dialog.dart';
+import 'package:felloapp/ui/elements/navbar.dart';
+import 'package:felloapp/ui/pages/tabs/finance_screen.dart';
+import 'package:felloapp/ui/pages/tabs/games_screen.dart';
+import 'package:felloapp/ui/pages/tabs/home_screen.dart';
+import 'package:felloapp/ui/pages/tabs/profile_screen.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/ui/elements/navbar.dart';
-import 'package:felloapp/ui/pages/tabs/home_screen.dart';
-import 'package:felloapp/ui/pages/tabs/games_screen.dart';
-import 'package:felloapp/ui/pages/tabs/finance_screen.dart';
-import 'package:felloapp/ui/pages/tabs/profile_screen.dart';
-import 'package:felloapp/util/logger.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
-import 'package:felloapp/ui/elements/hamburger-dialog.dart';
 
 class Root extends StatefulWidget {
   @override
@@ -196,7 +196,10 @@ class _RootState extends State<Root> {
       if (deepLink != null) {
         log.debug('Received deep link');
         log.debug(deepLink.toString());
-        submitReferral(baseProvider.myUser.uid, deepLink);
+        submitReferral(baseProvider.myUser.uid, deepLink).then((value) {
+          log.debug(value);
+          return;
+        });
       }
     }, onError: (OnLinkErrorException e) async {
       log.error('Error in fetching deeplink');
@@ -210,20 +213,30 @@ class _RootState extends State<Root> {
     if (deepLink != null) {
       log.debug('Received deep link');
       log.debug(deepLink.toString());
-      submitReferral(baseProvider.myUser.uid, deepLink);
+      submitReferral(baseProvider.myUser.uid, deepLink).then((value) {
+        log.debug(value);
+        return;
+      });
     }
   }
 
-  Future<http.Response> submitReferral(String userId, Uri deepLink) {
+  Future<int> submitReferral(String userId, Uri deepLink) async {
     String prefix = 'https://fello.in/';
     String dLink = deepLink.toString();
     if (dLink.startsWith(prefix)) {
       String referee = dLink.replaceAll(prefix, '');
       log.debug(referee);
-      if (prefix.length > 0 && prefix != userId)
-        httpModel.postReferral(userId, referee);
-    }
-    return null;
+      if (prefix.length > 0 && prefix != userId) {
+        return httpModel
+            .postUserReferral(userId, referee)
+            .then((userTicketUpdateCount) {
+          log.debug('User deserves $userTicketUpdateCount more tickets');
+          return userTicketUpdateCount;
+        });
+      } else
+        return 0;
+    } else
+      return 0;
   }
 }
 

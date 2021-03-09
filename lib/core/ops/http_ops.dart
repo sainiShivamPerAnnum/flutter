@@ -14,20 +14,36 @@ class HttpModel extends ChangeNotifier {
   static const String _rzphomeuri =
       'https://us-central1-fello-d3a9c.cloudfunctions.net/razorpayops';
 
-  Future<http.Response> postReferral(String userId, String referee) async {
-    String idToken;
-    if (_baseUtil != null && _baseUtil.firebaseUser != null) {
-      idToken = await _baseUtil.firebaseUser.getIdToken();
-      log.debug('Fetched user IDToken: ' + idToken);
-      try {
-        return http.post('$_homeuri/validateReferral?uid=$userId&rid=$referee',
-            headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
-      } catch (e) {
-        log.error('Http post failed: ' + e.toString());
-        return null;
+  ///Returns the number of tickets that need to be added to user's balance
+  Future<int> postUserReferral(String userId, String referee) async {
+    if (_baseUtil == null || _baseUtil.firebaseUser == null) return -1;
+    String idToken = await _baseUtil.firebaseUser.getIdToken();
+    log.debug('Fetched user IDToken: ' + idToken);
+    try {
+      http.Response _response = await http.post('$_homeuri/validateUserReferral?uid=$userId&rid=$referee',
+          headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
+      log.debug(_response.body);
+      if(_response.statusCode == 200) {
+        try{
+          Map<String, dynamic> parsed = jsonDecode(_response.body);
+          if(parsed != null && parsed['add_tickets_count'] != null) {
+            log.debug(parsed['add_tickets_count']);
+            int userTicketUpdateCount = int.parse(parsed['add_tickets_count']);
+            return userTicketUpdateCount;
+          }else {
+            return -1;
+          }
+        }catch(err) {
+          log.error('Failed to parse ticket update count');
+          return -1;
+        }
+      }else {
+        return -1;
       }
-    } else
-      return null;
+    } catch (e) {
+      log.error('Http post failed: ' + e.toString());
+      return -1;
+    }
   }
 
   //amount must be integer

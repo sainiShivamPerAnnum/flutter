@@ -177,7 +177,7 @@ class _AppRootState extends State<AppRoot> {
       String referee = dLink.replaceAll(prefix, '');
       log.debug(referee);
       if (prefix.length > 0 && prefix != userId)
-        httpModel.postReferral(userId, referee);
+        httpModel.postUserReferral(userId, referee);
     }
     return null;
   }
