@@ -33,7 +33,7 @@ class HttpModel extends ChangeNotifier {
   //amount must be integer
   //sample url: https://us-central1-fello-d3a9c.cloudfunctions.net/razorpayops/dev/api/orderid?amount=121&notes=hellp
   Future<Map<String, dynamic>> generateRzpOrderId(
-      int amount, String notes) async {
+      double amount, String notes) async {
     if (_baseUtil == null || _baseUtil.firebaseUser == null || amount == null)
       return null;
 
@@ -41,9 +41,10 @@ class HttpModel extends ChangeNotifier {
     idToken = await _baseUtil.firebaseUser.getIdToken();
     log.debug('Fetched user IDToken: ' + idToken);
 
+    String amx = (amount*100).round().toString();
     String _stage = BaseUtil.activeRazorpayStage.value();
-    String _uri = '$_rzphomeuri/$_stage/api/orderid?amount=$amount';
-    if (notes != null) _uri = _uri + '&notes=$notes';
+    String _uri = '$_rzphomeuri/$_stage/api/orderid?amount=$amx';
+    if (notes != null) _uri = _uri + '&notes=${Uri.encodeComponent(notes)}';
     log.debug('URL: $_uri');
 
     try {

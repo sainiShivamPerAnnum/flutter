@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/fcm_listener.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => locator<ICICIModel>()),
         ChangeNotifierProvider(create: (_) => locator<KYCModel>()),
         ChangeNotifierProvider(create: (_) => locator<RazorpayModel>()),
+        ChangeNotifierProvider(create: (_) => locator<AugmontModel>()),
         ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
         ChangeNotifierProvider(create: (_) => locator<FcmListener>()),
         ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
