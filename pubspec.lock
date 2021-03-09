@@ -358,6 +358,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.4"
+  flat_icons_flutter:
+    dependency: "direct main"
+    description:
+      name: flat_icons_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
   flushbar:
     dependency: "direct main"
     description:
@@ -420,7 +427,7 @@ packages:
     source: hosted
     version: "4.1.2+1"
   flutter_svg:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_svg
       url: "https://pub.dartlang.org"
@@ -639,6 +646,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.4"
+  pie_chart:
+    dependency: "direct main"
+    description:
+      name: pie_chart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.1"
   pin_input_text_field:
     dependency: "direct main"
     description:

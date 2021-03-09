@@ -27,8 +27,6 @@ import 'package:showcaseview/showcase.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 class PlayHome extends StatefulWidget {
-  static final int index = (BaseUtil.playScreenFirst) ? 0 : 1;
-
   @override
   _HState createState() => _HState();
 }
@@ -706,6 +704,59 @@ class _HState extends State<PlayHome> {
     return picks;
   }
 
+// <<<<<<< HEAD
+//   Widget _getDrawBallRow(DailyPick draws, int day) {
+//     balls = [];
+//     if (draws != null && draws.getWeekdayDraws(day - 1) != null) {
+//       draws.getWeekdayDraws(day - 1).forEach((element) {
+//         balls.add(_getDrawBall(element));
+//       });
+//     } else {
+//       for (int i = 0; i < 5; i++) {
+//         balls.add(_getDrawBall(0));
+//       }
+//     }
+//     return Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//       children: balls,
+//     );
+//   }
+
+//   Widget _getDrawBall(int digit) {
+//     double xWidth = MediaQuery.of(context).size.width;
+//     double xFont = double.parse((xWidth / 18).toStringAsFixed(2));
+//     //   log.debug(xFont.toString());
+//     return Stack(
+//       children: [
+//         Container(
+//           width: 40,
+//           height: 40,
+//           decoration: new BoxDecoration(
+//             color: Colors.white,
+//             shape: BoxShape.circle,
+//           ),
+//         ),
+//         Center(
+//           child: (digit != null && digit > 0)
+//               ? Padding(
+//                   padding: EdgeInsets.only(left: xFont / 3.3, top: xFont / 3),
+//                   child: SingleDigit(
+//                     initialValue: digit,
+//                     textStyle: TextStyle(color: Colors.black, fontSize: xFont),
+//                   ))
+//               : Padding(
+//                   padding: EdgeInsets.only(left: 16, top: 7),
+//                   child: Text(
+//                     '-',
+//                     style: TextStyle(fontSize: 22, color: Colors.black38),
+//                     textAlign: TextAlign.center,
+//                   ),
+//                 ),
+//         )
+//       ],
+//     );
+//   }
+// =======
   // Widget _getDrawBall(
   //   int digit,
   // ) {
@@ -741,6 +792,7 @@ class _HState extends State<PlayHome> {
   //     ],
   //   );
   // }
+//>>>>>>> fe967712be963b72ac3e0241fe9b31044dee0fa8
 
   Widget _buildPrizeButton() {
     Random rnnd = new Random();

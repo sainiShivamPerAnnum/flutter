@@ -280,39 +280,39 @@ class _ReferScreenState extends State<ReferScreen> {
                           ),
                     onPressed: () async {
                       ////////////////////////////////
-                      // baseProvider.isReferralLinkBuildInProgressWhatsapp = true;
-                      // setState(() {});
-                      // String url;
-                      // try {
-                      //   url = await _createDynamicLink(
-                      //       baseProvider.myUser.uid, true, 'Whatsapp');
-                      // } catch (e) {
-                      //   log.error('Failed to create dynamic link');
-                      //   log.error(e);
-                      // }
-                      // baseProvider.isReferralLinkBuildInProgressWhatsapp =
-                      //     false;
-                      // setState(() {});
-                      // if (url == null)
-                      //   return;
-                      // else
-                      //   log.debug(url);
-                      //
-                      // FlutterShareMe()
-                      //     .shareToWhatsApp(msg: _shareMsg + url)
-                      //     .then((flag) {
-                      //   log.debug(flag);
-                      // }).catchError((err) {
-                      //   log.error('Share to whatsapp failed');
-                      //   log.error(err);
-                      //   FlutterShareMe()
-                      //       .shareToWhatsApp4Biz(msg: _shareMsg + url)
-                      //       .then((value) {
-                      //     log.debug(value);
-                      //   }).catchError((err) {
-                      //     log.error('Share to whatsapp biz failed as well');
-                      //   });
-                      // });
+                      baseProvider.isReferralLinkBuildInProgressWhatsapp = true;
+                      setState(() {});
+                      String url;
+                      try {
+                        url = await _createDynamicLink(
+                            baseProvider.myUser.uid, true, 'Whatsapp');
+                      } catch (e) {
+                        log.error('Failed to create dynamic link');
+                        log.error(e);
+                      }
+                      baseProvider.isReferralLinkBuildInProgressWhatsapp =
+                          false;
+                      setState(() {});
+                      if (url == null)
+                        return;
+                      else
+                        log.debug(url);
+
+                      FlutterShareMe()
+                          .shareToWhatsApp(msg: _shareMsg + url)
+                          .then((flag) {
+                        log.debug(flag);
+                      }).catchError((err) {
+                        log.error('Share to whatsapp failed');
+                        log.error(err);
+                        FlutterShareMe()
+                            .shareToWhatsApp4Biz(msg: _shareMsg + url)
+                            .then((value) {
+                          log.debug(value);
+                        }).catchError((err) {
+                          log.error('Share to whatsapp biz failed as well');
+                        });
+                      });
                       ////////////////////////
                       //TESTING RAZORPAY
                       // rProvider.submitAugmontTransaction(
@@ -324,24 +324,24 @@ class _ReferScreenState extends State<ReferScreen> {
                       // });
                       //////////////////////////
                       //TESTING AUGMONT
-                      if (!aProvider.isInit()) await aProvider.init();
-
-                      // var kObj = await aProvider.createUser('9988776655', 'AMVPL5308BB', 'shouryaditya.ray', 'wk9PrqnK');
-                      final _rates = await aProvider.getRates();
-
-                      log.debug(_rates.blockId);
-                      log.debug(_rates.goldBuyPrice.toString());
-                      log.debug(_rates.cgstPercent.toString());
-
-                      //baseProvider.augmontDetail = await aProvider.createUser(baseProvider.myUser.mobile, baseProvider.myUser.pan, 'wk9PrqnK');
-                      baseProvider.augmontDetail = await dbProvider.getUserAugmontDetails(baseProvider.myUser.uid);
-                      if(baseProvider.augmontDetail != null)log.debug(baseProvider.augmontDetail.userId);
-
-                      UserTransaction _txn = await aProvider.initiateGoldPurchase(_rates, 22.1);
-                      if(_txn != null)log.debug(_txn.augmnt.toString());
-                      aProvider.setAugmontTxnProcessListener((txn) {
-                        log.debug('Received txn callback');
-                      });
+                      // if (!aProvider.isInit()) await aProvider.init();
+                      //
+                      // // var kObj = await aProvider.createUser('9988776655', 'AMVPL5308BB', 'shouryaditya.ray', 'wk9PrqnK');
+                      // final _rates = await aProvider.getRates();
+                      //
+                      // log.debug(_rates.blockId);
+                      // log.debug(_rates.goldBuyPrice.toString());
+                      // log.debug(_rates.cgstPercent.toString());
+                      //
+                      // //baseProvider.augmontDetail = await aProvider.createUser(baseProvider.myUser.mobile, baseProvider.myUser.pan, 'wk9PrqnK');
+                      // baseProvider.augmontDetail = await dbProvider.getUserAugmontDetails(baseProvider.myUser.uid);
+                      // if(baseProvider.augmontDetail != null)log.debug(baseProvider.augmontDetail.userId);
+                      //
+                      // UserTransaction _txn = await aProvider.initiateGoldPurchase(_rates, 22.1);
+                      // if(_txn != null)log.debug(_txn.augmnt.toString());
+                      // aProvider.setAugmontTxnProcessListener((txn) {
+                      //   log.debug('Received txn callback');
+                      // });
                     },
                     highlightColor: Colors.orange.withOpacity(0.5),
                     splashColor: Colors.orange.withOpacity(0.5),

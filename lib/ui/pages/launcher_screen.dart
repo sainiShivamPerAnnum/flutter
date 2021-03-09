@@ -11,11 +11,12 @@ import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:provider/provider.dart';
-
+import 'package:felloapp/util/size_config.dart';
 import '../../base_util.dart';
 
 class SplashScreen extends StatefulWidget {
-  @override State<StatefulWidget> createState() => LogoFadeIn();
+  @override
+  State<StatefulWidget> createState() => LogoFadeIn();
 }
 
 class LogoFadeIn extends State<SplashScreen> {
@@ -46,20 +47,19 @@ class LogoFadeIn extends State<SplashScreen> {
     });
   }
 
-  initialize() async{
+  initialize() async {
     final baseProvider = Provider.of<BaseUtil>(context);
     final fcmProvider = Provider.of<FcmListener>(context);
     await baseProvider.init();
     await fcmProvider.setupFcm();
     _timer3.cancel();
-    if(!baseProvider.isUserOnboarded) {
+    if (!baseProvider.isUserOnboarded) {
       log.debug("New user. Moving to Onboarding..");
       // Navigator.of(context).pop();
       Navigator.of(context).pushReplacementNamed('/onboarding');
-    }
-    else {
+    } else {
       log.debug("Existing User. Moving to Home..");
-     // Navigator.of(context).pop();
+      // Navigator.of(context).pop();
       Navigator.of(context).pushReplacementNamed('/approot');
     }
   }
@@ -67,45 +67,47 @@ class LogoFadeIn extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     //if(!_timer.isActive)initialize();
+    SizeConfig().init(context);
+
     return MaterialApp(
       home: Scaffold(
           body: Stack(
-            children: <Widget>[
-              (logo != null)?Center(
-                child: Container(
-                  child: new Logo(
-                    size: 160.0,
-                    style: _logoStyle,
-                    img: logo,
+        children: <Widget>[
+          (logo != null)
+              ? Center(
+                  child: Container(
+                    child: new Logo(
+                      size: 160.0,
+                      style: _logoStyle,
+                      img: logo,
+                    ),
                   ),
-                ),
-              ):Text('Loading..'),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                    padding: EdgeInsets.fromLTRB(20, 20, 20, 40),
-                    child: Visibility(
-                        maintainSize: true,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        visible: _isSlowConnection,
-                        child:  BreathingText(alertText: 'Connection is taking longer than usual')
-                    )
-                ),
-              )
-            ],
+                )
+              : Text('Loading..'),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 40),
+                child: Visibility(
+                    maintainSize: true,
+                    maintainAnimation: true,
+                    maintainState: true,
+                    visible: _isSlowConnection,
+                    child: BreathingText(
+                        alertText: 'Connection is taking longer than usual'))),
           )
-      ),
+        ],
+      )),
     );
   }
 
-  void _loadImageAsset(String assetName) async{
+  void _loadImageAsset(String assetName) async {
     var bd = await rootBundle.load(assetName);
     Uint8List lst = new Uint8List.view(bd.buffer);
     var codec = await ui.instantiateImageCodec(lst);
     var frameInfo = await codec.getNextFrame();
     logo = frameInfo.image;
-    print ("bkImage instantiated: $logo");
+    print("bkImage instantiated: $logo");
     setState(() {});
   }
 }
