@@ -1,7 +1,8 @@
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 
-class FcmHandler extends ChangeNotifier {
+class FcmHandler extends ChangeNotifier
+{
   Log log = new Log("FcmHandler");
   ValueChanged<Map> playListener;
   ValueChanged<Map> saveListener;
@@ -32,3 +33,4 @@ class FcmHandler extends ChangeNotifier {
   }
 
 }
+
