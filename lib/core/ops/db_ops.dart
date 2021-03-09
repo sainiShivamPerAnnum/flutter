@@ -303,49 +303,26 @@ class DBModel extends ChangeNotifier {
         };
       }
     }
-
     return null;
   }
 
   Future<List<UserMiniTransaction>> getFilteredUserTransactions(
-      BaseUser user, String type, String subtype, int limit) async {
+      BaseUser user, String type, String subtype, [int limit = 30]) async {
+    List<UserMiniTransaction> requestedTxns = [];
     try {
-      final FirebaseFirestore _db = FirebaseFirestore.instance;
       String _id = user.uid;
-      Query query = _db
-          .collection(Constants.COLN_USERS)
-          .doc(_id)
-          .collection(Constants.SUBCOLN_USER_TXNS);
-
-      QuerySnapshot txnSnapshot = await query.get();
-      // Stream<QuerySnapshot> _stream =
-      //     _api.getUserTransactionsByField(_id, type, subtype, limit);
-      List<UserMiniTransaction> requestedTxns = [];
-      txnSnapshot.docs.forEach((t) {
-        UserMiniTransaction txn = UserMiniTransaction.fromMap(t.data());
-        requestedTxns.add(txn);
+      QuerySnapshot _querySnapshot = await _api.getUserTransactionsByField(_id, type, subtype, limit);
+      _querySnapshot.docs.forEach((txn) {
+        try{
+          if(txn.exists)requestedTxns.add(UserMiniTransaction.fromMap(txn.data()));
+        }catch(e) {
+          log.error('Failed to parse user transaction $txn');
+        }
       });
-      print(requestedTxns.length);
       return requestedTxns;
-      // _stream.listen((querySnapshot) {
-      //   querySnapshot.docs.forEach((docSnapshot) {
-      //     if (docSnapshot.exists)
-      //       log.debug('Received snapshot: ' + docSnapshot.data.toString());
-      //     UserMiniTransaction txn;
-      //     try {
-      //       txn = UserMiniTransaction.fromMap(docSnapshot.data());
-      //     } catch (e) {
-      //       log.error('Transaction parse error');
-      //       txn = null;
-      //     }
-      //     if (txn != null && txn.amount > 0) requestedTxns.add(txn);
-      //     print(requestedTxns);
-      //   });
-      //   log.debug('Post stream update-> count: ${requestedTxns.length}');
-      // });
     } catch (err) {
       log.error('Failed to fetch tambola boards');
-      return null;
+      return requestedTxns;
     }
   }
 

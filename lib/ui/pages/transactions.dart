@@ -33,7 +33,7 @@ class _TransactionsState extends State<Transactions> {
     if (baseProvider != null && dbProvider != null) {
       print(baseProvider.myUser.uid);
       dbProvider
-          .getFilteredUserTransactions(baseProvider.myUser, null, null, 0)
+          .getFilteredUserTransactions(baseProvider.myUser, null, null)
           .then((value) {
         transactionList = value;
         if (isLoading) {

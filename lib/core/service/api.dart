@@ -159,7 +159,7 @@ class Api {
     return query.get();
   }
 
-  Stream<QuerySnapshot> getUserTransactionsByField(
+  Future<QuerySnapshot> getUserTransactionsByField(
       String user_id, String type, String subtype, int limit) {
     Query query = _db
         .collection(Constants.COLN_USERS)
@@ -170,9 +170,9 @@ class Api {
     if (subtype != null)
       query = query.where(UserTransaction.fldSubType, isEqualTo: subtype);
     if (limit != -1 && limit > 10) query = query.limit(limit);
-    query = query.orderBy(UserTransaction.fldUpdatedTime);
+    query = query.orderBy(UserTransaction.fldUpdatedTime, descending: true);
 
-    return query.snapshots();
+    return query.get();
   }
 
   Future<void> addCallbackDocument(String year, String monthCde, Map data) {

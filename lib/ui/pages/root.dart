@@ -188,39 +188,40 @@ class _RootState extends State<Root> {
     });
   }
 
-  void initDynamicLinks() async {
+  Future<dynamic> initDynamicLinks() async {
     FirebaseDynamicLinks.instance.onLink(
         onSuccess: (PendingDynamicLinkData dynamicLink) async {
-      final Uri deepLink = dynamicLink?.link;
-
-      if (deepLink != null) {
-        log.debug('Received deep link');
-        log.debug(deepLink.toString());
-        submitReferral(baseProvider.myUser.uid, deepLink).then((value) {
-          log.debug(value);
-          return;
-        });
-      }
+      return x(dynamicLink);
     }, onError: (OnLinkErrorException e) async {
       log.error('Error in fetching deeplink');
       log.error(e);
+      return null;
     });
 
-    final PendingDynamicLinkData data =
-        await FirebaseDynamicLinks.instance.getInitialLink();
+    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
     final Uri deepLink = data?.link;
-
     if (deepLink != null) {
       log.debug('Received deep link');
       log.debug(deepLink.toString());
-      submitReferral(baseProvider.myUser.uid, deepLink).then((value) {
+      return submitReferral22(baseProvider.myUser.uid, deepLink).then((value) {
         log.debug(value);
-        return;
+        return value;
       });
     }
   }
 
-  Future<int> submitReferral(String userId, Uri deepLink) async {
+  Future<dynamic> x(PendingDynamicLinkData dynamicLink) {
+    final Uri deepLink = dynamicLink?.link;
+    if (deepLink == null) return null;
+    log.debug('Received deep link');
+    //log.debug(deepLink.toString());
+    return submitReferral22(baseProvider.myUser.uid, deepLink).then((value) {
+      log.debug(value);
+      return value;
+    });
+  }
+
+  Future<int> submitReferral22(String userId, Uri deepLink) async {
     String prefix = 'https://fello.in/';
     String dLink = deepLink.toString();
     if (dLink.startsWith(prefix)) {
