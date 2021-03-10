@@ -1,3 +1,4 @@
+import 'package:felloapp/ui/elements/Parallax-card/custom_scroll.dart';
 import 'package:felloapp/ui/elements/game-poll-dialog.dart';
 import 'package:felloapp/ui/pages/tabs/card_screen.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -53,7 +54,7 @@ class GameCardListState extends State<GameCardList>
     // _cardHeight = (size.width).clamp(300.0, 400.0);
     // _cardWidth = _cardHeight * .8;
     //Calculate the viewPort fraction for this aspect ratio, since PageController does not accept pixel based size values
-    _pageController = PageController(initialPage: 0, viewportFraction: 0.9);
+    _pageController = PageController(initialPage: 0, viewportFraction: 0.85);
 
     //Create our main list
     Widget listContent = Container(

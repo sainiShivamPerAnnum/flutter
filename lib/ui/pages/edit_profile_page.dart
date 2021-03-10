@@ -1,11 +1,21 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/elements/change_profile_picture_dialog.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class EditProfile extends StatefulWidget {
+  final String prevImage;
+  EditProfile({this.prevImage});
   @override
   _EditProfileState createState() => _EditProfileState();
 }
@@ -18,7 +28,27 @@ class _EditProfileState extends State<EditProfile> {
   bool _isInitialized = false;
   static DBModel dbProvider;
   static BaseUtil baseProvider;
-  RegExp emailRegex = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  String profilePic;
+  RegExp emailRegex = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+
+  chooseprofilePicture() async {
+    final temp = await ImagePicker().getImage(source: ImageSource.gallery);
+    if (temp != null) {
+      HapticFeedback.vibrate();
+      print("--------------------------------->" + temp.path);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => ChangeProfilePicture(
+          image: File(temp.path),
+        ),
+      );
+    }
+
+    // setState(() {
+    //   profilePic = temp.path;
+    // });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,17 +57,17 @@ class _EditProfileState extends State<EditProfile> {
       baseProvider = Provider.of<BaseUtil>(context);
       dbProvider = Provider.of<DBModel>(context);
       _nameFieldController =
-      (baseProvider.myUser != null && baseProvider.myUser.name != null)
-          ? new TextEditingController(text: baseProvider.myUser.name)
-          : new TextEditingController();
+          (baseProvider.myUser != null && baseProvider.myUser.name != null)
+              ? new TextEditingController(text: baseProvider.myUser.name)
+              : new TextEditingController();
       _emailFieldController =
-      (baseProvider.myUser != null && baseProvider.myUser.email != null)
-          ? new TextEditingController(text: baseProvider.myUser.email)
-          : new TextEditingController();
+          (baseProvider.myUser != null && baseProvider.myUser.email != null)
+              ? new TextEditingController(text: baseProvider.myUser.email)
+              : new TextEditingController();
       _ageFieldController =
-      (baseProvider.myUser != null && baseProvider.myUser.age != null)
-          ? new TextEditingController(text: baseProvider.myUser.age)
-          : new TextEditingController();
+          (baseProvider.myUser != null && baseProvider.myUser.age != null)
+              ? new TextEditingController(text: baseProvider.myUser.age)
+              : new TextEditingController();
     }
 
     return Scaffold(
@@ -49,6 +79,78 @@ class _EditProfileState extends State<EditProfile> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(top: 24),
+                child: Container(
+                    height: SizeConfig.screenHeight * 0.2,
+                    width: SizeConfig.screenHeight * 0.2,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.black,
+                    ),
+                    child: Stack(
+                      children: [
+                        widget.prevImage == null
+                            ? Image.asset(
+                                "images/profile.png",
+                                height: SizeConfig.screenHeight * 0.2,
+                                width: SizeConfig.screenHeight * 0.2,
+                                fit: BoxFit.cover,
+                              )
+                            : ClipOval(
+                                child: CachedNetworkImage(
+                                  imageUrl: widget.prevImage,
+                                  height: SizeConfig.screenHeight * 0.2,
+                                  width: SizeConfig.screenHeight * 0.2,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                        Positioned(
+                          bottom: SizeConfig.screenHeight * 0.02,
+                          left: SizeConfig.screenHeight * 0.05,
+                          child: GestureDetector(
+                            onTap: chooseprofilePicture,
+                            child: Container(
+                              height: SizeConfig.screenHeight * 0.05,
+                              width: SizeConfig.screenHeight * 0.1,
+                              decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.8),
+                                  borderRadius: BorderRadius.circular(100)),
+                              child: Center(
+                                child: Text(
+                                  "Edit",
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.montserrat(
+                                    color: Colors.white,
+                                    fontSize: SizeConfig.mediumTextSize,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                    // Stack(
+                    //   children: [
+                    //     ClipRRect(
+                    //         borderRadius: BorderRadius.circular(500),
+                    //         child: profilePic != null
+                    //             ? CachedNetworkImage(
+                    //                 imageUrl: "${baseProvider.myUser.uid}.png")
+                    //             : Image.asset("images/profile.png")),
+                    //     Positioned(
+                    //       bottom: 0,
+                    //       child: Container(
+                    //         height: SizeConfig.screenHeight * 0.1,
+                    //         width: SizeConfig.screenHeight * 0.2,
+                    //         color: Colors.white,
+                    //       ),
+                    //     )
+                    //   ],
+                    // ),
+                    ),
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 18.0),
                 child: TextFormField(
@@ -58,8 +160,7 @@ class _EditProfileState extends State<EditProfile> {
                     labelText: 'Name',
                     prefixIcon: Icon(Icons.person),
                   ),
-                  validator: (value)
-                  {
+                  validator: (value) {
                     return value.isEmpty ? 'Please enter your name' : null;
                   },
                   onFieldSubmitted: (v) {
@@ -80,7 +181,9 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                   validator: (value) {
                     print(value);
-                    return (value != null && value.isNotEmpty && emailRegex.hasMatch(value))
+                    return (value != null &&
+                            value.isNotEmpty &&
+                            emailRegex.hasMatch(value))
                         ? null
                         : 'Please enter a valid email';
                   },
@@ -119,33 +222,34 @@ class _EditProfileState extends State<EditProfile> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     new Container(
-                      width: MediaQuery.of(context).size.width-50,
+                      width: MediaQuery.of(context).size.width - 50,
                       height: 50.0,
                       decoration: BoxDecoration(
-                        gradient: new LinearGradient(colors: [
-                          UiConstants.primaryColor,
-                          UiConstants.primaryColor.withBlue(200),
-                        ],
-                            begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
+                        gradient: new LinearGradient(
+                            colors: [
+                              UiConstants.primaryColor,
+                              UiConstants.primaryColor.withBlue(200),
+                            ],
+                            begin: Alignment(0.5, -1.0),
+                            end: Alignment(0.5, 1.0)),
                         borderRadius: new BorderRadius.circular(10.0),
                       ),
                       child: new Material(
                         child: MaterialButton(
                           child: (!baseProvider.isLoginNextInProgress)
                               ? Text(
-                            'UPDATE',
-                            style: Theme.of(context)
-                                .textTheme
-                                .button
-                                .copyWith(color: Colors.white),
-                          )
+                                  'UPDATE',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .button
+                                      .copyWith(color: Colors.white),
+                                )
                               : SpinKitThreeBounce(
-                            color: UiConstants.spinnerColor2,
-                            size: 18.0,
-                          ),
+                                  color: UiConstants.spinnerColor2,
+                                  size: 18.0,
+                                ),
                           onPressed: () {
-                            if(_formKey.currentState.validate())
-                            {
+                            if (_formKey.currentState.validate()) {
                               // baseProvider.firebaseUser = await FirebaseAuth.instance.currentUser();
                               var pName = _nameFieldController.text;
                               var pEmail = _emailFieldController.text;
@@ -156,27 +260,34 @@ class _EditProfileState extends State<EditProfile> {
                               var curAge = baseProvider.myUser.age;
 
                               bool noChanges = true;
-                              if(curName == null || pName != curName) noChanges = false;
-                              if(curEmail == null || pEmail != curEmail) noChanges = false;
-                              if(curAge == null || pAge != curAge) noChanges = false;
+                              if (curName == null || pName != curName)
+                                noChanges = false;
+                              if (curEmail == null || pEmail != curEmail)
+                                noChanges = false;
+                              if (curAge == null || pAge != curAge)
+                                noChanges = false;
 
-                              if(noChanges) {
-                                baseProvider.showNegativeAlert('No Update', 'No changes were made', context);
+                              if (noChanges) {
+                                baseProvider.showNegativeAlert('No Update',
+                                    'No changes were made', context);
                                 return;
-                              }else {
+                              } else {
                                 baseProvider.myUser.name = pName;
                                 baseProvider.myUser.email = pEmail;
                                 baseProvider.myUser.age = pAge;
 
-                                dbProvider.updateUser(baseProvider.myUser)
+                                dbProvider
+                                    .updateUser(baseProvider.myUser)
                                     .then((flag) {
                                   if (flag) {
                                     Navigator.of(context).pop();
-                                    baseProvider.showPositiveAlert('Complete',
+                                    baseProvider.showPositiveAlert(
+                                        'Complete',
                                         'Your details have been updated',
                                         context);
                                   } else {
-                                    baseProvider.showNegativeAlert('Failed',
+                                    baseProvider.showNegativeAlert(
+                                        'Failed',
                                         'Your details could not be updated at the moment',
                                         context);
                                   }
@@ -195,9 +306,7 @@ class _EditProfileState extends State<EditProfile> {
                 ),
               )
             ],
-          )
-      ),
-
+          )),
     );
   }
 }

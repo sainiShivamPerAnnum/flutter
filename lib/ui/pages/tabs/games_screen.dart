@@ -1,4 +1,8 @@
+import 'package:confetti/confetti.dart';
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/pages/root.dart';
+import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:felloapp/ui/elements/Parallax-card/game_card_list.dart';
@@ -7,6 +11,7 @@ import 'package:felloapp/ui/elements/week-winners.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class GamePage extends StatefulWidget {
   final ValueChanged<int> tabChange;
@@ -17,8 +22,10 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   List<Game> _gameList;
-  Game _currentGame;
-  int currentGame;
+  Game _currentPage;
+  ConfettiController _confeticontroller;
+  LocalDBModel lclDbProvider;
+  int currentPage;
   PageController _controller = new PageController(
     initialPage: 0,
   );
@@ -28,20 +35,34 @@ class _GamePageState extends State<GamePage> {
     super.initState();
     var data = DemoData();
     _gameList = data.getCities();
-    _currentGame = _gameList[1];
-    currentGame = 0;
+    _currentPage = _gameList[1];
+    currentPage = 0;
+    _confeticontroller = new ConfettiController(
+      duration: new Duration(seconds: 2),
+    );
   }
 
   void _handleCityChange(Game game) {
     setState(() {
-      this._currentGame = game;
+      this._currentPage = game;
     });
   }
 
-  void setPage() {}
+  void checkConfetti() {
+    // DateTime date = new DateTime.now();
+    // int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
+    // lclDbProvider.isConfettiRequired(weekCde).then((flag) {
+    //   if (flag) {
+    _confeticontroller.play();
+    //     lclDbProvider.saveConfettiUpdate(weekCde);
+    //   }
+    // });
+  }
 
   @override
   Widget build(BuildContext context) {
+    lclDbProvider = Provider.of<LocalDBModel>(context);
+
     return Container(
       decoration: BoxDecoration(
         color: Color(0xfff1f1f1),
@@ -67,7 +88,10 @@ class _GamePageState extends State<GamePage> {
             controller: _controller,
             onPageChanged: (int page) {
               setState(() {
-                currentGame = page;
+                currentPage = page;
+                if (currentPage == 1) {
+                  checkConfetti();
+                }
               });
             },
             children: [
@@ -79,7 +103,7 @@ class _GamePageState extends State<GamePage> {
                   child: Column(
                     children: [
                       Container(
-                        height: AppBar().preferredSize.height * 1.5,
+                        height: AppBar().preferredSize.height * 2,
                       ),
                       TicketCount(),
                       Expanded(
@@ -144,7 +168,25 @@ class _GamePageState extends State<GamePage> {
               )
             ],
           ),
-          currentGame == 0
+          Container(
+              height: 100,
+              width: 100,
+              child: ConfettiWidget(
+                blastDirectionality: BlastDirectionality.explosive,
+                confettiController: _confeticontroller,
+                particleDrag: 0.05,
+                emissionFrequency: 0.05,
+                numberOfParticles: 25,
+                gravity: 0.05,
+                shouldLoop: false,
+                colors: [
+                  UiConstants.primaryColor,
+                  Colors.grey,
+                  Colors.yellow,
+                  Colors.blue,
+                ],
+              )),
+          currentPage == 0
               ? Positioned(
                   bottom: 10,
                   child: Container(

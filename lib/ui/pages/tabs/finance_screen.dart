@@ -306,7 +306,7 @@ class Fund {
 List<Fund> fundList = [
   Fund(
     assetName: "images/integrated.png",
-    title: "ICICI Prudential Fund (Integrated)",
+    title: "ICICI Prudential Fund ",
   ),
   Fund(
     assetName: "images/augmont.png",

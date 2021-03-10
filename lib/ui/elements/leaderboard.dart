@@ -26,10 +26,21 @@ class _LeaderboardState extends State<Leaderboard> {
           horizontal: SizeConfig.blockSizeHorizontal * 6,
           vertical: SizeConfig.blockSizeVertical * 0.8,
         ),
-        leading: ClipOval(
-          child: Image.network(
-              "http://t3.gstatic.com/images?q=tbn:ANd9GcQw-reFu5eeRMoSapJYzoDUIxIYosqNkwK63UgUTspEPayytpszE0zNWI6eWwzv"),
+        leading: CircleAvatar(
+          backgroundColor: Colors.transparent,
+          child: Text(
+            '#$i',
+            style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.w700,
+              fontSize: SizeConfig.mediumTextSize,
+              color: Colors.white,
+            ),
+          ),
         ),
+        // ClipOval(
+        //   child: Image.network(
+        //       "http://t3.gstatic.com/images?q=tbn:ANd9GcQw-reFu5eeRMoSapJYzoDUIxIYosqNkwK63UgUTspEPayytpszE0zNWI6eWwzv"),
+        // ),
         title: Text(
           "Stanlee",
           style: GoogleFonts.montserrat(
@@ -62,10 +73,7 @@ class _LeaderboardState extends State<Leaderboard> {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             gradient: new LinearGradient(
-              colors: [
-                Color(0xffD4AC5B),
-                Color(0xffDECBA4),
-              ],
+              colors: [Color(0xff0F2027), Color(0xff203A43), Color(0xff2C5364)],
               begin: Alignment.bottomLeft,
               end: Alignment.topRight,
             ),
@@ -209,7 +217,7 @@ class TopThree extends StatelessWidget {
                   height: SizeConfig.screenWidth * 0.2,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      width: 3,
+                      width: 5,
                       color: Color(0xffB4ADA5),
                     ),
                     shape: BoxShape.circle,
@@ -241,10 +249,10 @@ class TopThree extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: Text(
-                    "200",
+                    "₹ 200",
                     style: GoogleFonts.montserrat(
                       color: Colors.white,
-                      fontSize: SizeConfig.mediumTextSize,
+                      fontSize: SizeConfig.largeTextSize,
                     ),
                   ),
                 )
@@ -260,7 +268,7 @@ class TopThree extends StatelessWidget {
                   height: SizeConfig.screenWidth * 0.3,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      width: 3,
+                      width: 8,
                       color: Color(0xffFFB96B),
                     ),
                     shape: BoxShape.circle,
@@ -293,10 +301,10 @@ class TopThree extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: Text(
-                    "500",
+                    "₹ 500",
                     style: GoogleFonts.montserrat(
                       color: Colors.white,
-                      fontSize: SizeConfig.mediumTextSize,
+                      fontSize: SizeConfig.largeTextSize,
                     ),
                   ),
                 )
@@ -312,7 +320,7 @@ class TopThree extends StatelessWidget {
                   height: SizeConfig.screenWidth * 0.16,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      width: 3,
+                      width: 5,
                       color: Color(0xff754F24),
                     ),
                     shape: BoxShape.circle,
@@ -345,11 +353,10 @@ class TopThree extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: Text(
-                    "80",
+                    "₹ 80",
                     style: GoogleFonts.montserrat(
-                      color: Colors.white,
-                      fontSize: SizeConfig.mediumTextSize,
-                    ),
+                        color: Colors.white,
+                        fontSize: SizeConfig.largeTextSize),
                   ),
                 )
               ],

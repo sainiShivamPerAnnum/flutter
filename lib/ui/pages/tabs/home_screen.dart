@@ -6,13 +6,36 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:felloapp/ui/elements/game-poll-dialog.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
-class HomePage extends StatelessWidget {
+import 'package:cached_network_image/cached_network_image.dart';
+
+class HomePage extends StatefulWidget {
   final ValueChanged<int> tabChange;
   HomePage({this.tabChange});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  bool isImageLoading = true;
+  String imageUrl;
+
+  Future<void> getProfilePicUrl() async {
+    imageUrl = await FirebaseStorage.instance
+        .ref('dps/${baseProvider.myUser.uid}/image')
+        .getDownloadURL();
+    print("Got the image");
+    if (imageUrl != null) {
+      setState(() {
+        isImageLoading = false;
+      });
+    }
+  }
+
   String getGreeting() {
     int hour = DateTime.now().hour;
-    print(hour);
     if (hour >= 5 && hour <= 12) {
       return "Good Morning,";
     } else if (hour > 12 && hour <= 17) {
@@ -24,10 +47,13 @@ class HomePage extends StatelessWidget {
   }
 
   BaseUtil baseProvider;
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
-
+    if (imageUrl == null) {
+      getProfilePicUrl();
+    }
     return Container(
         decoration: BoxDecoration(
           color: Color(0xfff1f1f1),
@@ -82,11 +108,17 @@ class HomePage extends StatelessWidget {
                                     color: Colors.white,
                                     width: 5,
                                   )),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: Image.asset("images/profile.png",
-                                    fit: BoxFit.cover),
-                              ),
+                              child: isImageLoading
+                                  ? Image.asset(
+                                      "images/profile.png",
+                                      fit: BoxFit.cover,
+                                    )
+                                  : ClipOval(
+                                      child: CachedNetworkImage(
+                                        imageUrl: imageUrl,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
                             ),
                             SizedBox(
                               width: 30,
@@ -138,7 +170,7 @@ class HomePage extends StatelessWidget {
                         subtitle:
                             "Refer a friend Fello and we'll throw tickets worth of ₹1000 to both the accounts",
                         buttonText: "Share now",
-                        onPressed: () => tabChange(3),
+                        onPressed: () => widget.tabChange(3),
                         gradient: [
                           Color(0xffD4AC5B),
                           Color(0xffDECBA4),

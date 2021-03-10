@@ -19,8 +19,9 @@ class WeekWinnerBoard extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             gradient: new LinearGradient(
               colors: [
-                Color(0xff2193b0),
-                Color(0xff6dd5ed),
+                Color(0xfff7797d),
+                Color(0xffFBD786),
+                Color(0xffC6FFDD),
               ],
               begin: Alignment.bottomLeft,
               end: Alignment.topRight,
@@ -42,7 +43,7 @@ class WeekWinnerBoard extends StatelessWidget {
             Text(
               "This Week's Winners",
               style: GoogleFonts.montserrat(
-                color: Colors.white,
+                color: Colors.black87,
                 fontSize: height * 0.024,
                 fontWeight: FontWeight.w700,
               ),
@@ -51,7 +52,7 @@ class WeekWinnerBoard extends StatelessWidget {
             Text(
               "Tambola Winners for week: 15 Feb to 21 Feb",
               style: GoogleFonts.montserrat(
-                color: Colors.white,
+                color: Colors.black87,
                 fontSize: height * 0.012,
               ),
             ),
@@ -74,14 +75,14 @@ class WeekWinnerBoard extends StatelessWidget {
                     title: Text(
                       weekWinnersList[i].name,
                       style: GoogleFonts.montserrat(
-                        color: Colors.white,
+                        color: Colors.black87,
                         fontSize: SizeConfig.mediumTextSize,
                       ),
                     ),
                     trailing: Text(
                       weekWinnersList[i].prize,
                       style: GoogleFonts.montserrat(
-                        color: Colors.white,
+                        color: Colors.black87,
                         fontSize: SizeConfig.mediumTextSize,
                       ),
                     ),

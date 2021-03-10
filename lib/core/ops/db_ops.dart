@@ -288,7 +288,7 @@ class DBModel extends ChangeNotifier {
     return null;
   }
 
-  Future<List<UserMiniTransaction>> getFilteredUserTransactions(
+  Future<List<Map<String, dynamic>>> getFilteredUserTransactions(
       BaseUser user, String type, String subtype, int limit) async {
     try {
       final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -301,11 +301,13 @@ class DBModel extends ChangeNotifier {
       QuerySnapshot txnSnapshot = await query.get();
       // Stream<QuerySnapshot> _stream =
       //     _api.getUserTransactionsByField(_id, type, subtype, limit);
-      List<UserMiniTransaction> requestedTxns = [];
+      List<Map<String, dynamic>> requestedTxns = [];
       txnSnapshot.docs.forEach((t) {
-        UserMiniTransaction txn = UserMiniTransaction.fromMap(t.data());
+        print(t.data().values);
+        Map<String, dynamic> txn = t.data();
         requestedTxns.add(txn);
       });
+
       print(requestedTxns.length);
       return requestedTxns;
       // _stream.listen((querySnapshot) {

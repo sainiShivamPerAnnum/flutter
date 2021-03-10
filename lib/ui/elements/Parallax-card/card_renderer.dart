@@ -18,8 +18,7 @@ class TravelCardRenderer extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.only(
-        top: 16,
-        left: 30,
+        right: 20,
       ),
       child: Stack(
         overflow: Overflow.visible,
@@ -44,7 +43,7 @@ class TravelCardRenderer extends StatelessWidget {
             ),
           ),
           // City image, out of card by 15px
-          Positioned(left: -15, child: _buildGameImage()),
+          Positioned(left: -25, child: _buildGameImage()),
           // City information
           _buildCityData()
         ],
