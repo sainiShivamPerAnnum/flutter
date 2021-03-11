@@ -50,15 +50,21 @@ class Api {
   }
 
   Future<DocumentSnapshot> getUserAugmontDetailDocument(String userId) {
-    ref = _db.collection(Constants.COLN_USERS).doc(userId)
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
         .collection(Constants.SUBCOLN_USER_AUGMONT_DETAILS);
     return ref.doc(Constants.DOC_USER_AUGMONT_DETAIL).get();
   }
 
   Future<void> updateUserAugmontDetailDocument(String userId, Map data) {
-    ref = _db.collection(Constants.COLN_USERS).doc(userId)
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
         .collection(Constants.SUBCOLN_USER_AUGMONT_DETAILS);
-    return ref.doc(Constants.DOC_USER_AUGMONT_DETAIL).set(data, SetOptions(merge: true));
+    return ref
+        .doc(Constants.DOC_USER_AUGMONT_DETAIL)
+        .set(data, SetOptions(merge: true));
   }
 
   Future<DocumentSnapshot> getUserKycDetailDocument(String userId) {
@@ -140,12 +146,12 @@ class Api {
     return _db.collection(Constants.COLN_FAILREPORTS).add(data);
   }
 
-  Future<QuerySnapshot> getWinnersByWeekCde(int weekCde) {
+  Future<QuerySnapshot> getWinnersByWeekCde(int weekCde) async {
     Query query = _db
         .collection(Constants.COLN_WINNERS)
         .where('week_code', isEqualTo: weekCde);
-
-    return query.get();
+    final response = await query.get();
+    return response;
   }
 
   Future<QuerySnapshot> getCredentialsByTypeAndStage(
@@ -215,7 +221,7 @@ class Api {
     ref = _db.collection(Constants.COLN_POLLS);
     return ref.doc(id).get();
   }
-  
+
   Future<dynamic> incrementPollDocument(String id, String field) {
     ref = _db.collection(Constants.COLN_POLLS);
     var upObj = {};
@@ -224,18 +230,29 @@ class Api {
     return ref.doc(id).update(upObj);
   }
 
-  Future<DocumentSnapshot> addUserPollResponseDocument(String id, String pollId, Map data) {
-    ref = _db.collection(Constants.COLN_USERS).doc(id).collection(Constants.SUBCOLN_USER_POLL_RESPONSES);
+  Future<DocumentSnapshot> addUserPollResponseDocument(
+      String id, String pollId, Map data) {
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(id)
+        .collection(Constants.SUBCOLN_USER_POLL_RESPONSES);
     return ref.doc(pollId).set(data, SetOptions(merge: false));
   }
 
-  Future<DocumentSnapshot> getUserPollResponseDocument(String id, String pollId) {
-    ref = _db.collection(Constants.COLN_USERS).doc(id).collection(Constants.SUBCOLN_USER_POLL_RESPONSES);
+  Future<DocumentSnapshot> getUserPollResponseDocument(
+      String id, String pollId) {
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(id)
+        .collection(Constants.SUBCOLN_USER_POLL_RESPONSES);
     return ref.doc(pollId).get();
   }
 
   Future<QuerySnapshot> getLeaderboardDocument(String category, int weekCde) {
-    Query _query = _db.collection(Constants.COLN_LEADERBOARD).where('category', isEqualTo: category).where('week_code', isEqualTo: weekCde);
+    Query _query = _db
+        .collection(Constants.COLN_LEADERBOARD)
+        .where('category', isEqualTo: category)
+        .where('week_code', isEqualTo: weekCde);
     return _query.get();
   }
 }

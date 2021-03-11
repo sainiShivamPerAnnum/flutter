@@ -839,10 +839,10 @@ class _HState extends State<PlayHome> {
           ],
         )),
         onTap: () {
-          HapticFeedback.vibrate();
-          showDialog(
-              context: context,
-              builder: (BuildContext context) => PrizeDialog());
+          // HapticFeedback.vibrate();
+          // showDialog(
+          //     context: context,
+          //     builder: (BuildContext context) => PrizeDialog());
         },
       ),
     );
