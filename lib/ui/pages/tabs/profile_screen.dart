@@ -52,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
+    baseProvider = Provider.of<BaseUtil>(context,listen:false);
     if (imageUrl == null) {
       getProfilePicUrl();
     }
@@ -443,10 +443,10 @@ class _ShareOptionsState extends State<ShareOptions> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
-    dbProvider = Provider.of<DBModel>(context);
-    fcmProvider = Provider.of<FcmHandler>(context);
-    rProvider = Provider.of<RazorpayModel>(context);
+    baseProvider = Provider.of<BaseUtil>(context,listen:false);
+    dbProvider = Provider.of<DBModel>(context,listen:false);
+    fcmProvider = Provider.of<FcmHandler>(context,listen:false);
+    rProvider = Provider.of<RazorpayModel>(context,listen:false);
     _init();
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

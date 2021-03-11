@@ -41,7 +41,7 @@ class NameInputScreenState extends State<NameInputScreen> {
   Widget build(BuildContext context) {
     if (!_isInitialized) {
       _isInitialized = true;
-      authProvider = Provider.of<BaseUtil>(context);
+      authProvider = Provider.of<BaseUtil>(context,listen:false);
       _nameFieldController =
           (authProvider.myUser != null && authProvider.myUser.name != null)
               ? new TextEditingController(text: authProvider.myUser.name)

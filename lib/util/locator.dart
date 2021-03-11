@@ -13,7 +13,7 @@ import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:get_it/get_it.dart';
 
-GetIt locator = GetIt();
+GetIt locator = GetIt.instance;
 
 void setupLocator() {
   locator.registerLazySingleton(() => Api());

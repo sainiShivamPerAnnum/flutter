@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
+    baseProvider = Provider.of<BaseUtil>(context,listen:false);
     if (imageUrl == null) {
       getProfilePicUrl();
     }

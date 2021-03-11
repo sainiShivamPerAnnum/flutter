@@ -85,8 +85,8 @@ class _LeaderboardState extends State<Leaderboard> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
-    dbProvider = Provider.of<DBModel>(context);
+    baseProvider = Provider.of<BaseUtil>(context,listen:false);
+    dbProvider = Provider.of<DBModel>(context,listen:false);
     if (prizeLboardList == null) {
       print("hello");
       getLeaderBoardData();

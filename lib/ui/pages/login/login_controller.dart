@@ -130,10 +130,10 @@ class _LoginControllerState extends State<LoginController> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
-    dbProvider = Provider.of<DBModel>(context);
-    localDbProvider = Provider.of<LocalDBModel>(context);
-    fcmProvider = Provider.of<FcmListener>(context);
+    baseProvider = Provider.of<BaseUtil>(context,listen:false);
+    dbProvider = Provider.of<DBModel>(context,listen:false);
+    localDbProvider = Provider.of<LocalDBModel>(context,listen:false);
+    fcmProvider = Provider.of<FcmListener>(context,listen:false);
     return Scaffold(
       appBar: BaseUtil.getAppBar(),
       backgroundColor: Colors.white,

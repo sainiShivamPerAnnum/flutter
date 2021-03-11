@@ -47,9 +47,9 @@
 //   }
 
 //   _init(BuildContext context) {
-//     baseProvider = Provider.of<BaseUtil>(context);
-//     dbProvider = Provider.of<DBModel>(context);
-//     lclDbProvider = Provider.of<LocalDBModel>(context);
+//     baseProvider = Provider.of<BaseUtil>(context,listen:false);
+//     dbProvider = Provider.of<DBModel>(context,listen:false);
+//     lclDbProvider = Provider.of<LocalDBModel>(context,listen:false);
 
 //     DateTime date = new DateTime.now();
 //     int weekCde = date.year*100 + BaseUtil.getWeekNumber();

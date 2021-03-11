@@ -40,8 +40,8 @@ class _OptionsList extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
-    reqProvider = Provider.of<DBModel>(context);
+    baseProvider = Provider.of<BaseUtil>(context,listen:false);
+    reqProvider = Provider.of<DBModel>(context,listen:false);
     _optionsList = _loadOptionsList();
     return new Scaffold(
         appBar: BaseUtil.getAppBar(),

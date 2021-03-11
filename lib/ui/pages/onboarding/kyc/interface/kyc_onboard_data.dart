@@ -146,7 +146,7 @@ class KycOnboardData {
             title: Text("Success"),
             content: Text("Details updated!"),
             actions: [
-              FlatButton(
+              TextButton(
                 child: Text("Ok"),
                 onPressed: () => Navigator.pop(context),
               ),
@@ -169,7 +169,7 @@ class KycOnboardData {
             title: Text("Error"),
             content: Text(message),
             actions: [
-              FlatButton(
+              TextButton(
                 child: Text("Retry"),
                 onPressed: () => Navigator.pop(context),
               ),
@@ -308,7 +308,7 @@ class KycOnboardData {
           "Here are the details we extracted",
           'Kindly update if required and confirm',
           createForm(createPANFields()), [
-        FlatButton(
+        TextButton(
           child: Text("Confirm"),
           onPressed: () async {
             if (_formKey.currentState.validate()) {
@@ -348,11 +348,11 @@ class KycOnboardData {
       _ifsc.text = result["fields"]["ifsc"];
       showStepDialog(
           context, "Penny Transfer", '', createForm(createBankFormFields()), [
-        FlatButton(
+        TextButton(
           child: Text("Cancle"),
           onPressed: () => Navigator.pop(context),
         ),
-        FlatButton(
+        TextButton(
           child: Text("Ok"),
           onPressed: () async {
             if (_formKey.currentState.validate()) {
@@ -402,7 +402,7 @@ class KycOnboardData {
             face == 0 ? "Front-Side Upload" : "Back-Side Upload",
             '',
             Text("Choose image from"), [
-          new FlatButton(
+          new TextButton(
             child: Text('Camera'),
             onPressed: () async {
               _markStepAttempted(1);
@@ -416,7 +416,7 @@ class KycOnboardData {
               //print(result);
             },
           ),
-          FlatButton(
+          TextButton(
             child: Text('Gallery'),
             onPressed: () async {
               _markStepAttempted(1);
@@ -519,7 +519,7 @@ class KycOnboardData {
         "You missed a step in between",
         Text(""),
         [
-          FlatButton(
+          TextButton(
             child: Text("OK"),
             onPressed: () => Navigator.pop(context),
           ),
@@ -532,7 +532,7 @@ class KycOnboardData {
         '',
         Text("You have already completed this process"),
         [
-          FlatButton(
+          TextButton(
             child: Text("OK"),
             onPressed: () => Navigator.pop(context),
           ),
@@ -565,7 +565,7 @@ class KycOnboardData {
         // ---------------------------------------------------------------------------//
         showStepDialog(
             context, "PAN Card Upload", '', Text("Choose image from"), [
-          new FlatButton(
+          new TextButton(
             child: Text('Camera'),
             onPressed: () async {
               _markStepAttempted(0);
@@ -574,7 +574,7 @@ class KycOnboardData {
               continuePanProcess(context, imagePath);
             },
           ),
-          FlatButton(
+          TextButton(
             child: Text('Gallery'),
             onPressed: () async {
               _markStepAttempted(0);
@@ -602,10 +602,10 @@ class KycOnboardData {
                     ],
                   ),
                   actions: [
-                    FlatButton(
+                    TextButton(
                         onPressed: () => Navigator.pop(context),
                         child: Text("Cancel")),
-                    FlatButton(
+                    TextButton(
                         onPressed: () async {
                           if (imagef == null || imageb == null) {
                             showErrorDialog(context,
@@ -633,7 +633,7 @@ class KycOnboardData {
                               //     result["fields"]["splitAddress"]["district"];
                               showStepDialog(context, "Confirm you Details", '',
                                   createForm(createADDFields()), [
-                                FlatButton(
+                                TextButton(
                                   child: Text("Confirm"),
                                   onPressed: () async {
                                     if (_formKey.currentState.validate()) {
@@ -684,7 +684,7 @@ class KycOnboardData {
           '',
           Text("Choose image from"),
           [
-            new FlatButton(
+            new TextButton(
               child: Text('Camera'),
               onPressed: () async {
                 _markStepAttempted(2);
@@ -694,7 +694,7 @@ class KycOnboardData {
                 continueBankVerification(context, imagePath);
               },
             ),
-            FlatButton(
+            TextButton(
               child: Text('Gallery'),
               onPressed: () async {
                 _markStepAttempted(2);
@@ -746,7 +746,7 @@ class KycOnboardData {
           '',
           Text("Choose image from"),
           [
-            new FlatButton(
+            new TextButton(
               child: Text('Camera'),
               onPressed: () async {
                 _markStepAttempted(6);
@@ -755,7 +755,7 @@ class KycOnboardData {
                 continueProfilePictureProcess(context, imagePath);
               },
             ),
-            FlatButton(
+            TextButton(
               child: Text('Gallery'),
               onPressed: () async {
                 final image =
