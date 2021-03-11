@@ -1,18 +1,18 @@
 import 'dart:math';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
+import 'package:felloapp/ui/elements/hamburger-dialog.dart';
+import 'package:felloapp/ui/elements/navbar.dart';
+import 'package:felloapp/ui/pages/tabs/finance_screen.dart';
+import 'package:felloapp/ui/pages/tabs/games_screen.dart';
+import 'package:felloapp/ui/pages/tabs/home_screen.dart';
+import 'package:felloapp/ui/pages/tabs/profile_screen.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/ui/elements/navbar.dart';
-import 'package:felloapp/ui/pages/tabs/home_screen.dart';
-import 'package:felloapp/ui/pages/tabs/games_screen.dart';
-import 'package:felloapp/ui/pages/tabs/finance_screen.dart';
-import 'package:felloapp/ui/pages/tabs/profile_screen.dart';
-import 'package:felloapp/util/logger.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
-import 'package:felloapp/ui/elements/hamburger-dialog.dart';
 
 class Root extends StatefulWidget {
   @override
@@ -188,42 +188,56 @@ class _RootState extends State<Root> {
     });
   }
 
-  void initDynamicLinks() async {
+  Future<dynamic> initDynamicLinks() async {
     FirebaseDynamicLinks.instance.onLink(
         onSuccess: (PendingDynamicLinkData dynamicLink) async {
-      final Uri deepLink = dynamicLink?.link;
-
-      if (deepLink != null) {
-        log.debug('Received deep link');
-        log.debug(deepLink.toString());
-        submitReferral(baseProvider.myUser.uid, deepLink);
-      }
+      return x(dynamicLink);
     }, onError: (OnLinkErrorException e) async {
       log.error('Error in fetching deeplink');
       log.error(e);
+      return null;
     });
 
-    final PendingDynamicLinkData data =
-        await FirebaseDynamicLinks.instance.getInitialLink();
+    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
     final Uri deepLink = data?.link;
-
     if (deepLink != null) {
       log.debug('Received deep link');
       log.debug(deepLink.toString());
-      submitReferral(baseProvider.myUser.uid, deepLink);
+      return submitReferral22(baseProvider.myUser.uid, deepLink).then((value) {
+        log.debug(value);
+        return value;
+      });
     }
   }
 
-  Future<http.Response> submitReferral(String userId, Uri deepLink) {
+  Future<dynamic> x(PendingDynamicLinkData dynamicLink) {
+    final Uri deepLink = dynamicLink?.link;
+    if (deepLink == null) return null;
+    log.debug('Received deep link');
+    //log.debug(deepLink.toString());
+    return submitReferral22(baseProvider.myUser.uid, deepLink).then((value) {
+      log.debug(value);
+      return value;
+    });
+  }
+
+  Future<int> submitReferral22(String userId, Uri deepLink) async {
     String prefix = 'https://fello.in/';
     String dLink = deepLink.toString();
     if (dLink.startsWith(prefix)) {
       String referee = dLink.replaceAll(prefix, '');
       log.debug(referee);
-      if (prefix.length > 0 && prefix != userId)
-        httpModel.postReferral(userId, referee);
-    }
-    return null;
+      if (prefix.length > 0 && prefix != userId) {
+        return httpModel
+            .postUserReferral(userId, referee)
+            .then((userTicketUpdateCount) {
+          log.debug('User deserves $userTicketUpdateCount more tickets');
+          return userTicketUpdateCount;
+        });
+      } else
+        return 0;
+    } else
+      return 0;
   }
 }
 

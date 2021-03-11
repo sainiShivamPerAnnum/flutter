@@ -88,12 +88,12 @@ class RazorpayModel extends ChangeNotifier {
   //update transaction
   //create map
   //open gateway
-  submitAugmontTransaction(
+  Future<UserTransaction> submitAugmontTransaction(
       UserTransaction txn, String mobile, String email, String note) async {
     if (!_init(txn)) return null; //initialise razorpay
 
     Map<String, dynamic> orderDetails =
-        await _httpModel.generateRzpOrderId(_currentTxn.amount.round(), note);
+        await _httpModel.generateRzpOrderId(_currentTxn.amount,note);
     if (orderDetails == null) {
       log.error('Failed to generate order id');
       return null;
@@ -117,6 +117,7 @@ class RazorpayModel extends ChangeNotifier {
     };
 
     _razorpay.open(options);
+    return _currentTxn;
   }
 
   void cleanListeners() {

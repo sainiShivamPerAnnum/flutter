@@ -49,6 +49,24 @@ class Api {
         .set(data, SetOptions(merge: true));
   }
 
+  Future<DocumentSnapshot> getUserAugmontDetailDocument(String userId) {
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_AUGMONT_DETAILS);
+    return ref.doc(Constants.DOC_USER_AUGMONT_DETAIL).get();
+  }
+
+  Future<void> updateUserAugmontDetailDocument(String userId, Map data) {
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_AUGMONT_DETAILS);
+    return ref
+        .doc(Constants.DOC_USER_AUGMONT_DETAIL)
+        .set(data, SetOptions(merge: true));
+  }
+
   Future<DocumentSnapshot> getUserKycDetailDocument(String userId) {
     ref = _db
         .collection(Constants.COLN_USERS)
@@ -128,12 +146,12 @@ class Api {
     return _db.collection(Constants.COLN_FAILREPORTS).add(data);
   }
 
-  Future<QuerySnapshot> getWinnersByWeekCde(int weekCde) {
+  Future<QuerySnapshot> getWinnersByWeekCde(int weekCde) async {
     Query query = _db
         .collection(Constants.COLN_WINNERS)
         .where('week_code', isEqualTo: weekCde);
-
-    return query.get();
+    final response = await query.get();
+    return response;
   }
 
   Future<QuerySnapshot> getCredentialsByTypeAndStage(
@@ -147,7 +165,7 @@ class Api {
     return query.get();
   }
 
-  Stream<QuerySnapshot> getUserTransactionsByField(
+  Future<QuerySnapshot> getUserTransactionsByField(
       String user_id, String type, String subtype, int limit) {
     Query query = _db
         .collection(Constants.COLN_USERS)
@@ -158,9 +176,9 @@ class Api {
     if (subtype != null)
       query = query.where(UserTransaction.fldSubType, isEqualTo: subtype);
     if (limit != -1 && limit > 10) query = query.limit(limit);
-    query = query.orderBy(UserTransaction.fldUpdatedTime);
+    query = query.orderBy(UserTransaction.fldUpdatedTime, descending: true);
 
-    return query.snapshots();
+    return query.get();
   }
 
   Future<void> addCallbackDocument(String year, String monthCde, Map data) {
@@ -197,5 +215,44 @@ class Api {
   Future<QuerySnapshot> getReferedDocs(String id) {
     ref = _db.collection(Constants.COLN_REFERRALS);
     return ref.where('ref_by', isEqualTo: id).get();
+  }
+
+  Future<DocumentSnapshot> getPollDocument(String id) {
+    ref = _db.collection(Constants.COLN_POLLS);
+    return ref.doc(id).get();
+  }
+
+  Future<dynamic> incrementPollDocument(String id, String field) {
+    ref = _db.collection(Constants.COLN_POLLS);
+    var upObj = {};
+    upObj[field] = FieldValue.increment(1);
+
+    return ref.doc(id).update(upObj);
+  }
+
+  Future<DocumentSnapshot> addUserPollResponseDocument(
+      String id, String pollId, Map data) {
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(id)
+        .collection(Constants.SUBCOLN_USER_POLL_RESPONSES);
+    return ref.doc(pollId).set(data, SetOptions(merge: false));
+  }
+
+  Future<DocumentSnapshot> getUserPollResponseDocument(
+      String id, String pollId) {
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(id)
+        .collection(Constants.SUBCOLN_USER_POLL_RESPONSES);
+    return ref.doc(pollId).get();
+  }
+
+  Future<QuerySnapshot> getLeaderboardDocument(String category, int weekCde) {
+    Query _query = _db
+        .collection(Constants.COLN_LEADERBOARD)
+        .where('category', isEqualTo: category)
+        .where('week_code', isEqualTo: weekCde);
+    return _query.get();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
@@ -28,8 +29,8 @@ class _ReferScreenState extends State<ReferScreen> {
   Log log = new Log('ReferScreen');
   BaseUtil baseProvider;
   DBModel dbProvider;
-  RazorpayModel rProvider;
   FcmHandler fcmProvider;
+  AugmontModel aProvider;
   String referral_bonus = BaseUtil.remoteConfig.getString('referral_bonus');
   String referral_ticket_bonus =
       BaseUtil.remoteConfig.getString('referral_ticket_bonus');
@@ -75,7 +76,7 @@ class _ReferScreenState extends State<ReferScreen> {
     baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context);
     fcmProvider = Provider.of<FcmHandler>(context);
-    rProvider = Provider.of<RazorpayModel>(context);
+    aProvider = Provider.of<AugmontModel>(context);
     _init();
     return Scaffold(
         //debugShowCheckedModeBanner: false,
@@ -313,6 +314,7 @@ class _ReferScreenState extends State<ReferScreen> {
                         });
                       });
                       ////////////////////////
+                      //TESTING RAZORPAY
                       // rProvider.submitAugmontTransaction(
                       //     UserTransaction.extMFDeposit('', '', 100.23, '', baseProvider.myUser.uid),
                       //     baseProvider.myUser.mobile,
@@ -320,9 +322,26 @@ class _ReferScreenState extends State<ReferScreen> {
                       // rProvider.setTransactionListener((resTxn) {
                       //   //log.debug(resTxn);
                       // });
-
-                      // var x = await dbProvider.getFilteredUserTransactions(baseProvider.myUser, null, null, 0);
-                      // log.debug(x);
+                      //////////////////////////
+                      //TESTING AUGMONT
+                      // if (!aProvider.isInit()) await aProvider.init();
+                      //
+                      // // var kObj = await aProvider.createUser('9988776655', 'AMVPL5308BB', 'shouryaditya.ray', 'wk9PrqnK');
+                      // final _rates = await aProvider.getRates();
+                      //
+                      // log.debug(_rates.blockId);
+                      // log.debug(_rates.goldBuyPrice.toString());
+                      // log.debug(_rates.cgstPercent.toString());
+                      //
+                      // //baseProvider.augmontDetail = await aProvider.createUser(baseProvider.myUser.mobile, baseProvider.myUser.pan, 'wk9PrqnK');
+                      // baseProvider.augmontDetail = await dbProvider.getUserAugmontDetails(baseProvider.myUser.uid);
+                      // if(baseProvider.augmontDetail != null)log.debug(baseProvider.augmontDetail.userId);
+                      //
+                      // UserTransaction _txn = await aProvider.initiateGoldPurchase(_rates, 22.1);
+                      // if(_txn != null)log.debug(_txn.augmnt.toString());
+                      // aProvider.setAugmontTxnProcessListener((txn) {
+                      //   log.debug('Received txn callback');
+                      // });
                     },
                     highlightColor: Colors.orange.withOpacity(0.5),
                     splashColor: Colors.orange.withOpacity(0.5),
@@ -407,7 +426,7 @@ class _ReferScreenState extends State<ReferScreen> {
       socialMetaTagParameters: SocialMetaTagParameters(
           title: 'Download ${Constants.APP_NAME}',
           description:
-              'Fello makes saving a lot more fun, and investing a lot more simple!',
+              'Fello makes saving fun, and investing a lot more simple!',
           imageUrl: Uri.parse(
               'https://play-lh.googleusercontent.com/yA_k3_efLEwy4slB6RUa-aBzJNuS5Bta7LudVRxYAThc0wnU0jgNih7lt95gHDgR_Ew=s360-rw')),
       googleAnalyticsParameters: GoogleAnalyticsParameters(

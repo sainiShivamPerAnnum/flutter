@@ -18,7 +18,9 @@ enum FailType{
   UserWithdrawalCheckIMPSFailed,
   UserWithdrawalGetRedeemFailed,
   UserWithdrawalExitLoadFailed,
-  UserWithdrawalSubmitFailed
+  UserWithdrawalSubmitFailed,
+  UserAugmontPurchaseFailed,
+  UserRazorpayPurchaseFailed
 }
 
 extension ParseToString on FailType {

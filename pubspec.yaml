@@ -48,12 +48,11 @@ dependencies:
   video_player: ^1.0.1
   camera: ^0.7.0+2
   path: ^1.7.0
-  razorpay_flutter: '1.1.0'
+  razorpay_flutter: ^1.2.5
   pie_chart: ^4.0.1
   flat_icons_flutter: ^1.0.2
   flutter_svg: 
   flutter_image_compress: ^0.7.0
-
 
 
 

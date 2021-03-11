@@ -588,11 +588,11 @@ class _ShareOptionsState extends State<ShareOptions> {
       String userId, bool short, String source) async {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: 'https://fello.page.link',
-      link: Uri.parse('https://fello.in/$userId'),
+      link: Uri.parse('https://fello.in/g2g2g2'),
       socialMetaTagParameters: SocialMetaTagParameters(
           title: 'Download ${Constants.APP_NAME}',
           description:
-              'Fello makes saving a lot more fun, and investing a lot more simple!',
+              'Fello makes saving fun, and investing a lot more simple!',
           imageUrl: Uri.parse(
               'https://play-lh.googleusercontent.com/yA_k3_efLEwy4slB6RUa-aBzJNuS5Bta7LudVRxYAThc0wnU0jgNih7lt95gHDgR_Ew=s360-rw')),
       googleAnalyticsParameters: GoogleAnalyticsParameters(

@@ -11,22 +11,29 @@ class Constants {
   static final String COLN_FEEDBACK = "feedback";
   static final String COLN_FAILREPORTS = "failreports";
   static final String COLN_CREDENTIALS = "credentials";
+  static final String COLN_POLLS = "polls";
+  static final String COLN_LEADERBOARD = "leaderboard";
 
   //Sub-collections
   static final String SUBCOLN_USER_FCM = "fcm";
   static final String SUBCOLN_USER_TICKETS = "tickets";
   static final String SUBCOLN_USER_ICICI_DETAILS = "icici";
+  static final String SUBCOLN_USER_AUGMONT_DETAILS = "augmont";
   static final String SUBCOLN_USER_KYC_DETAILS = "kyc";
   static final String SUBCOLN_USER_TXNS = "txns";
+  static final String SUBCOLN_USER_POLL_RESPONSES = "poll";
 
   //Sub-collection docs
   static final String DOC_USER_FCM_TOKEN = "client_token";
   static final String DOC_USER_ICICI_DETAIL = "detail";
   static final String DOC_USER_KYC_DETAIL = "detail";
+  static final String DOC_USER_AUGMONT_DETAIL = "detail";
 
   static const int CORNERS_COMPLETED = 0;
   static const int ROW_ONE_COMPLETED = 1;
   static const int ROW_TWO_COMPLETED = 2;
   static const int ROW_THREE_COMPLETED = 3;
   static const int FULL_HOUSE_COMPLETED = 4;
+
+  static const String POLL_NEXTGAME_ID = "nextgame";
 }

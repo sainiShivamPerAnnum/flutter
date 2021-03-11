@@ -1,6 +1,10 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/PrizeLeader.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class Leaderboard extends StatefulWidget {
   @override
@@ -9,6 +13,10 @@ class Leaderboard extends StatefulWidget {
 
 class _LeaderboardState extends State<Leaderboard> {
   int currentPage = 0;
+  DBModel dbProvider;
+  BaseUtil baseProvider;
+  List<PrizeLeader> prizeLboardList;
+  bool isLoading = true;
   PageController _pageController = new PageController(initialPage: 0);
   viewpage(int index) {
     setState(() {
@@ -18,9 +26,26 @@ class _LeaderboardState extends State<Leaderboard> {
     });
   }
 
-  List<Widget> buildLeaderboardList() {
+  Future<void> getLeaderBoardData() async {
+    prizeLboardList = await dbProvider.getPrizeLeaderboard();
+    print("GOt the list --------------------" +
+        prizeLboardList.length.toString());
+    //prizeLboardList.sort((a, b) => a.totalWin.compareTo(b.totalWin));
+    for (int i = 0; i < prizeLboardList.length; i++) {
+      print(prizeLboardList[i].name +
+          "------->" +
+          prizeLboardList[i].totalWin.toString());
+    }
+    if (isLoading) {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  List<Widget> buildWinnerList() {
     List<ListTile> leaderboardItems = [];
-    for (int i = 3; i < 10; i++) {
+    for (int i = 0; i < leaderboardItems.length; i++) {
       leaderboardItems.add(ListTile(
         contentPadding: EdgeInsets.symmetric(
           horizontal: SizeConfig.blockSizeHorizontal * 6,
@@ -29,7 +54,7 @@ class _LeaderboardState extends State<Leaderboard> {
         leading: CircleAvatar(
           backgroundColor: Colors.transparent,
           child: Text(
-            '#$i',
+            '#${i + 1}',
             style: GoogleFonts.montserrat(
               fontWeight: FontWeight.w700,
               fontSize: SizeConfig.mediumTextSize,
@@ -42,14 +67,14 @@ class _LeaderboardState extends State<Leaderboard> {
         //       "http://t3.gstatic.com/images?q=tbn:ANd9GcQw-reFu5eeRMoSapJYzoDUIxIYosqNkwK63UgUTspEPayytpszE0zNWI6eWwzv"),
         // ),
         title: Text(
-          "Stanlee",
+          prizeLboardList[i].name,
           style: GoogleFonts.montserrat(
             color: Colors.white,
             fontSize: SizeConfig.mediumTextSize,
           ),
         ),
         trailing: Text(
-          "500",
+          prizeLboardList[i].totalWin.toString(),
           style: GoogleFonts.montserrat(
               color: Colors.white, fontSize: SizeConfig.mediumTextSize),
         ),
@@ -60,16 +85,20 @@ class _LeaderboardState extends State<Leaderboard> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    baseProvider = Provider.of<BaseUtil>(context);
+    dbProvider = Provider.of<DBModel>(context);
+    if (prizeLboardList == null) {
+      print("hello");
+      getLeaderBoardData();
+    }
     return Expanded(
       child: Container(
         margin: EdgeInsets.symmetric(
-          horizontal: width * 0.05,
-          vertical: width * 0.02,
+          horizontal: SizeConfig.screenWidth * 0.05,
+          vertical: SizeConfig.screenWidth * 0.02,
         ),
-        padding: EdgeInsets.only(top: height * 0.03),
-        width: width,
+        padding: EdgeInsets.only(top: SizeConfig.screenHeight * 0.03),
+        width: SizeConfig.screenWidth,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             gradient: new LinearGradient(
@@ -95,99 +124,107 @@ class _LeaderboardState extends State<Leaderboard> {
               "Leaderboard",
               style: GoogleFonts.montserrat(
                 color: Colors.white,
-                fontSize: height * 0.024,
+                fontSize: SizeConfig.screenHeight * 0.024,
                 fontWeight: FontWeight.w700,
               ),
             ),
             SizedBox(height: 10),
-            Container(
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: () => viewpage(0),
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: currentPage == 0
-                            ? Colors.white
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: Text(
-                        "Prizes",
-                        style: currentPage == 0
-                            ? TextStyle(
-                                fontSize: SizeConfig.mediumTextSize,
-                                fontWeight: FontWeight.w700)
-                            : TextStyle(
-                                fontSize: SizeConfig.mediumTextSize,
-                                color: Colors.white,
-                              ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => viewpage(1),
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: currentPage == 1
-                            ? Colors.white
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: Text(
-                        "Referrals",
-                        style: currentPage == 1
-                            ? TextStyle(
-                                fontSize: SizeConfig.mediumTextSize,
-                                fontWeight: FontWeight.w700)
-                            : TextStyle(
-                                fontSize: SizeConfig.mediumTextSize,
-                                color: Colors.white,
-                              ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Container(
-                child: PageView(
-                  controller: _pageController,
-                  // physics: NeverScrollableScrollPhysics(),
-                  onPageChanged: (int page) {
-                    setState(() {
-                      currentPage = page;
-                    });
-                  },
-                  children: [
-                    SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          TopThree(
-                            winners: [
-                              "Rahul Senapati Dixit Senapati Dixit",
-                              "Mohit Senapati Dixit Senapati Dixit",
-                              "Ronit Senapati Dixit"
-                            ],
+            isLoading
+                ? SizedBox()
+                : Container(
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                          onTap: () => viewpage(0),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: currentPage == 0
+                                  ? Colors.white
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Text(
+                              "Prizes",
+                              style: currentPage == 0
+                                  ? TextStyle(
+                                      fontSize: SizeConfig.mediumTextSize,
+                                      fontWeight: FontWeight.w700)
+                                  : TextStyle(
+                                      fontSize: SizeConfig.mediumTextSize,
+                                      color: Colors.white,
+                                    ),
+                            ),
                           ),
-                          Column(children: buildLeaderboardList())
+                        ),
+                        GestureDetector(
+                          onTap: () => viewpage(1),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: currentPage == 1
+                                  ? Colors.white
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Text(
+                              "Referrals",
+                              style: currentPage == 1
+                                  ? TextStyle(
+                                      fontSize: SizeConfig.mediumTextSize,
+                                      fontWeight: FontWeight.w700)
+                                  : TextStyle(
+                                      fontSize: SizeConfig.mediumTextSize,
+                                      color: Colors.white,
+                                    ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+            Expanded(
+              child: isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.white,
+                      ),
+                    )
+                  : Container(
+                      child: PageView(
+                        controller: _pageController,
+                        // physics: NeverScrollableScrollPhysics(),
+                        onPageChanged: (int page) {
+                          setState(() {
+                            currentPage = page;
+                          });
+                        },
+                        children: [
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                TopThree(
+                                  winners: [
+                                    "Rahul Senapati Dixit Senapati Dixit",
+                                    "Mohit Senapati Dixit Senapati Dixit",
+                                    "Ronit Senapati Dixit"
+                                  ],
+                                ),
+                                Column(children: buildWinnerList())
+                              ],
+                            ),
+                          ),
+                          Container(
+                            color: Colors.white,
+                          )
                         ],
                       ),
                     ),
-                    Container(
-                      color: Colors.white,
-                    )
-                  ],
-                ),
-              ),
             ),
           ],
         ),
