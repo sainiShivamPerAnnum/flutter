@@ -11,34 +11,35 @@ class WeekWinnerBoard extends StatefulWidget {
 }
 
 class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
-  bool isLoading = true;
+  bool isLoading = false;
   DBModel dbProvider;
   BaseUtil baseProvider;
-  Map<String, dynamic> weeklyWinners;
   List<WeekWinner> weekWinnersList;
 
   Future<void> getWeekWinners() async {
-    weeklyWinners = await dbProvider.getWeeklyWinners();
+    baseProvider.currentWeekWinners = await dbProvider.getWeeklyWinners();
+    weekWinnersList = [];
     print("Got the list --------------------");
-    print(weeklyWinners);
-    weeklyWinners.forEach((key, value) {
-      weekWinnersList.add(WeekWinner(
+    print(baseProvider.currentWeekWinners);
+    baseProvider.currentWeekWinners.forEach((key, value) {
+      weekWinnersList.add(WeekWinner(//TODO
           name: key, prize: value.toString(), avatar: "images/profile.png"));
     });
-    if (isLoading) {
-      setState(() {
-        isLoading = false;
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    dbProvider = Provider.of<DBModel>(context,listen:false);
-    if (weeklyWinners == null) {
-      print("hello");
-      getWeekWinners();
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    if (baseProvider.currentWeekWinners == null || baseProvider.currentWeekWinners.isEmpty) {
+      isLoading = true;
+      getWeekWinners().then((value) {
+        if (isLoading) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      });
     }
     return Expanded(
       child: Container(
@@ -83,7 +84,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
             ),
             SizedBox(height: 10),
             Text(
-              "Tambola Winners for week: 15 Feb to 21 Feb",
+              "Tambola Winners for week: 15 Feb to 21 Feb", //TODO CHANGE BASED ON WEEK
               style: GoogleFonts.montserrat(
                   color: Colors.black87, fontSize: SizeConfig.smallTextSize),
             ),
@@ -104,7 +105,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                             horizontal: SizeConfig.blockSizeHorizontal * 6,
                             vertical: SizeConfig.blockSizeVertical * 0.8,
                           ),
-                          leading: ClipOval(
+                          leading: ClipOval(//TODO
                             child: Image.asset(weekWinnersList[i].avatar),
                           ),
                           title: Text(
@@ -115,7 +116,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                             ),
                           ),
                           trailing: Text(
-                            weekWinnersList[i].prize,
+                            weekWinnersList[i].prize.toString(),
                             style: GoogleFonts.montserrat(
                               color: Colors.black87,
                               fontSize: SizeConfig.mediumTextSize,

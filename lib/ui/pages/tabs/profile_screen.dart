@@ -1,30 +1,26 @@
-import 'dart:developer';
 import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/ui/pages/edit_profile_page.dart';
+import 'package:felloapp/ui/pages/transactions.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:flat_icons_flutter/flat_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_svg/parser.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/ui/pages/transactions.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -33,16 +29,13 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   BaseUtil baseProvider;
-  bool isImageLoading = true;
-  String imageUrl;
-  //FirebaseStorage storage = FirebaseStorage.instance;
+  DBModel dbProvider;
+  bool isImageLoading = false;
 
   Future<void> getProfilePicUrl() async {
-    imageUrl = await FirebaseStorage.instance
-        .ref('dps/${baseProvider.myUser.uid}/image')
-        .getDownloadURL();
-
-    if (imageUrl != null) {
+    baseProvider.myUserDpUrl =
+        await dbProvider.getUserDP(baseProvider.myUser.uid);
+    if (baseProvider.myUserDpUrl != null) {
       setState(() {
         isImageLoading = false;
       });
@@ -52,8 +45,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    if (imageUrl == null) {
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    if (baseProvider.myUserDpUrl == null) {
+      isImageLoading = true;
       getProfilePicUrl();
     }
     return Container(
@@ -83,7 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => EditProfile(
-                            prevImage: imageUrl,
+                            prevImage: baseProvider.myUserDpUrl,
                           )),
                 );
               },
@@ -130,7 +125,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   )
                                 : ClipOval(
                                     child: CachedNetworkImage(
-                                      imageUrl: imageUrl,
+                                      imageUrl: baseProvider.myUserDpUrl,
                                       height: SizeConfig.screenWidth * 0.25,
                                       width: SizeConfig.screenWidth * 0.25,
                                       fit: BoxFit.cover,
@@ -443,10 +438,10 @@ class _ShareOptionsState extends State<ShareOptions> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    dbProvider = Provider.of<DBModel>(context,listen:false);
-    fcmProvider = Provider.of<FcmHandler>(context,listen:false);
-    rProvider = Provider.of<RazorpayModel>(context,listen:false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    fcmProvider = Provider.of<FcmHandler>(context, listen: false);
+    rProvider = Provider.of<RazorpayModel>(context, listen: false);
     _init();
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -681,6 +676,7 @@ class ProfileTabTile extends StatelessWidget {
   final Function onPress;
 
   ProfileTabTile({this.logo, this.onPress, this.title, this.value});
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;

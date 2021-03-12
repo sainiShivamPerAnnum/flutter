@@ -15,9 +15,10 @@ class _LeaderboardState extends State<Leaderboard> {
   int currentPage = 0;
   DBModel dbProvider;
   BaseUtil baseProvider;
-  List<PrizeLeader> prizeLboardList;
-  bool isLoading = true;
+  bool isPrizeLeadersLoading = false;
+  bool isReferralLeadersLoading = false;
   PageController _pageController = new PageController(initialPage: 0);
+
   viewpage(int index) {
     setState(() {
       currentPage = index;
@@ -26,19 +27,36 @@ class _LeaderboardState extends State<Leaderboard> {
     });
   }
 
-  Future<void> getLeaderBoardData() async {
-    prizeLboardList = await dbProvider.getPrizeLeaderboard();
+  Future<void> getPrizeLeaderBoardData() async {
+    baseProvider.prizeLeaders = await dbProvider.getPrizeLeaderboard();
     print("GOt the list --------------------" +
-        prizeLboardList.length.toString());
+        baseProvider.prizeLeaders.length.toString());
     //prizeLboardList.sort((a, b) => a.totalWin.compareTo(b.totalWin));
-    for (int i = 0; i < prizeLboardList.length; i++) {
-      print(prizeLboardList[i].name +
+    for (int i = 0; i < baseProvider.prizeLeaders.length; i++) {
+      print(baseProvider.prizeLeaders[i].name +
           "------->" +
-          prizeLboardList[i].totalWin.toString());
+          baseProvider.prizeLeaders[i].totalWin.toString());
     }
-    if (isLoading) {
+    if (isPrizeLeadersLoading) {
       setState(() {
-        isLoading = false;
+        isPrizeLeadersLoading = false;
+      });
+    }
+  }
+
+  Future<void> getReferralLeaderBoardData() async {
+    baseProvider.referralLeaders = await dbProvider.getReferralLeaderboard();
+    print("GOt the list --------------------" +
+        baseProvider.referralLeaders.length.toString());
+    //prizeLboardList.sort((a, b) => a.totalWin.compareTo(b.totalWin));
+    for (int i = 0; i < baseProvider.referralLeaders.length; i++) {
+      print(baseProvider.referralLeaders[i].name +
+          "------->" +
+          baseProvider.referralLeaders[i].refCount.toString());
+    }
+    if (isReferralLeadersLoading) {
+      setState(() {
+        isReferralLeadersLoading = false;
       });
     }
   }
@@ -67,14 +85,14 @@ class _LeaderboardState extends State<Leaderboard> {
         //       "http://t3.gstatic.com/images?q=tbn:ANd9GcQw-reFu5eeRMoSapJYzoDUIxIYosqNkwK63UgUTspEPayytpszE0zNWI6eWwzv"),
         // ),
         title: Text(
-          prizeLboardList[i].name,
+          baseProvider.prizeLeaders[i].name,
           style: GoogleFonts.montserrat(
             color: Colors.white,
             fontSize: SizeConfig.mediumTextSize,
           ),
         ),
         trailing: Text(
-          prizeLboardList[i].totalWin.toString(),
+          baseProvider.prizeLeaders[i].totalWin.toString(),
           style: GoogleFonts.montserrat(
               color: Colors.white, fontSize: SizeConfig.mediumTextSize),
         ),
@@ -85,11 +103,19 @@ class _LeaderboardState extends State<Leaderboard> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    dbProvider = Provider.of<DBModel>(context,listen:false);
-    if (prizeLboardList == null) {
-      print("hello");
-      getLeaderBoardData();
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    if (baseProvider.prizeLeaders == null ||
+        baseProvider.prizeLeaders.isEmpty) {
+      isPrizeLeadersLoading = true;
+      setState(() {});
+      getPrizeLeaderBoardData();
+    }
+    if (baseProvider.referralLeaders == null ||
+        baseProvider.referralLeaders.isEmpty) {
+      isReferralLeadersLoading = true;
+      setState(() {});
+      getReferralLeaderBoardData();
     }
     return Expanded(
       child: Container(
@@ -129,7 +155,7 @@ class _LeaderboardState extends State<Leaderboard> {
               ),
             ),
             SizedBox(height: 10),
-            isLoading
+            isPrizeLeadersLoading
                 ? SizedBox()
                 : Container(
                     alignment: Alignment.center,
@@ -189,7 +215,7 @@ class _LeaderboardState extends State<Leaderboard> {
                     ),
                   ),
             Expanded(
-              child: isLoading
+              child: isPrizeLeadersLoading
                   ? Center(
                       child: CircularProgressIndicator(
                         backgroundColor: Colors.white,
@@ -235,7 +261,9 @@ class _LeaderboardState extends State<Leaderboard> {
 
 class TopThree extends StatelessWidget {
   List<String> winners;
+
   TopThree({this.winners});
+
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -1,17 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/elements/game-poll-dialog.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:felloapp/ui/elements/game-poll-dialog.dart';
-import 'package:felloapp/util/size_config.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-
-import 'package:cached_network_image/cached_network_image.dart';
 
 class HomePage extends StatefulWidget {
   final ValueChanged<int> tabChange;
+
   HomePage({this.tabChange});
 
   @override
@@ -19,18 +19,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool isImageLoading = true;
-  String imageUrl;
+  bool isImageLoading = false;
+  BaseUtil baseProvider;
+  DBModel dbProvider;
 
   Future<void> getProfilePicUrl() async {
-    imageUrl = await FirebaseStorage.instance
-        .ref('dps/${baseProvider.myUser.uid}/image')
-        .getDownloadURL();
-    print("Got the image");
-    if (imageUrl != null) {
+    baseProvider.myUserDpUrl =
+        await dbProvider.getUserDP(baseProvider.myUser.uid);
+    if (baseProvider.myUserDpUrl != null) {
       setState(() {
         isImageLoading = false;
       });
+      print("got the image");
     }
   }
 
@@ -46,12 +46,12 @@ class _HomePageState extends State<HomePage> {
       return "Hello,";
   }
 
-  BaseUtil baseProvider;
-
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    if (imageUrl == null) {
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    if (baseProvider.myUserDpUrl == null) {
+      isImageLoading = true;
       getProfilePicUrl();
     }
     return Container(
@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                                     )
                                   : ClipOval(
                                       child: CachedNetworkImage(
-                                        imageUrl: imageUrl,
+                                        imageUrl: baseProvider.myUserDpUrl,
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -147,7 +147,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       HomeCard(
-                        title: "SAVE | PLAY | EARN",
+                        title: "SAVE | PLAY | WIN",
                         asset: "images/tickets.png",
                         subtitle:
                             "New to Fello?? No worries.\nLet's get started with a new way of saving money.",
