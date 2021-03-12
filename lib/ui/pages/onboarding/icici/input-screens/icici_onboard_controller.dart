@@ -311,24 +311,44 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
         {
           bool data = await showDialog(
                 context: context,
-                child: new AlertDialog(
-                  title: new Text(
-                      'Is any of the applicant\'s/guardian/Power of Attorney ' +
-                          'holder\'s country of birth/citizenship/nationality/tax residency'
-                              ' status other than India?'),
-                  actions: <Widget>[
-                    new FlatButton(
-                      onPressed: () => Navigator.of(context).pop(false),
-                      child: new Text('No'),
-                    ),
-                    new FlatButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(true);
-                      },
-                      child: new Text('Yes'),
-                    ),
-                  ],
-                ),
+                builder: (_) {
+                  return AlertDialog(
+                    title: new Text(
+                        'Is any of the applicant\'s/guardian/Power of Attorney ' +
+                            'holder\'s country of birth/citizenship/nationality/tax residency'
+                                ' status other than India?'),
+                    actions: <Widget>[
+                      new FlatButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: new Text('No'),
+                      ),
+                      new FlatButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(true);
+                        },
+                        child: new Text('Yes'),
+                      ),
+                    ],
+                  );
+                },
+                // child: new AlertDialog(
+                //   title: new Text(
+                //       'Is any of the applicant\'s/guardian/Power of Attorney ' +
+                //           'holder\'s country of birth/citizenship/nationality/tax residency'
+                //               ' status other than India?'),
+                //   actions: <Widget>[
+                //     new FlatButton(
+                //       onPressed: () => Navigator.of(context).pop(false),
+                //       child: new Text('No'),
+                //     ),
+                //     new FlatButton(
+                //       onPressed: () {
+                //         Navigator.of(context).pop(true);
+                //       },
+                //       child: new Text('Yes'),
+                //     ),
+                //   ],
+                // ),
               ) ??
               false;
 
@@ -340,23 +360,42 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
         {
           bool data = await showDialog(
                 context: context,
-                child: new AlertDialog(
-                  title: new Text(
-                      'As per ICICI, FATCA Status for your record is \'Unable to confirm\'' +
-                          '. Do you wish to update the FATCA?'),
-                  actions: <Widget>[
-                    new FlatButton(
-                      onPressed: () => Navigator.of(context).pop(false),
-                      child: new Text('No'),
-                    ),
-                    new FlatButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(true);
-                      },
-                      child: new Text('Yes'),
-                    ),
-                  ],
-                ),
+                builder: (_) {
+                  return AlertDialog(
+                    title: new Text(
+                        'As per ICICI, FATCA Status for your record is \'Unable to confirm\'' +
+                            '. Do you wish to update the FATCA?'),
+                    actions: <Widget>[
+                      new FlatButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: new Text('No'),
+                      ),
+                      new FlatButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(true);
+                        },
+                        child: new Text('Yes'),
+                      ),
+                    ],
+                  );
+                },
+                // child: new AlertDialog(
+                //   title: new Text(
+                //       'As per ICICI, FATCA Status for your record is \'Unable to confirm\'' +
+                //           '. Do you wish to update the FATCA?'),
+                //   actions: <Widget>[
+                //     new FlatButton(
+                //       onPressed: () => Navigator.of(context).pop(false),
+                //       child: new Text('No'),
+                //     ),
+                //     new FlatButton(
+                //       onPressed: () {
+                //         Navigator.of(context).pop(true);
+                //       },
+                //       child: new Text('Yes'),
+                //     ),
+                //   ],
+                // ),
               ) ??
               false;
 
@@ -367,18 +406,30 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
       case GetKycStatus.FATCA_FLAG_UC:
         {
           bool data = await showDialog(
-                context: context,
-                child: new AlertDialog(
-                  title: new Text('US/Canada Person(s) are not allowed ' +
-                      'to do the subscription/Switch In transaction.'),
-                  actions: <Widget>[
-                    new FlatButton(
-                      onPressed: () => Navigator.of(context).pop(false),
-                      child: new Text('Okay'),
-                    ),
-                  ],
-                ),
-              ) ??
+                  context: context,
+                  builder: (_) {
+                    return AlertDialog(
+                      title: new Text('US/Canada Person(s) are not allowed ' +
+                          'to do the subscription/Switch In transaction.'),
+                      actions: <Widget>[
+                        new FlatButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: new Text('Okay'),
+                        ),
+                      ],
+                    );
+                  }
+                  // child: new AlertDialog(
+                  //   title: new Text('US/Canada Person(s) are not allowed ' +
+                  //       'to do the subscription/Switch In transaction.'),
+                  //   actions: <Widget>[
+                  //     new FlatButton(
+                  //       onPressed: () => Navigator.of(context).pop(false),
+                  //       child: new Text('Okay'),
+                  //     ),
+                  //   ],
+                  // ),
+                  ) ??
               false;
 
           flag = true;
@@ -388,19 +439,33 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
       case GetKycStatus.FATCA_FLAG_PC:
         {
           bool data = await showDialog(
-                context: context,
-                child: new AlertDialog(
-                  title: new Text('As per ICICI, your additional KYC, FATCA ' +
-                      'and CRS Self declaration information is not ' +
-                      'available, Kindly submit the same.'),
-                  actions: <Widget>[
-                    new FlatButton(
-                      onPressed: () => Navigator.of(context).pop(false),
-                      child: new Text('Okay'),
-                    ),
-                  ],
-                ),
-              ) ??
+                  context: context,
+                  builder: (_) {
+                    return AlertDialog(
+                      title: new Text(
+                          'As per ICICI, your additional KYC, FATCA ' +
+                              'and CRS Self declaration information is not ' +
+                              'available, Kindly submit the same.'),
+                      actions: <Widget>[
+                        new FlatButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: new Text('Okay'),
+                        ),
+                      ],
+                    );
+                  }
+                  // child: new AlertDialog(
+                  //   title: new Text('As per ICICI, your additional KYC, FATCA ' +
+                  //       'and CRS Self declaration information is not ' +
+                  //       'available, Kindly submit the same.'),
+                  //   actions: <Widget>[
+                  //     new FlatButton(
+                  //       onPressed: () => Navigator.of(context).pop(false),
+                  //       child: new Text('Okay'),
+                  //     ),
+                  //   ],
+                  // ),
+                  ) ??
               false;
 
           flag = true;
@@ -1203,7 +1268,6 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     _width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(

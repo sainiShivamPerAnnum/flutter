@@ -3,7 +3,7 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.da
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
-class BankDetailsInputScreen extends StatefulWidget{
+class BankDetailsInputScreen extends StatefulWidget {
   static const int index = 3;
 
   @override
@@ -16,10 +16,9 @@ class _BankDetailsInputScreenState extends State<BankDetailsInputScreen> {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
       resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: SingleChildScrollView(
+          child: SingleChildScrollView(
         child: Container(
           height: _height,
           width: _width,
@@ -85,8 +84,7 @@ class _BankDetailsInputScreenState extends State<BankDetailsInputScreen> {
             ),
           ),
         ),
-        )
-      ),
+      )),
     );
   }
 
@@ -104,12 +102,14 @@ class _BankDetailsInputScreenState extends State<BankDetailsInputScreen> {
             IDP.acctTypeChosenValue = newVal;
           });
         },
-        items: acctTypes.map(
+        items: acctTypes
+            .map(
               (e) => DropdownMenuItem(
-            value: e["CODE"],
-            child: Text(e["NAME"]),
-          ),
-        ).toList(),
+                value: e["CODE"],
+                child: Text(e["NAME"]),
+              ),
+            )
+            .toList(),
       ),
     );
   }
