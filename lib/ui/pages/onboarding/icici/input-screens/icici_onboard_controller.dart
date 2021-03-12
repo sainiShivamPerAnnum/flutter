@@ -1203,7 +1203,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     _width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      // resizeToAvoidBottomPadding: false,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
