@@ -51,7 +51,7 @@ class _PersonalPageState extends State<PersonalPage> {
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
-    baseProvider = Provider.of<BaseUtil>(context);
+    baseProvider = Provider.of<BaseUtil>(context,listen:false);
     IDP.name.text = (baseProvider.iciciDetail!=null)?baseProvider.iciciDetail.panName:'';
     IDP.email.text = (baseProvider.myUser!=null)?baseProvider.myUser.email:'';
     return SafeArea(

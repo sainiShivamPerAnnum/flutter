@@ -30,8 +30,8 @@ class _DepositVerificationState extends State<DepositVerification> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
-    payService = Provider.of<PaymentService>(context);
+    baseProvider = Provider.of<BaseUtil>(context,listen:false);
+    payService = Provider.of<PaymentService>(context,listen:false);
     _width = MediaQuery.of(context).size.width;
     _height = MediaQuery.of(context).size.height;
     return WillPopScope(
@@ -372,14 +372,14 @@ class _DepositVerificationState extends State<DepositVerification> {
   Future<bool> _onWillPop() {
     return showDialog(
       context: context,
-      child: new AlertDialog(
+      builder: (context) => new AlertDialog(
         title: new Text('Are you sure you want to go back?'),
         actions: <Widget>[
-          new FlatButton(
+          new TextButton(
             onPressed: () => Navigator.of(context).pop(false),
             child: new Text('No'),
           ),
-          new FlatButton(
+          new TextButton(
             onPressed: () {
               //pop twice to get back to mf details
               Navigator.of(context).pop();

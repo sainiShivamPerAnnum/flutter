@@ -199,10 +199,10 @@ class _HState extends State<PlayHome> {
 
   @override
   Widget build(BuildContext c) {
-    baseProvider = Provider.of<BaseUtil>(context);
-    dbProvider = Provider.of<DBModel>(context);
-    fcmProvider = Provider.of<FcmHandler>(context);
-    localDBModel = Provider.of<LocalDBModel>(context);
+    baseProvider = Provider.of<BaseUtil>(context,listen:false);
+    dbProvider = Provider.of<DBModel>(context,listen:false);
+    fcmProvider = Provider.of<FcmHandler>(context,listen:false);
+    localDBModel = Provider.of<LocalDBModel>(context,listen:false);
     _init();
     _processTicketResults();
     if (_showTutorial) _startTutorial();

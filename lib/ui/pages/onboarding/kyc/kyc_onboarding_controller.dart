@@ -71,7 +71,7 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
                           title: Center(child: Text("Update profile")),
                           content: Text("Choose image from"),
                           actions: [
-                            new FlatButton(
+                            new TextButton(
                               child: Text('Camera'),
                               onPressed: () async {
                                 var image = await picker.getImage(
@@ -84,7 +84,7 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
                                     await kycModel.updateProfile(imagePath);
                               },
                             ),
-                            FlatButton(
+                            TextButton(
                               child: Text('Gallery'),
                               onPressed: () async {
                                 final image = await picker.getImage(
@@ -110,7 +110,7 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
                           title: Center(child: Text("POD")),
                           content: Text("Choose image from"),
                           actions: [
-                            new FlatButton(
+                            new TextButton(
                               child: Text('Camera'),
                               onPressed: () async {
                                 var image = await picker.getImage(
@@ -137,7 +137,7 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
                                 //  }
                               },
                             ),
-                            FlatButton(
+                            TextButton(
                               child: Text('Gallery'),
                               onPressed: () async {
                                 final image = await picker.getImage(
@@ -163,7 +163,7 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
                           title: Center(child: Text("POD")),
                           content: Text("Choose image from"),
                           actions: [
-                            new FlatButton(
+                            new TextButton(
                               child: Text('Camera'),
                               onPressed: () async {
                                 var image = await picker.getImage(
@@ -176,7 +176,7 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
                                     await kycModel.cancelledCheque(imagePath);
                               },
                             ),
-                            FlatButton(
+                            TextButton(
                               child: Text('Gallery'),
                               onPressed: () async {
                                 final image = await picker.getImage(

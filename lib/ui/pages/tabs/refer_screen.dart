@@ -73,10 +73,10 @@ class _ReferScreenState extends State<ReferScreen> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
-    dbProvider = Provider.of<DBModel>(context);
-    fcmProvider = Provider.of<FcmHandler>(context);
-    aProvider = Provider.of<AugmontModel>(context);
+    baseProvider = Provider.of<BaseUtil>(context,listen:false);
+    dbProvider = Provider.of<DBModel>(context,listen:false);
+    fcmProvider = Provider.of<FcmHandler>(context,listen:false);
+    aProvider = Provider.of<AugmontModel>(context,listen:false);
     _init();
     return Scaffold(
         //debugShowCheckedModeBanner: false,

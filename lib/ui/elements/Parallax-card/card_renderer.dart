@@ -98,9 +98,12 @@ class TravelCardRenderer extends StatelessWidget {
               textAlign: TextAlign.center),
         ),
 
-        FlatButton(
-          disabledColor: Colors.transparent,
-          color: Colors.transparent,
+        TextButton(
+          style: ButtonStyle(
+
+          ),
+          // disabledColor: Colors.transparent,
+          // color: Colors.transparent,
           child: Text('Tap to Play'.toUpperCase(), style: Styles.cardAction),
           onPressed: null,
         ),

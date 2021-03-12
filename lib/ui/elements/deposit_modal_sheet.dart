@@ -64,7 +64,7 @@ class DepositModalSheetState extends State<DepositModalSheet>
   }
 
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
+    baseProvider = Provider.of<BaseUtil>(context,listen:false);
     _width = MediaQuery.of(context).size.width;
     if (!_isInitialized) _initFields();
     return Container(

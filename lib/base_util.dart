@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
+import 'package:felloapp/core/model/PrizeLeader.dart';
+import 'package:felloapp/core/model/ReferralLeader.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
@@ -40,6 +42,11 @@ class BaseUtil extends ChangeNotifier {
   UserTransaction _currentAugmontTxn;
   ///KYC global object
   UserKycDetail _kycDetail;
+
+  Map<String, dynamic> currentWeekWinners = {};
+  List<PrizeLeader> prizeLeaders = [];
+  List<ReferralLeader> referralLeaders = [];
+  String myUserDpUrl;
 
   int referCount = 0;
   int userTicketsCount = 0;
