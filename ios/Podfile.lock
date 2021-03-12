@@ -246,6 +246,9 @@ PODS:
   - Firebase/InAppMessaging (7.3.0):
     - Firebase/CoreOnly
     - FirebaseInAppMessaging (~> 7.3.0-beta)
+  - Firebase/Messaging (7.3.0):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (~> 7.3.0)
   - Firebase/RemoteConfig (7.3.0):
     - Firebase/CoreOnly
     - FirebaseRemoteConfig (~> 7.3.0)
@@ -269,6 +272,10 @@ PODS:
     - Flutter
   - firebase_in_app_messaging (0.3.0-1):
     - Firebase/InAppMessaging (= 7.3.0)
+    - firebase_core
+    - Flutter
+  - firebase_messaging (8.0.0-dev.15):
+    - Firebase/Messaging (= 7.3.0)
     - firebase_core
     - Flutter
   - firebase_remote_config (0.6.0):
@@ -329,6 +336,18 @@ PODS:
     - GoogleUtilities/Environment (~> 7.0)
     - GoogleUtilities/UserDefaults (~> 7.0)
     - PromisesObjC (~> 1.2)
+  - FirebaseInstanceID (7.8.0):
+    - FirebaseCore (~> 7.0)
+    - FirebaseInstallations (~> 7.0)
+    - GoogleUtilities/Environment (~> 7.0)
+    - GoogleUtilities/UserDefaults (~> 7.0)
+  - FirebaseMessaging (7.3.0):
+    - FirebaseCore (~> 7.0)
+    - FirebaseInstanceID (~> 7.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.0)
+    - GoogleUtilities/Environment (~> 7.0)
+    - GoogleUtilities/Reachability (~> 7.0)
+    - GoogleUtilities/UserDefaults (~> 7.0)
   - FirebaseRemoteConfig (7.3.0):
     - FirebaseABTesting (~> 7.0)
     - FirebaseCore (~> 7.0)
@@ -441,6 +460,7 @@ DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_dynamic_links (from `.symlinks/plugins/firebase_dynamic_links/ios`)
   - firebase_in_app_messaging (from `.symlinks/plugins/firebase_in_app_messaging/ios`)
+  - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - firebase_remote_config (from `.symlinks/plugins/firebase_remote_config/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
@@ -472,6 +492,8 @@ SPEC REPOS:
     - FirebaseFirestore
     - FirebaseInAppMessaging
     - FirebaseInstallations
+    - FirebaseInstanceID
+    - FirebaseMessaging
     - FirebaseRemoteConfig
     - FirebaseStorage
     - FMDB
@@ -504,6 +526,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_dynamic_links/ios"
   firebase_in_app_messaging:
     :path: ".symlinks/plugins/firebase_in_app_messaging/ios"
+  firebase_messaging:
+    :path: ".symlinks/plugins/firebase_messaging/ios"
   firebase_remote_config:
     :path: ".symlinks/plugins/firebase_remote_config/ios"
   firebase_storage:
@@ -549,6 +573,7 @@ SPEC CHECKSUMS:
   firebase_core: 91b27774a52f41f8b58484a75edf71197ac01c59
   firebase_dynamic_links: 14bf04008446c471b5c9f6e6542e14210bf26bd5
   firebase_in_app_messaging: 40000c3861713ce16e418bade49963cf6364099c
+  firebase_messaging: caf0273c76e54f0a10dfe5048ac47b89e75bb78a
   firebase_remote_config: 1c56b7b8caa840aa2e9432e66bf606d10f492fc9
   firebase_storage: 554b8ce9192bfe0bd35f63da42d0d1f6ae819ccc
   FirebaseABTesting: 96117eb86e2fa429520bbf5a3f02caef615f6576
@@ -560,6 +585,8 @@ SPEC CHECKSUMS:
   FirebaseFirestore: 1906bf163afdb7c432d2e3b5c40ceb9dd2df5820
   FirebaseInAppMessaging: 9436b16bbd1fd02bcb50c25ed485150b3269d611
   FirebaseInstallations: 42c86e7b02ff75b7f27f85833bf5dcb5f38a9774
+  FirebaseInstanceID: aaecc93b4528bbcafea12c477e26827719ca1183
+  FirebaseMessaging: 68d1bcb14880189558a8ae57167abe0b7e417232
   FirebaseRemoteConfig: 826fad8bec5ce1912ef97a124d6ec0ce4dcf6ec1
   FirebaseStorage: 5002b1895bfe74a5ce92ad54f966e6162d0da2e5
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
