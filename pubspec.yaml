@@ -70,6 +70,8 @@ dependencies:
   pie_chart: ^4.0.1
   flat_icons_flutter: ^1.0.2
   flutter_svg: 
+  flutter_image_compress: ^0.7.0
+
 
 
   flutter:

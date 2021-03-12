@@ -23,13 +23,39 @@ import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/ui/pages/transactions.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
-import 'package:felloapp/ui/pages/root.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
   BaseUtil baseProvider;
+  bool isImageLoading = true;
+  String imageUrl;
+  //FirebaseStorage storage = FirebaseStorage.instance;
+
+  Future<void> getProfilePicUrl() async {
+    imageUrl = await FirebaseStorage.instance
+        .ref('dps/${baseProvider.myUser.uid}/image')
+        .getDownloadURL();
+
+    if (imageUrl != null) {
+      setState(() {
+        isImageLoading = false;
+      });
+      print("got the image");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
+    if (imageUrl == null) {
+      getProfilePicUrl();
+    }
     return Container(
       padding: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.02),
       decoration: BoxDecoration(
@@ -55,7 +81,10 @@ class ProfilePage extends StatelessWidget {
                 HapticFeedback.vibrate();
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => EditProfile()),
+                  MaterialPageRoute(
+                      builder: (context) => EditProfile(
+                            prevImage: imageUrl,
+                          )),
                 );
               },
               child: Container(
@@ -93,11 +122,20 @@ class ProfilePage extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.asset(
-                              "images/profile.png",
-                              height: SizeConfig.screenWidth * 0.25,
-                              fit: BoxFit.cover,
-                            ),
+                            isImageLoading
+                                ? Image.asset(
+                                    "images/profile.png",
+                                    height: SizeConfig.screenWidth * 0.25,
+                                    fit: BoxFit.cover,
+                                  )
+                                : ClipOval(
+                                    child: CachedNetworkImage(
+                                      imageUrl: imageUrl,
+                                      height: SizeConfig.screenWidth * 0.25,
+                                      width: SizeConfig.screenWidth * 0.25,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                             SizedBox(
                               width: SizeConfig.screenWidth * 0.05,
                             ),

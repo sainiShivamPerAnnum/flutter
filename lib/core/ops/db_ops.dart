@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
+import 'package:felloapp/core/model/PrizeLeader.dart';
+import 'package:felloapp/core/model/ReferralLeader.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
@@ -238,7 +240,8 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<Map<String, String>> getActiveAwsIciciApiKey() async {
-    String _awsKeyIndex = BaseUtil.remoteConfig.getString('aws_icici_key_index');
+    String _awsKeyIndex =
+        BaseUtil.remoteConfig.getString('aws_icici_key_index');
     if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
     int keyIndex = 1;
     try {
@@ -264,7 +267,8 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<Map<String, String>> getActiveAwsAugmontApiKey() async {
-    String _awsKeyIndex = BaseUtil.remoteConfig.getString('aws_augmont_key_index');
+    String _awsKeyIndex =
+        BaseUtil.remoteConfig.getString('aws_augmont_key_index');
     if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
     int keyIndex = 1;
     try {
@@ -307,15 +311,18 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<List<UserMiniTransaction>> getFilteredUserTransactions(
-      BaseUser user, String type, String subtype, [int limit = 30]) async {
+      BaseUser user, String type, String subtype,
+      [int limit = 30]) async {
     List<UserMiniTransaction> requestedTxns = [];
     try {
       String _id = user.uid;
-      QuerySnapshot _querySnapshot = await _api.getUserTransactionsByField(_id, type, subtype, limit);
+      QuerySnapshot _querySnapshot =
+          await _api.getUserTransactionsByField(_id, type, subtype, limit);
       _querySnapshot.docs.forEach((txn) {
-        try{
-          if(txn.exists)requestedTxns.add(UserMiniTransaction.fromMap(txn.data()));
-        }catch(e) {
+        try {
+          if (txn.exists)
+            requestedTxns.add(UserMiniTransaction.fromMap(txn.data()));
+        } catch (e) {
           log.error('Failed to parse user transaction $txn');
         }
       });
@@ -387,6 +394,141 @@ class DBModel extends ChangeNotifier {
     } catch (e) {
       log.error("Error adding callback doc: " + e.toString());
       return false;
+    }
+  }
+
+  ///Sample response:
+  ///{ op_1: 52
+  /// op_2: 65
+  /// op_3: 37
+  /// op_4: 75
+  /// op_5: 99}
+  Future<Map<String, dynamic>> getPollCount(
+      [String pollId = Constants.POLL_NEXTGAME_ID]) async {
+    try {
+      DocumentSnapshot snapshot = await _api.getPollDocument(pollId);
+      if (snapshot.exists && snapshot.data().length > 0) {
+        return snapshot.data();
+      }
+    } catch (e) {
+      log.error("Error fetch poll details: " + e.toString());
+    }
+    return null;
+  }
+
+  ///response parameter should be the index of the poll option = 1,2,3,4,5
+  Future<bool> addUserPollResponse(String uid, int response,
+      [String pollId = Constants.POLL_NEXTGAME_ID]) async {
+    bool incrementFlag = true;
+    try {
+      await _api.incrementPollDocument(pollId, 'op_$response');
+      incrementFlag = true;
+    } catch (e) {
+      print("Error incremeting poll");
+      //log.error(e);
+      incrementFlag = false;
+    }
+    if (incrementFlag) {
+      //poll incremented, now update user subcoln response
+      try {
+        Map<String, dynamic> pRes = {
+          'pResponse': response,
+          'pUserId': uid,
+          'timestamp': Timestamp.now()
+        };
+        await _api.addUserPollResponseDocument(uid, pollId, pRes);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  ///If response = -1, user has not added a poll response yet
+  ///else response is option index, 1,2,3,4,5
+  Future<int> getUserPollResponse(String uid,
+      [String pollId = Constants.POLL_NEXTGAME_ID]) async {
+    try {
+      DocumentSnapshot docSnapshot =
+          await _api.getUserPollResponseDocument(uid, pollId);
+      if (docSnapshot.exists) {
+        Map<String, dynamic> docData = docSnapshot.data();
+        if (docData != null && docData['pResponse'] != null) {
+          log.debug(
+              'Found existing response from user: ${docData['pResponse']}');
+          return docData['pResponse'];
+        }
+      }
+    } catch (e) {
+      log.error(e);
+    }
+    return -1;
+  }
+
+  Future<List<ReferralLeader>> getReferralLeaderboard() async {
+    try {
+      int weekCode = _getWeekCode();
+      QuerySnapshot _querySnapshot =
+          await _api.getLeaderboardDocument('referral', weekCode);
+      if (_querySnapshot == null || _querySnapshot.size != 1) return null;
+
+      DocumentSnapshot _docSnapshot = _querySnapshot.docs[0];
+      if (!_docSnapshot.exists || _docSnapshot.data()['leaders'] == null)
+        return null;
+      Map<String, dynamic> leaderMap = _docSnapshot.data()['leaders'];
+      log.debug('Referral Leader Map: $leaderMap');
+
+      List<ReferralLeader> leaderList = [];
+      leaderMap.forEach((key, value) {
+        try {
+          String uid = key;
+          String usrName = value.name;
+          int usrRefCount = value.ref_count;
+          log.debug('Leader details:: $uid, $usrName, $usrRefCount');
+          leaderList.add(ReferralLeader(uid, usrName, usrRefCount));
+        } catch (err) {
+          log.error('Item skipped');
+        }
+      });
+
+      return leaderList;
+    } catch (e) {
+      log.error(e);
+      return null;
+    }
+  }
+
+  Future<List<PrizeLeader>> getPrizeLeaderboard() async {
+    try {
+      int weekCode = _getWeekCode();
+      QuerySnapshot _querySnapshot =
+          await _api.getLeaderboardDocument('prize', weekCode);
+      if (_querySnapshot == null || _querySnapshot.size != 1) return null;
+
+      DocumentSnapshot _docSnapshot = _querySnapshot.docs[0];
+      if (!_docSnapshot.exists || _docSnapshot.data()['leaders'] == null)
+        return null;
+      Map<String, dynamic> leaderMap = _docSnapshot.data()['leaders'];
+      log.debug('Prize Leader Map: $leaderMap');
+
+      List<PrizeLeader> leaderList = [];
+      leaderMap.forEach((key, value) {
+        try {
+          String uid = key;
+          String usrName = value.name;
+          double usrRefCount = value.win_total;
+          log.debug('Leader details:: $uid, $usrName, $usrRefCount');
+          leaderList.add(PrizeLeader(uid, usrName, usrRefCount));
+        } catch (err) {
+          log.error('Item skipped');
+        }
+      });
+      return leaderList;
+    } catch (e) {
+      log.error(e);
+      return null;
     }
   }
 
