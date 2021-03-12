@@ -26,13 +26,13 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class MFDetailsPage extends StatefulWidget {
+class GoldDetailsPage extends StatefulWidget {
   @override
-  _MFDetailsPageState createState() => _MFDetailsPageState();
+  _GoldDetailsPageState createState() => _GoldDetailsPageState();
 }
 
-class _MFDetailsPageState extends State<MFDetailsPage> {
-  Log log = new Log('MFDetails');
+class _GoldDetailsPageState extends State<GoldDetailsPage> {
+  Log log = new Log('GoldDetails');
   BaseUtil baseProvider;
   DBModel dbProvider;
   PaymentService payService;

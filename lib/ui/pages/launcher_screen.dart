@@ -48,8 +48,8 @@ class LogoFadeIn extends State<SplashScreen> {
   }
 
   initialize() async {
-    final baseProvider = Provider.of<BaseUtil>(context);
-    final fcmProvider = Provider.of<FcmListener>(context);
+    final baseProvider = Provider.of<BaseUtil>(context,listen:false);
+    final fcmProvider = Provider.of<FcmListener>(context,listen:false);
     await baseProvider.init();
     // await fcmProvider.setupFcm();
     _timer3.cancel();

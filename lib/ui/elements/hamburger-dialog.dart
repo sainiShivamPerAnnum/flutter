@@ -25,8 +25,8 @@ class HamburgerMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
-    reqProvider = Provider.of<DBModel>(context);
+    baseProvider = Provider.of<BaseUtil>(context,listen:false);
+    reqProvider = Provider.of<DBModel>(context,listen:false);
     _optionsList = _loadOptionsList();
 
     return BackdropFilter(

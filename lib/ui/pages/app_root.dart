@@ -51,8 +51,8 @@ class _AppRootState extends State<AppRoot> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
-    httpModel = Provider.of<HttpModel>(context);
+    baseProvider = Provider.of<BaseUtil>(context,listen:false);
+    httpModel = Provider.of<HttpModel>(context,listen:false);
     baseProvider.acceptNotificationsIfAny(context);
     return Scaffold(
       // appBar: BaseUtil.getAppBar(),

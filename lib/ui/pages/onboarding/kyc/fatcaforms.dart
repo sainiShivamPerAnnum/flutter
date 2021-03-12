@@ -401,7 +401,7 @@ class _FatcaFormsState extends State<FatcaForms> {
                         end: Alignment.centerRight,
                       ),
                     ),
-                    child: FlatButton(
+                    child: TextButton(
                       onPressed: () {},
                       child: Text(
                         "Submit",

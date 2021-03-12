@@ -54,8 +54,8 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     if (!_isInitialized) {
       _isInitialized = true;
-      baseProvider = Provider.of<BaseUtil>(context);
-      dbProvider = Provider.of<DBModel>(context);
+      baseProvider = Provider.of<BaseUtil>(context,listen:false);
+      dbProvider = Provider.of<DBModel>(context,listen:false);
       _nameFieldController =
           (baseProvider.myUser != null && baseProvider.myUser.name != null)
               ? new TextEditingController(text: baseProvider.myUser.name)

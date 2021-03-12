@@ -273,7 +273,7 @@ class _MyCamState extends State<MyCam> {
                     ),
                   ),
                   actions: [
-                    FlatButton(
+                    TextButton(
                       child: Text("Looks Good"),
                       onPressed: () {
                         print(videoFile.path);
@@ -281,7 +281,7 @@ class _MyCamState extends State<MyCam> {
                         Navigator.of(context).pop(videoFile.path);
                       },
                     ),
-                    FlatButton(
+                    TextButton(
                       child: Text("Retake"),
                       onPressed: () {
                         videoController.pause();

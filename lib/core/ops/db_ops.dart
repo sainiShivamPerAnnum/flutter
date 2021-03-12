@@ -5,12 +5,11 @@ import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/PrizeLeader.dart';
 import 'package:felloapp/core/model/ReferralLeader.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
-import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
-import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/model/UserMiniTransaction.dart';
+import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
@@ -220,9 +219,12 @@ class DBModel extends ChangeNotifier {
 
   Future<Map<String, dynamic>> getWeeklyWinners() async {
     try {
-      DateTime date = new DateTime.now();
-      int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
+      // DateTime date = new DateTime.now();
+      // int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
 
+      ////DUMMY
+      int weekCde = 202105;
+      /////
       QuerySnapshot querySnapshot = await _api.getWinnersByWeekCde(weekCde);
       if (querySnapshot != null && querySnapshot.docs.length == 1) {
         DocumentSnapshot snapshot = querySnapshot.docs[0];
@@ -484,8 +486,9 @@ class DBModel extends ChangeNotifier {
       leaderMap.forEach((key, value) {
         try {
           String uid = key;
-          String usrName = value.name;
-          int usrRefCount = value.ref_count;
+          Map<String, dynamic> vals = value;
+          String usrName = vals['name'];
+          int usrRefCount = vals['ref_count'];
           log.debug('Leader details:: $uid, $usrName, $usrRefCount');
           leaderList.add(ReferralLeader(uid, usrName, usrRefCount));
         } catch (err) {
@@ -517,10 +520,17 @@ class DBModel extends ChangeNotifier {
       leaderMap.forEach((key, value) {
         try {
           String uid = key;
-          String usrName = value.name;
-          double usrRefCount = value.win_total;
-          log.debug('Leader details:: $uid, $usrName, $usrRefCount');
-          leaderList.add(PrizeLeader(uid, usrName, usrRefCount));
+          Map<String, dynamic> vals = value;
+          String usrName = vals['name'];
+          var usrTotalWin = vals['win_total'];
+          double uTotal;
+          try{
+            uTotal = usrTotalWin;
+          }catch(e) {
+            uTotal = usrTotalWin + .0;
+          }
+          log.debug('Leader details:: $uid, $usrName, $uTotal');
+          leaderList.add(PrizeLeader(uid, usrName, uTotal));
         } catch (err) {
           log.error('Item skipped');
         }
@@ -585,6 +595,15 @@ class DBModel extends ChangeNotifier {
     } catch (e) {
       log.error("Error adding callback doc: " + e.toString());
       return false;
+    }
+  }
+
+  Future<String> getUserDP(String uid) async{
+    try{
+      return await _api.getFileFromDPBucketURL(uid, 'image');
+    }catch(e) {
+      log.error('Failed to fetch dp url');
+      return null;
     }
   }
 

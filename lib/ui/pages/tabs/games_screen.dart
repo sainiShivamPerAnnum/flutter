@@ -61,7 +61,7 @@ class _GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
-    lclDbProvider = Provider.of<LocalDBModel>(context);
+    lclDbProvider = Provider.of<LocalDBModel>(context,listen:false);
 
     return Container(
       decoration: BoxDecoration(
