@@ -192,6 +192,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 20,
+            ),
             Container(
               padding: EdgeInsets.symmetric(
                 horizontal: SizeConfig.blockSizeHorizontal * 2,
@@ -355,7 +358,7 @@ class ShareCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "₹ 25 on every referal",
+                    "Get  ₹ 25 on every referral",
                     style: GoogleFonts.montserrat(
                         color: Colors.white,
                         shadows: [

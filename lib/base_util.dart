@@ -19,9 +19,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'core/model/TambolaBoard.dart';
 import 'core/model/UserAugmontDetail.dart';
+import 'util/size_config.dart';
 
 class BaseUtil extends ChangeNotifier {
   final Log log = new Log("BaseUtil");
@@ -31,15 +33,19 @@ class BaseUtil extends ChangeNotifier {
   User firebaseUser;
   static RemoteConfig remoteConfig;
   PaymentService _payService;
+
   ///Tambola global objects
   DailyPick weeklyDigits;
   List<TambolaBoard> userWeeklyBoards;
+
   ///ICICI global objects
   UserIciciDetail _iciciDetail;
   UserTransaction _currentICICITxn;
+
   ///Augmont global objects
   UserAugmontDetail _augmontDetail;
   UserTransaction _currentAugmontTxn;
+
   ///KYC global object
   UserKycDetail _kycDetail;
 
@@ -71,6 +77,7 @@ class BaseUtil extends ChangeNotifier {
   static int ticketCountBeforeRequest = NEW_USER_TICKET_COUNT;
   static int infoSliderIndex = 0;
   static bool playScreenFirst = true;
+
   ///STAGES - IMPORTANT
   static const AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;
   static const AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.DEV;
@@ -89,30 +96,31 @@ class BaseUtil extends ChangeNotifier {
       String _p = remoteConfig.getString('play_screen_first');
       playScreenFirst = !(_p != null && _p.isNotEmpty && _p == 'false');
 
-    _payService = locator<PaymentService>();
-      if(myUser.isIciciOnboarded)_payService.verifyPaymentsIfAny();
+      _payService = locator<PaymentService>();
+      if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
     }
   }
 
   acceptNotificationsIfAny(BuildContext context) {
     //if payment completed in the background:
-    if(_payService != null && myUser.pendingTxnId != null) {
+    if (_payService != null && myUser.pendingTxnId != null) {
       _payService.addPaymentStatusListener((value) {
-          if(value == PaymentService.TRANSACTION_COMPLETE) {
-            showPositiveAlert(
-                'Transaction Complete', 'Your account balance has been updated!', context,
-                seconds: 5);
-          }else if(value == PaymentService.TRANSACTION_REJECTED) {
-            showPositiveAlert(
-                'Transaction Closed', 'The transaction was not completed', context,
-                seconds: 5);
-          }else{
-            log.debug('Received notif for pending transaction: $value');
-          }
+        if (value == PaymentService.TRANSACTION_COMPLETE) {
+          showPositiveAlert('Transaction Complete',
+              'Your account balance has been updated!', context,
+              seconds: 5);
+        } else if (value == PaymentService.TRANSACTION_REJECTED) {
+          showPositiveAlert('Transaction Closed',
+              'The transaction was not completed', context,
+              seconds: 5);
+        } else {
+          log.debug('Received notif for pending transaction: $value');
+        }
       });
     }
     //
   }
+
   cancelIncomingNotifications() {
     _payService.addPaymentStatusListener(null);
   }
@@ -133,7 +141,7 @@ class BaseUtil extends ChangeNotifier {
       'aws_icici_key_index': '1',
       'aws_augmont_key_index': '1',
       'icici_deposits_enabled': '1',
-      'kyc_completion_prize':'You have won ₹50 and 10 Tambola tickets!'
+      'kyc_completion_prize': 'You have won ₹50 and 10 Tambola tickets!'
     });
     try {
       // Using default duration to force fetching from remote server.
@@ -171,10 +179,10 @@ class BaseUtil extends ChangeNotifier {
         color: UiConstants.accentColor, //change your color here
       ),
       title: Text('${Constants.APP_NAME}',
-          style: TextStyle(
-              color: UiConstants.accentColor,
-              fontWeight: FontWeight.w700,
-              fontSize: 30.0)),
+          style: GoogleFonts.montserrat(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+              fontSize: SizeConfig.largeTextSize)),
       bottom: PreferredSize(
           child: Container(
               color: Colors.blueGrey[100],
@@ -359,7 +367,6 @@ class BaseUtil extends ChangeNotifier {
     return n;
   }
 
-
   BaseUser get myUser => _myUser;
 
   set myUser(BaseUser value) {
@@ -383,7 +390,6 @@ class BaseUtil extends ChangeNotifier {
   set currentICICITxn(UserTransaction value) {
     _currentICICITxn = value;
   }
-
 
   UserAugmontDetail get augmontDetail => _augmontDetail;
 
