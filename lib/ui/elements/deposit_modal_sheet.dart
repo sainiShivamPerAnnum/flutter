@@ -69,7 +69,7 @@ class DepositModalSheetState extends State<DepositModalSheet>
     if (!_isInitialized) _initFields();
     return Container(
       padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom),
       margin: EdgeInsets.only(left: 18, right: 18),
       decoration: BoxDecoration(
         color: Colors.white,
