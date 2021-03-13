@@ -428,7 +428,7 @@ class DBModel extends ChangeNotifier {
       incrementFlag = true;
     } catch (e) {
       print("Error incremeting poll");
-      //log.error(e);
+      log.error(e);
       incrementFlag = false;
     }
     if (incrementFlag) {
@@ -442,6 +442,7 @@ class DBModel extends ChangeNotifier {
         await _api.addUserPollResponseDocument(uid, pollId, pRes);
         return true;
       } catch (e) {
+        log.error('$e');
         return false;
       }
     } else {

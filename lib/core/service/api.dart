@@ -226,13 +226,13 @@ class Api {
 
   Future<dynamic> incrementPollDocument(String id, String field) {
     ref = _db.collection(Constants.COLN_POLLS);
-    var upObj = {};
+    Map<String, dynamic> upObj = {};
     upObj[field] = FieldValue.increment(1);
 
     return ref.doc(id).update(upObj);
   }
 
-  Future<DocumentSnapshot> addUserPollResponseDocument(
+  Future<void> addUserPollResponseDocument(
       String id, String pollId, Map data) {
     ref = _db
         .collection(Constants.COLN_USERS)
