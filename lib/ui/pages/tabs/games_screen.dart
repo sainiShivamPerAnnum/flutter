@@ -27,6 +27,7 @@ class _GamePageState extends State<GamePage> {
   Game _currentPage;
   ConfettiController _confeticontroller;
   LocalDBModel lclDbProvider;
+  BaseUtil baseProvider;
   int currentPage;
   PageController _controller = new PageController(
     initialPage: 0,
@@ -64,6 +65,7 @@ class _GamePageState extends State<GamePage> {
   @override
   Widget build(BuildContext context) {
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
 
     return Container(
       decoration: BoxDecoration(
@@ -107,7 +109,7 @@ class _GamePageState extends State<GamePage> {
                       Container(
                         height: AppBar().preferredSize.height * 2,
                       ),
-                      TicketCount(),
+                      TicketCount(baseProvider.myUser.ticket_count),
                       Expanded(
                         flex: 5,
                         child: GameCardList(
@@ -218,6 +220,9 @@ class _GamePageState extends State<GamePage> {
 }
 
 class TicketCount extends StatefulWidget {
+  final int totalCount;
+  TicketCount(this.totalCount);
+
   @override
   _TicketCountState createState() => _TicketCountState();
 }
@@ -239,9 +244,9 @@ class _TicketCountState extends State<TicketCount>
   void initState() {
     super.initState();
     _controller =
-        AnimationController(duration: Duration(seconds: 3), vsync: this);
+        AnimationController(duration: Duration(seconds: 2), vsync: this);
     _latestBegin = 0;
-    _latestEnd = 5;
+    _latestEnd = widget.totalCount + .0;
   }
 
   @override
@@ -250,14 +255,14 @@ class _TicketCountState extends State<TicketCount>
       SizeConfig.isfirstTime = true;
       CurvedAnimation curvedAnimation =
           CurvedAnimation(parent: _controller, curve: Curves.decelerate);
-      _animation = Tween<double>(begin: 0, end: 5).animate(curvedAnimation);
+      _animation = Tween<double>(begin: 0, end: _latestEnd).animate(curvedAnimation);
 
-      if (0 != _latestBegin || 5 != _latestEnd) {
+      if (0 != _latestBegin || widget.totalCount != _latestEnd) {
         _controller.reset();
       }
 
       _latestBegin = 0;
-      _latestEnd = 5;
+      _latestEnd = widget.totalCount+.0;
       _controller.addListener(() {
         setState(() {});
       });
@@ -268,7 +273,7 @@ class _TicketCountState extends State<TicketCount>
       child: Column(
         children: [
           Text(
-            _animation != null ? _animation.value.round().toString() : "5",
+            _animation != null ? _animation.value.round().toString() : "${widget.totalCount}",
             style: GoogleFonts.montserrat(
               color: Colors.white,
               fontSize: SizeConfig.screenHeight * 0.08,
