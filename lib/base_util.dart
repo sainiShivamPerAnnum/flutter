@@ -54,6 +54,7 @@ class BaseUtil extends ChangeNotifier {
   List<ReferralLeader> referralLeaders = [];
   String myUserDpUrl;
 
+  DateTime _userCreationTimestamp;
   int referCount = 0;
   int userTicketsCount = 0;
   bool isUserOnboarded = false;
@@ -91,6 +92,7 @@ class BaseUtil extends ChangeNotifier {
       _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
     isUserOnboarded =
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
+    _userCreationTimestamp = firebaseUser.metadata.creationTime;
     if (isUserOnboarded) {
       await initRemoteConfig();
       String _p = remoteConfig.getString('play_screen_first');
@@ -406,4 +408,6 @@ class BaseUtil extends ChangeNotifier {
   set currentAugmontTxn(UserTransaction value) {
     _currentAugmontTxn = value;
   }
+
+  DateTime get userCreationTimestamp => _userCreationTimestamp;
 }
