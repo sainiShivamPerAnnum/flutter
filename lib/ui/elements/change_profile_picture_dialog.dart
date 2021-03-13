@@ -25,7 +25,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
   bool isUploaded = false;
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
 
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -84,7 +84,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
     setState(() {
       isUploading = false;
     });
-    Navigator.pop(context);
+    Navigator.popAndPushNamed(context, '/editProf');
   }
 
   dialogContent(BuildContext context) {

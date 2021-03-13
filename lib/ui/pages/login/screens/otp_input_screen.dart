@@ -65,7 +65,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
               textAlign: TextAlign.center,
             ),
             (!_autoDetectingOtp)
-                ? FlatButton(
+                ? TextButton(
                     child: Text('Resend'),
                     onPressed: () {
                       log.debug("Resend action triggered");

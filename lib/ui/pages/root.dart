@@ -13,6 +13,7 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class Root extends StatefulWidget {
   @override
@@ -87,6 +88,8 @@ class _RootState extends State<Root> {
 
   @override
   Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    httpModel = Provider.of<HttpModel>(context, listen: false);
     var accentColor = UiConstants.primaryColor;
 
     //Create custom navBar, pass in a list of buttons, and listen for tap event
@@ -191,53 +194,55 @@ class _RootState extends State<Root> {
   Future<dynamic> initDynamicLinks() async {
     FirebaseDynamicLinks.instance.onLink(
         onSuccess: (PendingDynamicLinkData dynamicLink) async {
-      return x(dynamicLink);
+      final Uri deepLink = dynamicLink?.link;
+      if (deepLink == null) return null;
+      log.debug('Received deep link');
+      int addUserTicketCount =
+      await submitReferral(baseProvider.myUser.uid, deepLink);
+      log.debug(addUserTicketCount.toString()??0.toString());
+      //TODO add ticket request over here
+      return addUserTicketCount;
     }, onError: (OnLinkErrorException e) async {
       log.error('Error in fetching deeplink');
       log.error(e);
       return null;
     });
 
-    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
+    final PendingDynamicLinkData data =
+        await FirebaseDynamicLinks.instance.getInitialLink();
     final Uri deepLink = data?.link;
     if (deepLink != null) {
       log.debug('Received deep link');
-      log.debug(deepLink.toString());
-      return submitReferral22(baseProvider.myUser.uid, deepLink).then((value) {
-        log.debug(value);
-        return value;
-      });
+      // log.debug(deepLink.toString());
+      int addUserTicketCount =
+          await submitReferral(baseProvider.myUser.uid, deepLink);
+      log.debug(addUserTicketCount.toString()??0.toString());
+      return addUserTicketCount;
     }
   }
 
-  Future<dynamic> x(PendingDynamicLinkData dynamicLink) {
-    final Uri deepLink = dynamicLink?.link;
-    if (deepLink == null) return null;
-    log.debug('Received deep link');
-    //log.debug(deepLink.toString());
-    return submitReferral22(baseProvider.myUser.uid, deepLink).then((value) {
-      log.debug(value);
-      return value;
-    });
-  }
-
-  Future<int> submitReferral22(String userId, Uri deepLink) async {
-    String prefix = 'https://fello.in/';
-    String dLink = deepLink.toString();
-    if (dLink.startsWith(prefix)) {
-      String referee = dLink.replaceAll(prefix, '');
-      log.debug(referee);
-      if (prefix.length > 0 && prefix != userId) {
-        return httpModel
-            .postUserReferral(userId, referee)
-            .then((userTicketUpdateCount) {
-          log.debug('User deserves $userTicketUpdateCount more tickets');
-          return userTicketUpdateCount;
-        });
+  Future<int> submitReferral(String userId, Uri deepLink) async {
+    try {
+      String prefix = 'https://fello.in/';
+      String dLink = deepLink.toString();
+      if (dLink.startsWith(prefix)) {
+        String referee = dLink.replaceAll(prefix, '');
+        log.debug(referee);
+        if (prefix.length > 0 && prefix != userId) {
+          return httpModel
+              .postUserReferral(userId, referee)
+              .then((userTicketUpdateCount) {
+            log.debug('User deserves $userTicketUpdateCount more tickets');
+            return userTicketUpdateCount;
+          });
+        } else
+          return -1;
       } else
-        return 0;
-    } else
-      return 0;
+        return -1;
+    } catch (e) {
+      log.error(e);
+      return -1;
+    }
   }
 }
 

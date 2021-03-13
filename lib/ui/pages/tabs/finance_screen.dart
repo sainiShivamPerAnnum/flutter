@@ -6,7 +6,7 @@ import 'package:pie_chart/pie_chart.dart';
 import 'package:felloapp/util/size_config.dart';
 
 class FinancePage extends StatelessWidget {
-  final bool hasFund = false;
+  final bool hasFund = true;
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -182,7 +182,7 @@ class ZeroBalView extends StatelessWidget {
     return Container(
       height: SizeConfig.screenHeight * 0.3,
       padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-      child: Row(
+      child: Column(
         children: [
           Expanded(
             child: Center(
@@ -192,6 +192,18 @@ class ZeroBalView extends StatelessWidget {
               ),
             ),
           ),
+
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(
+              "Your Savings wallet is empty, start investing now!",
+              style: GoogleFonts.montserrat(
+                fontWeight: FontWeight.w500,
+                fontSize: SizeConfig.mediumTextSize,
+              ),
+            ),
+          ),
+
           // Expanded(
           //   flex: 4,
           //   child: Text(

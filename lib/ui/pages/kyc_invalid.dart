@@ -11,7 +11,7 @@ class KYCInvalid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
+    baseProvider = Provider.of<BaseUtil>(context,listen:false);
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
     return Scaffold(

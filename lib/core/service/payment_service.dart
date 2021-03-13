@@ -145,7 +145,7 @@ class PaymentService extends ChangeNotifier {
         String pMultipleId = pRes[SubmitUpiNewInvestor.resMultipleId];
         String pUpiDateTime = pRes[SubmitUpiNewInvestor.resUpiTime];
         localVpa = vpa;
-        baseProvider.currentICICITxn = UserTransaction.newMFDeposit(pTranId,
+        baseProvider.currentICICITxn = UserTransaction.mfDeposit(pTranId,
             pMultipleId, pUpiDateTime, amtDouble, baseProvider.myUser.uid);
         String userTxnKey = await dbProvider.addUserTransaction(
             baseProvider.myUser.uid, baseProvider.currentICICITxn);
@@ -163,8 +163,7 @@ class PaymentService extends ChangeNotifier {
         } else {
           //transaction initiated, however the details were not stored with Firebase correctly
           var failData = {
-            'tranid': baseProvider.currentICICITxn.tranId,
-            // 'userTxnId': baseProvider.currentICICITxn.docKey,
+            'tranid': baseProvider.currentICICITxn.icici[UserTransaction.subFldIciciTranId],
             'failReason':
                 'Txn updated: ${nFlag.toString()} and user updated: ${upFlag.toString()}'
           };
@@ -262,8 +261,8 @@ class PaymentService extends ChangeNotifier {
         String pMultipleId = pRes[SubmitUpiExistingInvestor.resMultipleId];
         String pUpiDateTime = pRes[SubmitUpiExistingInvestor.resUpiTime];
         localVpa = vpa;
-        baseProvider.currentICICITxn = UserTransaction.extMFDeposit(pTranId,
-            pMultipleId, amtDouble, pUpiDateTime, baseProvider.myUser.uid);
+        baseProvider.currentICICITxn = UserTransaction.mfDeposit(pTranId,
+            pMultipleId, pUpiDateTime, amtDouble, baseProvider.myUser.uid);
         String userTxnKey = await dbProvider.addUserTransaction(
             baseProvider.myUser.uid, baseProvider.currentICICITxn);
         bool nFlag = (userTxnKey != null);
@@ -280,8 +279,7 @@ class PaymentService extends ChangeNotifier {
         } else {
           //transaction initiated, however the details were not stored with Firebase correctly
           var failData = {
-            'tranid': baseProvider.currentICICITxn.tranId,
-            // 'userTxnId': baseProvider.currentICICITxn.docKey,
+            'tranid': baseProvider.currentICICITxn.icici[UserTransaction.subFldIciciTranId],
             'failReason':
                 'Txn updated: ${nFlag.toString()} and user updated: ${upFlag.toString()}'
           };
@@ -310,7 +308,7 @@ class PaymentService extends ChangeNotifier {
         baseProvider.currentICICITxn.isExpired()) {
       //Transaction expired
       //run one final check then close transaction
-      _getTransactionStatus(baseProvider.currentICICITxn.tranId,
+      _getTransactionStatus(baseProvider.currentICICITxn.icici[UserTransaction.subFldIciciTranId],
               baseProvider.iciciDetail.panNumber)
           .then((resMap) {
         if (resMap != null && resMap['isComplete'] && resMap['isPaid']) {
@@ -335,7 +333,7 @@ class PaymentService extends ChangeNotifier {
     int counter = CHECK_COUNT;
     receivePort.listen((data) {
       counter--;
-      _getTransactionStatus(baseProvider.currentICICITxn.tranId,
+      _getTransactionStatus(baseProvider.currentICICITxn.icici[UserTransaction.subFldIciciTranId],
               baseProvider.iciciDetail.panNumber)
           .then((resMap) {
         if (resMap != null) {
@@ -550,7 +548,7 @@ class PaymentService extends ChangeNotifier {
     //log failure
     //dont close transaction,let it still process in the future as well
     Map<String, dynamic> failData = {
-      'tranid': baseProvider.currentICICITxn.tranId,
+      'tranid': baseProvider.currentICICITxn.icici[UserTransaction.subFldIciciTranId],
       'userTxnId': baseProvider.currentICICITxn.docKey
     };
     bool failureLogged = await dbProvider.logFailure(baseProvider.myUser.uid,
@@ -784,7 +782,7 @@ class PaymentService extends ChangeNotifier {
             amt = double.parse(withdrawalMap['amount']);
           } catch (e) {}
           //Transaction ID generated and IMPS code is success
-          UserTransaction withTxn = UserTransaction.extMFWithdrawal(
+          UserTransaction withTxn = UserTransaction.mfWithdrawal(
               redemptionMap[SubmitRedemption.resTranId],
               redemptionMap[SubmitRedemption.resBankRnn],
               redemptionMap[SubmitRedemption.resIMPSStatus] ?? 'NA',

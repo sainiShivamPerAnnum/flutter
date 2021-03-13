@@ -25,8 +25,8 @@ class HamburgerMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
-    reqProvider = Provider.of<DBModel>(context);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    reqProvider = Provider.of<DBModel>(context, listen: false);
     _optionsList = _loadOptionsList();
 
     return BackdropFilter(
@@ -175,33 +175,15 @@ class HamburgerMenu extends StatelessWidget {
                   ));
           break;
         }
-      case 'editProf':
-        {
-          HapticFeedback.vibrate();
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => EditProfile()),
-          );
-          break;
-        }
-      // case 'ui2':
+      // case 'kyc':
       //   {
       //     HapticFeedback.vibrate();
       //     Navigator.push(
       //       context,
-      //       MaterialPageRoute(builder: (context) => Root()),
+      //       MaterialPageRoute(builder: (context) => KycOnboardController()),
       //     );
       //     break;
       //   }
-      case 'kyc':
-        {
-          HapticFeedback.vibrate();
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => KycOnboardController()),
-          );
-          break;
-        }
       case 'signOut':
         {
           showDialog(
@@ -276,9 +258,6 @@ class HamburgerMenu extends StatelessWidget {
           key: 'abUs', value: 'About ${Constants.APP_NAME}', isEnabled: true),
       new OptionDetail(key: 'fdbk', value: 'Feedback', isEnabled: true),
       new OptionDetail(key: 'faq', value: 'FAQs', isEnabled: true),
-      new OptionDetail(
-          key: 'editProf', value: 'Update Details', isEnabled: true),
-      // new OptionDetail(key: 'kyc', value: 'KYC',isEnabled: true),
       new OptionDetail(key: 'contUs', value: 'Contact Us', isEnabled: true),
       new OptionDetail(
           key: 'signOut',

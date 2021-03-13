@@ -27,7 +27,9 @@ class HttpModel extends ChangeNotifier {
         try{
           Map<String, dynamic> parsed = jsonDecode(_response.body);
           if(parsed != null && parsed['add_tickets_count'] != null) {
-            log.debug(parsed['add_tickets_count']);
+            try {
+              log.debug(parsed['add_tickets_count'].toString());
+            }catch(ee) {}
             int userTicketUpdateCount = int.parse(parsed['add_tickets_count']);
             return userTicketUpdateCount;
           }else {

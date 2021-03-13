@@ -9,6 +9,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../../util/size_config.dart';
+
 class Transactions extends StatefulWidget {
   @override
   _TransactionsState createState() => _TransactionsState();
@@ -30,7 +32,10 @@ class _TransactionsState extends State<Transactions> {
     if (baseProvider != null && dbProvider != null && isLoading == true) {
       print(baseProvider.myUser.uid);
       transactionList = await dbProvider.getFilteredUserTransactions(
-          baseProvider.myUser, null, null, 30);
+        baseProvider.myUser,
+        null,
+        null,
+      );
       print(transactionList.length);
       filteredList = transactionList;
       if (isLoading) {
@@ -110,8 +115,8 @@ class _TransactionsState extends State<Transactions> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
-    dbProvider = Provider.of<DBModel>(context);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
     if (transactionList == null) {
       getTransactions();
     }
@@ -242,60 +247,82 @@ class _TransactionsState extends State<Transactions> {
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
-                    : AnimatedList(
-                        initialItemCount: filteredList.length,
-                        itemBuilder: (context, index, animation) {
-                          return ListTile(
-                            dense: true,
-                            leading: Container(
-                              padding: EdgeInsets.all(
-                                  SizeConfig.blockSizeHorizontal * 2),
-                              height: SizeConfig.blockSizeVertical * 5,
-                              width: SizeConfig.blockSizeVertical * 5,
-                              child:
-                                  getTileLead(filteredList[index].tranStatus),
-                            ),
-                            title: Text(
-                              getTileTitle(
-                                filteredList[index].subType.toString(),
+                    : (filteredList.length == 0
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "images/no-transactions.png",
+                                width: SizeConfig.screenWidth * 0.8,
                               ),
-                              style: GoogleFonts.montserrat(
-                                fontSize: SizeConfig.mediumTextSize,
+                              SizedBox(
+                                height: 20,
                               ),
-                            ),
-                            subtitle: Text(
-                              getTileSubtitle(filteredList[index].type),
-                              style: GoogleFonts.montserrat(
-                                color: getTileColor(
-                                    filteredList[index].tranStatus),
-                                fontSize: SizeConfig.smallTextSize,
-                              ),
-                            ),
-                            trailing: Column(
-                              children: [
-                                Text(
-                                  (filteredList[index].type == "WITHDRAWAL"
-                                          ? "- "
-                                          : "+ ") +
-                                      "₹ ${filteredList[index].amount.toString()}",
+                              Text(
+                                "No transactions to show yet",
+                                style: GoogleFonts.montserrat(
+                                  fontSize: SizeConfig.largeTextSize,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )
+                            ],
+                          )
+                        : AnimatedList(
+                            initialItemCount: filteredList.length,
+                            itemBuilder: (context, index, animation) {
+                              return ListTile(
+                                dense: true,
+                                leading: Container(
+                                  padding: EdgeInsets.all(
+                                      SizeConfig.blockSizeHorizontal * 2),
+                                  height: SizeConfig.blockSizeVertical * 5,
+                                  width: SizeConfig.blockSizeVertical * 5,
+                                  child: getTileLead(
+                                      filteredList[index].tranStatus),
+                                ),
+                                title: Text(
+                                  getTileTitle(
+                                    filteredList[index].subType.toString(),
+                                  ),
                                   style: GoogleFonts.montserrat(
-                                    color: getTileColor(
-                                        filteredList[index].tranStatus),
                                     fontSize: SizeConfig.mediumTextSize,
                                   ),
                                 ),
-                                Text(
-                                  filteredList[index].updatedTime.toString(),
+                                subtitle: Text(
+                                  getTileSubtitle(filteredList[index].type),
                                   style: GoogleFonts.montserrat(
-                                      color: getTileColor(
-                                          filteredList[index].tranStatus),
-                                      fontSize: SizeConfig.smallTextSize),
-                                )
-                              ],
-                            ),
-                          ); // Refer step 3
-                        },
-                      ),
+                                    color: getTileColor(
+                                        filteredList[index].tranStatus),
+                                    fontSize: SizeConfig.smallTextSize,
+                                  ),
+                                ),
+                                trailing: Column(
+                                  children: [
+                                    Text(
+                                      (filteredList[index].type == "WITHDRAWAL"
+                                              ? "- "
+                                              : "+ ") +
+                                          "₹ ${filteredList[index].amount.toString()}",
+                                      style: GoogleFonts.montserrat(
+                                        color: getTileColor(
+                                            filteredList[index].tranStatus),
+                                        fontSize: SizeConfig.mediumTextSize,
+                                      ),
+                                    ),
+                                    Text(
+                                      filteredList[index]
+                                          .updatedTime
+                                          .toString(),
+                                      style: GoogleFonts.montserrat(
+                                          color: getTileColor(
+                                              filteredList[index].tranStatus),
+                                          fontSize: SizeConfig.smallTextSize),
+                                    )
+                                  ],
+                                ),
+                              ); // Refer step 3
+                            },
+                          )),
               ),
             ],
           ),

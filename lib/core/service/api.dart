@@ -4,10 +4,12 @@ import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class Api {
   Log log = new Log("Api");
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
   String path;
   CollectionReference ref;
 
@@ -254,5 +256,9 @@ class Api {
         .where('category', isEqualTo: category)
         .where('week_code', isEqualTo: weekCde);
     return _query.get();
+  }
+
+  Future<String> getFileFromDPBucketURL(String uid, String path) {
+    return _storage.ref('dps/$uid/$path').getDownloadURL();
   }
 }

@@ -26,8 +26,8 @@ class WinningsDialogState extends State<WinningsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
-    dbProvider = Provider.of<DBModel>(context);
+    baseProvider = Provider.of<BaseUtil>(context,listen:false);
+    dbProvider = Provider.of<DBModel>(context,listen:false);
     return Dialog(
       insetPadding: EdgeInsets.only(left:20, top:50, bottom: 80, right:20),
       shape: RoundedRectangleBorder(

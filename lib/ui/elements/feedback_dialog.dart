@@ -104,7 +104,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
               SizedBox(height: 16.0),
               Align(
                 alignment: Alignment.bottomRight,
-                child: FlatButton(
+                child: TextButton(
                   onPressed: () {
                     HapticFeedback.vibrate();
                     log.debug('DialogAction clicked');

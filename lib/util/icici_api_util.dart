@@ -486,3 +486,26 @@ class SubmitRedemption{
 
   static const String IMPS_TRANSACTION_SUCCESS = '0';
 }
+
+class SubmitRedemptionNonInstant{
+  static final String path = 'api/submitRedemptionNonInstant';
+  static final String fldFolioNo = 'foliono';
+  static final String fldPan = 'firstpan';
+  static final String fldAmount = 'amount';
+  static final String fldBankCode = 'bankcode';
+  static final String fldBankName = 'bankname';
+  static final String fldAccNo = 'accno';
+  static final String fldAccType = 'acctype';
+  static final String fldBankBranch = 'bankbranch';
+  static final String fldBankCity = 'bankcity';
+  static final String fldRedeemMode = 'redeemmode';
+  static final String fldIfsc = 'ifsc';
+
+  static final String resTranId = 'TRANID';
+  static final String resTrnTime = 'TRXN_TIME';
+  static final String resBankRnn = 'BANK_RNN';
+  static final String resIMPSCode = 'IMPS_CODE';
+  static final String resIMPSStatus = 'IMPS_STATUS';
+
+  static const String IMPS_TRANSACTION_SUCCESS = '0';
+}

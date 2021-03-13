@@ -13,6 +13,8 @@ import 'package:felloapp/util/size_config.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
+import '../../../util/size_config.dart';
+
 class GamePage extends StatefulWidget {
   final ValueChanged<int> tabChange;
   GamePage({this.tabChange});
@@ -61,7 +63,7 @@ class _GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
-    lclDbProvider = Provider.of<LocalDBModel>(context);
+    lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
 
     return Container(
       decoration: BoxDecoration(
@@ -181,9 +183,9 @@ class _GamePageState extends State<GamePage> {
                 shouldLoop: false,
                 colors: [
                   UiConstants.primaryColor,
-                  Colors.grey,
-                  Colors.yellow,
-                  Colors.blue,
+                  Color(0xfff7ff00),
+                  Color(0xffFC5C7D),
+                  Color(0xff2B32B2),
                 ],
               )),
           currentPage == 0
@@ -215,14 +217,58 @@ class _GamePageState extends State<GamePage> {
   }
 }
 
-class TicketCount extends StatelessWidget {
+class TicketCount extends StatefulWidget {
+  @override
+  _TicketCountState createState() => _TicketCountState();
+}
+
+class _TicketCountState extends State<TicketCount>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<double> _animation;
+  double _latestBegin;
+  double _latestEnd;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller =
+        AnimationController(duration: Duration(seconds: 1), vsync: this);
+    _latestBegin = 0;
+    _latestEnd = 5;
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (SizeConfig.isfirstTime != true) {
+      SizeConfig.isfirstTime = true;
+      CurvedAnimation curvedAnimation =
+          CurvedAnimation(parent: _controller, curve: Curves.decelerate);
+      _animation = Tween<double>(begin: 0, end: 5).animate(curvedAnimation);
+
+      if (0 != _latestBegin || 5 != _latestEnd) {
+        _controller.reset();
+      }
+
+      _latestBegin = 0;
+      _latestEnd = 5;
+      _controller.addListener(() {
+        setState(() {});
+      });
+      _controller.forward();
+    }
+
     return Container(
       child: Column(
         children: [
           Text(
-            "5",
+            _animation != null ? _animation.value.round().toString() : "5",
             style: GoogleFonts.montserrat(
               color: Colors.white,
               fontSize: SizeConfig.screenHeight * 0.08,
