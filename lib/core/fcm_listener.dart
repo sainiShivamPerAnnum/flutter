@@ -8,6 +8,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 
 class FcmListener extends ChangeNotifier{
@@ -17,12 +18,17 @@ class FcmListener extends ChangeNotifier{
   DBModel _dbModel = locator<DBModel>();
   FcmHandler _handler = locator<FcmHandler>();
   FirebaseMessaging _fcm;
-  
-  FcmListener() {}
 
+  /// Create a [AndroidNotificationChannel] for heads up notifications
+  static const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    'high_importance_channel', // id
+    'High Importance Notifications', // title
+    'This channel is used for important notifications.', // description
+    importance: Importance.high,
+  );
   //TODO INTERNET MESSAGE PlatformException(Error performing get, Failed to get document because the client is offline., null)
   Future<FirebaseMessaging> setupFcm() async {
-    _fcm = FirebaseMessaging();
+    _fcm = FirebaseMessaging.instance;
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         log.debug("onMessage recieved: " + message.toString());
