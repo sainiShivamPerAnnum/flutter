@@ -239,7 +239,7 @@ class _TicketCountState extends State<TicketCount>
   void initState() {
     super.initState();
     _controller =
-        AnimationController(duration: Duration(seconds: 1), vsync: this);
+        AnimationController(duration: Duration(seconds: 3), vsync: this);
     _latestBegin = 0;
     _latestEnd = 5;
   }

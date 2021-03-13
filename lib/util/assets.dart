@@ -152,7 +152,7 @@ class Assets {
 
   static final List<String> showCaseDesc = [
     'Welcome to Fello!\n'
-        'We have added 5 tickets in your account to get you started',
+        'We have added a number of tickets in your account to get you started',
     'Everyday, 5 numbers are randomly picked from Monday to Sunday. Click the box to see this week\'s numbers',
     'You receive fresh Tambola tickets every Monday. The ticket numbers are automatically crossed based on the daily picks',
     'If any of your tickets match one of the 5 categories, you receive an instant cash prize in your account!'
