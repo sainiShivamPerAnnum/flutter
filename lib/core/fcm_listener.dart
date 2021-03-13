@@ -29,6 +29,27 @@ class FcmListener extends ChangeNotifier{
   //TODO INTERNET MESSAGE PlatformException(Error performing get, Failed to get document because the client is offline., null)
   Future<FirebaseMessaging> setupFcm() async {
 
+    try{
+      fbm.setForegroundNotificationPresentationOptions(
+          alert: true, badge: true, sound: true);
+      fbm.requestPermission();
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        print('IOS Listener');
+        print('Got a message whilst in the foreground!');
+        print('Message data: ${message.data}');
+
+        if (message.notification != null) {
+          print('Message also contained a notification: ${message.notification}');
+        }
+      });
+
+    }
+    catch(e)
+    {
+      print(e);
+
+    }
+
 //     _fcm = FirebaseMessaging();
 //     _fcm.configure(
 //       onMessage: (Map<String, dynamic> message) async {
@@ -61,18 +82,10 @@ class FcmListener extends ChangeNotifier{
     // for iOS
 
     // IOS Configurations
-    fbm.setForegroundNotificationPresentationOptions(
-        alert: true, badge: true, sound: true);
-    fbm.requestPermission();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('IOS Listener');
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
 
-      if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
-      }
-    });
+    if(_baseUtil.myUser != null && _baseUtil.myUser.mobile != null)await _saveDeviceToken();
+    return fbm;
+
 
     // if(Platform.isIOS) {
     //   _fcm.requestNotificationPermissions(
@@ -85,27 +98,65 @@ class FcmListener extends ChangeNotifier{
     //
     // _fcm.subscribeToTopic('dailypickbroadcast');
     //
-    // if(_baseUtil.myUser != null && _baseUtil.myUser.mobile != null)await _saveDeviceToken();
-    // return _fcm;
+
+  _saveDeviceToken() async {
+    bool flag = true;
+    String fcmToken = await fbm.getToken();
+
+    if (fcmToken != null && _baseUtil.myUser != null && _baseUtil.myUser.mobile != null
+        && (_baseUtil.myUser.client_token == null || (_baseUtil.myUser.client_token != null && _baseUtil.myUser.client_token != fcmToken))) {
+      log.debug("Updating FCM token to local and server db");
+      _baseUtil.myUser.client_token = fcmToken;
+      flag = await _dbModel.updateClientToken(_baseUtil.myUser, fcmToken);
+      if(flag)await _lModel.saveUser(_baseUtil.myUser);  //user cache has client token field available
+    }
+    return flag;
   }
 
-  // _saveDeviceToken() async {
-  //   bool flag = true;
-  //   String fcmToken = await _fcm.getToken();
-  //
-  //   if (fcmToken != null && _baseUtil.myUser != null && _baseUtil.myUser.mobile != null
-  //       && (_baseUtil.myUser.client_token == null || (_baseUtil.myUser.client_token != null && _baseUtil.myUser.client_token != fcmToken))) {
-  //     log.debug("Updating FCM token to local and server db");
-  //     _baseUtil.myUser.client_token = fcmToken;
-  //     flag = await _dbModel.updateClientToken(_baseUtil.myUser, fcmToken);
-  //     if(flag)await _lModel.saveUser(_baseUtil.myUser);  //user cache has client token field available
-  //   }
-  //   return flag;
-  // }
+  FirebaseMessaging get fcm => _fcm;
 
-  // FirebaseMessaging get fcm => _fcm;
-  //
-  // set fcm(FirebaseMessaging value) {
-  //   _fcm = value;
-  // }
-  //
+  set fcm(FirebaseMessaging value) {
+    _fcm = value;
+  }
+
+  }
+
+
+
+
+class TestNotifications extends StatefulWidget {
+  @override
+  _TestNotificationsState createState() => _TestNotificationsState();
+}
+
+class _TestNotificationsState extends State<TestNotifications> {
+
+  @override
+  void initState() {
+    super.initState();
+    final fbm = FirebaseMessaging.instance;
+
+    // IOS Configurations
+    fbm.setForegroundNotificationPresentationOptions(
+        alert: true, badge: true, sound: true);
+    fbm.requestPermission();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('IOS Listener');
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+      }
+    });
+  }
+
+
+
+
+
+    @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
