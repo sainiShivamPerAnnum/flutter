@@ -6,6 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/model/PrizeLeader.dart';
+import '../../core/model/ReferralLeader.dart';
+import '../../util/size_config.dart';
+
 class Leaderboard extends StatefulWidget {
   @override
   _LeaderboardState createState() => _LeaderboardState();
@@ -18,7 +22,8 @@ class _LeaderboardState extends State<Leaderboard> {
   bool isPrizeLeadersLoading = false;
   bool isReferralLeadersLoading = false;
   PageController _pageController = new PageController(initialPage: 0);
-
+  List<PrizeLeader> prizeLeaders;
+  List<ReferralLeader> referralLeaders;
   viewpage(int index) {
     setState(() {
       currentPage = index;
@@ -29,14 +34,7 @@ class _LeaderboardState extends State<Leaderboard> {
 
   Future<void> getPrizeLeaderBoardData() async {
     baseProvider.prizeLeaders = await dbProvider.getPrizeLeaderboard();
-    print("GOt the list --------------------" +
-        baseProvider.prizeLeaders.length.toString());
-    //prizeLboardList.sort((a, b) => a.totalWin.compareTo(b.totalWin));
-    for (int i = 0; i < baseProvider.prizeLeaders.length; i++) {
-      print(baseProvider.prizeLeaders[i].name +
-          "------->" +
-          baseProvider.prizeLeaders[i].totalWin.toString());
-    }
+    baseProvider.prizeLeaders.sort((a, b) => a.totalWin.compareTo(b.totalWin));
     if (isPrizeLeadersLoading) {
       setState(() {
         isPrizeLeadersLoading = false;
@@ -46,59 +44,13 @@ class _LeaderboardState extends State<Leaderboard> {
 
   Future<void> getReferralLeaderBoardData() async {
     baseProvider.referralLeaders = await dbProvider.getReferralLeaderboard();
-    print("GOt the list --------------------" +
-        baseProvider.referralLeaders.length.toString());
-    //prizeLboardList.sort((a, b) => a.totalWin.compareTo(b.totalWin));
-    for (int i = 0; i < baseProvider.referralLeaders.length; i++) {
-      print(baseProvider.referralLeaders[i].name +
-          "------->" +
-          baseProvider.referralLeaders[i].refCount.toString());
-    }
+    baseProvider.referralLeaders
+        .sort((a, b) => a.refCount.compareTo(b.refCount));
     if (isReferralLeadersLoading) {
       setState(() {
         isReferralLeadersLoading = false;
       });
     }
-  }
-
-  List<Widget> buildWinnerList() {
-    List<ListTile> leaderboardItems = [];
-    for (int i = 0; i < leaderboardItems.length; i++) {
-      leaderboardItems.add(ListTile(
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.blockSizeHorizontal * 6,
-          vertical: SizeConfig.blockSizeVertical * 0.8,
-        ),
-        leading: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          child: Text(
-            '#${i + 1}',
-            style: GoogleFonts.montserrat(
-              fontWeight: FontWeight.w700,
-              fontSize: SizeConfig.mediumTextSize,
-              color: Colors.white,
-            ),
-          ),
-        ),
-        // ClipOval(
-        //   child: Image.network(
-        //       "http://t3.gstatic.com/images?q=tbn:ANd9GcQw-reFu5eeRMoSapJYzoDUIxIYosqNkwK63UgUTspEPayytpszE0zNWI6eWwzv"),
-        // ),
-        title: Text(
-          baseProvider.prizeLeaders[i].name,
-          style: GoogleFonts.montserrat(
-            color: Colors.white,
-            fontSize: SizeConfig.mediumTextSize,
-          ),
-        ),
-        trailing: Text(
-          baseProvider.prizeLeaders[i].totalWin.toString(),
-          style: GoogleFonts.montserrat(
-              color: Colors.white, fontSize: SizeConfig.mediumTextSize),
-        ),
-      ));
-    }
-    return leaderboardItems;
   }
 
   @override
@@ -117,6 +69,8 @@ class _LeaderboardState extends State<Leaderboard> {
       setState(() {});
       getReferralLeaderBoardData();
     }
+    prizeLeaders = baseProvider.prizeLeaders;
+    referralLeaders = baseProvider.referralLeaders;
     return Expanded(
       child: Container(
         margin: EdgeInsets.symmetric(
@@ -155,7 +109,7 @@ class _LeaderboardState extends State<Leaderboard> {
               ),
             ),
             SizedBox(height: 10),
-            isPrizeLeadersLoading
+            isPrizeLeadersLoading && isReferralLeadersLoading
                 ? SizedBox()
                 : Container(
                     alignment: Alignment.center,
@@ -215,47 +169,128 @@ class _LeaderboardState extends State<Leaderboard> {
                     ),
                   ),
             Expanded(
-              child: isPrizeLeadersLoading
-                  ? Center(
-                      child: CircularProgressIndicator(
-                        backgroundColor: Colors.white,
-                      ),
-                    )
-                  : Container(
-                      child: PageView(
-                        controller: _pageController,
-                        // physics: NeverScrollableScrollPhysics(),
-                        onPageChanged: (int page) {
-                          setState(() {
-                            currentPage = page;
-                          });
-                        },
-                        children: [
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                TopThree(
-                                  winners: [
-                                    "Rahul Senapati Dixit Senapati Dixit",
-                                    "Mohit Senapati Dixit Senapati Dixit",
-                                    "Ronit Senapati Dixit"
+              child: Stack(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Opacity(
+                        opacity: 0.3,
+                        child: Image.asset(
+                          "images/leaderboard.png",
+                          height: SizeConfig.screenHeight * 0.3,
+                        ),
+                      )
+                    ],
+                  ),
+                  Container(
+                    child: PageView(
+                      controller: _pageController,
+                      // physics: NeverScrollableScrollPhysics(),
+                      onPageChanged: (int page) {
+                        setState(() {
+                          currentPage = page;
+                        });
+                      },
+                      children: [
+                        isPrizeLeadersLoading
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  backgroundColor: Colors.white,
+                                ),
+                              )
+                            : SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    // TopThree(
+                                    //   winners: [
+                                    //     "Rahul Senapati Dixit Senapati Dixit",
+                                    //     "Mohit Senapati Dixit Senapati Dixit",
+                                    //     "Ronit Senapati Dixit"
+                                    //   ],
+                                    // ),
+                                    Column(
+                                        children: buildLeaderBoardList("Prize"))
                                   ],
                                 ),
-                                Column(children: buildWinnerList())
-                              ],
-                            ),
-                          ),
-                          Container(
-                            color: Colors.white,
-                          )
-                        ],
-                      ),
+                              ),
+                        isReferralLeadersLoading
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  backgroundColor: Colors.white,
+                                ),
+                              )
+                            : SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    // TopThree(
+                                    //   winners: [
+                                    //     "Rahul Senapati Dixit Senapati Dixit",
+                                    //     "Mohit Senapati Dixit Senapati Dixit",
+                                    //     "Ronit Senapati Dixit"
+                                    //   ],
+                                    // ),
+                                    Column(
+                                        children:
+                                            buildLeaderBoardList("Referrals"))
+                                  ],
+                                ),
+                              ),
+                      ],
                     ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  List<Widget> buildLeaderBoardList(String type) {
+    List<ListTile> leaderBoardItems = [];
+    int length = type == "Prize" ? prizeLeaders.length : referralLeaders.length;
+    for (int i = length - 1; i > -1; i--) {
+      leaderBoardItems.add(ListTile(
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.blockSizeHorizontal * 8,
+          vertical: SizeConfig.blockSizeVertical * 0.8,
+        ),
+        leading: CircleAvatar(
+          backgroundColor: Colors.transparent,
+          child: Text(
+            '#${length - i}',
+            style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.w700,
+              fontSize: SizeConfig.mediumTextSize,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        title: Text(
+          type == "Prize"
+              ? "${prizeLeaders[i].name[0].toUpperCase()}${prizeLeaders[i].name.substring(1).toLowerCase()}"
+              : "${referralLeaders[i].name[0].toUpperCase()}${referralLeaders[i].name.substring(1).toLowerCase()}",
+          style: GoogleFonts.montserrat(
+            color: Colors.white,
+            fontSize: SizeConfig.mediumTextSize,
+          ),
+        ),
+        trailing: Text(
+          type == "Prize"
+              ? "₹ ${baseProvider.prizeLeaders[i].totalWin.toString()}"
+              : "₹ ${(referralLeaders[i].refCount * 25).toString()}",
+          style: GoogleFonts.montserrat(
+            color: Colors.white,
+            fontSize: SizeConfig.largeTextSize,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ));
+    }
+    return leaderBoardItems;
   }
 }
 
@@ -317,7 +352,7 @@ class TopThree extends StatelessWidget {
                     "₹ 200",
                     style: GoogleFonts.montserrat(
                       color: Colors.white,
-                      fontSize: SizeConfig.largeTextSize,
+                      fontSize: SizeConfig.mediumTextSize,
                     ),
                   ),
                 )

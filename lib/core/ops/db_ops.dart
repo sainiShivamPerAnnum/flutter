@@ -328,6 +328,7 @@ class DBModel extends ChangeNotifier {
           log.error('Failed to parse user transaction $txn');
         }
       });
+      print("LENGTH----------------->" + requestedTxns.length.toString());
       return requestedTxns;
     } catch (err) {
       log.error('Failed to fetch tambola boards');
@@ -524,9 +525,9 @@ class DBModel extends ChangeNotifier {
           String usrName = vals['name'];
           var usrTotalWin = vals['win_total'];
           double uTotal;
-          try{
+          try {
             uTotal = usrTotalWin;
-          }catch(e) {
+          } catch (e) {
             uTotal = usrTotalWin + .0;
           }
           log.debug('Leader details:: $uid, $usrName, $uTotal');
@@ -598,10 +599,10 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<String> getUserDP(String uid) async{
-    try{
+  Future<String> getUserDP(String uid) async {
+    try {
       return await _api.getFileFromDPBucketURL(uid, 'image');
-    }catch(e) {
+    } catch (e) {
       log.error('Failed to fetch dp url');
       return null;
     }
