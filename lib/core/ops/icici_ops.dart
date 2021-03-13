@@ -620,6 +620,44 @@ class ICICIModel extends ChangeNotifier {
     }
   }
 
+  Future<Map<String, dynamic>> submitNonInstantWithdrawal(
+      String folioNumber, String pan, String amount, String bankCode,
+      String bankName, String accNo, String accType, String bankBranch,
+      String bankCity, String redeemMode, String ifsc) async {
+    var _params = {
+      SubmitRedemptionNonInstant.fldFolioNo: folioNumber,
+      SubmitRedemptionNonInstant.fldPan: pan,
+      SubmitRedemptionNonInstant.fldAmount: amount,
+      SubmitRedemptionNonInstant.fldBankCode: bankCode,
+      SubmitRedemptionNonInstant.fldBankName: bankName,
+      SubmitRedemptionNonInstant.fldAccNo: accNo,
+      SubmitRedemptionNonInstant.fldAccType: accType,
+      SubmitRedemptionNonInstant.fldBankBranch: bankBranch,
+      SubmitRedemptionNonInstant.fldBankCity: bankCode,
+      SubmitRedemptionNonInstant.fldRedeemMode: redeemMode,
+      SubmitRedemptionNonInstant.fldIfsc: ifsc,
+    };
+
+    var _request = http.Request(
+        'GET', Uri.parse(constructRequest(SubmitRedemptionNonInstant.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if (resMap == null) {
+      log.error('Query Failed');
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    }else if (!resMap[INTERNAL_FAIL_FLAG]) {
+      return {
+        QUERY_SUCCESS_FLAG: QUERY_FAILED,
+        QUERY_FAIL_REASON: resMap["userMessage"]
+      };
+    } else {
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+      return resMap;
+    }
+  }
+
   String constructRequest(String subPath, Map<String, String> params) {
     String _path = '$_baseUri/$subPath';
     if (params != null && params.length > 0) {
@@ -785,7 +823,7 @@ class ICICIModel extends ChangeNotifier {
       // + '"AMOUNT":100,"UPI_DATE_TIME":"01/02/2021 12:50 PM","TRIG_SCHEME":null,"USERNAME":null,"TRAN_ID":"3433599",'
       // + '"DISPLAY_NAME":null,"IS_TAX":"N","LTEF_URL":null}]';
       List<dynamic> rList = json.decode(res);
-      List<Map<String, dynamic>> refList = new List();
+      List<Map<String, dynamic>> refList = [];
       rList.forEach((element) {
         refList.add({
           SubmitUpiNewInvestor.resTrnId: element[SubmitUpiNewInvestor.resTrnId],
