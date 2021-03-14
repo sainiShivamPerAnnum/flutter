@@ -1,6 +1,8 @@
 import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/ui/elements/feedback_dialog.dart';
 import 'package:felloapp/ui/pages/root.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +30,9 @@ class _GamePageState extends State<GamePage> {
   ConfettiController _confeticontroller;
   LocalDBModel lclDbProvider;
   int currentPage;
+  BaseUtil baseProvider;
+  DBModel reqProvider;
+
   PageController _controller = new PageController(
     initialPage: 0,
   );
@@ -39,9 +44,11 @@ class _GamePageState extends State<GamePage> {
     _gameList = data.getCities();
     _currentPage = _gameList[1];
     currentPage = 0;
+    // if (SizeConfig.isGamefirstTime != true) {
     _confeticontroller = new ConfettiController(
       duration: new Duration(seconds: 2),
     );
+    // }
   }
 
   void _handleCityChange(Game game) {
@@ -56,6 +63,7 @@ class _GamePageState extends State<GamePage> {
     // lclDbProvider.isConfettiRequired(weekCde).then((flag) {
     //   if (flag) {
     _confeticontroller.play();
+    SizeConfig.isGamefirstTime = false;
     //     lclDbProvider.saveConfettiUpdate(weekCde);
     //   }
     // });
@@ -64,7 +72,8 @@ class _GamePageState extends State<GamePage> {
   @override
   Widget build(BuildContext context) {
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
-
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    reqProvider = Provider.of<DBModel>(context, listen: false);
     return Container(
       decoration: BoxDecoration(
         color: Color(0xfff1f1f1),
@@ -91,7 +100,7 @@ class _GamePageState extends State<GamePage> {
             onPageChanged: (int page) {
               setState(() {
                 currentPage = page;
-                if (currentPage == 1) {
+                if (currentPage == 1 && SizeConfig.isGamefirstTime == true) {
                   checkConfetti();
                 }
               });
@@ -109,7 +118,7 @@ class _GamePageState extends State<GamePage> {
                       ),
                       TicketCount(),
                       Expanded(
-                        flex: 5,
+                        flex: 4,
                         child: GameCardList(
                           games: _gameList,
                           onGameChange: _handleCityChange,
@@ -148,8 +157,51 @@ class _GamePageState extends State<GamePage> {
                                   Color(0xffD4AC5B),
                                   Color(0xffDECBA4),
                                 ],
-                                title: "Vote for your next game on fello.",
-                                action: [],
+                                title: "Have any other game in mind?",
+                                action: [
+                                  GameOfferCardButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            FeedbackDialog(
+                                          title: "Tell us what you think",
+                                          description:
+                                              "We'd love to hear from you",
+                                          buttonText: "Submit",
+                                          dialogAction: (String fdbk) {
+                                            if (fdbk != null &&
+                                                fdbk.isNotEmpty) {
+                                              //feedback submission allowed even if user not signed in
+                                              reqProvider
+                                                  .submitFeedback(
+                                                      (baseProvider.firebaseUser ==
+                                                                  null ||
+                                                              baseProvider
+                                                                      .firebaseUser
+                                                                      .uid ==
+                                                                  null)
+                                                          ? 'UNKNOWN'
+                                                          : baseProvider
+                                                              .firebaseUser.uid,
+                                                      fdbk)
+                                                  .then((flag) {
+                                                if (flag) {
+                                                  baseProvider.showPositiveAlert(
+                                                      'Thank You',
+                                                      'We appreciate your feedback!',
+                                                      context);
+                                                }
+                                              });
+                                              Navigator.of(context).pop();
+                                            }
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    title: "Suggest us",
+                                  ),
+                                ],
                               )
                             ],
                           ),
@@ -171,23 +223,24 @@ class _GamePageState extends State<GamePage> {
             ],
           ),
           Container(
-              height: 100,
-              width: 100,
-              child: ConfettiWidget(
-                blastDirectionality: BlastDirectionality.explosive,
-                confettiController: _confeticontroller,
-                particleDrag: 0.05,
-                emissionFrequency: 0.05,
-                numberOfParticles: 25,
-                gravity: 0.05,
-                shouldLoop: false,
-                colors: [
-                  UiConstants.primaryColor,
-                  Color(0xfff7ff00),
-                  Color(0xffFC5C7D),
-                  Color(0xff2B32B2),
-                ],
-              )),
+            height: 100,
+            width: 100,
+            child: ConfettiWidget(
+              blastDirectionality: BlastDirectionality.explosive,
+              confettiController: _confeticontroller,
+              particleDrag: 0.05,
+              emissionFrequency: 0.05,
+              numberOfParticles: 25,
+              gravity: 0.05,
+              shouldLoop: false,
+              colors: [
+                UiConstants.primaryColor,
+                Color(0xfff7ff00),
+                Color(0xffFC5C7D),
+                Color(0xff2B32B2),
+              ],
+            ),
+          ),
           currentPage == 0
               ? Positioned(
                   bottom: 10,
@@ -239,15 +292,14 @@ class _TicketCountState extends State<TicketCount>
   void initState() {
     super.initState();
     _controller =
-        AnimationController(duration: Duration(seconds: 1), vsync: this);
+        AnimationController(duration: Duration(seconds: 3), vsync: this);
     _latestBegin = 0;
     _latestEnd = 5;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (SizeConfig.isfirstTime != true) {
-      SizeConfig.isfirstTime = true;
+    if (SizeConfig.isGamefirstTime == true) {
       CurvedAnimation curvedAnimation =
           CurvedAnimation(parent: _controller, curve: Curves.decelerate);
       _animation = Tween<double>(begin: 0, end: 5).animate(curvedAnimation);

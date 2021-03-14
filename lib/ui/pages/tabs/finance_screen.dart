@@ -1,17 +1,36 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/pages/mf_details_page.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:felloapp/util/size_config.dart';
+import 'package:provider/provider.dart';
 
-class FinancePage extends StatelessWidget {
+class FinancePage extends StatefulWidget {
+  @override
+  _FinancePageState createState() => _FinancePageState();
+}
+
+class _FinancePageState extends State<FinancePage> {
   final bool hasFund = true;
+  BaseUtil baseProvider;
+  Map<String, double> chartData;
+  Map<String, double> getChartMap() {
+    return {
+      "ICICI Balance": baseProvider.myUser.icici_balance,
+      "Augmont Balance": baseProvider.myUser.account_balance.toDouble(),
+      "Prize Balance": baseProvider.myUser.prize_balance.toDouble(),
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    print(baseProvider.myUser.account_balance);
+    chartData = getChartMap();
     return Container(
-      height: height,
+      height: SizeConfig.screenHeight,
       decoration: BoxDecoration(
         color: Color(0xFFEFEFEF),
         borderRadius: BorderRadius.only(
@@ -26,7 +45,8 @@ class FinancePage extends StatelessWidget {
             bottomRight: Radius.circular(50),
           ),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: height * 0.016),
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.screenHeight * 0.016),
             child: CustomScrollView(
               slivers: [
                 SliverList(
@@ -35,7 +55,13 @@ class FinancePage extends StatelessWidget {
                     height: AppBar().preferredSize.height,
                   ),
                   Container(
-                    child: hasFund ? FundChartView() : ZeroBalView(),
+                    child: baseProvider.myUser.account_balance > 0
+                        ? FundChartView(
+                            dataMap: chartData,
+                            totalBal:
+                                baseProvider.myUser.account_balance.toDouble(),
+                          )
+                        : ZeroBalView(),
                   ),
                   Divider(),
                   Text(
@@ -80,15 +106,12 @@ class FinancePage extends StatelessWidget {
 }
 
 class FundChartView extends StatelessWidget {
-  final Map<String, double> dataMap = {
-    "Funds": 5,
-    "Gold": 3,
-    "Referrals": 2,
-    "Prizes": 2,
-  };
+  final Map<String, double> dataMap;
+  final double totalBal;
+
+  FundChartView({this.dataMap, this.totalBal});
 
   final List<Color> colorList = [
-    UiConstants.primaryColor,
     UiConstants.primaryColor.withGreen(200),
     UiConstants.primaryColor.withGreen(400),
     UiConstants.primaryColor.withGreen(600),
@@ -96,6 +119,7 @@ class FundChartView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> title = dataMap.keys.toList();
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -111,27 +135,21 @@ class FundChartView extends StatelessWidget {
             children: [
               Legend(
                 icon: Icons.money,
-                title: "FUNDS",
-                amount: "₹ 200",
+                title: title[0],
+                amount: "₹ ${dataMap[title[0]]}",
                 color: UiConstants.primaryColor,
               ),
               Legend(
                 icon: Icons.money,
-                title: "GOLD",
-                amount: "₹ 100",
+                title: title[1],
+                amount: "₹ ${dataMap[title[0]]}",
                 color: UiConstants.primaryColor.withGreen(200),
               ),
               Legend(
                 icon: Icons.share,
-                title: "REFERRALS",
-                amount: "₹ 50",
+                title: title[2],
+                amount: "₹ ${dataMap[title[0]]}",
                 color: UiConstants.primaryColor.withGreen(400),
-              ),
-              Legend(
-                icon: Icons.satellite,
-                title: "PRIZES",
-                amount: "₹ 10",
-                color: UiConstants.primaryColor.withGreen(600),
               ),
             ],
           ),
@@ -149,7 +167,7 @@ class FundChartView extends StatelessWidget {
             initialAngleInDegree: 0,
             chartType: ChartType.ring,
             ringStrokeWidth: 5,
-            centerText: "₹ 360",
+            centerText: "₹ $totalBal",
             legendOptions: LegendOptions(
               showLegendsInRow: false,
               legendPosition: LegendPosition.left,

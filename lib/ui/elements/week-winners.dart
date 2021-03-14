@@ -25,6 +25,81 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
     baseProvider.currentWeekWinners = await dbProvider.getWeeklyWinners();
   }
 
+  ScrollController _controller;
+
+  @override
+  void initState() {
+    currentWeekWinners = [];
+
+    _controller = ScrollController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  String getMonthName(int monthNum) {
+    switch (monthNum) {
+      case 1:
+        return "Jan";
+        break;
+      case 2:
+        return "Feb";
+        break;
+      case 3:
+        return "Mar";
+        break;
+      case 4:
+        return "Apr";
+        break;
+      case 5:
+        return "May";
+        break;
+      case 6:
+        return "June";
+        break;
+      case 7:
+        return "July";
+        break;
+      case 8:
+        return "Aug";
+        break;
+      case 9:
+        return "Sept";
+        break;
+      case 10:
+        return "Oct";
+        break;
+      case 11:
+        return "Nov";
+        break;
+      case 12:
+        return "Dec";
+        break;
+      default:
+        return "Month";
+    }
+  }
+
+  List<String> getWeek() {
+    int weekNumber = BaseUtil.getWeekNumber();
+    var startDate = ((weekNumber - 2) * 7) + (0);
+    var endDate = ((weekNumber - 2) * 7) + (6);
+    int startDay =
+        DateTime.utc(DateTime.now().year, 1, startDate).toLocal().day;
+    int endDay = DateTime.utc(DateTime.now().year, 1, endDate).toLocal().day;
+    int startMon =
+        DateTime.utc(DateTime.now().year, 1, startDate).toLocal().month;
+    int endMon = DateTime.utc(DateTime.now().year, 1, endDate).toLocal().month;
+    String startMonth = getMonthName(startMon);
+    String endMonth = getMonthName(endMon);
+
+    return ["$startDay $startMonth", "$endDay $endMonth"];
+  }
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
@@ -40,7 +115,6 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
         }
       });
     }
-    currentWeekWinners = [];
     baseProvider.currentWeekWinners.forEach((key, value) {
       currentWeekWinners.add(WeekWinner(
         name: key,
@@ -92,7 +166,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
             ),
             SizedBox(height: 10),
             Text(
-              "Tambola Winners for week: 15 Feb to 21 Feb", //TODO CHANGE BASED ON WEEK
+              "Tambola Winners for week: ${getWeek()[0]} to ${getWeek()[1]}", //TODO CHANGE BASED ON WEEK
               style: GoogleFonts.montserrat(
                   color: Colors.white, fontSize: SizeConfig.smallTextSize),
             ),
@@ -119,49 +193,71 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
-                    : ListView.builder(
-                        physics: BouncingScrollPhysics(),
-                        itemCount: currentWeekWinners.length,
-                        itemBuilder: (ctx, i) {
-                          return ListTile(
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.blockSizeHorizontal * 8,
-                              vertical: SizeConfig.blockSizeVertical * 0.8,
-                            ),
-                            leading: CircleAvatar(
-                              backgroundColor: Colors.transparent,
-                              child: Text(
-                                '#${i + 1}',
-                                style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: SizeConfig.mediumTextSize,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
+                    : (currentWeekWinners.length != 0
+                        ? Scrollbar(
+                            thickness: 20,
+                            radius: Radius.circular(100),
+                            showTrackOnHover: true,
+                            hoverThickness: 10,
+                            isAlwaysShown: true,
+                            controller: _controller,
+                            child: ListView.builder(
+                              controller: _controller,
+                              physics: BouncingScrollPhysics(),
+                              itemCount: currentWeekWinners.length,
+                              itemBuilder: (ctx, i) {
+                                return ListTile(
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.blockSizeHorizontal * 8,
+                                    vertical:
+                                        SizeConfig.blockSizeVertical * 0.8,
+                                  ),
+                                  leading: CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    child: Text(
+                                      '#${i + 1}',
+                                      style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: SizeConfig.mediumTextSize,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
 
-                            //  ClipOval(
-                            //   //TODO
-                            //   child: Image.asset("images/profile.png"),
-                            // ),
-                            title: Text(
-                              "${currentWeekWinners[i].name[0].toUpperCase()}${currentWeekWinners[i].name.substring(1).toLowerCase()}",
-                              style: GoogleFonts.montserrat(
-                                color: Colors.white,
-                                fontSize: SizeConfig.mediumTextSize,
-                              ),
+                                  //  ClipOval(
+                                  //   //TODO
+                                  //   child: Image.asset("images/profile.png"),
+                                  // ),
+                                  title: Text(
+                                    "${currentWeekWinners[i].name[0].toUpperCase()}${currentWeekWinners[i].name.substring(1).toLowerCase()}",
+                                    style: GoogleFonts.montserrat(
+                                      color: Colors.white,
+                                      fontSize: SizeConfig.mediumTextSize,
+                                    ),
+                                  ),
+                                  trailing: Text(
+                                    "₹ ${currentWeekWinners[i].prize.toString()}",
+                                    style: GoogleFonts.montserrat(
+                                      color: Colors.white,
+                                      fontSize: SizeConfig.largeTextSize,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                            trailing: Text(
-                              "₹ ${currentWeekWinners[i].prize.toString()}",
+                          )
+                        : Center(
+                            child: Text(
+                              "Winners will be updated soon.",
                               style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w500,
                                 color: Colors.white,
                                 fontSize: SizeConfig.largeTextSize,
-                                fontWeight: FontWeight.w500,
                               ),
                             ),
-                          );
-                        },
-                      ),
+                          )),
               ]),
             )
           ],

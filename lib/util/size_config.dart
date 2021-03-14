@@ -12,7 +12,7 @@ class SizeConfig {
   static double largeTextSize;
   static double cardTitleTextSize;
 
-  static bool isfirstTime;
+  static bool isGamefirstTime;
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
@@ -24,5 +24,6 @@ class SizeConfig {
     mediumTextSize = screenWidth * 0.032;
     largeTextSize = screenHeight * 0.02;
     cardTitleTextSize = screenWidth * 0.08;
+    isGamefirstTime = true;
   }
 }
