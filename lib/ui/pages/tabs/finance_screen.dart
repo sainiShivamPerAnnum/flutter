@@ -19,7 +19,7 @@ class _FinancePageState extends State<FinancePage> {
   Map<String, double> getChartMap() {
     return {
       "ICICI Balance": baseProvider.myUser.icici_balance,
-      "Augmont Balance": baseProvider.myUser.account_balance.toDouble(),
+      "Augmont Balance": baseProvider.myUser.augmont_balance.toDouble(),
       "Prize Balance": baseProvider.myUser.prize_balance.toDouble(),
     };
   }
@@ -142,13 +142,13 @@ class FundChartView extends StatelessWidget {
               Legend(
                 icon: Icons.money,
                 title: title[1],
-                amount: "₹ ${dataMap[title[0]]}",
+                amount: "₹ ${dataMap[title[1]]}",
                 color: UiConstants.primaryColor.withGreen(200),
               ),
               Legend(
                 icon: Icons.share,
                 title: title[2],
-                amount: "₹ ${dataMap[title[0]]}",
+                amount: "₹ ${dataMap[title[2]]}",
                 color: UiConstants.primaryColor.withGreen(400),
               ),
             ],

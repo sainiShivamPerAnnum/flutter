@@ -163,7 +163,8 @@ class PaymentService extends ChangeNotifier {
         } else {
           //transaction initiated, however the details were not stored with Firebase correctly
           var failData = {
-            'tranid': baseProvider.currentICICITxn.icici[UserTransaction.subFldIciciTranId],
+            'tranid': baseProvider
+                .currentICICITxn.icici[UserTransaction.subFldIciciTranId],
             'failReason':
                 'Txn updated: ${nFlag.toString()} and user updated: ${upFlag.toString()}'
           };
@@ -279,7 +280,8 @@ class PaymentService extends ChangeNotifier {
         } else {
           //transaction initiated, however the details were not stored with Firebase correctly
           var failData = {
-            'tranid': baseProvider.currentICICITxn.icici[UserTransaction.subFldIciciTranId],
+            'tranid': baseProvider
+                .currentICICITxn.icici[UserTransaction.subFldIciciTranId],
             'failReason':
                 'Txn updated: ${nFlag.toString()} and user updated: ${upFlag.toString()}'
           };
@@ -308,7 +310,9 @@ class PaymentService extends ChangeNotifier {
         baseProvider.currentICICITxn.isExpired()) {
       //Transaction expired
       //run one final check then close transaction
-      _getTransactionStatus(baseProvider.currentICICITxn.icici[UserTransaction.subFldIciciTranId],
+      _getTransactionStatus(
+              baseProvider
+                  .currentICICITxn.icici[UserTransaction.subFldIciciTranId],
               baseProvider.iciciDetail.panNumber)
           .then((resMap) {
         if (resMap != null && resMap['isComplete'] && resMap['isPaid']) {
@@ -333,7 +337,9 @@ class PaymentService extends ChangeNotifier {
     int counter = CHECK_COUNT;
     receivePort.listen((data) {
       counter--;
-      _getTransactionStatus(baseProvider.currentICICITxn.icici[UserTransaction.subFldIciciTranId],
+      _getTransactionStatus(
+              baseProvider
+                  .currentICICITxn.icici[UserTransaction.subFldIciciTranId],
               baseProvider.iciciDetail.panNumber)
           .then((resMap) {
         if (resMap != null) {
@@ -501,7 +507,7 @@ class PaymentService extends ChangeNotifier {
     if (!baseProvider.iciciDetail.firstInvMade || vpaUpdateFlag) {
       if (!baseProvider.iciciDetail.firstInvMade)
         baseProvider.iciciDetail.firstInvMade = true;
-      if(vpaUpdateFlag)baseProvider.iciciDetail.vpa = localVpa;
+      if (vpaUpdateFlag) baseProvider.iciciDetail.vpa = localVpa;
       icFlag = await dbProvider.updateUserIciciDetails(
           baseProvider.myUser.uid, baseProvider.iciciDetail);
     }
@@ -548,7 +554,8 @@ class PaymentService extends ChangeNotifier {
     //log failure
     //dont close transaction,let it still process in the future as well
     Map<String, dynamic> failData = {
-      'tranid': baseProvider.currentICICITxn.icici[UserTransaction.subFldIciciTranId],
+      'tranid':
+          baseProvider.currentICICITxn.icici[UserTransaction.subFldIciciTranId],
       'userTxnId': baseProvider.currentICICITxn.docKey
     };
     bool failureLogged = await dbProvider.logFailure(baseProvider.myUser.uid,
@@ -698,7 +705,9 @@ class PaymentService extends ChangeNotifier {
   ///amount
   ///exit load details if required
   Future<Map<String, dynamic>> processWithdrawal(
-      Map<String, dynamic> withdrawalMap) async {
+      Map<String, dynamic> withdrawalMap,
+      double instantAmount,
+      double nonInstantAmount) async {
     bool initFlag = await _init();
     if (!initFlag)
       return {
@@ -706,9 +715,28 @@ class PaymentService extends ChangeNotifier {
         'reason': 'App restart required'
       }; //should never happen
 
+    log.debug('$instantAmount, $nonInstantAmount');
+
+    instantAmount = 0;
+    nonInstantAmount = 167;
+
+    Map<String, dynamic> instantWithdrawalResult,nonInstantWithdrawalResult;
+    if(instantAmount != null && instantAmount > 0) {
+      instantWithdrawalResult = await _processInstantWithdrawal(withdrawalMap, instantAmount);
+    }
+    if(nonInstantAmount != null && nonInstantAmount > 0) {
+      nonInstantWithdrawalResult = await _processNonInstantWithdrawal(withdrawalMap, nonInstantAmount);
+    }
+
+    log.debug('x');
+  }
+
+  Future<Map<String, dynamic>> _processInstantWithdrawal(
+      Map<String, dynamic> withdrawalMap,
+      double amount) async{
     final redemptionMap = await iProvider.submitInstantWithdrawal(
         baseProvider.iciciDetail.folioNo,
-        withdrawalMap['amount'],
+        amount.toString(),
         withdrawalMap['bankCode'],
         '91${baseProvider.myUser.mobile}',
         withdrawalMap['bankName'],
@@ -756,6 +784,97 @@ class PaymentService extends ChangeNotifier {
           'flag': false,
           'reason':
               'Withdrawal failed. Please try again in sometime. We will verify the transaction from our end as well!'
+        };
+      } else {
+        //Transaction ID generated. Now check for IMPS Code
+        if (redemptionMap[SubmitRedemption.resIMPSCode] == null ||
+            redemptionMap[SubmitRedemption.resIMPSCode] !=
+                SubmitRedemption.IMPS_TRANSACTION_SUCCESS) {
+          Map<String, dynamic> failData = {
+            'folioNumber': baseProvider.iciciDetail.folioNo,
+            'failReason': 'Tran ID generated but IMPS status not 0'
+          };
+          bool failureLogged = await dbProvider.logFailure(
+              baseProvider.myUser.uid,
+              FailType.UserWithdrawalSubmitFailed,
+              failData);
+          log.debug('Failure logged correctly: $failureLogged');
+          return {
+            'flag': false,
+            'reason': redemptionMap[SubmitRedemption.resIMPSStatus] ??
+                'Withdrawal failed. Please try again in sometime. We will verify the transaction from our end as well!'
+          };
+        } else {
+          double amt = 0;
+          try {
+            amt = double.parse(withdrawalMap['amount']);
+          } catch (e) {}
+          //Transaction ID generated and IMPS code is success
+          UserTransaction withTxn = UserTransaction.mfWithdrawal(
+              redemptionMap[SubmitRedemption.resTranId],
+              redemptionMap[SubmitRedemption.resBankRnn],
+              redemptionMap[SubmitRedemption.resIMPSStatus] ?? 'NA',
+              redemptionMap[SubmitRedemption.resTrnTime],
+              amt,
+              baseProvider.myUser.uid);
+          bool fFlag = await _onWithdrawalCompleted(withTxn);
+          return {'flag': fFlag};
+        }
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>> _processNonInstantWithdrawal(
+      Map<String, dynamic> withdrawalMap,
+      double amount) async{
+    final redemptionMap = await iProvider.submitNonInstantWithdrawal(
+        baseProvider.iciciDetail.folioNo,
+        baseProvider.myUser.pan,
+        amount.toString(),
+        withdrawalMap['bankCode'],
+        withdrawalMap['bankName'],
+        withdrawalMap['accountNumber'],
+        withdrawalMap['accountType'],
+        withdrawalMap['bankBranch'],
+        withdrawalMap['bankCity'],
+        withdrawalMap['redeemMode'],
+        withdrawalMap['ifsc']);
+
+    if (redemptionMap == null ||
+        redemptionMap[QUERY_SUCCESS_FLAG] == QUERY_FAILED) {
+      String errReason = (redemptionMap[QUERY_FAIL_REASON] != null)
+          ? redemptionMap[QUERY_FAIL_REASON]
+          : 'Unknown';
+      Map<String, dynamic> failData = {
+        'folioNumber': baseProvider.iciciDetail.folioNo,
+        'failReason': errReason
+      };
+      bool failureLogged = await dbProvider.logFailure(baseProvider.myUser.uid,
+          FailType.UserWithdrawalSubmitFailed, failData);
+      log.debug('Failure logged correctly: $failureLogged');
+      return {
+        'flag': false,
+        'reason': (redemptionMap[QUERY_FAIL_REASON] != null)
+            ? redemptionMap[QUERY_FAIL_REASON]
+            : 'Encountered an unknown error. Please try again in a while'
+      };
+    } else {
+      if (redemptionMap[SubmitRedemption.resTranId] == null ||
+          redemptionMap[SubmitRedemption.resTranId].toString().isEmpty) {
+        //Transaction ID not created. Withdrawal failed
+        Map<String, dynamic> failData = {
+          'folioNumber': baseProvider.iciciDetail.folioNo,
+          'failReason': 'Tran ID not generated'
+        };
+        bool failureLogged = await dbProvider.logFailure(
+            baseProvider.myUser.uid,
+            FailType.UserWithdrawalSubmitFailed,
+            failData);
+        log.debug('Failure logged correctly: $failureLogged');
+        return {
+          'flag': false,
+          'reason':
+          'Withdrawal failed. Please try again in sometime. We will verify the transaction from our end as well!'
         };
       } else {
         //Transaction ID generated. Now check for IMPS Code

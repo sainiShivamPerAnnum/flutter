@@ -294,49 +294,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
               withdrawalDetailsMap['reason']);
         }
       });
-      showDialog(
-          barrierColor: Colors.black87,
-          context: context,
-          builder: (BuildContext context) => IciciWithdrawDialog(
-                key: _withdrawalDialogKey,
-                currentBalance: baseProvider.myUser.icici_balance,
-                onAmountConfirmed: (double wAmount) {
-                  payService
-                      .preProcessWithdrawal(wAmount.toString())
-                      .then((combDetailsMap) {
-                    if (combDetailsMap['flag']) {
-                      _withdrawalRequestDetails = combDetailsMap;
-                      //check if dialog required
-                      if (combDetailsMap[GetExitLoad.resPopUpFlag] ==
-                          GetExitLoad.SHOW_POPUP) {
-                        _withdrawalDialogKey.currentState.onShowLoadDialog();
-                      } else {
-                        onInitiateWithdrawal(_withdrawalRequestDetails);
-                      }
-                    } else {
-                      Navigator.of(context).pop();
-                      baseProvider.showNegativeAlert('Withdrawal Failed',
-                          'Error: ${combDetailsMap['reason']}', context);
-                    }
-                  });
-                },
-                onOptionConfirmed: (bool flag) {
-                  if (flag) {
-                    _withdrawalRequestDetails[
-                        SubmitRedemption.fldExitLoadTick] = 'Y';
-                    _withdrawalRequestDetails[
-                            SubmitRedemption.fldApproxLoadAmount] =
-                        _withdrawalRequestDetails[GetExitLoad.resApproxLoadAmt];
-                    onInitiateWithdrawal(_withdrawalRequestDetails);
-                  } else {
-                    Navigator.of(context).pop();
-                    baseProvider.showNegativeAlert(
-                        'Withdrawal Cancelled',
-                        'Please contact us if you need any further details',
-                        context);
-                  }
-                },
-              ));
+
     }
   }
 

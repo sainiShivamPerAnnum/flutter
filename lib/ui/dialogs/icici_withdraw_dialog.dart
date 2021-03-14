@@ -1,3 +1,4 @@
+import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -9,7 +10,7 @@ import 'package:intl/intl.dart';
 
 class IciciWithdrawDialog extends StatefulWidget {
   final double currentBalance;
-  final ValueChanged<double> onAmountConfirmed;
+  final ValueChanged<Map<String, double>> onAmountConfirmed;
   final ValueChanged<bool> onOptionConfirmed;
 
   IciciWithdrawDialog(
@@ -36,6 +37,8 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
   double _width;
   double _instantBalance = 0;
   double _totalBalance = 0;
+  double _userWithdrawInstantAmount = 0;
+  double _userWithdrawNonInstantAmount = 0;
   final TextStyle tTextStyle =
       TextStyle(fontSize: 18, fontWeight: FontWeight.w300);
   final TextStyle gTextStyle =
@@ -283,10 +286,41 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
               _amountError = null;
             });
             if (_amountError == null) {
-              _isLoading = true;
-              setState(() {});
-              return widget
-                  .onAmountConfirmed(double.parse(_amountController.text));
+              double amt = double.parse(_amountController.text);
+              String _confirmMsg = "Are you sure you want to continue? ";
+              if (amt <= _instantBalance) {
+                _userWithdrawInstantAmount = amt;
+                _confirmMsg = _confirmMsg +
+                    '₹${_userWithdrawInstantAmount.round()} will be withdrawn immediately.';
+              } else {
+                _userWithdrawInstantAmount = _instantBalance;
+                _userWithdrawNonInstantAmount = amt - _instantBalance;
+                _confirmMsg = _confirmMsg +
+                    '₹${_userWithdrawInstantAmount.round()} will be withdrawn immediately, and ₹${_userWithdrawNonInstantAmount.round()} will be withdrawn within 1 business day';
+              }
+              showDialog(
+                context: context,
+                builder: (ctx) => ConfirmActionDialog(
+                  title: "Please confirm your action",
+                  description:_confirmMsg,
+                  buttonText: "Withdraw",
+                  cancelBtnText: 'Cancel',
+                  confirmAction: () {
+                    Navigator.of(context).pop();
+                    _isLoading = true;
+                    setState(() {});
+                    widget.onAmountConfirmed({
+                      'instant_amount': _userWithdrawInstantAmount,
+                      'non_instant_amount': _userWithdrawNonInstantAmount
+                    });
+                    return true;
+                  },
+                  cancelAction: () {
+                    Navigator.of(context).pop();
+                    return false;
+                  },
+                ),
+              );
             }
           },
           highlightColor: Colors.orange.withOpacity(0.5),

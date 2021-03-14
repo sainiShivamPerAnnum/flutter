@@ -40,6 +40,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   GlobalKey<IciciWithdrawDialogState> _withdrawalDialogKey = GlobalKey();
   double containerHeight = 10;
   Map<String, dynamic> _withdrawalRequestDetails;
+  double instantAmount=0, nonInstantAmount=0;
 
   @override
   Widget build(BuildContext context) {
@@ -300,9 +301,12 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
           builder: (BuildContext context) => IciciWithdrawDialog(
                 key: _withdrawalDialogKey,
                 currentBalance: baseProvider.myUser.icici_balance,
-                onAmountConfirmed: (double wAmount) {
+                onAmountConfirmed: (Map<String, double> amountDetails) {
+                  instantAmount = amountDetails['instant_amount']??0;
+                  nonInstantAmount = amountDetails['non_instant_amount']??0;
+                  if(instantAmount == 0 && nonInstantAmount == 0) return;
                   payService
-                      .preProcessWithdrawal(wAmount.toString())
+                      .preProcessWithdrawal(instantAmount.toString())
                       .then((combDetailsMap) {
                     if (combDetailsMap['flag']) {
                       _withdrawalRequestDetails = combDetailsMap;
@@ -311,7 +315,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                           GetExitLoad.SHOW_POPUP) {
                         _withdrawalDialogKey.currentState.onShowLoadDialog();
                       } else {
-                        onInitiateWithdrawal(_withdrawalRequestDetails);
+                        onInitiateWithdrawal(_withdrawalRequestDetails, instantAmount, nonInstantAmount);
                       }
                     } else {
                       Navigator.of(context).pop();
@@ -327,7 +331,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                     _withdrawalRequestDetails[
                             SubmitRedemption.fldApproxLoadAmount] =
                         _withdrawalRequestDetails[GetExitLoad.resApproxLoadAmt];
-                    onInitiateWithdrawal(_withdrawalRequestDetails);
+                    onInitiateWithdrawal(_withdrawalRequestDetails, instantAmount, nonInstantAmount);
                   } else {
                     Navigator.of(context).pop();
                     baseProvider.showNegativeAlert(
@@ -340,8 +344,8 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     }
   }
 
-  Future<bool> onInitiateWithdrawal(Map<String, dynamic> fieldMap) {
-    payService.processWithdrawal(fieldMap).then((wMap) {
+  Future<bool> onInitiateWithdrawal(Map<String, dynamic> fieldMap, double instantWithdraw, double nonInstantWithdraw) {
+    payService.processWithdrawal(fieldMap,instantWithdraw,nonInstantWithdraw).then((wMap) {
       Navigator.of(context).pop();
       if (!wMap['flag']) {
         baseProvider.showNegativeAlert(
