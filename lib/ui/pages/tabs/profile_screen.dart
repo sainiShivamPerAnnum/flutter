@@ -399,7 +399,7 @@ class ShareCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: SizeConfig.screenWidth,
+      width: SizeConfig.screenWidth*0.9,
       height: SizeConfig.screenHeight * 0.25,
       alignment: Alignment.center,
       child: Container(

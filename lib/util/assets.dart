@@ -35,6 +35,11 @@ class Assets {
     'Play',
     'Safe',
   ];
+  static final List<String> teachFello = [
+    'images/process/process-1.png',
+    'images/process/process-2.png',
+    'images/process/process-3.png',
+  ];
   static final checkmarkLottie = 'images/checkmark.json';
   static final String aboutUsDesc =
       'Fello is a game based savings and investment platform for users to save, grow and earn higher returns than a traditional savings bank account. For every ₹100 saved and invested through Fello, users get amazing rewards and incentives. \n\n'
