@@ -39,18 +39,18 @@ class GuideDialog extends StatelessWidget {
             physics: BouncingScrollPhysics(),
             child: Padding(
                 padding:
-                    EdgeInsets.only(top: 30, bottom: 40, left: 15, right: 15),
+                    EdgeInsets.only(top: 40, bottom: 40, left: 15, right: 15),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'Save.Grow.Win',
+                      'Save.Play.Win',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 30,
+                          fontWeight: FontWeight.w800,
                           color: UiConstants.primaryColor),
                     ),
                     Padding(

@@ -405,7 +405,7 @@ class ShareCard extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.symmetric(
             horizontal: SizeConfig.blockSizeHorizontal * 2),
-        height: SizeConfig.screenHeight * 0.24,
+        height: SizeConfig.screenHeight * 0.26,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             gradient: new LinearGradient(
@@ -451,7 +451,7 @@ class ShareCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Get  ₹ 25 on every referral",
+                    "Both get ₹ 25 on every referral",
                     style: GoogleFonts.montserrat(
                         color: Colors.white,
                         shadows: [
@@ -465,11 +465,12 @@ class ShareCard extends StatelessWidget {
                         fontSize: SizeConfig.cardTitleTextSize),
                   ),
                   Text(
-                    "Share Fello with your friends and family and get ₹25 each.",
+                    "You and your friend also receive 10 game tickets that week!",
                     style: GoogleFonts.montserrat(
                         color: Colors.white,
                         fontSize: SizeConfig.mediumTextSize),
                   ),
+                  SizedBox(height:5),
                   ShareOptions(),
                 ],
               ),

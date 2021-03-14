@@ -157,7 +157,7 @@ class _GamePageState extends State<GamePage> {
                                   Color(0xffD4AC5B),
                                   Color(0xffDECBA4),
                                 ],
-                                title: "Share your thoughts",
+                                title: "Share your thoughts with us",
                                 action: [
                                   GameOfferCardButton(
                                     onPressed: () {
