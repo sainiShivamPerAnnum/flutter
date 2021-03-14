@@ -12,6 +12,7 @@ class GuideDialog extends StatelessWidget {
   final Log log = new Log('GuideDialog');
   BaseUtil baseProvider;
   DBModel dbProvider;
+
   GuideDialog();
 
   @override
@@ -52,14 +53,17 @@ class GuideDialog extends StatelessWidget {
                           fontWeight: FontWeight.w700,
                           color: UiConstants.primaryColor),
                     ),
-                    Text(
-                      'Fello is process -a',
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                          fontSize: 18,
-                          height: 1.5,
-                          fontWeight: FontWeight.w400,
-                          color: UiConstants.accentColor),
+                    Padding(
+                      padding: EdgeInsets.only(left:10, right: 10),
+                      child:Text(
+                        'Fello makes saving fun, and investing a lot more simple!',
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                            fontSize: 18,
+                            height: 1.5,
+                            fontWeight: FontWeight.w400,
+                            color: UiConstants.accentColor),
+                      ),
                     ),
                     SizedBox(
                       height: 20,
@@ -75,14 +79,17 @@ class GuideDialog extends StatelessWidget {
                     SizedBox(
                       height: 5,
                     ),
-                    Text(
-                      'Fello is bluh process b',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 18,
-                          height: 1.5,
-                          fontWeight: FontWeight.w400,
-                          color: UiConstants.accentColor),
+                    Padding(
+                      padding: EdgeInsets.only(left:10, right: 10),
+                      child:Text(
+                        'First you simply register for a fund in a few easy steps. If you\'re a first time investor, you will be guided through an official KYC process.',
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                            fontSize: 18,
+                            height: 1.5,
+                            fontWeight: FontWeight.w400,
+                            color: UiConstants.accentColor),
+                      ),
                     ),
                     SizedBox(
                       height: 30,
@@ -98,14 +105,17 @@ class GuideDialog extends StatelessWidget {
                     SizedBox(
                       height: 10,
                     ),
-                    Text(
-                      'Fello is bluh process-c',
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                          fontSize: 18,
-                          height: 1.5,
-                          fontWeight: FontWeight.w400,
-                          color: UiConstants.accentColor),
+                    Padding(
+                      padding: EdgeInsets.only(left:10, right: 10),
+                      child:Text(
+                        'For every ₹100 you save, you will receive a weekly game ticket which can be redeemed to play fun, rewarding games. The more you save, the better your odds at winning.',
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                            fontSize: 18,
+                            height: 1.5,
+                            fontWeight: FontWeight.w400,
+                            color: UiConstants.accentColor),
+                      ),
                     ),
                     SizedBox(
                       height: 20,
@@ -118,26 +128,32 @@ class GuideDialog extends StatelessWidget {
                       width: 160,
                       height: 90,
                     ),
-                    Text(
-                      'Fello is bluh process d',
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                          fontSize: 18,
-                          height: 1.5,
-                          fontWeight: FontWeight.w400,
-                          color: UiConstants.accentColor),
+                    Padding(
+                      padding: EdgeInsets.only(left:10, right: 10),
+                      child:Text(
+                        'Your money grows faster than a traditional bank and you retain the option to withdraw your funds whenever required.',
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                            fontSize: 18,
+                            height: 1.5,
+                            fontWeight: FontWeight.w400,
+                            color: UiConstants.accentColor),
+                      ),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 40,
                     ),
                     Text(
                       'Still need help?',
                       textAlign: TextAlign.justify,
                       style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16,
                           height: 1.5,
                           fontWeight: FontWeight.w400,
                           color: UiConstants.accentColor),
+                    ),
+                    SizedBox(
+                      height: 5,
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width - 50,
@@ -164,37 +180,41 @@ class GuideDialog extends StatelessWidget {
                           onPressed: () {
                             showDialog(
                                 context: context,
-                                builder: (BuildContext dialogContext) => ContactUsDialog(
-                                  isResident: (baseProvider.isSignedIn() &&
-                                      baseProvider.isActiveUser()),
-                                  isUnavailable: BaseUtil.isDeviceOffline,
-                                  onClick: () {
-                                    if (BaseUtil.isDeviceOffline) {
-                                      baseProvider.showNoInternetAlert(context);
-                                      return;
-                                    }
-                                    if (baseProvider.isSignedIn() &&
-                                        baseProvider.isActiveUser()) {
-                                      dbProvider
-                                          .addCallbackRequest(
-                                          baseProvider.firebaseUser.uid,
-                                          baseProvider.myUser.name,
-                                          baseProvider.myUser.mobile)
-                                          .then((flag) {
-                                        if (flag) {
-                                          Navigator.of(context).pop();
-                                          baseProvider.showPositiveAlert(
-                                              'Callback placed!',
-                                              'We\'ll contact you soon on your registered mobile',
+                                builder: (BuildContext dialogContext) =>
+                                    ContactUsDialog(
+                                      isResident: (baseProvider.isSignedIn() &&
+                                          baseProvider.isActiveUser()),
+                                      isUnavailable: BaseUtil.isDeviceOffline,
+                                      onClick: () {
+                                        if (BaseUtil.isDeviceOffline) {
+                                          baseProvider
+                                              .showNoInternetAlert(context);
+                                          return;
+                                        }
+                                        if (baseProvider.isSignedIn() &&
+                                            baseProvider.isActiveUser()) {
+                                          dbProvider
+                                              .addCallbackRequest(
+                                                  baseProvider.firebaseUser.uid,
+                                                  baseProvider.myUser.name,
+                                                  baseProvider.myUser.mobile)
+                                              .then((flag) {
+                                            if (flag) {
+                                              Navigator.of(context).pop();
+                                              baseProvider.showPositiveAlert(
+                                                  'Callback placed!',
+                                                  'We\'ll contact you soon on your registered mobile',
+                                                  context);
+                                            }
+                                          });
+                                        } else {
+                                          baseProvider.showNegativeAlert(
+                                              'Unavailable',
+                                              'Callbacks are reserved for active users',
                                               context);
                                         }
-                                      });
-                                    } else {
-                                      baseProvider.showNegativeAlert('Unavailable',
-                                          'Callbacks are reserved for active users', context);
-                                    }
-                                  },
-                                ));
+                                      },
+                                    ));
                           },
                           highlightColor: Colors.white30,
                           splashColor: Colors.white30,
