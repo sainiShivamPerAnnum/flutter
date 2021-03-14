@@ -3,9 +3,11 @@ import 'dart:ui';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +25,7 @@ class _GamePollState extends State<GamePoll> {
   int totalNoOfVotes = 0;
   int userVote;
   List<String> pollItems;
+
   vote() {
     setState(() {
       isVoted = true;
@@ -33,16 +36,18 @@ class _GamePollState extends State<GamePoll> {
     // isLoading = true;
     if (baseProvider != null && dbProvider != null && isLoading == true) {
       print(baseProvider.myUser.uid);
-      pollDetails = await dbProvider.getPollCount();
-      pollDetails.forEach((key, value) {
-        totalNoOfVotes += value;
-      });
-      pollItems = pollDetails.keys.toList();
-      if (isLoading) {
-        setState(() {
-          isLoading = false;
+      dbProvider.getPollCount().then((res) {
+        pollDetails = res;
+        pollDetails.forEach((key, value) {
+          totalNoOfVotes += value;
         });
-      }
+        pollItems = pollDetails.keys.toList();
+        if (isLoading) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      });
     }
   }
 
@@ -50,35 +55,49 @@ class _GamePollState extends State<GamePoll> {
     return (pollDetails[item] / totalNoOfVotes);
   }
 
-  Future<void> addPollVote(String item) async {
-    print(item.length);
-    int option = int.tryParse(item.substring(item.length - 1));
-    print(option);
-    // bool response =
-    //     await dbProvider.addUserPollResponse(baseProvider.myUser.uid, option);
-    // if (response == true) {
-    setState(() {
-      isVoted = true;
+  Future<void> addPollVote(String id) async {
+    if (id == null || id.isEmpty || !id.startsWith('op_')) return;
+    String indStr = id.substring(3);
+    int index = 0;
+    try {
+      index = int.parse(indStr);
+    } catch (e) {
+      print('Index parsing failed');
+    }
+    dbProvider.addUserPollResponse(baseProvider.myUser.uid, index).then((flag) {
+      if(!flag) {
+        baseProvider.showNegativeAlert('Couldn\'t save response', 'Please try again in some time', context);
+      }
+      setState(() {
+        isVoted = flag;
+      });
     });
-    // }
   }
 
   Future<void> getPollResponse() async {
-    int response =
-        await dbProvider.getUserPollResponse(baseProvider.myUser.uid);
-    setState(() {
-      userVote = response;
+    dbProvider
+        .getUserPollResponse(baseProvider.myUser.uid)
+        .then((response) {
+      setState(() {
+        userVote = response;
+        if(response != null && response != -1)isVoted = true;
+      });
     });
   }
 
   List<GameTile> createPollTiles() {
     List<GameTile> pollList = [];
     for (int i = 0; i < pollDetails.length; i++) {
+      PollItem _item = PollItem.build(pollItems[i], getPollPercentage(pollItems[i]));
       pollList.add(GameTile(
         isVoted: isVoted,
-        ontap: () => addPollVote(pollItems[i]),
-        pollItem: PollItem(
-            name: pollItems[i], votes: getPollPercentage(pollItems[i])),
+        ontap: () {
+          if(!isVoted) {
+            HapticFeedback.vibrate();
+            addPollVote(_item.id);
+          }
+        },
+        pollItem: _item,
       ));
     }
     return pollList;
@@ -86,10 +105,11 @@ class _GamePollState extends State<GamePoll> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    dbProvider = Provider.of<DBModel>(context,listen:false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
     if (pollDetails == null) {
       getPollDetails();
+      getPollResponse();
     }
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -123,17 +143,20 @@ class _GamePollState extends State<GamePoll> {
       child: Column(
         children: [
           SizedBox(height: 20),
-          Text(
-            "Which game would you like to play?",
-            textAlign: TextAlign.center,
-            style: GoogleFonts.montserrat(
-              fontWeight: FontWeight.w500,
-              fontSize: SizeConfig.largeTextSize,
-              color: Colors.white,
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              "Which game would you like to play on Fello next?",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.montserrat(
+                fontWeight: FontWeight.w500,
+                fontSize: SizeConfig.largeTextSize,
+                color: Colors.white,
+              ),
             ),
           ),
           SizedBox(
-            height: SizeConfig.screenHeight * 0.04,
+            height: SizeConfig.screenHeight * 0.03,
           ),
           Expanded(
             child: isLoading
@@ -153,8 +176,8 @@ class _GamePollState extends State<GamePoll> {
               child: Text(
                 !isVoted
                     ? "Just Tap on your favourite"
-                    : (userVote != null
-                        ? "You voted for ${pollItems[userVote - 1]}"
+                    : ((userVote != null && userVote != -1)
+                        ? "You voted for ${_getPollItemName(userVote)}"
                         : "Your vote has been recorded thank you"),
                 style: GoogleFonts.montserrat(
                   color: Colors.white,
@@ -167,12 +190,16 @@ class _GamePollState extends State<GamePoll> {
       ),
     );
   }
+  
+  String _getPollItemName(int i) => PollItem.getName('op_$i');
+
 }
 
 class GameTile extends StatefulWidget {
   final bool isVoted;
   final PollItem pollItem;
   final Function ontap;
+
   GameTile({this.isVoted, this.pollItem, this.ontap});
 
   @override
@@ -225,7 +252,7 @@ class _GameTileState extends State<GameTile> {
                     Spacer(),
                     widget.isVoted
                         ? Text(
-                            "${(widget.pollItem.votes * 100).toString()}%",
+                            "${(widget.pollItem.votes * 100).round().toString()}%",
                             style: GoogleFonts.montserrat(
                               color: Colors.white,
                               fontSize: SizeConfig.mediumTextSize,
@@ -244,16 +271,23 @@ class _GameTileState extends State<GameTile> {
 }
 
 class PollItem {
+  final String id;
   final String name;
   final double votes;
 
-  PollItem({this.name, this.votes});
-}
+  PollItem(this.id, this.name, this.votes);
 
-// List<PollItem> pollItemList = [
-//   PollItem(name: "Ludo", votes: 0.4),
-//   PollItem(name: "Snake and ladder", votes: 0.2),
-//   PollItem(name: "Spin Wheel", votes: 0.3),
-//   PollItem(name: "BB", votes: 0.05),
-//   PollItem(name: "Rock Paper Scissor", votes: 0.05)
-// ];
+  PollItem.build(String id, double votes) : this(id, getName(id), votes);
+
+  static getName(String id) {
+    if (id == null || id.isEmpty || !id.startsWith('op_')) return 'Error';
+    String indStr = id.substring(3);
+    int index = 0;
+    try {
+      index = int.parse(indStr);
+    } catch (e) {
+      print('Index parsing failed');
+    }
+    return Assets.POLL_NEXT_GAME_LIST[index - 1];
+  }
+}

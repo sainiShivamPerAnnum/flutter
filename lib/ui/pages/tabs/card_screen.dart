@@ -9,7 +9,6 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/elements/board_selector.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
-import 'package:felloapp/ui/elements/prize_dialog.dart';
 import 'package:felloapp/ui/elements/roulette.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
 import 'package:felloapp/ui/elements/tambola_dialog.dart';
@@ -18,10 +17,12 @@ import 'package:felloapp/ui/elements/winnings_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase.dart';
 import 'package:showcaseview/showcase_widget.dart';
@@ -170,9 +171,8 @@ class _HState extends State<PlayHome> {
     }
   }
 
-  _startTutorial() {
+  bool _startTutorial() {
     if (baseProvider.weeklyDrawFetched &&
-        baseProvider.weeklyDigits != null &&
         baseProvider.weeklyTicksFetched &&
         baseProvider.userTicketsCount > 0) {
       //Start showcase view after current widget frames are drawn.
@@ -181,7 +181,9 @@ class _HState extends State<PlayHome> {
             [_showcaseOne, _showcaseTwo, _showcaseThree, _showcaseFour]);
       });
       _showTutorial = false;
+      return true;
     }
+    return false;
   }
 
   @override
@@ -199,10 +201,10 @@ class _HState extends State<PlayHome> {
 
   @override
   Widget build(BuildContext c) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    dbProvider = Provider.of<DBModel>(context,listen:false);
-    fcmProvider = Provider.of<FcmHandler>(context,listen:false);
-    localDBModel = Provider.of<LocalDBModel>(context,listen:false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    fcmProvider = Provider.of<FcmHandler>(context, listen: false);
+    localDBModel = Provider.of<LocalDBModel>(context, listen: false);
     _init();
     _processTicketResults();
     if (_showTutorial) _startTutorial();
@@ -237,13 +239,24 @@ class _HState extends State<PlayHome> {
           left: 5,
           child: IconButton(
             color: Colors.white,
-            icon: Icon(Icons.menu),
+            icon: Icon(Icons.arrow_back),
             onPressed: () {
               HapticFeedback.vibrate();
-              Navigator.of(context).pushNamed('/settings');
+              Navigator.of(context).pop();
             },
           ),
         ),
+        SafeArea(child: Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(5, 20, 5, 5),
+            child: Text('Tambola',
+                style: GoogleFonts.montserrat(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: SizeConfig.largeTextSize)),
+          ),
+        )),
         Positioned(
           top: 30,
           right: 5,
@@ -252,9 +265,10 @@ class _HState extends State<PlayHome> {
             icon: Icon(Icons.help_outline),
             onPressed: () {
               HapticFeedback.vibrate();
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => GuideDialog());
+              _showTutorial = true;
+              if (!_startTutorial()) {
+                //baseProvider.showNegativeAlert('Try soon', message, context)
+              }
             },
           ),
         ),
@@ -277,8 +291,8 @@ class _HState extends State<PlayHome> {
                       ),
                       Text(
                         (baseProvider.userTicketsCount == 1)
-                            ? 'ticket'
-                            : 'tickets',
+                            ? 'Tambola ticket'
+                            : 'Tambola tickets',
                         style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ],
@@ -288,9 +302,9 @@ class _HState extends State<PlayHome> {
             child: Padding(
                 padding: EdgeInsets.only(top: 140),
                 child: _buildCardCanvas(context))),
-        SafeArea(
-            child: Align(
-                alignment: Alignment.bottomCenter, child: _buildPrizeButton()))
+        // SafeArea(
+        //     child: Align(
+        //         alignment: Alignment.bottomCenter, child: _buildPrizeButton()))
       ],
     )
         //),

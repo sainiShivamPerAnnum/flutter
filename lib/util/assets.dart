@@ -152,7 +152,7 @@ class Assets {
 
   static final List<String> showCaseDesc = [
     'Welcome to Fello!\n'
-        'We have added 5 tickets in your account to get you started',
+        'We have added a number of tickets in your account to get you started',
     'Everyday, 5 numbers are randomly picked from Monday to Sunday. Click the box to see this week\'s numbers',
     'You receive fresh Tambola tickets every Monday. The ticket numbers are automatically crossed based on the daily picks',
     'If any of your tickets match one of the 5 categories, you receive an instant cash prize in your account!'
@@ -188,4 +188,6 @@ class Assets {
       '\'Know Your Customer\' is process where we verify your identity by requesting you to submit certain documents. This verification is a one time process across all services';
   static final String infoWhyKYC =
       'RBI has made KYC mandatory to verify the identity of all customers who carry out financial transactions. This process unlocks all equity and mutual funds for you to invest in!';
+
+  static const List<String> POLL_NEXT_GAME_LIST = ['Finance Quiz', 'Card games', 'Board games', 'Naah','Naah5'];
 }

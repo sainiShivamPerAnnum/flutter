@@ -41,7 +41,7 @@ class NameInputScreenState extends State<NameInputScreen> {
   Widget build(BuildContext context) {
     if (!_isInitialized) {
       _isInitialized = true;
-      authProvider = Provider.of<BaseUtil>(context,listen:false);
+      authProvider = Provider.of<BaseUtil>(context, listen: false);
       _nameFieldController =
           (authProvider.myUser != null && authProvider.myUser.name != null)
               ? new TextEditingController(text: authProvider.myUser.name)
@@ -71,11 +71,9 @@ class NameInputScreenState extends State<NameInputScreen> {
                   prefixIcon: Icon(Icons.person),
                 ),
                 validator: (value) {
-                  return (value != null &&
-                          value.isNotEmpty &&
-                          _emailRegex.hasMatch(value))
+                  return (value != null && value.isNotEmpty)
                       ? null
-                      : 'Please enter a valid email';
+                      : 'Please enter your name';
                 },
                 onFieldSubmitted: (v) {
                   FocusScope.of(context).nextFocus();
@@ -92,9 +90,11 @@ class NameInputScreenState extends State<NameInputScreen> {
                   prefixIcon: Icon(Icons.email),
                 ),
                 validator: (value) {
-                  return (value != null && value.isNotEmpty)
+                  return (value != null &&
+                          value.isNotEmpty &&
+                          _emailRegex.hasMatch(value))
                       ? null
-                      : 'Please enter your name';
+                      : 'Please enter a valid email';
                 },
               ),
             ),

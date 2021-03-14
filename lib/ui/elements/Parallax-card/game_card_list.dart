@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:felloapp/ui/elements/Parallax-card/card_renderer.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'package:flutter/services.dart';
+import 'package:showcaseview/showcase_widget.dart';
 import 'rotation_3d.dart';
 
 class GameCardList extends StatefulWidget {
@@ -41,7 +42,12 @@ class GameCardListState extends State<GameCardList>
   Widget build(BuildContext context) {
     gameRoutes = [
       () => Navigator.push(
-          context, MaterialPageRoute(builder: (ctx) => PlayHome())),
+          context, MaterialPageRoute(builder: (ctx) => ShowCaseWidget(
+        builder: Builder(builder: (context) => PlayHome()),
+        autoPlay: true,
+        autoPlayDelay: Duration(seconds: 5),
+        autoPlayLockEnable: true,
+      ))),
       () {
         HapticFeedback.vibrate();
         showDialog(

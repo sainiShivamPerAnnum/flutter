@@ -5,8 +5,10 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/ui/elements/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/edit_profile_page.dart';
 import 'package:felloapp/ui/pages/transactions.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -31,6 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   bool isImageLoading = false;
+  bool isPanFieldHidden = true;
 
   Future<void> getProfilePicUrl() async {
     baseProvider.myUserDpUrl =
@@ -51,6 +54,12 @@ class _ProfilePageState extends State<ProfilePage> {
       isImageLoading = true;
       getProfilePicUrl();
     }
+    if (!baseProvider.referCountFetched)
+      dbProvider.getReferCount(baseProvider.myUser.uid).then((count) {
+        baseProvider.referCountFetched = true;
+        baseProvider.referCount = count;
+        if (count > 0) setState(() {});
+      });
     return Container(
       padding: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.02),
       decoration: BoxDecoration(
@@ -153,7 +162,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   height: 8,
                                 ),
                                 Text(
-                                  "Member since 1947",
+                                  'Member since ${_getUserMembershipDate()}',
                                   style: GoogleFonts.montserrat(
                                     color: Colors.black,
                                     fontSize: SizeConfig.smallTextSize,
@@ -201,11 +210,28 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               child: Column(
                 children: [
-                  ProfileTabTile(
+                  ProfileTabTilePan(
                     logo: "images/contact-book.png",
-                    title: "Username",
-                    value: baseProvider.myUser.uid.toString().toLowerCase(),
-                    onPress: () {},
+                    title: "PAN Number",
+                    value: baseProvider.myUser.pan,
+                    isHidden: isPanFieldHidden,
+                    isAvailable: (baseProvider.myUser.pan != null &&
+                        baseProvider.myUser.pan.isNotEmpty),
+                    onPress: () {
+                      HapticFeedback.vibrate();
+                      if (baseProvider.myUser.pan != null &&
+                          baseProvider.myUser.pan.isNotEmpty) {
+                        isPanFieldHidden = !isPanFieldHidden;
+                        setState(() {});
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) => MoreInfoDialog(
+                                  text: Assets.infoWhyPan,
+                                  title: 'Where is my PAN Number used?',
+                                ));
+                      }
+                    },
                   ),
                   ProfileTabTile(
                     logo: "images/transaction.png",
@@ -233,10 +259,77 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(
               height: 50,
             ),
+            _termsRow()
           ],
         ),
       ),
     );
+  }
+
+  Widget _termsRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          child: InkWell(
+            child: Text(
+              'Terms of Service',
+              style: TextStyle(
+                  color: Colors.grey, decoration: TextDecoration.underline),
+            ),
+            onTap: () {
+              HapticFeedback.vibrate();
+              Navigator.of(context).pushNamed('/tnc');
+            },
+          ),
+        ),
+        Text(
+          '•',
+          style: TextStyle(color: Colors.grey),
+        ),
+        Padding(
+          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          child: InkWell(
+            child: Text(
+              'Referral Policy',
+              style: TextStyle(
+                  color: Colors.grey, decoration: TextDecoration.underline),
+            ),
+            onTap: () {
+              HapticFeedback.vibrate();
+              Navigator.of(context).pushNamed('/refpolicy');
+            },
+          ),
+        )
+      ],
+    );
+  }
+
+  String _getUserMembershipDate() {
+    List<String> months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+    if (baseProvider.userCreationTimestamp != null) {
+      int month = baseProvider.userCreationTimestamp.month;
+      int year = baseProvider.userCreationTimestamp.year;
+      int yearShort = year % 2000;
+
+      return '${months[month - 1]}\'$yearShort';
+    } else {
+      return '\'Unavailable\'';
+    }
   }
 }
 
@@ -247,7 +340,7 @@ class Social extends StatelessWidget {
         width: SizeConfig.screenWidth,
         child: Column(children: [
           Text(
-            "Connect With us",
+            "Connect With Us",
             style: GoogleFonts.montserrat(
               color: Color(0xff333333),
               fontSize: SizeConfig.screenHeight * 0.02,
@@ -424,12 +517,12 @@ class _ShareOptionsState extends State<ShareOptions> {
         }
       }, 2);
 
-      if (!baseProvider.referCountFetched)
-        dbProvider.getReferCount(baseProvider.myUser.uid).then((count) {
-          baseProvider.referCountFetched = true;
-          baseProvider.referCount = count;
-          if (count > 0) setState(() {});
-        });
+      // if (!baseProvider.referCountFetched)
+      //   dbProvider.getReferCount(baseProvider.myUser.uid).then((count) {
+      //     baseProvider.referCountFetched = true;
+      //     baseProvider.referCount = count;
+      //     if (count > 0) setState(() {});
+      //   });
     }
   }
 
@@ -710,6 +803,95 @@ class ProfileTabTile extends StatelessWidget {
             ),
             onTap: onPress,
           ),
+          Divider(
+            endIndent: width * 0.1,
+            indent: width * 0.1,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ProfileTabTilePan extends StatelessWidget {
+  final String logo, title, value;
+  final bool isHidden;
+  final bool isAvailable;
+  final Function onPress;
+
+  ProfileTabTilePan(
+      {this.logo,
+      this.onPress,
+      this.title,
+      this.value,
+      this.isHidden,
+      this.isAvailable});
+
+  @override
+  Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: width * 0.02),
+      child: Column(
+        children: [
+          ListTile(
+              leading: Image.asset(
+                logo,
+                height: SizeConfig.screenHeight * 0.02,
+                width: SizeConfig.screenHeight * 0.02,
+              ),
+              title: Text(
+                title,
+                style: GoogleFonts.montserrat(
+                  color: Color(0xff333333),
+                  fontSize: SizeConfig.mediumTextSize,
+                ),
+              ),
+              trailing: isAvailable
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          isHidden ? '**********' : value,
+                          style: GoogleFonts.montserrat(
+                            color: UiConstants.primaryColor,
+                            fontSize: SizeConfig.mediumTextSize,
+                          ),
+                        ),
+                        InkWell(
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
+                              child: Icon(
+                                Icons.remove_red_eye_outlined,
+                                color: UiConstants.primaryColor,
+                              )),
+                          onTap: onPress,
+                        )
+                      ],
+                    )
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          ' - ',
+                          style: GoogleFonts.montserrat(
+                            color: UiConstants.primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: SizeConfig.mediumTextSize,
+                          ),
+                        ),
+                        InkWell(
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
+                              child: Icon(
+                                Icons.info_outline,
+                                color: UiConstants.primaryColor,
+                              )),
+                          onTap: onPress,
+                        )
+                      ],
+                    )),
           Divider(
             endIndent: width * 0.1,
             indent: width * 0.1,

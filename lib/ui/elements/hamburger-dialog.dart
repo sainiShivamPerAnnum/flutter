@@ -1,22 +1,18 @@
-import 'dart:developer';
 import 'dart:ui';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/aboutus_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/contact_dialog.dart';
 import 'package:felloapp/ui/elements/feedback_dialog.dart';
-import 'package:felloapp/ui/pages/edit_profile_page.dart';
-import 'package:felloapp/ui/pages/onboarding/kyc/kyc_onboarding_controller.dart';
+import 'package:felloapp/ui/pages/settings_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
-import 'package:flat_icons_flutter/flat_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:felloapp/ui/pages/settings_page.dart';
 import 'package:provider/provider.dart';
-import 'package:felloapp/util/logger.dart';
 
 class HamburgerMenu extends StatelessWidget {
   static List<OptionDetail> _optionsList;
@@ -63,7 +59,8 @@ class HamburgerMenu extends StatelessWidget {
                 shrinkWrap: true,
                 padding: const EdgeInsets.all(16.0),
                 itemBuilder: /*1*/ (context, i) {
-                  if (i.isOdd) return Divider(); /*2*/
+                  if (i.isOdd) return Divider();
+                  /*2*/
                   final index = i ~/ 2; /*3*/
                   return _buildRow(_optionsList[index], context);
                 },

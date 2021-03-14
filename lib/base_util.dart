@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/PrizeLeader.dart';
 import 'package:felloapp/core/model/ReferralLeader.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
+import 'package:felloapp/core/model/UserMiniTransaction.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
@@ -53,7 +54,9 @@ class BaseUtil extends ChangeNotifier {
   List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
   String myUserDpUrl;
+  List<UserMiniTransaction> userMiniTxnList = [];
 
+  DateTime _userCreationTimestamp;
   int referCount = 0;
   int userTicketsCount = 0;
   bool isUserOnboarded = false;
@@ -93,9 +96,13 @@ class BaseUtil extends ChangeNotifier {
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
     if (isUserOnboarded) {
       await initRemoteConfig();
-      String _p = remoteConfig.getString('play_screen_first');
-      playScreenFirst = !(_p != null && _p.isNotEmpty && _p == 'false');
+      // String _p = remoteConfig.getString('play_screen_first');
+      // playScreenFirst = !(_p != null && _p.isNotEmpty && _p == 'false');
 
+      //get user creation time
+      _userCreationTimestamp = firebaseUser.metadata.creationTime;
+
+      //check if there are any icici txns in process
       _payService = locator<PaymentService>();
       if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
     }
@@ -183,28 +190,28 @@ class BaseUtil extends ChangeNotifier {
               color: Colors.white,
               fontWeight: FontWeight.w500,
               fontSize: SizeConfig.largeTextSize)),
-      bottom: PreferredSize(
-          child: Container(
-              color: Colors.blueGrey[100],
-              height: 25.0,
-              child: Padding(
-                  padding:
-                      EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'We are currently in Beta',
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                      Icon(
-                        Icons.info_outline,
-                        size: 20,
-                        color: Colors.black54,
-                      )
-                    ],
-                  ))),
-          preferredSize: Size.fromHeight(25.0)),
+      // bottom: PreferredSize(
+      //     child: Container(
+      //         color: Colors.blueGrey[100],
+      //         height: 25.0,
+      //         child: Padding(
+      //             padding:
+      //                 EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
+      //             child: Row(
+      //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //               children: [
+      //                 Text(
+      //                   'We are currently in Beta',
+      //                   style: TextStyle(color: Colors.black54),
+      //                 ),
+      //                 Icon(
+      //                   Icons.info_outline,
+      //                   size: 20,
+      //                   color: Colors.black54,
+      //                 )
+      //               ],
+      //             ))),
+      //     preferredSize: Size.fromHeight(25.0)),
     );
   }
 
@@ -406,4 +413,6 @@ class BaseUtil extends ChangeNotifier {
   set currentAugmontTxn(UserTransaction value) {
     _currentAugmontTxn = value;
   }
+
+  DateTime get userCreationTimestamp => _userCreationTimestamp;
 }
