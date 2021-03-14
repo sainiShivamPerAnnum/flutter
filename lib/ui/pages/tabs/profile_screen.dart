@@ -679,7 +679,7 @@ class _ShareOptionsState extends State<ShareOptions> {
       String userId, bool short, String source) async {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: 'https://fello.page.link',
-      link: Uri.parse('https://fello.in/g2g2g2'),
+      link: Uri.parse('https://fello.in/$userId'),
       socialMetaTagParameters: SocialMetaTagParameters(
           title: 'Download ${Constants.APP_NAME}',
           description:
@@ -699,7 +699,7 @@ class _ShareOptionsState extends State<ShareOptions> {
         shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
       ),
       iosParameters: IosParameters(
-        bundleId: 'com.google.FirebaseCppDynamicLinksTestApp.dev',
+        bundleId: 'in.fello.felloappiOS',
         minimumVersion: '0',
       ),
     );

@@ -31,7 +31,6 @@ class _GamePageState extends State<GamePage> {
   LocalDBModel lclDbProvider;
   BaseUtil baseProvider;
   int currentPage;
-  BaseUtil baseProvider;
   DBModel reqProvider;
 
   PageController _controller = new PageController(
@@ -158,7 +157,7 @@ class _GamePageState extends State<GamePage> {
                                   Color(0xffD4AC5B),
                                   Color(0xffDECBA4),
                                 ],
-                                title: "Have any other game in mind?",
+                                title: "Share your thoughts",
                                 action: [
                                   GameOfferCardButton(
                                     onPressed: () {
@@ -200,7 +199,7 @@ class _GamePageState extends State<GamePage> {
                                         ),
                                       );
                                     },
-                                    title: "Suggest us",
+                                    title: "Feedback",
                                   ),
                                 ],
                               )

@@ -65,6 +65,7 @@ class BaseUtil extends ChangeNotifier {
   bool weeklyDrawFetched = false;
   bool weeklyTicksFetched = false;
   bool referCountFetched = false;
+  bool isProfilePictureUpdated = false;
   bool isReferralLinkBuildInProgressWhatsapp = false;
   bool isReferralLinkBuildInProgressOther = false;
 

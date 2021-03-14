@@ -214,7 +214,7 @@ class ZeroBalView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Text(
-              "Your Savings wallet is empty, start investing now!",
+              "Your savings and prizes will show up here!",
               style: GoogleFonts.montserrat(
                 fontWeight: FontWeight.w500,
                 fontSize: SizeConfig.mediumTextSize,

@@ -90,6 +90,7 @@ class _EditProfileState extends State<EditProfile> {
       await res.ref.getDownloadURL().then((url) {
         if (url != null) {
           isUploaded = true;
+          baseProvider.isProfilePictureUpdated = true;
           baseProvider.myUserDpUrl = url;
         }
         print(url);
@@ -138,14 +139,15 @@ class _EditProfileState extends State<EditProfile> {
           return (await showDialog(
             context: context,
             builder: (ctx) => ConfirmActionDialog(
-              title: "You have unsaved changes here?",
-              description: "Are you sure, you want to cancle?",
-              buttonText: "Stay",
+              title: "You changes are unsaved",
+              description: "Are you sure you want to go back?",
+              buttonText: "Yes",
+              cancelBtnText: 'Cancel',
               confirmAction: () {
+                Navigator.pop(context);
                 Navigator.pop(context);
               },
               cancelAction: () {
-                Navigator.pop(context);
                 Navigator.pop(context);
               },
             ),
@@ -398,7 +400,6 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 ),
                 Spacer(),
-                Text("Profile Picture will be updated after a restart of app"),
               ],
             )),
       ),
