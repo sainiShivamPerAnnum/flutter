@@ -331,7 +331,7 @@ class DBModel extends ChangeNotifier {
       print("LENGTH----------------->" + requestedTxns.length.toString());
       return requestedTxns;
     } catch (err) {
-      log.error('Failed to fetch tambola boards');
+      log.error('Failed to fetch user mini transactions');
       return requestedTxns;
     }
   }

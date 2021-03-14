@@ -178,7 +178,7 @@ class Api {
     if (subtype != null)
       query = query.where(UserTransaction.fldSubType, isEqualTo: subtype);
     if (limit != -1 && limit > 10) query = query.limit(limit);
-    query = query.orderBy(UserTransaction.fldUpdatedTime, descending: true);
+    query = query.orderBy(UserTransaction.fldTimestamp, descending: true);
 
     return query.get();
   }

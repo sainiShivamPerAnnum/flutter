@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/PrizeLeader.dart';
 import 'package:felloapp/core/model/ReferralLeader.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
+import 'package:felloapp/core/model/UserMiniTransaction.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
@@ -53,6 +54,7 @@ class BaseUtil extends ChangeNotifier {
   List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
   String myUserDpUrl;
+  List<UserMiniTransaction> userMiniTxnList = [];
 
   DateTime _userCreationTimestamp;
   int referCount = 0;
@@ -92,12 +94,15 @@ class BaseUtil extends ChangeNotifier {
       _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
     isUserOnboarded =
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
-    _userCreationTimestamp = firebaseUser.metadata.creationTime;
     if (isUserOnboarded) {
       await initRemoteConfig();
-      String _p = remoteConfig.getString('play_screen_first');
-      playScreenFirst = !(_p != null && _p.isNotEmpty && _p == 'false');
+      // String _p = remoteConfig.getString('play_screen_first');
+      // playScreenFirst = !(_p != null && _p.isNotEmpty && _p == 'false');
 
+      //get user creation time
+      _userCreationTimestamp = firebaseUser.metadata.creationTime;
+
+      //check if there are any icici txns in process
       _payService = locator<PaymentService>();
       if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
     }

@@ -65,10 +65,13 @@ class UserTransaction{
   ///Transaction types
   static const String TRAN_TYPE_DEPOSIT = 'DEPOSIT';
   static const String TRAN_TYPE_WITHDRAW = 'WITHDRAWAL';
+  static const String TRAN_TYPE_PRIZE = 'PRIZE';
 
   ///Transaction Subtype
   static const String TRAN_SUBTYPE_ICICI = 'ICICI1565';
   static const String TRAN_SUBTYPE_AUGMONT_GOLD = 'AUGGOLD99';
+  static const String TRAN_SUBTYPE_TAMBOLA_WIN = 'TMB_WIN';
+
 
   UserTransaction(this._amount,this._closingBalance,this._note,this._subType,
       this._type,this._ticketUpCount,this._userId,this._tranStatus, this._icici,
