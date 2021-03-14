@@ -1196,9 +1196,9 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    dbProvider = Provider.of<DBModel>(context,listen:false);
-    iProvider = Provider.of<ICICIModel>(context,listen:false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    iProvider = Provider.of<ICICIModel>(context, listen: false);
     _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
 

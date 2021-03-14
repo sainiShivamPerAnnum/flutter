@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
-class DepositVerification extends StatefulWidget{
+class DepositVerification extends StatefulWidget {
   DepositVerification();
 
   @override
@@ -30,8 +30,8 @@ class _DepositVerificationState extends State<DepositVerification> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    payService = Provider.of<PaymentService>(context,listen:false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    payService = Provider.of<PaymentService>(context, listen: false);
     _width = MediaQuery.of(context).size.width;
     _height = MediaQuery.of(context).size.height;
     return WillPopScope(
@@ -48,7 +48,8 @@ class _DepositVerificationState extends State<DepositVerification> {
                 child: InkWell(
                   child: Padding(
                     padding: EdgeInsets.all(15),
-                    child:Text('Facing an issue?',
+                    child: Text(
+                      'Facing an issue?',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 22,
@@ -60,8 +61,8 @@ class _DepositVerificationState extends State<DepositVerification> {
                     HapticFeedback.vibrate();
                     showDialog(
                         context: context,
-                        builder: (BuildContext context) => TransactionHelpDialog()
-                    );
+                        builder: (BuildContext context) =>
+                            TransactionHelpDialog());
                   },
                 ),
               )
@@ -72,8 +73,8 @@ class _DepositVerificationState extends State<DepositVerification> {
               children: [
                 Center(
                   child: Container(
-                    width: _width*0.8,
-                    decoration:new BoxDecoration(
+                    width: _width * 0.8,
+                    decoration: new BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.circular(UiConstants.padding),
@@ -87,25 +88,25 @@ class _DepositVerificationState extends State<DepositVerification> {
                     ),
                     child: Padding(
                         padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                        child: _getActiveLayout()
-                    ),
+                        child: _getActiveLayout()),
                   ),
                 )
               ],
             ),
-          )
-      ),
+          )),
     );
   }
 
   Widget _getActiveLayout() {
-    if(!_isPaymentMade)return _paymentNotMadeLayout();
+    if (!_isPaymentMade) return _paymentNotMadeLayout();
     Widget wx;
-    if(_isPaymentMade) wx = _paymentMadeLayout();
+    if (_isPaymentMade) wx = _paymentMadeLayout();
 
-    if(_isPaymentConfirmed) wx = _paymentConfirmed();
-    else if(_isPaymentRejected) wx = _paymentRejected();
-    else if(_isPaymentTimeout)wx = _paymentTimeout();
+    if (_isPaymentConfirmed)
+      wx = _paymentConfirmed();
+    else if (_isPaymentRejected)
+      wx = _paymentRejected();
+    else if (_isPaymentTimeout) wx = _paymentTimeout();
 
     return wx;
   }
@@ -126,11 +127,10 @@ class _DepositVerificationState extends State<DepositVerification> {
         SizedBox(
           height: 10,
         ),
-        Text('Please use your UPI app to confirm the payment request from ICICI Prudential',
+        Text(
+          'Please use your UPI app to confirm the payment request from ICICI Prudential',
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 18
-          ),
+          style: TextStyle(fontSize: 18),
         ),
         SizedBox(
           height: 10,
@@ -140,17 +140,14 @@ class _DepositVerificationState extends State<DepositVerification> {
         ),
         InkWell(
           child: Container(
-            height: 30,
-            child: Center(
-              child: Text('I have made the payment',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold
+              height: 30,
+              child: Center(
+                child: Text(
+                  'I have made the payment',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-              ),
-            )
-          ),
+              )),
           onTap: () {
             //TODO add an are you sure dialog here
             _isPaymentMade = true;
@@ -179,11 +176,10 @@ class _DepositVerificationState extends State<DepositVerification> {
         SizedBox(
           height: 10,
         ),
-        Text('Please wait while we contact ICICI and confirm your deposit. This usually takes less than 2 minutes',
+        Text(
+          'Please wait while we contact ICICI and confirm your deposit. This usually takes less than 2 minutes',
           textAlign: TextAlign.center,
-          style: TextStyle(
-              fontSize: 18
-          ),
+          style: TextStyle(fontSize: 18),
         ),
         SizedBox(
           height: 10,
@@ -200,7 +196,7 @@ class _DepositVerificationState extends State<DepositVerification> {
       children: [
         Padding(
           padding: EdgeInsets.all(5),
-          child:  Icon(
+          child: Icon(
             Icons.check_circle_outline,
             color: UiConstants.primaryColor,
             size: 20,
@@ -209,11 +205,10 @@ class _DepositVerificationState extends State<DepositVerification> {
         SizedBox(
           height: 10,
         ),
-        Text('Payment completed successfully! 🎉',
+        Text(
+          'Payment completed successfully! 🎉',
           textAlign: TextAlign.center,
-          style: TextStyle(
-              fontSize: 18
-          ),
+          style: TextStyle(fontSize: 18),
         ),
         SizedBox(
           height: 10,
@@ -225,21 +220,22 @@ class _DepositVerificationState extends State<DepositVerification> {
           child: Container(
               height: 30,
               child: Center(
-                child: Text('Okay',
+                child: Text(
+                  'Okay',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-              )
-          ),
+              )),
           onTap: () {
             Navigator.pop(context); //back to mf details
             // Navigator.pop(context); //back to save tab
-            Navigator.push(context, MaterialPageRoute(
-              builder: (ctx) => AppRoot(pageIndex: SaveScreen.index,),
-            ));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (ctx) => AppRoot(
+                    pageIndex: SaveScreen.index,
+                  ),
+                ));
           },
         )
       ],
@@ -254,7 +250,8 @@ class _DepositVerificationState extends State<DepositVerification> {
       children: [
         Padding(
           padding: EdgeInsets.all(5),
-          child: Icon(Icons.new_releases,
+          child: Icon(
+            Icons.new_releases,
             color: Colors.yellow[400],
             size: 20,
           ),
@@ -262,11 +259,10 @@ class _DepositVerificationState extends State<DepositVerification> {
         SizedBox(
           height: 10,
         ),
-        Text('We have verified that the payment was not completed.',
+        Text(
+          'We have verified that the payment was not completed.',
           textAlign: TextAlign.center,
-          style: TextStyle(
-              fontSize: 18
-          ),
+          style: TextStyle(fontSize: 18),
         ),
         SizedBox(
           height: 10,
@@ -278,21 +274,22 @@ class _DepositVerificationState extends State<DepositVerification> {
           child: Container(
               height: 30,
               child: Center(
-                child: Text('Okay',
+                child: Text(
+                  'Okay',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-              )
-          ),
+              )),
           onTap: () {
             Navigator.pop(context); //back to mf details
             // Navigator.pop(context); //back to save tab
-            Navigator.push(context, MaterialPageRoute(
-              builder: (ctx) => AppRoot(pageIndex: SaveScreen.index,),
-            ));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (ctx) => AppRoot(
+                    pageIndex: SaveScreen.index,
+                  ),
+                ));
           },
         )
       ],
@@ -307,7 +304,8 @@ class _DepositVerificationState extends State<DepositVerification> {
       children: [
         Padding(
           padding: EdgeInsets.all(5),
-          child: Icon(Icons.access_time,
+          child: Icon(
+            Icons.access_time,
             color: Colors.yellow[200],
             size: 60,
           ),
@@ -315,12 +313,11 @@ class _DepositVerificationState extends State<DepositVerification> {
         SizedBox(
           height: 10,
         ),
-        Text('We could not verify the status of your payment in time.\n\n'
-            + ' We will continue to check the status in the background and keep you informed.',
+        Text(
+          'We could not verify the status of your payment in time.\n\n' +
+              ' We will continue to check the status in the background and keep you informed.',
           textAlign: TextAlign.center,
-          style: TextStyle(
-              fontSize: 18
-          ),
+          style: TextStyle(fontSize: 18),
         ),
         SizedBox(
           height: 10,
@@ -332,20 +329,21 @@ class _DepositVerificationState extends State<DepositVerification> {
           child: Container(
               height: 30,
               child: Center(
-                child: Text('Okay',
+                child: Text(
+                  'Okay',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-              )
-          ),
+              )),
           onTap: () {
             Navigator.pop(context); //back to mf details
-            Navigator.push(context, MaterialPageRoute(
-              builder: (ctx) => AppRoot(pageIndex: SaveScreen.index,),
-            ));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (ctx) => AppRoot(
+                    pageIndex: SaveScreen.index,
+                  ),
+                ));
             // Navigator.pop(context); //back to save tab
           },
         )
@@ -371,43 +369,46 @@ class _DepositVerificationState extends State<DepositVerification> {
 
   Future<bool> _onWillPop() {
     return showDialog(
-      context: context,
-      builder: (context) => new AlertDialog(
-        title: new Text('Are you sure you want to go back?'),
-        actions: <Widget>[
-          new TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: new Text('No'),
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Are you sure you want to go back?'),
+            actions: <Widget>[
+              new TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
+              ),
+              new TextButton(
+                onPressed: () {
+                  //pop twice to get back to mf details
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+                child: new Text('Yes'),
+              ),
+            ],
           ),
-          new TextButton(
-            onPressed: () {
-              //pop twice to get back to mf details
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-              },
-            child: new Text('Yes'),
-          ),
-        ],
-      ),
-    ) ??
+        ) ??
         false;
   }
 
   _onPaymentStatusReceived(int status) {
-    switch(status) {
-      case PaymentService.TRANSACTION_COMPLETE: {
-        _isPaymentConfirmed = true;
-        break;
-      }
-      case PaymentService.TRANSACTION_REJECTED: {
-        _isPaymentRejected = true;
-        break;
-      }
+    switch (status) {
+      case PaymentService.TRANSACTION_COMPLETE:
+        {
+          _isPaymentConfirmed = true;
+          break;
+        }
+      case PaymentService.TRANSACTION_REJECTED:
+        {
+          _isPaymentRejected = true;
+          break;
+        }
       case PaymentService.TRANSACTION_CHECK_TIMEOUT:
-      case PaymentService.TRANSACTION_PENDING: {
-        _isPaymentTimeout = true;
-        break;
-      }
+      case PaymentService.TRANSACTION_PENDING:
+        {
+          _isPaymentTimeout = true;
+          break;
+        }
     }
     setState(() {});
   }
@@ -416,4 +417,3 @@ class _DepositVerificationState extends State<DepositVerification> {
 // class TransactionHelpDialog extends StatefulWidget{
 //
 // }
-
