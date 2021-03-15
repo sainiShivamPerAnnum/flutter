@@ -369,7 +369,7 @@ class _TransactionsState extends State<Transactions> {
               ),
             ),
             Text(
-              _getFormattedTime(filteredList[index].updatedTime),
+              _getFormattedTime(filteredList[index].timestamp),
               style: GoogleFonts.montserrat(
                   color: getTileColor(filteredList[index].tranStatus),
                   fontSize: SizeConfig.smallTextSize),
