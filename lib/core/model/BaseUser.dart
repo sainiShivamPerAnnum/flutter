@@ -89,6 +89,7 @@ class BaseUser {
       fldAge: _age,
       fldIsInvested: _isInvested,
       fldIsIciciOnboarded: _isIciciOnboarded,
+      fldIsAugmontOnboarded: _isAugmontOnboarded,
       fldIsKycVerified: _isKycVerified,
       fldPendingTxnId: _pendingTxnId
     };

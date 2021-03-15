@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 class AugmontOnboarding extends StatefulWidget {
   final Function onSubmit;
 
-  AugmontOnboarding({Key key, this.onSubmit}):super(key: key);
+  AugmontOnboarding({Key key, this.onSubmit}) : super(key: key);
 
   @override
   State createState() => AugmontOnboardingState();
@@ -23,13 +23,17 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
   BaseUtil baseProvider;
   double _width;
   static TextEditingController panInput = new TextEditingController();
+  bool _isInit = false;
   static String stateChosenValue;
 
   @override
   Widget build(BuildContext context) {
     _width = MediaQuery.of(context).size.width;
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    panInput.text = baseProvider.myUser.pan ?? '';
+    if (!_isInit) {
+      panInput.text = baseProvider.myUser.pan ?? '';
+      _isInit = true;
+    }
     return Dialog(
       insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
       shape: RoundedRectangleBorder(
@@ -185,20 +189,34 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                                   size: 18.0,
                                 ),
                           onPressed: () {
-                            if (stateChosenValue == null ||
-                                stateChosenValue.isEmpty) {
+                            RegExp panCheck =
+                                RegExp(r"[A-Z]{5}[0-9]{4}[A-Z]{1}");
+                            if (panInput.text.isEmpty) {
                               baseProvider.showNegativeAlert(
-                                  'State missing',
-                                  'Kindly enter your current residential state',
+                                  'Invalid Pan',
+                                  'Kindly enter a valid PAN Number',
                                   context);
                               return;
+                            } else if (!panCheck.hasMatch(panInput.text)) {
+                              baseProvider.showNegativeAlert('Invalid Pan',
+                                  'Kindly enter a valid PAN Number', context);
+                              return;
+                            } else {
+                              if (stateChosenValue == null ||
+                                  stateChosenValue.isEmpty) {
+                                baseProvider.showNegativeAlert(
+                                    'State missing',
+                                    'Kindly enter your current residential state',
+                                    context);
+                                return;
+                              }
+                              widget.onSubmit({
+                                'pan_number': panInput.text,
+                                'state_id': stateChosenValue
+                              });
+                              baseProvider.isAugmontRegnInProgress = true;
+                              setState(() {});
                             }
-                            widget.onSubmit({
-                              'pan_number': panInput.text,
-                              'state_id': stateChosenValue
-                            });
-                            baseProvider.isAugmontRegnInProgress = true;
-                            setState(() {});
                           },
                           highlightColor: Colors.white30,
                           splashColor: Colors.white30,
@@ -217,8 +235,8 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     baseProvider.isAugmontRegnInProgress = false;
     Navigator.of(context).pop();
     if (!flag) {
-      baseProvider.showNegativeAlert('Registration Failed',
-          'Please try again in some time', context);
+      baseProvider.showNegativeAlert(
+          'Registration Failed', 'Please try again in some time', context);
     }
   }
 }

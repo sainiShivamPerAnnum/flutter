@@ -104,7 +104,9 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                     return 'Please enter a valid amount';
 
                   int amount = int.parse(value);
-                  if (amount > 2000)
+                  if (amount < 10)
+                    return 'Minimum deposit amount is ₹10 per transaction';
+                  else if (amount > 2000)
                     return 'We are currently only accepting a max deposit of ₹2000 per transaction';
                   else return null;
                 },
@@ -113,33 +115,33 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                 },
               ),
             ),
-            _buildPurchaseDescriptionCard(int.parse(_amtController.text).roundToDouble()),
+            _buildPurchaseDescriptionCard(_getCurrentAmount(_amtController.text)),
             Wrap(
               spacing: 20,
               children: [
                 ActionChip(
-                  label: Text("What is my UPI ID?"),
+                  label: Text("How does this work?"),
                   backgroundColor: UiConstants.chipColor,
                   onPressed: () {
                     HapticFeedback.vibrate();
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => MoreInfoDialog(
-                              text: Assets.infoWhatUPI,
-                              title: 'Why is my UPI ID?',
+                              text: Assets.infoAugmontTxnHow,
+                              title: 'How does the transaction work?',
                             ));
                   },
                 ),
                 ActionChip(
-                  label: Text("Where do I find it?"),
+                  label: Text("How long does it take?"),
                   backgroundColor: UiConstants.chipColor,
                   onPressed: () {
                     HapticFeedback.vibrate();
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => MoreInfoDialog(
-                              text: Assets.infoWhereUPI,
-                              title: 'Where can i find my UPI Id?',
+                              text: Assets.infoAugmontTime,
+                              title: 'How long does it take?',
                             ));
                   },
                 ),
@@ -172,7 +174,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                         if (depositformKey3.currentState.validate()) {
                           _isDepositInProgress = true;
                           setState(() {});
-                          widget.onDepositConfirmed(int.parse(_amtController.text).roundToDouble());
+                          widget.onDepositConfirmed(_getCurrentAmount(_amtController.text));
                         }
                       },
                       alignLabel: Alignment.center,
@@ -224,6 +226,17 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
       ),
     );
   }
+  
+  double _getCurrentAmount(String amt) {
+    if(amt == null || amt.isEmpty) return null;
+    double t = 0;
+    try{
+      t = double.parse(amt);
+      return t;
+    }catch(e) {
+      return null;
+    }
+  }
 
   Widget _buildRateCard() {
     return Container(
@@ -250,7 +263,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
           Expanded(
             child: Text(title,
               style: TextStyle(
-                fontSize: SizeConfig.mediumTextSize
+                fontSize: SizeConfig.mediumTextSize*1.2
               ),
             ),
           ),
@@ -259,21 +272,22 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
               children: [
                 Text(value,
                   style: TextStyle(
-                      fontSize: SizeConfig.mediumTextSize
+                      fontSize: SizeConfig.mediumTextSize*1.2
                   ),
                 ),
+                SizedBox(width: 4,),
                 InkWell(
                   child: Icon(
                     Icons.info_outline,
-                    size: SizeConfig.mediumTextSize,
+                    size: SizeConfig.mediumTextSize*1.3,
                   ),
                   onTap: () {
                     HapticFeedback.vibrate();
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => MoreInfoDialog(
-                          text: title,
-                          title: info,
+                          title: title,
+                          text: info,
                         ));
                   },
                 )
@@ -307,7 +321,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                 fontSize: SizeConfig.mediumTextSize
             ),
           ),
-          Text('Gold amount: ${rate.toStringAsFixed(2)} grams',
+          Text('Gold amount: ${grams.toStringAsFixed(4)} grams',
             style:TextStyle(
                 fontSize: SizeConfig.mediumTextSize
             ),
@@ -315,5 +329,13 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         ],
       ),
     );
+  }
+
+  onDepositComplete(bool flag) {
+    _isDepositInProgress = false;
+    setState(() {});
+    Navigator.of(context).pop();
+    if(flag)baseProvider.showPositiveAlert('SUCCESS', 'You gold deposit was confirmed!', context);
+    else baseProvider.showNegativeAlert('Failed', 'Your gold deposit failed. Please try again or contact us if you are facing issues', context, seconds: 5);
   }
 }

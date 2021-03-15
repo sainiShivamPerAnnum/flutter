@@ -198,6 +198,8 @@ class Assets {
       '\'Know Your Customer\' is process where we verify your identity by requesting you to submit certain documents. This verification is a one time process across all services';
   static final String infoWhyKYC =
       'RBI has made KYC mandatory to verify the identity of all customers who carry out financial transactions. This process unlocks all equity and mutual funds for you to invest in!';
+  static final String infoAugmontTxnHow = '';
+  static final String infoAugmontTime = '';
 
   static const List<String> POLL_NEXT_GAME_LIST = ['Finance Quiz', 'Card games', 'Board games', 'Naah','Naah5'];
 }

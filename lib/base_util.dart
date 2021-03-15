@@ -381,12 +381,28 @@ class BaseUtil extends ChangeNotifier {
   }
 
   int getUpdatedClosingBalance(double investment) =>
-      (investment + _myUser.icici_balance ??
-              0 + _myUser.augmont_balance ??
-              0 + _myUser.prize_balance ??
-              0 + _myUser.deposit_balance ??
-              0)
+      (investment + toDouble(_myUser.icici_balance)
+              + toDouble(_myUser.augmont_balance)
+              + toDouble(_myUser.prize_balance)
+              + toDouble(_myUser.deposit_balance))
           .round();
+
+  static T _cast<T>(x) => x is T ? x : null;
+
+  static double toDouble(dynamic x) {
+    if(x == null) return 0.0;
+    try{
+      int y = _cast<int>(x);
+      if(y != null) return y+.0;
+    }catch(e) {}
+
+    try{
+      double z = _cast<double>(x);
+      if(z != null) return z;
+    }catch(e) {}
+
+    return 0.0;
+  }
 
   int getTicketCountForTransaction(double investment) =>
       (investment / BaseUtil.INVESTMENT_AMOUNT_FOR_TICKET).round();

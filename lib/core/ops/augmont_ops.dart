@@ -44,9 +44,9 @@ class AugmontModel extends ChangeNotifier {
 
   bool isInit() => (_apiKey != null);
 
-  String _constructUid(String pan) => 'fello3$pan';
+  String _constructUid(String pan) => 'fello$pan';
 
-  String _constructUsername() => 'fello${_baseProvider.myUser.uid.replaceAll(new RegExp(r"[0-9]"), "")}';
+  String _constructUsername() => 'felloZZ${_baseProvider.myUser.uid.replaceAll(new RegExp(r"[0-9]"), "")}';
 
   // Future<String> _getPanHolderName(String pan) async{
   //   if(!_iProvider.isInit())await _iProvider.init();
@@ -188,6 +188,7 @@ class AugmontModel extends ChangeNotifier {
         'txnDocId': _baseProvider.currentAugmontTxn.docKey
       };
       await _dbModel.logFailure(_baseProvider.myUser.uid, FailType.UserAugmontPurchaseFailed, _failMap);
+      bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
       if(_augmontTxnProcessListener != null)_augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
     } else {
       //success

@@ -4,19 +4,13 @@ import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
 import 'package:felloapp/ui/dialogs/augmont_onboarding_dialog.dart';
 import 'package:felloapp/ui/dialogs/icici_withdraw_dialog.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
-import 'package:felloapp/ui/elements/deposit_modal_sheet.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
-import 'package:felloapp/ui/pages/deposit_verification.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -40,7 +34,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   AugmontModel augmontProvider;
-  GlobalKey<AugmontDepositModalSheetState> _modalKey = GlobalKey();
+  GlobalKey<AugmontDepositModalSheetState> _modalKey2 = GlobalKey();
   GlobalKey<AugmontOnboardingState> _onboardingKey = GlobalKey();
   GlobalKey<IciciWithdrawDialogState> _withdrawalDialogKey = GlobalKey();
   double containerHeight = 10;
@@ -246,9 +240,9 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     } else if (_status == STATUS_REGISTER) {
       await showDialog(
           context: context,
-          builder: (BuildContext context) =>
-              AugmontOnboarding(key: _onboardingKey,
-                  onSubmit: (Map<String, String> aData) {
+          builder: (BuildContext context) => AugmontOnboarding(
+              key: _onboardingKey,
+              onSubmit: (Map<String, String> aData) {
                 String aPan = aData['pan_number'];
                 String aStateId = aData['state_id'];
                 _registerAugmontUser(aPan, aStateId).then((flag) {
@@ -273,7 +267,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
             isScrollControlled: true,
             builder: (context) {
               return AugmontDepositModalSheet(
-                key: _modalKey,
+                key: _modalKey2,
                 onDepositConfirmed: (double amount) {
                   augmontProvider.initiateGoldPurchase(
                       _currentBuyRates, amount);
@@ -297,7 +291,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     return false;
   }
 
-  Future<bool> _onDepositTransactionComplete(UserTransaction txn) async{
+  Future<bool> _onDepositTransactionComplete(UserTransaction txn) async {
     if (txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) {
       if (baseProvider.currentAugmontTxn != null) {
         ///update augmont transaction closing balance and ticketupcount
@@ -310,20 +304,38 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         ///update baseuser account balance and ticket count
         baseProvider.myUser.account_balance =
             baseProvider.currentAugmontTxn.closingBalance;
+        baseProvider.myUser.augmont_balance =
+            BaseUtil.toDouble(baseProvider.myUser.augmont_balance) +
+                BaseUtil.toDouble(baseProvider.currentAugmontTxn.amount);
         baseProvider.myUser.ticket_count =
             baseProvider.getTotalTicketsPostTransaction(
                 baseProvider.currentAugmontTxn.amount);
 
+        ///update fields
         await dbProvider.updateUser(baseProvider.myUser);
-        await dbProvider.updateUserTransaction(baseProvider.myUser.uid, baseProvider.currentAugmontTxn);
+        await dbProvider.updateUserTransaction(
+            baseProvider.myUser.uid, baseProvider.currentAugmontTxn);
+
+        ///update UI
+        _modalKey2.currentState.onDepositComplete(true);
+
+        augmontProvider.completeTransaction();
         return true;
       }
     } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_CANCELLED) {
       //razorpay payment failed
       log.debug('Payment cancelled');
+      if (baseProvider.currentAugmontTxn != null) {
+        _modalKey2.currentState.onDepositComplete(false);
+        augmontProvider.completeTransaction();
+      }
     } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_PENDING) {
       //razorpay completed but augmont purchase didnt go through
       log.debug('Payment pending');
+      if (baseProvider.currentAugmontTxn != null) {
+        _modalKey2.currentState.onDepositComplete(false);
+        augmontProvider.completeTransaction();
+      }
     }
   }
 
@@ -334,12 +346,9 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
           'Not onboarded', 'You havent been onboarded to Augmont yet', context);
     } else if (baseProvider.myUser.augmont_balance == null ||
         baseProvider.myUser.augmont_balance == 0) {
-      baseProvider.showNegativeAlert(
-          'No balance', 'Your Augmont wallet has no balance presently', context);
-    } else {
-
-
-    }
+      baseProvider.showNegativeAlert('No balance',
+          'Your Augmont wallet has no balance presently', context);
+    } else {}
   }
 
   Future<bool> onInitiateWithdrawal(Map<String, dynamic> fieldMap) {}

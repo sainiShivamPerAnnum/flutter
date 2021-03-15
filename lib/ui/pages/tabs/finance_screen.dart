@@ -17,6 +17,7 @@ class _FinancePageState extends State<FinancePage> {
   final bool hasFund = true;
   BaseUtil baseProvider;
   Map<String, double> chartData;
+
   Map<String, double> getChartMap() {
     return {
       "ICICI Balance": baseProvider.myUser.icici_balance,
@@ -28,7 +29,6 @@ class _FinancePageState extends State<FinancePage> {
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    print(baseProvider.myUser.account_balance);
     chartData = getChartMap();
     return Container(
       height: SizeConfig.screenHeight,
@@ -93,13 +93,17 @@ class _FinancePageState extends State<FinancePage> {
                           ),
                         ),
                       ),
-                      FundWidget(fund: fundList[1],
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (ctx) => GoldDetailsPage(),
-                          ),
-                        ),
+                      FundWidget(
+                        fund: fundList[1],
+                        onPressed: () async{
+                          final res = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (ctx) => GoldDetailsPage(),
+                            ),
+                          );
+                          //setState(() {});
+                        },
                       ),
                     ],
                   ),
@@ -218,7 +222,6 @@ class ZeroBalView extends StatelessWidget {
               ),
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Text(
@@ -289,7 +292,9 @@ class Legend extends StatelessWidget {
 class FundWidget extends StatelessWidget {
   final Fund fund;
   final Function onPressed;
+
   FundWidget({this.fund, this.onPressed});
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
