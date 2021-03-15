@@ -6,6 +6,7 @@ class Assets {
   static final String logoMaxSize = 'images/fello_logo.png';
   static final String referGraphic = 'images/transfer.png';
   static final String iciciGraphic = 'images/icici.png';
+  static final String augmontGraphic = 'images/augmont.png';
   static final String sebiGraphic = 'images/sebi.png';
   static final String amfiGraphic = 'images/amfi.png';
   static final String prizesGraphic = 'images/prizes-small.png';
@@ -178,6 +179,10 @@ class Assets {
   ];
 
   static final String integratedICICIUnavailable =
+      "We are slowly moving towards a fully automated system of deposits and withdrawals. " +
+          "Currently, we have started integrated transactions with only a small set of users.\n\n Please use manual deposits in the meanwhile!";
+
+  static final String augmontUnavailable =
       "We are slowly moving towards a fully automated system of deposits and withdrawals. " +
           "Currently, we have started integrated transactions with only a small set of users.\n\n Please use manual deposits in the meanwhile!";
 

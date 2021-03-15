@@ -37,8 +37,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                       color: Colors.grey,
                       textStyle: TextStyle(fontSize: 20, color: Colors.black)),
                   controller: _pinEditingController,
-                  autoFocus: true,
-                  textInputAction: TextInputAction.go,
+
                   onSubmit: (pin) {
                     log.debug("Pressed submit for pin: " +
                         pin.toString() +

@@ -61,7 +61,10 @@ class BaseUtil extends ChangeNotifier {
   int userTicketsCount = 0;
   bool isUserOnboarded = false;
   bool isLoginNextInProgress = false;
-  bool isDepositRouteLogicInProgress = false;
+  bool isEditProfileNextInProgress = false;
+  bool isAugmontRegnInProgress = false;
+  bool isIciciDepositRouteLogicInProgress = false;
+  bool isAugDepositRouteLogicInProgress = false;
   bool weeklyDrawFetched = false;
   bool weeklyTicksFetched = false;
   bool referCountFetched = false;
@@ -154,7 +157,7 @@ class BaseUtil extends ChangeNotifier {
       'kyc_completion_prize': 'You have won ₹50 and 10 Tambola tickets!'
     });
     try {
-      // Using default duration to force fetching from remote server.
+      // Fetches every 12 hrs
       await remoteConfig.fetch();
       await remoteConfig.activateFetched();
     } on FetchThrottledException catch (exception) {
@@ -376,6 +379,20 @@ class BaseUtil extends ChangeNotifier {
     //log.debug("Current week number: " + n.toString());
     return n;
   }
+
+  int getUpdatedClosingBalance(double investment) =>
+      (investment + _myUser.icici_balance ??
+              0 + _myUser.augmont_balance ??
+              0 + _myUser.prize_balance ??
+              0 + _myUser.deposit_balance ??
+              0)
+          .round();
+
+  int getTicketCountForTransaction(double investment) =>
+      (investment / BaseUtil.INVESTMENT_AMOUNT_FOR_TICKET).round();
+
+  int getTotalTicketsPostTransaction(double investment) =>
+      _myUser.ticket_count + getTicketCountForTransaction(investment);
 
   BaseUser get myUser => _myUser;
 

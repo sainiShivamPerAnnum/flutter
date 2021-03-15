@@ -191,28 +191,6 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
       setState(() {});
       if (widget.appIdExists) {
         //dont generate a new app id again
-// <<<<<<< HEAD
-//         onBasicDetailsEntered(
-//                 baseProvider.myUser.mobile, IDP.email.text, IDP.selectedDate)
-//             .then((basicObj) {
-//           if (!basicObj['flag']) {
-//             _isProcessing = false;
-//             if (basicObj['reason'] != null) {
-//               _errorMessage = 'Error: ${basicObj['reason']}';
-//             } else {
-//               _errorMessage =
-//                   'Error: Unknown error occurred. Please try again.';
-//             }
-//             setState(() {});
-//           } else {
-//             _isProcessing = false;
-//             setState(() {});
-//             new Timer(const Duration(milliseconds: 1000), () {
-//               onTabTapped(IncomeDetailsInputScreen.index);
-//             });
-//           }
-//         });
-// =======
         runBasicDetailsAndFatcaApi();
       } else {
         //first generate an app id using name and pannumber
@@ -228,25 +206,6 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
             }
             setState(() {});
           } else {
-// <<<<<<< HEAD
-//             onBasicDetailsEntered(baseProvider.myUser.mobile, IDP.email.text,
-//                     IDP.selectedDate)
-//                 .then((basicObj) {
-//               if (!basicObj['flag']) {
-//                 _isProcessing = false;
-//                 if (basicObj['reason'] != null) {
-//                   _errorMessage = 'Error: ${basicObj['reason']}';
-//                 } else {
-//                   _errorMessage =
-//                       'Error: Unknown error occurred. Please try again.';
-//                 }
-//                 setState(() {});
-//               } else {
-//                 _isProcessing = false;
-//                 setState(() {});
-//                 new Timer(const Duration(milliseconds: 1000), () {
-//                   onTabTapped(IncomeDetailsInputScreen.index);
-// =======
             runBasicDetailsAndFatcaApi();
           }
         });
@@ -282,7 +241,6 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
               if (userAcctList != null) IDP.userAcctTypes = userAcctList;
               new Timer(const Duration(milliseconds: 500), () {
                 onTabTapped(BankDetailsInputScreen.index);
-// >>>>>>> fe967712be963b72ac3e0241fe9b31044dee0fa8
               });
             });
           }

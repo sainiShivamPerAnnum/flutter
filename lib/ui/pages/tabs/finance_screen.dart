@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/ui/pages/gold_details_page.dart';
 import 'package:felloapp/ui/pages/mf_details_page.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +93,14 @@ class _FinancePageState extends State<FinancePage> {
                           ),
                         ),
                       ),
-                      FundWidget(fund: fundList[1]),
+                      FundWidget(fund: fundList[1],
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (ctx) => GoldDetailsPage(),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -221,17 +229,6 @@ class ZeroBalView extends StatelessWidget {
               ),
             ),
           ),
-
-          // Expanded(
-          //   flex: 4,
-          //   child: Text(
-          //     "Wallet Empty!!\n\nKickstart your investing journey today with Fello",
-          //     style: GoogleFonts.montserrat(
-          //       fontSize: SizeConfig.mediumTextSize,
-          //       color: Colors.black87,
-          //     ),
-          //   ),
-          // )
         ],
       ),
     );

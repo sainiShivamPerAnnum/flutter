@@ -310,7 +310,7 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                         child: new Material(
                           child: MaterialButton(
-                            child: (!baseProvider.isLoginNextInProgress)
+                            child: (!baseProvider.isEditProfileNextInProgress)
                                 ? Text(
                                     'UPDATE',
                                     style: Theme.of(context)

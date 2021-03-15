@@ -87,7 +87,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       ),
       child: new Material(
         child: MaterialButton(
-          child: (!baseProvider.isDepositRouteLogicInProgress)
+          child: (!baseProvider.isIciciDepositRouteLogicInProgress)
               ? Text(
                   _getActionButtonText(),
                   style: Theme.of(context)
@@ -101,7 +101,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                 ),
           onPressed: () async {
             HapticFeedback.vibrate();
-            baseProvider.isDepositRouteLogicInProgress = true;
+            baseProvider.isIciciDepositRouteLogicInProgress = true;
             setState(() {});
             ///////////DUMMY///////////////////////////////////
             // baseProvider.iciciDetail =
@@ -198,7 +198,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     if (baseProvider.myUser.isIciciEnabled == null ||
         !baseProvider.myUser.isIciciEnabled) {
       //icici deposits not enabled. show disabled dialog
-      baseProvider.isDepositRouteLogicInProgress = false;
+      baseProvider.isIciciDepositRouteLogicInProgress = false;
       showDialog(
           context: context,
           builder: (BuildContext context) => IntegratedIciciDisabled());
@@ -207,7 +207,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_VALID &&
         baseProvider.myUser.isIciciOnboarded) {
       //move directly to depositing
-      baseProvider.isDepositRouteLogicInProgress = false;
+      baseProvider.isIciciDepositRouteLogicInProgress = false;
       showModalBottomSheet(
           backgroundColor: Colors.transparent,
           context: context,
@@ -238,7 +238,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       return true;
     }
     if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID) {
-      baseProvider.isDepositRouteLogicInProgress = false;
+      baseProvider.isIciciDepositRouteLogicInProgress = false;
       Navigator.of(context).pop(); //go back to save tab
       // Navigator.of(context).pushNamed('/verifykyc');
       Navigator.of(context).pushNamed('/initkyc');
@@ -267,7 +267,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
               ),
             ));
       }
-      baseProvider.isDepositRouteLogicInProgress = false;
+      baseProvider.isIciciDepositRouteLogicInProgress = false;
     }
     return true;
   }

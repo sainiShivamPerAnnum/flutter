@@ -29,7 +29,7 @@ class AugmontModel extends ChangeNotifier {
   String _apiKey;
   var headers;
 
-  Future<bool> init() async {
+  Future<bool> _init() async {
     if (_dbModel == null) return false;
     Map<String, String> cMap = await _dbModel.getActiveAwsAugmontApiKey();
     if (cMap == null) return false;
@@ -60,6 +60,8 @@ class AugmontModel extends ChangeNotifier {
 
   Future<UserAugmontDetail> createUser(
       String mobile, String pan, String stateId) async {
+    if (!isInit()) await _init();
+
     String _uid = _constructUid(pan);
     String _uname = _constructUsername();
     var _params = {
@@ -70,11 +72,11 @@ class AugmontModel extends ChangeNotifier {
     };
 
     var _request = http.Request(
-        'GET', Uri.parse(constructRequest(CreateUser.path, _params)));
+        'GET', Uri.parse(_constructRequest(CreateUser.path, _params)));
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
-    final resMap = await processResponse(_response);
+    final resMap = await _processResponse(_response);
     if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
       log.error('Query Failed');
       return null;
@@ -83,19 +85,23 @@ class AugmontModel extends ChangeNotifier {
       resMap["flag"] = QUERY_PASSED;
 
       _baseProvider.augmontDetail = UserAugmontDetail.newUser(_uid, _uname, stateId);
+      _baseProvider.myUser.isAugmontOnboarded = true;
       await _dbModel.updateUserAugmontDetails(_baseProvider.myUser.uid, _baseProvider.augmontDetail);
+      await _dbModel.updateUser(_baseProvider.myUser);
 
       return _baseProvider.augmontDetail;
     }
   }
 
   Future<AugmontRates> getRates() async {
+    if (!isInit()) await _init();
+
     var _request =
-        http.Request('GET', Uri.parse(constructRequest(GetRates.path, null)));
+        http.Request('GET', Uri.parse(_constructRequest(GetRates.path, null)));
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
-    final resMap = await processResponse(_response);
+    final resMap = await _processResponse(_response);
     if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
       log.error('Query Failed');
       return null;
@@ -113,6 +119,8 @@ class AugmontModel extends ChangeNotifier {
   ///update db object
   Future<UserTransaction> initiateGoldPurchase(
       AugmontRates buyRates, double amount) async {
+    if (!isInit()) await _init();
+
     if (_baseProvider.augmontDetail == null ||
         _baseProvider.augmontDetail.userId == null ||
         _baseProvider.augmontDetail.userName == null ||
@@ -169,11 +177,11 @@ class AugmontModel extends ChangeNotifier {
       SubmitGoldPurchase.fldPaymode: _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugPaymode],
     };
     var _request = http.Request(
-        'GET', Uri.parse(constructRequest(SubmitGoldPurchase.path, _params)));
+        'GET', Uri.parse(_constructRequest(SubmitGoldPurchase.path, _params)));
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
-    final resMap = await processResponse(_response);
+    final resMap = await _processResponse(_response);
     if (resMap == null || !resMap[INTERNAL_FAIL_FLAG] || resMap['result']['data'][SubmitGoldPurchase.resTranId] == null) {
       log.error('Query Failed');
       var _failMap = {
@@ -186,7 +194,7 @@ class AugmontModel extends ChangeNotifier {
       _baseProvider.currentAugmontTxn.tranStatus = UserTransaction.TRAN_STATUS_COMPLETE;
       _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] = resMap['result']['data'][SubmitGoldPurchase.resAugTranId];
       _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] = resMap['result']['data'][SubmitGoldPurchase.resTranId];
-      bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
+      //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
       if(!_baseProvider.augmontDetail.firstInvMade){
         _baseProvider.augmontDetail.firstInvMade = true;
         await _dbModel.updateUserAugmontDetails(_baseProvider.myUser.uid, _baseProvider.augmontDetail);
@@ -201,10 +209,12 @@ class AugmontModel extends ChangeNotifier {
       'txnDocId': _baseProvider.currentAugmontTxn.docKey
     };
     await _dbModel.logFailure(_baseProvider.myUser.uid, FailType.UserRazorpayPurchaseFailed, _failMap);
+    _baseProvider.currentAugmontTxn.tranStatus = UserTransaction.TRAN_STATUS_CANCELLED;
+    bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
     if(_augmontTxnProcessListener != null)_augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
   }
 
-  String constructRequest(String subPath, Map<String, String> params) {
+  String _constructRequest(String subPath, Map<String, String> params) {
     String _path = '$_baseUri/$subPath';
     if (params != null && params.length > 0) {
       String _p = '';
@@ -224,7 +234,7 @@ class AugmontModel extends ChangeNotifier {
     return _path;
   }
 
-  Future<Map<String, dynamic>> processResponse(
+  Future<Map<String, dynamic>> _processResponse(
       http.StreamedResponse response) async {
     if (response == null) {
       log.error('response is null');
@@ -270,5 +280,7 @@ class AugmontModel extends ChangeNotifier {
     _rzpGateway.cleanListeners();
     _baseProvider.currentAugmontTxn = null;
     _augmontTxnProcessListener = null;
+
+    _baseProvider.userMiniTxnList = null; //this is to ensure that the transactions list gets refreshed
   }
 }

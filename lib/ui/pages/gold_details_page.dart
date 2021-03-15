@@ -1,12 +1,18 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/AugGoldRates.dart';
+import 'package:felloapp/core/model/UserAugmontDetail.dart';
+import 'package:felloapp/core/model/UserTransaction.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
+import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
+import 'package:felloapp/ui/dialogs/augmont_onboarding_dialog.dart';
 import 'package:felloapp/ui/dialogs/icici_withdraw_dialog.dart';
-import 'package:felloapp/ui/dialogs/integrated_icici_disabled_dialog.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/deposit_modal_sheet.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
+import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/pages/deposit_verification.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
@@ -33,17 +39,22 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
   Log log = new Log('GoldDetails');
   BaseUtil baseProvider;
   DBModel dbProvider;
-  PaymentService payService;
-  GlobalKey<DepositModalSheetState> _modalKey = GlobalKey();
+  AugmontModel augmontProvider;
+  GlobalKey<AugmontDepositModalSheetState> _modalKey = GlobalKey();
+  GlobalKey<AugmontOnboardingState> _onboardingKey = GlobalKey();
   GlobalKey<IciciWithdrawDialogState> _withdrawalDialogKey = GlobalKey();
   double containerHeight = 10;
   Map<String, dynamic> _withdrawalRequestDetails;
+  AugmontRates _currentBuyRates;
+  static const int STATUS_UNAVAILABLE = 0;
+  static const int STATUS_REGISTER = 1;
+  static const int STATUS_OPEN = 2;
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    dbProvider = Provider.of<DBModel>(context,listen:false);
-    payService = Provider.of<PaymentService>(context,listen:false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    augmontProvider = Provider.of<AugmontModel>(context, listen: false);
 
     return Scaffold(
       appBar: BaseUtil.getAppBar(),
@@ -66,13 +77,13 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
               ),
             ),
           ),
-          _buildBetaSaveButton(),
+          _buildSaveButton(),
         ],
       ),
     );
   }
 
-  Widget _buildBetaSaveButton() {
+  Widget _buildSaveButton() {
     return Container(
       width: double.infinity,
       height: MediaQuery.of(context).size.height * 0.07,
@@ -84,7 +95,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
       ),
       child: new Material(
         child: MaterialButton(
-          child: (!baseProvider.isDepositRouteLogicInProgress)
+          child: (!baseProvider.isAugDepositRouteLogicInProgress)
               ? Text(
                   _getActionButtonText(),
                   style: Theme.of(context)
@@ -98,7 +109,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                 ),
           onPressed: () async {
             HapticFeedback.vibrate();
-            baseProvider.isDepositRouteLogicInProgress = true;
+            baseProvider.isAugDepositRouteLogicInProgress = true;
             setState(() {});
             ///////////DUMMY///////////////////////////////////
             // baseProvider.iciciDetail =
@@ -109,7 +120,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
             //     panNumber: baseProvider.iciciDetail.panNumber,),
             // ));
             //////////////////////////////////////
-            onDepositClicked().then((value) {
+            _onDepositClicked().then((value) {
               setState(() {});
             });
           },
@@ -175,130 +186,163 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     );
   }
 
-  String _getActionButtonText() {
-    if (baseProvider.myUser.isIciciEnabled == null ||
-        !baseProvider.myUser.isIciciEnabled) {
-      return 'UNAVAILABLE';
+  int _checkAugmontStatus() {
+    //check who is allowed to deposit
+    String _perm =
+        BaseUtil.remoteConfig.getString('augmont_deposit_permission');
+    int _isGeneralUserAllowed = 1;
+    bool _isAllowed = false;
+    if (_perm != null && _perm.isNotEmpty) {
+      try {
+        _isGeneralUserAllowed = int.parse(_perm);
+      } catch (e) {
+        _isGeneralUserAllowed = 1;
+      }
     }
-    if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID)
-      return 'COMPLETE KYC';
-    if (!baseProvider.myUser.isIciciOnboarded)
+    if (_isGeneralUserAllowed == 0) {
+      //General permission is denied. Check if specific user permission granted
+      if (baseProvider.myUser.isAugmontEnabled != null &&
+          baseProvider.myUser.isAugmontEnabled) {
+        //this specific user is allowed to use Augmont
+        _isAllowed = true;
+      } else {
+        _isAllowed = false;
+      }
+    } else {
+      _isAllowed = true;
+    }
+
+    if (!_isAllowed)
+      return STATUS_UNAVAILABLE;
+    else if (baseProvider.myUser.isAugmontOnboarded == null ||
+        baseProvider.myUser.isAugmontOnboarded == false)
+      return STATUS_REGISTER;
+    else
+      return STATUS_OPEN;
+  }
+
+  String _getActionButtonText() {
+    int _status = _checkAugmontStatus();
+    if (_status == STATUS_UNAVAILABLE)
+      return 'UNAVAILABLE';
+    else if (_status == STATUS_REGISTER)
       return 'REGISTER';
     else
       return 'DEPOSIT';
   }
 
-  Future<bool> onDepositClicked() async {
-    baseProvider.iciciDetail = (baseProvider.iciciDetail == null)
-        ? (await dbProvider.getUserIciciDetails(baseProvider.myUser.uid))
-        : baseProvider.iciciDetail;
-    if (baseProvider.myUser.isIciciEnabled == null ||
-        !baseProvider.myUser.isIciciEnabled) {
-      //icici deposits not enabled. show disabled dialog
-      baseProvider.isDepositRouteLogicInProgress = false;
+  Future<bool> _onDepositClicked() async {
+    baseProvider.augmontDetail = (baseProvider.augmontDetail == null)
+        ? (await dbProvider.getUserAugmontDetails(baseProvider.myUser.uid))
+        : baseProvider.augmontDetail;
+    int _status = _checkAugmontStatus();
+    if (_status == STATUS_UNAVAILABLE) {
+      baseProvider.isAugDepositRouteLogicInProgress = false;
       showDialog(
           context: context,
-          builder: (BuildContext context) => IntegratedIciciDisabled());
+          builder: (BuildContext context) => AugmontDisabled());
+      setState(() {});
       return true;
-    }
-    if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_VALID &&
-        baseProvider.myUser.isIciciOnboarded) {
-      //move directly to depositing
-      baseProvider.isDepositRouteLogicInProgress = false;
-      showModalBottomSheet(
-          backgroundColor: Colors.transparent,
+    } else if (_status == STATUS_REGISTER) {
+      await showDialog(
           context: context,
-          isScrollControlled: true,
-          builder: (context) {
-            return DepositModalSheet(
-              key: _modalKey,
-              onDepositConfirmed: (Map<String, dynamic> rMap) {
-                payService
-                    .initiateTransaction(rMap['amount'], rMap['vpa'])
-                    .then((resMap) {
-                  if (!resMap['flag']) {
-                    _modalKey.currentState.onErrorReceived(resMap['reason'] ??
-                        'Error: Unknown. Please restart the app');
-                  } else {
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (ctx) => DepositVerification(),
-                        ));
-                  }
-                  return;
+          builder: (BuildContext context) =>
+              AugmontOnboarding(key: _onboardingKey,
+                  onSubmit: (Map<String, String> aData) {
+                String aPan = aData['pan_number'];
+                String aStateId = aData['state_id'];
+                _registerAugmontUser(aPan, aStateId).then((flag) {
+                  _onboardingKey.currentState.regnComplete(flag);
                 });
-              },
-            );
-          });
-      return true;
-    }
-    if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID) {
-      baseProvider.isDepositRouteLogicInProgress = false;
-      Navigator.of(context).pop(); //go back to save tab
-      // Navigator.of(context).pushNamed('/verifykyc');
-      Navigator.of(context).pushNamed('/initkyc');
+              }));
+      baseProvider.isAugDepositRouteLogicInProgress = false;
+      setState(() {});
       return true;
     } else {
-      Navigator.of(context).pop(); //go back to save tab
-      if (baseProvider.iciciDetail != null &&
-          baseProvider.iciciDetail.panNumber != null &&
-          baseProvider.iciciDetail.appId != null &&
-          baseProvider.iciciDetail.panName != null) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (ctx) => IciciOnboardController(
-                startIndex: PersonalPage.index,
-                appIdExists: true,
-              ),
-            ));
+      baseProvider.isAugDepositRouteLogicInProgress = false;
+      _currentBuyRates = await augmontProvider.getRates();
+      if (_currentBuyRates == null) {
+        baseProvider.showNegativeAlert('Portal unavailable',
+            'The current rates couldn\'t be loaded. Please try again', context);
+        return false;
       } else {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (ctx) => IciciOnboardController(
-                startIndex: PANPage.index,
-                appIdExists: false,
-              ),
-            ));
+        showModalBottomSheet(
+            isDismissible: false,
+            backgroundColor: Colors.transparent,
+            context: context,
+            isScrollControlled: true,
+            builder: (context) {
+              return AugmontDepositModalSheet(
+                key: _modalKey,
+                onDepositConfirmed: (double amount) {
+                  augmontProvider.initiateGoldPurchase(
+                      _currentBuyRates, amount);
+                  augmontProvider.setAugmontTxnProcessListener(
+                      _onDepositTransactionComplete);
+                },
+                currentRates: _currentBuyRates,
+              );
+            });
       }
-      baseProvider.isDepositRouteLogicInProgress = false;
     }
     return true;
   }
 
+  Future<bool> _registerAugmontUser(String aPan, String aStateId) async {
+    if (aPan != null && aStateId != null) {
+      UserAugmontDetail detail = await augmontProvider.createUser(
+          baseProvider.myUser.mobile, aPan, aStateId);
+      if (detail != null) return true;
+    }
+    return false;
+  }
+
+  Future<bool> _onDepositTransactionComplete(UserTransaction txn) async{
+    if (txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) {
+      if (baseProvider.currentAugmontTxn != null) {
+        ///update augmont transaction closing balance and ticketupcount
+        baseProvider.currentAugmontTxn.ticketUpCount =
+            baseProvider.getTicketCountForTransaction(
+                baseProvider.currentAugmontTxn.amount);
+        baseProvider.currentAugmontTxn.closingBalance = baseProvider
+            .getUpdatedClosingBalance(baseProvider.currentAugmontTxn.amount);
+
+        ///update baseuser account balance and ticket count
+        baseProvider.myUser.account_balance =
+            baseProvider.currentAugmontTxn.closingBalance;
+        baseProvider.myUser.ticket_count =
+            baseProvider.getTotalTicketsPostTransaction(
+                baseProvider.currentAugmontTxn.amount);
+
+        await dbProvider.updateUser(baseProvider.myUser);
+        await dbProvider.updateUserTransaction(baseProvider.myUser.uid, baseProvider.currentAugmontTxn);
+        return true;
+      }
+    } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_CANCELLED) {
+      //razorpay payment failed
+      log.debug('Payment cancelled');
+    } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_PENDING) {
+      //razorpay completed but augmont purchase didnt go through
+      log.debug('Payment pending');
+    }
+  }
+
   onWithdrawalClicked() {
-    if (!baseProvider.myUser.isIciciOnboarded) {
+    HapticFeedback.vibrate();
+    if (!baseProvider.myUser.isAugmontOnboarded) {
       baseProvider.showNegativeAlert(
-          'Not onboarded', 'You havent been onboarded to ICICI yet', context);
-    } else if (baseProvider.myUser.icici_balance == null ||
-        baseProvider.myUser.icici_balance == 0) {
+          'Not onboarded', 'You havent been onboarded to Augmont yet', context);
+    } else if (baseProvider.myUser.augmont_balance == null ||
+        baseProvider.myUser.augmont_balance == 0) {
       baseProvider.showNegativeAlert(
-          'No balance', 'Your ICICI wallet has no balance presently', context);
+          'No balance', 'Your Augmont wallet has no balance presently', context);
     } else {
-      HapticFeedback.vibrate();
-      payService.getWithdrawalDetails().then((withdrawalDetailsMap) {
-        //refresh dialog state once balance received
-        if (!withdrawalDetailsMap['flag']) {
-          _withdrawalDialogKey.currentState
-              .onDetailsReceived(0, 0, false, withdrawalDetailsMap['reason']);
-        } else {
-          _withdrawalDialogKey.currentState.onDetailsReceived(
-              withdrawalDetailsMap['instant_balance'],
-              withdrawalDetailsMap['total_balance'],
-              withdrawalDetailsMap['is_imps_allowed'],
-              withdrawalDetailsMap['reason']);
-        }
-      });
+
 
     }
   }
 
-  Future<bool> onInitiateWithdrawal(Map<String, dynamic> fieldMap) {
-
-  }
+  Future<bool> onInitiateWithdrawal(Map<String, dynamic> fieldMap) {}
 }
 
 class FundDetailsTable extends StatelessWidget {
@@ -457,7 +501,7 @@ class FundInfo extends StatelessWidget {
                 bottom: _height * 0.02,
               ),
               width: _width * 0.2,
-              child: Image.asset(Assets.iciciGraphic, fit: BoxFit.contain),
+              child: Image.asset(Assets.augmontGraphic, fit: BoxFit.contain),
             ),
             SizedBox(
               width: 10,
@@ -465,7 +509,7 @@ class FundInfo extends StatelessWidget {
             Expanded(
                 child: FittedBox(
               child: Text(
-                "ICICI Prudential Mutual Fund",
+                "Augmont Gold Fund",
                 textAlign: TextAlign.left,
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24),
               ),
