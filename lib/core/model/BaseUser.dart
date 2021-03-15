@@ -21,9 +21,11 @@ class BaseUser {
   String _age;
   bool _isInvested;
   bool _isIciciOnboarded;
+  bool _isAugmontOnboarded;
   int _isKycVerified;
   String _pendingTxnId;
   bool _isIciciEnabled;
+  bool _isAugmontEnabled;
 
   static final String fldId = "mID";
   static final String fldMobile = "mMobile";
@@ -32,30 +34,33 @@ class BaseUser {
   static final String fldClient_token = "mClientToken";
   static final String fldTicket_count = "mTicketCount";
   static final String fldAcctBalance = "mAcctBalance";
-  static final String fldPan = "mPan";
-  static final String fldAge = "mAge";
-  static final String fldIsInvested = "mIsInvested";
-  static final String fldIsIciciOnboarded = "mIsIciciOnboarded";
-  static final String fldIsIciciEnabled = "mIsIciciEnabled";
-  static final String fldIsKycVerified = "mIsKycVerified";
   static final String fldDepositBalance = "mDepBalance";
   static final String fldPriBalance = "mPriBalance";
   static final String fldICICIBalance = "mICBalance";
   static final String fldAugmontBalance = "mAugBalance";
   static final String fldLifeTimeWinnings = "mLifeTimeWin";
+  static final String fldPan = "mPan";
+  static final String fldAge = "mAge";
+  static final String fldIsInvested = "mIsInvested";
+  static final String fldIsIciciOnboarded = "mIsIciciOnboarded";
+  static final String fldIsAugmontOnboarded = "mIsAugmontOnboarded";
+  static final String fldIsKycVerified = "mIsKycVerified";
   static final String fldPendingTxnId = "mPendingTxnId";
+  static final String fldIsIciciEnabled = "mIsIciciEnabled";
+  static final String fldIsAugmontEnabled = "mIsAugmontEnabled";
 
   BaseUser(this._uid, this._mobile, this._email, this._name, this._client_token,
       this._ticket_count, this._account_balance, this._deposit_balance,
-      this._prize_balance, this._icici_balance, this._augmont_balance, this._lifetime_winnings,
-      this._pan, this._age, this._isInvested, this._isIciciOnboarded,
-      this._isKycVerified, this._pendingTxnId, this._isIciciEnabled);
+      this._prize_balance, this._icici_balance, this._augmont_balance,
+      this._lifetime_winnings, this._pan, this._age, this._isInvested,
+      this._isIciciOnboarded, this._isAugmontOnboarded, this._isKycVerified,
+      this._pendingTxnId, this._isIciciEnabled, this._isAugmontEnabled);
 
   static List<String> _fldList = [ fldMobile, fldEmail, fldName, fldPan, fldAge ];
 
   BaseUser.newUser(String id, String mobile) : this(id, mobile, null, null, null,
-      BaseUtil.NEW_USER_TICKET_COUNT, 0, 0, 0, 0, 0, 0, null, null, false, false,
-      BaseUtil.KYC_UNTESTED,null,null);
+      BaseUtil.NEW_USER_TICKET_COUNT, 0, 0, 0, 0, 0, 0, null, null, false, false,false,
+      BaseUtil.KYC_UNTESTED,null,null,null);
 
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token]) :
         this(id, data[fldMobile], data[fldEmail], data[fldName], client_token,
@@ -63,8 +68,8 @@ class BaseUser {
           data[fldDepositBalance]??0,data[fldPriBalance]??0, data[fldICICIBalance]??0,
           data[fldAugmontBalance]??0,data[fldLifeTimeWinnings]??0,data[fldPan],
           data[fldAge], data[fldIsInvested]??false,data[fldIsIciciOnboarded]??false,
-          data[fldIsKycVerified]??BaseUtil.KYC_UNTESTED,data[fldPendingTxnId],
-          data[fldIsIciciEnabled]
+          data[fldIsAugmontOnboarded]??false,data[fldIsKycVerified]??BaseUtil.KYC_UNTESTED,
+          data[fldPendingTxnId],data[fldIsIciciEnabled],data[fldIsAugmontEnabled]
       );
 
   //to send user object to server
@@ -88,6 +93,7 @@ class BaseUser {
       fldPendingTxnId: _pendingTxnId
     };
     if(_isIciciEnabled != null)userObj[fldIsIciciEnabled]=_isIciciEnabled;
+    if(_isAugmontEnabled != null)userObj[fldIsAugmontEnabled]=_isAugmontEnabled;
 
     return userObj;
   }
@@ -291,5 +297,17 @@ class BaseUser {
 
   set isIciciEnabled(bool value) {
     _isIciciEnabled = value;
+  }
+
+  bool get isAugmontEnabled => _isAugmontEnabled;
+
+  set isAugmontEnabled(bool value) {
+    _isAugmontEnabled = value;
+  }
+
+  bool get isAugmontOnboarded => _isAugmontOnboarded;
+
+  set isAugmontOnboarded(bool value) {
+    _isAugmontOnboarded = value;
   }
 }
