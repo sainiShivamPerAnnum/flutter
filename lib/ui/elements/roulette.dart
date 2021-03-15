@@ -1,4 +1,5 @@
 import 'package:felloapp/ui/elements/daily_pick_text_slider.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 
 class Roulette extends StatelessWidget {
@@ -10,7 +11,7 @@ class Roulette extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 100,
+        height: SizeConfig.screenHeight * 0.1,
         width: double.infinity,
         margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
         padding: EdgeInsets.all(10),
@@ -42,8 +43,7 @@ class Roulette extends StatelessWidget {
                   infoList: dailyPickTextList,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              Container(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -76,93 +76,15 @@ class Holes extends StatefulWidget {
   Holes({this.pick});
 
   @override
-// <<<<<<< HEAD
-//   Widget build(BuildContext context) {
-//     return Container(
-//         height: 100,
-//         width: double.infinity,
-//         margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
-//         padding: EdgeInsets.all(10),
-//         alignment: Alignment.center,
-//         decoration: BoxDecoration(
-//           color: Colors.blueGrey[400],
-//           boxShadow: [
-//             new BoxShadow(
-//               color: Colors.black26,
-//               offset: Offset.fromDirection(20, 7),
-//               blurRadius: 5.0,
-//             )
-//           ],
-//           borderRadius: BorderRadius.all(Radius.circular(20)),
-//           gradient: LinearGradient(
-//             begin: Alignment.topRight,
-//             end: Alignment.bottomLeft,
-//             stops: [0.1, 0.4],
-//             colors: [Colors.blueGrey[500], Colors.blueGrey[400]],
-//           ),
-//         ),
-//         child: Center(
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: [
-//               Padding(
-//                 padding: EdgeInsets.only(top: 0),
-//                 child: DPTextSlider(
-//                   infoList: dailyPickTextList,
-//                 ),
-//               ),
-//               Padding(
-//                 padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                   children: [
-//                     Holes(
-//                       pick: digits[0],
-//                     ),
-//                     Holes(
-//                       pick: digits[1],
-//                     ),
-//                     Holes(
-//                       pick: digits[2],
-//                     ),
-//                     Holes(
-//                       pick: digits[3],
-//                     ),
-//                     Holes(
-//                       pick: digits[4],
-//                     ),
-//                   ],
-//                 ),
-//               )
-//             ],
-//           ),
-//         ));
-//   }
-// }
-
-// class Holes extends StatefulWidget {
-//   final int pick;
-//   Holes({this.pick});
-
-//   @override
-//   _HolesState createState() => _HolesState();
-// }
-
-// =======
   _HolesState createState() => _HolesState();
 }
 
-//>>>>>>> fe967712be963b72ac3e0241fe9b31044dee0fa8
 class _HolesState extends State<Holes> {
   ScrollController _scrollController;
 
   @override
   void initState() {
-// <<<<<<< HEAD
-//     if (widget.pick != 0) {
-// =======
     if (widget.pick != -1) {
-//>>>>>>> fe967712be963b72ac3e0241fe9b31044dee0fa8
       _scrollController = ScrollController();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _moveDown();
@@ -178,11 +100,7 @@ class _HolesState extends State<Holes> {
 
   @override
   void dispose() {
-// <<<<<<< HEAD
-//     if (widget.pick != 0) {
-// =======
     if (widget.pick != -1) {
-// >>>>>>> fe967712be963b72ac3e0241fe9b31044dee0fa8
       _scrollController.dispose();
     }
     super.dispose();
@@ -201,24 +119,15 @@ class _HolesState extends State<Holes> {
       widget.pick
     ];
     return Container(
-// <<<<<<< HEAD
-//       height: _width * 0.08,
-//       width: _width * 0.08,
-// =======
-      height: _width * 0.1,
-      width: _width * 0.10,
-// >>>>>>> fe967712be963b72ac3e0241fe9b31044dee0fa8
+      height: SizeConfig.screenWidth * 0.1,
+      width: SizeConfig.screenWidth * 0.10,
       padding: EdgeInsets.all(4),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.white,
       ),
-// <<<<<<< HEAD
-//       child: widget.pick != 0
-// =======
       child: widget.pick != -1
-// >>>>>>> fe967712be963b72ac3e0241fe9b31044dee0fa8
           ? ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               itemCount: pickList.length,
@@ -228,23 +137,15 @@ class _HolesState extends State<Holes> {
                 return Text(
                   "${pickList[i]}",
                   textAlign: TextAlign.center,
-// <<<<<<< HEAD
-//                   style: TextStyle(fontSize: _height * 0.025),
-// =======
                   style: TextStyle(fontSize: _height * 0.028),
-// >>>>>>> fe967712be963b72ac3e0241fe9b31044dee0fa8
                 );
               },
             )
           : Center(
-// <<<<<<< HEAD
-//               child: Text("-"),
-// =======
               child: Text(
                 "-",
                 style: TextStyle(fontSize: _height * 0.028),
               ),
-// >>>>>>> fe967712be963b72ac3e0241fe9b31044dee0fa8
             ),
     );
   }

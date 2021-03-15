@@ -295,7 +295,7 @@ class _TicketCountState extends State<TicketCount>
   void initState() {
     super.initState();
     _controller =
-    AnimationController(duration: Duration(seconds: 2), vsync: this);
+        AnimationController(duration: Duration(seconds: 2), vsync: this);
     _latestBegin = 0;
     _latestEnd = widget.totalCount + .0;
   }
@@ -305,14 +305,15 @@ class _TicketCountState extends State<TicketCount>
     if (SizeConfig.isGamefirstTime == true) {
       CurvedAnimation curvedAnimation =
           CurvedAnimation(parent: _controller, curve: Curves.decelerate);
-      _animation = Tween<double>(begin: 0, end: _latestEnd).animate(curvedAnimation);
+      _animation =
+          Tween<double>(begin: 0, end: _latestEnd).animate(curvedAnimation);
 
       if (0 != _latestBegin || widget.totalCount != _latestEnd) {
         _controller.reset();
       }
 
       _latestBegin = 0;
-      _latestEnd = widget.totalCount+.0;
+      _latestEnd = widget.totalCount + .0;
       _controller.addListener(() {
         setState(() {});
       });
@@ -323,7 +324,9 @@ class _TicketCountState extends State<TicketCount>
       child: Column(
         children: [
           Text(
-            _animation != null ? _animation.value.round().toString() : "${widget.totalCount}",
+            _animation != null
+                ? _animation.value.round().toString()
+                : "${widget.totalCount}",
             style: GoogleFonts.montserrat(
               color: Colors.white,
               fontSize: SizeConfig.screenHeight * 0.08,

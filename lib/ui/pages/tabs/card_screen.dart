@@ -246,7 +246,8 @@ class _HState extends State<PlayHome> {
             },
           ),
         ),
-        SafeArea(child: Align(
+        SafeArea(
+            child: Align(
           alignment: Alignment.topCenter,
           child: Padding(
             padding: EdgeInsets.fromLTRB(5, 20, 5, 5),
@@ -957,8 +958,12 @@ class Odds extends StatelessWidget {
                   children: [
                     Icon(_i, size: 24.0, color: Colors.blueGrey),
                     SizedBox(width: 9.0),
-                    Text(_title,
-                        style: tt.caption.apply(color: Colors.blueGrey)),
+                    Text(
+                      _title,
+                      style: tt.caption.apply(
+                        color: Colors.blueGrey,
+                      ),
+                    ),
                   ],
                 ),
               ),

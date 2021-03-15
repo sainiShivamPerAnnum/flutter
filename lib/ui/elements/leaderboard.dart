@@ -36,6 +36,7 @@ class _LeaderboardState extends State<Leaderboard> {
 
   Future<void> getPrizeLeaderBoardData() async {
     baseProvider.prizeLeaders = await dbProvider.getPrizeLeaderboard();
+    print("prizeleaders length: " + baseProvider.prizeLeaders.toString());
     baseProvider.prizeLeaders.sort((a, b) => a.totalWin.compareTo(b.totalWin));
     if (isPrizeLeadersLoading) {
       setState(() {
@@ -48,6 +49,7 @@ class _LeaderboardState extends State<Leaderboard> {
     baseProvider.referralLeaders = await dbProvider.getReferralLeaderboard();
     baseProvider.referralLeaders
         .sort((a, b) => a.refCount.compareTo(b.refCount));
+
     if (isReferralLeadersLoading) {
       setState(() {
         isReferralLeadersLoading = false;
@@ -73,14 +75,12 @@ class _LeaderboardState extends State<Leaderboard> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    if (baseProvider.prizeLeaders == null ||
-        baseProvider.prizeLeaders.isEmpty) {
+    if (baseProvider.prizeLeaders == null) {
       isPrizeLeadersLoading = true;
       setState(() {});
       getPrizeLeaderBoardData();
     }
-    if (baseProvider.referralLeaders == null ||
-        baseProvider.referralLeaders.isEmpty) {
+    if (baseProvider.referralLeaders == null) {
       isReferralLeadersLoading = true;
       setState(() {});
       getReferralLeaderBoardData();
@@ -216,7 +216,7 @@ class _LeaderboardState extends State<Leaderboard> {
                                   backgroundColor: Colors.white,
                                 ),
                               )
-                            : (referralLeaders.length != 0
+                            : (prizeLeaders.length != 0
                                 ? Scrollbar(
                                     thickness: 20,
                                     radius: Radius.circular(100),
