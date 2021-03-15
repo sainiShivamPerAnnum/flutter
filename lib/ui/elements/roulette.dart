@@ -13,7 +13,8 @@ class Roulette extends StatelessWidget {
     return Container(
         height: SizeConfig.screenHeight * 0.1,
         width: double.infinity,
-        margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+        margin: EdgeInsets.symmetric(
+            horizontal: SizeConfig.blockSizeHorizontal * 4),
         padding: EdgeInsets.all(10),
         alignment: Alignment.center,
         decoration: BoxDecoration(
