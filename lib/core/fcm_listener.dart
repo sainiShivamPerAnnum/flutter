@@ -29,26 +29,32 @@ class FcmListener extends ChangeNotifier{
   //TODO INTERNET MESSAGE PlatformException(Error performing get, Failed to get document because the client is offline., null)
   Future<FirebaseMessaging> setupFcm() async {
 
-    try{
-      fbm.setForegroundNotificationPresentationOptions(
-          alert: true, badge: true, sound: true);
-      fbm.requestPermission();
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        print('IOS Listener');
-        print('Got a message whilst in the foreground!');
-        print('Message data: ${message.data}');
+    //new part for iOS
+    if(Platform.isIOS)
+      {
+        try{
+          fbm.setForegroundNotificationPresentationOptions(
+              alert: true, badge: true, sound: true);
+          fbm.requestPermission();
+          FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+            // print('IOS Listener');
+            // print('Got a message whilst in the foreground!');
+            // print('Message data: ${message.data}');
 
-        if (message.notification != null) {
-          print('Message also contained a notification: ${message.notification}');
+            if (message.notification != null) {
+              // print('Message also contained a notification: ${message.notification}');
+            }
+          });
+
         }
-      });
+        catch(e)
+        {
+          log.debug(e);
 
-    }
-    catch(e)
-    {
-      print(e);
+        }
 
-    }
+      }
+
 
 //     _fcm = FirebaseMessaging();
 //     _fcm.configure(
@@ -79,25 +85,12 @@ class FcmListener extends ChangeNotifier{
 //     );
     //TODO to be tested
 
-    // for iOS
-
-    // IOS Configurations
-
     if(_baseUtil.myUser != null && _baseUtil.myUser.mobile != null)await _saveDeviceToken();
     return fbm;
 
 
-    // if(Platform.isIOS) {
-    //   _fcm.requestNotificationPermissions(
-    //       const IosNotificationSettings(sound: true, badge: true, alert: true));
-    //   _fcm.onIosSettingsRegistered
-    //       .listen((IosNotificationSettings settings) {
-    //     print("Settings registered: $settings");
-    //   });
+
     }
-    //
-    // _fcm.subscribeToTopic('dailypickbroadcast');
-    //
 
   _saveDeviceToken() async {
     bool flag = true;

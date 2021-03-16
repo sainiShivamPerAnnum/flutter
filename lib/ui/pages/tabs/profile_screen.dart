@@ -21,6 +21,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:share/share.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -488,11 +489,21 @@ class _ShareOptionsState extends State<ShareOptions> {
                 log.debug(url);
                 baseProvider.isReferralLinkBuildInProgressOther = false;
                 setState(() {});
-                FlutterShareMe()
-                    .shareToSystem(msg: _shareMsg + url)
-                    .then((flag) {
-                  log.debug(flag);
-                });
+                if(Platform.isIOS)
+                  {
+                    Share.share(_shareMsg + url);
+
+                  }
+                else
+                  {
+                    FlutterShareMe()
+                        .shareToSystem(msg: _shareMsg + url)
+                        .then((flag) {
+                      log.debug(flag);
+                    });
+
+                  }
+
               });
               setState(() {});
             },
