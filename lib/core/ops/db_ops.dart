@@ -476,10 +476,10 @@ class DBModel extends ChangeNotifier {
       int weekCode = _getWeekCode();
       QuerySnapshot _querySnapshot =
           await _api.getLeaderboardDocument('referral', weekCode);
-      if (_querySnapshot == null || _querySnapshot.size != 1) return null;
+      if (_querySnapshot == null || _querySnapshot.size != 1) return [];
 
       DocumentSnapshot _docSnapshot = _querySnapshot.docs[0];
-      if (!_docSnapshot.exists || _docSnapshot.data()['leaders'] == null)
+      if (!_docSnapshot.exists || _docSnapshot.data()['leaders'] == [])
         return null;
       Map<String, dynamic> leaderMap = _docSnapshot.data()['leaders'];
       log.debug('Referral Leader Map: $leaderMap');
@@ -501,7 +501,7 @@ class DBModel extends ChangeNotifier {
       return leaderList;
     } catch (e) {
       log.error(e);
-      return null;
+      return [];
     }
   }
 
@@ -510,10 +510,10 @@ class DBModel extends ChangeNotifier {
       int weekCode = _getWeekCode();
       QuerySnapshot _querySnapshot =
           await _api.getLeaderboardDocument('prize', weekCode);
-      if (_querySnapshot == null || _querySnapshot.size != 1) return null;
+      if (_querySnapshot == null || _querySnapshot.size != 1) return [];
 
       DocumentSnapshot _docSnapshot = _querySnapshot.docs[0];
-      if (!_docSnapshot.exists || _docSnapshot.data()['leaders'] == null)
+      if (!_docSnapshot.exists || _docSnapshot.data()['leaders'] == [])
         return null;
       Map<String, dynamic> leaderMap = _docSnapshot.data()['leaders'];
       log.debug('Prize Leader Map: $leaderMap');
@@ -540,7 +540,7 @@ class DBModel extends ChangeNotifier {
       return leaderList;
     } catch (e) {
       log.error(e);
-      return null;
+      return [];
     }
   }
 

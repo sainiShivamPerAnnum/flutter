@@ -85,9 +85,11 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
   }
 
   List<String> getWeek() {
-    int weekNumber = BaseUtil.getWeekNumber();
-    var startDate = ((weekNumber - 2) * 7) + (0);
-    var endDate = ((weekNumber - 2) * 7) + (6);
+    int weekNumber = BaseUtil.getWeekNumber(); //12
+    var date = ((weekNumber - 2) * 7);
+    var weekEnd = DateTime.utc(DateTime.now().year, 1, date).toLocal().weekday;
+    var startDate = date - (weekEnd - 1);
+    var endDate = date + (7 - weekEnd);
     int startDay =
         DateTime.utc(DateTime.now().year, 1, startDate).toLocal().day;
     int endDay = DateTime.utc(DateTime.now().year, 1, endDate).toLocal().day;

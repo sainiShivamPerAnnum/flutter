@@ -359,6 +359,7 @@ class _TransactionsState extends State<Transactions> {
           ),
         ),
         trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               (filteredList[index].type == "WITHDRAWAL" ? "- " : "+ ") +
