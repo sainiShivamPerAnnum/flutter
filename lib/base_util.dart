@@ -97,7 +97,7 @@ class BaseUtil extends ChangeNotifier {
     if (firebaseUser != null)
       _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
     isUserOnboarded =
-        (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
+    (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
     if (isUserOnboarded) {
       await initRemoteConfig();
       // String _p = remoteConfig.getString('play_screen_first');
@@ -174,10 +174,9 @@ class BaseUtil extends ChangeNotifier {
       //there is a pending icici transaction
       iciciDetail = await _dbModel.getUserIciciDetails(_myUser.uid);
       UserTransaction txn =
-          await _dbModel.getUserTransaction(_myUser.uid, _myUser.pendingTxnId);
+      await _dbModel.getUserTransaction(_myUser.uid, _myUser.pendingTxnId);
       if (txn != null &&
-          txn.tranStatus == UserTransaction.TRAN_STATUS_PENDING) {
-      } else {
+          txn.tranStatus == UserTransaction.TRAN_STATUS_PENDING) {} else {
         //transaction doesnt exist or is no longer in PENDING status
 
       }
@@ -248,7 +247,8 @@ class BaseUtil extends ChangeNotifier {
           blurRadius: 3.0,
         )
       ],
-    )..show(context);
+    )
+      ..show(context);
   }
 
   showNegativeAlert(String title, String message, BuildContext context,
@@ -274,7 +274,8 @@ class BaseUtil extends ChangeNotifier {
           blurRadius: 3.0,
         )
       ],
-    )..show(context);
+    )
+      ..show(context);
   }
 
   showNoInternetAlert(BuildContext context) {
@@ -299,7 +300,8 @@ class BaseUtil extends ChangeNotifier {
           blurRadius: 3.0,
         )
       ],
-    )..show(context);
+    )
+      ..show(context);
   }
 
   AuthCredential generateAuthCredential(String verificationId, String smsCode) {
@@ -364,7 +366,7 @@ class BaseUtil extends ChangeNotifier {
     //tdt = new DateTime(tdt.year, tdt.month, tdt.day-dayn+3);
     //tdt.setDate(tdt.getDate() - dayn + 3);
     DateTime firstThursday =
-        new DateTime(tdt.year, tdt.month, tdt.day - dayn + 3);
+    new DateTime(tdt.year, tdt.month, tdt.day - dayn + 3);
     tdt = new DateTime(tdt.year, 1, 1);
     if (tdt.weekday != DateTime.friday) {
       //tdt.setMonth(0, 1 + ((4 - tdt.getDay()) + 7) % 7);
@@ -374,32 +376,41 @@ class BaseUtil extends ChangeNotifier {
     }
     int n = 1 +
         ((firstThursday.millisecondsSinceEpoch - tdt.millisecondsSinceEpoch) /
-                604800000)
+            604800000)
             .ceil();
     //log.debug("Current week number: " + n.toString());
     return n;
   }
 
+  int getUpdatedWithdrawalClosingBalance(double investment) =>
+      (toDouble(_myUser.icici_balance) +
+          toDouble(_myUser.augmont_balance) +
+          toDouble(_myUser.prize_balance) +
+          toDouble(_myUser.deposit_balance) -
+          investment)
+          .round();
+
   int getUpdatedClosingBalance(double investment) =>
-      (investment + toDouble(_myUser.icici_balance)
-              + toDouble(_myUser.augmont_balance)
-              + toDouble(_myUser.prize_balance)
-              + toDouble(_myUser.deposit_balance))
+      (investment +
+          toDouble(_myUser.icici_balance) +
+          toDouble(_myUser.augmont_balance) +
+          toDouble(_myUser.prize_balance) +
+          toDouble(_myUser.deposit_balance))
           .round();
 
   static T _cast<T>(x) => x is T ? x : null;
 
   static double toDouble(dynamic x) {
-    if(x == null) return 0.0;
-    try{
+    if (x == null) return 0.0;
+    try {
       int y = _cast<int>(x);
-      if(y != null) return y+.0;
-    }catch(e) {}
+      if (y != null) return y + .0;
+    } catch (e) {}
 
-    try{
+    try {
       double z = _cast<double>(x);
-      if(z != null) return z;
-    }catch(e) {}
+      if (z != null) return z;
+    } catch (e) {}
 
     return 0.0;
   }
@@ -409,6 +420,13 @@ class BaseUtil extends ChangeNotifier {
 
   int getTotalTicketsPostTransaction(double investment) =>
       _myUser.ticket_count + getTicketCountForTransaction(investment);
+
+  int getTotalTicketsPostWithdrawalTransaction(double investment) {
+    int count = _myUser.ticket_count - getTicketCountForTransaction(investment);
+    if(count <= 0) count = 0;
+
+    return count;
+  }
 
   BaseUser get myUser => _myUser;
 

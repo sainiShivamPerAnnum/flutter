@@ -20,6 +20,7 @@ enum FailType{
   UserWithdrawalExitLoadFailed,
   UserWithdrawalSubmitFailed,
   UserAugmontPurchaseFailed,
+  UserAugmontSellFailed,
   UserRazorpayPurchaseFailed
 }
 

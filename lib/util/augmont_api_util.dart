@@ -60,7 +60,7 @@ class SubmitGoldSell {
   static final String fldLockPrice = 'lockprice';
   static final String fldAmount = 'amount';
   static final String fldMobile = 'mobile';
-  static final String fldUid = 'uid';
+  static final String fldAugmontUid = 'uid';
   static final String fldUsername = 'uname';
   static final String fldAccHolderName = 'acctname';
   static final String fldAccNo = 'accno';

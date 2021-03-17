@@ -22,7 +22,10 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
   final Log log = new Log('AugmontOnboarding');
   BaseUtil baseProvider;
   double _width;
-  static TextEditingController panInput = new TextEditingController();
+  static TextEditingController _panInput = new TextEditingController();
+  static TextEditingController _bankHolderNameInput = new TextEditingController();
+  static TextEditingController _bankAccountNumberInput = new TextEditingController();
+  static TextEditingController _bankIfscInput = new TextEditingController();
   bool _isInit = false;
   static String stateChosenValue;
 
@@ -31,7 +34,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     _width = MediaQuery.of(context).size.width;
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     if (!_isInit) {
-      panInput.text = baseProvider.myUser.pan ?? '';
+      _panInput.text = baseProvider.myUser.pan ?? '';
       _isInit = true;
     }
     return Dialog(
@@ -115,7 +118,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                     InputField(
                       child: TextFormField(
                         decoration: inputFieldDecoration('PAN Number'),
-                        controller: panInput,
+                        controller: _panInput,
                         textCapitalization: TextCapitalization.characters,
                         enabled: true,
                         validator: (value) {
@@ -161,6 +164,54 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                             .toList(),
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text("Bank Details"),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text("Account Holder Name"),
+                    ),
+                    InputField(
+                      child: TextFormField(
+                        decoration: inputFieldDecoration('Your name as per your bank'),
+                        controller: _bankHolderNameInput,
+                        keyboardType: TextInputType.name,
+                        textCapitalization: TextCapitalization.characters,
+                        enabled: true,
+                        validator: (value) {return null;},
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text("Bank Account Number"),
+                    ),
+                    InputField(
+                      child: TextFormField(
+                        decoration: inputFieldDecoration('Your bank account number'),
+                        controller: _bankAccountNumberInput,
+                        keyboardType: TextInputType.number,
+                        enabled: true,
+                        validator: (value) => null,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text("Bank IFSC"),
+                    ),
+                    InputField(
+                      child: TextFormField(
+                        decoration: inputFieldDecoration('Your bank\'s IFSC code'),
+                        controller: _bankIfscInput,
+                        keyboardType: TextInputType.streetAddress,
+                        textCapitalization: TextCapitalization.characters,
+                        enabled: true,
+                        validator: (value) => null,
+                      ),
+                    ),
+                    SizedBox(height: 10),
                     Container(
                       width: MediaQuery.of(context).size.width - 50,
                       height: 50.0,
@@ -191,13 +242,13 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                           onPressed: () {
                             RegExp panCheck =
                                 RegExp(r"[A-Z]{5}[0-9]{4}[A-Z]{1}");
-                            if (panInput.text.isEmpty) {
+                            if (_panInput.text.isEmpty) {
                               baseProvider.showNegativeAlert(
                                   'Invalid Pan',
                                   'Kindly enter a valid PAN Number',
                                   context);
                               return;
-                            } else if (!panCheck.hasMatch(panInput.text)) {
+                            } else if (!panCheck.hasMatch(_panInput.text)) {
                               baseProvider.showNegativeAlert('Invalid Pan',
                                   'Kindly enter a valid PAN Number', context);
                               return;
@@ -211,8 +262,11 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                                 return;
                               }
                               widget.onSubmit({
-                                'pan_number': panInput.text,
-                                'state_id': stateChosenValue
+                                'pan_number': _panInput.text,
+                                'state_id': stateChosenValue,
+                                'bank_holder_name': _bankHolderNameInput.text,
+                                'bank_acc_no': _bankAccountNumberInput.text,
+                                'bank_ifsc': _bankIfscInput.text
                               });
                               baseProvider.isAugmontRegnInProgress = true;
                               setState(() {});
