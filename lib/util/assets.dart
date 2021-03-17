@@ -7,6 +7,7 @@ class Assets {
   static final String referGraphic = 'images/transfer.png';
   static final String iciciGraphic = 'images/icici.png';
   static final String augmontGraphic = 'images/augmont.png';
+  static final String augmontLogo = "images/augmont-logo.png";
   static final String sebiGraphic = 'images/sebi.png';
   static final String amfiGraphic = 'images/amfi.png';
   static final String prizesGraphic = 'images/prizes-small.png';
@@ -201,5 +202,11 @@ class Assets {
   static final String infoAugmontTxnHow = '';
   static final String infoAugmontTime = '';
 
-  static const List<String> POLL_NEXT_GAME_LIST = ['Finance Quiz', 'Card games', 'Board games', 'Naah','Naah5'];
+  static const List<String> POLL_NEXT_GAME_LIST = [
+    'Finance Quiz',
+    'Card games',
+    'Board games',
+    'Naah',
+    'Naah5'
+  ];
 }

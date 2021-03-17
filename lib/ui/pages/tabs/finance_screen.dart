@@ -26,89 +26,119 @@ class _FinancePageState extends State<FinancePage> {
     };
   }
 
+  refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     chartData = getChartMap();
-    return Container(
-      height: SizeConfig.screenHeight,
-      decoration: BoxDecoration(
-        color: Color(0xFFEFEFEF),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(50),
-          bottomRight: Radius.circular(50),
-        ),
-      ),
-      child: SafeArea(
-        child: ClipRRect(
+    return RefreshIndicator(
+      onRefresh: () async {
+        setState(() {});
+      },
+      child: Container(
+        height: SizeConfig.screenHeight,
+        decoration: BoxDecoration(
+          color: Color(0xFFEFEFEF),
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(50),
             bottomRight: Radius.circular(50),
           ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.screenHeight * 0.016),
-            child: CustomScrollView(
-              slivers: [
-                SliverList(
-                    delegate: SliverChildListDelegate([
-                  Container(
-                    height: AppBar().preferredSize.height,
-                  ),
-                  Container(
-                    child: baseProvider.myUser.account_balance > 0
-                        ? FundChartView(
-                            dataMap: chartData,
-                            totalBal:
-                                baseProvider.myUser.account_balance.toDouble(),
-                          )
-                        : ZeroBalView(),
-                  ),
-                  Divider(),
-                  Text(
-                    "Available Funds",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 24,
-                      color: Colors.black87,
+        ),
+        child: SafeArea(
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(50),
+              bottomRight: Radius.circular(50),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.screenHeight * 0.016),
+              child: CustomScrollView(
+                slivers: [
+                  SliverList(
+                      delegate: SliverChildListDelegate([
+                    Container(
+                      height: AppBar().preferredSize.height * 0.7,
+                    ),
+                    Container(
+                      child: baseProvider.myUser.account_balance > 0
+                          ? FundChartView(
+                              dataMap: chartData,
+                              totalBal: baseProvider.myUser.account_balance
+                                  .toDouble(),
+                            )
+                          : ZeroBalView(),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: SizeConfig.screenWidth * 0.04,
+                        ),
+                        Icon(
+                          Icons.refresh,
+                          color: UiConstants.primaryColor.withGreen(600),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text("Pull to Refresh", style: TextStyle(fontSize: 12)),
+                      ],
+                    ),
+                    Divider(),
+                    Text(
+                      "Available Funds",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 24,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ])),
+                  SliverGrid(
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 275,
+                      childAspectRatio: 2 / 3,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20,
+                    ),
+                    delegate: SliverChildListDelegate(
+                      [
+                        FundWidget(
+                            fund: fundList[0],
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (ctx) => MFDetailsPage(),
+                                ),
+                              );
+
+                              setState(() {});
+                            }),
+                        FundWidget(
+                          fund: fundList[1],
+                          onPressed: () async {
+                            bool res = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (ctx) => GoldDetailsPage(),
+                              ),
+                            );
+                            if (res) {
+                              setState(() {});
+                            }
+                          },
+                        ),
+                      ],
                     ),
                   ),
-                ])),
-                SliverGrid(
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 275,
-                    childAspectRatio: 2 / 3,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20,
-                  ),
-                  delegate: SliverChildListDelegate(
-                    [
-                      FundWidget(
-                        fund: fundList[0],
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (ctx) => MFDetailsPage(),
-                          ),
-                        ),
-                      ),
-                      FundWidget(
-                        fund: fundList[1],
-                        onPressed: () async{
-                          final res = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (ctx) => GoldDetailsPage(),
-                            ),
-                          );
-                          //setState(() {});
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -146,22 +176,19 @@ class FundChartView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Legend(
-                icon: Icons.money,
                 title: title[0],
                 amount: "₹ ${dataMap[title[0]]}",
-                color: UiConstants.primaryColor,
+                color: colorList[0],
               ),
               Legend(
-                icon: Icons.money,
                 title: title[1],
                 amount: "₹ ${dataMap[title[1]]}",
-                color: UiConstants.primaryColor.withGreen(200),
+                color: colorList[1],
               ),
               Legend(
-                icon: Icons.share,
                 title: title[2],
                 amount: "₹ ${dataMap[title[2]]}",
-                color: UiConstants.primaryColor.withGreen(400),
+                color: colorList[2],
               ),
             ],
           ),
@@ -239,28 +266,24 @@ class ZeroBalView extends StatelessWidget {
 }
 
 class Legend extends StatelessWidget {
-  final IconData icon;
   final String title, amount;
   final Color color;
 
-  Legend({this.amount, this.icon, this.title, this.color});
+  Legend({this.amount, this.title, this.color});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.bottomCenter,
-      padding: const EdgeInsets.only(
-        top: 15,
-      ),
+      padding: const EdgeInsets.only(top: 8, bottom: 8),
       child: Row(
         children: [
-          Icon(
-            icon,
-            color: color,
-            size: MediaQuery.of(context).size.width * 0.04,
+          CircleAvatar(
+            radius: MediaQuery.of(context).size.width * 0.016,
+            backgroundColor: color,
           ),
           SizedBox(
-            width: 5,
+            width: 8,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

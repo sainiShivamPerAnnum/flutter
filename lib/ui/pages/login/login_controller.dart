@@ -47,6 +47,12 @@ class _LoginControllerState extends State<LoginController> {
   final _mobileScreenKey = new GlobalKey<MobileInputScreenState>();
   final _otpScreenKey = new GlobalKey<OtpInputScreenState>();
   final _nameScreenKey = new GlobalKey<NameInputScreenState>();
+  //  final GlobalKey<FormFieldState<String>> _mobileScreenKey =
+  //     GlobalKey<FormFieldState<String>>();
+  //  final GlobalKey<FormFieldState<String>> _otpScreenKey =
+  //     GlobalKey<FormFieldState<String>>();
+  //  final GlobalKey<FormFieldState<String>> _nameScreenKey =
+  //     GlobalKey<FormFieldState<String>>();
 
   // final _addressScreenKey = new GlobalKey<AddressInputScreenState>();
 
@@ -130,10 +136,10 @@ class _LoginControllerState extends State<LoginController> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    dbProvider = Provider.of<DBModel>(context,listen:false);
-    localDbProvider = Provider.of<LocalDBModel>(context,listen:false);
-    fcmProvider = Provider.of<FcmListener>(context,listen:false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    localDbProvider = Provider.of<LocalDBModel>(context, listen: false);
+    fcmProvider = Provider.of<FcmListener>(context, listen: false);
     return Scaffold(
       appBar: BaseUtil.getAppBar(),
       backgroundColor: Colors.white,
@@ -256,6 +262,7 @@ class _LoginControllerState extends State<LoginController> {
             this.verificationId = '+91' + this.userMobile;
             verifyPhone();
             baseProvider.isLoginNextInProgress = true;
+            FocusScope.of(_mobileScreenKey.currentContext).unfocus();
             setState(() {});
           }
 //          if (formatMobileNumber(id) != null) {
@@ -285,6 +292,7 @@ class _LoginControllerState extends State<LoginController> {
               baseProvider.showNegativeAlert(
                   'Invalid Otp', 'Please enter a valid otp', context);
               baseProvider.isLoginNextInProgress = true;
+              FocusScope.of(_otpScreenKey.currentContext).unfocus();
               setState(() {});
             }
 //            });
