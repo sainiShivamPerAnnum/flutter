@@ -14,6 +14,7 @@ import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:fl_animated_linechart/chart/area_line_chart.dart';
 import 'package:fl_animated_linechart/chart/line_chart.dart';
@@ -22,6 +23,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -52,29 +54,35 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
 
-    return Scaffold(
-      appBar: BaseUtil.getAppBar(),
-      body: Column(
-        children: [
-          Expanded(
-            child: Container(
-              child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                child: Column(
-                  children: [
-                    FundInfo(),
-                    FundGraph(),
-                    FundDetailsTable(),
-                    ProfitCalculator(),
-                    FAQCard(),
-                    _buildBetaWithdrawButton(),
-                  ],
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context, true);
+        return true;
+      },
+      child: Scaffold(
+        appBar: BaseUtil.getAppBar(),
+        body: Column(
+          children: [
+            Expanded(
+              child: Container(
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      FundInfo(),
+                      FundGraph(),
+                      FundDetailsTable(),
+                      ProfitCalculator(),
+                      FAQCard(),
+                      _buildBetaWithdrawButton(),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          _buildSaveButton(),
-        ],
+            _buildSaveButton(),
+          ],
+        ),
       ),
     );
   }
@@ -532,20 +540,40 @@ class FundDetailsTable extends StatelessWidget {
 
 class FundGraph extends StatelessWidget {
   final Map<DateTime, double> line1 = {
-    DateTime.utc(2018, 02, 19): 255.088,
-    DateTime.utc(2018, 06, 04): 260.479,
-    DateTime.utc(2018, 10, 01): 266.677,
-    DateTime.utc(2018, 12, 10): 270.567,
-    DateTime.utc(2019, 02, 18): 274.292,
-    DateTime.utc(2019, 06, 03): 280.168,
-    DateTime.utc(2019, 08, 02): 284.682,
-    DateTime.utc(2019, 11, 04): 287.417,
-    DateTime.utc(2020, 01, 10): 292.637,
-    DateTime.utc(2020, 05, 25): 296.341,
-    DateTime.utc(2020, 08, 17): 298.870,
-    DateTime.utc(2020, 10, 12): 300.374,
-    DateTime.utc(2020, 12, 14): 301.983,
-    DateTime.utc(2021, 01, 18): 302.761,
+    DateTime.utc(2018, 03, 19): 3130,
+    DateTime.utc(2018, 04, 29): 3199,
+    DateTime.utc(2018, 05, 30): 3205,
+    DateTime.utc(2018, 06, 10): 3152,
+    DateTime.utc(2018, 07, 18): 3053,
+    DateTime.utc(2018, 08, 03): 3118,
+    DateTime.utc(2018, 09, 02): 3138,
+    DateTime.utc(2018, 10, 04): 3281,
+    DateTime.utc(2018, 12, 10): 3142,
+    DateTime.utc(2019, 01, 25): 3223,
+    DateTime.utc(2019, 02, 17): 3223,
+    DateTime.utc(2019, 03, 12): 3443,
+    DateTime.utc(2019, 04, 14): 3280,
+    DateTime.utc(2019, 05, 18): 3279,
+    DateTime.utc(2019, 06, 10): 3294,
+    DateTime.utc(2019, 07, 18): 3466,
+    DateTime.utc(2019, 08, 03): 3590,
+    DateTime.utc(2019, 09, 02): 3994,
+    DateTime.utc(2019, 10, 04): 3877,
+    DateTime.utc(2019, 12, 10): 4008,
+    DateTime.utc(2020, 01, 25): 3925,
+    DateTime.utc(2020, 02, 17): 4026,
+    DateTime.utc(2020, 03, 12): 4221,
+    DateTime.utc(2020, 04, 14): 4347,
+    DateTime.utc(2020, 05, 18): 4473,
+    DateTime.utc(2020, 06, 10): 4650,
+    DateTime.utc(2020, 07, 18): 4848,
+    DateTime.utc(2020, 08, 03): 5050,
+    DateTime.utc(2020, 09, 02): 5530,
+    DateTime.utc(2020, 10, 04): 5340,
+    DateTime.utc(2020, 12, 10): 5225,
+    DateTime.utc(2021, 01, 25): 5141,
+    DateTime.utc(2021, 02, 17): 4702,
+    DateTime.utc(2021, 03, 12): 4588,
   };
 
   @override
@@ -600,7 +628,7 @@ class FundInfo extends StatelessWidget {
                 bottom: _height * 0.02,
               ),
               width: _width * 0.2,
-              child: Image.asset(Assets.augmontGraphic, fit: BoxFit.contain),
+              child: Image.asset(Assets.augmontLogo, fit: BoxFit.contain),
             ),
             SizedBox(
               width: 10,
