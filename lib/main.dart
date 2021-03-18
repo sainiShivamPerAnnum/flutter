@@ -58,11 +58,10 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: Constants.APP_NAME,
         theme: ThemeData(
-          primaryColor: UiConstants.primaryColor,
-          primarySwatch: Colors.green,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          textTheme: GoogleFonts.sourceSansProTextTheme(),
-        ),
+            primaryColor: UiConstants.primaryColor,
+            primarySwatch: Colors.green,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            textTheme: GoogleFonts.montserratTextTheme()),
         home: SplashScreen(),
         routes: <String, WidgetBuilder>{
           '/launcher': (BuildContext context) => SplashScreen(),

@@ -14,6 +14,7 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_detail
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:felloapp/ui/dialogs/icici_withdraw_dialog.dart';
 import 'package:fl_animated_linechart/chart/area_line_chart.dart';
@@ -23,6 +24,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -40,13 +42,13 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   GlobalKey<IciciWithdrawDialogState> _withdrawalDialogKey = GlobalKey();
   double containerHeight = 10;
   Map<String, dynamic> _withdrawalRequestDetails;
-  double instantAmount=0, nonInstantAmount=0;
+  double instantAmount = 0, nonInstantAmount = 0;
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    dbProvider = Provider.of<DBModel>(context,listen:false);
-    payService = Provider.of<PaymentService>(context,listen:false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    payService = Provider.of<PaymentService>(context, listen: false);
 
     return Scaffold(
       appBar: BaseUtil.getAppBar(),
@@ -302,9 +304,9 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                 key: _withdrawalDialogKey,
                 currentBalance: baseProvider.myUser.icici_balance,
                 onAmountConfirmed: (Map<String, double> amountDetails) {
-                  instantAmount = amountDetails['instant_amount']??0;
-                  nonInstantAmount = amountDetails['non_instant_amount']??0;
-                  if(instantAmount == 0 && nonInstantAmount == 0) return;
+                  instantAmount = amountDetails['instant_amount'] ?? 0;
+                  nonInstantAmount = amountDetails['non_instant_amount'] ?? 0;
+                  if (instantAmount == 0 && nonInstantAmount == 0) return;
                   payService
                       .preProcessWithdrawal(instantAmount.toString())
                       .then((combDetailsMap) {
@@ -315,7 +317,8 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                           GetExitLoad.SHOW_POPUP) {
                         _withdrawalDialogKey.currentState.onShowLoadDialog();
                       } else {
-                        onInitiateWithdrawal(_withdrawalRequestDetails, instantAmount, nonInstantAmount);
+                        onInitiateWithdrawal(_withdrawalRequestDetails,
+                            instantAmount, nonInstantAmount);
                       }
                     } else {
                       Navigator.of(context).pop();
@@ -331,7 +334,8 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                     _withdrawalRequestDetails[
                             SubmitRedemption.fldApproxLoadAmount] =
                         _withdrawalRequestDetails[GetExitLoad.resApproxLoadAmt];
-                    onInitiateWithdrawal(_withdrawalRequestDetails, instantAmount, nonInstantAmount);
+                    onInitiateWithdrawal(_withdrawalRequestDetails,
+                        instantAmount, nonInstantAmount);
                   } else {
                     Navigator.of(context).pop();
                     baseProvider.showNegativeAlert(
@@ -344,8 +348,11 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     }
   }
 
-  Future<bool> onInitiateWithdrawal(Map<String, dynamic> fieldMap, double instantWithdraw, double nonInstantWithdraw) {
-    payService.processWithdrawal(fieldMap,instantWithdraw,nonInstantWithdraw).then((wMap) {
+  Future<bool> onInitiateWithdrawal(Map<String, dynamic> fieldMap,
+      double instantWithdraw, double nonInstantWithdraw) {
+    payService
+        .processWithdrawal(fieldMap, instantWithdraw, nonInstantWithdraw)
+        .then((wMap) {
       Navigator.of(context).pop();
       if (!wMap['flag']) {
         baseProvider.showNegativeAlert(
@@ -520,13 +527,14 @@ class FundInfo extends StatelessWidget {
               width: 10,
             ),
             Expanded(
-                child: FittedBox(
               child: Text(
                 "ICICI Prudential Mutual Fund",
                 textAlign: TextAlign.left,
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24),
+                style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w700,
+                    fontSize: SizeConfig.largeTextSize),
               ),
-            )),
+            ),
             SizedBox(
               width: _height * 0.02,
             )

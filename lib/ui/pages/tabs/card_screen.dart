@@ -14,11 +14,13 @@ import 'package:felloapp/ui/elements/tambola_board_view.dart';
 import 'package:felloapp/ui/elements/tambola_dialog.dart';
 import 'package:felloapp/ui/elements/weekly_draw_dialog.dart';
 import 'package:felloapp/ui/elements/winnings_dialog.dart';
+import 'package:felloapp/ui/pages/tambola-cards.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -430,20 +432,57 @@ class _HState extends State<PlayHome> {
                   baseProvider.weeklyDrawFetched,
                   baseProvider.userWeeklyBoards,
                   baseProvider.userTicketsCount),
-              (baseProvider.weeklyTicksFetched &&
-                      baseProvider.userWeeklyBoards != null &&
-                      baseProvider.userTicketsCount > 0 &&
-                      _currentBoard != null)
-                  ? Padding(
-                      padding: EdgeInsets.only(left: 25),
-                      child: Text(
-                        'Ticket #${_currentBoard.getTicketNumber()}',
-                        style: GoogleFonts.montserrat(
-                          fontSize: SizeConfig.smallTextSize,
-                        ),
-                      ),
-                    )
-                  : Container(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  (baseProvider.weeklyTicksFetched &&
+                          baseProvider.userWeeklyBoards != null &&
+                          baseProvider.userTicketsCount > 0 &&
+                          _currentBoard != null)
+                      ? Padding(
+                          padding: EdgeInsets.only(left: 25),
+                          child: Text(
+                            'Ticket #${_currentBoard.getTicketNumber()}',
+                            style: GoogleFonts.montserrat(
+                              fontSize: SizeConfig.smallTextSize,
+                            ),
+                          ),
+                        )
+                      : Container(),
+                  baseProvider.userTicketsCount > 10
+                      ? GestureDetector(
+                          child: Text(
+                            "Show All Tickets   ",
+                            style: GoogleFonts.montserrat(
+                              color: UiConstants.primaryColor.withGreen(600),
+                            ),
+                          ),
+                          onTap: () {
+                            _tambolaBoardViews = [];
+                            baseProvider.userWeeklyBoards.forEach((board) {
+                              _tambolaBoardViews.add(new TambolaBoardView(
+                                  tambolaBoard: board.tambolaBoard,
+                                  calledDigits:
+                                      (baseProvider.weeklyDrawFetched &&
+                                              baseProvider.weeklyDigits != null)
+                                          ? baseProvider.weeklyDigits.toList()
+                                          : [],
+                                  boardColor:
+                                      UiConstants.primaryColor.withGreen(200)));
+                            });
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (ctx) => TambolaCardsList(
+                                  tambolaBoardView: _tambolaBoardViews,
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : SizedBox(),
+                ],
+              ),
               SizedBox(
                 height: 8,
               )
@@ -736,17 +775,27 @@ class _HState extends State<PlayHome> {
                   width: double.infinity, child: _tambolaBoardViews[0])));
     } else {
       _tambolaBoardViews = [];
-      baseProvider.userWeeklyBoards.forEach((board) {
+      for (int i = 0; i < 5; i++) {
         _tambolaBoardViews.add(new TambolaBoardView(
-          tambolaBoard: board.tambolaBoard,
+          tambolaBoard: baseProvider.userWeeklyBoards[i].tambolaBoard,
           calledDigits: (baseProvider.weeklyDrawFetched &&
                   baseProvider.weeklyDigits != null)
               ? baseProvider.weeklyDigits.toList()
               : [],
-          boardColor: UiConstants
-              .boardColors[rnd.nextInt(UiConstants.boardColors.length)],
+          boardColor: UiConstants.primaryColor.withGreen(200),
         ));
-      });
+      }
+      // baseProvider.userWeeklyBoards.forEach((board) {
+      //   _tambolaBoardViews.add(new TambolaBoardView(
+      //     tambolaBoard: board.tambolaBoard,
+      //     calledDigits: (baseProvider.weeklyDrawFetched &&
+      //             baseProvider.weeklyDigits != null)
+      //         ? baseProvider.weeklyDigits.toList()
+      //         : [],
+      //     boardColor: UiConstants
+      //         .boardColors[rnd.nextInt(UiConstants.boardColors.length)],
+      //   ));
+      // });
       _widget = _buildShowcaseWrapper(
           _showcaseThree,
           Assets.showCaseDesc[2],
