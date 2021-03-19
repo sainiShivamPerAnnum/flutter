@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/ui/elements/more_info_dialog.dart';
+import 'package:felloapp/ui/elements/success-dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
@@ -17,9 +18,12 @@ class AugmontDepositModalSheet extends StatefulWidget {
   final ValueChanged<double> onDepositConfirmed;
   final AugmontRates currentRates;
 
-  AugmontDepositModalSheet({Key key, this.onDepositConfirmed, this.currentRates}) : super(key: key);
+  AugmontDepositModalSheet(
+      {Key key, this.onDepositConfirmed, this.currentRates})
+      : super(key: key);
 
-  AugmontDepositModalSheetState createState() => AugmontDepositModalSheetState();
+  AugmontDepositModalSheetState createState() =>
+      AugmontDepositModalSheetState();
 }
 
 class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
@@ -57,7 +61,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
   }
 
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
     _width = MediaQuery.of(context).size.width;
     if (!_isInitialized) _initFields();
     return Container(
@@ -108,14 +112,16 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                     return 'Minimum deposit amount is ₹10 per transaction';
                   else if (amount > 2000)
                     return 'We are currently only accepting a max deposit of ₹2000 per transaction';
-                  else return null;
+                  else
+                    return null;
                 },
                 onChanged: (String val) {
                   setState(() {});
                 },
               ),
             ),
-            _buildPurchaseDescriptionCard(_getCurrentAmount(_amtController.text)),
+            _buildPurchaseDescriptionCard(
+                _getCurrentAmount(_amtController.text)),
             Wrap(
               spacing: 20,
               children: [
@@ -164,8 +170,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
             SizedBox(
               height: 20,
             ),
-            (_isDepositsEnabled &&
-                    !_isDepositInProgress)
+            (_isDepositsEnabled && !_isDepositInProgress)
                 ? Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                     child: SliderButton(
@@ -174,7 +179,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                         if (depositformKey3.currentState.validate()) {
                           _isDepositInProgress = true;
                           setState(() {});
-                          widget.onDepositConfirmed(_getCurrentAmount(_amtController.text));
+                          widget.onDepositConfirmed(
+                              _getCurrentAmount(_amtController.text));
                         }
                       },
                       alignLabel: Alignment.center,
@@ -226,14 +232,14 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
       ),
     );
   }
-  
+
   double _getCurrentAmount(String amt) {
-    if(amt == null || amt.isEmpty) return null;
+    if (amt == null || amt.isEmpty) return null;
     double t = 0;
-    try{
+    try {
       t = double.parse(amt);
       return t;
-    }catch(e) {
+    } catch (e) {
       return null;
     }
   }
@@ -246,9 +252,18 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _buildRateRow('Rate per gram', '₹${widget.currentRates.goldBuyPrice.toStringAsFixed(2)}', 'This is the current price of 1 gram of gold'),
-          _buildRateRow('CGST', '${widget.currentRates.cgstPercent.toString()}%', 'This is the Goods and Services Tax(GST) charged by the central government'),
-          _buildRateRow('SGST', '${widget.currentRates.sgstPercent.toString()}%', 'This is the Goods and Services Tax(GST) charged by the state government'),
+          _buildRateRow(
+              'Rate per gram',
+              '₹${widget.currentRates.goldBuyPrice.toStringAsFixed(2)}',
+              'This is the current price of 1 gram of gold'),
+          _buildRateRow(
+              'CGST',
+              '${widget.currentRates.cgstPercent.toString()}%',
+              'This is the Goods and Services Tax(GST) charged by the central government'),
+          _buildRateRow(
+              'SGST',
+              '${widget.currentRates.sgstPercent.toString()}%',
+              'This is the Goods and Services Tax(GST) charged by the state government'),
         ],
       ),
     );
@@ -261,53 +276,53 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
-            child: Text(title,
-              style: TextStyle(
-                fontSize: SizeConfig.mediumTextSize*1.2
-              ),
+            child: Text(
+              title,
+              style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
             ),
           ),
           Expanded(
-            child: Row(
-              children: [
-                Text(value,
-                  style: TextStyle(
-                      fontSize: SizeConfig.mediumTextSize*1.2
-                  ),
+              child: Row(
+            children: [
+              Text(
+                value,
+                style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
+              ),
+              SizedBox(
+                width: 4,
+              ),
+              InkWell(
+                child: Icon(
+                  Icons.info_outline,
+                  size: SizeConfig.mediumTextSize * 1.3,
                 ),
-                SizedBox(width: 4,),
-                InkWell(
-                  child: Icon(
-                    Icons.info_outline,
-                    size: SizeConfig.mediumTextSize*1.3,
-                  ),
-                  onTap: () {
-                    HapticFeedback.vibrate();
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) => MoreInfoDialog(
-                          title: title,
-                          text: info,
-                        ));
-                  },
-                )
-              ],
-            )
-          )
+                onTap: () {
+                  HapticFeedback.vibrate();
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) => MoreInfoDialog(
+                            title: title,
+                            text: info,
+                          ));
+                },
+              )
+            ],
+          ))
         ],
       ),
     );
   }
 
   Widget _buildPurchaseDescriptionCard(double amt) {
-    double netTax = widget.currentRates.sgstPercent + widget.currentRates.cgstPercent;
+    double netTax =
+        widget.currentRates.sgstPercent + widget.currentRates.cgstPercent;
     double rate = widget.currentRates.goldBuyPrice;
 
-    if(amt == null || amt < 5) {
+    if (amt == null || amt < 5) {
       return Container();
     }
-    double taxDeducted = amt - (amt*netTax)/100;
-    double grams = taxDeducted/rate;
+    double taxDeducted = amt - (amt * netTax) / 100;
+    double grams = taxDeducted / rate;
 
     return Padding(
       padding: EdgeInsets.all(5),
@@ -316,15 +331,13 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Investment after Tax: ₹${taxDeducted.toStringAsFixed(2)}',
-            style:TextStyle(
-                fontSize: SizeConfig.mediumTextSize
-            ),
+          Text(
+            'Investment after Tax: ₹${taxDeducted.toStringAsFixed(2)}',
+            style: TextStyle(fontSize: SizeConfig.mediumTextSize),
           ),
-          Text('Gold amount: ${grams.toStringAsFixed(4)} grams',
-            style:TextStyle(
-                fontSize: SizeConfig.mediumTextSize
-            ),
+          Text(
+            'Gold amount: ${grams.toStringAsFixed(4)} grams',
+            style: TextStyle(fontSize: SizeConfig.mediumTextSize),
           )
         ],
       ),
@@ -335,7 +348,20 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     _isDepositInProgress = false;
     setState(() {});
     Navigator.of(context).pop();
-    if(flag)baseProvider.showPositiveAlert('SUCCESS', 'You gold deposit was confirmed!', context);
-    else baseProvider.showNegativeAlert('Failed', 'Your gold deposit failed. Please try again or contact us if you are facing issues', context, seconds: 5);
+    if (flag) {
+      // baseProvider.showPositiveAlert(
+      //     'SUCCESS', 'You gold deposit was confirmed!', context);
+      HapticFeedback.vibrate();
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => SuccessDialog(),
+      );
+      // baseProvider.showRefreshAlert(context);
+    } else
+      baseProvider.showNegativeAlert(
+          'Failed',
+          'Your gold deposit failed. Please try again or contact us if you are facing issues',
+          context,
+          seconds: 5);
   }
 }

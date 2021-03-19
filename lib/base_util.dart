@@ -302,6 +302,30 @@ class BaseUtil extends ChangeNotifier {
     )..show(context);
   }
 
+  showRefreshIndicator(BuildContext context) {
+    Flushbar(
+      flushbarPosition: FlushbarPosition.TOP,
+      flushbarStyle: FlushbarStyle.FLOATING,
+      icon: Icon(
+        Icons.refresh,
+        size: 28.0,
+        color: Colors.white,
+      ),
+      margin: EdgeInsets.all(10),
+      borderRadius: 8,
+      title: "Pull to Refresh Funds",
+      duration: Duration(seconds: 2),
+      backgroundColor: UiConstants.negativeAlertColor,
+      boxShadows: [
+        BoxShadow(
+          color: UiConstants.negativeAlertColor.withOpacity(0.5),
+          offset: Offset(0.0, 2.0),
+          blurRadius: 3.0,
+        )
+      ],
+    )..show(context);
+  }
+
   AuthCredential generateAuthCredential(String verificationId, String smsCode) {
     final AuthCredential credential = PhoneAuthProvider.credential(
       verificationId: verificationId,
@@ -380,26 +404,26 @@ class BaseUtil extends ChangeNotifier {
     return n;
   }
 
-  int getUpdatedClosingBalance(double investment) =>
-      (investment + toDouble(_myUser.icici_balance)
-              + toDouble(_myUser.augmont_balance)
-              + toDouble(_myUser.prize_balance)
-              + toDouble(_myUser.deposit_balance))
-          .round();
+  int getUpdatedClosingBalance(double investment) => (investment +
+          toDouble(_myUser.icici_balance) +
+          toDouble(_myUser.augmont_balance) +
+          toDouble(_myUser.prize_balance) +
+          toDouble(_myUser.deposit_balance))
+      .round();
 
   static T _cast<T>(x) => x is T ? x : null;
 
   static double toDouble(dynamic x) {
-    if(x == null) return 0.0;
-    try{
+    if (x == null) return 0.0;
+    try {
       int y = _cast<int>(x);
-      if(y != null) return y+.0;
-    }catch(e) {}
+      if (y != null) return y + .0;
+    } catch (e) {}
 
-    try{
+    try {
       double z = _cast<double>(x);
-      if(z != null) return z;
-    }catch(e) {}
+      if (z != null) return z;
+    } catch (e) {}
 
     return 0.0;
   }
