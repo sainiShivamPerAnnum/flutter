@@ -65,6 +65,7 @@ class BaseUtil extends ChangeNotifier {
   bool isAugmontRegnInProgress = false;
   bool isIciciDepositRouteLogicInProgress = false;
   bool isAugDepositRouteLogicInProgress = false;
+  bool isAugWithdrawRouteLogicInProgress = false;
   bool weeklyDrawFetched = false;
   bool weeklyTicksFetched = false;
   bool referCountFetched = false;

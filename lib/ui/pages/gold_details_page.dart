@@ -7,14 +7,12 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
 import 'package:felloapp/ui/dialogs/augmont_onboarding_dialog.dart';
 import 'package:felloapp/ui/dialogs/augmont_withdraw_dialog.dart';
-import 'package:felloapp/ui/dialogs/icici_withdraw_dialog.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
-import 'package:felloapp/ui/elements/profit_calculator.dart';
+import 'package:felloapp/ui/elements/gold_profit_calculator.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:fl_animated_linechart/chart/area_line_chart.dart';
 import 'package:fl_animated_linechart/chart/line_chart.dart';
@@ -23,7 +21,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -71,8 +68,8 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                     children: [
                       FundInfo(),
                       FundGraph(),
-                      FundDetailsTable(),
-                      ProfitCalculator(),
+                      //FundDetailsTable(),
+                      GoldProfitCalculator(),
                       FAQCard(),
                       _buildBetaWithdrawButton(),
                     ],
@@ -90,10 +87,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
   Widget _buildSaveButton() {
     return Container(
       width: double.infinity,
-      height: MediaQuery
-          .of(context)
-          .size
-          .height * 0.07,
+      height: MediaQuery.of(context).size.height * 0.07,
       decoration: BoxDecoration(
         gradient: new LinearGradient(colors: [
           UiConstants.primaryColor,
@@ -104,17 +98,16 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         child: MaterialButton(
           child: (!baseProvider.isAugDepositRouteLogicInProgress)
               ? Text(
-            _getActionButtonText(),
-            style: Theme
-                .of(context)
-                .textTheme
-                .button
-                .copyWith(color: Colors.white),
-          )
+                  _getActionButtonText(),
+                  style: Theme.of(context)
+                      .textTheme
+                      .button
+                      .copyWith(color: Colors.white),
+                )
               : SpinKitThreeBounce(
-            color: UiConstants.spinnerColor2,
-            size: 18.0,
-          ),
+                  color: UiConstants.spinnerColor2,
+                  size: 18.0,
+                ),
           onPressed: () async {
             HapticFeedback.vibrate();
             baseProvider.isAugDepositRouteLogicInProgress = true;
@@ -145,16 +138,10 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     return Container(
       margin: EdgeInsets.symmetric(
         vertical: 16,
-        horizontal: MediaQuery
-            .of(context)
-            .size
-            .height * 0.02,
+        horizontal: MediaQuery.of(context).size.height * 0.02,
       ),
       width: double.infinity,
-      height: MediaQuery
-          .of(context)
-          .size
-          .height * 0.05,
+      height: MediaQuery.of(context).size.height * 0.05,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         gradient: new LinearGradient(
@@ -175,22 +162,23 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
       ),
       child: new Material(
         child: MaterialButton(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'WITHDRAW ',
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .button
-                    .copyWith(color: Colors.white),
-              ),
-            ],
+          child: (!baseProvider.isAugWithdrawRouteLogicInProgress)
+              ? Text(
+            'WITHDRAW',
+            style: Theme.of(context)
+                .textTheme
+                .button
+                .copyWith(color: Colors.white),
+          )
+              : SpinKitThreeBounce(
+            color: UiConstants.spinnerColor2,
+            size: 18.0,
           ),
           onPressed: () async {
-            HapticFeedback.vibrate();
-            _onWithdrawalClicked();
+            if(!baseProvider.isAugWithdrawRouteLogicInProgress) {
+              HapticFeedback.vibrate();
+              _onWithdrawalClicked();
+            }
           },
           highlightColor: Colors.orange.withOpacity(0.5),
           splashColor: Colors.orange.withOpacity(0.5),
@@ -204,7 +192,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
   int _checkAugmontStatus() {
     //check who is allowed to deposit
     String _perm =
-    BaseUtil.remoteConfig.getString('augmont_deposit_permission');
+        BaseUtil.remoteConfig.getString('augmont_deposit_permission');
     int _isGeneralUserAllowed = 1;
     bool _isAllowed = false;
     if (_perm != null && _perm.isNotEmpty) {
@@ -259,10 +247,10 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
       setState(() {});
       return true;
     } else if (_status == STATUS_REGISTER) {
-      await showDialog(
-          context: context,
-          builder: (BuildContext context) =>
-              AugmontOnboarding(
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => AugmontOnboarding(
                   key: _onboardingKey,
                   onSubmit: (Map<String, String> aData) {
                     String aPan = aData['pan_number'];
@@ -270,12 +258,12 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                     String aBankHolderName = aData['bank_holder_name'];
                     String aBankAccNo = aData['bank_acc_no'];
                     String aBankIfsc = aData['bank_ifsc'];
-                    _registerAugmontUser(
-                        aPan, aStateId, aBankHolderName, aBankAccNo, aBankIfsc)
+                    _registerAugmontUser(aPan, aStateId, aBankHolderName,
+                            aBankAccNo, aBankIfsc)
                         .then((flag) {
                       _onboardingKey.currentState.regnComplete(flag);
                     });
-                  }));
+                  })));
       baseProvider.isAugDepositRouteLogicInProgress = false;
       setState(() {});
       return true;
@@ -377,7 +365,6 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     baseProvider.augmontDetail = (baseProvider.augmontDetail == null)
         ? (await dbProvider.getUserAugmontDetails(baseProvider.myUser.uid))
         : baseProvider.augmontDetail;
-    _currentSellRates = await augmontProvider.getRates();
     if (!baseProvider.myUser.isAugmontOnboarded) {
       baseProvider.showNegativeAlert(
           'Not onboarded', 'You havent been onboarded to Augmont yet', context);
@@ -386,21 +373,32 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
       baseProvider.showNegativeAlert('No balance',
           'Your Augmont wallet has no balance presently', context);
     } else {
-      showDialog(
-          barrierColor: Colors.black87,
-          context: context,
-          builder: (BuildContext context) =>
-              AugmontWithdrawDialog(
-                key: _withdrawalDialogKey2,
-                balance: baseProvider.myUser.augmont_balance,
-                sellRate: _currentSellRates.goldSellPrice,
-                onAmountConfirmed: (Map<String, double> amountDetails) {
-                  _onInitiateWithdrawal(amountDetails['withdrawal_amount']);
-                },
-                bankHolderName: baseProvider.augmontDetail.bankHolderName,
-                bankAccNo: baseProvider.augmontDetail.bankAccNo,
-                bankIfsc: baseProvider.augmontDetail.ifsc,
-              ));
+      baseProvider.isAugWithdrawRouteLogicInProgress = true;
+      setState(() {});
+      augmontProvider.getRates().then((rates) {
+        _currentSellRates = rates;
+        baseProvider.isAugWithdrawRouteLogicInProgress = false;
+        setState(() {});
+
+        showDialog(
+            barrierColor: Colors.black87,
+            context: context,
+            builder: (BuildContext context) => AugmontWithdrawDialog(
+              key: _withdrawalDialogKey2,
+              balance: baseProvider.myUser.augmont_balance,
+              sellRate: _currentSellRates.goldSellPrice,
+              onAmountConfirmed: (Map<String, double> amountDetails) {
+                _onInitiateWithdrawal(amountDetails['withdrawal_amount']);
+              },
+              bankHolderName: baseProvider.augmontDetail.bankHolderName,
+              bankAccNo: baseProvider.augmontDetail.bankAccNo,
+              bankIfsc: baseProvider.augmontDetail.ifsc,
+            ));
+      }).catchError((err) {
+        baseProvider.isAugWithdrawRouteLogicInProgress = false;
+        setState(() {});
+        baseProvider.showNegativeAlert('Couldn\'t complete your request', 'Please try again in some time', context);
+      });
     }
   }
 
@@ -411,7 +409,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     }
   }
 
-  _onSellComplete(UserTransaction txn) async{
+  _onSellComplete(UserTransaction txn) async {
     if (baseProvider.currentAugmontTxn != null) {
       if (baseProvider.currentAugmontTxn.tranStatus !=
           UserTransaction.TRAN_STATUS_COMPLETE) {
@@ -424,18 +422,26 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         baseProvider.currentAugmontTxn.ticketUpCount =
             baseProvider.getTicketCountForTransaction(
                 baseProvider.currentAugmontTxn.amount);
-        await dbProvider.updateUserTransaction(baseProvider.myUser.uid, baseProvider.currentAugmontTxn);
+        await dbProvider.updateUserTransaction(
+            baseProvider.myUser.uid, baseProvider.currentAugmontTxn);
 
-        baseProvider.myUser.augmont_balance = baseProvider.myUser.augmont_balance - baseProvider.currentAugmontTxn.amount;
-        baseProvider.myUser.account_balance = baseProvider.currentAugmontTxn.closingBalance;
-        baseProvider.myUser.ticket_count = baseProvider.getTotalTicketsPostWithdrawalTransaction(baseProvider.currentAugmontTxn.amount);
+        baseProvider.myUser.augmont_balance =
+            baseProvider.myUser.augmont_balance -
+                baseProvider.currentAugmontTxn.amount;
+        baseProvider.myUser.account_balance =
+            baseProvider.currentAugmontTxn.closingBalance;
+        baseProvider.myUser.ticket_count =
+            baseProvider.getTotalTicketsPostWithdrawalTransaction(
+                baseProvider.currentAugmontTxn.amount);
 
         await dbProvider.updateUser(baseProvider.myUser);
 
         baseProvider.currentAugmontTxn = null;
-        baseProvider.userMiniTxnList = null;  //make null so it refreshes
-        _withdrawalDialogKey2.currentState.onTransactionProcessed(false);
+        baseProvider.userMiniTxnList = null; //make null so it refreshes
+        _withdrawalDialogKey2.currentState.onTransactionProcessed(true);
       }
+    }else{
+      _withdrawalDialogKey2.currentState.onTransactionProcessed(false);
     }
   }
 }
@@ -443,10 +449,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
 class FundDetailsTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    double _height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    double _height = MediaQuery.of(context).size.height;
     return Container(
       margin: EdgeInsets.symmetric(
         vertical: _height * 0.02,
@@ -578,10 +581,7 @@ class FundGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double _height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    double _height = MediaQuery.of(context).size.height;
     LineChart chart = AreaLineChart.fromDateTimeMaps(
       [line1],
       [UiConstants.primaryColor],
@@ -609,14 +609,8 @@ class FundGraph extends StatelessWidget {
 class FundInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    double _height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    double _width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double _height = MediaQuery.of(context).size.height;
+    double _width = MediaQuery.of(context).size.width;
     return Column(
       children: [
         Row(
@@ -635,12 +629,12 @@ class FundInfo extends StatelessWidget {
             ),
             Expanded(
                 child: FittedBox(
-                  child: Text(
-                    "Augmont Gold Fund",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24),
-                  ),
-                )),
+              child: Text(
+                "Augmont Gold Fund",
+                textAlign: TextAlign.left,
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24),
+              ),
+            )),
             SizedBox(
               width: _height * 0.02,
             )
@@ -650,7 +644,7 @@ class FundInfo extends StatelessWidget {
           padding: EdgeInsets.only(bottom: _height * 0.02, left: 20, right: 30),
           child: Text(
             'ICICI Prudential Liquid Mutual Fund is a'
-                ' popular fund that has consistently given an annual return of 6-7%.',
+            ' popular fund that has consistently given an annual return of 6-7%.',
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: UiConstants.accentColor, fontStyle: FontStyle.italic),
@@ -672,10 +666,7 @@ class FundDetailsCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double _width = MediaQuery.of(context).size.width;
     return Container(
       height: 75,
       width: _width * 0.5,
@@ -701,11 +692,10 @@ class FundDetailsCell extends StatelessWidget {
                   onTap: () {
                     showDialog(
                       context: context,
-                      builder: (context) =>
-                      new AlertDialog(
+                      builder: (context) => new AlertDialog(
                         shape: RoundedRectangleBorder(
                           borderRadius:
-                          BorderRadius.circular(UiConstants.padding),
+                              BorderRadius.circular(UiConstants.padding),
                         ),
                         title: new Text(title),
                         content: Text(info),

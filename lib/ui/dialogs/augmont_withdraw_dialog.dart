@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class AugmontWithdrawDialogState extends State<AugmontWithdrawDialog> {
   BaseUtil baseProvider;
   String _amountError;
   String _errorMessage;
-  bool _isLoading = true;
+  bool _isLoading = false;
   bool _isButtonEnabled = false;
   double _width;
   final TextStyle tTextStyle =
@@ -117,6 +118,20 @@ class AugmontWithdrawDialogState extends State<AugmontWithdrawDialog> {
                       height: 10,
                     ),
                     (!_isLoading)
+                        ? Text(
+                            'Current Gold Selling Rate: ₹${widget.sellRate} per gram',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: SizeConfig.mediumTextSize,
+                                fontWeight: FontWeight.w400),
+                          )
+                        : Container(),
+                    (!_isLoading)
+                        ? SizedBox(
+                            height: 20,
+                          )
+                        : Container(),
+                    (!_isLoading)
                         ? Container(
                             margin: EdgeInsets.only(top: 12),
                             child: Row(
@@ -137,6 +152,12 @@ class AugmontWithdrawDialogState extends State<AugmontWithdrawDialog> {
                             ),
                           )
                         : Container(),
+                    (!_isLoading)
+                        ? Padding(
+                      padding: EdgeInsets.only(top:10),
+                      child: _getGoldAmount(_amountController.text),
+                    )
+                        : Container(),
                     (!_isLoading && _amountError != null)
                         ? Container(
                             margin: EdgeInsets.only(top: 4, left: 12),
@@ -147,9 +168,24 @@ class AugmontWithdrawDialogState extends State<AugmontWithdrawDialog> {
                           )
                         : Container(),
                     SizedBox(
-                      height: 15,
+                      height: 25,
                     ),
                     (!_isLoading) ? _buildSubmitButton(context) : Container(),
+                    (!_isLoading)
+                        ? Padding(
+                            padding: EdgeInsets.only(
+                              top: 10,
+                            ),
+                            child: Text(
+                              'All withdrawals are usually processed within 2 working days.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.blueGrey[600],
+                                  fontSize: SizeConfig.mediumTextSize,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          )
+                        : Container(),
                     SizedBox(
                       height: 10,
                     ),
@@ -157,6 +193,27 @@ class AugmontWithdrawDialogState extends State<AugmontWithdrawDialog> {
                 )),
           )
         ]);
+  }
+
+  Widget _getGoldAmount(String amt) {
+    if (amt == null || amt.isEmpty) return Container();
+    double _gAmt = 0;
+    try {
+      _gAmt = double.parse(amt);
+    } catch (e) {
+      return Container();
+    }
+    if (_gAmt == null || _gAmt < 5)
+      return Container();
+    else {
+      double _goldAmt = _gAmt / widget.sellRate;
+      return Text(
+        ' = ${_goldAmt.toStringAsFixed(3)} grams of Gold',
+        textAlign: TextAlign.start,
+        style: TextStyle(
+            fontSize: SizeConfig.mediumTextSize, fontWeight: FontWeight.w400),
+      );
+    }
   }
 
   onTransactionProcessed(bool flag) {

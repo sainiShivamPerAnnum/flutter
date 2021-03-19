@@ -63,6 +63,7 @@ class UserAugmontDetail {
       fldBankHolderName: _bankHolderName,
       fldStateId: _userStateId,
       fldFirstInvMade: _firstInvMade,
+      fldIfsc: _ifsc,
       fldCreatedTime: _createdTime,
       fldUpdatedTime: Timestamp.now()
     };

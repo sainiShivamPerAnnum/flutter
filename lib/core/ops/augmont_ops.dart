@@ -45,10 +45,10 @@ class AugmontModel extends ChangeNotifier {
 
   bool isInit() => (_apiKey != null);
 
-  String _constructUid(String pan) => 'fello$pan';
+  String _constructUid(String pan) => 'fello9$pan';
 
   String _constructUsername() =>
-      'felloZZ${_baseProvider.myUser.uid.replaceAll(new RegExp(r"[0-9]"), "")}';
+      'felloYY${_baseProvider.myUser.uid.replaceAll(new RegExp(r"[0-9]"), "")}';
 
   // Future<String> _getPanHolderName(String pan) async{
   //   if(!_iProvider.isInit())await _iProvider.init();
@@ -268,7 +268,6 @@ class AugmontModel extends ChangeNotifier {
     Map<String, String> _params = {
       SubmitGoldSell.fldMobile: _baseProvider.myUser.mobile,
       SubmitGoldSell.fldAmount: amount.toString(),
-      SubmitGoldSell.fldUsername: _baseProvider.augmontDetail.userName,
       SubmitGoldSell.fldAugmontUid: _baseProvider.augmontDetail.userId,
       SubmitGoldSell.fldBlockId: sellRates.blockId,
       SubmitGoldSell.fldLockPrice: sellRates.goldSellPrice.toString(),
@@ -291,7 +290,7 @@ class AugmontModel extends ChangeNotifier {
           _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
       _baseProvider.currentAugmontTxn.docKey = docKey;
       log.error('Query Failed');
-      var _failMap = {'txnDocId': _baseProvider.currentAugmontTxn.docKey};
+      Map<String, dynamic> _failMap = {'txnDocId': _baseProvider.currentAugmontTxn.docKey};
       await _dbModel.logFailure(
           _baseProvider.myUser.uid, FailType.UserAugmontSellFailed, _failMap);
       if (_augmontTxnProcessListener != null)
