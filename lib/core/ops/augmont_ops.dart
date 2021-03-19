@@ -45,10 +45,10 @@ class AugmontModel extends ChangeNotifier {
 
   bool isInit() => (_apiKey != null);
 
-  String _constructUid(String pan) => 'fello9$pan';
+  String _constructUid(String pan) => 'fello77$pan';
 
   String _constructUsername() =>
-      'felloYY${_baseProvider.myUser.uid.replaceAll(new RegExp(r"[0-9]"), "")}';
+      'felloGY${_baseProvider.myUser.uid.replaceAll(new RegExp(r"[0-9]"), "")}';
 
   // Future<String> _getPanHolderName(String pan) async{
   //   if(!_iProvider.isInit())await _iProvider.init();
@@ -203,7 +203,7 @@ class AugmontModel extends ChangeNotifier {
     final resMap = await _processResponse(_response);
     if (resMap == null ||
         !resMap[INTERNAL_FAIL_FLAG] ||
-        resMap['result']['data'][SubmitGoldPurchase.resTranId] == null) {
+        resMap[SubmitGoldPurchase.resTranId] == null) {
       log.error('Query Failed');
       var _failMap = {'txnDocId': _baseProvider.currentAugmontTxn.docKey};
       await _dbModel.logFailure(_baseProvider.myUser.uid,
@@ -217,10 +217,10 @@ class AugmontModel extends ChangeNotifier {
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_COMPLETE;
       _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
-          resMap['result']['data'][SubmitGoldPurchase.resAugTranId];
+          resMap[SubmitGoldPurchase.resAugTranId];
       _baseProvider
               .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
-          resMap['result']['data'][SubmitGoldPurchase.resTranId];
+          resMap[SubmitGoldPurchase.resTranId];
       //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
       if (!_baseProvider.augmontDetail.firstInvMade) {
         _baseProvider.augmontDetail.firstInvMade = true;
@@ -271,7 +271,8 @@ class AugmontModel extends ChangeNotifier {
       SubmitGoldSell.fldAugmontUid: _baseProvider.augmontDetail.userId,
       SubmitGoldSell.fldBlockId: sellRates.blockId,
       SubmitGoldSell.fldLockPrice: sellRates.goldSellPrice.toString(),
-      SubmitGoldSell.fldAccHolderName: _baseProvider.augmontDetail.bankHolderName,
+      SubmitGoldSell.fldAccHolderName:
+          _baseProvider.augmontDetail.bankHolderName,
       SubmitGoldSell.fldAccNo: _baseProvider.augmontDetail.bankAccNo,
       SubmitGoldSell.fldIfsc: _baseProvider.augmontDetail.ifsc,
     };
@@ -290,7 +291,9 @@ class AugmontModel extends ChangeNotifier {
           _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
       _baseProvider.currentAugmontTxn.docKey = docKey;
       log.error('Query Failed');
-      Map<String, dynamic> _failMap = {'txnDocId': _baseProvider.currentAugmontTxn.docKey};
+      Map<String, dynamic> _failMap = {
+        'txnDocId': _baseProvider.currentAugmontTxn.docKey
+      };
       await _dbModel.logFailure(
           _baseProvider.myUser.uid, FailType.UserAugmontSellFailed, _failMap);
       if (_augmontTxnProcessListener != null)

@@ -146,6 +146,11 @@ class AugmontWithdrawDialogState extends State<AugmontWithdrawDialog> {
                                       border: OutlineInputBorder(),
                                       labelText: 'Amount',
                                     ),
+                                    onChanged: (value) {
+                                      setState(() {
+
+                                      });
+                                    },
                                   ),
                                 ),
                               ],
