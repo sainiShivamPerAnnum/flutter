@@ -6,14 +6,13 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
 import 'package:felloapp/ui/dialogs/augmont_onboarding_dialog.dart';
-import 'package:felloapp/ui/dialogs/icici_withdraw_dialog.dart';
+import 'package:felloapp/ui/dialogs/augmont_withdraw_dialog.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
-import 'package:felloapp/ui/elements/profit_calculator.dart';
+import 'package:felloapp/ui/elements/gold_profit_calculator.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:fl_animated_linechart/chart/area_line_chart.dart';
 import 'package:fl_animated_linechart/chart/line_chart.dart';
@@ -22,7 +21,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -38,10 +36,11 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
   AugmontModel augmontProvider;
   GlobalKey<AugmontDepositModalSheetState> _modalKey2 = GlobalKey();
   GlobalKey<AugmontOnboardingState> _onboardingKey = GlobalKey();
-  GlobalKey<IciciWithdrawDialogState> _withdrawalDialogKey = GlobalKey();
+  GlobalKey<AugmontWithdrawDialogState> _withdrawalDialogKey2 = GlobalKey();
   double containerHeight = 10;
   Map<String, dynamic> _withdrawalRequestDetails;
   AugmontRates _currentBuyRates;
+  AugmontRates _currentSellRates;
   static const int STATUS_UNAVAILABLE = 0;
   static const int STATUS_REGISTER = 1;
   static const int STATUS_OPEN = 2;
@@ -69,8 +68,8 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                     children: [
                       FundInfo(),
                       FundGraph(),
-                      FundDetailsTable(),
-                      ProfitCalculator(),
+                      //FundDetailsTable(),
+                      GoldProfitCalculator(),
                       FAQCard(),
                       _buildBetaWithdrawButton(),
                     ],
@@ -163,21 +162,23 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
       ),
       child: new Material(
         child: MaterialButton(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'WITHDRAW ',
-                style: Theme.of(context)
-                    .textTheme
-                    .button
-                    .copyWith(color: Colors.white),
-              ),
-            ],
+          child: (!baseProvider.isAugWithdrawRouteLogicInProgress)
+              ? Text(
+            'WITHDRAW',
+            style: Theme.of(context)
+                .textTheme
+                .button
+                .copyWith(color: Colors.white),
+          )
+              : SpinKitThreeBounce(
+            color: UiConstants.spinnerColor2,
+            size: 18.0,
           ),
           onPressed: () async {
-            HapticFeedback.vibrate();
-            onWithdrawalClicked();
+            if(!baseProvider.isAugWithdrawRouteLogicInProgress) {
+              HapticFeedback.vibrate();
+              _onWithdrawalClicked();
+            }
           },
           highlightColor: Colors.orange.withOpacity(0.5),
           splashColor: Colors.orange.withOpacity(0.5),
@@ -246,17 +247,23 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
       setState(() {});
       return true;
     } else if (_status == STATUS_REGISTER) {
-      await showDialog(
-          context: context,
-          builder: (BuildContext context) => AugmontOnboarding(
-              key: _onboardingKey,
-              onSubmit: (Map<String, String> aData) {
-                String aPan = aData['pan_number'];
-                String aStateId = aData['state_id'];
-                _registerAugmontUser(aPan, aStateId).then((flag) {
-                  _onboardingKey.currentState.regnComplete(flag);
-                });
-              }));
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => AugmontOnboarding(
+                  key: _onboardingKey,
+                  onSubmit: (Map<String, String> aData) {
+                    String aPan = aData['pan_number'];
+                    String aStateId = aData['state_id'];
+                    String aBankHolderName = aData['bank_holder_name'];
+                    String aBankAccNo = aData['bank_acc_no'];
+                    String aBankIfsc = aData['bank_ifsc'];
+                    _registerAugmontUser(aPan, aStateId, aBankHolderName,
+                            aBankAccNo, aBankIfsc)
+                        .then((flag) {
+                      _onboardingKey.currentState.regnComplete(flag);
+                    });
+                  })));
       baseProvider.isAugDepositRouteLogicInProgress = false;
       setState(() {});
       return true;
@@ -290,10 +297,16 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     return true;
   }
 
-  Future<bool> _registerAugmontUser(String aPan, String aStateId) async {
+  Future<bool> _registerAugmontUser(String aPan, String aStateId,
+      String aBankHolderName, String aBankAccNo, String aIfsc) async {
     if (aPan != null && aStateId != null) {
       UserAugmontDetail detail = await augmontProvider.createUser(
-          baseProvider.myUser.mobile, aPan, aStateId);
+          baseProvider.myUser.mobile,
+          aPan,
+          aStateId,
+          aBankHolderName,
+          aBankAccNo,
+          aIfsc);
       if (detail != null) return true;
     }
     return false;
@@ -347,8 +360,11 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     }
   }
 
-  onWithdrawalClicked() {
+  _onWithdrawalClicked() async {
     HapticFeedback.vibrate();
+    baseProvider.augmontDetail = (baseProvider.augmontDetail == null)
+        ? (await dbProvider.getUserAugmontDetails(baseProvider.myUser.uid))
+        : baseProvider.augmontDetail;
     if (!baseProvider.myUser.isAugmontOnboarded) {
       baseProvider.showNegativeAlert(
           'Not onboarded', 'You havent been onboarded to Augmont yet', context);
@@ -356,10 +372,78 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         baseProvider.myUser.augmont_balance == 0) {
       baseProvider.showNegativeAlert('No balance',
           'Your Augmont wallet has no balance presently', context);
-    } else {}
+    } else {
+      baseProvider.isAugWithdrawRouteLogicInProgress = true;
+      setState(() {});
+      augmontProvider.getRates().then((rates) {
+        _currentSellRates = rates;
+        baseProvider.isAugWithdrawRouteLogicInProgress = false;
+        setState(() {});
+
+        showDialog(
+            barrierColor: Colors.black87,
+            context: context,
+            builder: (BuildContext context) => AugmontWithdrawDialog(
+              key: _withdrawalDialogKey2,
+              balance: baseProvider.myUser.augmont_balance,
+              sellRate: _currentSellRates.goldSellPrice,
+              onAmountConfirmed: (Map<String, double> amountDetails) {
+                _onInitiateWithdrawal(amountDetails['withdrawal_amount']);
+              },
+              bankHolderName: baseProvider.augmontDetail.bankHolderName,
+              bankAccNo: baseProvider.augmontDetail.bankAccNo,
+              bankIfsc: baseProvider.augmontDetail.ifsc,
+            ));
+      }).catchError((err) {
+        baseProvider.isAugWithdrawRouteLogicInProgress = false;
+        setState(() {});
+        baseProvider.showNegativeAlert('Couldn\'t complete your request', 'Please try again in some time', context);
+      });
+    }
   }
 
-  Future<bool> onInitiateWithdrawal(Map<String, dynamic> fieldMap) {}
+  _onInitiateWithdrawal(double amt) {
+    if (_currentSellRates != null && amt != null) {
+      augmontProvider.initiateWithdrawal(_currentSellRates, amt);
+      augmontProvider.setAugmontTxnProcessListener(_onSellComplete);
+    }
+  }
+
+  _onSellComplete(UserTransaction txn) async {
+    if (baseProvider.currentAugmontTxn != null) {
+      if (baseProvider.currentAugmontTxn.tranStatus !=
+          UserTransaction.TRAN_STATUS_COMPLETE) {
+        _withdrawalDialogKey2.currentState.onTransactionProcessed(false);
+      } else {
+        ///reduce tickets and amount
+        baseProvider.currentAugmontTxn.closingBalance =
+            baseProvider.getUpdatedWithdrawalClosingBalance(
+                baseProvider.currentAugmontTxn.amount);
+        baseProvider.currentAugmontTxn.ticketUpCount =
+            baseProvider.getTicketCountForTransaction(
+                baseProvider.currentAugmontTxn.amount);
+        await dbProvider.updateUserTransaction(
+            baseProvider.myUser.uid, baseProvider.currentAugmontTxn);
+
+        baseProvider.myUser.augmont_balance =
+            baseProvider.myUser.augmont_balance -
+                baseProvider.currentAugmontTxn.amount;
+        baseProvider.myUser.account_balance =
+            baseProvider.currentAugmontTxn.closingBalance;
+        baseProvider.myUser.ticket_count =
+            baseProvider.getTotalTicketsPostWithdrawalTransaction(
+                baseProvider.currentAugmontTxn.amount);
+
+        await dbProvider.updateUser(baseProvider.myUser);
+
+        baseProvider.currentAugmontTxn = null;
+        baseProvider.userMiniTxnList = null; //make null so it refreshes
+        _withdrawalDialogKey2.currentState.onTransactionProcessed(true);
+      }
+    }else{
+      _withdrawalDialogKey2.currentState.onTransactionProcessed(false);
+    }
+  }
 }
 
 class FundDetailsTable extends StatelessWidget {
@@ -544,12 +628,12 @@ class FundInfo extends StatelessWidget {
               width: 10,
             ),
             Expanded(
-                child: Text(
-              "Augmont Gold Fund",
-              textAlign: TextAlign.left,
-              style: GoogleFonts.montserrat(
-                  fontWeight: FontWeight.w700,
-                  fontSize: SizeConfig.largeTextSize),
+                child: FittedBox(
+              child: Text(
+                "Augmont Gold Fund",
+                textAlign: TextAlign.left,
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24),
+              ),
             )),
             SizedBox(
               width: _height * 0.02,

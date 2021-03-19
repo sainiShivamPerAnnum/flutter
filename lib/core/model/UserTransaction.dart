@@ -102,6 +102,11 @@ class UserTransaction{
         this(amount, 0, 'NA', TRAN_SUBTYPE_AUGMONT_GOLD, TRAN_TYPE_DEPOSIT, 0, userId,TRAN_STATUS_PENDING, null, null,
           {subFldAugBlockId: blockId, subFldAugLockPrice: lockPrice, subFldAugPaymode: paymode}, Timestamp.now(),Timestamp.now());
 
+  //Augmont gold investment initiated by investor
+  UserTransaction.newGoldWithdrawal(double amount, String blockId, double lockPrice, String userId):
+        this(amount, 0, 'NA', TRAN_SUBTYPE_AUGMONT_GOLD, TRAN_TYPE_WITHDRAW, 0, userId,TRAN_STATUS_PENDING, null, null,
+          {subFldAugBlockId: blockId, subFldAugLockPrice: lockPrice}, Timestamp.now(),Timestamp.now());
+
   toJson() {
     return {
       fldAmount: _amount,

@@ -21,7 +21,8 @@ class AugmontModel extends ChangeNotifier {
   DBModel _dbModel = locator<DBModel>();
   RazorpayModel _rzpGateway = locator<RazorpayModel>();
   BaseUtil _baseProvider = locator<BaseUtil>();
-  ICICIModel _iProvider = locator<ICICIModel>(); //required to fetch user full name
+  ICICIModel _iProvider =
+      locator<ICICIModel>(); //required to fetch user full name
   ValueChanged<UserTransaction> _augmontTxnProcessListener;
   final String defaultBaseUri =
       'https://ug0949ai64.execute-api.ap-south-1.amazonaws.com/dev';
@@ -44,9 +45,10 @@ class AugmontModel extends ChangeNotifier {
 
   bool isInit() => (_apiKey != null);
 
-  String _constructUid(String pan) => 'fello$pan';
+  String _constructUid(String pan) => 'fello77$pan';
 
-  String _constructUsername() => 'felloZZ${_baseProvider.myUser.uid.replaceAll(new RegExp(r"[0-9]"), "")}';
+  String _constructUsername() =>
+      'felloGY${_baseProvider.myUser.uid.replaceAll(new RegExp(r"[0-9]"), "")}';
 
   // Future<String> _getPanHolderName(String pan) async{
   //   if(!_iProvider.isInit())await _iProvider.init();
@@ -59,7 +61,12 @@ class AugmontModel extends ChangeNotifier {
   // }
 
   Future<UserAugmontDetail> createUser(
-      String mobile, String pan, String stateId) async {
+      String mobile,
+      String pan,
+      String stateId,
+      String bankHolderName,
+      String bankAccNo,
+      String ifsc) async {
     if (!isInit()) await _init();
 
     String _uid = _constructUid(pan);
@@ -84,9 +91,11 @@ class AugmontModel extends ChangeNotifier {
       log.debug(resMap[CreateUser.resStatusCode].toString());
       resMap["flag"] = QUERY_PASSED;
 
-      _baseProvider.augmontDetail = UserAugmontDetail.newUser(_uid, _uname, stateId);
+      _baseProvider.augmontDetail = UserAugmontDetail.newUser(
+          _uid, _uname, stateId, bankHolderName, bankAccNo, ifsc);
       _baseProvider.myUser.isAugmontOnboarded = true;
-      await _dbModel.updateUserAugmontDetails(_baseProvider.myUser.uid, _baseProvider.augmontDetail);
+      await _dbModel.updateUserAugmontDetails(
+          _baseProvider.myUser.uid, _baseProvider.augmontDetail);
       await _dbModel.updateUser(_baseProvider.myUser);
 
       return _baseProvider.augmontDetail;
@@ -129,21 +138,25 @@ class AugmontModel extends ChangeNotifier {
         amount <= 0) {
       return null;
     }
-    _baseProvider.currentAugmontTxn = UserTransaction.newGoldDeposit(amount, buyRates.blockId,
-        buyRates.goldBuyPrice, 'RZP', _baseProvider.myUser.uid);
+    _baseProvider.currentAugmontTxn = UserTransaction.newGoldDeposit(
+        amount,
+        buyRates.blockId,
+        buyRates.goldBuyPrice,
+        'RZP',
+        _baseProvider.myUser.uid);
     UserTransaction tTxn = await _rzpGateway.submitAugmontTransaction(
         _baseProvider.currentAugmontTxn,
         _baseProvider.myUser.mobile,
         _baseProvider.myUser.email,
         //'');
         'BlockID: ${buyRates.blockId},gPrice: ${buyRates.goldBuyPrice}');
-    if(tTxn != null) {
+    if (tTxn != null) {
       _baseProvider.currentAugmontTxn = tTxn;
       _rzpGateway.setTransactionListener(_onRazorpayPaymentProcessed);
     }
 
-    String _docKey =
-        await _dbModel.addUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
+    String _docKey = await _dbModel.addUserTransaction(
+        _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
     _baseProvider.currentAugmontTxn.docKey = _docKey;
 
     return _baseProvider.currentAugmontTxn;
@@ -151,7 +164,8 @@ class AugmontModel extends ChangeNotifier {
 
   _onRazorpayPaymentProcessed(UserTransaction goldTxn) {
     String key = _baseProvider.currentAugmontTxn.docKey;
-    goldTxn.docKey = key; //add the firebase document key to this object as it was added later
+    goldTxn.docKey =
+        key; //add the firebase document key to this object as it was added later
     _baseProvider.currentAugmontTxn = goldTxn;
 
     if (_baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus] ==
@@ -169,12 +183,17 @@ class AugmontModel extends ChangeNotifier {
     Map<String, String> _params = {
       SubmitGoldPurchase.fldMobile: _baseProvider.myUser.mobile,
       SubmitGoldPurchase.fldStateId: _baseProvider.augmontDetail.userStateId,
-      SubmitGoldPurchase.fldAmount: _baseProvider.currentAugmontTxn.amount.toString(),
+      SubmitGoldPurchase.fldAmount:
+          _baseProvider.currentAugmontTxn.amount.toString(),
       SubmitGoldPurchase.fldUsername: _baseProvider.augmontDetail.userName,
       SubmitGoldPurchase.fldUid: _baseProvider.augmontDetail.userId,
-      SubmitGoldPurchase.fldBlockId: _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugBlockId],
-      SubmitGoldPurchase.fldLockPrice: _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugLockPrice].toString(),
-      SubmitGoldPurchase.fldPaymode: _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugPaymode],
+      SubmitGoldPurchase.fldBlockId: _baseProvider
+          .currentAugmontTxn.augmnt[UserTransaction.subFldAugBlockId],
+      SubmitGoldPurchase.fldLockPrice: _baseProvider
+          .currentAugmontTxn.augmnt[UserTransaction.subFldAugLockPrice]
+          .toString(),
+      SubmitGoldPurchase.fldPaymode: _baseProvider
+          .currentAugmontTxn.augmnt[UserTransaction.subFldAugPaymode],
     };
     var _request = http.Request(
         'GET', Uri.parse(_constructRequest(SubmitGoldPurchase.path, _params)));
@@ -182,37 +201,116 @@ class AugmontModel extends ChangeNotifier {
     http.StreamedResponse _response = await _request.send();
 
     final resMap = await _processResponse(_response);
-    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG] || resMap['result']['data'][SubmitGoldPurchase.resTranId] == null) {
+    if (resMap == null ||
+        !resMap[INTERNAL_FAIL_FLAG] ||
+        resMap[SubmitGoldPurchase.resTranId] == null) {
       log.error('Query Failed');
-      var _failMap = {
-        'txnDocId': _baseProvider.currentAugmontTxn.docKey
-      };
-      await _dbModel.logFailure(_baseProvider.myUser.uid, FailType.UserAugmontPurchaseFailed, _failMap);
-      bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
-      if(_augmontTxnProcessListener != null)_augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+      var _failMap = {'txnDocId': _baseProvider.currentAugmontTxn.docKey};
+      await _dbModel.logFailure(_baseProvider.myUser.uid,
+          FailType.UserAugmontPurchaseFailed, _failMap);
+      bool flag = await _dbModel.updateUserTransaction(
+          _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
+      if (_augmontTxnProcessListener != null)
+        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
     } else {
       //success
-      _baseProvider.currentAugmontTxn.tranStatus = UserTransaction.TRAN_STATUS_COMPLETE;
-      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] = resMap['result']['data'][SubmitGoldPurchase.resAugTranId];
-      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] = resMap['result']['data'][SubmitGoldPurchase.resTranId];
+      _baseProvider.currentAugmontTxn.tranStatus =
+          UserTransaction.TRAN_STATUS_COMPLETE;
+      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
+          resMap[SubmitGoldPurchase.resAugTranId];
+      _baseProvider
+              .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
+          resMap[SubmitGoldPurchase.resTranId];
       //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
-      if(!_baseProvider.augmontDetail.firstInvMade){
+      if (!_baseProvider.augmontDetail.firstInvMade) {
         _baseProvider.augmontDetail.firstInvMade = true;
-        await _dbModel.updateUserAugmontDetails(_baseProvider.myUser.uid, _baseProvider.augmontDetail);
+        await _dbModel.updateUserAugmontDetails(
+            _baseProvider.myUser.uid, _baseProvider.augmontDetail);
       }
-      if(_augmontTxnProcessListener != null)_augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+      if (_augmontTxnProcessListener != null)
+        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
     }
   }
 
-  _onPaymentFailed() async{
+  _onPaymentFailed() async {
     log.error('Query Failed');
-    var _failMap = {
-      'txnDocId': _baseProvider.currentAugmontTxn.docKey
+    var _failMap = {'txnDocId': _baseProvider.currentAugmontTxn.docKey};
+    await _dbModel.logFailure(_baseProvider.myUser.uid,
+        FailType.UserRazorpayPurchaseFailed, _failMap);
+    _baseProvider.currentAugmontTxn.tranStatus =
+        UserTransaction.TRAN_STATUS_CANCELLED;
+    bool flag = await _dbModel.updateUserTransaction(
+        _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
+    if (_augmontTxnProcessListener != null)
+      _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+  }
+
+  ///submit gold purchase augmont api
+  ///update object
+  initiateWithdrawal(AugmontRates sellRates, double amount) async {
+    if (!isInit()) await _init();
+
+    if (_baseProvider.augmontDetail == null ||
+        _baseProvider.augmontDetail.userId == null ||
+        _baseProvider.augmontDetail.userName == null ||
+        _baseProvider.augmontDetail.bankHolderName == null ||
+        _baseProvider.augmontDetail.bankAccNo == null ||
+        _baseProvider.augmontDetail.ifsc == null ||
+        sellRates == null ||
+        amount == null ||
+        amount <= 0) {
+      return null;
+    }
+
+    _baseProvider.currentAugmontTxn = UserTransaction.newGoldWithdrawal(amount,
+        sellRates.blockId, sellRates.goldSellPrice, _baseProvider.myUser.uid);
+
+    Map<String, String> _params = {
+      SubmitGoldSell.fldMobile: _baseProvider.myUser.mobile,
+      SubmitGoldSell.fldAmount: amount.toString(),
+      SubmitGoldSell.fldAugmontUid: _baseProvider.augmontDetail.userId,
+      SubmitGoldSell.fldBlockId: sellRates.blockId,
+      SubmitGoldSell.fldLockPrice: sellRates.goldSellPrice.toString(),
+      SubmitGoldSell.fldAccHolderName:
+          _baseProvider.augmontDetail.bankHolderName,
+      SubmitGoldSell.fldAccNo: _baseProvider.augmontDetail.bankAccNo,
+      SubmitGoldSell.fldIfsc: _baseProvider.augmontDetail.ifsc,
     };
-    await _dbModel.logFailure(_baseProvider.myUser.uid, FailType.UserRazorpayPurchaseFailed, _failMap);
-    _baseProvider.currentAugmontTxn.tranStatus = UserTransaction.TRAN_STATUS_CANCELLED;
-    bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
-    if(_augmontTxnProcessListener != null)_augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+    var _request = http.Request(
+        'GET', Uri.parse(_constructRequest(SubmitGoldSell.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await _processResponse(_response);
+    if (resMap == null ||
+        !resMap[INTERNAL_FAIL_FLAG] ||
+        resMap['result']['data'][SubmitGoldSell.resTranId] == null) {
+      _baseProvider.currentAugmontTxn.tranStatus =
+          UserTransaction.TRAN_STATUS_CANCELLED;
+      String docKey = await _dbModel.addUserTransaction(
+          _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
+      _baseProvider.currentAugmontTxn.docKey = docKey;
+      log.error('Query Failed');
+      Map<String, dynamic> _failMap = {
+        'txnDocId': _baseProvider.currentAugmontTxn.docKey
+      };
+      await _dbModel.logFailure(
+          _baseProvider.myUser.uid, FailType.UserAugmontSellFailed, _failMap);
+      if (_augmontTxnProcessListener != null)
+        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+    } else {
+      //success
+      _baseProvider.currentAugmontTxn.tranStatus =
+          UserTransaction.TRAN_STATUS_COMPLETE;
+      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
+          resMap['result']['data'][SubmitGoldSell.resAugTranId];
+      _baseProvider
+              .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
+          resMap['result']['data'][SubmitGoldSell.resTranId];
+      //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
+      if (_augmontTxnProcessListener != null)
+        _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+    }
   }
 
   String _constructRequest(String subPath, Map<String, String> params) {
@@ -282,6 +380,7 @@ class AugmontModel extends ChangeNotifier {
     _baseProvider.currentAugmontTxn = null;
     _augmontTxnProcessListener = null;
 
-    _baseProvider.userMiniTxnList = null; //this is to ensure that the transactions list gets refreshed
+    _baseProvider.userMiniTxnList =
+        null; //this is to ensure that the transactions list gets refreshed
   }
 }

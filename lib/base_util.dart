@@ -65,6 +65,7 @@ class BaseUtil extends ChangeNotifier {
   bool isAugmontRegnInProgress = false;
   bool isIciciDepositRouteLogicInProgress = false;
   bool isAugDepositRouteLogicInProgress = false;
+  bool isAugWithdrawRouteLogicInProgress = false;
   bool weeklyDrawFetched = false;
   bool weeklyTicksFetched = false;
   bool referCountFetched = false;
@@ -313,8 +314,9 @@ class BaseUtil extends ChangeNotifier {
       ),
       margin: EdgeInsets.all(10),
       borderRadius: 8,
-      title: "Pull to Refresh Funds",
+      title: "Pull to Refresh",
       duration: Duration(seconds: 2),
+      message: "Refresh to see the updated balance",
       backgroundColor: UiConstants.negativeAlertColor,
       boxShadows: [
         BoxShadow(
@@ -404,6 +406,14 @@ class BaseUtil extends ChangeNotifier {
     return n;
   }
 
+  int getUpdatedWithdrawalClosingBalance(double investment) =>
+      (toDouble(_myUser.icici_balance) +
+              toDouble(_myUser.augmont_balance) +
+              toDouble(_myUser.prize_balance) +
+              toDouble(_myUser.deposit_balance) -
+              investment)
+          .round();
+
   int getUpdatedClosingBalance(double investment) => (investment +
           toDouble(_myUser.icici_balance) +
           toDouble(_myUser.augmont_balance) +
@@ -433,6 +443,13 @@ class BaseUtil extends ChangeNotifier {
 
   int getTotalTicketsPostTransaction(double investment) =>
       _myUser.ticket_count + getTicketCountForTransaction(investment);
+
+  int getTotalTicketsPostWithdrawalTransaction(double investment) {
+    int count = _myUser.ticket_count - getTicketCountForTransaction(investment);
+    if (count <= 0) count = 0;
+
+    return count;
+  }
 
   BaseUser get myUser => _myUser;
 

@@ -356,7 +356,6 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         context: context,
         builder: (BuildContext context) => SuccessDialog(),
       );
-      // baseProvider.showRefreshAlert(context);
     } else
       baseProvider.showNegativeAlert(
           'Failed',

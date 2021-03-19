@@ -3,6 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/game-poll-dialog.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
+import 'package:felloapp/ui/elements/success-dialog.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -170,7 +171,14 @@ class _HomePageState extends State<HomePage> {
                         subtitle:
                             "By referring, you and your friend will both receive 10 game tickets and ₹25 in rewards!",
                         buttonText: "Share now",
-                        onPressed: () => widget.tabChange(3),
+                        onPressed: () {
+                          HapticFeedback.vibrate();
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => SuccessDialog(),
+                          );
+                        },
+                        //() => widget.tabChange(3),
                         gradient: [
                           Color(0xffD4AC5B),
                           Color(0xffDECBA4),
@@ -286,9 +294,8 @@ class HomeCard extends StatelessWidget {
                   subtitle,
                   style: GoogleFonts.montserrat(
                       color: Colors.white,
-                      fontSize: SizeConfig.mediumTextSize*1.2,
-                    fontWeight: FontWeight.w400
-                  ),
+                      fontSize: SizeConfig.mediumTextSize * 1.2,
+                      fontWeight: FontWeight.w400),
                 ),
                 GestureDetector(
                   onTap: onPressed,

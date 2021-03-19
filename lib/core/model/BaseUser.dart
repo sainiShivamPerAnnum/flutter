@@ -65,8 +65,8 @@ class BaseUser {
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token]) :
         this(id, data[fldMobile], data[fldEmail], data[fldName], client_token,
           data[fldTicket_count]??BaseUtil.NEW_USER_TICKET_COUNT, data[fldAcctBalance]??0,
-          data[fldDepositBalance]??0,data[fldPriBalance]??0, data[fldICICIBalance]??0,
-          data[fldAugmontBalance]??0,data[fldLifeTimeWinnings]??0,data[fldPan],
+          data[fldDepositBalance]??0,data[fldPriBalance]??0, BaseUtil.toDouble(data[fldICICIBalance]),
+          BaseUtil.toDouble(data[fldAugmontBalance]),data[fldLifeTimeWinnings]??0,data[fldPan],
           data[fldAge], data[fldIsInvested]??false,data[fldIsIciciOnboarded]??false,
           data[fldIsAugmontOnboarded]??false,data[fldIsKycVerified]??BaseUtil.KYC_UNTESTED,
           data[fldPendingTxnId],data[fldIsIciciEnabled],data[fldIsAugmontEnabled]
