@@ -111,13 +111,13 @@ class _FinancePageState extends State<FinancePage> {
                         FundWidget(
                             fund: fundList[0],
                             onPressed: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (ctx) => MFDetailsPage(),
-                              //   ),
-                              // );
-                              baseProvider.showNegativeAlert('Locked', 'Feature currently locked', context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (ctx) => MFDetailsPage(),
+                                ),
+                              );
+                              //baseProvider.showNegativeAlert('Locked', 'Feature currently locked', context);
 
                               setState(() {});
                             }),
