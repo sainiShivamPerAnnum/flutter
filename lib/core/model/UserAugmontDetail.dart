@@ -9,6 +9,7 @@ class UserAugmontDetail {
   String _bankAccNo;
   String _bankHolderName;
   String _userStateId;
+  String _ifsc;
   bool _firstInvMade;
   Timestamp _createdTime;
   Timestamp _updatedTime;
@@ -18,6 +19,7 @@ class UserAugmontDetail {
   static final String fldBankAccNo = 'aAccNo';
   static final String fldBankHolderName = 'aBankHolderName';
   static final String fldStateId = 'aStateId';
+  static final String fldIfsc = 'aIfsc';
   static final String fldFirstInvMade = 'aIsInvested';
   static final String fldHasIssue = 'aHasIssue';
   static final String fldCreatedTime = 'aCreatedTime';
@@ -28,15 +30,17 @@ class UserAugmontDetail {
       this._userName,
       this._bankAccNo,
       this._bankHolderName,
+      this._ifsc,
       this._userStateId,
       this._firstInvMade,
       this._hasIssue,
       this._createdTime,
       this._updatedTime);
 
-  UserAugmontDetail.newUser(String uid, String uname, String stateId)
-      : this(uid, uname, null, null, stateId, false, null, Timestamp.now(),
-            Timestamp.now());
+  UserAugmontDetail.newUser(String uid, String uname, String stateId,
+      String bankHolderName, String bankAccNo, String ifsc)
+      : this(uid, uname, bankAccNo, bankHolderName, ifsc, stateId, false, null,
+            Timestamp.now(), Timestamp.now());
 
   UserAugmontDetail.fromMap(Map<String, dynamic> data)
       : this(
@@ -44,8 +48,9 @@ class UserAugmontDetail {
             data[fldUserName],
             data[fldBankAccNo],
             data[fldBankHolderName],
+            data[fldIfsc],
             data[fldStateId],
-            data[fldFirstInvMade]??false,
+            data[fldFirstInvMade] ?? false,
             data[fldHasIssue],
             data[fldCreatedTime],
             data[fldUpdatedTime]);
@@ -58,6 +63,7 @@ class UserAugmontDetail {
       fldBankHolderName: _bankHolderName,
       fldStateId: _userStateId,
       fldFirstInvMade: _firstInvMade,
+      fldIfsc: _ifsc,
       fldCreatedTime: _createdTime,
       fldUpdatedTime: Timestamp.now()
     };
@@ -109,5 +115,11 @@ class UserAugmontDetail {
 
   set hasIssue(String value) {
     _hasIssue = value;
+  }
+
+  String get ifsc => _ifsc;
+
+  set ifsc(String value) {
+    _ifsc = value;
   }
 }

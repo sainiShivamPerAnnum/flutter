@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/PrizeLeader.dart';
 import 'package:felloapp/core/model/ReferralLeader.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
+import 'package:felloapp/core/model/UserMiniTransaction.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
@@ -19,9 +20,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'core/model/TambolaBoard.dart';
 import 'core/model/UserAugmontDetail.dart';
+import 'util/size_config.dart';
 
 class BaseUtil extends ChangeNotifier {
   final Log log = new Log("BaseUtil");
@@ -31,15 +34,19 @@ class BaseUtil extends ChangeNotifier {
   User firebaseUser;
   static RemoteConfig remoteConfig;
   PaymentService _payService;
+
   ///Tambola global objects
   DailyPick weeklyDigits;
   List<TambolaBoard> userWeeklyBoards;
+
   ///ICICI global objects
   UserIciciDetail _iciciDetail;
   UserTransaction _currentICICITxn;
+
   ///Augmont global objects
   UserAugmontDetail _augmontDetail;
   UserTransaction _currentAugmontTxn;
+
   ///KYC global object
   UserKycDetail _kycDetail;
 
@@ -47,15 +54,22 @@ class BaseUtil extends ChangeNotifier {
   List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
   String myUserDpUrl;
+  List<UserMiniTransaction> userMiniTxnList = [];
 
+  DateTime _userCreationTimestamp;
   int referCount = 0;
   int userTicketsCount = 0;
   bool isUserOnboarded = false;
   bool isLoginNextInProgress = false;
-  bool isDepositRouteLogicInProgress = false;
+  bool isEditProfileNextInProgress = false;
+  bool isAugmontRegnInProgress = false;
+  bool isIciciDepositRouteLogicInProgress = false;
+  bool isAugDepositRouteLogicInProgress = false;
+  bool isAugWithdrawRouteLogicInProgress = false;
   bool weeklyDrawFetched = false;
   bool weeklyTicksFetched = false;
   bool referCountFetched = false;
+  bool isProfilePictureUpdated = false;
   bool isReferralLinkBuildInProgressWhatsapp = false;
   bool isReferralLinkBuildInProgressOther = false;
 
@@ -71,6 +85,7 @@ class BaseUtil extends ChangeNotifier {
   static int ticketCountBeforeRequest = NEW_USER_TICKET_COUNT;
   static int infoSliderIndex = 0;
   static bool playScreenFirst = true;
+
   ///STAGES - IMPORTANT
   static const AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;
   static const AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.DEV;
@@ -83,36 +98,41 @@ class BaseUtil extends ChangeNotifier {
     if (firebaseUser != null)
       _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
     isUserOnboarded =
-        (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
+    (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
     if (isUserOnboarded) {
       await initRemoteConfig();
-      String _p = remoteConfig.getString('play_screen_first');
-      playScreenFirst = !(_p != null && _p.isNotEmpty && _p == 'false');
+      // String _p = remoteConfig.getString('play_screen_first');
+      // playScreenFirst = !(_p != null && _p.isNotEmpty && _p == 'false');
 
-    _payService = locator<PaymentService>();
-      if(myUser.isIciciOnboarded)_payService.verifyPaymentsIfAny();
+      //get user creation time
+      _userCreationTimestamp = firebaseUser.metadata.creationTime;
+
+      //check if there are any icici txns in process
+      _payService = locator<PaymentService>();
+      if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
     }
   }
 
   acceptNotificationsIfAny(BuildContext context) {
     //if payment completed in the background:
-    if(_payService != null && myUser.pendingTxnId != null) {
+    if (_payService != null && myUser.pendingTxnId != null) {
       _payService.addPaymentStatusListener((value) {
-          if(value == PaymentService.TRANSACTION_COMPLETE) {
-            showPositiveAlert(
-                'Transaction Complete', 'Your account balance has been updated!', context,
-                seconds: 5);
-          }else if(value == PaymentService.TRANSACTION_REJECTED) {
-            showPositiveAlert(
-                'Transaction Closed', 'The transaction was not completed', context,
-                seconds: 5);
-          }else{
-            log.debug('Received notif for pending transaction: $value');
-          }
+        if (value == PaymentService.TRANSACTION_COMPLETE) {
+          showPositiveAlert('Transaction Complete',
+              'Your account balance has been updated!', context,
+              seconds: 5);
+        } else if (value == PaymentService.TRANSACTION_REJECTED) {
+          showPositiveAlert('Transaction Closed',
+              'The transaction was not completed', context,
+              seconds: 5);
+        } else {
+          log.debug('Received notif for pending transaction: $value');
+        }
       });
     }
     //
   }
+
   cancelIncomingNotifications() {
     _payService.addPaymentStatusListener(null);
   }
@@ -133,10 +153,12 @@ class BaseUtil extends ChangeNotifier {
       'aws_icici_key_index': '1',
       'aws_augmont_key_index': '1',
       'icici_deposits_enabled': '1',
-      'kyc_completion_prize':'You have won ₹50 and 10 Tambola tickets!'
+      'augmont_deposits_enabled': '1',
+      'augmont_deposit_permission': '1',
+      'kyc_completion_prize': 'You have won ₹50 and 10 Tambola tickets!'
     });
     try {
-      // Using default duration to force fetching from remote server.
+      // Fetches every 12 hrs
       await remoteConfig.fetch();
       await remoteConfig.activateFetched();
     } on FetchThrottledException catch (exception) {
@@ -153,10 +175,9 @@ class BaseUtil extends ChangeNotifier {
       //there is a pending icici transaction
       iciciDetail = await _dbModel.getUserIciciDetails(_myUser.uid);
       UserTransaction txn =
-          await _dbModel.getUserTransaction(_myUser.uid, _myUser.pendingTxnId);
+      await _dbModel.getUserTransaction(_myUser.uid, _myUser.pendingTxnId);
       if (txn != null &&
-          txn.tranStatus == UserTransaction.TRAN_STATUS_PENDING) {
-      } else {
+          txn.tranStatus == UserTransaction.TRAN_STATUS_PENDING) {} else {
         //transaction doesnt exist or is no longer in PENDING status
 
       }
@@ -171,32 +192,32 @@ class BaseUtil extends ChangeNotifier {
         color: UiConstants.accentColor, //change your color here
       ),
       title: Text('${Constants.APP_NAME}',
-          style: TextStyle(
-              color: UiConstants.accentColor,
-              fontWeight: FontWeight.w700,
-              fontSize: 30.0)),
-      bottom: PreferredSize(
-          child: Container(
-              color: Colors.blueGrey[100],
-              height: 25.0,
-              child: Padding(
-                  padding:
-                      EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'We are currently in Beta',
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                      Icon(
-                        Icons.info_outline,
-                        size: 20,
-                        color: Colors.black54,
-                      )
-                    ],
-                  ))),
-          preferredSize: Size.fromHeight(25.0)),
+          style: GoogleFonts.montserrat(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+              fontSize: SizeConfig.largeTextSize)),
+      // bottom: PreferredSize(
+      //     child: Container(
+      //         color: Colors.blueGrey[100],
+      //         height: 25.0,
+      //         child: Padding(
+      //             padding:
+      //                 EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
+      //             child: Row(
+      //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //               children: [
+      //                 Text(
+      //                   'We are currently in Beta',
+      //                   style: TextStyle(color: Colors.black54),
+      //                 ),
+      //                 Icon(
+      //                   Icons.info_outline,
+      //                   size: 20,
+      //                   color: Colors.black54,
+      //                 )
+      //               ],
+      //             ))),
+      //     preferredSize: Size.fromHeight(25.0)),
     );
   }
 
@@ -227,7 +248,8 @@ class BaseUtil extends ChangeNotifier {
           blurRadius: 3.0,
         )
       ],
-    )..show(context);
+    )
+      ..show(context);
   }
 
   showNegativeAlert(String title, String message, BuildContext context,
@@ -253,7 +275,8 @@ class BaseUtil extends ChangeNotifier {
           blurRadius: 3.0,
         )
       ],
-    )..show(context);
+    )
+      ..show(context);
   }
 
   showNoInternetAlert(BuildContext context) {
@@ -278,7 +301,8 @@ class BaseUtil extends ChangeNotifier {
           blurRadius: 3.0,
         )
       ],
-    )..show(context);
+    )
+      ..show(context);
   }
 
   AuthCredential generateAuthCredential(String verificationId, String smsCode) {
@@ -343,7 +367,7 @@ class BaseUtil extends ChangeNotifier {
     //tdt = new DateTime(tdt.year, tdt.month, tdt.day-dayn+3);
     //tdt.setDate(tdt.getDate() - dayn + 3);
     DateTime firstThursday =
-        new DateTime(tdt.year, tdt.month, tdt.day - dayn + 3);
+    new DateTime(tdt.year, tdt.month, tdt.day - dayn + 3);
     tdt = new DateTime(tdt.year, 1, 1);
     if (tdt.weekday != DateTime.friday) {
       //tdt.setMonth(0, 1 + ((4 - tdt.getDay()) + 7) % 7);
@@ -353,12 +377,57 @@ class BaseUtil extends ChangeNotifier {
     }
     int n = 1 +
         ((firstThursday.millisecondsSinceEpoch - tdt.millisecondsSinceEpoch) /
-                604800000)
+            604800000)
             .ceil();
     //log.debug("Current week number: " + n.toString());
     return n;
   }
 
+  int getUpdatedWithdrawalClosingBalance(double investment) =>
+      (toDouble(_myUser.icici_balance) +
+          toDouble(_myUser.augmont_balance) +
+          toDouble(_myUser.prize_balance) +
+          toDouble(_myUser.deposit_balance) -
+          investment)
+          .round();
+
+  int getUpdatedClosingBalance(double investment) =>
+      (investment +
+          toDouble(_myUser.icici_balance) +
+          toDouble(_myUser.augmont_balance) +
+          toDouble(_myUser.prize_balance) +
+          toDouble(_myUser.deposit_balance))
+          .round();
+
+  static T _cast<T>(x) => x is T ? x : null;
+
+  static double toDouble(dynamic x) {
+    if (x == null) return 0.0;
+    try {
+      int y = _cast<int>(x);
+      if (y != null) return y + .0;
+    } catch (e) {}
+
+    try {
+      double z = _cast<double>(x);
+      if (z != null) return z;
+    } catch (e) {}
+
+    return 0.0;
+  }
+
+  int getTicketCountForTransaction(double investment) =>
+      (investment / BaseUtil.INVESTMENT_AMOUNT_FOR_TICKET).round();
+
+  int getTotalTicketsPostTransaction(double investment) =>
+      _myUser.ticket_count + getTicketCountForTransaction(investment);
+
+  int getTotalTicketsPostWithdrawalTransaction(double investment) {
+    int count = _myUser.ticket_count - getTicketCountForTransaction(investment);
+    if(count <= 0) count = 0;
+
+    return count;
+  }
 
   BaseUser get myUser => _myUser;
 
@@ -384,7 +453,6 @@ class BaseUtil extends ChangeNotifier {
     _currentICICITxn = value;
   }
 
-
   UserAugmontDetail get augmontDetail => _augmontDetail;
 
   set augmontDetail(UserAugmontDetail value) {
@@ -400,4 +468,6 @@ class BaseUtil extends ChangeNotifier {
   set currentAugmontTxn(UserTransaction value) {
     _currentAugmontTxn = value;
   }
+
+  DateTime get userCreationTimestamp => _userCreationTimestamp;
 }

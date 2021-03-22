@@ -328,9 +328,10 @@ class DBModel extends ChangeNotifier {
           log.error('Failed to parse user transaction $txn');
         }
       });
+      print("LENGTH----------------->" + requestedTxns.length.toString());
       return requestedTxns;
     } catch (err) {
-      log.error('Failed to fetch tambola boards');
+      log.error('Failed to fetch user mini transactions');
       return requestedTxns;
     }
   }
@@ -427,7 +428,7 @@ class DBModel extends ChangeNotifier {
       incrementFlag = true;
     } catch (e) {
       print("Error incremeting poll");
-      //log.error(e);
+      log.error(e);
       incrementFlag = false;
     }
     if (incrementFlag) {
@@ -441,6 +442,7 @@ class DBModel extends ChangeNotifier {
         await _api.addUserPollResponseDocument(uid, pollId, pRes);
         return true;
       } catch (e) {
+        log.error('$e');
         return false;
       }
     } else {
@@ -474,10 +476,10 @@ class DBModel extends ChangeNotifier {
       int weekCode = _getWeekCode();
       QuerySnapshot _querySnapshot =
           await _api.getLeaderboardDocument('referral', weekCode);
-      if (_querySnapshot == null || _querySnapshot.size != 1) return null;
+      if (_querySnapshot == null || _querySnapshot.size != 1) return [];
 
       DocumentSnapshot _docSnapshot = _querySnapshot.docs[0];
-      if (!_docSnapshot.exists || _docSnapshot.data()['leaders'] == null)
+      if (!_docSnapshot.exists || _docSnapshot.data()['leaders'] == [])
         return null;
       Map<String, dynamic> leaderMap = _docSnapshot.data()['leaders'];
       log.debug('Referral Leader Map: $leaderMap');
@@ -499,7 +501,7 @@ class DBModel extends ChangeNotifier {
       return leaderList;
     } catch (e) {
       log.error(e);
-      return null;
+      return [];
     }
   }
 
@@ -508,10 +510,10 @@ class DBModel extends ChangeNotifier {
       int weekCode = _getWeekCode();
       QuerySnapshot _querySnapshot =
           await _api.getLeaderboardDocument('prize', weekCode);
-      if (_querySnapshot == null || _querySnapshot.size != 1) return null;
+      if (_querySnapshot == null || _querySnapshot.size != 1) return [];
 
       DocumentSnapshot _docSnapshot = _querySnapshot.docs[0];
-      if (!_docSnapshot.exists || _docSnapshot.data()['leaders'] == null)
+      if (!_docSnapshot.exists || _docSnapshot.data()['leaders'] == [])
         return null;
       Map<String, dynamic> leaderMap = _docSnapshot.data()['leaders'];
       log.debug('Prize Leader Map: $leaderMap');
@@ -524,9 +526,9 @@ class DBModel extends ChangeNotifier {
           String usrName = vals['name'];
           var usrTotalWin = vals['win_total'];
           double uTotal;
-          try{
+          try {
             uTotal = usrTotalWin;
-          }catch(e) {
+          } catch (e) {
             uTotal = usrTotalWin + .0;
           }
           log.debug('Leader details:: $uid, $usrName, $uTotal');
@@ -538,7 +540,7 @@ class DBModel extends ChangeNotifier {
       return leaderList;
     } catch (e) {
       log.error(e);
-      return null;
+      return [];
     }
   }
 
@@ -598,10 +600,10 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<String> getUserDP(String uid) async{
-    try{
+  Future<String> getUserDP(String uid) async {
+    try {
       return await _api.getFileFromDPBucketURL(uid, 'image');
-    }catch(e) {
+    } catch (e) {
       log.error('Failed to fetch dp url');
       return null;
     }

@@ -6,6 +6,8 @@ class Assets {
   static final String logoMaxSize = 'images/fello_logo.png';
   static final String referGraphic = 'images/transfer.png';
   static final String iciciGraphic = 'images/icici.png';
+  static final String augmontGraphic = 'images/augmont.png';
+  static final String augmontLogo = "images/augmont-logo.png";
   static final String sebiGraphic = 'images/sebi.png';
   static final String amfiGraphic = 'images/amfi.png';
   static final String prizesGraphic = 'images/prizes-small.png';
@@ -34,6 +36,11 @@ class Assets {
     'Grow',
     'Play',
     'Safe',
+  ];
+  static final List<String> teachFello = [
+    'images/process/process-1.png',
+    'images/process/process-2.png',
+    'images/process/process-3.png',
   ];
   static final checkmarkLottie = 'images/checkmark.json';
   static final String aboutUsDesc =
@@ -152,7 +159,7 @@ class Assets {
 
   static final List<String> showCaseDesc = [
     'Welcome to Fello!\n'
-        'We have added 5 tickets in your account to get you started',
+        'We have added a number of tickets in your account to get you started',
     'Everyday, 5 numbers are randomly picked from Monday to Sunday. Click the box to see this week\'s numbers',
     'You receive fresh Tambola tickets every Monday. The ticket numbers are automatically crossed based on the daily picks',
     'If any of your tickets match one of the 5 categories, you receive an instant cash prize in your account!'
@@ -176,6 +183,10 @@ class Assets {
       "We are slowly moving towards a fully automated system of deposits and withdrawals. " +
           "Currently, we have started integrated transactions with only a small set of users.\n\n Please use manual deposits in the meanwhile!";
 
+  static final String augmontUnavailable =
+      "We are slowly moving towards a fully automated system of deposits and withdrawals. " +
+          "Currently, we have started integrated transactions with only a small set of users.\n\n Please use manual deposits in the meanwhile!";
+
   static final String infoWhyPan =
       'Your PAN Card is required by ICICI to set up your investment folio';
   static final String infoWherePan =
@@ -188,4 +199,14 @@ class Assets {
       '\'Know Your Customer\' is process where we verify your identity by requesting you to submit certain documents. This verification is a one time process across all services';
   static final String infoWhyKYC =
       'RBI has made KYC mandatory to verify the identity of all customers who carry out financial transactions. This process unlocks all equity and mutual funds for you to invest in!';
+  static final String infoAugmontTxnHow = '';
+  static final String infoAugmontTime = '';
+
+  static const List<String> POLL_NEXT_GAME_LIST = [
+    'Finance Quiz',
+    'Card games',
+    'Board games',
+    'Naah',
+    'Naah5'
+  ];
 }

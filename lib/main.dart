@@ -29,6 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'core/service/payment_service.dart';
+import 'ui/pages/edit_profile_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,11 +58,10 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: Constants.APP_NAME,
         theme: ThemeData(
-          primaryColor: UiConstants.primaryColor,
-          primarySwatch: Colors.green,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          textTheme: GoogleFonts.sourceSansProTextTheme(),
-        ),
+            primaryColor: UiConstants.primaryColor,
+            primarySwatch: Colors.green,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            textTheme: GoogleFonts.montserratTextTheme()),
         home: SplashScreen(),
         routes: <String, WidgetBuilder>{
           '/launcher': (BuildContext context) => SplashScreen(),
@@ -75,7 +75,8 @@ class MyApp extends StatelessWidget {
           '/refpolicy': (BuildContext context) => ReferralPolicy(),
           '/verifykyc': (BuildContext context) => KycOnboardInterface(),
           '/onboardicici': (BuildContext context) => IciciOnboardController(),
-          '/initkyc': (BuildContext context) => KYCInvalid()
+          '/initkyc': (BuildContext context) => KYCInvalid(),
+          '/editProf': (BuildContext context) => EditProfile()
         },
       ),
     );

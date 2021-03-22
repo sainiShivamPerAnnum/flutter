@@ -1,21 +1,19 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/AugGoldRates.dart';
+import 'package:felloapp/core/model/UserAugmontDetail.dart';
+import 'package:felloapp/core/model/UserTransaction.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/payment_service.dart';
-import 'package:felloapp/ui/dialogs/icici_withdraw_dialog.dart';
-import 'package:felloapp/ui/dialogs/integrated_icici_disabled_dialog.dart';
+import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
+import 'package:felloapp/ui/dialogs/augmont_onboarding_dialog.dart';
+import 'package:felloapp/ui/dialogs/augmont_withdraw_dialog.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
-import 'package:felloapp/ui/elements/deposit_modal_sheet.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
-import 'package:felloapp/ui/elements/profit_calculator.dart';
-import 'package:felloapp/ui/pages/deposit_verification.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
+import 'package:felloapp/ui/elements/gold_profit_calculator.dart';
+import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:felloapp/ui/dialogs/icici_withdraw_dialog.dart';
 import 'package:fl_animated_linechart/chart/area_line_chart.dart';
 import 'package:fl_animated_linechart/chart/line_chart.dart';
 import 'package:fl_animated_linechart/common/pair.dart';
@@ -35,46 +33,58 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
   Log log = new Log('GoldDetails');
   BaseUtil baseProvider;
   DBModel dbProvider;
-  PaymentService payService;
-  GlobalKey<DepositModalSheetState> _modalKey = GlobalKey();
-  GlobalKey<IciciWithdrawDialogState> _withdrawalDialogKey = GlobalKey();
+  AugmontModel augmontProvider;
+  GlobalKey<AugmontDepositModalSheetState> _modalKey2 = GlobalKey();
+  GlobalKey<AugmontOnboardingState> _onboardingKey = GlobalKey();
+  GlobalKey<AugmontWithdrawDialogState> _withdrawalDialogKey2 = GlobalKey();
   double containerHeight = 10;
   Map<String, dynamic> _withdrawalRequestDetails;
+  AugmontRates _currentBuyRates;
+  AugmontRates _currentSellRates;
+  static const int STATUS_UNAVAILABLE = 0;
+  static const int STATUS_REGISTER = 1;
+  static const int STATUS_OPEN = 2;
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    dbProvider = Provider.of<DBModel>(context,listen:false);
-    payService = Provider.of<PaymentService>(context,listen:false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    augmontProvider = Provider.of<AugmontModel>(context, listen: false);
 
-    return Scaffold(
-      appBar: BaseUtil.getAppBar(),
-      body: Column(
-        children: [
-          Expanded(
-            child: Container(
-              child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                child: Column(
-                  children: [
-                    FundInfo(),
-                    FundGraph(),
-                    FundDetailsTable(),
-                    ProfitCalculator(),
-                    FAQCard(),
-                    _buildBetaWithdrawButton(),
-                  ],
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context, true);
+        return true;
+      },
+      child: Scaffold(
+        appBar: BaseUtil.getAppBar(),
+        body: Column(
+          children: [
+            Expanded(
+              child: Container(
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      FundInfo(),
+                      FundGraph(),
+                      //FundDetailsTable(),
+                      GoldProfitCalculator(),
+                      FAQCard(),
+                      _buildBetaWithdrawButton(),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          _buildBetaSaveButton(),
-        ],
+            _buildSaveButton(),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildBetaSaveButton() {
+  Widget _buildSaveButton() {
     return Container(
       width: double.infinity,
       height: MediaQuery.of(context).size.height * 0.07,
@@ -86,7 +96,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
       ),
       child: new Material(
         child: MaterialButton(
-          child: (!baseProvider.isDepositRouteLogicInProgress)
+          child: (!baseProvider.isAugDepositRouteLogicInProgress)
               ? Text(
                   _getActionButtonText(),
                   style: Theme.of(context)
@@ -100,7 +110,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                 ),
           onPressed: () async {
             HapticFeedback.vibrate();
-            baseProvider.isDepositRouteLogicInProgress = true;
+            baseProvider.isAugDepositRouteLogicInProgress = true;
             setState(() {});
             ///////////DUMMY///////////////////////////////////
             // baseProvider.iciciDetail =
@@ -111,7 +121,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
             //     panNumber: baseProvider.iciciDetail.panNumber,),
             // ));
             //////////////////////////////////////
-            onDepositClicked().then((value) {
+            _onDepositClicked().then((value) {
               setState(() {});
             });
           },
@@ -152,21 +162,23 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
       ),
       child: new Material(
         child: MaterialButton(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'WITHDRAW ',
-                style: Theme.of(context)
-                    .textTheme
-                    .button
-                    .copyWith(color: Colors.white),
-              ),
-            ],
+          child: (!baseProvider.isAugWithdrawRouteLogicInProgress)
+              ? Text(
+            'WITHDRAW',
+            style: Theme.of(context)
+                .textTheme
+                .button
+                .copyWith(color: Colors.white),
+          )
+              : SpinKitThreeBounce(
+            color: UiConstants.spinnerColor2,
+            size: 18.0,
           ),
           onPressed: () async {
-            HapticFeedback.vibrate();
-            onWithdrawalClicked();
+            if(!baseProvider.isAugWithdrawRouteLogicInProgress) {
+              HapticFeedback.vibrate();
+              _onWithdrawalClicked();
+            }
           },
           highlightColor: Colors.orange.withOpacity(0.5),
           splashColor: Colors.orange.withOpacity(0.5),
@@ -177,180 +189,260 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     );
   }
 
-  String _getActionButtonText() {
-    if (baseProvider.myUser.isIciciEnabled == null ||
-        !baseProvider.myUser.isIciciEnabled) {
-      return 'UNAVAILABLE';
+  int _checkAugmontStatus() {
+    //check who is allowed to deposit
+    String _perm =
+        BaseUtil.remoteConfig.getString('augmont_deposit_permission');
+    int _isGeneralUserAllowed = 1;
+    bool _isAllowed = false;
+    if (_perm != null && _perm.isNotEmpty) {
+      try {
+        _isGeneralUserAllowed = int.parse(_perm);
+      } catch (e) {
+        _isGeneralUserAllowed = 1;
+      }
     }
-    if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID)
-      return 'COMPLETE KYC';
-    if (!baseProvider.myUser.isIciciOnboarded)
+    if (_isGeneralUserAllowed == 0) {
+      //General permission is denied. Check if specific user permission granted
+      if (baseProvider.myUser.isAugmontEnabled != null &&
+          baseProvider.myUser.isAugmontEnabled) {
+        //this specific user is allowed to use Augmont
+        _isAllowed = true;
+      } else {
+        _isAllowed = false;
+      }
+    } else {
+      _isAllowed = true;
+    }
+
+    if (!_isAllowed)
+      return STATUS_UNAVAILABLE;
+    else if (baseProvider.myUser.isAugmontOnboarded == null ||
+        baseProvider.myUser.isAugmontOnboarded == false)
+      return STATUS_REGISTER;
+    else
+      return STATUS_OPEN;
+  }
+
+  String _getActionButtonText() {
+    int _status = _checkAugmontStatus();
+    if (_status == STATUS_UNAVAILABLE)
+      return 'UNAVAILABLE';
+    else if (_status == STATUS_REGISTER)
       return 'REGISTER';
     else
       return 'DEPOSIT';
   }
 
-  Future<bool> onDepositClicked() async {
-    baseProvider.iciciDetail = (baseProvider.iciciDetail == null)
-        ? (await dbProvider.getUserIciciDetails(baseProvider.myUser.uid))
-        : baseProvider.iciciDetail;
-    if (baseProvider.myUser.isIciciEnabled == null ||
-        !baseProvider.myUser.isIciciEnabled) {
-      //icici deposits not enabled. show disabled dialog
-      baseProvider.isDepositRouteLogicInProgress = false;
+  Future<bool> _onDepositClicked() async {
+    baseProvider.augmontDetail = (baseProvider.augmontDetail == null)
+        ? (await dbProvider.getUserAugmontDetails(baseProvider.myUser.uid))
+        : baseProvider.augmontDetail;
+    int _status = _checkAugmontStatus();
+    if (_status == STATUS_UNAVAILABLE) {
+      baseProvider.isAugDepositRouteLogicInProgress = false;
       showDialog(
           context: context,
-          builder: (BuildContext context) => IntegratedIciciDisabled());
+          builder: (BuildContext context) => AugmontDisabled());
+      setState(() {});
       return true;
-    }
-    if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_VALID &&
-        baseProvider.myUser.isIciciOnboarded) {
-      //move directly to depositing
-      baseProvider.isDepositRouteLogicInProgress = false;
-      showModalBottomSheet(
-          backgroundColor: Colors.transparent,
-          context: context,
-          isScrollControlled: true,
-          builder: (context) {
-            return DepositModalSheet(
-              key: _modalKey,
-              onDepositConfirmed: (Map<String, dynamic> rMap) {
-                payService
-                    .initiateTransaction(rMap['amount'], rMap['vpa'])
-                    .then((resMap) {
-                  if (!resMap['flag']) {
-                    _modalKey.currentState.onErrorReceived(resMap['reason'] ??
-                        'Error: Unknown. Please restart the app');
-                  } else {
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (ctx) => DepositVerification(),
-                        ));
-                  }
-                  return;
-                });
-              },
-            );
-          });
-      return true;
-    }
-    if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID) {
-      baseProvider.isDepositRouteLogicInProgress = false;
-      Navigator.of(context).pop(); //go back to save tab
-      // Navigator.of(context).pushNamed('/verifykyc');
-      Navigator.of(context).pushNamed('/initkyc');
+    } else if (_status == STATUS_REGISTER) {
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => AugmontOnboarding(
+                  key: _onboardingKey,
+                  onSubmit: (Map<String, String> aData) {
+                    String aPan = aData['pan_number'];
+                    String aStateId = aData['state_id'];
+                    String aBankHolderName = aData['bank_holder_name'];
+                    String aBankAccNo = aData['bank_acc_no'];
+                    String aBankIfsc = aData['bank_ifsc'];
+                    _registerAugmontUser(aPan, aStateId, aBankHolderName,
+                            aBankAccNo, aBankIfsc)
+                        .then((flag) {
+                      _onboardingKey.currentState.regnComplete(flag);
+                    });
+                  })));
+      baseProvider.isAugDepositRouteLogicInProgress = false;
+      setState(() {});
       return true;
     } else {
-      Navigator.of(context).pop(); //go back to save tab
-      if (baseProvider.iciciDetail != null &&
-          baseProvider.iciciDetail.panNumber != null &&
-          baseProvider.iciciDetail.appId != null &&
-          baseProvider.iciciDetail.panName != null) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (ctx) => IciciOnboardController(
-                startIndex: PersonalPage.index,
-                appIdExists: true,
-              ),
-            ));
+      baseProvider.isAugDepositRouteLogicInProgress = false;
+      _currentBuyRates = await augmontProvider.getRates();
+      if (_currentBuyRates == null) {
+        baseProvider.showNegativeAlert('Portal unavailable',
+            'The current rates couldn\'t be loaded. Please try again', context);
+        return false;
       } else {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (ctx) => IciciOnboardController(
-                startIndex: PANPage.index,
-                appIdExists: false,
-              ),
-            ));
+        showModalBottomSheet(
+            isDismissible: false,
+            backgroundColor: Colors.transparent,
+            context: context,
+            isScrollControlled: true,
+            builder: (context) {
+              return AugmontDepositModalSheet(
+                key: _modalKey2,
+                onDepositConfirmed: (double amount) {
+                  augmontProvider.initiateGoldPurchase(
+                      _currentBuyRates, amount);
+                  augmontProvider.setAugmontTxnProcessListener(
+                      _onDepositTransactionComplete);
+                },
+                currentRates: _currentBuyRates,
+              );
+            });
       }
-      baseProvider.isDepositRouteLogicInProgress = false;
     }
     return true;
   }
 
-  onWithdrawalClicked() {
-    if (!baseProvider.myUser.isIciciOnboarded) {
-      baseProvider.showNegativeAlert(
-          'Not onboarded', 'You havent been onboarded to ICICI yet', context);
-    } else if (baseProvider.myUser.icici_balance == null ||
-        baseProvider.myUser.icici_balance == 0) {
-      baseProvider.showNegativeAlert(
-          'No balance', 'Your ICICI wallet has no balance presently', context);
-    } else {
-      HapticFeedback.vibrate();
-      payService.getWithdrawalDetails().then((withdrawalDetailsMap) {
-        //refresh dialog state once balance received
-        if (!withdrawalDetailsMap['flag']) {
-          _withdrawalDialogKey.currentState
-              .onDetailsReceived(0, 0, false, withdrawalDetailsMap['reason']);
-        } else {
-          _withdrawalDialogKey.currentState.onDetailsReceived(
-              withdrawalDetailsMap['instant_balance'],
-              withdrawalDetailsMap['total_balance'],
-              withdrawalDetailsMap['is_imps_allowed'],
-              withdrawalDetailsMap['reason']);
-        }
-      });
-      showDialog(
-          barrierColor: Colors.black87,
-          context: context,
-          builder: (BuildContext context) => IciciWithdrawDialog(
-                key: _withdrawalDialogKey,
-                currentBalance: baseProvider.myUser.icici_balance,
-                onAmountConfirmed: (double wAmount) {
-                  payService
-                      .preProcessWithdrawal(wAmount.toString())
-                      .then((combDetailsMap) {
-                    if (combDetailsMap['flag']) {
-                      _withdrawalRequestDetails = combDetailsMap;
-                      //check if dialog required
-                      if (combDetailsMap[GetExitLoad.resPopUpFlag] ==
-                          GetExitLoad.SHOW_POPUP) {
-                        _withdrawalDialogKey.currentState.onShowLoadDialog();
-                      } else {
-                        onInitiateWithdrawal(_withdrawalRequestDetails);
-                      }
-                    } else {
-                      Navigator.of(context).pop();
-                      baseProvider.showNegativeAlert('Withdrawal Failed',
-                          'Error: ${combDetailsMap['reason']}', context);
-                    }
-                  });
-                },
-                onOptionConfirmed: (bool flag) {
-                  if (flag) {
-                    _withdrawalRequestDetails[
-                        SubmitRedemption.fldExitLoadTick] = 'Y';
-                    _withdrawalRequestDetails[
-                            SubmitRedemption.fldApproxLoadAmount] =
-                        _withdrawalRequestDetails[GetExitLoad.resApproxLoadAmt];
-                    onInitiateWithdrawal(_withdrawalRequestDetails);
-                  } else {
-                    Navigator.of(context).pop();
-                    baseProvider.showNegativeAlert(
-                        'Withdrawal Cancelled',
-                        'Please contact us if you need any further details',
-                        context);
-                  }
-                },
-              ));
+  Future<bool> _registerAugmontUser(String aPan, String aStateId,
+      String aBankHolderName, String aBankAccNo, String aIfsc) async {
+    if (aPan != null && aStateId != null) {
+      UserAugmontDetail detail = await augmontProvider.createUser(
+          baseProvider.myUser.mobile,
+          aPan,
+          aStateId,
+          aBankHolderName,
+          aBankAccNo,
+          aIfsc);
+      if (detail != null) return true;
+    }
+    return false;
+  }
+
+  Future<bool> _onDepositTransactionComplete(UserTransaction txn) async {
+    if (txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) {
+      if (baseProvider.currentAugmontTxn != null) {
+        ///update augmont transaction closing balance and ticketupcount
+        baseProvider.currentAugmontTxn.ticketUpCount =
+            baseProvider.getTicketCountForTransaction(
+                baseProvider.currentAugmontTxn.amount);
+        baseProvider.currentAugmontTxn.closingBalance = baseProvider
+            .getUpdatedClosingBalance(baseProvider.currentAugmontTxn.amount);
+
+        ///update baseuser account balance and ticket count
+        baseProvider.myUser.account_balance =
+            baseProvider.currentAugmontTxn.closingBalance;
+        baseProvider.myUser.augmont_balance =
+            BaseUtil.toDouble(baseProvider.myUser.augmont_balance) +
+                BaseUtil.toDouble(baseProvider.currentAugmontTxn.amount);
+        baseProvider.myUser.ticket_count =
+            baseProvider.getTotalTicketsPostTransaction(
+                baseProvider.currentAugmontTxn.amount);
+
+        ///update fields
+        await dbProvider.updateUser(baseProvider.myUser);
+        await dbProvider.updateUserTransaction(
+            baseProvider.myUser.uid, baseProvider.currentAugmontTxn);
+
+        ///update UI
+        _modalKey2.currentState.onDepositComplete(true);
+
+        augmontProvider.completeTransaction();
+        return true;
+      }
+    } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_CANCELLED) {
+      //razorpay payment failed
+      log.debug('Payment cancelled');
+      if (baseProvider.currentAugmontTxn != null) {
+        _modalKey2.currentState.onDepositComplete(false);
+        augmontProvider.completeTransaction();
+      }
+    } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_PENDING) {
+      //razorpay completed but augmont purchase didnt go through
+      log.debug('Payment pending');
+      if (baseProvider.currentAugmontTxn != null) {
+        _modalKey2.currentState.onDepositComplete(false);
+        augmontProvider.completeTransaction();
+      }
     }
   }
 
-  Future<bool> onInitiateWithdrawal(Map<String, dynamic> fieldMap) {
-    payService.processWithdrawal(fieldMap).then((wMap) {
-      Navigator.of(context).pop();
-      if (!wMap['flag']) {
-        baseProvider.showNegativeAlert(
-            'Withdrawal Failed', 'Error: ${wMap['reason']}', context);
+  _onWithdrawalClicked() async {
+    HapticFeedback.vibrate();
+    baseProvider.augmontDetail = (baseProvider.augmontDetail == null)
+        ? (await dbProvider.getUserAugmontDetails(baseProvider.myUser.uid))
+        : baseProvider.augmontDetail;
+    if (!baseProvider.myUser.isAugmontOnboarded) {
+      baseProvider.showNegativeAlert(
+          'Not onboarded', 'You havent been onboarded to Augmont yet', context);
+    } else if (baseProvider.myUser.augmont_balance == null ||
+        baseProvider.myUser.augmont_balance == 0) {
+      baseProvider.showNegativeAlert('No balance',
+          'Your Augmont wallet has no balance presently', context);
+    } else {
+      baseProvider.isAugWithdrawRouteLogicInProgress = true;
+      setState(() {});
+      augmontProvider.getRates().then((rates) {
+        _currentSellRates = rates;
+        baseProvider.isAugWithdrawRouteLogicInProgress = false;
+        setState(() {});
+
+        showDialog(
+            barrierColor: Colors.black87,
+            context: context,
+            builder: (BuildContext context) => AugmontWithdrawDialog(
+              key: _withdrawalDialogKey2,
+              balance: baseProvider.myUser.augmont_balance,
+              sellRate: _currentSellRates.goldSellPrice,
+              onAmountConfirmed: (Map<String, double> amountDetails) {
+                _onInitiateWithdrawal(amountDetails['withdrawal_amount']);
+              },
+              bankHolderName: baseProvider.augmontDetail.bankHolderName,
+              bankAccNo: baseProvider.augmontDetail.bankAccNo,
+              bankIfsc: baseProvider.augmontDetail.ifsc,
+            ));
+      }).catchError((err) {
+        baseProvider.isAugWithdrawRouteLogicInProgress = false;
+        setState(() {});
+        baseProvider.showNegativeAlert('Couldn\'t complete your request', 'Please try again in some time', context);
+      });
+    }
+  }
+
+  _onInitiateWithdrawal(double amt) {
+    if (_currentSellRates != null && amt != null) {
+      augmontProvider.initiateWithdrawal(_currentSellRates, amt);
+      augmontProvider.setAugmontTxnProcessListener(_onSellComplete);
+    }
+  }
+
+  _onSellComplete(UserTransaction txn) async {
+    if (baseProvider.currentAugmontTxn != null) {
+      if (baseProvider.currentAugmontTxn.tranStatus !=
+          UserTransaction.TRAN_STATUS_COMPLETE) {
+        _withdrawalDialogKey2.currentState.onTransactionProcessed(false);
       } else {
-        baseProvider.showPositiveAlert('Withdrawal Successful',
-            'Processed in less than 30 seconds!', context);
+        ///reduce tickets and amount
+        baseProvider.currentAugmontTxn.closingBalance =
+            baseProvider.getUpdatedWithdrawalClosingBalance(
+                baseProvider.currentAugmontTxn.amount);
+        baseProvider.currentAugmontTxn.ticketUpCount =
+            baseProvider.getTicketCountForTransaction(
+                baseProvider.currentAugmontTxn.amount);
+        await dbProvider.updateUserTransaction(
+            baseProvider.myUser.uid, baseProvider.currentAugmontTxn);
+
+        baseProvider.myUser.augmont_balance =
+            baseProvider.myUser.augmont_balance -
+                baseProvider.currentAugmontTxn.amount;
+        baseProvider.myUser.account_balance =
+            baseProvider.currentAugmontTxn.closingBalance;
+        baseProvider.myUser.ticket_count =
+            baseProvider.getTotalTicketsPostWithdrawalTransaction(
+                baseProvider.currentAugmontTxn.amount);
+
+        await dbProvider.updateUser(baseProvider.myUser);
+
+        baseProvider.currentAugmontTxn = null;
+        baseProvider.userMiniTxnList = null; //make null so it refreshes
+        _withdrawalDialogKey2.currentState.onTransactionProcessed(true);
       }
-    });
+    }else{
+      _withdrawalDialogKey2.currentState.onTransactionProcessed(false);
+    }
   }
 }
 
@@ -451,20 +543,40 @@ class FundDetailsTable extends StatelessWidget {
 
 class FundGraph extends StatelessWidget {
   final Map<DateTime, double> line1 = {
-    DateTime.utc(2018, 02, 19): 255.088,
-    DateTime.utc(2018, 06, 04): 260.479,
-    DateTime.utc(2018, 10, 01): 266.677,
-    DateTime.utc(2018, 12, 10): 270.567,
-    DateTime.utc(2019, 02, 18): 274.292,
-    DateTime.utc(2019, 06, 03): 280.168,
-    DateTime.utc(2019, 08, 02): 284.682,
-    DateTime.utc(2019, 11, 04): 287.417,
-    DateTime.utc(2020, 01, 10): 292.637,
-    DateTime.utc(2020, 05, 25): 296.341,
-    DateTime.utc(2020, 08, 17): 298.870,
-    DateTime.utc(2020, 10, 12): 300.374,
-    DateTime.utc(2020, 12, 14): 301.983,
-    DateTime.utc(2021, 01, 18): 302.761,
+    DateTime.utc(2018, 03, 19): 3130,
+    DateTime.utc(2018, 04, 29): 3199,
+    DateTime.utc(2018, 05, 30): 3205,
+    DateTime.utc(2018, 06, 10): 3152,
+    DateTime.utc(2018, 07, 18): 3053,
+    DateTime.utc(2018, 08, 03): 3118,
+    DateTime.utc(2018, 09, 02): 3138,
+    DateTime.utc(2018, 10, 04): 3281,
+    DateTime.utc(2018, 12, 10): 3142,
+    DateTime.utc(2019, 01, 25): 3223,
+    DateTime.utc(2019, 02, 17): 3223,
+    DateTime.utc(2019, 03, 12): 3443,
+    DateTime.utc(2019, 04, 14): 3280,
+    DateTime.utc(2019, 05, 18): 3279,
+    DateTime.utc(2019, 06, 10): 3294,
+    DateTime.utc(2019, 07, 18): 3466,
+    DateTime.utc(2019, 08, 03): 3590,
+    DateTime.utc(2019, 09, 02): 3994,
+    DateTime.utc(2019, 10, 04): 3877,
+    DateTime.utc(2019, 12, 10): 4008,
+    DateTime.utc(2020, 01, 25): 3925,
+    DateTime.utc(2020, 02, 17): 4026,
+    DateTime.utc(2020, 03, 12): 4221,
+    DateTime.utc(2020, 04, 14): 4347,
+    DateTime.utc(2020, 05, 18): 4473,
+    DateTime.utc(2020, 06, 10): 4650,
+    DateTime.utc(2020, 07, 18): 4848,
+    DateTime.utc(2020, 08, 03): 5050,
+    DateTime.utc(2020, 09, 02): 5530,
+    DateTime.utc(2020, 10, 04): 5340,
+    DateTime.utc(2020, 12, 10): 5225,
+    DateTime.utc(2021, 01, 25): 5141,
+    DateTime.utc(2021, 02, 17): 4702,
+    DateTime.utc(2021, 03, 12): 4588,
   };
 
   @override
@@ -510,7 +622,7 @@ class FundInfo extends StatelessWidget {
                 bottom: _height * 0.02,
               ),
               width: _width * 0.2,
-              child: Image.asset(Assets.iciciGraphic, fit: BoxFit.contain),
+              child: Image.asset(Assets.augmontLogo, fit: BoxFit.contain),
             ),
             SizedBox(
               width: 10,
@@ -518,7 +630,7 @@ class FundInfo extends StatelessWidget {
             Expanded(
                 child: FittedBox(
               child: Text(
-                "ICICI Prudential Mutual Fund",
+                "Augmont Gold Fund",
                 textAlign: TextAlign.left,
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24),
               ),

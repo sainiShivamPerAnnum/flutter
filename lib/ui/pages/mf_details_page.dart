@@ -14,6 +14,7 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_detail
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:felloapp/ui/dialogs/icici_withdraw_dialog.dart';
 import 'package:fl_animated_linechart/chart/area_line_chart.dart';
@@ -23,6 +24,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -40,12 +42,13 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   GlobalKey<IciciWithdrawDialogState> _withdrawalDialogKey = GlobalKey();
   double containerHeight = 10;
   Map<String, dynamic> _withdrawalRequestDetails;
+  double instantAmount = 0, nonInstantAmount = 0;
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    dbProvider = Provider.of<DBModel>(context,listen:false);
-    payService = Provider.of<PaymentService>(context,listen:false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    payService = Provider.of<PaymentService>(context, listen: false);
 
     return Scaffold(
       appBar: BaseUtil.getAppBar(),
@@ -86,7 +89,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       ),
       child: new Material(
         child: MaterialButton(
-          child: (!baseProvider.isDepositRouteLogicInProgress)
+          child: (!baseProvider.isIciciDepositRouteLogicInProgress)
               ? Text(
                   _getActionButtonText(),
                   style: Theme.of(context)
@@ -100,7 +103,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                 ),
           onPressed: () async {
             HapticFeedback.vibrate();
-            baseProvider.isDepositRouteLogicInProgress = true;
+            baseProvider.isIciciDepositRouteLogicInProgress = true;
             setState(() {});
             ///////////DUMMY///////////////////////////////////
             // baseProvider.iciciDetail =
@@ -166,7 +169,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
           ),
           onPressed: () async {
             HapticFeedback.vibrate();
-            onWithdrawalClicked();
+            //TODO onWithdrawalClicked();
           },
           highlightColor: Colors.orange.withOpacity(0.5),
           splashColor: Colors.orange.withOpacity(0.5),
@@ -197,7 +200,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     if (baseProvider.myUser.isIciciEnabled == null ||
         !baseProvider.myUser.isIciciEnabled) {
       //icici deposits not enabled. show disabled dialog
-      baseProvider.isDepositRouteLogicInProgress = false;
+      baseProvider.isIciciDepositRouteLogicInProgress = false;
       showDialog(
           context: context,
           builder: (BuildContext context) => IntegratedIciciDisabled());
@@ -206,7 +209,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_VALID &&
         baseProvider.myUser.isIciciOnboarded) {
       //move directly to depositing
-      baseProvider.isDepositRouteLogicInProgress = false;
+      baseProvider.isIciciDepositRouteLogicInProgress = false;
       showModalBottomSheet(
           backgroundColor: Colors.transparent,
           context: context,
@@ -237,7 +240,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       return true;
     }
     if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID) {
-      baseProvider.isDepositRouteLogicInProgress = false;
+      baseProvider.isIciciDepositRouteLogicInProgress = false;
       Navigator.of(context).pop(); //go back to save tab
       // Navigator.of(context).pushNamed('/verifykyc');
       Navigator.of(context).pushNamed('/initkyc');
@@ -266,7 +269,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
               ),
             ));
       }
-      baseProvider.isDepositRouteLogicInProgress = false;
+      baseProvider.isIciciDepositRouteLogicInProgress = false;
     }
     return true;
   }
@@ -300,9 +303,12 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
           builder: (BuildContext context) => IciciWithdrawDialog(
                 key: _withdrawalDialogKey,
                 currentBalance: baseProvider.myUser.icici_balance,
-                onAmountConfirmed: (double wAmount) {
+                onAmountConfirmed: (Map<String, double> amountDetails) {
+                  instantAmount = amountDetails['instant_amount'] ?? 0;
+                  nonInstantAmount = amountDetails['non_instant_amount'] ?? 0;
+                  if (instantAmount == 0 && nonInstantAmount == 0) return;
                   payService
-                      .preProcessWithdrawal(wAmount.toString())
+                      .preProcessWithdrawal(instantAmount.toString())
                       .then((combDetailsMap) {
                     if (combDetailsMap['flag']) {
                       _withdrawalRequestDetails = combDetailsMap;
@@ -311,7 +317,8 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                           GetExitLoad.SHOW_POPUP) {
                         _withdrawalDialogKey.currentState.onShowLoadDialog();
                       } else {
-                        onInitiateWithdrawal(_withdrawalRequestDetails);
+                        onInitiateWithdrawal(_withdrawalRequestDetails,
+                            instantAmount, nonInstantAmount);
                       }
                     } else {
                       Navigator.of(context).pop();
@@ -327,7 +334,8 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                     _withdrawalRequestDetails[
                             SubmitRedemption.fldApproxLoadAmount] =
                         _withdrawalRequestDetails[GetExitLoad.resApproxLoadAmt];
-                    onInitiateWithdrawal(_withdrawalRequestDetails);
+                    onInitiateWithdrawal(_withdrawalRequestDetails,
+                        instantAmount, nonInstantAmount);
                   } else {
                     Navigator.of(context).pop();
                     baseProvider.showNegativeAlert(
@@ -340,8 +348,11 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     }
   }
 
-  Future<bool> onInitiateWithdrawal(Map<String, dynamic> fieldMap) {
-    payService.processWithdrawal(fieldMap).then((wMap) {
+  Future<bool> onInitiateWithdrawal(Map<String, dynamic> fieldMap,
+      double instantWithdraw, double nonInstantWithdraw) {
+    payService
+        .processWithdrawal(fieldMap, instantWithdraw, nonInstantWithdraw)
+        .then((wMap) {
       Navigator.of(context).pop();
       if (!wMap['flag']) {
         baseProvider.showNegativeAlert(
@@ -516,13 +527,14 @@ class FundInfo extends StatelessWidget {
               width: 10,
             ),
             Expanded(
-                child: FittedBox(
               child: Text(
                 "ICICI Prudential Mutual Fund",
                 textAlign: TextAlign.left,
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24),
+                style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w700,
+                    fontSize: SizeConfig.largeTextSize),
               ),
-            )),
+            ),
             SizedBox(
               width: _height * 0.02,
             )

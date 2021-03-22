@@ -5,6 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+class WeekWinner {
+  final name, prize;
+  WeekWinner({this.name, this.prize});
+}
+
 class WeekWinnerBoard extends StatefulWidget {
   @override
   _WeekWinnerBoardState createState() => _WeekWinnerBoardState();
@@ -14,24 +19,95 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
   bool isLoading = false;
   DBModel dbProvider;
   BaseUtil baseProvider;
-  List<WeekWinner> weekWinnersList;
+  List<WeekWinner> currentWeekWinners;
 
   Future<void> getWeekWinners() async {
     baseProvider.currentWeekWinners = await dbProvider.getWeeklyWinners();
-    weekWinnersList = [];
-    print("Got the list --------------------");
-    print(baseProvider.currentWeekWinners);
-    baseProvider.currentWeekWinners.forEach((key, value) {
-      weekWinnersList.add(WeekWinner(//TODO
-          name: key, prize: value.toString(), avatar: "images/profile.png"));
-    });
+  }
+
+  ScrollController _controller;
+
+  @override
+  void initState() {
+    currentWeekWinners = [];
+
+    _controller = ScrollController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  String getMonthName(int monthNum) {
+    switch (monthNum) {
+      case 1:
+        return "Jan";
+        break;
+      case 2:
+        return "Feb";
+        break;
+      case 3:
+        return "Mar";
+        break;
+      case 4:
+        return "Apr";
+        break;
+      case 5:
+        return "May";
+        break;
+      case 6:
+        return "June";
+        break;
+      case 7:
+        return "July";
+        break;
+      case 8:
+        return "Aug";
+        break;
+      case 9:
+        return "Sept";
+        break;
+      case 10:
+        return "Oct";
+        break;
+      case 11:
+        return "Nov";
+        break;
+      case 12:
+        return "Dec";
+        break;
+      default:
+        return "Month";
+    }
+  }
+
+  List<String> getWeek() {
+    int weekNumber = BaseUtil.getWeekNumber(); //12
+    var date = ((weekNumber - 2) * 7);
+    var weekEnd = DateTime.utc(DateTime.now().year, 1, date).toLocal().weekday;
+    var startDate = date - (weekEnd - 1);
+    var endDate = date + (7 - weekEnd);
+    int startDay =
+        DateTime.utc(DateTime.now().year, 1, startDate).toLocal().day;
+    int endDay = DateTime.utc(DateTime.now().year, 1, endDate).toLocal().day;
+    int startMon =
+        DateTime.utc(DateTime.now().year, 1, startDate).toLocal().month;
+    int endMon = DateTime.utc(DateTime.now().year, 1, endDate).toLocal().month;
+    String startMonth = getMonthName(startMon);
+    String endMonth = getMonthName(endMon);
+
+    return ["$startDay $startMonth", "$endDay $endMonth"];
   }
 
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    if (baseProvider.currentWeekWinners == null || baseProvider.currentWeekWinners.isEmpty) {
+    if (baseProvider.currentWeekWinners == null ||
+        baseProvider.currentWeekWinners.isEmpty) {
       isLoading = true;
       getWeekWinners().then((value) {
         if (isLoading) {
@@ -41,6 +117,15 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
         }
       });
     }
+    baseProvider.currentWeekWinners.forEach((key, value) {
+      currentWeekWinners.add(WeekWinner(
+        name: key,
+        prize: value.toString(),
+      ));
+    });
+    currentWeekWinners
+        .sort((a, b) => int.tryParse(a.prize).compareTo(int.tryParse(b.prize)));
+    currentWeekWinners = currentWeekWinners.reversed.toList();
     return Expanded(
       child: Container(
         margin: EdgeInsets.symmetric(
@@ -53,9 +138,8 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
             borderRadius: BorderRadius.circular(20),
             gradient: new LinearGradient(
               colors: [
-                Color(0xfff7797d),
-                Color(0xffFBD786),
-                Color(0xffC6FFDD),
+                Color(0xff1488CC),
+                Color(0xff2B32B2),
               ],
               begin: Alignment.bottomLeft,
               end: Alignment.topRight,
@@ -77,54 +161,106 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
             Text(
               "This Week's Winners",
               style: GoogleFonts.montserrat(
-                color: Colors.black87,
+                color: Colors.white,
                 fontSize: SizeConfig.largeTextSize,
                 fontWeight: FontWeight.w700,
               ),
             ),
             SizedBox(height: 10),
             Text(
-              "Tambola Winners for week: 15 Feb to 21 Feb", //TODO CHANGE BASED ON WEEK
+              "Tambola Winners for week: ${getWeek()[0]} to ${getWeek()[1]}", //TODO CHANGE BASED ON WEEK
               style: GoogleFonts.montserrat(
-                  color: Colors.black87, fontSize: SizeConfig.smallTextSize),
+                  color: Colors.white, fontSize: SizeConfig.smallTextSize),
             ),
             SizedBox(
               height: 10,
             ),
             Expanded(
-              child: isLoading
-                  ? Center(
-                      child: CircularProgressIndicator(),
+              child: Stack(children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Opacity(
+                      opacity: 0.2,
+                      child: Image.asset(
+                        "images/week-winners.png",
+                        height: SizeConfig.screenHeight * 0.35,
+                        width: SizeConfig.screenWidth * 0.6,
+                      ),
                     )
-                  : ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      itemCount: weekWinnersList.length,
-                      itemBuilder: (ctx, i) {
-                        return ListTile(
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.blockSizeHorizontal * 6,
-                            vertical: SizeConfig.blockSizeVertical * 0.8,
-                          ),
-                          leading: ClipOval(//TODO
-                            child: Image.asset(weekWinnersList[i].avatar),
-                          ),
-                          title: Text(
-                            weekWinnersList[i].name,
-                            style: GoogleFonts.montserrat(
-                              color: Colors.black87,
-                              fontSize: SizeConfig.mediumTextSize,
+                  ],
+                ),
+                isLoading
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : (currentWeekWinners.length != 0
+                        ? Scrollbar(
+                            thickness: 20,
+                            radius: Radius.circular(100),
+                            showTrackOnHover: true,
+                            hoverThickness: 10,
+                            isAlwaysShown: true,
+                            controller: _controller,
+                            child: ListView.builder(
+                              controller: _controller,
+                              physics: BouncingScrollPhysics(),
+                              itemCount: currentWeekWinners.length,
+                              itemBuilder: (ctx, i) {
+                                return ListTile(
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        SizeConfig.blockSizeHorizontal * 8,
+                                    vertical:
+                                        SizeConfig.blockSizeVertical * 0.8,
+                                  ),
+                                  leading: CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    child: Text(
+                                      '#${i + 1}',
+                                      style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: SizeConfig.mediumTextSize,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+
+                                  //  ClipOval(
+                                  //   //TODO
+                                  //   child: Image.asset("images/profile.png"),
+                                  // ),
+                                  title: Text(
+                                    "${currentWeekWinners[i].name[0].toUpperCase()}${currentWeekWinners[i].name.substring(1).toLowerCase()}",
+                                    style: GoogleFonts.montserrat(
+                                      color: Colors.white,
+                                      fontSize: SizeConfig.mediumTextSize,
+                                    ),
+                                  ),
+                                  trailing: Text(
+                                    "₹ ${currentWeekWinners[i].prize.toString()}",
+                                    style: GoogleFonts.montserrat(
+                                      color: Colors.white,
+                                      fontSize: SizeConfig.largeTextSize,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          ),
-                          trailing: Text(
-                            weekWinnersList[i].prize.toString(),
-                            style: GoogleFonts.montserrat(
-                              color: Colors.black87,
-                              fontSize: SizeConfig.mediumTextSize,
+                          )
+                        : Center(
+                            child: Text(
+                              "Winners will be updated soon.",
+                              style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                                fontSize: SizeConfig.largeTextSize,
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
+                          )),
+              ]),
             )
           ],
         ),
@@ -132,47 +268,3 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
     );
   }
 }
-
-class WeekWinner {
-  final String avatar, name, prize;
-  WeekWinner({this.avatar, this.name, this.prize});
-}
-
-// List<WeekWinner> weekWinnersList = [
-//   WeekWinner(
-//     avatar:
-//         "http://t3.gstatic.com/images?q=tbn:ANd9GcQw-reFu5eeRMoSapJYzoDUIxIYosqNkwK63UgUTspEPayytpszE0zNWI6eWwzv",
-//     name: "Stanlee",
-//     prize: "200",
-//   ),
-//   WeekWinner(
-//     avatar:
-//         "http://t3.gstatic.com/images?q=tbn:ANd9GcQw-reFu5eeRMoSapJYzoDUIxIYosqNkwK63UgUTspEPayytpszE0zNWI6eWwzv",
-//     name: "Stanlee",
-//     prize: "200",
-//   ),
-//   WeekWinner(
-//     avatar:
-//         "http://t3.gstatic.com/images?q=tbn:ANd9GcQw-reFu5eeRMoSapJYzoDUIxIYosqNkwK63UgUTspEPayytpszE0zNWI6eWwzv",
-//     name: "Stanlee",
-//     prize: "200",
-//   ),
-//   WeekWinner(
-//     avatar:
-//         "http://t3.gstatic.com/images?q=tbn:ANd9GcQw-reFu5eeRMoSapJYzoDUIxIYosqNkwK63UgUTspEPayytpszE0zNWI6eWwzv",
-//     name: "Stanlee",
-//     prize: "200",
-//   ),
-//   WeekWinner(
-//     avatar:
-//         "http://t3.gstatic.com/images?q=tbn:ANd9GcQw-reFu5eeRMoSapJYzoDUIxIYosqNkwK63UgUTspEPayytpszE0zNWI6eWwzv",
-//     name: "Stanlee",
-//     prize: "200",
-//   ),
-//   WeekWinner(
-//     avatar:
-//         "http://t3.gstatic.com/images?q=tbn:ANd9GcQw-reFu5eeRMoSapJYzoDUIxIYosqNkwK63UgUTspEPayytpszE0zNWI6eWwzv",
-//     name: "Stanlee",
-//     prize: "200",
-//   ),
-// ];

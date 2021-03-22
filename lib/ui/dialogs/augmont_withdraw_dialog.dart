@@ -1,44 +1,47 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class IciciWithdrawDialog extends StatefulWidget {
-  final double currentBalance;
+class AugmontWithdrawDialog extends StatefulWidget {
+  final double balance;
+  final double sellRate;
+  final String bankHolderName;
+  final String bankAccNo;
+  final String bankIfsc;
   final ValueChanged<Map<String, double>> onAmountConfirmed;
-  final ValueChanged<bool> onOptionConfirmed;
 
-  IciciWithdrawDialog(
+  AugmontWithdrawDialog(
       {Key key,
-      this.currentBalance,
-      this.onAmountConfirmed,
-      this.onOptionConfirmed})
+      this.balance,
+      this.sellRate,
+      this.bankHolderName,
+      this.bankAccNo,
+      this.bankIfsc,
+      this.onAmountConfirmed})
       : super(key: key);
 
   @override
-  State createState() => IciciWithdrawDialogState();
+  State createState() => AugmontWithdrawDialogState();
 }
 
-class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
-  final Log log = new Log('IciciWithdrawDialog');
+class AugmontWithdrawDialogState extends State<AugmontWithdrawDialog> {
+  final Log log = new Log('AugmontWithdrawDialog');
   TextEditingController _amountController = TextEditingController();
-  TextEditingController _upiAddressController = TextEditingController();
+  BaseUtil baseProvider;
   String _amountError;
   String _errorMessage;
-  String _upiAddressError;
-  bool _isLoading = true;
-  bool _isBalanceAvailble = false;
+  bool _isLoading = false;
   bool _isButtonEnabled = false;
   double _width;
-  double _instantBalance = 0;
-  double _totalBalance = 0;
-  double _userWithdrawInstantAmount = 0;
-  double _userWithdrawNonInstantAmount = 0;
   final TextStyle tTextStyle =
       TextStyle(fontSize: 18, fontWeight: FontWeight.w300);
   final TextStyle gTextStyle =
@@ -47,6 +50,7 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
   @override
   Widget build(BuildContext context) {
     _width = MediaQuery.of(context).size.width;
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
     return Dialog(
       insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
       shape: RoundedRectangleBorder(
@@ -96,10 +100,6 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
                               color: UiConstants.primaryColor,
                             ))
                         : Container(),
-                    (!_isLoading && _isBalanceAvailble)
-                        ? _buildBalanceTextWidget(
-                            _instantBalance, _totalBalance)
-                        : Container(),
                     (_errorMessage != null && !_isLoading)
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -118,6 +118,20 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
                       height: 10,
                     ),
                     (!_isLoading)
+                        ? Text(
+                            'Current Gold Selling Rate: ₹${widget.sellRate} per gram',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: SizeConfig.mediumTextSize,
+                                fontWeight: FontWeight.w400),
+                          )
+                        : Container(),
+                    (!_isLoading)
+                        ? SizedBox(
+                            height: 20,
+                          )
+                        : Container(),
+                    (!_isLoading)
                         ? Container(
                             margin: EdgeInsets.only(top: 12),
                             child: Row(
@@ -132,11 +146,22 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
                                       border: OutlineInputBorder(),
                                       labelText: 'Amount',
                                     ),
+                                    onChanged: (value) {
+                                      setState(() {
+
+                                      });
+                                    },
                                   ),
                                 ),
                               ],
                             ),
                           )
+                        : Container(),
+                    (!_isLoading)
+                        ? Padding(
+                      padding: EdgeInsets.only(top:10),
+                      child: _getGoldAmount(_amountController.text),
+                    )
                         : Container(),
                     (!_isLoading && _amountError != null)
                         ? Container(
@@ -148,9 +173,24 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
                           )
                         : Container(),
                     SizedBox(
-                      height: 15,
+                      height: 25,
                     ),
                     (!_isLoading) ? _buildSubmitButton(context) : Container(),
+                    (!_isLoading)
+                        ? Padding(
+                            padding: EdgeInsets.only(
+                              top: 10,
+                            ),
+                            child: Text(
+                              'All withdrawals are usually processed within 2 working days.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.blueGrey[600],
+                                  fontSize: SizeConfig.mediumTextSize,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          )
+                        : Container(),
                     SizedBox(
                       height: 10,
                     ),
@@ -160,92 +200,39 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
         ]);
   }
 
-  onDetailsReceived(double instantBalance, double totalBalance,
-      bool isIMPSAllowed, String errMsg) {
-    _isLoading = false;
-    if (!isIMPSAllowed) {
-      _errorMessage =
-          errMsg ?? 'Unknown error occured. Please try again in a while';
+  Widget _getGoldAmount(String amt) {
+    if (amt == null || amt.isEmpty) return Container();
+    double _gAmt = 0;
+    try {
+      _gAmt = double.parse(amt);
+    } catch (e) {
+      return Container();
     }
-
-    if (instantBalance != null && totalBalance != null) {
-      _instantBalance = instantBalance;
-      _totalBalance = totalBalance;
-      _isBalanceAvailble = true;
+    if (_gAmt == null || _gAmt < 5)
+      return Container();
+    else {
+      double _goldAmt = _gAmt / widget.sellRate;
+      return Text(
+        ' = ${_goldAmt.toStringAsFixed(3)} grams of Gold',
+        textAlign: TextAlign.start,
+        style: TextStyle(
+            fontSize: SizeConfig.mediumTextSize, fontWeight: FontWeight.w400),
+      );
     }
-    setState(() {});
   }
 
-  onShowLoadDialog() {}
-
-  Widget _buildBalanceTextWidget(double instantBalance, double totalBalance) {
-    final DateTime tomorrow = DateTime.now().add(new Duration(hours: 24));
-    final DateFormat formatter = DateFormat('dd-MM-yyyy');
-    final String formatted = formatter.format(tomorrow);
-    return Padding(
-      padding: EdgeInsets.all(10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: _width * 0.7,
-            child: Wrap(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Total balance: ',
-                  textAlign: TextAlign.center,
-                  style: tTextStyle,
-                ),
-                Text(
-                  '₹${totalBalance.toStringAsFixed(2)}',
-                  textAlign: TextAlign.center,
-                  style: gTextStyle,
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: _width * 0.7,
-            child: Wrap(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Available for immediate withdrawal: ',
-                  textAlign: TextAlign.center,
-                  style: tTextStyle,
-                ),
-                Text(
-                  '₹${instantBalance.toStringAsFixed(2)}',
-                  textAlign: TextAlign.center,
-                  style: gTextStyle,
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: _width * 0.7,
-            child: Wrap(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Available by $formatted: ',
-                  textAlign: TextAlign.center,
-                  style: tTextStyle,
-                ),
-                Text(
-                  '₹${(totalBalance - instantBalance).toStringAsFixed(2)}',
-                  textAlign: TextAlign.center,
-                  style: gTextStyle,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+  onTransactionProcessed(bool flag) {
+    _isLoading = false;
+    setState(() {});
+    Navigator.of(context).pop();
+    if (!flag) {
+      baseProvider.showNegativeAlert('Withdrawal Failed',
+          'Please try again in some time or contact us for assistance', context,
+          seconds: 5);
+    } else {
+      baseProvider.showPositiveAlert('Withdrawal Request is now processing',
+          'We will inform you once the withdrawal is complete!', context);
+    }
   }
 
   Widget _buildSubmitButton(BuildContext context) {
@@ -287,22 +274,13 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
             });
             if (_amountError == null) {
               double amt = double.parse(_amountController.text);
-              String _confirmMsg = "Are you sure you want to continue? ";
-              if (amt <= _instantBalance) {
-                _userWithdrawInstantAmount = amt;
-                _confirmMsg = _confirmMsg +
-                    '₹${_userWithdrawInstantAmount.round()} will be withdrawn immediately.';
-              } else {
-                _userWithdrawInstantAmount = _instantBalance;
-                _userWithdrawNonInstantAmount = amt - _instantBalance;
-                _confirmMsg = _confirmMsg +
-                    '₹${_userWithdrawInstantAmount.round()} will be withdrawn immediately, and ₹${_userWithdrawNonInstantAmount.round()} will be withdrawn within 1 business day';
-              }
+              String _confirmMsg =
+                  "Are you sure you want to continue? ₹$amt worth of digital gold shall be processed.";
               showDialog(
                 context: context,
                 builder: (ctx) => ConfirmActionDialog(
                   title: "Please confirm your action",
-                  description:_confirmMsg,
+                  description: _confirmMsg,
                   buttonText: "Withdraw",
                   cancelBtnText: 'Cancel',
                   confirmAction: () {
@@ -310,8 +288,7 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
                     _isLoading = true;
                     setState(() {});
                     widget.onAmountConfirmed({
-                      'instant_amount': _userWithdrawInstantAmount,
-                      'non_instant_amount': _userWithdrawNonInstantAmount
+                      'withdrawal_amount': amt,
                     });
                     return true;
                   },
@@ -338,23 +315,13 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
     }
     try {
       double amount = double.parse(value);
-      if (amount > widget.currentBalance ||
-          (_totalBalance != 0 && amount > _totalBalance))
-        return 'Insufficient balance';
-      if (amount < 1)
-        return 'Please enter value more than ₹1';
-      //else if(amount > 1500) return 'We are currently only accepting deposits below ₹1500';
+      if (amount > widget.balance) return 'Insufficient balance';
+      if (amount < 5)
+        return 'Please enter value more than ₹5';
       else
         return null;
     } catch (e) {
       return 'Please enter a valid amount';
     }
-  }
-
-  String _validateUPIAddress(String value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter a valid UPI address';
-    }
-    return null;
   }
 }

@@ -6,6 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/model/PrizeLeader.dart';
+import '../../core/model/ReferralLeader.dart';
+import '../../util/size_config.dart';
+
 class Leaderboard extends StatefulWidget {
   @override
   _LeaderboardState createState() => _LeaderboardState();
@@ -18,6 +22,9 @@ class _LeaderboardState extends State<Leaderboard> {
   bool isPrizeLeadersLoading = false;
   bool isReferralLeadersLoading = false;
   PageController _pageController = new PageController(initialPage: 0);
+  List<PrizeLeader> prizeLeaders;
+  List<ReferralLeader> referralLeaders;
+  ScrollController _controller;
 
   viewpage(int index) {
     setState(() {
@@ -29,14 +36,8 @@ class _LeaderboardState extends State<Leaderboard> {
 
   Future<void> getPrizeLeaderBoardData() async {
     baseProvider.prizeLeaders = await dbProvider.getPrizeLeaderboard();
-    print("GOt the list --------------------" +
-        baseProvider.prizeLeaders.length.toString());
-    //prizeLboardList.sort((a, b) => a.totalWin.compareTo(b.totalWin));
-    for (int i = 0; i < baseProvider.prizeLeaders.length; i++) {
-      print(baseProvider.prizeLeaders[i].name +
-          "------->" +
-          baseProvider.prizeLeaders[i].totalWin.toString());
-    }
+    print("prizeleaders length: " + baseProvider.prizeLeaders.toString());
+    baseProvider.prizeLeaders.sort((a, b) => a.totalWin.compareTo(b.totalWin));
     if (isPrizeLeadersLoading) {
       setState(() {
         isPrizeLeadersLoading = false;
@@ -46,14 +47,9 @@ class _LeaderboardState extends State<Leaderboard> {
 
   Future<void> getReferralLeaderBoardData() async {
     baseProvider.referralLeaders = await dbProvider.getReferralLeaderboard();
-    print("GOt the list --------------------" +
-        baseProvider.referralLeaders.length.toString());
-    //prizeLboardList.sort((a, b) => a.totalWin.compareTo(b.totalWin));
-    for (int i = 0; i < baseProvider.referralLeaders.length; i++) {
-      print(baseProvider.referralLeaders[i].name +
-          "------->" +
-          baseProvider.referralLeaders[i].refCount.toString());
-    }
+    baseProvider.referralLeaders
+        .sort((a, b) => a.refCount.compareTo(b.refCount));
+
     if (isReferralLeadersLoading) {
       setState(() {
         isReferralLeadersLoading = false;
@@ -61,62 +57,36 @@ class _LeaderboardState extends State<Leaderboard> {
     }
   }
 
-  List<Widget> buildWinnerList() {
-    List<ListTile> leaderboardItems = [];
-    for (int i = 0; i < leaderboardItems.length; i++) {
-      leaderboardItems.add(ListTile(
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.blockSizeHorizontal * 6,
-          vertical: SizeConfig.blockSizeVertical * 0.8,
-        ),
-        leading: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          child: Text(
-            '#${i + 1}',
-            style: GoogleFonts.montserrat(
-              fontWeight: FontWeight.w700,
-              fontSize: SizeConfig.mediumTextSize,
-              color: Colors.white,
-            ),
-          ),
-        ),
-        // ClipOval(
-        //   child: Image.network(
-        //       "http://t3.gstatic.com/images?q=tbn:ANd9GcQw-reFu5eeRMoSapJYzoDUIxIYosqNkwK63UgUTspEPayytpszE0zNWI6eWwzv"),
-        // ),
-        title: Text(
-          baseProvider.prizeLeaders[i].name,
-          style: GoogleFonts.montserrat(
-            color: Colors.white,
-            fontSize: SizeConfig.mediumTextSize,
-          ),
-        ),
-        trailing: Text(
-          baseProvider.prizeLeaders[i].totalWin.toString(),
-          style: GoogleFonts.montserrat(
-              color: Colors.white, fontSize: SizeConfig.mediumTextSize),
-        ),
-      ));
-    }
-    return leaderboardItems;
+  @override
+  void initState() {
+    prizeLeaders = [];
+    referralLeaders = [];
+    _controller = ScrollController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    if (baseProvider.prizeLeaders == null ||
-        baseProvider.prizeLeaders.isEmpty) {
+    if (baseProvider.prizeLeaders == null) {
       isPrizeLeadersLoading = true;
       setState(() {});
       getPrizeLeaderBoardData();
     }
-    if (baseProvider.referralLeaders == null ||
-        baseProvider.referralLeaders.isEmpty) {
+    if (baseProvider.referralLeaders == null) {
       isReferralLeadersLoading = true;
       setState(() {});
       getReferralLeaderBoardData();
     }
+    prizeLeaders = baseProvider.prizeLeaders;
+    referralLeaders = baseProvider.referralLeaders;
     return Expanded(
       child: Container(
         margin: EdgeInsets.symmetric(
@@ -155,7 +125,7 @@ class _LeaderboardState extends State<Leaderboard> {
               ),
             ),
             SizedBox(height: 10),
-            isPrizeLeadersLoading
+            isPrizeLeadersLoading && isReferralLeadersLoading
                 ? SizedBox()
                 : Container(
                     alignment: Alignment.center,
@@ -215,220 +185,342 @@ class _LeaderboardState extends State<Leaderboard> {
                     ),
                   ),
             Expanded(
-              child: isPrizeLeadersLoading
-                  ? Center(
-                      child: CircularProgressIndicator(
-                        backgroundColor: Colors.white,
-                      ),
-                    )
-                  : Container(
-                      child: PageView(
-                        controller: _pageController,
-                        // physics: NeverScrollableScrollPhysics(),
-                        onPageChanged: (int page) {
-                          setState(() {
-                            currentPage = page;
-                          });
-                        },
-                        children: [
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                TopThree(
-                                  winners: [
-                                    "Rahul Senapati Dixit Senapati Dixit",
-                                    "Mohit Senapati Dixit Senapati Dixit",
-                                    "Ronit Senapati Dixit"
-                                  ],
+              child: Stack(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Opacity(
+                        opacity: 0.3,
+                        child: Image.asset(
+                          "images/leaderboard.png",
+                          height: SizeConfig.screenHeight * 0.3,
+                        ),
+                      )
+                    ],
+                  ),
+                  Container(
+                    child: PageView(
+                      controller: _pageController,
+                      // physics: NeverScrollableScrollPhysics(),
+                      onPageChanged: (int page) {
+                        setState(() {
+                          currentPage = page;
+                        });
+                      },
+                      children: [
+                        isPrizeLeadersLoading
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  backgroundColor: Colors.white,
                                 ),
-                                Column(children: buildWinnerList())
-                              ],
-                            ),
-                          ),
-                          Container(
-                            color: Colors.white,
-                          )
-                        ],
-                      ),
+                              )
+                            : (prizeLeaders.length != 0
+                                ? Scrollbar(
+                                    thickness: 20,
+                                    radius: Radius.circular(100),
+                                    showTrackOnHover: true,
+                                    hoverThickness: 10,
+                                    isAlwaysShown: true,
+                                    controller: _controller,
+                                    child: SingleChildScrollView(
+                                      controller: _controller,
+                                      child: Column(
+                                        children: [
+                                          // TopThree(
+                                          //   winners: [
+                                          //     "Rahul Senapati Dixit Senapati Dixit",
+                                          //     "Mohit Senapati Dixit Senapati Dixit",
+                                          //     "Ronit Senapati Dixit"
+                                          //   ],
+                                          // ),
+                                          Column(
+                                              children:
+                                                  buildLeaderBoardList("Prize"))
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : Center(
+                                    child: Text(
+                                      "Leaders will be updated soon.",
+                                      style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                        fontSize: SizeConfig.largeTextSize,
+                                      ),
+                                    ),
+                                  )),
+                        isReferralLeadersLoading
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  backgroundColor: Colors.white,
+                                ),
+                              )
+                            : (referralLeaders.length != 0
+                                ? Scrollbar(
+                                    thickness: 20,
+                                    radius: Radius.circular(100),
+                                    showTrackOnHover: true,
+                                    hoverThickness: 10,
+                                    isAlwaysShown: true,
+                                    controller: _controller,
+                                    child: SingleChildScrollView(
+                                      controller: _controller,
+                                      child: Column(
+                                        children: [
+                                          // TopThree(
+                                          //   winners: [
+                                          //     "Rahul Senapati Dixit Senapati Dixit",
+                                          //     "Mohit Senapati Dixit Senapati Dixit",
+                                          //     "Ronit Senapati Dixit"
+                                          //   ],
+                                          // ),
+                                          Column(
+                                              children: buildLeaderBoardList(
+                                                  "Referrals"))
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : Center(
+                                    child: Text(
+                                      "Leaders will be updated soon.",
+                                      style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                        fontSize: SizeConfig.largeTextSize,
+                                      ),
+                                    ),
+                                  )),
+                      ],
                     ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
       ),
     );
   }
-}
 
-class TopThree extends StatelessWidget {
-  List<String> winners;
-
-  TopThree({this.winners});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: SizeConfig.screenHeight * 0.3,
-      padding: EdgeInsets.all(
-        SizeConfig.blockSizeHorizontal * 2,
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 3,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: SizeConfig.screenWidth * 0.2,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 5,
-                      color: Color(0xffB4ADA5),
-                    ),
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      image: NetworkImage(
-                          "https://images.fineartamerica.com/images/artworkimages/mediumlarge/3/doremon-deepak-pengoria.jpg"),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  winners[0],
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.montserrat(
-                    color: Colors.white,
-                    fontSize: SizeConfig.mediumTextSize,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 2,
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  child: Text(
-                    "₹ 200",
-                    style: GoogleFonts.montserrat(
-                      color: Colors.white,
-                      fontSize: SizeConfig.largeTextSize,
-                    ),
-                  ),
-                )
-              ],
+  List<Widget> buildLeaderBoardList(String type) {
+    List<ListTile> leaderBoardItems = [];
+    int length = type == "Prize" ? prizeLeaders.length : referralLeaders.length;
+    for (int i = length - 1; i > -1; i--) {
+      leaderBoardItems.add(ListTile(
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.blockSizeHorizontal * 8,
+          vertical: SizeConfig.blockSizeVertical * 0.8,
+        ),
+        leading: CircleAvatar(
+          backgroundColor: Colors.transparent,
+          child: Text(
+            '#${length - i}',
+            style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.w700,
+              fontSize: SizeConfig.mediumTextSize,
+              color: Colors.white,
             ),
           ),
-          Expanded(
-            flex: 5,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  height: SizeConfig.screenWidth * 0.3,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 8,
-                      color: Color(0xffFFB96B),
-                    ),
-                    shape: BoxShape.circle,
-                    // borderRadius: BorderRadius.circular(100),
-                    image: DecorationImage(
-                      image: NetworkImage(
-                          "https://static.wikia.nocookie.net/danmacgregor/images/4/42/0090%27snoddy.jpg/revision/latest/scale-to-width-down/340?cb=20140826131725"),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  winners[1],
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.montserrat(
-                    color: Colors.white,
-                    fontSize: SizeConfig.mediumTextSize,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 2,
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  child: Text(
-                    "₹ 500",
-                    style: GoogleFonts.montserrat(
-                      color: Colors.white,
-                      fontSize: SizeConfig.largeTextSize,
-                    ),
-                  ),
-                )
-              ],
-            ),
+        ),
+        title: Text(
+          type == "Prize"
+              ? "${prizeLeaders[i].name[0].toUpperCase()}${prizeLeaders[i].name.substring(1).toLowerCase()}"
+              : "${referralLeaders[i].name[0].toUpperCase()}${referralLeaders[i].name.substring(1).toLowerCase()}",
+          style: GoogleFonts.montserrat(
+            color: Colors.white,
+            fontSize: SizeConfig.mediumTextSize,
           ),
-          Expanded(
-            flex: 2,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  height: SizeConfig.screenWidth * 0.16,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 5,
-                      color: Color(0xff754F24),
-                    ),
-                    shape: BoxShape.circle,
-                    // borderRadius: BorderRadius.circular(100),
-                    image: DecorationImage(
-                      image: NetworkImage(
-                          "https://images-na.ssl-images-amazon.com/images/I/611wqa%2BCF-L._AC_SL1500_.jpg"),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  winners[2],
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.montserrat(
-                    color: Colors.white,
-                    fontSize: SizeConfig.mediumTextSize,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 2,
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  child: Text(
-                    "₹ 80",
-                    style: GoogleFonts.montserrat(
-                        color: Colors.white,
-                        fontSize: SizeConfig.largeTextSize),
-                  ),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
-    );
+        ),
+        trailing: Text(
+          type == "Prize"
+              ? "₹ ${baseProvider.prizeLeaders[i].totalWin.toString()}"
+              : "₹ ${(referralLeaders[i].refCount * 25).toString()}",
+          style: GoogleFonts.montserrat(
+            color: Colors.white,
+            fontSize: SizeConfig.largeTextSize,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ));
+    }
+    return leaderBoardItems;
   }
 }
+
+// class TopThree extends StatelessWidget {
+//   List<String> winners;
+
+//   TopThree({this.winners});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       height: SizeConfig.screenHeight * 0.3,
+//       padding: EdgeInsets.all(
+//         SizeConfig.blockSizeHorizontal * 2,
+//       ),
+//       child: Row(
+//         children: [
+//           Expanded(
+//             flex: 3,
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Container(
+//                   height: SizeConfig.screenWidth * 0.2,
+//                   decoration: BoxDecoration(
+//                     border: Border.all(
+//                       width: 5,
+//                       color: Color(0xffB4ADA5),
+//                     ),
+//                     shape: BoxShape.circle,
+//                     image: DecorationImage(
+//                       image: NetworkImage(
+//                           "https://images.fineartamerica.com/images/artworkimages/mediumlarge/3/doremon-deepak-pengoria.jpg"),
+//                       fit: BoxFit.cover,
+//                     ),
+//                   ),
+//                 ),
+//                 SizedBox(height: 10),
+//                 Text(
+//                   winners[0],
+//                   maxLines: 1,
+//                   overflow: TextOverflow.ellipsis,
+//                   style: GoogleFonts.montserrat(
+//                     color: Colors.white,
+//                     fontSize: SizeConfig.mediumTextSize,
+//                   ),
+//                 ),
+//                 SizedBox(height: 10),
+//                 Container(
+//                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+//                   decoration: BoxDecoration(
+//                     border: Border.all(
+//                       width: 2,
+//                       color: Colors.white,
+//                     ),
+//                     borderRadius: BorderRadius.circular(100),
+//                   ),
+//                   child: Text(
+//                     "₹ 200",
+//                     style: GoogleFonts.montserrat(
+//                       color: Colors.white,
+//                       fontSize: SizeConfig.mediumTextSize,
+//                     ),
+//                   ),
+//                 )
+//               ],
+//             ),
+//           ),
+//           Expanded(
+//             flex: 5,
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.start,
+//               children: [
+//                 Container(
+//                   height: SizeConfig.screenWidth * 0.3,
+//                   decoration: BoxDecoration(
+//                     border: Border.all(
+//                       width: 8,
+//                       color: Color(0xffFFB96B),
+//                     ),
+//                     shape: BoxShape.circle,
+//                     // borderRadius: BorderRadius.circular(100),
+//                     image: DecorationImage(
+//                       image: NetworkImage(
+//                           "https://static.wikia.nocookie.net/danmacgregor/images/4/42/0090%27snoddy.jpg/revision/latest/scale-to-width-down/340?cb=20140826131725"),
+//                       fit: BoxFit.cover,
+//                     ),
+//                   ),
+//                 ),
+//                 SizedBox(height: 10),
+//                 Text(
+//                   winners[1],
+//                   maxLines: 1,
+//                   overflow: TextOverflow.ellipsis,
+//                   style: GoogleFonts.montserrat(
+//                     color: Colors.white,
+//                     fontSize: SizeConfig.mediumTextSize,
+//                   ),
+//                 ),
+//                 SizedBox(height: 10),
+//                 Container(
+//                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+//                   decoration: BoxDecoration(
+//                     border: Border.all(
+//                       width: 2,
+//                       color: Colors.white,
+//                     ),
+//                     borderRadius: BorderRadius.circular(100),
+//                   ),
+//                   child: Text(
+//                     "₹ 500",
+//                     style: GoogleFonts.montserrat(
+//                       color: Colors.white,
+//                       fontSize: SizeConfig.largeTextSize,
+//                     ),
+//                   ),
+//                 )
+//               ],
+//             ),
+//           ),
+//           Expanded(
+//             flex: 2,
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.end,
+//               children: [
+//                 Container(
+//                   height: SizeConfig.screenWidth * 0.16,
+//                   decoration: BoxDecoration(
+//                     border: Border.all(
+//                       width: 5,
+//                       color: Color(0xff754F24),
+//                     ),
+//                     shape: BoxShape.circle,
+//                     // borderRadius: BorderRadius.circular(100),
+//                     image: DecorationImage(
+//                       image: NetworkImage(
+//                           "https://images-na.ssl-images-amazon.com/images/I/611wqa%2BCF-L._AC_SL1500_.jpg"),
+//                       fit: BoxFit.cover,
+//                     ),
+//                   ),
+//                 ),
+//                 SizedBox(height: 10),
+//                 Text(
+//                   winners[2],
+//                   maxLines: 1,
+//                   overflow: TextOverflow.ellipsis,
+//                   style: GoogleFonts.montserrat(
+//                     color: Colors.white,
+//                     fontSize: SizeConfig.mediumTextSize,
+//                   ),
+//                 ),
+//                 SizedBox(height: 10),
+//                 Container(
+//                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+//                   decoration: BoxDecoration(
+//                     border: Border.all(
+//                       width: 2,
+//                       color: Colors.white,
+//                     ),
+//                     borderRadius: BorderRadius.circular(100),
+//                   ),
+//                   child: Text(
+//                     "₹ 80",
+//                     style: GoogleFonts.montserrat(
+//                         color: Colors.white,
+//                         fontSize: SizeConfig.largeTextSize),
+//                   ),
+//                 )
+//               ],
+//             ),
+//           )
+//         ],
+//       ),
+//     );
+//   }
+// }

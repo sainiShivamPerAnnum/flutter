@@ -150,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                         title: "SAVE | PLAY | WIN",
                         asset: "images/tickets.png",
                         subtitle:
-                            "New to Fello?? No worries.\nLet's get started with a new way of saving money.",
+                            "New to Fello? \nLearn a little more about how to play and win big, just by saving!",
                         buttonText: "Learn how Fello works",
                         onPressed: () {
                           HapticFeedback.vibrate();
@@ -165,10 +165,10 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                       HomeCard(
-                        title: "Want more tambola tickets?",
+                        title: "More tickets, more prizes",
                         asset: "images/referral-asset.png",
                         subtitle:
-                            "Refer a friend Fello and we'll throw tickets worth of ₹1000 to both the accounts",
+                            "By referring, you and your friend will both receive 10 game tickets and ₹25 in rewards!",
                         buttonText: "Share now",
                         onPressed: () => widget.tabChange(3),
                         gradient: [
@@ -177,10 +177,10 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                       HomeCard(
-                        title: "Suggest us another game",
+                        title: "We're looking for suggestions",
                         asset: "images/puzzle.png",
                         subtitle:
-                            "What other games you'd like to paly on Fello? We are planning to add another game.",
+                            "Vote for the next game that you would like to play on Fello",
                         buttonText: "Vote now",
                         onPressed: () {
                           HapticFeedback.vibrate();
@@ -285,7 +285,10 @@ class HomeCard extends StatelessWidget {
                 Text(
                   subtitle,
                   style: GoogleFonts.montserrat(
-                      color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+                      color: Colors.white,
+                      fontSize: SizeConfig.mediumTextSize*1.2,
+                    fontWeight: FontWeight.w400
+                  ),
                 ),
                 GestureDetector(
                   onTap: onPressed,

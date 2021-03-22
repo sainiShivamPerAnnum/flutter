@@ -20,9 +20,29 @@ class OtpInputScreenState extends State<OtpInputScreen> {
   bool _otpFieldEnabled = true;
   bool _autoDetectingOtp = true;
   final _pinEditingController = new TextEditingController();
+  FocusNode focusNode;
+
+  @override
+  void initState() {
+    focusNode = new FocusNode();
+    focusNode.addListener(
+        () => print('focusNode updated: hasFocus: ${focusNode.hasFocus}'));
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (mounted) {
+      FocusScope.of(context).requestFocus(focusNode);
+    }
+
     return Scaffold(
         backgroundColor: Colors.transparent,
         body: Center(
@@ -32,13 +52,13 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                 padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 18.0),
                 child: PinInputTextField(
                   enabled: _otpFieldEnabled,
+                  autoFocus: true,
+                  focusNode: focusNode,
                   pinLength: 6,
                   decoration: UnderlineDecoration(
                       color: Colors.grey,
                       textStyle: TextStyle(fontSize: 20, color: Colors.black)),
                   controller: _pinEditingController,
-                  autoFocus: true,
-                  textInputAction: TextInputAction.go,
                   onSubmit: (pin) {
                     log.debug("Pressed submit for pin: " +
                         pin.toString() +

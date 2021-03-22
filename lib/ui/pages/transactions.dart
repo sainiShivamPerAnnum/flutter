@@ -1,13 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserMiniTransaction.dart';
+import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:flat_icons_flutter/flat_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import '../../util/size_config.dart';
 
 class Transactions extends StatefulWidget {
   @override
@@ -17,38 +21,38 @@ class Transactions extends StatefulWidget {
 class _TransactionsState extends State<Transactions> {
   int subfilter = 1;
   int filter = 1;
-  bool isLoading = true;
+  bool isLoading = false;
+  bool isInit = true;
   BaseUtil baseProvider;
   DBModel dbProvider;
-  List<UserMiniTransaction> transactionList, filteredList;
+  List<UserMiniTransaction> filteredList;
 
   /// Will used to access the Animated list
   // final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
 
   getTransactions() async {
     // isLoading = true;
-    if (baseProvider != null && dbProvider != null && isLoading == true) {
-      print(baseProvider.myUser.uid);
-      transactionList = await dbProvider.getFilteredUserTransactions(
-          baseProvider.myUser, null, null, 30);
-      print(transactionList.length);
-      filteredList = transactionList;
-      if (isLoading) {
+    if (baseProvider != null && dbProvider != null) {
+      dbProvider
+          .getFilteredUserTransactions(baseProvider.myUser, null, null)
+          .then((List<UserMiniTransaction> tList) {
+        baseProvider.userMiniTxnList = List.from(tList);
+        filteredList = List.from(baseProvider.userMiniTxnList);
         setState(() {
           isLoading = false;
         });
-      }
+      });
     }
   }
 
   Widget getTileLead(String type) {
-    if (type == "COMPLETE") {
+    if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
       return SvgPicture.asset("images/svgs/completed.svg",
           color: UiConstants.primaryColor, fit: BoxFit.contain);
-    } else if (type == "CANCELLED") {
+    } else if (type == UserTransaction.TRAN_STATUS_CANCELLED) {
       return SvgPicture.asset("images/svgs/cancel.svg",
           color: Colors.redAccent, fit: BoxFit.contain);
-    } else if (type == "PENDING") {
+    } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
       return SvgPicture.asset("images/svgs/pending.svg",
           color: Colors.amber, fit: BoxFit.contain);
     }
@@ -56,22 +60,22 @@ class _TransactionsState extends State<Transactions> {
   }
 
   String getTileTitle(String type) {
-    if (type == "ICICI1565") {
+    if (type == UserTransaction.TRAN_SUBTYPE_ICICI) {
       return "ICICI Prudential Fund";
-    } else if (type == "AUG99") {
+    } else if (type == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD) {
       return "Augmont Gold";
-    } else if (type == "TMB_WIN") {
+    } else if (type == UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN) {
       return "Tambola Win";
     }
     return "Fund Name";
   }
 
   String getTileSubtitle(String type) {
-    if (type == "DEPOSIT") {
+    if (type == UserTransaction.TRAN_TYPE_DEPOSIT) {
       return "Deposit";
-    } else if (type == "PRIZE") {
+    } else if (type == UserTransaction.TRAN_TYPE_PRIZE) {
       return "Prize";
-    } else if (type == "WITHDRAWAL") {
+    } else if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
       return "Withdrawal";
     }
     return "";
@@ -89,31 +93,81 @@ class _TransactionsState extends State<Transactions> {
   }
 
   filterTransactions() {
-    switch (subfilter) {
-      case 1:
-        filteredList = transactionList;
-        break;
-      case 2:
-        print("helll");
-        filteredList.clear();
-        transactionList.forEach((element) {
-          if (element.type == "DEPOSIT") {
-            filteredList.add(element);
+    filteredList = List.from(baseProvider.userMiniTxnList);
+    if (filter != 1 || subfilter != 1) {
+      filteredList.clear();
+      baseProvider.userMiniTxnList.forEach((txn) {
+        bool addItemFlag = true;
+        if (filter != 1) {
+          if (filter == 2) {
+            //only deposits
+            if (txn.type == UserTransaction.TRAN_TYPE_DEPOSIT)
+              addItemFlag = true;
+            else
+              addItemFlag = false;
+          } else if (filter == 3) {
+            //only withdrawals
+            if (txn.type == UserTransaction.TRAN_TYPE_WITHDRAW)
+              addItemFlag = true;
+            else
+              addItemFlag = false;
+          } else {
+            //only prizes
+            if (txn.type == UserTransaction.TRAN_TYPE_PRIZE)
+              addItemFlag = true;
+            else
+              addItemFlag = false;
           }
-        });
-        if (isLoading) {
-          isLoading = false;
+        } else {
+          addItemFlag = true;
         }
-        break;
+        if (addItemFlag) {
+          if (subfilter != 1) {
+            if (subfilter == 2) {
+              //only ICICI
+              if (txn.subType == UserTransaction.TRAN_SUBTYPE_ICICI)
+                addItemFlag = true;
+              else
+                addItemFlag = false;
+            } else {
+              //only Augmont
+              if (txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
+                addItemFlag = true;
+              else
+                addItemFlag = false;
+            }
+          } else {
+            addItemFlag = true;
+          }
+        }
+
+        if (addItemFlag) filteredList.add(txn);
+      });
     }
+    if (isLoading) {
+      isLoading = false;
+      setState(() {});
+    }
+    return filteredList;
   }
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    dbProvider = Provider.of<DBModel>(context,listen:false);
-    if (transactionList == null) {
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    if (baseProvider.userMiniTxnList == null ||
+        baseProvider.userMiniTxnList.isEmpty) {
+      isLoading = true;
       getTransactions();
+    }
+    if (isInit) {
+      if (baseProvider.userMiniTxnList != null &&
+          baseProvider.userMiniTxnList.isNotEmpty) {
+        filteredList = List.from(baseProvider.userMiniTxnList);
+      } else {
+        filteredList = [];
+      }
+      isInit = false;
     }
     return Scaffold(
         appBar: AppBar(
@@ -179,13 +233,19 @@ class _TransactionsState extends State<Transactions> {
                                         fontSize: SizeConfig.mediumTextSize),
                                   ),
                                   value: 3),
+                              DropdownMenuItem(
+                                  child: Text(
+                                    "Prize",
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: SizeConfig.mediumTextSize),
+                                  ),
+                                  value: 4),
                             ],
                             onChanged: (value) {
-                              setState(() {
-                                filter = value;
-                                isLoading = true;
-                                filterTransactions();
-                              });
+                              filter = value;
+                              isLoading = true;
+                              setState(() {});
+                              filterTransactions();
                             }),
                       ),
                     ),
@@ -226,11 +286,10 @@ class _TransactionsState extends State<Transactions> {
                                   value: 3),
                             ],
                             onChanged: (value) {
-                              setState(() {
-                                subfilter = value;
-                                isLoading = true;
-                                filterTransactions();
-                              });
+                              subfilter = value;
+                              isLoading = true;
+                              setState(() {});
+                              filterTransactions();
                             }),
                       ),
                     ),
@@ -242,63 +301,91 @@ class _TransactionsState extends State<Transactions> {
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
-                    : AnimatedList(
-                        initialItemCount: filteredList.length,
-                        itemBuilder: (context, index, animation) {
-                          return ListTile(
-                            dense: true,
-                            leading: Container(
-                              padding: EdgeInsets.all(
-                                  SizeConfig.blockSizeHorizontal * 2),
-                              height: SizeConfig.blockSizeVertical * 5,
-                              width: SizeConfig.blockSizeVertical * 5,
-                              child:
-                                  getTileLead(filteredList[index].tranStatus),
-                            ),
-                            title: Text(
-                              getTileTitle(
-                                filteredList[index].subType.toString(),
+                    : (filteredList.length == 0
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                "images/no-transactions.png",
+                                width: SizeConfig.screenWidth * 0.8,
                               ),
-                              style: GoogleFonts.montserrat(
-                                fontSize: SizeConfig.mediumTextSize,
+                              SizedBox(
+                                height: 20,
                               ),
-                            ),
-                            subtitle: Text(
-                              getTileSubtitle(filteredList[index].type),
-                              style: GoogleFonts.montserrat(
-                                color: getTileColor(
-                                    filteredList[index].tranStatus),
-                                fontSize: SizeConfig.smallTextSize,
-                              ),
-                            ),
-                            trailing: Column(
-                              children: [
-                                Text(
-                                  (filteredList[index].type == "WITHDRAWAL"
-                                          ? "- "
-                                          : "+ ") +
-                                      "₹ ${filteredList[index].amount.toString()}",
-                                  style: GoogleFonts.montserrat(
-                                    color: getTileColor(
-                                        filteredList[index].tranStatus),
-                                    fontSize: SizeConfig.mediumTextSize,
-                                  ),
+                              Text(
+                                "No transactions to show yet",
+                                style: GoogleFonts.montserrat(
+                                  fontSize: SizeConfig.largeTextSize,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                Text(
-                                  filteredList[index].updatedTime.toString(),
-                                  style: GoogleFonts.montserrat(
-                                      color: getTileColor(
-                                          filteredList[index].tranStatus),
-                                      fontSize: SizeConfig.smallTextSize),
-                                )
-                              ],
-                            ),
-                          ); // Refer step 3
-                        },
-                      ),
+                              )
+                            ],
+                          )
+                        : ListView(
+                            physics: BouncingScrollPhysics(),
+                            padding: EdgeInsets.all(10),
+                            children: _getTxns(),
+                          )),
               ),
             ],
           ),
         ));
+  }
+
+  List<Widget> _getTxns() {
+    List<ListTile> _tiles = [];
+    for (int index = 0; index < filteredList.length; index++) {
+      _tiles.add(ListTile(
+        dense: true,
+        leading: Container(
+          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+          height: SizeConfig.blockSizeVertical * 5,
+          width: SizeConfig.blockSizeVertical * 5,
+          child: getTileLead(filteredList[index].tranStatus),
+        ),
+        title: Text(
+          getTileTitle(
+            filteredList[index].subType.toString(),
+          ),
+          style: GoogleFonts.montserrat(
+            fontSize: SizeConfig.mediumTextSize,
+          ),
+        ),
+        subtitle: Text(
+          getTileSubtitle(filteredList[index].type),
+          style: GoogleFonts.montserrat(
+            color: getTileColor(filteredList[index].tranStatus),
+            fontSize: SizeConfig.smallTextSize,
+          ),
+        ),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              (filteredList[index].type == "WITHDRAWAL" ? "- " : "+ ") +
+                  "₹ ${filteredList[index].amount.toString()}",
+              style: GoogleFonts.montserrat(
+                color: getTileColor(filteredList[index].tranStatus),
+                fontSize: SizeConfig.mediumTextSize,
+              ),
+            ),
+            Text(
+              _getFormattedTime(filteredList[index].timestamp),
+              style: GoogleFonts.montserrat(
+                  color: getTileColor(filteredList[index].tranStatus),
+                  fontSize: SizeConfig.smallTextSize),
+            )
+          ],
+        ),
+      ));
+    }
+
+    return _tiles;
+  }
+
+  String _getFormattedTime(Timestamp tTime) {
+    DateTime now =
+        DateTime.fromMillisecondsSinceEpoch(tTime.millisecondsSinceEpoch);
+    return DateFormat('yyyy-MM-dd – kk:mm').format(now);
   }
 }

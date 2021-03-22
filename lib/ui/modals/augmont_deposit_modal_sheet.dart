@@ -1,8 +1,10 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/ui/elements/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,28 +13,24 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:slider_button/slider_button.dart';
 
-class DepositModalSheet extends StatefulWidget {
-  final ValueChanged<Map<String, dynamic>> onDepositConfirmed;
+class AugmontDepositModalSheet extends StatefulWidget {
+  final ValueChanged<double> onDepositConfirmed;
+  final AugmontRates currentRates;
 
-  DepositModalSheet({Key key, this.onDepositConfirmed}) : super(key: key);
+  AugmontDepositModalSheet({Key key, this.onDepositConfirmed, this.currentRates}) : super(key: key);
 
-  DepositModalSheetState createState() => DepositModalSheetState();
+  AugmontDepositModalSheetState createState() => AugmontDepositModalSheetState();
 }
 
-class DepositModalSheetState extends State<DepositModalSheet>
+class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     with SingleTickerProviderStateMixin {
-  DepositModalSheetState();
-
-  Log log = new Log('DepositModalSheet');
+  AugmontDepositModalSheetState();
+  Log log = new Log('AugmontDepositModalSheet');
   var heightOfModalBottomSheet = 100.0;
-  bool _isDepositRequested = false;
-  bool _isFirstInvestment = true;
-  bool _isPendingTransaction = false;
   bool _isDepositsEnabled = true;
   BaseUtil baseProvider;
   final _amtController = new TextEditingController();
-  final _vpaController = new TextEditingController();
-  final depositformKey2 = GlobalKey<FormState>();
+  final depositformKey3 = GlobalKey<FormState>();
   bool _isInitialized = false;
   bool _isDepositInProgress = false;
   String _errorMessage;
@@ -40,15 +38,10 @@ class DepositModalSheetState extends State<DepositModalSheet>
 
   _initFields() {
     if (baseProvider != null) {
-      if (baseProvider.iciciDetail.vpa != null &&
-          baseProvider.iciciDetail.vpa.isNotEmpty)
-        _vpaController.text = baseProvider.iciciDetail.vpa;
-      _isFirstInvestment = (!baseProvider.iciciDetail.firstInvMade) ?? true;
-      _isPendingTransaction = (baseProvider.myUser.pendingTxnId != null);
-      String isEnabledStr =
-          BaseUtil.remoteConfig.getString('icici_deposits_enabled');
+      String _isEnabledStr =
+          BaseUtil.remoteConfig.getString('augmont_deposits_enabled');
       try {
-        int t = (isEnabledStr != null) ? int.parse(isEnabledStr) : 1;
+        int t = (_isEnabledStr != null) ? int.parse(_isEnabledStr) : 1;
         _isDepositsEnabled = (t == 1);
       } catch (e) {
         _isDepositsEnabled = true;
@@ -92,10 +85,11 @@ class DepositModalSheetState extends State<DepositModalSheet>
   Widget _depositDialog() {
     return Container(
       child: Form(
-        key: depositformKey2,
+        key: depositformKey3,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            _buildRateCard(),
             InputField(
               child: TextFormField(
                 autofocus: false,
@@ -110,61 +104,44 @@ class DepositModalSheetState extends State<DepositModalSheet>
                     return 'Please enter a valid amount';
 
                   int amount = int.parse(value);
-                  if (_isFirstInvestment && amount < 100)
-                    return 'Your first investment has to be atleast ₹100';
-                  else if (!_isFirstInvestment && amount < 1)
-                    return 'Please enter a valid amount';
+                  if (amount < 10)
+                    return 'Minimum deposit amount is ₹10 per transaction';
                   else if (amount > 2000)
                     return 'We are currently only accepting a max deposit of ₹2000 per transaction';
-                  else
-                    return null;
+                  else return null;
+                },
+                onChanged: (String val) {
+                  setState(() {});
                 },
               ),
             ),
-            InputField(
-              child: TextFormField(
-                autofocus: false,
-                controller: _vpaController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: inputFieldDecoration("Enter your UPI Id"),
-                validator: (value) {
-                  RegExp upiRegex =
-                      RegExp('[-a-zA-Z0-9._]{2,256}@[a-zA-Z]{2,64}');
-                  if (value == null || value.isEmpty)
-                    return 'Please enter your UPI ID';
-                  else if (!upiRegex.hasMatch(value))
-                    return 'Please enter a valid UPI ID';
-                  else
-                    return null;
-                },
-              ),
-            ),
+            _buildPurchaseDescriptionCard(_getCurrentAmount(_amtController.text)),
             Wrap(
               spacing: 20,
               children: [
                 ActionChip(
-                  label: Text("What is my UPI ID?"),
+                  label: Text("How does this work?"),
                   backgroundColor: UiConstants.chipColor,
                   onPressed: () {
                     HapticFeedback.vibrate();
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => MoreInfoDialog(
-                              text: Assets.infoWhatUPI,
-                              title: 'Why is my UPI ID?',
+                              text: Assets.infoAugmontTxnHow,
+                              title: 'How does the transaction work?',
                             ));
                   },
                 ),
                 ActionChip(
-                  label: Text("Where do I find it?"),
+                  label: Text("How long does it take?"),
                   backgroundColor: UiConstants.chipColor,
                   onPressed: () {
                     HapticFeedback.vibrate();
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => MoreInfoDialog(
-                              text: Assets.infoWhereUPI,
-                              title: 'Where can i find my UPI Id?',
+                              text: Assets.infoAugmontTime,
+                              title: 'How long does it take?',
                             ));
                   },
                 ),
@@ -188,20 +165,16 @@ class DepositModalSheetState extends State<DepositModalSheet>
               height: 20,
             ),
             (_isDepositsEnabled &&
-                    !_isDepositInProgress &&
-                    !_isPendingTransaction)
+                    !_isDepositInProgress)
                 ? Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                     child: SliderButton(
                       action: () {
                         //widget.onDepositConfirmed();
-                        if (depositformKey2.currentState.validate()) {
+                        if (depositformKey3.currentState.validate()) {
                           _isDepositInProgress = true;
                           setState(() {});
-                          widget.onDepositConfirmed({
-                            'amount': _amtController.text,
-                            'vpa': _vpaController.text
-                          });
+                          widget.onDepositConfirmed(_getCurrentAmount(_amtController.text));
                         }
                       },
                       alignLabel: Alignment.center,
@@ -235,19 +208,6 @@ class DepositModalSheetState extends State<DepositModalSheet>
                     ),
                   )
                 : Container(),
-            (_isPendingTransaction)
-                ? Padding(
-                    padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                    child: Container(
-                      width: _width,
-                      child: Text(
-                          'A previous deposit is currently pending.\n Please ' +
-                              'wait until it has been successfully processed.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 16, color: UiConstants.accentColor)),
-                    ))
-                : Container(),
             (!_isDepositsEnabled)
                 ? Padding(
                     padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
@@ -255,7 +215,7 @@ class DepositModalSheetState extends State<DepositModalSheet>
                       width: _width,
                       child: Text(
                           'We are currently not accepting deposits for ' +
-                              'the ICICI Prudential Liquid Fund - Growth',
+                              'Augmont Gold Fund',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 16, color: UiConstants.accentColor)),
@@ -265,5 +225,117 @@ class DepositModalSheetState extends State<DepositModalSheet>
         ),
       ),
     );
+  }
+  
+  double _getCurrentAmount(String amt) {
+    if(amt == null || amt.isEmpty) return null;
+    double t = 0;
+    try{
+      t = double.parse(amt);
+      return t;
+    }catch(e) {
+      return null;
+    }
+  }
+
+  Widget _buildRateCard() {
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _buildRateRow('Rate per gram', '₹${widget.currentRates.goldBuyPrice.toStringAsFixed(2)}', 'This is the current price of 1 gram of gold'),
+          _buildRateRow('CGST', '${widget.currentRates.cgstPercent.toString()}%', 'This is the Goods and Services Tax(GST) charged by the central government'),
+          _buildRateRow('SGST', '${widget.currentRates.sgstPercent.toString()}%', 'This is the Goods and Services Tax(GST) charged by the state government'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRateRow(String title, String value, String info) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Text(title,
+              style: TextStyle(
+                fontSize: SizeConfig.mediumTextSize*1.2
+              ),
+            ),
+          ),
+          Expanded(
+            child: Row(
+              children: [
+                Text(value,
+                  style: TextStyle(
+                      fontSize: SizeConfig.mediumTextSize*1.2
+                  ),
+                ),
+                SizedBox(width: 4,),
+                InkWell(
+                  child: Icon(
+                    Icons.info_outline,
+                    size: SizeConfig.mediumTextSize*1.3,
+                  ),
+                  onTap: () {
+                    HapticFeedback.vibrate();
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => MoreInfoDialog(
+                          title: title,
+                          text: info,
+                        ));
+                  },
+                )
+              ],
+            )
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPurchaseDescriptionCard(double amt) {
+    double netTax = widget.currentRates.sgstPercent + widget.currentRates.cgstPercent;
+    double rate = widget.currentRates.goldBuyPrice;
+
+    if(amt == null || amt < 5) {
+      return Container();
+    }
+    double taxDeducted = amt - (amt*netTax)/100;
+    double grams = taxDeducted/rate;
+
+    return Padding(
+      padding: EdgeInsets.all(5),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Investment after Tax: ₹${taxDeducted.toStringAsFixed(2)}',
+            style:TextStyle(
+                fontSize: SizeConfig.mediumTextSize
+            ),
+          ),
+          Text('Gold amount: ${grams.toStringAsFixed(4)} grams',
+            style:TextStyle(
+                fontSize: SizeConfig.mediumTextSize
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  onDepositComplete(bool flag) {
+    _isDepositInProgress = false;
+    setState(() {});
+    Navigator.of(context).pop();
+    if(flag)baseProvider.showPositiveAlert('SUCCESS', 'You gold deposit was confirmed!', context);
+    else baseProvider.showNegativeAlert('Failed', 'Your gold deposit failed. Please try again or contact us if you are facing issues', context, seconds: 5);
   }
 }

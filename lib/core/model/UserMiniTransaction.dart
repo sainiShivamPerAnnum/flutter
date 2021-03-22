@@ -9,7 +9,7 @@ class UserMiniTransaction {
   String _type;
   String _subType;
   String _tranStatus;
-  Timestamp _updatedTime;
+  Timestamp _timestamp;
   String _note;
 
   UserMiniTransaction(
@@ -18,19 +18,34 @@ class UserMiniTransaction {
       this._type,
       this._subType,
       this._tranStatus,
-      this._updatedTime,
+      this._timestamp,
       this._note);
 
   UserMiniTransaction.fromMap(Map<String, dynamic> data):this(
-    data[UserTransaction.fldAmount],data[UserTransaction.fldClosingBalance],
+    toDouble(data[UserTransaction.fldAmount]),data[UserTransaction.fldClosingBalance],
     data[UserTransaction.fldType],data[UserTransaction.fldSubType],
-    data[UserTransaction.fldTranStatus],data[UserTransaction.fldUpdatedTime],
+    data[UserTransaction.fldTranStatus],data[UserTransaction.fldTimestamp],
     data[UserTransaction.fldNote],
   );
 
+  static double toDouble(dynamic fld) {
+    double res = 0;
+    try{
+      res = fld;
+      return res;
+    }catch(e) {}
+
+    try {
+      int p = fld;
+      return p + .0;
+    }catch(err) {}
+
+    return res;
+  }
+
   String get note => _note;
 
-  Timestamp get updatedTime => _updatedTime;
+  Timestamp get timestamp => _timestamp;
 
   String get tranStatus => _tranStatus;
 

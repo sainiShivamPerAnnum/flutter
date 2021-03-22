@@ -1,6 +1,8 @@
 import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/ui/elements/feedback_dialog.dart';
 import 'package:felloapp/ui/pages/root.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,8 @@ import 'package:felloapp/ui/elements/leaderboard.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+
+import '../../../util/size_config.dart';
 
 class GamePage extends StatefulWidget {
   final ValueChanged<int> tabChange;
@@ -25,7 +29,10 @@ class _GamePageState extends State<GamePage> {
   Game _currentPage;
   ConfettiController _confeticontroller;
   LocalDBModel lclDbProvider;
+  BaseUtil baseProvider;
   int currentPage;
+  DBModel reqProvider;
+
   PageController _controller = new PageController(
     initialPage: 0,
   );
@@ -37,9 +44,11 @@ class _GamePageState extends State<GamePage> {
     _gameList = data.getCities();
     _currentPage = _gameList[1];
     currentPage = 0;
+    // if (SizeConfig.isGamefirstTime != true) {
     _confeticontroller = new ConfettiController(
       duration: new Duration(seconds: 2),
     );
+    // }
   }
 
   void _handleCityChange(Game game) {
@@ -54,6 +63,7 @@ class _GamePageState extends State<GamePage> {
     // lclDbProvider.isConfettiRequired(weekCde).then((flag) {
     //   if (flag) {
     _confeticontroller.play();
+    SizeConfig.isGamefirstTime = false;
     //     lclDbProvider.saveConfettiUpdate(weekCde);
     //   }
     // });
@@ -61,8 +71,9 @@ class _GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
-    lclDbProvider = Provider.of<LocalDBModel>(context,listen:false);
-
+    lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    reqProvider = Provider.of<DBModel>(context, listen: false);
     return Container(
       decoration: BoxDecoration(
         color: Color(0xfff1f1f1),
@@ -89,7 +100,7 @@ class _GamePageState extends State<GamePage> {
             onPageChanged: (int page) {
               setState(() {
                 currentPage = page;
-                if (currentPage == 1) {
+                if (currentPage == 1 && SizeConfig.isGamefirstTime == true) {
                   checkConfetti();
                 }
               });
@@ -105,9 +116,9 @@ class _GamePageState extends State<GamePage> {
                       Container(
                         height: AppBar().preferredSize.height * 2,
                       ),
-                      TicketCount(),
+                      TicketCount(baseProvider.myUser.ticket_count),
                       Expanded(
-                        flex: 5,
+                        flex: 4,
                         child: GameCardList(
                           games: _gameList,
                           onGameChange: _handleCityChange,
@@ -146,8 +157,51 @@ class _GamePageState extends State<GamePage> {
                                   Color(0xffD4AC5B),
                                   Color(0xffDECBA4),
                                 ],
-                                title: "Vote for your next game on fello.",
-                                action: [],
+                                title: "Share your thoughts with us",
+                                action: [
+                                  GameOfferCardButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            FeedbackDialog(
+                                          title: "Tell us what you think",
+                                          description:
+                                              "We'd love to hear from you",
+                                          buttonText: "Submit",
+                                          dialogAction: (String fdbk) {
+                                            if (fdbk != null &&
+                                                fdbk.isNotEmpty) {
+                                              //feedback submission allowed even if user not signed in
+                                              reqProvider
+                                                  .submitFeedback(
+                                                      (baseProvider.firebaseUser ==
+                                                                  null ||
+                                                              baseProvider
+                                                                      .firebaseUser
+                                                                      .uid ==
+                                                                  null)
+                                                          ? 'UNKNOWN'
+                                                          : baseProvider
+                                                              .firebaseUser.uid,
+                                                      fdbk)
+                                                  .then((flag) {
+                                                if (flag) {
+                                                  baseProvider.showPositiveAlert(
+                                                      'Thank You',
+                                                      'We appreciate your feedback!',
+                                                      context);
+                                                }
+                                              });
+                                              Navigator.of(context).pop();
+                                            }
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    title: "Feedback",
+                                  ),
+                                ],
                               )
                             ],
                           ),
@@ -169,23 +223,24 @@ class _GamePageState extends State<GamePage> {
             ],
           ),
           Container(
-              height: 100,
-              width: 100,
-              child: ConfettiWidget(
-                blastDirectionality: BlastDirectionality.explosive,
-                confettiController: _confeticontroller,
-                particleDrag: 0.05,
-                emissionFrequency: 0.05,
-                numberOfParticles: 25,
-                gravity: 0.05,
-                shouldLoop: false,
-                colors: [
-                  UiConstants.primaryColor,
-                  Colors.grey,
-                  Colors.yellow,
-                  Colors.blue,
-                ],
-              )),
+            height: 100,
+            width: 100,
+            child: ConfettiWidget(
+              blastDirectionality: BlastDirectionality.explosive,
+              confettiController: _confeticontroller,
+              particleDrag: 0.05,
+              emissionFrequency: 0.05,
+              numberOfParticles: 25,
+              gravity: 0.05,
+              shouldLoop: false,
+              colors: [
+                UiConstants.primaryColor,
+                Color(0xfff7ff00),
+                Color(0xffFC5C7D),
+                Color(0xff2B32B2),
+              ],
+            ),
+          ),
           currentPage == 0
               ? Positioned(
                   bottom: 10,
@@ -215,14 +270,63 @@ class _GamePageState extends State<GamePage> {
   }
 }
 
-class TicketCount extends StatelessWidget {
+class TicketCount extends StatefulWidget {
+  final int totalCount;
+  TicketCount(this.totalCount);
+
+  @override
+  _TicketCountState createState() => _TicketCountState();
+}
+
+class _TicketCountState extends State<TicketCount>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<double> _animation;
+  double _latestBegin;
+  double _latestEnd;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller =
+        AnimationController(duration: Duration(seconds: 2), vsync: this);
+    _latestBegin = 0;
+    _latestEnd = widget.totalCount + .0;
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (SizeConfig.isGamefirstTime == true) {
+      CurvedAnimation curvedAnimation =
+          CurvedAnimation(parent: _controller, curve: Curves.decelerate);
+      _animation =
+          Tween<double>(begin: 0, end: _latestEnd).animate(curvedAnimation);
+
+      if (0 != _latestBegin || widget.totalCount != _latestEnd) {
+        _controller.reset();
+      }
+
+      _latestBegin = 0;
+      _latestEnd = widget.totalCount + .0;
+      _controller.addListener(() {
+        setState(() {});
+      });
+      _controller.forward();
+    }
+
     return Container(
       child: Column(
         children: [
           Text(
-            "5",
+            _animation != null
+                ? _animation.value.round().toString()
+                : "${widget.totalCount}",
             style: GoogleFonts.montserrat(
               color: Colors.white,
               fontSize: SizeConfig.screenHeight * 0.08,

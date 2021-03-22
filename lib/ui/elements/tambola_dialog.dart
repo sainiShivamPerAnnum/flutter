@@ -5,7 +5,7 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class TambolaDialog extends StatelessWidget {
-  final Log log = new Log('GuideDialog');
+  final Log log = new Log('TambolaDialog');
   TambolaBoard board;
   List<int> digits;
 

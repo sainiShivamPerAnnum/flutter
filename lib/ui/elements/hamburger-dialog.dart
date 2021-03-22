@@ -1,22 +1,18 @@
-import 'dart:developer';
 import 'dart:ui';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/aboutus_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/contact_dialog.dart';
 import 'package:felloapp/ui/elements/feedback_dialog.dart';
-import 'package:felloapp/ui/pages/edit_profile_page.dart';
-import 'package:felloapp/ui/pages/onboarding/kyc/kyc_onboarding_controller.dart';
+import 'package:felloapp/ui/pages/settings_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
-import 'package:flat_icons_flutter/flat_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:felloapp/ui/pages/settings_page.dart';
 import 'package:provider/provider.dart';
-import 'package:felloapp/util/logger.dart';
 
 class HamburgerMenu extends StatelessWidget {
   static List<OptionDetail> _optionsList;
@@ -25,8 +21,8 @@ class HamburgerMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    reqProvider = Provider.of<DBModel>(context,listen:false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    reqProvider = Provider.of<DBModel>(context, listen: false);
     _optionsList = _loadOptionsList();
 
     return BackdropFilter(
@@ -63,7 +59,8 @@ class HamburgerMenu extends StatelessWidget {
                 shrinkWrap: true,
                 padding: const EdgeInsets.all(16.0),
                 itemBuilder: /*1*/ (context, i) {
-                  if (i.isOdd) return Divider(); /*2*/
+                  if (i.isOdd) return Divider();
+                  /*2*/
                   final index = i ~/ 2; /*3*/
                   return _buildRow(_optionsList[index], context);
                 },
@@ -175,33 +172,15 @@ class HamburgerMenu extends StatelessWidget {
                   ));
           break;
         }
-      case 'editProf':
-        {
-          HapticFeedback.vibrate();
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => EditProfile()),
-          );
-          break;
-        }
-      // case 'ui2':
+      // case 'kyc':
       //   {
       //     HapticFeedback.vibrate();
       //     Navigator.push(
       //       context,
-      //       MaterialPageRoute(builder: (context) => Root()),
+      //       MaterialPageRoute(builder: (context) => KycOnboardController()),
       //     );
       //     break;
       //   }
-      case 'kyc':
-        {
-          HapticFeedback.vibrate();
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => KycOnboardController()),
-          );
-          break;
-        }
       case 'signOut':
         {
           showDialog(
@@ -276,9 +255,6 @@ class HamburgerMenu extends StatelessWidget {
           key: 'abUs', value: 'About ${Constants.APP_NAME}', isEnabled: true),
       new OptionDetail(key: 'fdbk', value: 'Feedback', isEnabled: true),
       new OptionDetail(key: 'faq', value: 'FAQs', isEnabled: true),
-      new OptionDetail(
-          key: 'editProf', value: 'Update Details', isEnabled: true),
-      // new OptionDetail(key: 'kyc', value: 'KYC',isEnabled: true),
       new OptionDetail(key: 'contUs', value: 'Contact Us', isEnabled: true),
       new OptionDetail(
           key: 'signOut',

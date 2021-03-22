@@ -14,6 +14,8 @@ class MobileInputScreenState extends State<MobileInputScreen> {
   final _mobileController = TextEditingController();
   bool _validate = true;
   Log log = new Log("MobileInputScreen");
+  static final GlobalKey<FormFieldState<String>> _phoneFieldKey =
+      GlobalKey<FormFieldState<String>>();
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,8 @@ class MobileInputScreenState extends State<MobileInputScreen> {
               child: Form(
                 key: _formKey,
                 child: TextFormField(
+                  key: _phoneFieldKey,
+                  autofocus: true,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: "Mobile",
@@ -33,7 +37,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                   controller: _mobileController,
                   validator: (value) => _validateMobile(value),
                   onFieldSubmitted: (v) {
-                    FocusScope.of(context).nextFocus();
+                    FocusScope.of(context).requestFocus(FocusNode());
                   },
                 ),
               )),
