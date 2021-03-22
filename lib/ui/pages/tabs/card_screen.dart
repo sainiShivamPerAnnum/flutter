@@ -52,7 +52,6 @@ class _HState extends State<PlayHome> {
   FcmHandler fcmProvider;
   LocalDBModel localDBModel;
 
-  bool prizeButtonUp = false;
   bool ticketsBeingGenerated = false;
   bool dailyPickHeaderWithTimings = false;
   String dailyPickHeaderText = 'Today\'s picks';
@@ -66,21 +65,11 @@ class _HState extends State<PlayHome> {
   bool _showTutorial = false;
   Timer _prizeTimer;
 
-  // ScrollController _scrollController1;
-  // ScrollController _scrollController2;
-  // ScrollController _scrollController3;
-  // ScrollController _scrollController4;
-  // ScrollController _scrollController5;
-
   @override
   void initState() {
     super.initState();
     initDailyPickFlags();
-    _prizeTimer = new Timer(const Duration(seconds: 3), () {
-      setState(() {
-        prizeButtonUp = true;
-      });
-    });
+
   }
 
   initDailyPickFlags() {
@@ -139,11 +128,6 @@ class _HState extends State<PlayHome> {
         }
       });
 
-      dbProvider.addUserTicketRequestListener(() {
-        ticketsBeingGenerated = true;
-        setState(() {});
-      });
-
       if (!baseProvider.weeklyTicksFetched)
         dbProvider.subscribeUserTickets(baseProvider.myUser);
 
@@ -192,7 +176,6 @@ class _HState extends State<PlayHome> {
   void dispose() {
     super.dispose();
     if (dbProvider != null) dbProvider.addUserTicketListener(null);
-    if (dbProvider != null) dbProvider.addUserTicketRequestListener(null);
     if (fcmProvider != null) fcmProvider.addIncomingMessageListener(null, 0);
 
     if (_prizeTimer.isActive) _prizeTimer.cancel();
@@ -598,6 +581,9 @@ class _HState extends State<PlayHome> {
             _testTickets();
             localDBModel.saveOnboardStatus(false);
           }
+          //also delete all the old tickets here
+          //no need to await
+          dbProvider.deleteExpiredUserTickets(baseProvider.myUser.uid);
         });
       }
     } else {

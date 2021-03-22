@@ -361,6 +361,11 @@ class BaseUtil extends ChangeNotifier {
     return 0;
   }
 
+  Future<bool> clearExpiredTambolaTickets() {
+    int currWeekCode = getWeekNumber();
+    
+  }
+
   static int getWeekNumber() {
     DateTime tdt = new DateTime.now();
     int dayn = tdt.weekday;

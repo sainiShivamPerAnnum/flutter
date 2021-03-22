@@ -261,4 +261,37 @@ class Api {
   Future<String> getFileFromDPBucketURL(String uid, String path) {
     return _storage.ref('dps/$uid/$path').getDownloadURL();
   }
+
+  Future<bool> deleteUserTicketsBeforeWeekCode(String uid, int weekCde) async{
+    bool flag = true;
+    Query _query = _db.collection(Constants.COLN_USERS).doc(uid)
+        .collection(Constants.SUBCOLN_USER_TICKETS).where('week_code', isLessThan: weekCde);
+    List<DocumentReference> _docReferences = [];
+    try {
+      QuerySnapshot _querySnapshot = await _query.get();
+      _querySnapshot.docs.forEach((dDoc) {
+        if (dDoc.exists) _docReferences.add(dDoc.reference);
+      });
+    }catch(e) {
+      log.error('Failed to retrieve ticket documents: $e');
+      flag = false;
+    }
+
+    if(_docReferences.length > 0) {
+      try {
+        var opBatch = _db.batch();
+        for (var ref in _docReferences) {
+          opBatch.delete(ref);
+        }
+        log.debug(
+            'Deleting ${_docReferences.length.toString()} ticket documents');
+
+        await opBatch.commit();
+      }catch(e) {
+        log.error('DB Batch operation failed: $e');
+        flag = false;
+      }
+    }
+    return flag;
+  }
 }
