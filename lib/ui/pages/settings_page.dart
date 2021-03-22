@@ -1,7 +1,5 @@
-import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/aboutus_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
@@ -238,38 +236,33 @@ class _OptionsList extends State<SettingsPage> {
       case 'fdbk':
         {
           HapticFeedback.lightImpact();
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => TestNotifications()),
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => FeedbackDialog(
+              title: "Tell us what you think",
+              description: "We'd love to hear from you",
+              buttonText: "Submit",
+              dialogAction: (String fdbk) {
+                if (fdbk != null && fdbk.isNotEmpty) {
+                  //feedback submission allowed even if user not signed in
+                  reqProvider
+                      .submitFeedback(
+                          (baseProvider.firebaseUser == null ||
+                                  baseProvider.firebaseUser.uid == null)
+                              ? 'UNKNOWN'
+                              : baseProvider.firebaseUser.uid,
+                          fdbk)
+                      .then((flag) {
+                    if (flag) {
+                      baseProvider.showPositiveAlert(
+                          'Thank You', 'We appreciate your feedback!', context);
+                    }
+                  });
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
           );
-
-          // showDialog(
-          //   context: context,
-          //   builder: (BuildContext context) => FeedbackDialog(
-          //     title: "Tell us what you think",
-          //     description: "We'd love to hear from you",
-          //     buttonText: "Submit",
-          //     dialogAction: (String fdbk) {
-          //       if (fdbk != null && fdbk.isNotEmpty) {
-          //         //feedback submission allowed even if user not signed in
-          //         reqProvider
-          //             .submitFeedback(
-          //                 (baseProvider.firebaseUser == null ||
-          //                         baseProvider.firebaseUser.uid == null)
-          //                     ? 'UNKNOWN'
-          //                     : baseProvider.firebaseUser.uid,
-          //                 fdbk)
-          //             .then((flag) {
-          //           if (flag) {
-          //             baseProvider.showPositiveAlert(
-          //                 'Thank You', 'We appreciate your feedback!', context);
-          //           }
-          //         });
-          //         Navigator.of(context).pop();
-          //       }
-          //     },
-          //   ),
-          // );
         }
     }
   }

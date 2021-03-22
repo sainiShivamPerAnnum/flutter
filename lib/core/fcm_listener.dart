@@ -1,4 +1,3 @@
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -9,7 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-class FcmListener extends ChangeNotifier{
+class FcmListener extends ChangeNotifier {
   Log log = new Log("FcmListener");
   BaseUtil _baseUtil = locator<BaseUtil>();
   LocalDBModel _lModel = locator<LocalDBModel>();
@@ -56,9 +55,9 @@ class FcmListener extends ChangeNotifier{
         _handler.handleMessage(message.data);
       }
     });
-  
+
     _fcm.setForegroundNotificationPresentationOptions(
-              alert: true, badge: true, sound: true);
+        alert: true, badge: true, sound: true);
     _fcm.requestPermission();
 
     _fcm.subscribeToTopic('dailypickbroadcast');
@@ -78,7 +77,7 @@ class FcmListener extends ChangeNotifier{
 
   _saveDeviceToken() async {
     bool flag = true;
-    String fcmToken = await fbm.getToken();
+    String fcmToken = await _fcm.getToken();
 
     if (fcmToken != null &&
         _baseUtil.myUser != null &&
@@ -101,12 +100,7 @@ class FcmListener extends ChangeNotifier{
   set fcm(FirebaseMessaging value) {
     _fcm = value;
   }
-
-
-  }
-
-
-
+}
 
 class TestNotifications extends StatefulWidget {
   @override
@@ -114,7 +108,6 @@ class TestNotifications extends StatefulWidget {
 }
 
 class _TestNotificationsState extends State<TestNotifications> {
-
   @override
   void initState() {
     super.initState();
@@ -135,11 +128,7 @@ class _TestNotificationsState extends State<TestNotifications> {
     });
   }
 
-
-
-
-
-    @override
+  @override
   Widget build(BuildContext context) {
     return Container();
   }

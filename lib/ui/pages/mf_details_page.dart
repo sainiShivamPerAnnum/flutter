@@ -169,7 +169,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
           ),
           onPressed: () async {
             HapticFeedback.vibrate();
-            //TODO onWithdrawalClicked();
+            onWithdrawalClicked();
           },
           highlightColor: Colors.orange.withOpacity(0.5),
           splashColor: Colors.orange.withOpacity(0.5),
