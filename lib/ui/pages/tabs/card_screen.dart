@@ -8,7 +8,6 @@ import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/elements/board_selector.dart';
-import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/ui/elements/roulette.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
 import 'package:felloapp/ui/elements/tambola_dialog.dart';
@@ -69,7 +68,6 @@ class _HState extends State<PlayHome> {
   void initState() {
     super.initState();
     initDailyPickFlags();
-
   }
 
   initDailyPickFlags() {
@@ -809,43 +807,6 @@ class _HState extends State<PlayHome> {
     return Roulette(
         dailyPickTextList: dailyPickTextList,
         digits: _getDailyPickData(baseProvider.weeklyDigits, date.weekday));
-    // DateTime date = DateTime.now();
-    // return Padding(
-    //   padding: EdgeInsets.all(10.0),
-    //   child: Container(
-    //     width: double.infinity,
-    //     height: 100,
-    //     decoration: BoxDecoration(
-    //       color: Colors.blueGrey[400],
-    //       boxShadow: [
-    //         new BoxShadow(
-    //           color: Colors.black26,
-    //           offset: Offset.fromDirection(20, 7),
-    //           blurRadius: 5.0,
-    //         )
-    //       ],
-    //       borderRadius: BorderRadius.all(Radius.circular(20)),
-    //       gradient: LinearGradient(
-    //         begin: Alignment.topRight,
-    //         end: Alignment.bottomLeft,
-    //         stops: [0.1, 0.4],
-    //         colors: [Colors.blueGrey[500], Colors.blueGrey[400]],
-    //       ),
-    //     ),
-    //     child: Column(
-    //         //mainAxisAlignment: MainAxisAlignment.center,
-    //         crossAxisAlignment: CrossAxisAlignment.center,
-    //         children: [
-    //           Padding(
-    //             padding: EdgeInsets.only(top: 10),
-    //             child: DPTextSlider(infoList: dailyPickTextList,),
-    //           ),
-    //           Padding(
-    //               padding: EdgeInsets.only(top: 10, left: 15, right: 15),
-    //               child: _getDrawBallRow(draws, date.weekday)),
-    //         ]),
-    //   ),
-    // );
   }
 
   List<int> _getDailyPickData(DailyPick draws, int day) {
@@ -860,150 +821,6 @@ class _HState extends State<PlayHome> {
       }
     }
     return picks;
-  }
-
-// <<<<<<< HEAD
-//   Widget _getDrawBallRow(DailyPick draws, int day) {
-//     balls = [];
-//     if (draws != null && draws.getWeekdayDraws(day - 1) != null) {
-//       draws.getWeekdayDraws(day - 1).forEach((element) {
-//         balls.add(_getDrawBall(element));
-//       });
-//     } else {
-//       for (int i = 0; i < 5; i++) {
-//         balls.add(_getDrawBall(0));
-//       }
-//     }
-//     return Row(
-//       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//       children: balls,
-//     );
-//   }
-
-//   Widget _getDrawBall(int digit) {
-//     double xWidth = MediaQuery.of(context).size.width;
-//     double xFont = double.parse((xWidth / 18).toStringAsFixed(2));
-//     //   log.debug(xFont.toString());
-//     return Stack(
-//       children: [
-//         Container(
-//           width: 40,
-//           height: 40,
-//           decoration: new BoxDecoration(
-//             color: Colors.white,
-//             shape: BoxShape.circle,
-//           ),
-//         ),
-//         Center(
-//           child: (digit != null && digit > 0)
-//               ? Padding(
-//                   padding: EdgeInsets.only(left: xFont / 3.3, top: xFont / 3),
-//                   child: SingleDigit(
-//                     initialValue: digit,
-//                     textStyle: TextStyle(color: Colors.black, fontSize: xFont),
-//                   ))
-//               : Padding(
-//                   padding: EdgeInsets.only(left: 16, top: 7),
-//                   child: Text(
-//                     '-',
-//                     style: TextStyle(fontSize: 22, color: Colors.black38),
-//                     textAlign: TextAlign.center,
-//                   ),
-//                 ),
-//         )
-//       ],
-//     );
-//   }
-// =======
-  // Widget _getDrawBall(
-  //   int digit,
-  // ) {
-  //   double xWidth = MediaQuery.of(context).size.width;
-  //   double xFont = double.parse((xWidth / 18).toStringAsFixed(2));
-  //   return Stack(
-  //     children: [
-  //       Container(
-  //         width: 40,
-  //         height: 40,
-  //         decoration: new BoxDecoration(
-  //           color: Colors.white,
-  //           shape: BoxShape.circle,
-  //         ),
-  //       ),
-  //       Center(
-  //         child: (digit != null && digit > 0)
-  //             ? Padding(
-  //                 padding: EdgeInsets.only(left: xFont / 3.3, top: xFont / 3),
-  //                 child: SingleDigit(
-  //                   initialValue: digit,
-  //                   textStyle: TextStyle(color: Colors.black, fontSize: xFont),
-  //                 ))
-  //             : Padding(
-  //                 padding: EdgeInsets.only(left: 16, top: 7),
-  //                 child: Text(
-  //                   '-',
-  //                   style: TextStyle(fontSize: 22, color: Colors.black38),
-  //                   textAlign: TextAlign.center,
-  //                 ),
-  //               ),
-  //       )
-  //     ],
-  //   );
-  // }
-//>>>>>>> fe967712be963b72ac3e0241fe9b31044dee0fa8
-
-  Widget _buildPrizeButton() {
-    Random rnnd = new Random();
-    return AnimatedContainer(
-      height: 40,
-      width: 100,
-      duration: const Duration(milliseconds: 400),
-      margin: (prizeButtonUp)
-          ? EdgeInsets.only(bottom: 32)
-          : EdgeInsets.only(bottom: 0),
-      decoration: (prizeButtonUp)
-          ? BoxDecoration(
-              color: Colors.blueGrey[300],
-              boxShadow: [
-                new BoxShadow(
-                  color: Colors.black12,
-                  offset: Offset.fromDirection(20, 7),
-                  blurRadius: 5.0,
-                )
-              ],
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              gradient: LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                stops: [0.1, 0.4],
-                colors: [Colors.blueGrey[400], Colors.blueGrey[400]],
-              ),
-            )
-          : BoxDecoration(color: Colors.transparent),
-      child: InkWell(
-        child: Center(
-            child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Prizes',
-              style: TextStyle(color: Colors.white70, fontSize: 16),
-            ),
-            Text(
-              prizeEmoji[rnnd.nextInt(prizeEmoji.length)],
-              style: TextStyle(color: Colors.white70, fontSize: 16),
-            ),
-          ],
-        )),
-        onTap: () {
-          // HapticFeedback.vibrate();
-          // showDialog(
-          //     context: context,
-          //     builder: (BuildContext context) => PrizeDialog());
-        },
-      ),
-    );
   }
 }
 
