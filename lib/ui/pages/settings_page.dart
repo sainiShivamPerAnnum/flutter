@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -36,6 +35,7 @@ class _OptionsList extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
+
   }
 
   @override
@@ -173,7 +173,7 @@ class _OptionsList extends State<SettingsPage> {
         }
       case 'editProf':
         {
-          HapticFeedback.vibrate();
+          HapticFeedback.lightImpact();
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => EditProfile()),
@@ -232,8 +232,10 @@ class _OptionsList extends State<SettingsPage> {
                   ));
           break;
         }
+
       case 'fdbk':
         {
+          HapticFeedback.lightImpact();
           showDialog(
             context: context,
             builder: (BuildContext context) => FeedbackDialog(

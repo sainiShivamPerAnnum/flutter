@@ -16,7 +16,6 @@ import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:felloapp/ui/dialogs/icici_withdraw_dialog.dart';
 import 'package:fl_animated_linechart/chart/area_line_chart.dart';
 import 'package:fl_animated_linechart/chart/line_chart.dart';
 import 'package:fl_animated_linechart/common/pair.dart';
@@ -169,7 +168,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
           ),
           onPressed: () async {
             HapticFeedback.vibrate();
-            //TODO onWithdrawalClicked();
+            onWithdrawalClicked();
           },
           highlightColor: Colors.orange.withOpacity(0.5),
           splashColor: Colors.orange.withOpacity(0.5),

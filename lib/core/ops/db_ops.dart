@@ -22,7 +22,6 @@ import 'package:flutter/material.dart';
 class DBModel extends ChangeNotifier {
   Api _api = locator<Api>();
   ValueChanged<List<TambolaBoard>> userTicketsUpdated;
-  VoidCallback userTicketsRequested;
   final Log log = new Log("DBModel");
 
   Future<bool> updateClientToken(BaseUser user, String token) async {
@@ -600,6 +599,23 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<bool> deleteExpiredUserTickets(String userId) async{
+    try{
+      int weekNumber = BaseUtil.getWeekNumber();
+      if(weekNumber > 2) {
+        ///eg: weekcode: 202105 -> delete all tickets older than 202103
+        int weekCde = _getWeekCode();
+        weekCde--;
+        return await _api.deleteUserTicketsBeforeWeekCode(userId, weekCde);
+      }else{
+        return false;
+      }
+    }catch(e) {
+      log.error('$e');
+      return false;
+    }
+  }
+
   Future<String> getUserDP(String uid) async {
     try {
       return await _api.getFileFromDPBucketURL(uid, 'image');
@@ -679,9 +695,5 @@ class DBModel extends ChangeNotifier {
 
   addUserTicketListener(ValueChanged<List<TambolaBoard>> listener) {
     userTicketsUpdated = listener;
-  }
-
-  addUserTicketRequestListener(VoidCallback listener) {
-    userTicketsRequested = listener;
   }
 }

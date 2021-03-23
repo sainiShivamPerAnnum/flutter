@@ -52,6 +52,7 @@ dependencies:
   signature: ^3.2.0
   slider_button: ^0.6.0
   scratcher: ^1.4.0
+  share: ^0.6.5+4
   upi_pay: ^0.2.1
   url_launcher: ^5.7.0
   video_player: ^1.0.1
@@ -101,4 +102,5 @@ flutter:
     - images/svgs/
     - images/lottie/
     - images/process/
+
 

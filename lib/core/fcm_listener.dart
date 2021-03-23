@@ -1,4 +1,3 @@
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -16,6 +15,8 @@ class FcmListener extends ChangeNotifier {
   DBModel _dbModel = locator<DBModel>();
   FcmHandler _handler = locator<FcmHandler>();
   FirebaseMessaging _fcm;
+
+  FcmListener() {}
 
   /// Create a [AndroidNotificationChannel] for heads up notifications
   static const AndroidNotificationChannel _androidChannel =
@@ -54,6 +55,10 @@ class FcmListener extends ChangeNotifier {
         _handler.handleMessage(message.data);
       }
     });
+
+    _fcm.setForegroundNotificationPresentationOptions(
+        alert: true, badge: true, sound: true);
+    _fcm.requestPermission();
 
     _fcm.subscribeToTopic('dailypickbroadcast');
 
@@ -94,5 +99,37 @@ class FcmListener extends ChangeNotifier {
 
   set fcm(FirebaseMessaging value) {
     _fcm = value;
+  }
+}
+
+class TestNotifications extends StatefulWidget {
+  @override
+  _TestNotificationsState createState() => _TestNotificationsState();
+}
+
+class _TestNotificationsState extends State<TestNotifications> {
+  @override
+  void initState() {
+    super.initState();
+    final fbm = FirebaseMessaging.instance;
+
+    // IOS Configurations
+    fbm.setForegroundNotificationPresentationOptions(
+        alert: true, badge: true, sound: true);
+    fbm.requestPermission();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('IOS Listener');
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
