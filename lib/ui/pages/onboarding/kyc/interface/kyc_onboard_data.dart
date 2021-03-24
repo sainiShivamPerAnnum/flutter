@@ -343,13 +343,13 @@ class KycOnboardData {
     Navigator.pop(context);
     if (result["flag"] == true) {
       print(result["fields"]);
-      _accNo.text = result["fields"]["accountno"];
-      _accHoldName.text = result["fields"]["name"];
-      _ifsc.text = result["fields"]["ifsc"];
+      _accNo.text = result["fields"]['result']["accountNumber"];
+      _accHoldName.text = result["fields"]['result']["name"];
+      _ifsc.text = result["fields"]['result']["ifsc"];
       showStepDialog(
           context, "Penny Transfer", '', createForm(createBankFormFields()), [
         TextButton(
-          child: Text("Cancle"),
+          child: Text("Cancel"),
           onPressed: () => Navigator.pop(context),
         ),
         TextButton(
@@ -359,7 +359,7 @@ class KycOnboardData {
               Navigator.pop(context);
               showLoadingDialog(context);
               var result =
-                  await kycModel.bankPennyTransfer(_accNo, _ifsc, _accHoldName);
+                  await kycModel.bankPennyTransfer(_accNo.text, _ifsc.text, _accHoldName.text);
               Navigator.pop(context);
               if (result["flag"] == true) {
                 _markStepCompleted(2);
@@ -619,18 +619,14 @@ class KycOnboardData {
                             Navigator.pop(context);
                             Navigator.pop(context);
                             if (result["flag"] == true) {
-                              _uid.text = result["fields"]["uid"];
-                              _pin.text =
-                                  result["fields"]["splitAddress"]["pincode"];
-                              _address.text = result["fields"]["address"];
-                              _name.text = result["fields"]["name"];
-                              _dob.text = result["fields"]["dob"];
-                              // _city.text =
-                              //     result["fields"]["splitAddress"]["city"];
-                              // _state.text =
-                              //     result["fields"]["splitAddress"]["state"];
-                              // _district.text =
-                              //     result["fields"]["splitAddress"]["district"];
+                              _uid.text = result["fields"]["uid"].toString();
+                              _pin.text = result["fields"]["splitAddress"]["pincode"].toString();
+                              _address.text = result["fields"]["address"].toString();
+                              _name.text = result["fields"]["name"].toString();
+                              _dob.text = result["fields"]["dob"].toString();
+                              _city.text = result["fields"]["splitAddress"]["city"].toString();
+                              _state.text = result["fields"]["splitAddress"]["state"].toString();
+                              _district.text = result["fields"]["splitAddress"]["district"].toString();
                               showStepDialog(context, "Confirm you Details", '',
                                   createForm(createADDFields()), [
                                 TextButton(
@@ -650,7 +646,7 @@ class KycOnboardData {
                                       isLoading = false;
                                       Navigator.pop(context);
                                       if (result["flag"]) {
-                                        _markStepCompleted(0);
+                                        _markStepCompleted(1);
 
                                         showSuccessDialog(context);
                                       } else {
@@ -715,13 +711,29 @@ class KycOnboardData {
         final result = await Navigator.push(context,
             MaterialPageRoute(builder: (context) => SignatureScreen()));
         print(result);
+        if (result["flag"] == true) {
+          _markStepCompleted(3);
+          showSuccessDialog(context);
+        } else {
+          showErrorDialog(context,
+              result['message'] ?? 'Something went wrong. Please try again');
+        }
       }
       //------------------------------------------------------FATCA-------------------------------------------------//
       else if (step == 4) {
         print("FATCA");
         //await kycModel.Fatca();
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => FatcaForms()));
+        final result = await Navigator.push(context,
+            MaterialPageRoute(builder: (context) => FatcaForms()));
+
+        if (result["flag"]== true) {
+          _markStepCompleted(4);
+          showSuccessDialog(context);
+        } else {
+          showErrorDialog(context,
+              result['message'] ?? 'Something went wrong. Please try again');
+        }
+
       }
       //-------------------------------------------LOCATION----------------------------------------------------------//
       else if (step == 5) {

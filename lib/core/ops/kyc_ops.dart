@@ -359,7 +359,7 @@ class KYCModel extends ChangeNotifier {
     print("Auth Token = $auth");
 
     var dataf = await convertImages(frontimage);
-    var datab = await convertImages(frontimage);
+    var datab = await convertImages(backImage);
     var imageUrlf = dataf['imageUrl'];
     var imageUrlb = datab['imageUrl'];
 
@@ -740,7 +740,7 @@ class KYCModel extends ChangeNotifier {
     if (response.statusCode == 200) {
       flag = true;
 
-      print(await response.stream.bytesToString());
+      // print(await response.stream.bytesToString());
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
       fields = jsonDecode(responseString)['object'];
@@ -762,16 +762,15 @@ class KYCModel extends ChangeNotifier {
     return result;
   }
 
-  Future<Map<dynamic, dynamic>> cancelledCheque(String imagePath) async {
+
+  Future<Map<dynamic, dynamic>> cancelledCheque(String imagePath) async
+  {
     var fields;
     var tokens = await getId();
     var data = await convertImages(imagePath);
-    if (!data['flag']) {
-      return {
-        "flag": false,
-        "message":
-            data['message'] ?? 'Operation failed. Please try again in sometime'
-      };
+    if(!data['flag'])
+    {
+      return {"flag": false, "message": data['message']??'Operation failed. Please try again in sometime'};
     }
 
     var imageUrl = data['imageUrl'];
@@ -782,70 +781,81 @@ class KYCModel extends ChangeNotifier {
 
     bool flag = false;
     String message = "Bank Verified Successfully";
-
     var headers = {
       'Authorization': '$authToken',
-      // 'Content-Type': 'application/json'
+      'Content-Type': 'application/json'
     };
     var request = http.Request('POST', Uri.parse(KycUrls.execute));
-    request.body = '''{
-          "merchantId": "$merchantID",
-          "inputData": { 
-            "service": "identity", 
-            "type": "cheque",  
-            "task": "autoRecognition",
-            "data": {
-                    "images": ["$imageUrl"],
-                    "toVerifyData": {},  
-                    "searchParam": {},       
-                    "proofType": "cheque"      
-                   }  
-                }}''';
 
+    request.body = '''{
+    "merchantId": "$merchantID",
+    "inputData": {
+      "service": "identity",
+      "type": "cheque",
+      "task": "autoRecognition",
+      "data": {
+      "images": ["$imageUrl"],
+      "toVerifyData": {},
+      "searchParam": {},
+       "proofType": "cheque"
+       }
+       }
+       }''';
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
       flag = true;
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      print(responseString);
+      fields = jsonDecode(responseString)['object'];
+      // print(await response.stream.bytesToString());
+    }
+    else if (response.statusCode == 400) {
+      print(await response.stream.bytesToString());
 
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
-      fields = jsonDecode(responseString)['object'];
-
-      print(await response.stream.bytesToString());
-    } else if (response.statusCode == 400) {
+      print(responseString);
       flag = false;
       message = "Please enter a correct image format";
 
       print(response.reasonPhrase);
-    } else if (response.statusCode == 422) {
-      flag = false;
-      message = "Please provide a clearer image";
-
-      print(response.reasonPhrase);
-    } else {
-      flag = false;
-      message = "Upload failed. Please verify the image and try again";
-
-      print(response.reasonPhrase);
     }
+    else if (response.statusCode == 400) {
+      print(await response.stream.bytesToString());
 
+      flag = false;
+      message = "Please enter a correct image format";
+    }
+    else {
+      print(await response.stream.bytesToString());
+
+      print(response.reasonPhrase);
+      message = "Something went wrong";
+
+    }
     Map<dynamic, dynamic> result = {
       'flag': flag,
       'message': message,
       'fields': fields
     };
 
-    return result;
+    return Future.value(result);
+
   }
 
   Future<Map<dynamic, dynamic>> Fatca(
       var pep,
       var rpep,
       var residentForTaxInIndia,
-      var relatedPerson,
-      var relatedPersonType) async {
+      var relatedPerson)
+  // var relatedPersonType)
+
+  async {
+    print("in dfatca pep $pep rpep $rpep $residentForTaxInIndia , $relatedPerson");
     var flag = false;
     var message = "Updated successfully";
 
@@ -859,47 +869,48 @@ class KYCModel extends ChangeNotifier {
       'Content-Type': 'application/json'
     };
     var request = http.Request('POST', Uri.parse(KycUrls.update));
-    request.body = '''{ 
+
+    request.body = '''{
     "merchantId":"$merchantID",
     "save":"formData",
     "type":"fatca",
-    "data":{ 
-          "type":"fatca",
-          "fatcaData":
-            {      
-               "pep":"NO",
-               "rpep":"NO", 
-               "residentForTaxInIndia":"NO",
-               "relatedPerson":"NO",
-                "addressType":"...", 
-                "countryCodeJurisdictionResidence":"...", 
-                "countryJurisdictionResidence":"...",   
-                "taxIdentificationNumber":"...",    
-                "placeOfBirth":"...",       
-                "countryCodeOfBirth":"...",
-                "countryOfBirth":"...",
-                "addressCity":"...",
-                "addressDistrict":"...",
-                "addressStateCode":"...",
-                "addressState":"... ...",
-                "addressCountryCode":"...",
-                "addressCountry":"...",
-                "addressPincode": "313001",
-                "address":"...",
-                "relatedPersonType":"NO",
-                "relatedPersonKycNumber":"",
-                "relatedPersonKycNumberExists":"...",
-                "relatedPersonTitle":"....",
-                "relatedPersonIdentityProof":{
-                "name":"AB",
-                "fatherName":"DEMO",
-                "dob":"02/01/1998",
-                "number":"9282"
-                },
-                "relatedPersonName":"",
+     "data":{
+     "type":"fatca",
+     "fatcaData":{
+     "pep":"$pep",
+     "rpep":"$rpep",
+     "residentForTaxInIndia":"$residentForTaxInIndia",
+     "relatedPerson":"$relatedPerson",
+     "addressType":"...",
+     "countryCodeJurisdictionResidence":"...",
+     "countryJurisdictionResidence":"...",
+     "taxIdentificationNumber":"...",
+     "placeOfBirth":"...",
+     "countryCodeOfBirth":"...",
+     "countryOfBirth":"",
+     "addressCity":"...",
+     "addressDistrict":"...",
+     "addressStateCode":"...",
+     "addressState":"... ...",
+      "addressCountryCode":"...",
+      "addressCountry":"",    
+       "addressPincode": "",  
+       "address":"",  
+       "relatedPersonType":"", 
+       "relatedPersonKycNumber":"",
+       "relatedPersonKycNumberExists":"...",
+       "relatedPersonTitle":"....",
+        "relatedPersonIdentityProof":{
+        "name":"",
+        "fatherName":"",
+        "dob":"",
+        "number":""
+         },
+                 "relatedPersonName":"",
+                 
                  "relatedPersonIdentityProofType":"..."
                  }
-                  }
+                    }
                     }''';
 
     request.headers.addAll(headers);
@@ -913,10 +924,12 @@ class KYCModel extends ChangeNotifier {
     } else if (response.statusCode == 422) {
       flag = false;
       message = "RelatedPerson must be one of [YES, NO]";
+      print(await response.stream.bytesToString());
+
     } else {
       flag = false;
       message = "something went wrong";
-      print(response.reasonPhrase);
+      print(await response.stream.bytesToString());
     }
 
     Map<dynamic, dynamic> result = {'flag': flag, 'message': message};
@@ -924,104 +937,74 @@ class KYCModel extends ChangeNotifier {
     return Future.value(result);
   }
 
-  Future<Map<dynamic, dynamic>> Forms(
-    var gender,
-    var maritalStatus,
-    var nomineeRelationShip,
-    var fatherTitle,
-    var panNumber,
-    var motherTitle,
-    var residentialStatus,
-    var occupationDescription,
-    var occupationCode,
-    var kycAccountCode,
-    var kycAccountDescription,
-    var communicationAddressCode,
-    var communicationAddressType,
-    var permanentAddressCode,
-    var permanentAddressType,
-    var citizenshipCountryCode,
-    var citizenshipCountry,
-    var applicationStatusCode,
-    var applicationStatusDescription,
-    var mobileNumber,
-    var countryCode,
-    var emailId,
-    var fatherName,
-    // var motherName,
-    // var annualIncome,
-  ) async {
+  Future<Map<dynamic, dynamic>> fatcaForms(
+      //parameters for FATCA
+      var pep, var rpep, var residentForTaxInIndia, var relatedPerson,
+
+      //parameters for FORMS
+      var gender,
+      var maritalStatus,
+      var nomineeRelationShip,
+      var fatherTitle,
+      var panNumber,
+      var motherTitle,
+      var residentialStatus,
+      var occupationDescription,
+      var occupationCode,
+      var kycAccountCode,
+      var kycAccountDescription,
+      var communicationAddressCode,
+      var communicationAddressType,
+      var permanentAddressCode,
+      var permanentAddressType,
+      var citizenshipCountryCode,
+      var citizenshipCountry,
+      var applicationStatusCode,
+      var applicationStatusDescription,
+      var mobileNumber,
+      var countryCode,
+      var emailId,
+      var fatherName,
+      var motherName
+
+      )async
+
+  {
     var flag = false;
     var message = "Updated successfully";
 
-    var tokens = await getId();
+    var res = await Fatca(pep, rpep, residentForTaxInIndia, relatedPerson);
 
-    var merchantID = tokens['merchantId'];
-    var authToken = tokens['authToken'];
-
-    var headers = {
-      'Authorization': "$authToken",
-      'Content-Type': 'application/json'
-    };
-    var request = http.Request('POST', Uri.parse(KycUrls.update));
-    request.body = '''{
-    "merchantId": "$merchantID",
-    "save": "formData",
-    "type": "kycdata",
-    "data": {
-        "type": "kycdata",
-        "kycData": {
-        "gender": "$gender",
-        "maritalStatus": "$maritalStatus",
-         "nomineeRelationShip": "$nomineeRelationShip",
-          "fatherTitle": "$fatherTitle.",
-          "maidenTitle": "",
-          "maidenName": "",
-          "panNumber": "$panNumber",
-          "aadhaarNumber": "",
-          "motherTitle": "$motherTitle",
-          "residentialStatus": "$residentialStatus",
-          "occupationDescription": "$occupationDescription",
-          "occupationCode": "$occupationCode",
-          "kycAccountCode": "$kycAccountCode",
-          "kycAccountDescription": "$kycAccountDescription",
-          "communicationAddressCode": "$communicationAddressCode",
-          "communicationAddressType": "$communicationAddressType",
-          "permanentAddressCode": "$permanentAddressCode",
-          "permanentAddressType": "$permanentAddressType",
-          "citizenshipCountryCode": "$citizenshipCountryCode",
-          "citizenshipCountry": "$citizenshipCountry",
-          "applicationStatusCode": "$applicationStatusCode",
-          "applicationStatusDescription": "$applicationStatusDescription",
-          "mobileNumber": "$mobileNumber",
-          "countryCode": $countryCode,
-          "emailId": "$emailId",
-          "fatherName": "$fatherName",
-            }
-            }
-            }''';
-
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
+    if(res['flag'])
+    {
       flag = true;
+      await Forms(gender, maritalStatus, nomineeRelationShip, fatherTitle, panNumber, motherTitle, residentialStatus, occupationDescription, occupationCode, kycAccountCode, kycAccountDescription, communicationAddressCode, communicationAddressType, permanentAddressCode, permanentAddressType, citizenshipCountryCode, citizenshipCountry, applicationStatusCode, applicationStatusDescription, mobileNumber, countryCode, emailId, fatherName,motherName);
+    }
+    else
+    {
+      message = "Something went wrong";
 
-      print(await response.stream.bytesToString());
-    } else if (response.statusCode == 422) {
-      flag = false;
-      message = "Please fill the required fields";
-    } else {
-      flag = false;
-      message = "something went wrong";
-      print(response.reasonPhrase);
+      print("inside else");
+      print(res['message']);
+
     }
 
     Map<dynamic, dynamic> result = {'flag': flag, 'message': message};
 
     return Future.value(result);
+
+
+
+
+
+
   }
+
+
+
+
+
+
 
   Future<Map<dynamic, dynamic>> uploadLocation() async {
     await location.getCurrentLocation();
@@ -1043,7 +1026,7 @@ class KYCModel extends ChangeNotifier {
       'Authorization': '$authToken',
       'Content-Type': 'application/json'
     };
-    var request = http.Request('POST', Uri.parse(KycUrls.execute));
+    var request = http.Request('POST', Uri.parse(KycUrls.update));
     request.body = '''{
     "merchantId": "$merchantID",
     "save": "formData",
@@ -1075,14 +1058,19 @@ class KYCModel extends ChangeNotifier {
     if (response.statusCode == 200) {
       flag = true;
 
-      print(await response.stream.bytesToString());
+      // print(await response.stream.bytesToString());
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
+      print(responseString);
     } else if (response.statusCode == 400) {
+      // print(await response.stream.bytesToString());
+
       flag = false;
 
       print(response.reasonPhrase);
     } else {
+      // print(await response.stream.bytesToString());
+
       flag = false;
       message = "Something went wrong please try again later";
     }
@@ -1094,6 +1082,116 @@ class KYCModel extends ChangeNotifier {
 
     return result;
   }
+
+
+  Future<Map<dynamic, dynamic>> Forms(
+      var gender,
+      var maritalStatus,
+      var nomineeRelationShip,
+      var fatherTitle,
+      var panNumber,
+      var motherTitle,
+      var residentialStatus,
+      var occupationDescription,
+      var occupationCode,
+      var kycAccountCode,
+      var kycAccountDescription,
+      var communicationAddressCode,
+      var communicationAddressType,
+      var permanentAddressCode,
+      var permanentAddressType,
+      var citizenshipCountryCode,
+      var citizenshipCountry,
+      var applicationStatusCode,
+      var applicationStatusDescription,
+      var mobileNumber,
+      var countryCode,
+      var emailId,
+      var fatherName,
+      var motherName,
+      // var annualIncome,
+      ) async {
+    print("inside for,ms");
+    var flag = false;
+    var message = "Updated successfully";
+
+    var tokens = await getId();
+
+    var merchantID = tokens['merchantId'];
+    var authToken = tokens['authToken'];
+
+    var headers = {
+      'Authorization': "$authToken",
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST', Uri.parse(KycUrls.update));
+    request.body = '''{
+    "merchantId": "$merchantID",
+    "save": "formData",
+    "type": "kycdata",
+    "data": {
+    "type": "kycdata",
+    "kycData": {
+    "gender": "$gender",
+    "maritalStatus": "$maritalStatus",
+    "nomineeRelationShip": "$nomineeRelationShip",
+    "fatherTitle": "Mr.",
+    "maidenTitle": "",
+    "maidenName": ".......",
+    "panNumber": "$panNumber",
+    "aadhaarNumber": "",
+    "motherTitle": "Mrs.",
+    "residentialStatus": "$residentialStatus",
+    "occupationDescription": "$occupationDescription",
+    "occupationCode": "$occupationCode",
+    "kycAccountCode": "$kycAccountCode",
+    "kycAccountDescription": "$kycAccountDescription",
+    "communicationAddressCode": "$communicationAddressCode",
+    "communicationAddressType": "$communicationAddressType",
+    "permanentAddressCode": "$permanentAddressCode",
+    "permanentAddressType": "$permanentAddressType",
+    "citizenshipCountryCode": "101",
+    "citizenshipCountry": "India",
+    "applicationStatusCode": "$applicationStatusCode",
+    "applicationStatusDescription": "$applicationStatusDescription",
+    "mobileNumber": "$mobileNumber",
+    "countryCode": 91,
+    "emailId": "$emailId",
+    "fatherName": "$fatherName",
+    "motherName": "$motherName",
+    "placeOfBirth": "... placeOfBirth ..",
+    "annualIncome": ""
+    }
+      }
+       }''';
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      flag = true;
+
+      print(await response.stream.bytesToString());
+    } else if (response.statusCode == 422) {
+      flag = false;
+      message = "Please fill the required fields";
+      print(await response.stream.bytesToString());
+
+    } else {
+      flag = false;
+      message = "something went wrong";
+      print("IN forms");
+      print(await response.stream.bytesToString());
+    }
+
+    Map<dynamic, dynamic> result = {'flag': flag, 'message': message};
+
+    return Future.value(result);
+  }
+
+
+
 
   // to update AAdhar Card
 
