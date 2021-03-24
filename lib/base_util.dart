@@ -89,7 +89,7 @@ class BaseUtil extends ChangeNotifier {
   ///STAGES - IMPORTANT
   static const AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;
   static const AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.DEV;
-  static const SignzyStage activeSignzyStage = SignzyStage.DEV;
+  static const SignzyStage activeSignzyStage = SignzyStage.PROD;
   static const RazorpayStage activeRazorpayStage = RazorpayStage.DEV;
 
   Future init() async {

@@ -515,7 +515,7 @@ class KycOnboardData {
     if (step != 0 && baseProvider.kycDetail.isStepComplete[step - 1] != 1) {
       showStepDialog(
         context,
-        "!Oops",
+        "Error",
         "You missed a step in between",
         Text(""),
         [

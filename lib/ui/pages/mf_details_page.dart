@@ -113,7 +113,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
             //     panNumber: baseProvider.iciciDetail.panNumber,),
             // ));
             //////////////////////////////////////
-            onDepositClicked().then((value) {
+            onDepositClicked2().then((value) {
               setState(() {});
             });
           },
@@ -190,6 +190,13 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       return 'REGISTER';
     else
       return 'DEPOSIT';
+  }
+
+  Future<bool> onDepositClicked2() async {
+    Navigator.of(context).pop(); //go back to save tab
+    Navigator.of(context).pushNamed('/initkyc');
+
+    return true;
   }
 
   Future<bool> onDepositClicked() async {

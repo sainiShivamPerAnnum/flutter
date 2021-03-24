@@ -28,8 +28,6 @@ class KYCModel extends ChangeNotifier {
   DBModel _dbModel = locator<DBModel>();
   BaseUtil baseProvider = locator<BaseUtil>();
 
-  final String defaultBaseUri =
-      'https://multi-channel-preproduction.signzy.tech';
   String _baseUri;
   String _apiKey;
   var headers;
@@ -46,7 +44,7 @@ class KYCModel extends ChangeNotifier {
   // - if existing user - just fetches the current data
   Future<bool> init() async {
     if (_dbModel == null || baseProvider == null) return false;
-
+    KycUrls.init();
     //initialize user kyc obj
     baseProvider.kycDetail = baseProvider.kycDetail ??
         await _dbModel.getUserKycDetails(baseProvider.myUser.uid);
@@ -64,7 +62,7 @@ class KYCModel extends ChangeNotifier {
     Map<String, String> cMap = await _dbModel.getActiveSignzyApiKey();
     if (cMap == null || cMap['key'] == null) return false;
 
-    String _baseUri = (cMap['baseuri'] == null || cMap['baseuri'].isEmpty)
+    _baseUri = (cMap['baseuri'] == null || cMap['baseuri'].isEmpty)
         ? KycUrls.defaultBaseUri
         : cMap['baseuri'];
     String _apiKey = cMap['key'];
@@ -1442,7 +1440,7 @@ class KYCModel extends ChangeNotifier {
     String authToken = baseProvider.kycDetail.userAccessToken;
     String merchantId = baseProvider.kycDetail.merchantId;
 
-    print("auth Tojken = $authToken merid = $merchantId");
+    print("auth Token = $authToken merid = $merchantId");
 
     Map<dynamic, dynamic> data = {
       "authToken": authToken,
@@ -1456,6 +1454,6 @@ class KYCModel extends ChangeNotifier {
     String p = (panNumber ?? 'ABCDE1234E').toLowerCase();
     var rnd = new Random();
     int u = rnd.nextInt(10);
-    return 'fello${u.toString()}_$p';
+    return 'felloj${u.toString()}_$p';
   }
 }

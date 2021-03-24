@@ -5,7 +5,6 @@ import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -21,8 +20,6 @@ class AugmontModel extends ChangeNotifier {
   DBModel _dbModel = locator<DBModel>();
   RazorpayModel _rzpGateway = locator<RazorpayModel>();
   BaseUtil _baseProvider = locator<BaseUtil>();
-  ICICIModel _iProvider =
-      locator<ICICIModel>(); //required to fetch user full name
   ValueChanged<UserTransaction> _augmontTxnProcessListener;
   final String defaultBaseUri =
       'https://ug0949ai64.execute-api.ap-south-1.amazonaws.com/dev';
@@ -50,15 +47,6 @@ class AugmontModel extends ChangeNotifier {
   String _constructUsername() =>
       'felloGY${_baseProvider.myUser.uid.replaceAll(new RegExp(r"[0-9]"), "")}';
 
-  // Future<String> _getPanHolderName(String pan) async{
-  //   if(!_iProvider.isInit())await _iProvider.init();
-  //   final kycMap = await _iProvider.getKycStatus(pan);
-  //   if(kycMap == null || kycMap[GetKycStatus.resName] == null) {
-  //     return null;
-  //   }else{
-  //     return kycMap[GetKycStatus.resName];
-  //   }
-  // }
 
   Future<UserAugmontDetail> createUser(
       String mobile,
