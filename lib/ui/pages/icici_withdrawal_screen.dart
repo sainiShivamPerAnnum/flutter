@@ -48,8 +48,15 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
   updateAmount() {
     double amount = double.tryParse(_amountController.text ?? 0);
     setState(() {
-      if (amount <= 100) {
+      if (amount == 0 || amount == null) {
+        _userWithdrawInstantAmount = 0;
+        _userWithdrawNonInstantAmount = 0;
+      } else if (amount > widget.currentBalance) {
+        _userWithdrawInstantAmount = widget.currentBalance * 0.9;
+        _userWithdrawNonInstantAmount = widget.currentBalance * 0.1;
+      } else if (amount <= 100) {
         _userWithdrawInstantAmount = amount;
+
         _userWithdrawNonInstantAmount = 0;
       } else {
         _userWithdrawInstantAmount = 0.9 * amount;
@@ -205,8 +212,8 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
                                   children: [
                                     Container(
                                       height: SizeConfig.screenWidth * 0.12,
-                                      child: LottieBuilder.asset(
-                                        'images/lottie/timer.json',
+                                      child: SvgPicture.asset(
+                                        "images/svgs/stopwatch.svg",
                                       ),
                                     ),
                                     Text(
@@ -253,7 +260,7 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
                   end: Alignment(0.5, 1.0),
                 ),
               ),
-              child: (!_isLoading)
+              child: (_isLoading)
                   ? new Material(
                       child: MaterialButton(
                         child: Text(
@@ -369,4 +376,6 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
     }
     setState(() {});
   }
+
+  onShowLoadDialog() {}
 }

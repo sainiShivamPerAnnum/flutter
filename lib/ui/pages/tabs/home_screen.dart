@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:camera/camera.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/game-poll-dialog.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/ui/elements/success-dialog.dart';
+import 'package:felloapp/ui/pages/onboarding/kyc/interface/cam.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -190,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                         subtitle:
                             "Vote for the next game that you would like to play on Fello",
                         buttonText: "Vote now",
-                        onPressed: () {
+                        onPressed: () async {
                           HapticFeedback.vibrate();
                           showDialog(
                             context: context,
@@ -210,6 +212,9 @@ class _HomePageState extends State<HomePage> {
           ],
         ));
   }
+
+  void logError(String code, String message) =>
+      print('Error: $code\nError Message: $message');
 }
 
 class HomeCard extends StatelessWidget {
@@ -228,13 +233,11 @@ class HomeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return Container(
       margin: EdgeInsets.only(
         bottom: 30,
         right: width * 0.05,
       ),
-      height: height * 0.28,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           gradient: new LinearGradient(
@@ -290,12 +293,18 @@ class HomeCard extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                       fontSize: SizeConfig.cardTitleTextSize),
                 ),
+                SizedBox(
+                  height: 20,
+                ),
                 Text(
                   subtitle,
                   style: GoogleFonts.montserrat(
                       color: Colors.white,
                       fontSize: SizeConfig.mediumTextSize * 1.2,
                       fontWeight: FontWeight.w400),
+                ),
+                SizedBox(
+                  height: 20,
                 ),
                 GestureDetector(
                   onTap: onPressed,
