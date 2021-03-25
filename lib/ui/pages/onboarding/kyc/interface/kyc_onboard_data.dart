@@ -647,7 +647,6 @@ class KycOnboardData {
                                       Navigator.pop(context);
                                       if (result["flag"]) {
                                         _markStepCompleted(1);
-
                                         showSuccessDialog(context);
                                       } else {
                                         showErrorDialog(
