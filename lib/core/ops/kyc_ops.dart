@@ -1417,7 +1417,7 @@ class KYCModel extends ChangeNotifier {
   }
 
   // this function returns a esignedFile
-  Future<Map<dynamic, dynamic>> saveAadharEsignPdf(var url) async {
+  Future<Map<dynamic, dynamic>> saveAadharEsignPdf() async {
     var fields;
     var tokens = await getId();
 
@@ -1453,7 +1453,8 @@ class KYCModel extends ChangeNotifier {
 
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
-      fields = jsonDecode(responseString)['object'];
+      fields = jsonDecode(responseString)['object']['result']['esignedFile'];
+      print("signed pdf is $fields");
     } else if (response.statusCode == 400) {
       res = false;
       message = "PDF Not generated";
@@ -1502,6 +1503,7 @@ class KYCModel extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       flag = true;
+
     } else if (response.statusCode == 422) {
       flag = false;
       message = "SignedPdf is not allowed to be empty";
@@ -1519,6 +1521,63 @@ class KYCModel extends ChangeNotifier {
 
     return result;
   }
+
+
+  // Final Step to complete the KYC verify Via KYC Verification Engine
+  Future<Map<dynamic, dynamic>> kycVerificationEngine() async
+  {
+
+    var tokens = await getId();
+    var fields;
+    var merchantID = tokens['merchantId'];
+    var authToken = tokens['authToken'];
+
+    bool flag = false;
+    String message = "Updated Successfully";
+
+    var headers = {
+      'Authorization': '$authToken',
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST', Uri.parse(KycUrls.execute));
+    request.body = '''{
+    "merchantId": "$merchantID",
+    "inputData": {
+    "service": "verificationEngine",
+    "merchantId": "$merchantID"
+    }
+    }''';
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200)
+    {
+      flag = true;
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      fields = jsonDecode(responseString)['object'];
+
+
+    } else if (response.statusCode == 422) {
+      flag = false;
+      message = "SignedPdf is not allowed to be empty";
+
+      print(response.reasonPhrase);
+    } else {
+      flag = false;
+      message = "Something went wrong please try again later";
+    }
+
+    Map<dynamic, dynamic> result = {
+      'flag': flag,
+      'message': message,
+      'fields' : fields
+    };
+
+    return result;
+  }
+
 
   // this function is used to fetch the merchant id and Authentication token
   Future<Map<dynamic, dynamic>> getId() async {
