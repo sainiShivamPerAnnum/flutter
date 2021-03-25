@@ -8,6 +8,7 @@ import 'package:felloapp/ui/elements/deposit_modal_sheet.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/pages/deposit_verification.dart';
+import 'package:felloapp/ui/pages/icici_withdrawal_screen.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
@@ -19,6 +20,7 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:fl_animated_linechart/chart/area_line_chart.dart';
 import 'package:fl_animated_linechart/chart/line_chart.dart';
 import 'package:fl_animated_linechart/common/pair.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -296,54 +298,104 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
               withdrawalDetailsMap['reason']);
         }
       });
-      showDialog(
-          barrierColor: Colors.black87,
-          context: context,
-          builder: (BuildContext context) => IciciWithdrawDialog(
-                key: _withdrawalDialogKey,
-                currentBalance: baseProvider.myUser.icici_balance,
-                onAmountConfirmed: (Map<String, double> amountDetails) {
-                  instantAmount = amountDetails['instant_amount'] ?? 0;
-                  nonInstantAmount = amountDetails['non_instant_amount'] ?? 0;
-                  if (instantAmount == 0 && nonInstantAmount == 0) return;
-                  payService
-                      .preProcessWithdrawal(instantAmount.toString())
-                      .then((combDetailsMap) {
-                    if (combDetailsMap['flag']) {
-                      _withdrawalRequestDetails = combDetailsMap;
-                      //check if dialog required
-                      if (combDetailsMap[GetExitLoad.resPopUpFlag] ==
-                          GetExitLoad.SHOW_POPUP) {
-                        _withdrawalDialogKey.currentState.onShowLoadDialog();
-                      } else {
-                        onInitiateWithdrawal(_withdrawalRequestDetails,
-                            instantAmount, nonInstantAmount);
-                      }
-                    } else {
-                      Navigator.of(context).pop();
-                      baseProvider.showNegativeAlert('Withdrawal Failed',
-                          'Error: ${combDetailsMap['reason']}', context);
-                    }
-                  });
-                },
-                onOptionConfirmed: (bool flag) {
-                  if (flag) {
-                    _withdrawalRequestDetails[
-                        SubmitRedemption.fldExitLoadTick] = 'Y';
-                    _withdrawalRequestDetails[
-                            SubmitRedemption.fldApproxLoadAmount] =
-                        _withdrawalRequestDetails[GetExitLoad.resApproxLoadAmt];
+      Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (ctx) => ICICIWithdrawal(
+            key: _withdrawalDialogKey,
+            currentBalance: baseProvider.myUser.icici_balance,
+            onAmountConfirmed: (Map<String, double> amountDetails) {
+              instantAmount = amountDetails['instant_amount'] ?? 0;
+              nonInstantAmount = amountDetails['non_instant_amount'] ?? 0;
+              if (instantAmount == 0 && nonInstantAmount == 0) return;
+              payService
+                  .preProcessWithdrawal(instantAmount.toString())
+                  .then((combDetailsMap) {
+                if (combDetailsMap['flag']) {
+                  _withdrawalRequestDetails = combDetailsMap;
+                  //check if dialog required
+                  if (combDetailsMap[GetExitLoad.resPopUpFlag] ==
+                      GetExitLoad.SHOW_POPUP) {
+                    _withdrawalDialogKey.currentState.onShowLoadDialog();
+                  } else {
                     onInitiateWithdrawal(_withdrawalRequestDetails,
                         instantAmount, nonInstantAmount);
-                  } else {
-                    Navigator.of(context).pop();
-                    baseProvider.showNegativeAlert(
-                        'Withdrawal Cancelled',
-                        'Please contact us if you need any further details',
-                        context);
                   }
-                },
-              ));
+                } else {
+                  Navigator.of(context).pop();
+                  baseProvider.showNegativeAlert('Withdrawal Failed',
+                      'Error: ${combDetailsMap['reason']}', context);
+                }
+              });
+            },
+            onOptionConfirmed: (bool flag) {
+              if (flag) {
+                _withdrawalRequestDetails[SubmitRedemption.fldExitLoadTick] =
+                    'Y';
+                _withdrawalRequestDetails[
+                        SubmitRedemption.fldApproxLoadAmount] =
+                    _withdrawalRequestDetails[GetExitLoad.resApproxLoadAmt];
+                onInitiateWithdrawal(
+                    _withdrawalRequestDetails, instantAmount, nonInstantAmount);
+              } else {
+                Navigator.of(context).pop();
+                baseProvider.showNegativeAlert(
+                    'Withdrawal Cancelled',
+                    'Please contact us if you need any further details',
+                    context);
+              }
+            },
+          ),
+        ),
+      );
+      // showDialog(
+      //     barrierColor: Colors.black87,
+      //     context: context,
+      //     builder: (BuildContext context) => IciciWithdrawDialog(
+      //           key: _withdrawalDialogKey,
+      //           currentBalance: baseProvider.myUser.icici_balance,
+      //           onAmountConfirmed: (Map<String, double> amountDetails) {
+      //             instantAmount = amountDetails['instant_amount'] ?? 0;
+      //             nonInstantAmount = amountDetails['non_instant_amount'] ?? 0;
+      //             if (instantAmount == 0 && nonInstantAmount == 0) return;
+      //             payService
+      //                 .preProcessWithdrawal(instantAmount.toString())
+      //                 .then((combDetailsMap) {
+      //               if (combDetailsMap['flag']) {
+      //                 _withdrawalRequestDetails = combDetailsMap;
+      //                 //check if dialog required
+      //                 if (combDetailsMap[GetExitLoad.resPopUpFlag] ==
+      //                     GetExitLoad.SHOW_POPUP) {
+      //                   _withdrawalDialogKey.currentState.onShowLoadDialog();
+      //                 } else {
+      //                   onInitiateWithdrawal(_withdrawalRequestDetails,
+      //                       instantAmount, nonInstantAmount);
+      //                 }
+      //               } else {
+      //                 Navigator.of(context).pop();
+      //                 baseProvider.showNegativeAlert('Withdrawal Failed',
+      //                     'Error: ${combDetailsMap['reason']}', context);
+      //               }
+      //             });
+      //           },
+      //           onOptionConfirmed: (bool flag) {
+      //             if (flag) {
+      //               _withdrawalRequestDetails[
+      //                   SubmitRedemption.fldExitLoadTick] = 'Y';
+      //               _withdrawalRequestDetails[
+      //                       SubmitRedemption.fldApproxLoadAmount] =
+      //                   _withdrawalRequestDetails[GetExitLoad.resApproxLoadAmt];
+      //               onInitiateWithdrawal(_withdrawalRequestDetails,
+      //                   instantAmount, nonInstantAmount);
+      //             } else {
+      //               Navigator.of(context).pop();
+      //               baseProvider.showNegativeAlert(
+      //                   'Withdrawal Cancelled',
+      //                   'Please contact us if you need any further details',
+      //                   context);
+      //             }
+      //           },
+      //         ));
     }
   }
 
