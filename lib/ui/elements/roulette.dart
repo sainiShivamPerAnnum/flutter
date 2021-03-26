@@ -11,7 +11,6 @@ class Roulette extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: SizeConfig.screenHeight * 0.1,
         width: double.infinity,
         margin: EdgeInsets.symmetric(
             horizontal: SizeConfig.blockSizeHorizontal * 4),

@@ -93,6 +93,12 @@ class _NavbarButtonState extends State<NavbarButton>
   }
 
   @override
+  void dispose() {
+    _iconAnimController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _startAnimIfSelectedChanged(widget.isSelected);
     //Create our main button, a Row, with an icon and some text

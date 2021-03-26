@@ -59,105 +59,100 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
   }
 
   dialogContent(BuildContext context) {
-    return Stack(
-        overflow: Overflow.visible,
-        alignment: Alignment.topCenter,
-        children: <Widget>[
-          SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Padding(
-                padding:
-                    EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      child: Image(
-                        image: AssetImage(Assets.onboardingSlide[1]),
-                        fit: BoxFit.contain,
-                      ),
-                      width: 150,
-                      height: 150,
-                    ),
-                    Text(
-                      'WITHDRAW',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
-                          color: UiConstants.primaryColor),
-                    ),
-                    (_isLoading)
-                        ? Padding(
-                            padding: EdgeInsets.all(30),
-                            child: SpinKitWave(
-                              color: UiConstants.primaryColor,
-                            ))
-                        : Container(),
-                    (!_isLoading && _isBalanceAvailble)
-                        ? _buildBalanceTextWidget(
-                            _instantBalance, _totalBalance)
-                        : Container(),
-                    (_errorMessage != null && !_isLoading)
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: _width * 0.7,
-                                child: Text('Error: $_errorMessage',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Colors.redAccent, fontSize: 16)),
-                              )
-                            ],
+    return Stack(alignment: Alignment.topCenter, children: <Widget>[
+      SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Padding(
+            padding: EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  child: Image(
+                    image: AssetImage(Assets.onboardingSlide[1]),
+                    fit: BoxFit.contain,
+                  ),
+                  width: 150,
+                  height: 150,
+                ),
+                Text(
+                  'WITHDRAW',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      color: UiConstants.primaryColor),
+                ),
+                (_isLoading)
+                    ? Padding(
+                        padding: EdgeInsets.all(30),
+                        child: SpinKitWave(
+                          color: UiConstants.primaryColor,
+                        ))
+                    : Container(),
+                (!_isLoading && _isBalanceAvailble)
+                    ? _buildBalanceTextWidget(_instantBalance, _totalBalance)
+                    : Container(),
+                (_errorMessage != null && !_isLoading)
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: _width * 0.7,
+                            child: Text('Error: $_errorMessage',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.redAccent, fontSize: 16)),
                           )
-                        : Container(),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    (!_isLoading)
-                        ? Container(
-                            margin: EdgeInsets.only(top: 12),
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: TextField(
-                                    controller: _amountController,
-                                    keyboardType: TextInputType.number,
-                                    readOnly: false,
-                                    enabled: true,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Amount',
-                                    ),
-                                  ),
+                        ],
+                      )
+                    : Container(),
+                SizedBox(
+                  height: 10,
+                ),
+                (!_isLoading)
+                    ? Container(
+                        margin: EdgeInsets.only(top: 12),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: TextField(
+                                controller: _amountController,
+                                keyboardType: TextInputType.number,
+                                readOnly: false,
+                                enabled: true,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Amount',
                                 ),
-                              ],
+                              ),
                             ),
-                          )
-                        : Container(),
-                    (!_isLoading && _amountError != null)
-                        ? Container(
-                            margin: EdgeInsets.only(top: 4, left: 12),
-                            child: Text(
-                              _amountError,
-                              style: TextStyle(color: Colors.red),
-                            ),
-                          )
-                        : Container(),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    (!_isLoading) ? _buildSubmitButton(context) : Container(),
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ],
-                )),
-          )
-        ]);
+                          ],
+                        ),
+                      )
+                    : Container(),
+                (!_isLoading && _amountError != null)
+                    ? Container(
+                        margin: EdgeInsets.only(top: 4, left: 12),
+                        child: Text(
+                          _amountError,
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      )
+                    : Container(),
+                SizedBox(
+                  height: 15,
+                ),
+                (!_isLoading) ? _buildSubmitButton(context) : Container(),
+                SizedBox(
+                  height: 10,
+                ),
+              ],
+            )),
+      )
+    ]);
   }
 
   onDetailsReceived(double instantBalance, double totalBalance,
@@ -302,7 +297,7 @@ class IciciWithdrawDialogState extends State<IciciWithdrawDialog> {
                 context: context,
                 builder: (ctx) => ConfirmActionDialog(
                   title: "Please confirm your action",
-                  description:_confirmMsg,
+                  description: _confirmMsg,
                   buttonText: "Withdraw",
                   cancelBtnText: 'Cancel',
                   confirmAction: () {
