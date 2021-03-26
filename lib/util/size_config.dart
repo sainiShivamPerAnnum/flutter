@@ -24,7 +24,7 @@ class SizeConfig {
     smallTextSize = screenHeight * 0.01;
     mediumTextSize = screenWidth * 0.036;
     largeTextSize = screenWidth * 0.048;
-    cardTitleTextSize = screenWidth * 0.08;
+    cardTitleTextSize = screenWidth * 0.07;
     isGamefirstTime = true;
     showTutorial = true;
   }

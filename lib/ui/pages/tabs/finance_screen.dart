@@ -72,22 +72,22 @@ class _FinancePageState extends State<FinancePage> {
                             )
                           : ZeroBalView(),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: SizeConfig.screenWidth * 0.04,
-                        ),
-                        Icon(
-                          Icons.refresh,
-                          color: UiConstants.primaryColor.withGreen(600),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text("Pull to Refresh", style: TextStyle(fontSize: 12)),
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.start,
+                    //   children: [
+                    //     SizedBox(
+                    //       width: SizeConfig.screenWidth * 0.04,
+                    //     ),
+                    //     Icon(
+                    //       Icons.refresh,
+                    //       color: UiConstants.primaryColor.withGreen(600),
+                    //     ),
+                    //     SizedBox(
+                    //       width: 10,
+                    //     ),
+                    //     Text("Pull to Refresh", style: TextStyle(fontSize: 12)),
+                    //   ],
+                    // ),
                     Divider(),
                     Text(
                       "Available Funds",
