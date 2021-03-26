@@ -10,6 +10,7 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.da
 import 'package:felloapp/ui/pages/onboarding/kyc/fatcaforms.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/interface/cam.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/signature.dart';
+import 'package:felloapp/ui/pages/onboarding/kyc/verify_kyc_webview.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -804,12 +805,12 @@ class KycOnboardData {
           print("-----------------------------Data recieved: $imagePath");
         }
         // _markStepAttempted(7);
-        //showLoadingDialog(context);
-        // Navigator.pop(context);
-        // if (result["flag"] == true) {
-        //   _markStepCompleted(7);
-        //   showSuccessDialog(context);
-        // }
+        showLoadingDialog(context);
+        Navigator.pop(context);
+        if (result["flag"] == true) {
+          _markStepCompleted(7);
+          showSuccessDialog(context);
+        }
         else {
           showErrorDialog(context,
               result['message'] ?? 'Something went wrong. Please try again');
@@ -818,7 +819,34 @@ class KycOnboardData {
       //--------------------------------------------PDF REVIEW--------------------------------------------------------//
       else if (step == 8) {
         print("PDF Review");
-        await kycModel.generatePdf();
+        var data = await kycModel.generatePdf();
+
+        if(data['flag'])
+        {
+          //url to redirect to signzy otp verification
+          var url = data['fields'];
+
+    var result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => KycWebview(url: url,)),
+          );
+
+          if(result)
+            {
+              _markStepCompleted(8);
+              showSuccessDialog(context);
+
+            }
+          else {
+            showErrorDialog(context,'Something went wrong. Please try again');
+          }
+
+
+        }
+        else
+        {
+
+        }
       }
       //--------------------------------------COMPLETION REWARD----------------------------------------------------------//
       else if (step == 9) {
