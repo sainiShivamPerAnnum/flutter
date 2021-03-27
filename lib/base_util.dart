@@ -54,7 +54,7 @@ class BaseUtil extends ChangeNotifier {
   List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
   String myUserDpUrl;
-  List<UserMiniTransaction> userMiniTxnList = [];
+  List<UserTransaction> userMiniTxnList = [];
 
   DateTime _userCreationTimestamp;
   int referCount = 0;

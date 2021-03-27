@@ -4,6 +4,7 @@ import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/augmont_invoice_service.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
 import 'package:felloapp/ui/dialogs/augmont_onboarding_dialog.dart';
 import 'package:felloapp/ui/dialogs/augmont_withdraw_dialog.dart';
@@ -21,6 +22,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -164,20 +166,27 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         child: MaterialButton(
           child: (!baseProvider.isAugWithdrawRouteLogicInProgress)
               ? Text(
-            'WITHDRAW',
-            style: Theme.of(context)
-                .textTheme
-                .button
-                .copyWith(color: Colors.white),
-          )
+                  'WITHDRAW',
+                  style: Theme.of(context)
+                      .textTheme
+                      .button
+                      .copyWith(color: Colors.white),
+                )
               : SpinKitThreeBounce(
-            color: UiConstants.spinnerColor2,
-            size: 18.0,
-          ),
+                  color: UiConstants.spinnerColor2,
+                  size: 18.0,
+                ),
           onPressed: () async {
-            if(!baseProvider.isAugWithdrawRouteLogicInProgress) {
+            if (!baseProvider.isAugWithdrawRouteLogicInProgress) {
               HapticFeedback.vibrate();
-              _onWithdrawalClicked();
+              // _onWithdrawalClicked();
+              String generatedPdfFilePath = await augmontProvider
+                  .generatePurchaseInvoicePdf('FL763316143515330650085173');
+              if(generatedPdfFilePath != null) {
+                final result = await OpenFile.open(generatedPdfFilePath);
+              }else{
+                baseProvider.showNegativeAlert('Invoice could\'nt be loaded', 'Please try again in some time', context);
+              }
             }
           },
           highlightColor: Colors.orange.withOpacity(0.5),
@@ -384,20 +393,21 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
             barrierColor: Colors.black87,
             context: context,
             builder: (BuildContext context) => AugmontWithdrawDialog(
-              key: _withdrawalDialogKey2,
-              balance: baseProvider.myUser.augmont_balance,
-              sellRate: _currentSellRates.goldSellPrice,
-              onAmountConfirmed: (Map<String, double> amountDetails) {
-                _onInitiateWithdrawal(amountDetails['withdrawal_amount']);
-              },
-              bankHolderName: baseProvider.augmontDetail.bankHolderName,
-              bankAccNo: baseProvider.augmontDetail.bankAccNo,
-              bankIfsc: baseProvider.augmontDetail.ifsc,
-            ));
+                  key: _withdrawalDialogKey2,
+                  balance: baseProvider.myUser.augmont_balance,
+                  sellRate: _currentSellRates.goldSellPrice,
+                  onAmountConfirmed: (Map<String, double> amountDetails) {
+                    _onInitiateWithdrawal(amountDetails['withdrawal_amount']);
+                  },
+                  bankHolderName: baseProvider.augmontDetail.bankHolderName,
+                  bankAccNo: baseProvider.augmontDetail.bankAccNo,
+                  bankIfsc: baseProvider.augmontDetail.ifsc,
+                ));
       }).catchError((err) {
         baseProvider.isAugWithdrawRouteLogicInProgress = false;
         setState(() {});
-        baseProvider.showNegativeAlert('Couldn\'t complete your request', 'Please try again in some time', context);
+        baseProvider.showNegativeAlert('Couldn\'t complete your request',
+            'Please try again in some time', context);
       });
     }
   }
@@ -440,7 +450,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         baseProvider.userMiniTxnList = null; //make null so it refreshes
         _withdrawalDialogKey2.currentState.onTransactionProcessed(true);
       }
-    }else{
+    } else {
       _withdrawalDialogKey2.currentState.onTransactionProcessed(false);
     }
   }

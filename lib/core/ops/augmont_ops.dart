@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/core/service/augmont_invoice_service.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
@@ -107,6 +108,35 @@ class AugmontModel extends ChangeNotifier {
       resMap["flag"] = QUERY_PASSED;
 
       return AugmontRates.fromMap(resMap);
+    }
+  }
+
+  Future<double> getGoldBalance() async {
+    if (!isInit()) await _init();
+    Map<String, String> _params = {
+      Passbook.fldAugmontUid: _baseProvider.augmontDetail.userId,
+    };
+    var _request =
+    http.Request('GET', Uri.parse(_constructRequest(Passbook.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await _processResponse(_response);
+    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
+      log.error('Query Failed');
+      return null;
+    } else {
+      log.debug(resMap[Passbook.resGoldGrams].toString());
+      resMap["flag"] = QUERY_PASSED;
+
+      String goldGrmsStr = resMap[Passbook.resGoldGrams];
+      double goldGrms = 0;
+      try{
+        goldGrms = double.parse(goldGrmsStr);
+        return goldGrms;
+      }catch(e) {
+        return 0.0;
+      }
     }
   }
 
@@ -298,6 +328,31 @@ class AugmontModel extends ChangeNotifier {
       //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+    }
+  }
+
+  ///returns path where invoice is generated and saved
+  Future<String> generatePurchaseInvoicePdf(String txnId) async{
+    AugmontInvoiceService _pdfService = AugmontInvoiceService();
+    if (!isInit()) await _init();
+    var _params = {
+      GetInvoice.fldTranId: txnId,
+    };
+    var _request =
+    http.Request('GET', Uri.parse(_constructRequest(GetInvoice.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await _processResponse(_response);
+    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
+      log.error('Query Failed');
+      return null;
+    } else {
+      log.debug(resMap[GetInvoice.resTransactionId].toString());
+      resMap["flag"] = QUERY_PASSED;
+
+      String _path = await _pdfService.generateInvoice(resMap);
+      return _path;
     }
   }
 

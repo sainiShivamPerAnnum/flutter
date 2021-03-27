@@ -80,3 +80,53 @@ class SubmitGoldSell {
   static final String resPreTaxAmount = 'preTaxAmount';
   static final String resAugTranId = 'transactionId';
 }
+
+class Passbook{
+  static final String path = 'api/passbook';
+  static final String fldAugmontUid = 'uid';
+
+  static final String resGoldGrams = 'goldGrms';
+  static final String resSilverGrams = 'silverGrms';
+
+}
+
+/**
+ * {
+    "invoiceNumber": "GFL022102",
+    "userInfo": {"name": "shouryaditya.ray.lala","address": null,"city": null,
+    "state": "Manipur","pincode": null,"email": null,"mobileNumber": "9986643444",
+    "uniqueId": "fello_AMVPL5308B"},
+    "transactionId": "FL763316143515330650085173","quantity": "0.1026",
+    "metalType": "gold","hsnCode": "71141110","rate": "4727.40","unitType": "Gram",
+    "grossAmount": "485.44","netAmount": "500.00",
+    "taxes": {"totalTaxAmount": "14.56",
+    "taxSplit": [{"type": "CGST","taxPerc": "1.50","taxAmount": "7.28"},
+    {"type": "SGST","taxPerc": "1.50","taxAmount": "7.28"},
+    {"type": "IGST","taxPerc": "0.00","taxAmount": "0.00"}]
+    },"tcsInfo": {"tcsPerc": "0","tcsAmount": "0"},
+    "discount": [{"type": "percentage","title": "tcs","value": "0",
+    "amount": "0","description": "TCS discount"}
+    ],"invoiceDate": "26-02-2021 20:28:53"
+    }
+ *
+ * **/
+class GetInvoice{
+  static final String path = 'api/invoice';
+  static final String fldTranId = 'tranid';
+
+  static final resInvoiceNumber = 'invoiceNumber';
+  static final resTransactionId = 'transactionId';
+  static final resHsnCode = 'hsnCode';
+  static final resRate = 'rate';
+  static final resQuantity = 'quantity';
+  static final resDate = 'invoiceDate';
+  static final resAmount = 'grossAmount';
+
+  static const PDF_KEY_TRANID = 'TRANID';
+  static const PDF_KEY_INVOICENUMBER = 'INVNUMBER';
+  static const PDF_KEY_RATE = 'RATE';
+  static const PDF_KEY_HSN = 'HSN';
+  static const PDF_KEY_QUANTITY = 'QUANTITY';
+  static const PDF_KEY_INVOICEDATE = 'INVDATE';
+  static const PDF_KEY_AMOUNT = 'AMT';
+}

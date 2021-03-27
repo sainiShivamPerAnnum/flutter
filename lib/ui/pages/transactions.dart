@@ -25,7 +25,7 @@ class _TransactionsState extends State<Transactions> {
   bool isInit = true;
   BaseUtil baseProvider;
   DBModel dbProvider;
-  List<UserMiniTransaction> filteredList;
+  List<UserTransaction> filteredList;
 
   /// Will used to access the Animated list
   // final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
@@ -35,7 +35,7 @@ class _TransactionsState extends State<Transactions> {
     if (baseProvider != null && dbProvider != null) {
       dbProvider
           .getFilteredUserTransactions(baseProvider.myUser, null, null)
-          .then((List<UserMiniTransaction> tList) {
+          .then((List<UserTransaction> tList) {
         baseProvider.userMiniTxnList = List.from(tList);
         filteredList = List.from(baseProvider.userMiniTxnList);
         setState(() {

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/logger.dart';
 
 class UserTransaction{
@@ -78,7 +79,7 @@ class UserTransaction{
       this._rzp, this._augmnt, this._timestamp,this._updatedTime);
 
   UserTransaction.fromMap(Map<String, dynamic> data, String documentID):
-        this(data[fldAmount], data[fldClosingBalance], data[fldNote], data[fldSubType],
+        this(BaseUtil.toDouble(data[fldAmount]), data[fldClosingBalance], data[fldNote], data[fldSubType],
         data[fldType], data[fldTicketUpCount], data[fldUserId], data[fldTranStatus],
         data[fldIciciMap], data[fldRzpMap],data[fldAugmontMap],data[fldTimestamp],
         data[fldUpdatedTime]);
@@ -203,5 +204,11 @@ class UserTransaction{
 
   set docKey(String value) {
     _docKey = value;
+  }
+
+  Timestamp get timestamp => _timestamp;
+
+  set timestamp(Timestamp value) {
+    _timestamp = value;
   }
 }
