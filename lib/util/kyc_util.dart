@@ -8,7 +8,7 @@ class KycUrls {
 
   static init() {
     if (BaseUtil.activeSignzyStage == SignzyStage.DEV) {
-      defaultBaseUri = 'https://multi-channel-preproduction.signzy.tech';
+      defaultBaseUri = 'https://multi-channel.signzy.tech';
       channelId = "6007e4edf3be1f1190757519";
     } else {
       defaultBaseUri = 'https://multi-channel.signzy.tech';
