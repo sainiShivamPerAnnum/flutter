@@ -152,13 +152,6 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
           begin: Alignment(0.5, -1.0),
           end: Alignment(0.5, 1.0),
         ),
-        // boxShadow: [
-        //   new BoxShadow(
-        //     color: Colors.black12,
-        //     offset: Offset.fromDirection(20, 7),
-        //     blurRadius: 3.0,
-        //   )
-        // ],
       ),
       child: new Material(
         child: MaterialButton(
@@ -177,7 +170,9 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
           onPressed: () async {
             if (!baseProvider.isAugWithdrawRouteLogicInProgress) {
               HapticFeedback.vibrate();
-              _onWithdrawalClicked();
+              //_onWithdrawalClicked();
+              double amt = await augmontProvider.getGoldBalance();
+              log.debug(amt.toString());
             }
           },
           highlightColor: Colors.orange.withOpacity(0.5),
@@ -331,6 +326,8 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         baseProvider.myUser.ticket_count =
             baseProvider.getTotalTicketsPostTransaction(
                 baseProvider.currentAugmontTxn.amount);
+        baseProvider.myUser.augmont_quantity = baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm];
 
         ///update fields
         await dbProvider.updateUser(baseProvider.myUser);

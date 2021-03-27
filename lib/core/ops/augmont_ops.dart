@@ -239,6 +239,7 @@ class AugmontModel extends ChangeNotifier {
       _baseProvider
               .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
           resMap[SubmitGoldPurchase.resTranId];
+      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] = resMap[SubmitGoldPurchase.resGoldBalance];
       //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
       if (!_baseProvider.augmontDetail.firstInvMade) {
         _baseProvider.augmontDetail.firstInvMade = true;

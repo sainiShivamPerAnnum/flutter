@@ -88,9 +88,9 @@ class FcmListener extends ChangeNotifier {
       log.debug("Updating FCM token to local and server db");
       _baseUtil.myUser.client_token = fcmToken;
       flag = await _dbModel.updateClientToken(_baseUtil.myUser, fcmToken);
-      if (flag)
-        await _lModel.saveUser(
-            _baseUtil.myUser); //user cache has client token field available
+      // if (flag)
+      //   await _lModel.saveUser(
+      //       _baseUtil.myUser); //user cache has client token field available
     }
     return flag;
   }

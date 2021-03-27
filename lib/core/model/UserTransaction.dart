@@ -46,6 +46,7 @@ class UserTransaction{
   static final String subFldAugPaymode = 'aPaymode';
   static final String subFldMerchantTranId = 'aTranId';
   static final String subFldAugTranId = 'aAugTranId';
+  static final String subFldAugTotalGoldGm = 'aGoldBalance';
 
   ///Icici submap fields
   static final String subFldIciciTranId = 'iTranId';
