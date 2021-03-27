@@ -121,6 +121,7 @@ class GetInvoice{
   static final resQuantity = 'quantity';
   static final resDate = 'invoiceDate';
   static final resAmount = 'grossAmount';
+  static final resTaxes = 'grossAmount';
 
   static const PDF_KEY_TRANID = 'TRANID';
   static const PDF_KEY_INVOICENUMBER = 'INVNUMBER';
@@ -129,4 +130,5 @@ class GetInvoice{
   static const PDF_KEY_QUANTITY = 'QUANTITY';
   static const PDF_KEY_INVOICEDATE = 'INVDATE';
   static const PDF_KEY_AMOUNT = 'AMT';
+  static const PDF_KEY_TAXES = 'TAX';
 }

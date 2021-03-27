@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/UserMiniTransaction.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -82,11 +82,11 @@ class _TransactionsState extends State<Transactions> {
   }
 
   Color getTileColor(String type) {
-    if (type == "CANCELLED") {
+    if (type == UserTransaction.TRAN_STATUS_CANCELLED) {
       return Colors.redAccent;
-    } else if (type == "COMPLETE") {
+    } else if (type == UserTransaction.TRAN_STATUS_COMPLETE) {
       return UiConstants.primaryColor;
-    } else if (type == "PENDING") {
+    } else if (type == UserTransaction.TRAN_STATUS_PENDING) {
       return Colors.amber;
     }
     return Colors.blue;
@@ -336,6 +336,12 @@ class _TransactionsState extends State<Transactions> {
     List<ListTile> _tiles = [];
     for (int index = 0; index < filteredList.length; index++) {
       _tiles.add(ListTile(
+        onTap: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) =>
+                  TransactionDetailsDialog(filteredList[index]));
+        },
         dense: true,
         leading: Container(
           padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),

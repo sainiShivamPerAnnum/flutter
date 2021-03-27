@@ -17,7 +17,7 @@ class AugmontInvoiceService {
       return null;
     }
     try {
-      Directory appDocDir = await getDownloadsDirectory();
+      Directory appDocDir = await getTemporaryDirectory();
 
       final String targetPath = appDocDir.path;
       // final String targetFileName = invoiceMap[GetInvoice.resTransactionId];
@@ -59,6 +59,8 @@ class AugmontInvoiceService {
           data[GetInvoice.resHsnCode] ?? 'N/A');
       _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_AMOUNT),
           data[GetInvoice.resAmount] ?? 'N/A');
+      _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_TAXES),
+          data['taxes']['totalTaxAmount'] ?? 'N/A');
 
       return _content;
     } catch (e) {

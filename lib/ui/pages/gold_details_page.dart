@@ -4,7 +4,6 @@ import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/augmont_invoice_service.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
 import 'package:felloapp/ui/dialogs/augmont_onboarding_dialog.dart';
 import 'package:felloapp/ui/dialogs/augmont_withdraw_dialog.dart';
@@ -22,7 +21,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -179,14 +177,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
           onPressed: () async {
             if (!baseProvider.isAugWithdrawRouteLogicInProgress) {
               HapticFeedback.vibrate();
-              // _onWithdrawalClicked();
-              String generatedPdfFilePath = await augmontProvider
-                  .generatePurchaseInvoicePdf('FL763316143515330650085173');
-              if(generatedPdfFilePath != null) {
-                final result = await OpenFile.open(generatedPdfFilePath);
-              }else{
-                baseProvider.showNegativeAlert('Invoice could\'nt be loaded', 'Please try again in some time', context);
-              }
+              _onWithdrawalClicked();
             }
           },
           highlightColor: Colors.orange.withOpacity(0.5),
