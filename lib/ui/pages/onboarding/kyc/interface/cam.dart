@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:camera/camera.dart';
+import 'package:felloapp/core/ops/kyc_ops.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/interface/kyc_onboard_data.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,8 @@ class _MyCamState extends State<MyCam> {
   XFile videoFile;
   VideoPlayerController videoController;
   VoidCallback videoPlayerListener;
+
+  KYCModel kycModel = KYCModel();
 
   // Counting pointers (number of user fingers on screen)
   int _pointers = 0;
@@ -290,8 +293,14 @@ class _MyCamState extends State<MyCam> {
                   actions: [
                     TextButton(
                       child: Text("Looks Good"),
-                      onPressed: () {
+                      onPressed: () async{
                         print(videoFile.path);
+
+                       var result =  await kycModel.recordVideo(videoFile.path);
+
+                       print(result);
+
+
                         Navigator.pop(context);
                         Navigator.of(context).pop(videoFile.path);
                       },

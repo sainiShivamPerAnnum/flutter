@@ -613,8 +613,7 @@ class KycOnboardData {
                                 "Both front and back images are required");
                           } else {
                             showLoadingDialog(context);
-                            var result = await kycModel.coresPOA(
-                                imagef.path, imageb.path);
+                            var result = await kycModel.coresPOA(imagef.path, imageb.path);
                             print(result);
                             isLoading = false;
                             Navigator.pop(context);
@@ -823,8 +822,10 @@ class KycOnboardData {
 
         if(data['flag'])
         {
+          print("data is $data");
           //url to redirect to signzy otp verification
-          var url = data['fields'];
+          var url = data['fields']['result']['url'].toString();
+          print("url is $url");
 
     var result = await Navigator.push(
             context,

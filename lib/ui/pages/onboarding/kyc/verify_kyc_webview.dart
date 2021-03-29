@@ -53,6 +53,7 @@ class KycWebviewState extends State<KycWebview> {
     var success = false;
 
 
+
     if(result['flag'])
     {
       var signedPdf = result['fields'];
@@ -62,6 +63,7 @@ class KycWebviewState extends State<KycWebview> {
       if(finalResult['flag'])
       {
         var lastStage = await kycModel.kycVerificationEngine();
+        print(lastStage);
 
         if(lastStage['flag'])
         {

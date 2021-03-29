@@ -346,6 +346,7 @@ class KYCModel extends ChangeNotifier {
     return results;
   }
 
+
   Future<Map<dynamic, dynamic>> coresPOA(var frontimage, var backImage) async {
     var fields;
     var flag = false;
@@ -397,6 +398,9 @@ class KYCModel extends ChangeNotifier {
       print(responseString);
       var fd = jsonDecode(responseString)['object'];
       if (fd != null) fields = fd['result'];
+
+      await POA(imageUrlf, imageUrlb);
+
     } else if (response.statusCode == 400) {
       flag = false;
       message = "Image link expired please select a new Image";
@@ -413,6 +417,74 @@ class KYCModel extends ChangeNotifier {
     };
     return results;
   }
+
+  Future<Map<dynamic, dynamic>> POA(var frontimage, var backImage) async {
+    var fields;
+    var flag = false;
+    var message = "Uploaded Successfully";
+
+    var tokens = await getId();
+
+    var auth = tokens['authToken'];
+    var merchentId = tokens["merchantId"];
+
+    // var dataf = await convertImages(frontimage);
+    // var datab = await convertImages(backImage);
+    // var imageUrlf = dataf['imageUrl'];
+    // var imageUrlb = datab['imageUrl'];
+
+
+    var headers = {
+      'Authorization': '$auth',
+      'Content-Type': 'application/json'
+    };
+
+    var request = http.Request('POST', Uri.parse(KycUrls.execute));
+    request.body = '''{
+    "merchantId": "$merchentId",
+    "inputData": {
+      "service": "identity",
+      "type": "aadhaar",
+      "task": "autoRecognition",
+         "data": {
+             "images": ["$frontimage","$backImage"],
+             "toVerifyData": {},
+             "searchParam": {},
+             "proofType": "address"
+             }
+            }
+           }''';
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      flag = true;
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      print(responseString);
+      var fd = jsonDecode(responseString)['object'];
+      if (fd != null) fields = fd['result'];
+    } else if (response.statusCode == 400) {
+      flag = false;
+      message = "Image link expired please select a new Image";
+    } else {
+      flag = false;
+      message = "Something went wrong";
+      print(await response.stream.bytesToString());
+      print(response.reasonPhrase);
+    }
+    Map<dynamic, dynamic> results = {
+      "flag": flag,
+      "message": message,
+      "fields": fields
+    };
+    return results;
+  }
+
+
+
 
   Future<Map<dynamic, dynamic>> startVideo() async {
     var tokens = await getId();
@@ -447,7 +519,8 @@ class KYCModel extends ChangeNotifier {
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
       object = jsonDecode(responseString)['object'];
-      print('$object');
+      print('${object[0]['randNumber']}');
+
     } else if (response.statusCode == 401) {
       flag = false;
       message = "Invalid credentials";
@@ -532,61 +605,7 @@ class KYCModel extends ChangeNotifier {
     return results;
   }
 
-  //this is not a part of kyc its for testing purpose
-  Future<bool> POI(var image) async {
-    var imageURL = await convertImages(image);
 
-    var data = await getId();
-
-    var auth = data['authToken'];
-    var merchentId = data["merchantId"];
-    print(merchentId);
-    print("Auth Token = $auth");
-
-    bool result = false;
-
-    print("INside multipart file");
-
-    final headers = {
-      // 'Content-Type': 'application/json',
-      'Authorization': '$auth'
-    };
-    Map<dynamic, dynamic> inputData = {
-      "service": "identity",
-      "type": "individualPan",
-      "task": "autoRecognition",
-      "data": {
-        "images": [imageURL],
-        "toVerifyData": {},
-        "searchParam": {},
-        "proofType": "identity"
-      }
-    };
-
-    var request = http.MultipartRequest('POST', Uri.parse(KycUrls.execute));
-
-    request.headers.addAll(headers);
-    request.fields['merchantId'] = '$merchentId';
-    request.fields['inputData'] = '$inputData';
-
-    var response = await request.send();
-
-    if (response.statusCode == 201 || response.statusCode == 200) {
-      result = true;
-
-      print(response.statusCode);
-    } else {
-      print("Something went wrong");
-      print(response.statusCode);
-      var responseData = await response.stream.toBytes();
-      var responseString = String.fromCharCodes(responseData);
-      print(responseString);
-    }
-
-    return Future.value(result);
-
-    //Get the response from the server
-  }
 
   Future<Map<dynamic, dynamic>> updateSignature(String imagePath) async {
     var flag = false;
@@ -1194,7 +1213,6 @@ class KYCModel extends ChangeNotifier {
 
 
   // to update AAdhar Card
-
   Future<Map<dynamic, dynamic>> updatePOI(
       var name, var fatherName, var panNumber, var dob) async {
     //DOB should be in day/month/year
@@ -1246,7 +1264,8 @@ class KYCModel extends ChangeNotifier {
     return results;
   }
 
-  // to update PAN Card
+
+
   Future<Map<dynamic, dynamic>> updatePOA(var name, var uid, var address,
       var city, var state, var district, var pincode, var dob) async {
     //DOB should be in day/month/year
@@ -1258,8 +1277,7 @@ class KYCModel extends ChangeNotifier {
     var tokens = await getId();
 
     var auth = tokens['authToken'];
-    var merchentId = tokens["merchantId"];
-    print(merchentId);
+    var merchantId = tokens["merchantId"];
 
     var headers = {
       'Authorization': '$auth',
@@ -1268,7 +1286,71 @@ class KYCModel extends ChangeNotifier {
 
     var request = http.Request('POST', Uri.parse(KycUrls.update));
     request.body = '''{
-    "merchantId": "$merchentId",
+    "merchantId": "$merchantId",
+    "save": "formData",
+    "type": "addressProof",
+    "data": {
+         "type": "aadhaar",
+         "name": "$name",
+         "uid": "$uid",
+         "address": "$address.",
+          "city": "$city",
+          "state": "$state",
+          "district": "$district",
+          "pincode": "$pincode",
+          "dob": "$dob"
+  
+          }}''';
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print("success");
+      flag = true;
+      print(await response.stream.bytesToString());
+      await updateCorPOA(auth, merchantId, name, uid, address, city, state, district, pincode, dob);
+
+    } else if (response.statusCode == 422)
+    {
+      print(await response.stream.bytesToString());
+
+      flag = false;
+      message = "Please fill all the fields";
+    } else {
+      flag = false;
+      message = "Something went wrong";
+      print(await response.stream.bytesToString());
+      print(response.reasonPhrase);
+    }
+    Map<dynamic, dynamic> results = {"flag": flag, "message": message};
+    return results;
+  }
+
+
+  Future<Map<dynamic, dynamic>> updateCorPOA(var auth, var merchantId,var name, var uid, var address,
+      var city, var state, var district, var pincode, var dob) async {
+    //DOB should be in day/month/year
+    print(
+        "name: $name-----uid: $uid-----address: $address----city: $city-----state: $state---district: $district-----pincode: $pincode----dob: $dob");
+    var flag = false;
+    var message = "Updated Successfully";
+
+    var tokens = await getId();
+
+    var auth = tokens['authToken'];
+    var merchantId = tokens["merchantId"];
+    print(merchantId);
+
+    var headers = {
+      'Authorization': '$auth',
+      'Content-Type': 'application/json'
+    };
+
+    var request = http.Request('POST', Uri.parse(KycUrls.update));
+    request.body = '''{
+    "merchantId": "$merchantId",
      "save": "formData",
      "type": "corrAddressProof",
          "data": {
@@ -1289,9 +1371,13 @@ class KYCModel extends ChangeNotifier {
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
+      print("success");
       flag = true;
       print(await response.stream.bytesToString());
-    } else if (response.statusCode == 422) {
+    } else if (response.statusCode == 422)
+    {
+      print(await response.stream.bytesToString());
+
       flag = false;
       message = "Please fill all the fields";
     } else {
@@ -1304,10 +1390,12 @@ class KYCModel extends ChangeNotifier {
     return results;
   }
 
-  // this is unsigned PDF
+
+
   Future<Map<dynamic, dynamic>> generatePdf() async {
     var fields;
     var tokens = await getId();
+    var url;
 
     var merchantID = tokens['merchantId'];
     var authToken = tokens['authToken'];
@@ -1338,7 +1426,15 @@ class KYCModel extends ChangeNotifier {
       res = true;
       var responseData = await response.stream.toBytes();
       var responseString = String.fromCharCodes(responseData);
-      fields = jsonDecode(responseString)['object'];
+      // print(responseString);
+      var inputFile = jsonDecode(responseString)['object']['result']['combinedPdf'];
+      var result = await generateAadharEsignPdf(inputFile);
+      if (result['flag'])
+      {
+        fields = result['fields'];
+        // print('url is $url');
+      }
+
     } else {
       message = "Something went wrong";
       res = false;
@@ -1350,11 +1446,16 @@ class KYCModel extends ChangeNotifier {
     Map<dynamic, dynamic> result = {
       'flag': res,
       'message': message,
-      'fields': fields
+      'fields': fields,
+      'url' : url
     };
 
     return result;
   }
+
+
+
+
 
   // this is the final step It will return a url that will redirect to aadhar authentication web site
   Future<Map<dynamic, dynamic>> generateAadharEsignPdf(var url) async {
@@ -1417,6 +1518,171 @@ class KYCModel extends ChangeNotifier {
   }
 
   // this function returns a esignedFile
+  // Future<Map<dynamic, dynamic>> saveAadharEsignPdf() async {
+  //   var fields;
+  //   var tokens = await getId();
+  //
+  //   var merchantID = tokens['merchantId'];
+  //   var authToken = tokens['authToken'];
+  //
+  //   bool res = false;
+  //   String message = "";
+  //
+  //   var headers = {
+  //     'Authorization': '$authToken',
+  //     'Content-Type': 'application/json'
+  //   };
+  //   var request = http.Request('POST', Uri.parse(KycUrls.execute));
+  //   request.body = '''{
+  //   "merchantId":"$merchantID",
+  //   "inputData":{
+  //   "service": "esign",
+  //   "type": "",
+  //   "task": "getEsignData",
+  //   "data":{
+  //
+  //           }
+  //        }
+  //     }
+  //   ''';
+  //   request.headers.addAll(headers);
+  //
+  //   http.StreamedResponse response = await request.send();
+  //
+  //   if (response.statusCode == 200) {
+  //     res = true;
+  //
+  //     var responseData = await response.stream.toBytes();
+  //     var responseString = String.fromCharCodes(responseData);
+  //     fields = jsonDecode(responseString)['object']['result']['esignedFile'];
+  //     print("signed pdf is $fields");
+  //   } else if (response.statusCode == 400) {
+  //     res = false;
+  //     message = "PDF Not generated";
+  //   } else {
+  //     message = "Something went wrong";
+  //
+  //     res = false;
+  //     print(await response.stream.bytesToString());
+  //
+  //     print(response.statusCode);
+  //   }
+  //
+  //   Map<dynamic, dynamic> result = {
+  //     'flag': res,
+  //     'message': message,
+  //     'fields': fields
+  //   };
+  //
+  //   return result;
+  // }
+  //
+  // // the above function returns a signed pdf url that url we need to pass and save it
+  // Future<Map<dynamic, dynamic>> saveSignedPdf(var signedPdfUrl) async {
+  //   var tokens = await getId();
+  //
+  //   var merchantID = tokens['merchantId'];
+  //   var authToken = tokens['authToken'];
+  //
+  //   bool flag = false;
+  //   String message = "Updated Successfully";
+  //
+  //   var headers = {
+  //     'Authorization': '$authToken',
+  //     'Content-Type': 'application/json'
+  //   };
+  //   var request = http.Request('POST', Uri.parse(KycUrls.update));
+  //   request.body = '''{
+  //   "merchantId": "$merchantID",
+  //   "save": "esign",
+  //   "data": {
+  //   "signedPdf": "$signedPdfUrl"}
+  //   }''';
+  //   request.headers.addAll(headers);
+  //
+  //   http.StreamedResponse response = await request.send();
+  //
+  //   if (response.statusCode == 200) {
+  //     flag = true;
+  //
+  //   } else if (response.statusCode == 422) {
+  //     flag = false;
+  //     message = "SignedPdf is not allowed to be empty";
+  //
+  //     print(response.reasonPhrase);
+  //   } else {
+  //     flag = false;
+  //     message = "Something went wrong please try again later";
+  //   }
+  //
+  //   Map<dynamic, dynamic> result = {
+  //     'flag': flag,
+  //     'message': message,
+  //   };
+  //
+  //   return result;
+  // }
+  //
+  //
+  // // Final Step to complete the KYC verify Via KYC Verification Engine
+  // Future<Map<dynamic, dynamic>> kycVerificationEngine() async
+  // {
+  //
+  //   var tokens = await getId();
+  //   var fields;
+  //   var merchantID = tokens['merchantId'];
+  //   var authToken = tokens['authToken'];
+  //
+  //   bool flag = false;
+  //   String message = "Updated Successfully";
+  //
+  //   var headers = {
+  //     'Authorization': '$authToken',
+  //     'Content-Type': 'application/json'
+  //   };
+  //   var request = http.Request('POST', Uri.parse(KycUrls.execute));
+  //   request.body = '''{
+  //   "merchantId": "$merchantID",
+  //   "inputData": {
+  //   "service": "verificationEngine",
+  //   "merchantId": "$merchantID"
+  //   }
+  //   }''';
+  //   request.headers.addAll(headers);
+  //
+  //   http.StreamedResponse response = await request.send();
+  //
+  //   if (response.statusCode == 200)
+  //   {
+  //     flag = true;
+  //     var responseData = await response.stream.toBytes();
+  //     var responseString = String.fromCharCodes(responseData);
+  //     fields = jsonDecode(responseString)['object'];
+  //
+  //
+  //   } else if (response.statusCode == 422) {
+  //     flag = false;
+  //     message = "SignedPdf is not allowed to be empty";
+  //
+  //     print(response.reasonPhrase);
+  //   } else {
+  //     flag = false;
+  //     message = "Something went wrong please try again later";
+  //   }
+  //
+  //   Map<dynamic, dynamic> result = {
+  //     'flag': flag,
+  //     'message': message,
+  //     'fields' : fields
+  //   };
+  //
+  //   return result;
+  // }
+
+
+  // this function is used to fetch the merchant id and Authentication token
+
+
   Future<Map<dynamic, dynamic>> saveAadharEsignPdf() async {
     var fields;
     var tokens = await getId();
@@ -1501,7 +1767,8 @@ class KYCModel extends ChangeNotifier {
 
     http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200)
+    {
       flag = true;
 
     } else if (response.statusCode == 422) {
@@ -1523,7 +1790,9 @@ class KYCModel extends ChangeNotifier {
   }
 
 
-  // Final Step to complete the KYC verify Via KYC Verification Engine
+
+
+// Final Step to complete the KYC verify Via KYC Verification Engine
   Future<Map<dynamic, dynamic>> kycVerificationEngine() async
   {
 
@@ -1560,11 +1829,18 @@ class KYCModel extends ChangeNotifier {
 
 
     } else if (response.statusCode == 422) {
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      print(responseString);
       flag = false;
       message = "SignedPdf is not allowed to be empty";
 
       print(response.reasonPhrase);
-    } else {
+    }
+    else {
+      var responseData = await response.stream.toBytes();
+      var responseString = String.fromCharCodes(responseData);
+      print(responseString);
       flag = false;
       message = "Something went wrong please try again later";
     }
@@ -1579,7 +1855,6 @@ class KYCModel extends ChangeNotifier {
   }
 
 
-  // this function is used to fetch the merchant id and Authentication token
   Future<Map<dynamic, dynamic>> getId() async {
     // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     //
