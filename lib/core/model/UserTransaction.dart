@@ -75,12 +75,12 @@ class UserTransaction{
   static const String TRAN_SUBTYPE_TAMBOLA_WIN = 'TMB_WIN';
 
 
-  UserTransaction(this._amount,this._closingBalance,this._note,this._subType,
+  UserTransaction(this._docKey, this._amount,this._closingBalance,this._note,this._subType,
       this._type,this._ticketUpCount,this._userId,this._tranStatus, this._icici,
       this._rzp, this._augmnt, this._timestamp,this._updatedTime);
 
   UserTransaction.fromMap(Map<String, dynamic> data, String documentID):
-        this(BaseUtil.toDouble(data[fldAmount]), data[fldClosingBalance], data[fldNote], data[fldSubType],
+        this(documentID, BaseUtil.toDouble(data[fldAmount]), data[fldClosingBalance], data[fldNote], data[fldSubType],
         data[fldType], data[fldTicketUpCount], data[fldUserId], data[fldTranStatus],
         data[fldIciciMap], data[fldRzpMap],data[fldAugmontMap],data[fldTimestamp],
         data[fldUpdatedTime]);
@@ -88,25 +88,25 @@ class UserTransaction{
   //ICICI investment initiated by new investor
   UserTransaction.mfDeposit(String tranId, String multipleId, String upiTimestamp,
       double amount, String userId):
-      this(amount,0,'NA',TRAN_SUBTYPE_ICICI,TRAN_TYPE_DEPOSIT,0,userId,
+      this(null, amount,0,'NA',TRAN_SUBTYPE_ICICI,TRAN_TYPE_DEPOSIT,0,userId,
           TRAN_STATUS_PENDING, {subFldIciciTranId: tranId, subFldIciciMultipleId: multipleId,
             subFldIciciUpiTime: upiTimestamp},null,null,Timestamp.now(),Timestamp.now());
 
   //ICICI withdrawal initiated and completed by active investor
   UserTransaction.mfWithdrawal(String tranId, String bankRnn, String note, String upiTimestamp,
       double amount, String userId):
-        this(amount,0,note??'NA',TRAN_SUBTYPE_ICICI,TRAN_TYPE_WITHDRAW,0,
+        this(null, amount,0,note??'NA',TRAN_SUBTYPE_ICICI,TRAN_TYPE_WITHDRAW,0,
           userId,TRAN_STATUS_COMPLETE,{subFldIciciTranId: tranId, subFldIciciBankRnn: bankRnn,
             subFldIciciUpiTime: upiTimestamp}, null,null,Timestamp.now(),Timestamp.now());
 
   //Augmont gold investment initiated by investor
   UserTransaction.newGoldDeposit(double amount, String blockId, double lockPrice, String paymode, String userId):
-        this(amount, 0, 'NA', TRAN_SUBTYPE_AUGMONT_GOLD, TRAN_TYPE_DEPOSIT, 0, userId,TRAN_STATUS_PENDING, null, null,
+        this(null, amount, 0, 'NA', TRAN_SUBTYPE_AUGMONT_GOLD, TRAN_TYPE_DEPOSIT, 0, userId,TRAN_STATUS_PENDING, null, null,
           {subFldAugBlockId: blockId, subFldAugLockPrice: lockPrice, subFldAugPaymode: paymode}, Timestamp.now(),Timestamp.now());
 
   //Augmont gold investment initiated by investor
   UserTransaction.newGoldWithdrawal(double amount, String blockId, double lockPrice, String userId):
-        this(amount, 0, 'NA', TRAN_SUBTYPE_AUGMONT_GOLD, TRAN_TYPE_WITHDRAW, 0, userId,TRAN_STATUS_PENDING, null, null,
+        this(null, amount, 0, 'NA', TRAN_SUBTYPE_AUGMONT_GOLD, TRAN_TYPE_WITHDRAW, 0, userId,TRAN_STATUS_PENDING, null, null,
           {subFldAugBlockId: blockId, subFldAugLockPrice: lockPrice}, Timestamp.now(),Timestamp.now());
 
   toJson() {

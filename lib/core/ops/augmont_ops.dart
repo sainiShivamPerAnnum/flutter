@@ -304,7 +304,7 @@ class AugmontModel extends ChangeNotifier {
     final resMap = await _processResponse(_response);
     if (resMap == null ||
         !resMap[INTERNAL_FAIL_FLAG] ||
-        resMap['result']['data'][SubmitGoldSell.resTranId] == null) {
+        resMap[SubmitGoldSell.resTranId] == null) {
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;
       String docKey = await _dbModel.addUserTransaction(
@@ -323,14 +323,14 @@ class AugmontModel extends ChangeNotifier {
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_COMPLETE;
       _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
-          resMap['result']['data'][SubmitGoldSell.resAugTranId];
+          resMap[SubmitGoldSell.resAugTranId];
       _baseProvider
               .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
-          resMap['result']['data'][SubmitGoldSell.resTranId];
+          resMap[SubmitGoldSell.resTranId];
       _baseProvider
               .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] =
           double.tryParse(
-              resMap['result']['data'][SubmitGoldSell.resGoldBalance])??0.0;
+              resMap[SubmitGoldSell.resGoldBalance])??0.0;
       //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);

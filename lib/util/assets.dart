@@ -158,10 +158,10 @@ class Assets {
   static final List<String> goldFaqAnswers = [
     'This is a digital gold fund. On completing a deposit, you get alloted the required grams of gold at the present gold rate',
     'Your gold is stored as an investment with Augmont. For all purposes, it is as robust as physical ownership and can be sold at any given time.',
-    'Simply register with the gold fund by providing a few very simple details. After registration, you can purchase any amount of gold through any preferred payment method.'
-        'You can make a minimum purchase of as low as ₹5',
-    'Gold can be sold at any given time at the selling rate during the time. Your sell amount is usually deposited to your bank account within a maximum of 2 business working days.'
-        'The gold purchase and sell rates are subject to gold price fluctuation. Historically, gold is accepted to be an extremely strong asset and has given good long term returns.'
+    'Simply register with the gold fund by providing a few very simple details. After registration, you can purchase any amount of gold through any preferred payment method.',
+    'You can make a minimum purchase of as low as ₹5',
+    'Gold can be sold at any given time at the selling rate during the time. Your sell amount is usually deposited to your bank account within a maximum of 2 business working days.',
+    'The gold purchase and sell rates are subject to gold price fluctuation. Historically, gold is accepted to be an extremely strong asset and has given good long term returns.'
   ];
 
   static final List<String> onboardDialogDesc = [
@@ -222,9 +222,9 @@ class Assets {
 
   static const List<String> POLL_NEXT_GAME_LIST = [
     'Financial Quiz',
-    'Single player arcade'
-        'Single or multi player card game'
-        'Multi player board game',
+    'Single player arcade',
+    'Single/multi player card game',
+    'Multi player board game',
     'Multi player arcade game',
   ];
 }

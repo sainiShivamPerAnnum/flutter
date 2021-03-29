@@ -170,9 +170,9 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
           onPressed: () async {
             if (!baseProvider.isAugWithdrawRouteLogicInProgress) {
               HapticFeedback.vibrate();
-              //_onWithdrawalClicked();
-              double amt = await augmontProvider.getGoldBalance();
-              log.debug(amt.toString());
+              _onWithdrawalClicked();
+              // double amt = await augmontProvider.getGoldBalance();
+              // log.debug(amt.toString());
             }
           },
           highlightColor: Colors.orange.withOpacity(0.5),
@@ -589,9 +589,9 @@ class FundInfo extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(bottom: _height * 0.02, left: 20, right: 30),
           child: Text(
-            'A strong asset with a 76% growth in the past 5 years. Augmont gold is the leading' +
-                'gold buillion of India. Invest in digital gold ' +
-                'with an assured 99.9% purity.',
+            'A strong asset with a 56% growth in the past 5 years. Augmont is the leading ' +
+                'gold bullion of India. Invest in 24K digital gold ' +
+                'with 999 purity.',
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: UiConstants.accentColor, fontStyle: FontStyle.italic),
