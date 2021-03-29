@@ -359,8 +359,8 @@ class KycOnboardData {
             if (_formKey.currentState.validate()) {
               Navigator.pop(context);
               showLoadingDialog(context);
-              var result =
-                  await kycModel.bankPennyTransfer(_accNo.text, _ifsc.text, _accHoldName.text);
+              var result = await kycModel.bankPennyTransfer(
+                  _accNo.text, _ifsc.text, _accHoldName.text);
               Navigator.pop(context);
               if (result["flag"] == true) {
                 _markStepCompleted(2);
@@ -613,20 +613,30 @@ class KycOnboardData {
                                 "Both front and back images are required");
                           } else {
                             showLoadingDialog(context);
-                            var result = await kycModel.coresPOA(imagef.path, imageb.path);
+                            var result = await kycModel.coresPOA(
+                                imagef.path, imageb.path);
                             print(result);
                             isLoading = false;
                             Navigator.pop(context);
                             Navigator.pop(context);
                             if (result["flag"] == true) {
                               _uid.text = result["fields"]["uid"].toString();
-                              _pin.text = result["fields"]["splitAddress"]["pincode"].toString();
-                              _address.text = result["fields"]["address"].toString();
+                              _pin.text = result["fields"]["splitAddress"]
+                                      ["pincode"]
+                                  .toString();
+                              _address.text =
+                                  result["fields"]["address"].toString();
                               _name.text = result["fields"]["name"].toString();
                               _dob.text = result["fields"]["dob"].toString();
-                              _city.text = result["fields"]["splitAddress"]["city"].toString();
-                              _state.text = result["fields"]["splitAddress"]["state"].toString();
-                              _district.text = result["fields"]["splitAddress"]["district"].toString();
+                              _city.text = result["fields"]["splitAddress"]
+                                      ["city"]
+                                  .toString();
+                              _state.text = result["fields"]["splitAddress"]
+                                      ["state"]
+                                  .toString();
+                              _district.text = result["fields"]["splitAddress"]
+                                      ["district"]
+                                  .toString();
                               showStepDialog(context, "Confirm you Details", '',
                                   createForm(createADDFields()), [
                                 TextButton(
@@ -722,17 +732,16 @@ class KycOnboardData {
       else if (step == 4) {
         print("FATCA");
         //await kycModel.Fatca();
-        final result = await Navigator.push(context,
-            MaterialPageRoute(builder: (context) => FatcaForms()));
+        final result = await Navigator.push(
+            context, MaterialPageRoute(builder: (context) => FatcaForms()));
 
-        if (result["flag"]== true) {
+        if (result["flag"] == true) {
           _markStepCompleted(4);
           showSuccessDialog(context);
         } else {
           showErrorDialog(context,
               result['message'] ?? 'Something went wrong. Please try again');
         }
-
       }
       //-------------------------------------------LOCATION----------------------------------------------------------//
       else if (step == 5) {
@@ -809,8 +818,7 @@ class KycOnboardData {
         if (result["flag"] == true) {
           _markStepCompleted(7);
           showSuccessDialog(context);
-        }
-        else {
+        } else {
           showErrorDialog(context,
               result['message'] ?? 'Something went wrong. Please try again');
         }
@@ -818,36 +826,31 @@ class KycOnboardData {
       //--------------------------------------------PDF REVIEW--------------------------------------------------------//
       else if (step == 8) {
         print("PDF Review");
+        var ress = await kycModel.kycVerificationEngine();
+
         var data = await kycModel.generatePdf();
 
-        if(data['flag'])
-        {
+        if (data['flag']) {
           print("data is $data");
           //url to redirect to signzy otp verification
           var url = data['fields']['result']['url'].toString();
           print("url is $url");
+          // var result = await Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //       builder: (context) => KycWebview(
+          //             url: url,
+          //           )),
+          // );
+          var result = true;
 
-    var result = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => KycWebview(url: url,)),
-          );
-
-          if(result)
-            {
-              _markStepCompleted(8);
-              showSuccessDialog(context);
-
-            }
-          else {
-            showErrorDialog(context,'Something went wrong. Please try again');
+          if (result) {
+            _markStepCompleted(8);
+            showSuccessDialog(context);
+          } else {
+            showErrorDialog(context, 'Something went wrong. Please try again');
           }
-
-
-        }
-        else
-        {
-
-        }
+        } else {}
       }
       //--------------------------------------COMPLETION REWARD----------------------------------------------------------//
       else if (step == 9) {
