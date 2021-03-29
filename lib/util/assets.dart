@@ -146,6 +146,24 @@ class Assets {
     '90% of your funds are withdrawn within minutes. The remaining 10% will be available within the next day. So if you had saved ₹100 and wish to withdraw the entire amount, ₹90 gets withdrawn within 2 minutes, and the rest within the next day!',
   ];
 
+  static final List<String> goldFaqHeaders = [
+    'What kind of fund is this?',
+    'What does digital gold mean?',
+    'How does the transaction work?',
+    'What is the minimum amount that I need to buy?',
+    'When can I sell my gold?',
+    'Is there any risk involved?',
+  ];
+
+  static final List<String> goldFaqAnswers = [
+    'This is a digital gold fund. On completing a deposit, you get alloted the required grams of gold at the present gold rate',
+    'Your gold is stored as an investment with Augmont. For all purposes, it is as robust as physical ownership and can be sold at any given time.',
+    'Simply register with the gold fund by providing a few very simple details. After registration, you can purchase any amount of gold through any preferred payment method.'
+        'You can make a minimum purchase of as low as ₹5',
+    'Gold can be sold at any given time at the selling rate during the time. Your sell amount is usually deposited to your bank account within a maximum of 2 business working days.'
+        'The gold purchase and sell rates are subject to gold price fluctuation. Historically, gold is accepted to be an extremely strong asset and has given good long term returns.'
+  ];
+
   static final List<String> onboardDialogDesc = [
     'Welcome to Fello! We have added 5 game tickets to your account to get you started.',
     'Save your money in diverse and stable funds. We have onboarded ICICI Prudential Liquid Fund as our first partner.',
@@ -203,10 +221,10 @@ class Assets {
   static final String infoAugmontTime = '';
 
   static const List<String> POLL_NEXT_GAME_LIST = [
-    'Finance Quiz',
-    'Card games',
-    'Board games',
-    'Naah',
-    'Naah5'
+    'Financial Quiz',
+    'Single player arcade'
+        'Single or multi player card game'
+        'Multi player board game',
+    'Multi player arcade game',
   ];
 }

@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/size_config.dart';

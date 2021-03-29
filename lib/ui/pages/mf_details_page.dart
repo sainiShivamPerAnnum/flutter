@@ -66,7 +66,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                     FundGraph(),
                     FundDetailsTable(),
                     ProfitCalculator(),
-                    FAQCard(),
+                    FAQCard(Assets.mfFaqHeaders, Assets.mfFaqAnswers),
                     _buildBetaWithdrawButton(),
                   ],
                 ),

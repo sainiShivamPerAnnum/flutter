@@ -1,11 +1,12 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/ui/pages/gold_details_page.dart';
 import 'package:felloapp/ui/pages/mf_details_page.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pie_chart/pie_chart.dart';
-import 'package:felloapp/util/size_config.dart';
 import 'package:provider/provider.dart';
 
 class FinancePage extends StatefulWidget {
@@ -16,6 +17,7 @@ class FinancePage extends StatefulWidget {
 class _FinancePageState extends State<FinancePage> {
   final bool hasFund = true;
   BaseUtil baseProvider;
+  AugmontModel augmontProvider;
   Map<String, double> chartData;
 
   Map<String, double> getChartMap() {
@@ -30,9 +32,36 @@ class _FinancePageState extends State<FinancePage> {
     setState(() {});
   }
 
+  _updateAugmontBalance() async {
+    if (augmontProvider == null ||
+        (baseProvider.myUser.augmont_quantity == 0 &&
+            baseProvider.myUser.augmont_balance == 0)) return;
+    augmontProvider.getRates().then((currRates) {
+      if (currRates == null || currRates.goldBuyPrice == null) return;
+
+      double gBuyRate = currRates.goldBuyPrice;
+      if (baseProvider.myUser.augmont_quantity == 0) return;
+      baseProvider.myUser.augmont_balance =
+          (baseProvider.myUser.augmont_quantity * gBuyRate).roundToDouble();
+      baseProvider.myUser.account_balance =
+          (baseProvider.myUser.augmont_balance +
+                  baseProvider.myUser.icici_balance +
+                  baseProvider.myUser.prize_balance)
+              .round();
+      setState(() {}); //TODO might cause ui error if screen no longer active
+    }).catchError((err) {
+      print('$err');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    augmontProvider = Provider.of<AugmontModel>(context, listen: false);
+    if (!baseProvider.isAugmontRealTimeBalanceFetched) {
+      _updateAugmontBalance();
+      baseProvider.isAugmontRealTimeBalanceFetched = true;
+    }
     chartData = getChartMap();
     return RefreshIndicator(
       onRefresh: () async {

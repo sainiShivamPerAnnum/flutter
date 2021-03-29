@@ -68,9 +68,9 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                     children: [
                       FundInfo(),
                       FundGraph(),
-                      //FundDetailsTable(),
+                      FundDetailsTable(baseProvider.myUser.augmont_quantity),
                       GoldProfitCalculator(),
-                      FAQCard(),
+                      FAQCard(Assets.goldFaqHeaders, Assets.goldFaqAnswers),
                       _buildBetaWithdrawButton(),
                     ],
                   ),
@@ -426,6 +426,8 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         baseProvider.myUser.augmont_balance =
             baseProvider.myUser.augmont_balance -
                 baseProvider.currentAugmontTxn.amount;
+        baseProvider.myUser.augmont_quantity = baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm];
         baseProvider.myUser.account_balance =
             baseProvider.currentAugmontTxn.closingBalance;
         baseProvider.myUser.ticket_count =
@@ -445,6 +447,9 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
 }
 
 class FundDetailsTable extends StatelessWidget {
+  final double _goldBalance;
+  FundDetailsTable(this._goldBalance);
+
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
@@ -470,69 +475,12 @@ class FundDetailsTable extends StatelessWidget {
                 ),
               ],
             ),
-            child: Table(
-              border: TableBorder(
-                horizontalInside: BorderSide(
-                  color: Colors.black.withOpacity(0.1),
-                ),
-                verticalInside: BorderSide(
-                  color: Colors.black.withOpacity(0.1),
-                ),
+            child: Padding(
+              padding: EdgeInsets.all(30),
+              child: Text('Current Gold Balance: ${_goldBalance.toStringAsFixed(3)} grams'                
               ),
-              children: [
-                TableRow(children: [
-                  FundDetailsCell(
-                    title: "NAV",
-                    data: "₹301.72",
-                    info: Assets.mfTableDetailsInfo[0],
-                  ),
-                  FundDetailsCell(
-                    title: "CAGR",
-                    data: "7.51%",
-                    info: Assets.mfTableDetailsInfo[1],
-                  ),
-                ]),
-                TableRow(children: [
-                  FundDetailsCell(
-                    title: "Age",
-                    data: "15 yrs",
-                    info: Assets.mfTableDetailsInfo[2],
-                  ),
-                  FundDetailsCell(
-                    title: "AUM",
-                    data: "42176.95cr",
-                    info: Assets.mfTableDetailsInfo[3],
-                  ),
-                ]),
-              ],
             ),
           ),
-          Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: RichText(
-                text: TextSpan(
-                    text: "For More Details visit ",
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                    children: [
-                      TextSpan(
-                          text: 'Official Site',
-                          style: TextStyle(
-                              color: Colors.grey,
-                              decoration: TextDecoration.underline),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () async {
-                              const url =
-                                  'https://www.icicipruamc.com/mutual-fund/debt-funds/icici-prudential-liquid-fund';
-                              if (await canLaunch(url)) {
-                                await launch(url);
-                              } else {
-                                throw 'Could not launch $url';
-                              }
-                            }),
-                    ]),
-              )),
         ],
       ),
     );
@@ -641,8 +589,9 @@ class FundInfo extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(bottom: _height * 0.02, left: 20, right: 30),
           child: Text(
-            'ICICI Prudential Liquid Mutual Fund is a'
-            ' popular fund that has consistently given an annual return of 6-7%.',
+            'A strong asset with a 76% growth in the past 5 years. Augmont gold is the leading' +
+                'gold buillion of India. Invest in digital gold ' +
+                'with an assured 99.9% purity.',
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: UiConstants.accentColor, fontStyle: FontStyle.italic),

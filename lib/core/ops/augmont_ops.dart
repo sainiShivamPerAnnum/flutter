@@ -48,7 +48,6 @@ class AugmontModel extends ChangeNotifier {
   String _constructUsername() =>
       'felloGY${_baseProvider.myUser.uid.replaceAll(new RegExp(r"[0-9]"), "")}';
 
-
   Future<UserAugmontDetail> createUser(
       String mobile,
       String pan,
@@ -116,8 +115,8 @@ class AugmontModel extends ChangeNotifier {
     Map<String, String> _params = {
       Passbook.fldAugmontUid: _baseProvider.augmontDetail.userId,
     };
-    var _request =
-    http.Request('GET', Uri.parse(_constructRequest(Passbook.path, _params)));
+    var _request = http.Request(
+        'GET', Uri.parse(_constructRequest(Passbook.path, _params)));
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
@@ -131,10 +130,10 @@ class AugmontModel extends ChangeNotifier {
 
       String goldGrmsStr = resMap[Passbook.resGoldGrams];
       double goldGrms = 0;
-      try{
+      try {
         goldGrms = double.parse(goldGrmsStr);
         return goldGrms;
-      }catch(e) {
+      } catch (e) {
         return 0.0;
       }
     }
@@ -239,7 +238,9 @@ class AugmontModel extends ChangeNotifier {
       _baseProvider
               .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
           resMap[SubmitGoldPurchase.resTranId];
-      _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] = resMap[SubmitGoldPurchase.resGoldBalance];
+      _baseProvider
+              .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] =
+          double.tryParse(resMap[SubmitGoldPurchase.resGoldBalance])??0.0;
       //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
       if (!_baseProvider.augmontDetail.firstInvMade) {
         _baseProvider.augmontDetail.firstInvMade = true;
@@ -326,6 +327,10 @@ class AugmontModel extends ChangeNotifier {
       _baseProvider
               .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
           resMap['result']['data'][SubmitGoldSell.resTranId];
+      _baseProvider
+              .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] =
+          double.tryParse(
+              resMap['result']['data'][SubmitGoldSell.resGoldBalance])??0.0;
       //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
@@ -333,14 +338,14 @@ class AugmontModel extends ChangeNotifier {
   }
 
   ///returns path where invoice is generated and saved
-  Future<String> generatePurchaseInvoicePdf(String txnId) async{
+  Future<String> generatePurchaseInvoicePdf(String txnId) async {
     AugmontInvoiceService _pdfService = AugmontInvoiceService();
     if (!isInit()) await _init();
     var _params = {
       GetInvoice.fldTranId: txnId,
     };
-    var _request =
-    http.Request('GET', Uri.parse(_constructRequest(GetInvoice.path, _params)));
+    var _request = http.Request(
+        'GET', Uri.parse(_constructRequest(GetInvoice.path, _params)));
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
