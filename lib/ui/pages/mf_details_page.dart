@@ -195,9 +195,10 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   }
 
   Future<bool> onDepositClicked2() async {
-    Navigator.of(context).pop(); //go back to save tab
-    Navigator.of(context).pushNamed('/initkyc');
+    // Navigator.of(context).pop(); //go back to save tab
+    // Navigator.of(context).pushNamed('/initkyc');
 
+    baseProvider.showNegativeAlert('Disabled', 'This action has been currently disabled', context);
     return true;
   }
 
