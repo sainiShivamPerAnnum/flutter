@@ -10,7 +10,6 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.da
 import 'package:felloapp/ui/pages/onboarding/kyc/fatcaforms.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/interface/cam.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/signature.dart';
-import 'package:felloapp/ui/pages/onboarding/kyc/verify_kyc_webview.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';

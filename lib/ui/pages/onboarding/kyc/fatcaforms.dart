@@ -71,11 +71,6 @@ class _FatcaFormsState extends State<FatcaForms> {
 
   KYCModel kycModel = KYCModel();
 
-
-
-
-
-
   List<Map<String, String>> occupation = [
     {"OCC_CODE": "01", "OCC_NAME": "Private Sector"},
     {"OCC_CODE": "02", "OCC_NAME": "Public Sector"},
@@ -146,7 +141,6 @@ class _FatcaFormsState extends State<FatcaForms> {
         ),
       ),
     );
-
   }
 
   Widget createEditableField(
@@ -158,14 +152,10 @@ class _FatcaFormsState extends State<FatcaForms> {
       title: Text(title),
       subtitle: InputField(
         child: TextFormField(
-
-
-
           decoration: InputDecoration(border: InputBorder.none),
           controller: controller,
           textCapitalization: TextCapitalization.characters,
-          keyboardType: inputType == "mobile"?  TextInputType.number : TextInputType.text ,
-
+          keyboardType: inputType == "mobile"?  TextInputType.number : TextInputType.text,
           validator: (value) {
             if (value.isEmpty) {
               return 'Field Cannot be Empty';
@@ -198,7 +188,7 @@ class _FatcaFormsState extends State<FatcaForms> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ListTile(
-                  title: Text("Are you a politally exposed person?"),
+                  title: Text("Are you a politically exposed person?"),
                   subtitle: Row(
                     children: [
                       Expanded(
