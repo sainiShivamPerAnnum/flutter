@@ -5,10 +5,8 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
-import 'package:felloapp/ui/elements/roulette.dart';
 import 'package:felloapp/ui/elements/scrolling_text.dart';
 import 'package:felloapp/ui/pages/mf_details_page.dart';
-import 'package:felloapp/ui/pages/onboarding/kyc/interface/kyc_onboarding_interface.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -73,18 +71,12 @@ class _SaveScreenState extends State<SaveScreen> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    dbProvider = Provider.of<DBModel>(context,listen:false);
-    fcmProvider = Provider.of<FcmHandler>(context,listen:false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    fcmProvider = Provider.of<FcmHandler>(context, listen: false);
     acctBalance = baseProvider.myUser.account_balance;
-    _width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    _height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    _width = MediaQuery.of(context).size.width;
+    _height = MediaQuery.of(context).size.height;
     _init();
 
     return Stack(
@@ -103,15 +95,9 @@ class _SaveScreenState extends State<SaveScreen> {
             ),
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.elliptical(
-                  MediaQuery
-                      .of(context)
-                      .size
-                      .width * 0.50, 18),
+                  MediaQuery.of(context).size.width * 0.50, 18),
               bottomRight: Radius.elliptical(
-                  MediaQuery
-                      .of(context)
-                      .size
-                      .width * 0.50, 18),
+                  MediaQuery.of(context).size.width * 0.50, 18),
             ),
           ),
         ),
@@ -161,49 +147,46 @@ class _SaveScreenState extends State<SaveScreen> {
                 ],
               ),
             )),
-
         SafeArea(
             child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: EdgeInsets.only(bottom: 35),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 35),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          child: Opacity(
-                              opacity: 0.5,
-                              child: Image(
-                                image: AssetImage(Assets.sebiGraphic),
-                                fit: BoxFit.contain,
-                              )),
-                          height: 80,
-                          width: 80,
-                        ),
-                        SizedBox(
-                          child: Opacity(
-                              opacity: 0.5,
-                              child: Image(
-                                image: AssetImage(Assets.amfiGraphic),
-                                fit: BoxFit.contain,
-                              )),
-                          height: 80,
-                          width: 80,
-                        ),
-                      ],
+                    SizedBox(
+                      child: Opacity(
+                          opacity: 0.5,
+                          child: Image(
+                            image: AssetImage(Assets.sebiGraphic),
+                            fit: BoxFit.contain,
+                          )),
+                      height: 80,
+                      width: 80,
+                    ),
+                    SizedBox(
+                      child: Opacity(
+                          opacity: 0.5,
+                          child: Image(
+                            image: AssetImage(Assets.amfiGraphic),
+                            fit: BoxFit.contain,
+                          )),
+                      height: 80,
+                      width: 80,
                     ),
                   ],
                 ),
-              ),
-            )),
+              ],
+            ),
+          ),
+        )),
         SafeArea(
             child: Padding(
-                padding: EdgeInsets.only(top: 150), child: _buildLayout()
-            )
-        ),
+                padding: EdgeInsets.only(top: 150), child: _buildLayout())),
       ],
     );
   }
@@ -217,13 +200,14 @@ class _SaveScreenState extends State<SaveScreen> {
         SizedBox(
           height: 10,
         ),
-        _buildIciciManualButton('Integrated', () =>
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (ctx) => MFDetailsPage(),
-              ),
-            )),
+        _buildIciciManualButton(
+            'Integrated',
+            () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (ctx) => MFDetailsPage(),
+                  ),
+                )),
       ],
     );
   }
@@ -275,36 +259,33 @@ class _SaveScreenState extends State<SaveScreen> {
                                   padding: EdgeInsets.fromLTRB(10, 5, 5, 5),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text('ICICI Mutual Fund',
+                                      Text(
+                                        'ICICI Mutual Fund',
                                         style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w400,
-                                            color: UiConstants.primaryColor
-                                        ),
+                                            color: UiConstants.primaryColor),
                                       ),
-                                      Text(type,
+                                      Text(
+                                        type,
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w700,
-                                            color: UiConstants.accentColor
-                                        ),
+                                            color: UiConstants.accentColor),
                                       ),
                                     ],
-                                  )
-                              )
-                          ),
+                                  ))),
                           Padding(
                               padding: EdgeInsets.all(10),
                               child: Icon(
                                 Icons.arrow_forward_ios,
                                 size: 20,
                                 color: Colors.black54,
-                              )
-                          )
+                              ))
                         ],
                       ),
                     ),
@@ -734,7 +715,7 @@ class _SaveScreenState extends State<SaveScreen> {
                     padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                     child: Text(
                       'ICICI Prudential Liquid Mutual Fund is a'
-                          ' popular fund that has consistently given an annual return of 6-7%.',
+                      ' popular fund that has consistently given an annual return of 6-7%.',
                       textAlign: TextAlign.center,
                       style: TextStyle(color: UiConstants.accentColor),
                     ),
@@ -766,7 +747,7 @@ class _SaveScreenState extends State<SaveScreen> {
                         TextSpan(
                             text: 'Read more about it here.',
                             style:
-                            TextStyle(decoration: TextDecoration.underline),
+                                TextStyle(decoration: TextDecoration.underline),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () async {
                                 const url =

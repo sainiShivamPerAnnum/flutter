@@ -13,6 +13,7 @@ import 'package:felloapp/ui/elements/gold_profit_calculator.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:fl_animated_linechart/chart/area_line_chart.dart';
 import 'package:fl_animated_linechart/chart/line_chart.dart';
@@ -21,6 +22,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -68,9 +71,9 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                     children: [
                       FundInfo(),
                       FundGraph(),
-                      //FundDetailsTable(),
+                      FundDetailsTable(baseProvider.myUser.augmont_quantity),
                       GoldProfitCalculator(),
-                      FAQCard(),
+                      FAQCard(Assets.goldFaqHeaders, Assets.goldFaqAnswers),
                       _buildBetaWithdrawButton(),
                     ],
                   ),
@@ -152,32 +155,27 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
           begin: Alignment(0.5, -1.0),
           end: Alignment(0.5, 1.0),
         ),
-        // boxShadow: [
-        //   new BoxShadow(
-        //     color: Colors.black12,
-        //     offset: Offset.fromDirection(20, 7),
-        //     blurRadius: 3.0,
-        //   )
-        // ],
       ),
       child: new Material(
         child: MaterialButton(
           child: (!baseProvider.isAugWithdrawRouteLogicInProgress)
               ? Text(
-            'WITHDRAW',
-            style: Theme.of(context)
-                .textTheme
-                .button
-                .copyWith(color: Colors.white),
-          )
+                  'WITHDRAW',
+                  style: Theme.of(context)
+                      .textTheme
+                      .button
+                      .copyWith(color: Colors.white),
+                )
               : SpinKitThreeBounce(
-            color: UiConstants.spinnerColor2,
-            size: 18.0,
-          ),
+                  color: UiConstants.spinnerColor2,
+                  size: 18.0,
+                ),
           onPressed: () async {
-            if(!baseProvider.isAugWithdrawRouteLogicInProgress) {
+            if (!baseProvider.isAugWithdrawRouteLogicInProgress) {
               HapticFeedback.vibrate();
               _onWithdrawalClicked();
+              // double amt = await augmontProvider.getGoldBalance();
+              // log.debug(amt.toString());
             }
           },
           highlightColor: Colors.orange.withOpacity(0.5),
@@ -331,6 +329,8 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         baseProvider.myUser.ticket_count =
             baseProvider.getTotalTicketsPostTransaction(
                 baseProvider.currentAugmontTxn.amount);
+        baseProvider.myUser.augmont_quantity = baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm];
 
         ///update fields
         await dbProvider.updateUser(baseProvider.myUser);
@@ -384,20 +384,21 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
             barrierColor: Colors.black87,
             context: context,
             builder: (BuildContext context) => AugmontWithdrawDialog(
-              key: _withdrawalDialogKey2,
-              balance: baseProvider.myUser.augmont_balance,
-              sellRate: _currentSellRates.goldSellPrice,
-              onAmountConfirmed: (Map<String, double> amountDetails) {
-                _onInitiateWithdrawal(amountDetails['withdrawal_amount']);
-              },
-              bankHolderName: baseProvider.augmontDetail.bankHolderName,
-              bankAccNo: baseProvider.augmontDetail.bankAccNo,
-              bankIfsc: baseProvider.augmontDetail.ifsc,
-            ));
+                  key: _withdrawalDialogKey2,
+                  balance: baseProvider.myUser.augmont_balance,
+                  sellRate: _currentSellRates.goldSellPrice,
+                  onAmountConfirmed: (Map<String, double> amountDetails) {
+                    _onInitiateWithdrawal(amountDetails['withdrawal_amount']);
+                  },
+                  bankHolderName: baseProvider.augmontDetail.bankHolderName,
+                  bankAccNo: baseProvider.augmontDetail.bankAccNo,
+                  bankIfsc: baseProvider.augmontDetail.ifsc,
+                ));
       }).catchError((err) {
         baseProvider.isAugWithdrawRouteLogicInProgress = false;
         setState(() {});
-        baseProvider.showNegativeAlert('Couldn\'t complete your request', 'Please try again in some time', context);
+        baseProvider.showNegativeAlert('Couldn\'t complete your request',
+            'Please try again in some time', context);
       });
     }
   }
@@ -428,6 +429,8 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         baseProvider.myUser.augmont_balance =
             baseProvider.myUser.augmont_balance -
                 baseProvider.currentAugmontTxn.amount;
+        baseProvider.myUser.augmont_quantity = baseProvider
+            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm];
         baseProvider.myUser.account_balance =
             baseProvider.currentAugmontTxn.closingBalance;
         baseProvider.myUser.ticket_count =
@@ -440,103 +443,69 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         baseProvider.userMiniTxnList = null; //make null so it refreshes
         _withdrawalDialogKey2.currentState.onTransactionProcessed(true);
       }
-    }else{
+    } else {
       _withdrawalDialogKey2.currentState.onTransactionProcessed(false);
     }
   }
 }
 
 class FundDetailsTable extends StatelessWidget {
+  final double _goldBalance;
+  FundDetailsTable(this._goldBalance);
+
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
-    return Container(
-      margin: EdgeInsets.symmetric(
-        vertical: _height * 0.02,
-      ),
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: _height * 0.02,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  offset: Offset(5, 5),
-                  blurRadius: 5,
-                  color: Colors.black.withOpacity(0.1),
-                  spreadRadius: 0,
+    return Row(
+      children: [
+        Spacer(),
+        Container(
+          margin: EdgeInsets.symmetric(
+            vertical: _height * 0.02,
+          ),
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(
+                  horizontal: _height * 0.02,
                 ),
-              ],
-            ),
-            child: Table(
-              border: TableBorder(
-                horizontalInside: BorderSide(
-                  color: Colors.black.withOpacity(0.1),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      offset: Offset(5, 5),
+                      blurRadius: 5,
+                      color: Colors.black.withOpacity(0.1),
+                      spreadRadius: 0,
+                    ),
+                  ],
                 ),
-                verticalInside: BorderSide(
-                  color: Colors.black.withOpacity(0.1),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: 20, horizontal: SizeConfig.screenWidth * 0.1),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        "images/svgs/gold.svg",
+                        height: SizeConfig.screenWidth * 0.08,
+                        // width: SizeConfig.screenWidth*0.05,
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                          'Current Gold Balance: ${_goldBalance.toStringAsFixed(3)} grams'),
+                    ],
+                  ),
                 ),
               ),
-              children: [
-                TableRow(children: [
-                  FundDetailsCell(
-                    title: "NAV",
-                    data: "₹301.72",
-                    info: Assets.mfTableDetailsInfo[0],
-                  ),
-                  FundDetailsCell(
-                    title: "CAGR",
-                    data: "7.51%",
-                    info: Assets.mfTableDetailsInfo[1],
-                  ),
-                ]),
-                TableRow(children: [
-                  FundDetailsCell(
-                    title: "Age",
-                    data: "15 yrs",
-                    info: Assets.mfTableDetailsInfo[2],
-                  ),
-                  FundDetailsCell(
-                    title: "AUM",
-                    data: "42176.95cr",
-                    info: Assets.mfTableDetailsInfo[3],
-                  ),
-                ]),
-              ],
-            ),
+            ],
           ),
-          Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: RichText(
-                text: TextSpan(
-                    text: "For More Details visit ",
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                    children: [
-                      TextSpan(
-                          text: 'Official Site',
-                          style: TextStyle(
-                              color: Colors.grey,
-                              decoration: TextDecoration.underline),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () async {
-                              const url =
-                                  'https://www.icicipruamc.com/mutual-fund/debt-funds/icici-prudential-liquid-fund';
-                              if (await canLaunch(url)) {
-                                await launch(url);
-                              } else {
-                                throw 'Could not launch $url';
-                              }
-                            }),
-                    ]),
-              )),
-        ],
-      ),
+        ),
+        Spacer(),
+      ],
     );
   }
 }
@@ -628,13 +597,14 @@ class FundInfo extends StatelessWidget {
               width: 10,
             ),
             Expanded(
-                child: FittedBox(
               child: Text(
                 "Augmont Gold Fund",
                 textAlign: TextAlign.left,
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24),
+                style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w700,
+                    fontSize: SizeConfig.largeTextSize),
               ),
-            )),
+            ),
             SizedBox(
               width: _height * 0.02,
             )
@@ -643,8 +613,9 @@ class FundInfo extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(bottom: _height * 0.02, left: 20, right: 30),
           child: Text(
-            'ICICI Prudential Liquid Mutual Fund is a'
-            ' popular fund that has consistently given an annual return of 6-7%.',
+            'A strong asset with a 56% growth in the past 5 years. Augmont is the leading ' +
+                'gold bullion of India. Invest in 24K digital gold ' +
+                'with 999 purity.',
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: UiConstants.accentColor, fontStyle: FontStyle.italic),

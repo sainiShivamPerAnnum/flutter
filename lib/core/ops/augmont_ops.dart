@@ -5,8 +5,8 @@ import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/core/service/augmont_invoice_service.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
@@ -21,8 +21,6 @@ class AugmontModel extends ChangeNotifier {
   DBModel _dbModel = locator<DBModel>();
   RazorpayModel _rzpGateway = locator<RazorpayModel>();
   BaseUtil _baseProvider = locator<BaseUtil>();
-  ICICIModel _iProvider =
-      locator<ICICIModel>(); //required to fetch user full name
   ValueChanged<UserTransaction> _augmontTxnProcessListener;
   final String defaultBaseUri =
       'https://ug0949ai64.execute-api.ap-south-1.amazonaws.com/dev';
@@ -49,16 +47,6 @@ class AugmontModel extends ChangeNotifier {
 
   String _constructUsername() =>
       'felloGY${_baseProvider.myUser.uid.replaceAll(new RegExp(r"[0-9]"), "")}';
-
-  // Future<String> _getPanHolderName(String pan) async{
-  //   if(!_iProvider.isInit())await _iProvider.init();
-  //   final kycMap = await _iProvider.getKycStatus(pan);
-  //   if(kycMap == null || kycMap[GetKycStatus.resName] == null) {
-  //     return null;
-  //   }else{
-  //     return kycMap[GetKycStatus.resName];
-  //   }
-  // }
 
   Future<UserAugmontDetail> createUser(
       String mobile,
@@ -119,6 +107,35 @@ class AugmontModel extends ChangeNotifier {
       resMap["flag"] = QUERY_PASSED;
 
       return AugmontRates.fromMap(resMap);
+    }
+  }
+
+  Future<double> getGoldBalance() async {
+    if (!isInit()) await _init();
+    Map<String, String> _params = {
+      Passbook.fldAugmontUid: _baseProvider.augmontDetail.userId,
+    };
+    var _request = http.Request(
+        'GET', Uri.parse(_constructRequest(Passbook.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await _processResponse(_response);
+    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
+      log.error('Query Failed');
+      return null;
+    } else {
+      log.debug(resMap[Passbook.resGoldGrams].toString());
+      resMap["flag"] = QUERY_PASSED;
+
+      String goldGrmsStr = resMap[Passbook.resGoldGrams];
+      double goldGrms = 0;
+      try {
+        goldGrms = double.parse(goldGrmsStr);
+        return goldGrms;
+      } catch (e) {
+        return 0.0;
+      }
     }
   }
 
@@ -221,6 +238,9 @@ class AugmontModel extends ChangeNotifier {
       _baseProvider
               .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
           resMap[SubmitGoldPurchase.resTranId];
+      _baseProvider
+              .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] =
+          double.tryParse(resMap[SubmitGoldPurchase.resGoldBalance])??0.0;
       //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
       if (!_baseProvider.augmontDetail.firstInvMade) {
         _baseProvider.augmontDetail.firstInvMade = true;
@@ -284,7 +304,7 @@ class AugmontModel extends ChangeNotifier {
     final resMap = await _processResponse(_response);
     if (resMap == null ||
         !resMap[INTERNAL_FAIL_FLAG] ||
-        resMap['result']['data'][SubmitGoldSell.resTranId] == null) {
+        resMap[SubmitGoldSell.resTranId] == null) {
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_CANCELLED;
       String docKey = await _dbModel.addUserTransaction(
@@ -303,13 +323,42 @@ class AugmontModel extends ChangeNotifier {
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_COMPLETE;
       _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
-          resMap['result']['data'][SubmitGoldSell.resAugTranId];
+          resMap[SubmitGoldSell.resAugTranId];
       _baseProvider
               .currentAugmontTxn.augmnt[UserTransaction.subFldMerchantTranId] =
-          resMap['result']['data'][SubmitGoldSell.resTranId];
+          resMap[SubmitGoldSell.resTranId];
+      _baseProvider
+              .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] =
+          double.tryParse(
+              resMap[SubmitGoldSell.resGoldBalance])??0.0;
       //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
+    }
+  }
+
+  ///returns path where invoice is generated and saved
+  Future<String> generatePurchaseInvoicePdf(String txnId) async {
+    AugmontInvoiceService _pdfService = AugmontInvoiceService();
+    if (!isInit()) await _init();
+    var _params = {
+      GetInvoice.fldTranId: txnId,
+    };
+    var _request = http.Request(
+        'GET', Uri.parse(_constructRequest(GetInvoice.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await _processResponse(_response);
+    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
+      log.error('Query Failed');
+      return null;
+    } else {
+      log.debug(resMap[GetInvoice.resTransactionId].toString());
+      resMap["flag"] = QUERY_PASSED;
+
+      String _path = await _pdfService.generateInvoice(resMap);
+      return _path;
     }
   }
 

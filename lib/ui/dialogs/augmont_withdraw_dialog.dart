@@ -118,13 +118,70 @@ class AugmontWithdrawDialogState extends State<AugmontWithdrawDialog> {
                       height: 10,
                     ),
                     (!_isLoading)
-                        ? Text(
-                            'Current Gold Selling Rate: ₹${widget.sellRate} per gram',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: SizeConfig.mediumTextSize,
-                                fontWeight: FontWeight.w400),
+                        ? Padding(
+                            padding: const EdgeInsets.all(0),
+                            child: RichText(
+                              text: TextSpan(
+                                  text: 'Current Gold Selling Rate: ',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: '₹${widget.sellRate} per gram',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ]),
+                            ))
+                        : Container(),
+                    (!_isLoading)
+                        ? SizedBox(
+                            height: 5,
                           )
+                        : Container(),
+                    (!_isLoading)
+                        ? Padding(
+                            padding: const EdgeInsets.all(0),
+                            child: RichText(
+                              text: TextSpan(
+                                  text: "Total Gold Owned: ",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          '${baseProvider.myUser.augmont_quantity.toStringAsFixed(4)} grams',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ]),
+                            ))
+                        : Container(),
+                    (!_isLoading)
+                        ? SizedBox(
+                            height: 5,
+                          )
+                        : Container(),
+                    (!_isLoading)
+                        ? Padding(
+                            padding: const EdgeInsets.all(0),
+                            child: RichText(
+                              text: TextSpan(
+                                  text: 'Total value of Gold owned: ',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          '${baseProvider.myUser.augmont_quantity.toStringAsFixed(4)} * ${widget.sellRate} = ₹${_getTotalGoldOwned().toStringAsFixed(3)}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ]),
+                            ))
                         : Container(),
                     (!_isLoading)
                         ? SizedBox(
@@ -147,9 +204,7 @@ class AugmontWithdrawDialogState extends State<AugmontWithdrawDialog> {
                                       labelText: 'Amount',
                                     ),
                                     onChanged: (value) {
-                                      setState(() {
-
-                                      });
+                                      setState(() {});
                                     },
                                   ),
                                 ),
@@ -159,9 +214,9 @@ class AugmontWithdrawDialogState extends State<AugmontWithdrawDialog> {
                         : Container(),
                     (!_isLoading)
                         ? Padding(
-                      padding: EdgeInsets.only(top:10),
-                      child: _getGoldAmount(_amountController.text),
-                    )
+                            padding: EdgeInsets.only(top: 10),
+                            child: _getGoldAmount(_amountController.text),
+                          )
                         : Container(),
                     (!_isLoading && _amountError != null)
                         ? Container(
@@ -182,7 +237,7 @@ class AugmontWithdrawDialogState extends State<AugmontWithdrawDialog> {
                               top: 10,
                             ),
                             child: Text(
-                              'All withdrawals are usually processed within 2 working days.',
+                              'All withdrawals are processed within 2 business working days.',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Colors.blueGrey[600],
@@ -219,6 +274,15 @@ class AugmontWithdrawDialogState extends State<AugmontWithdrawDialog> {
             fontSize: SizeConfig.mediumTextSize, fontWeight: FontWeight.w400),
       );
     }
+  }
+
+  double _getTotalGoldOwned() {
+    if (widget.sellRate != null &&
+        baseProvider.myUser.augmont_quantity != null) {
+      double _net = widget.sellRate * baseProvider.myUser.augmont_quantity;
+      return _net;
+    }
+    return 0;
   }
 
   onTransactionProcessed(bool flag) {
@@ -315,7 +379,7 @@ class AugmontWithdrawDialogState extends State<AugmontWithdrawDialog> {
     }
     try {
       double amount = double.parse(value);
-      if (amount > widget.balance) return 'Insufficient balance';
+      if (amount > _getTotalGoldOwned()) return 'Insufficient balance';
       if (amount < 5)
         return 'Please enter value more than ₹5';
       else

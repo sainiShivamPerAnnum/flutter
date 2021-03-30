@@ -54,7 +54,7 @@ class BaseUtil extends ChangeNotifier {
   List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
   String myUserDpUrl;
-  List<UserMiniTransaction> userMiniTxnList = [];
+  List<UserTransaction> userMiniTxnList = [];
 
   DateTime _userCreationTimestamp;
   int referCount = 0;
@@ -66,6 +66,7 @@ class BaseUtil extends ChangeNotifier {
   bool isIciciDepositRouteLogicInProgress = false;
   bool isAugDepositRouteLogicInProgress = false;
   bool isAugWithdrawRouteLogicInProgress = false;
+  bool isAugmontRealTimeBalanceFetched = false;
   bool weeklyDrawFetched = false;
   bool weeklyTicksFetched = false;
   bool referCountFetched = false;
@@ -89,7 +90,7 @@ class BaseUtil extends ChangeNotifier {
   ///STAGES - IMPORTANT
   static const AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;
   static const AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.DEV;
-  static const SignzyStage activeSignzyStage = SignzyStage.DEV;
+  static const SignzyStage activeSignzyStage = SignzyStage.PROD;
   static const RazorpayStage activeRazorpayStage = RazorpayStage.DEV;
 
   Future init() async {

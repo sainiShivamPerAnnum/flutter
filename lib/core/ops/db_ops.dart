@@ -311,10 +311,10 @@ class DBModel extends ChangeNotifier {
     return null;
   }
 
-  Future<List<UserMiniTransaction>> getFilteredUserTransactions(
+  Future<List<UserTransaction>> getFilteredUserTransactions(
       BaseUser user, String type, String subtype,
       [int limit = 30]) async {
-    List<UserMiniTransaction> requestedTxns = [];
+    List<UserTransaction> requestedTxns = [];
     try {
       String _id = user.uid;
       QuerySnapshot _querySnapshot =
@@ -322,7 +322,7 @@ class DBModel extends ChangeNotifier {
       _querySnapshot.docs.forEach((txn) {
         try {
           if (txn.exists)
-            requestedTxns.add(UserMiniTransaction.fromMap(txn.data()));
+            requestedTxns.add(UserTransaction.fromMap(txn.data(),txn.id));
         } catch (e) {
           log.error('Failed to parse user transaction $txn');
         }

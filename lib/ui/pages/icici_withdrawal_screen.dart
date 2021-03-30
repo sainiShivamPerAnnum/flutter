@@ -5,6 +5,7 @@ import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/icici_api_util.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -254,7 +255,7 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
                           ],
                         ),
                       ),
-                      FAQCard(),
+                      FAQCard(Assets.mfFaqHeaders, Assets.mfFaqAnswers),
                     ],
                   ),
                 ),

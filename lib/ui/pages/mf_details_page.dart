@@ -65,7 +65,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                     FundGraph(),
                     FundDetailsTable(),
                     ProfitCalculator(),
-                    FAQCard(),
+                    FAQCard(Assets.mfFaqHeaders, Assets.mfFaqAnswers),
                     _buildBetaWithdrawButton(),
                   ],
                 ),
@@ -115,7 +115,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
             //     panNumber: baseProvider.iciciDetail.panNumber,),
             // ));
             //////////////////////////////////////
-            onDepositClicked().then((value) {
+            onDepositClicked2().then((value) {
               setState(() {});
             });
           },
@@ -192,6 +192,14 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       return 'REGISTER';
     else
       return 'DEPOSIT';
+  }
+
+  Future<bool> onDepositClicked2() async {
+    // Navigator.of(context).pop(); //go back to save tab
+    // Navigator.of(context).pushNamed('/initkyc');
+
+    baseProvider.showNegativeAlert('Disabled', 'This action has been currently disabled', context);
+    return true;
   }
 
   Future<bool> onDepositClicked() async {

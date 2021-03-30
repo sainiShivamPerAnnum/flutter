@@ -54,7 +54,7 @@ class _GoldProfitCalculatorState extends State<GoldProfitCalculator> {
       child: Column(
         children: [
           Text(
-            "PROFIT CALCULATOR*",
+            "PROFIT CALCULATOR",
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 24,
