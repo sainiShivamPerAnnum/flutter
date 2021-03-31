@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                     physics: BouncingScrollPhysics(),
                     children: [
                       Container(
-                        height: AppBar().preferredSize.height * 1.5,
+                        height: AppBar().preferredSize.height,
                       ),
                       Container(
                         decoration: BoxDecoration(

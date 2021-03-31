@@ -5,6 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
+import 'package:felloapp/ui/pages/login/screens/Field-Container.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -277,51 +278,62 @@ class _EditProfileState extends State<EditProfile> {
                   SizedBox(
                     height: 20,
                   ),
-                  InputField(
-                    child: TextFormField(
-                      controller: _nameFieldController,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
-                        labelText: 'Name',
-                        prefixIcon: Icon(Icons.person),
-                        border:
-                            UnderlineInputBorder(borderSide: BorderSide.none),
+                  //Text("Name"),
+                  TextFormField(
+                    controller: _nameFieldController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      validator: (value) {
-                        return value.isEmpty ? 'Please enter your name' : null;
-                      },
-                      onFieldSubmitted: (v) {
-                        FocusScope.of(context).nextFocus();
-                      },
+                      prefixIcon: Icon(Icons.person),
+                      focusColor: UiConstants.primaryColor,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
+                    validator: (value) {
+                      return value.isEmpty ? 'Please enter your name' : null;
+                    },
+                    onFieldSubmitted: (v) {
+                      FocusScope.of(context).nextFocus();
+                    },
                   ),
-                  InputField(
-                    child: TextFormField(
-                      controller: _emailFieldController,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        //hintText: 'Email(optional)',
-                        //errorText: _validate ? null : "Invalid!",
-                        labelText: 'Email',
-                        prefixIcon: Icon(Icons.email),
-                        border:
-                            UnderlineInputBorder(borderSide: BorderSide.none),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  //Text("Email"),
+                  TextFormField(
+                    controller: _emailFieldController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      //hintText: 'Email(optional)',
+                      //errorText: _validate ? null : "Invalid!",
+                      labelText: 'Email',
+                      focusColor: UiConstants.primaryColor,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      validator: (value) {
-                        print(value);
-                        return (value != null &&
-                                value.isNotEmpty &&
-                                emailRegex.hasMatch(value))
-                            ? null
-                            : 'Please enter a valid email';
-                      },
+                      prefixIcon: Icon(Icons.email),
+                    ),
+                    validator: (value) {
+                      print(value);
+                      return (value != null &&
+                              value.isNotEmpty &&
+                              emailRegex.hasMatch(value))
+                          ? null
+                          : 'Please enter a valid email';
+                    },
 //                        onChanged: (value) {
-                      //this._email = value;
+                    //this._email = value;
 //                    if(!_validate) setState(() {
 //                      _validate = true;
 //                    });
 //                        },
-                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
                   ),
                   // Padding(
                   //   padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 18.0),
@@ -343,86 +355,90 @@ class _EditProfileState extends State<EditProfile> {
                   //     },
                   //   ),
                   // ),
-                  // Text("Date of Birth"),
+                  //Text("Date of Birth"),
                   InkWell(
                     onTap: () {
                       _selectDate(context);
                     },
-                    child: InputField(
-                      child: TextFormField(
-                        textAlign: TextAlign.start,
-                        enabled: false,
-                        keyboardType: TextInputType.text,
-                        validator: (value) {
-                          return null;
-                        },
-                        controller: _dateController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          labelText: 'DOB',
-                          hintText: 'Enter Date',
-                          prefixIcon: Icon(
-                            Icons.calendar_today,
-                          ),
+                    child: TextFormField(
+                      textAlign: TextAlign.start,
+                      enabled: false,
+                      keyboardType: TextInputType.text,
+                      validator: (value) {
+                        return null;
+                      },
+                      controller: _dateController,
+                      decoration: InputDecoration(
+                        focusColor: UiConstants.primaryColor,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        labelText: 'DOB',
+                        hintText: 'Enter Date',
+                        prefixIcon: Icon(
+                          Icons.calendar_today,
                         ),
                       ),
                     ),
                   ),
-                  InputField(
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton(
-                          value: gender,
-                          items: [
-                            DropdownMenuItem(
-                              child: Text(
-                                "Male",
-                                style: GoogleFonts.montserrat(),
-                              ),
-                              value: 1,
-                            ),
-                            DropdownMenuItem(
-                              child: Text(
-                                "Female",
-                                style: GoogleFonts.montserrat(),
-                              ),
-                              value: 2,
-                            ),
-                            DropdownMenuItem(
-                                child: Text(
-                                  "Rather Not Say",
-                                  style: GoogleFonts.montserrat(),
-                                ),
-                                value: 3),
-                          ],
-                          onChanged: (value) {
-                            gender = value;
-                            //   isLoading = true;
-                            setState(() {});
-                            //   filterTransactions();
-                          }),
-                    ),
+                  SizedBox(
+                    height: 20,
                   ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 25),
-                    child: Row(
-                      children: [
-                        Spacer(),
-                        Text("Ever invested in Mutual Funds?"),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Switch.adaptive(
-                            value: isPlayer,
-                            activeColor: UiConstants.primaryColor,
-                            onChanged: (val) {
-                              setState(() {
-                                isPlayer = val;
-                              });
-                            }),
-                        // Spacer(),
-                      ],
-                    ),
-                  ),
+                  // InputField(
+                  //   child: DropdownButtonHideUnderline(
+                  //     child: DropdownButton(
+                  //         value: gender,
+                  //         items: [
+                  //           DropdownMenuItem(
+                  //             child: Text(
+                  //               "Male",
+                  //               style: GoogleFonts.montserrat(),
+                  //             ),
+                  //             value: 1,
+                  //           ),
+                  //           DropdownMenuItem(
+                  //             child: Text(
+                  //               "Female",
+                  //               style: GoogleFonts.montserrat(),
+                  //             ),
+                  //             value: 2,
+                  //           ),
+                  //           DropdownMenuItem(
+                  //               child: Text(
+                  //                 "Rather Not Say",
+                  //                 style: GoogleFonts.montserrat(),
+                  //               ),
+                  //               value: 3),
+                  //         ],
+                  //         onChanged: (value) {
+                  //           gender = value;
+                  //           //   isLoading = true;
+                  //           setState(() {});
+                  //           //   filterTransactions();
+                  //         }),
+                  //   ),
+                  // ),
+                  // Container(
+                  //   margin: EdgeInsets.only(bottom: 25),
+                  //   child: Row(
+                  //     children: [
+                  //       Spacer(),
+                  //       Text("Ever invested in Mutual Funds?"),
+                  //       SizedBox(
+                  //         width: 20,
+                  //       ),
+                  //       Switch.adaptive(
+                  //           value: isPlayer,
+                  //           activeColor: UiConstants.primaryColor,
+                  //           onChanged: (val) {
+                  //             setState(() {
+                  //               isPlayer = val;
+                  //             });
+                  //           }),
+                  //       // Spacer(),
+                  //     ],
+                  //   ),
+                  // ),
                   new Container(
                     height: 50.0,
                     width: double.infinity,

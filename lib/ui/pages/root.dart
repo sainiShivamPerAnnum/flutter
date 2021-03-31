@@ -148,23 +148,12 @@ class _RootState extends State<Root> {
                         ),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          // gradient: new LinearGradient(
-                          //   colors: [
-                          //     kPrimarColor.withGreen(200),
-                          //     kPrimarColor.withGreen(400),
-                          //     kPrimarColor.withGreen(600)
-                          //   ],
-                          //   begin: Alignment.topLeft,
-                          //   end: Alignment.bottomRight,
-                          // ),
                           border:
                               Border.all(color: getBurgerBorder(), width: 3),
                         ),
                         child: Container(
-                          height: 5,
-                          width: 5,
                           padding: EdgeInsets.all(
-                            width * 0.03,
+                            height * 0.011,
                           ),
                           child: Image.asset(
                             getBurgerImage(),
@@ -198,8 +187,8 @@ class _RootState extends State<Root> {
       if (deepLink == null) return null;
       log.debug('Received deep link');
       int addUserTicketCount =
-      await submitReferral(baseProvider.myUser.uid, deepLink);
-      log.debug(addUserTicketCount.toString()??0.toString());
+          await submitReferral(baseProvider.myUser.uid, deepLink);
+      log.debug(addUserTicketCount.toString() ?? 0.toString());
       //TODO add ticket request over here
       return addUserTicketCount;
     }, onError: (OnLinkErrorException e) async {
@@ -216,7 +205,7 @@ class _RootState extends State<Root> {
       // log.debug(deepLink.toString());
       int addUserTicketCount =
           await submitReferral(baseProvider.myUser.uid, deepLink);
-      log.debug(addUserTicketCount.toString()??0.toString());
+      log.debug(addUserTicketCount.toString() ?? 0.toString());
       return addUserTicketCount;
     }
   }

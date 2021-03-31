@@ -458,7 +458,6 @@ class FundDetailsTable extends StatelessWidget {
     double _height = MediaQuery.of(context).size.height;
     return Row(
       children: [
-        Spacer(),
         Container(
           margin: EdgeInsets.symmetric(
             vertical: _height * 0.02,
@@ -504,7 +503,6 @@ class FundDetailsTable extends StatelessWidget {
             ],
           ),
         ),
-        Spacer(),
       ],
     );
   }
