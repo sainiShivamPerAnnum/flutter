@@ -93,7 +93,8 @@ class NameInputScreenState extends State<NameInputScreen> {
                     height: 400,
                     child: CupertinoDatePicker(
                         mode: CupertinoDatePickerMode.date,
-                        maximumDate: DateTime(2003, 1, 1, 0, 0),
+                        minimumDate: DateTime(1949, 1, 1, 0, 0),
+                        maximumDate: DateTime(2008, 1, 1, 0, 0),
                         initialDateTime: initialDate,
                         onDateTimeChanged: (val) {
                           setState(() {
@@ -158,7 +159,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                 height: 30,
               ),
               Text(
-                "Let's introduce",
+                "Tell us a little about yourself",
                 style: GoogleFonts.montserrat(
                     fontSize: SizeConfig.largeTextSize,
                     fontWeight: FontWeight.w700),
