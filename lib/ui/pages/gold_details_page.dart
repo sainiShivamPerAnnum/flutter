@@ -13,6 +13,7 @@ import 'package:felloapp/ui/elements/gold_profit_calculator.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:fl_animated_linechart/chart/area_line_chart.dart';
 import 'package:fl_animated_linechart/chart/line_chart.dart';
@@ -21,6 +22,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -454,34 +457,39 @@ class FundDetailsTable extends StatelessWidget {
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
     return Container(
-      margin: EdgeInsets.symmetric(
-        vertical: _height * 0.02,
+      margin: EdgeInsets.all(
+        _height * 0.02,
       ),
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: _height * 0.02,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  offset: Offset(5, 5),
-                  blurRadius: 5,
-                  color: Colors.black.withOpacity(0.1),
-                  spreadRadius: 0,
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(30),
-              child: Text('Current Gold Balance: ${_goldBalance.toStringAsFixed(3)} grams'                
-              ),
-            ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            offset: Offset(5, 5),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 0,
           ),
         ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+            vertical: 20, horizontal: SizeConfig.screenWidth * 0.1),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              "images/svgs/gold.svg",
+              height: SizeConfig.screenWidth * 0.08,
+              // width: SizeConfig.screenWidth*0.05,
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            Text(
+                'Current Gold Balance: ${_goldBalance.toStringAsFixed(3)} grams'),
+          ],
+        ),
       ),
     );
   }
@@ -574,13 +582,14 @@ class FundInfo extends StatelessWidget {
               width: 10,
             ),
             Expanded(
-                child: FittedBox(
               child: Text(
                 "Augmont Gold Fund",
                 textAlign: TextAlign.left,
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24),
+                style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.w700,
+                    fontSize: SizeConfig.largeTextSize),
               ),
-            )),
+            ),
             SizedBox(
               width: _height * 0.02,
             )

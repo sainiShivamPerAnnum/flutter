@@ -5,9 +5,12 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
+import 'package:felloapp/ui/pages/login/screens/Field-Container.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -35,6 +38,8 @@ class _EditProfileState extends State<EditProfile> {
   static DBModel dbProvider;
   static BaseUtil baseProvider;
   File profilePic;
+  int gender = 1;
+  bool isPlayer = false;
   RegExp emailRegex = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
@@ -99,6 +104,37 @@ class _EditProfileState extends State<EditProfile> {
     return isUploaded;
   }
 
+  static DateTime selectedDate = DateTime.now();
+  TextEditingController _dateController = new TextEditingController(
+      text: '${selectedDate.toLocal()}'.split(' ')[0]);
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(1940, 8),
+        lastDate: DateTime(2101),
+        builder: (BuildContext context, Widget child) {
+          return Theme(
+            data: ThemeData.dark().copyWith(
+              colorScheme: ColorScheme.dark(
+                primary: UiConstants.primaryColor,
+                onPrimary: Colors.black,
+                surface: UiConstants.primaryColor,
+                onSurface: Colors.black,
+              ),
+              dialogBackgroundColor: Colors.blueGrey[50],
+            ),
+            child: child,
+          );
+        });
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+        _dateController.text = "${picked.toLocal()}".split(' ')[0];
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!_isInitialized) {
@@ -158,81 +194,104 @@ class _EditProfileState extends State<EditProfile> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: BaseUtil.getAppBar(),
-        body: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(top: 24),
-                  child: Container(
-                    height: SizeConfig.screenHeight * 0.2,
-                    width: SizeConfig.screenHeight * 0.2,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.black,
-                    ),
-                    child: Stack(
-                      children: [
-                        ClipOval(
-                          child: profilePic != null
-                              ? Image.file(
-                                  profilePic,
-                                  height: SizeConfig.screenHeight * 0.2,
-                                  width: SizeConfig.screenHeight * 0.2,
-                                  fit: BoxFit.cover,
-                                )
-                              : (widget.prevImage == null
-                                  ? Image.asset(
-                                      "images/profile.png",
-                                      height: SizeConfig.screenHeight * 0.2,
-                                      width: SizeConfig.screenHeight * 0.2,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : CachedNetworkImage(
-                                      imageUrl: widget.prevImage,
-                                      height: SizeConfig.screenHeight * 0.2,
-                                      width: SizeConfig.screenHeight * 0.2,
-                                      fit: BoxFit.cover,
-                                    )),
-                        ),
-                        Positioned(
-                          bottom: SizeConfig.screenHeight * 0.02,
-                          left: SizeConfig.screenHeight * 0.05,
-                          child: GestureDetector(
-                            onTap: chooseprofilePicture,
-                            child: Container(
-                              height: SizeConfig.screenHeight * 0.05,
-                              width: SizeConfig.screenHeight * 0.1,
-                              decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.8),
-                                  borderRadius: BorderRadius.circular(100)),
-                              child: Center(
-                                child: Text(
-                                  "Edit",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.montserrat(
-                                    color: Colors.white,
-                                    fontSize: SizeConfig.mediumTextSize,
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.blockSizeHorizontal * 5),
+          child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 24),
+                        child: Container(
+                          height: SizeConfig.screenHeight * 0.2,
+                          width: SizeConfig.screenHeight * 0.2,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.black,
+                              border: Border.all(
+                                  color: UiConstants.primaryColor, width: 4)),
+                          child: Stack(
+                            children: [
+                              ClipOval(
+                                child: profilePic != null
+                                    ? Image.file(
+                                        profilePic,
+                                        height: SizeConfig.screenHeight * 0.2,
+                                        width: SizeConfig.screenHeight * 0.2,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : (widget.prevImage == null
+                                        ? Image.asset(
+                                            "images/profile.png",
+                                            height:
+                                                SizeConfig.screenHeight * 0.2,
+                                            width:
+                                                SizeConfig.screenHeight * 0.2,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : CachedNetworkImage(
+                                            imageUrl: widget.prevImage,
+                                            height:
+                                                SizeConfig.screenHeight * 0.2,
+                                            width:
+                                                SizeConfig.screenHeight * 0.2,
+                                            fit: BoxFit.cover,
+                                          )),
+                              ),
+                              Positioned(
+                                bottom: SizeConfig.screenHeight * 0.02,
+                                left: SizeConfig.screenHeight * 0.05,
+                                child: GestureDetector(
+                                  onTap: chooseprofilePicture,
+                                  child: Container(
+                                    height: SizeConfig.screenHeight * 0.05,
+                                    width: SizeConfig.screenHeight * 0.1,
+                                    decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(0.8),
+                                        borderRadius:
+                                            BorderRadius.circular(100)),
+                                    child: Center(
+                                      child: Text(
+                                        "Edit",
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.montserrat(
+                                          color: Colors.white,
+                                          fontSize: SizeConfig.mediumTextSize,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 18.0),
-                  child: TextFormField(
+                  SizedBox(
+                    height: 20,
+                  ),
+                  //Text("Name"),
+                  TextFormField(
                     controller: _nameFieldController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       labelText: 'Name',
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       prefixIcon: Icon(Icons.person),
+                      focusColor: UiConstants.primaryColor,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                     validator: (value) {
                       return value.isEmpty ? 'Please enter your name' : null;
@@ -241,16 +300,21 @@ class _EditProfileState extends State<EditProfile> {
                       FocusScope.of(context).nextFocus();
                     },
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 18.0),
-                  child: TextFormField(
+                  SizedBox(
+                    height: 20,
+                  ),
+                  //Text("Email"),
+                  TextFormField(
                     controller: _emailFieldController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       //hintText: 'Email(optional)',
                       //errorText: _validate ? null : "Invalid!",
                       labelText: 'Email',
+                      focusColor: UiConstants.primaryColor,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       prefixIcon: Icon(Icons.email),
                     ),
                     validator: (value) {
@@ -268,140 +332,215 @@ class _EditProfileState extends State<EditProfile> {
 //                    });
 //                        },
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 18.0),
-                  child: TextFormField(
-                    controller: _ageFieldController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Age',
-                      prefixIcon: Icon(Icons.perm_contact_calendar),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 18.0),
+                  //   child: TextFormField(
+                  //     controller: _ageFieldController,
+                  //     keyboardType: TextInputType.number,
+                  //     decoration: InputDecoration(
+                  //       labelText: 'Age',
+                  //       prefixIcon: Icon(Icons.perm_contact_calendar),
+                  //     ),
+                  //     validator: (value) {
+                  //       print(value);
+                  //       return (value != null && value.isNotEmpty)
+                  //           ? null
+                  //           : 'Please enter your age';
+                  //     },
+                  //     onFieldSubmitted: (v) {
+                  //       FocusScope.of(context).nextFocus();
+                  //     },
+                  //   ),
+                  // ),
+                  //Text("Date of Birth"),
+                  // InkWell(
+                  //   onTap: () {
+                  //     _selectDate(context);
+                  //   },
+                  //   child: TextFormField(
+                  //     textAlign: TextAlign.start,
+                  //     enabled: false,
+                  //     keyboardType: TextInputType.text,
+                  //     validator: (value) {
+                  //       return null;
+                  //     },
+                  //     controller: _dateController,
+                  //     decoration: InputDecoration(
+                  //       focusColor: UiConstants.primaryColor,
+                  //       border: OutlineInputBorder(
+                  //         borderRadius: BorderRadius.circular(10),
+                  //       ),
+                  //       labelText: 'DOB',
+                  //       hintText: 'Enter Date',
+                  //       prefixIcon: Icon(
+                  //         Icons.calendar_today,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   height: 20,
+                  // ),
+                  // InputField(
+                  //   child: DropdownButtonHideUnderline(
+                  //     child: DropdownButton(
+                  //         value: gender,
+                  //         items: [
+                  //           DropdownMenuItem(
+                  //             child: Text(
+                  //               "Male",
+                  //               style: GoogleFonts.montserrat(),
+                  //             ),
+                  //             value: 1,
+                  //           ),
+                  //           DropdownMenuItem(
+                  //             child: Text(
+                  //               "Female",
+                  //               style: GoogleFonts.montserrat(),
+                  //             ),
+                  //             value: 2,
+                  //           ),
+                  //           DropdownMenuItem(
+                  //               child: Text(
+                  //                 "Rather Not Say",
+                  //                 style: GoogleFonts.montserrat(),
+                  //               ),
+                  //               value: 3),
+                  //         ],
+                  //         onChanged: (value) {
+                  //           gender = value;
+                  //           //   isLoading = true;
+                  //           setState(() {});
+                  //           //   filterTransactions();
+                  //         }),
+                  //   ),
+                  // ),
+                  // Container(
+                  //   margin: EdgeInsets.only(bottom: 25),
+                  //   child: Row(
+                  //     children: [
+                  //       Spacer(),
+                  //       Text("Ever invested in Mutual Funds?"),
+                  //       SizedBox(
+                  //         width: 20,
+                  //       ),
+                  //       Switch.adaptive(
+                  //           value: isPlayer,
+                  //           activeColor: UiConstants.primaryColor,
+                  //           onChanged: (val) {
+                  //             setState(() {
+                  //               isPlayer = val;
+                  //             });
+                  //           }),
+                  //       // Spacer(),
+                  //     ],
+                  //   ),
+                  // ),
+                  new Container(
+                    height: 50.0,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      gradient: new LinearGradient(colors: [
+                        UiConstants.primaryColor,
+                        UiConstants.primaryColor.withBlue(200),
+                      ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
+                      borderRadius: new BorderRadius.circular(10.0),
                     ),
-                    validator: (value) {
-                      print(value);
-                      return (value != null && value.isNotEmpty)
-                          ? null
-                          : 'Please enter your age';
-                    },
-                    onFieldSubmitted: (v) {
-                      FocusScope.of(context).nextFocus();
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20, 10, 20, 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      new Container(
-                        width: MediaQuery.of(context).size.width - 50,
-                        height: 50.0,
-                        decoration: BoxDecoration(
-                          gradient: new LinearGradient(
-                              colors: [
-                                UiConstants.primaryColor,
-                                UiConstants.primaryColor.withBlue(200),
-                              ],
-                              begin: Alignment(0.5, -1.0),
-                              end: Alignment(0.5, 1.0)),
-                          borderRadius: new BorderRadius.circular(10.0),
-                        ),
-                        child: new Material(
-                          child: MaterialButton(
-                            child: (!baseProvider.isEditProfileNextInProgress)
-                                ? Text(
-                                    'UPDATE',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .button
-                                        .copyWith(color: Colors.white),
-                                  )
-                                : SpinKitThreeBounce(
-                                    color: UiConstants.spinnerColor2,
-                                    size: 18.0,
-                                  ),
-                            onPressed: () {
-                              if (_formKey.currentState.validate()) {
-                                // baseProvider.firebaseUser = await FirebaseAuth.instance.currentUser();
-                                var pName = _nameFieldController.text;
-                                var pEmail = _emailFieldController.text;
-                                var pAge = _ageFieldController.text;
+                    child: new Material(
+                      child: MaterialButton(
+                        child: (!baseProvider.isEditProfileNextInProgress)
+                            ? Text(
+                                'UPDATE',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .button
+                                    .copyWith(color: Colors.white),
+                              )
+                            : SpinKitThreeBounce(
+                                color: UiConstants.spinnerColor2,
+                                size: 18.0,
+                              ),
+                        onPressed: () {
+                          if (_formKey.currentState.validate()) {
+                            // baseProvider.firebaseUser = await FirebaseAuth.instance.currentUser();
+                            var pName = _nameFieldController.text;
+                            var pEmail = _emailFieldController.text;
+                            var pAge = _ageFieldController.text;
 
-                                var curName = baseProvider.myUser.name;
-                                var curEmail = baseProvider.myUser.email;
-                                var curAge = baseProvider.myUser.age;
+                            var curName = baseProvider.myUser.name;
+                            var curEmail = baseProvider.myUser.email;
+                            var curAge = baseProvider.myUser.age;
 
-                                bool noChanges = true;
-                                if (curName == null || pName != curName)
-                                  noChanges = false;
-                                if (curEmail == null || pEmail != curEmail)
-                                  noChanges = false;
-                                if (curAge == null || pAge != curAge)
-                                  noChanges = false;
-                                if (profilePic != null) noChanges = false;
+                            bool noChanges = true;
+                            if (curName == null || pName != curName)
+                              noChanges = false;
+                            if (curEmail == null || pEmail != curEmail)
+                              noChanges = false;
+                            if (curAge == null || pAge != curAge)
+                              noChanges = false;
+                            if (profilePic != null) noChanges = false;
 
-                                if (noChanges) {
-                                  baseProvider.showNegativeAlert('No Update',
-                                      'No changes were made', context);
+                            if (noChanges) {
+                              baseProvider.showNegativeAlert(
+                                  'No Update', 'No changes were made', context);
 
-                                  return;
-                                } else {
-                                  baseProvider.myUser.name = pName;
-                                  baseProvider.myUser.email = pEmail;
-                                  baseProvider.myUser.age = pAge;
-                                  if (profilePic != null) {
-                                    updatePicture(context).then((flag) {
-                                      if (flag) {
-                                        baseProvider.showPositiveAlert(
-                                            'Complete',
-                                            'Your profile Picture have been updated',
-                                            context);
-                                      } else {
-                                        baseProvider.showNegativeAlert(
-                                            'Failed',
-                                            'Your Profile Picture could not be updated at the moment',
-                                            context);
-                                      }
-                                    });
+                              return;
+                            } else {
+                              baseProvider.myUser.name = pName;
+                              baseProvider.myUser.email = pEmail;
+                              baseProvider.myUser.age = pAge;
+                              if (profilePic != null) {
+                                updatePicture(context).then((flag) {
+                                  if (flag) {
+                                    baseProvider.showPositiveAlert(
+                                        'Complete',
+                                        'Your profile Picture have been updated',
+                                        context);
+                                  } else {
+                                    baseProvider.showNegativeAlert(
+                                        'Failed',
+                                        'Your Profile Picture could not be updated at the moment',
+                                        context);
                                   }
-
-                                  dbProvider
-                                      .updateUser(baseProvider.myUser)
-                                      .then((flag) {
-                                    if (flag) {
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (ctx) => Root()));
-                                      baseProvider.showPositiveAlert(
-                                          'Complete',
-                                          'Your details have been updated',
-                                          context);
-                                    } else {
-                                      baseProvider.showNegativeAlert(
-                                          'Failed',
-                                          'Your details could not be updated at the moment',
-                                          context);
-                                    }
-                                  });
-                                }
+                                });
                               }
-                            },
-                            highlightColor: Colors.white30,
-                            splashColor: Colors.white30,
-                          ),
-                          color: Colors.transparent,
-                          borderRadius: new BorderRadius.circular(30.0),
-                        ),
+
+                              dbProvider
+                                  .updateUser(baseProvider.myUser)
+                                  .then((flag) {
+                                if (flag) {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (ctx) => Root()));
+                                  baseProvider.showPositiveAlert(
+                                      'Complete',
+                                      'Your details have been updated',
+                                      context);
+                                } else {
+                                  baseProvider.showNegativeAlert(
+                                      'Failed',
+                                      'Your details could not be updated at the moment',
+                                      context);
+                                }
+                              });
+                            }
+                          }
+                        },
+                        highlightColor: Colors.white30,
+                        splashColor: Colors.white30,
                       ),
-                    ],
+                      color: Colors.transparent,
+                      borderRadius: new BorderRadius.circular(30.0),
+                    ),
                   ),
-                ),
-                Spacer(),
-              ],
-            )),
+                  Spacer(),
+                ],
+              )),
+        ),
       ),
     );
   }

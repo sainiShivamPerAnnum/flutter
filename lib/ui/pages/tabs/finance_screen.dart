@@ -184,9 +184,9 @@ class FundChartView extends StatelessWidget {
   FundChartView({this.dataMap, this.totalBal});
 
   final List<Color> colorList = [
-    UiConstants.primaryColor.withGreen(200),
-    UiConstants.primaryColor.withGreen(400),
-    UiConstants.primaryColor.withGreen(600),
+    UiConstants.primaryColor,
+    Color(0xffF18805),
+    Color(0xff03256C),
   ];
 
   @override

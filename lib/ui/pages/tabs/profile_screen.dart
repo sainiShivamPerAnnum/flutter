@@ -94,6 +94,8 @@ class _ProfilePageState extends State<ProfilePage> {
               },
               child: Container(
                 height: SizeConfig.screenHeight * 0.24,
+                margin: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.blockSizeHorizontal * 2),
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage(
@@ -127,6 +129,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            SizedBox(
+                              width: 20,
+                            ),
                             isImageLoading
                                 ? Image.asset(
                                     "images/profile.png",
@@ -400,84 +405,80 @@ class ShareCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: SizeConfig.screenWidth*0.9,
-      height: SizeConfig.screenHeight * 0.25,
-      alignment: Alignment.center,
-      child: Container(
-        margin: EdgeInsets.symmetric(
-            horizontal: SizeConfig.blockSizeHorizontal * 2),
-        height: SizeConfig.screenHeight * 0.26,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            gradient: new LinearGradient(
-              colors: [
-                Color(0xff4E4376),
-                Color(0xff2B5876),
-              ],
-              begin: Alignment.bottomLeft,
-              end: Alignment.topRight,
+      margin:
+          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: new LinearGradient(
+            colors: [
+              Color(0xff4E4376),
+              Color(0xff2B5876),
+            ],
+            begin: Alignment.bottomLeft,
+            end: Alignment.topRight,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0xff4E4376).withOpacity(0.3),
+              offset: Offset(5, 5),
+              blurRadius: 10,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Color(0xff4E4376).withOpacity(0.3),
-                offset: Offset(5, 5),
-                blurRadius: 10,
+            BoxShadow(
+              color: Color(0xff2B5876).withOpacity(0.3),
+              offset: Offset(5, 5),
+              blurRadius: 10,
+            ),
+          ]),
+      width: double.infinity,
+      child: Stack(
+        children: [
+          Positioned(
+            right: 10,
+            bottom: 0,
+            child: Opacity(
+              opacity: 0.3,
+              child: Image.asset(
+                "images/share-card.png",
+                // height: SizeConfig.screenHeight * 0.5,
+                // width: SizeConfig.screenWidth * 0.5,
               ),
-              BoxShadow(
-                color: Color(0xff2B5876).withOpacity(0.3),
-                offset: Offset(5, 5),
-                blurRadius: 10,
-              ),
-            ]),
-        width: double.infinity,
-        child: Stack(
-          children: [
-            Positioned(
-              right: 10,
-              bottom: 0,
-              child: Opacity(
-                opacity: 0.3,
-                child: Image.asset(
-                  "images/share-card.png",
-                  // height: SizeConfig.screenHeight * 0.5,
-                  // width: SizeConfig.screenWidth * 0.5,
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Both get ₹ 25 on every referral",
+                  style: GoogleFonts.montserrat(
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          offset: Offset(5, 5),
+                          color: Colors.black26,
+                          blurRadius: 10,
+                        )
+                      ],
+                      fontWeight: FontWeight.w700,
+                      fontSize: SizeConfig.cardTitleTextSize),
                 ),
-              ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "You and your friend also receive 10 game tickets that week!",
+                  style: GoogleFonts.montserrat(
+                      color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+                ),
+                SizedBox(height: 10),
+                ShareOptions(),
+              ],
             ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Both get ₹ 25 on every referral",
-                    style: GoogleFonts.montserrat(
-                        color: Colors.white,
-                        shadows: [
-                          Shadow(
-                            offset: Offset(5, 5),
-                            color: Colors.black26,
-                            blurRadius: 10,
-                          )
-                        ],
-                        fontWeight: FontWeight.w700,
-                        fontSize: SizeConfig.cardTitleTextSize),
-                  ),
-                  Text(
-                    "You and your friend also receive 10 game tickets that week!",
-                    style: GoogleFonts.montserrat(
-                        color: Colors.white,
-                        fontSize: SizeConfig.mediumTextSize),
-                  ),
-                  SizedBox(height:5),
-                  ShareOptions(),
-                ],
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
@@ -586,21 +587,15 @@ class _ShareOptionsState extends State<ShareOptions> {
                 log.debug(url);
                 baseProvider.isReferralLinkBuildInProgressOther = false;
                 setState(() {});
-                if(Platform.isIOS)
-                  {
-                    Share.share(_shareMsg + url);
-
-                  }
-                else
-                  {
-                    FlutterShareMe()
-                        .shareToSystem(msg: _shareMsg + url)
-                        .then((flag) {
-                      log.debug(flag);
-                    });
-
-                  }
-
+                if (Platform.isIOS) {
+                  Share.share(_shareMsg + url);
+                } else {
+                  FlutterShareMe()
+                      .shareToSystem(msg: _shareMsg + url)
+                      .then((flag) {
+                    log.debug(flag);
+                  });
+                }
               });
               setState(() {});
             },
@@ -608,9 +603,7 @@ class _ShareOptionsState extends State<ShareOptions> {
             splashColor: Colors.orange.withOpacity(0.5),
           ),
         ),
-        SizedBox(
-          width: 20,
-        ),
+        Spacer(),
         Container(
           decoration: BoxDecoration(
             border: Border.all(

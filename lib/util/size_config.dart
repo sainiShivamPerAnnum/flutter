@@ -23,7 +23,7 @@ class SizeConfig {
     blockSizeVertical = screenHeight / 100;
     smallTextSize = screenHeight * 0.01;
     mediumTextSize = screenWidth * 0.036;
-    largeTextSize = screenWidth * 0.048;
+    largeTextSize = screenWidth * 0.05;
     cardTitleTextSize = screenWidth * 0.07;
     isGamefirstTime = true;
     showTutorial = true;

@@ -1,8 +1,10 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/ui/dialogs/icici_withdraw_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
+import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -13,17 +15,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class ICICIWithdrawal extends StatefulWidget {
-  final double currentBalance;
-  final ValueChanged<Map<String, double>> onAmountConfirmed;
-  final ValueChanged<bool> onOptionConfirmed;
-  ICICIWithdrawal(
-      {Key key,
-      this.currentBalance,
-      this.onAmountConfirmed,
-      this.onOptionConfirmed})
-      : super(key: key);
   @override
   _ICICIWithdrawalState createState() => _ICICIWithdrawalState();
 }
@@ -32,11 +26,10 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
   TextEditingController _amountController = TextEditingController();
   String _amountError;
   String _errorMessage;
-  String _upiAddressError;
   bool _isLoading = true;
+  BaseUtil baseProvider;
   bool _isBalanceAvailble = false;
   bool _isButtonEnabled = false;
-  double _width;
   double _instantBalance = 0;
   double _totalBalance = 0;
   double _userWithdrawInstantAmount = 0;
@@ -45,6 +38,22 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
       TextStyle(fontSize: 18, fontWeight: FontWeight.w300);
   final TextStyle gTextStyle =
       TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+  PaymentService payService;
+
+  getDetails() {
+    payService.getWithdrawalDetails().then((withdrawalDetailsMap) {
+      //refresh dialog state once balance received
+      if (!withdrawalDetailsMap['flag']) {
+        onDetailsReceived(0, 0, false, withdrawalDetailsMap['reason']);
+      } else {
+        onDetailsReceived(
+            withdrawalDetailsMap['instant_balance'],
+            withdrawalDetailsMap['total_balance'],
+            withdrawalDetailsMap['is_imps_allowed'],
+            withdrawalDetailsMap['reason']);
+      }
+    });
+  }
 
   updateAmount() {
     double amount = double.tryParse(_amountController.text ?? 0);
@@ -52,9 +61,9 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
       if (amount == 0 || amount == null) {
         _userWithdrawInstantAmount = 0;
         _userWithdrawNonInstantAmount = 0;
-      } else if (amount > widget.currentBalance) {
-        _userWithdrawInstantAmount = widget.currentBalance * 0.9;
-        _userWithdrawNonInstantAmount = widget.currentBalance * 0.1;
+      } else if (amount > baseProvider.myUser.icici_balance) {
+        _userWithdrawInstantAmount = baseProvider.myUser.icici_balance * 0.9;
+        _userWithdrawNonInstantAmount = baseProvider.myUser.icici_balance * 0.1;
       } else if (amount <= 100) {
         _userWithdrawInstantAmount = amount;
 
@@ -71,6 +80,10 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
     final DateTime tomorrow = DateTime.now().add(new Duration(hours: 24));
     final DateFormat formatter = DateFormat.MMMEd();
     final String formatted = formatter.format(tomorrow);
+    payService = Provider.of<PaymentService>(context, listen: false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    if (_isLoading) getDetails();
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -108,7 +121,7 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
                           bottom: 10,
                         ),
                         child: Text(
-                          "₹ ${widget.currentBalance.toStringAsFixed(2)}",
+                          "₹ ${baseProvider.myUser.icici_balance.toStringAsFixed(2)}",
                           style: GoogleFonts.montserrat(
                             fontWeight: FontWeight.w700,
                             color: UiConstants.primaryColor,
@@ -248,6 +261,14 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
                 ),
               ),
             ),
+            _errorMessage != null
+                ? Text(
+                    _errorMessage,
+                    style: GoogleFonts.montserrat(
+                      color: Colors.red,
+                    ),
+                  )
+                : Container(),
             Container(
               width: double.infinity,
               height: MediaQuery.of(context).size.height * 0.07,
@@ -261,7 +282,7 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
                   end: Alignment(0.5, 1.0),
                 ),
               ),
-              child: (_isLoading)
+              child: (!_isLoading)
                   ? new Material(
                       child: MaterialButton(
                         child: Text(
@@ -310,11 +331,57 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
                                   Navigator.of(context).pop();
                                   _isLoading = true;
                                   setState(() {});
-                                  widget.onAmountConfirmed({
-                                    'instant_amount':
-                                        _userWithdrawInstantAmount,
-                                    'non_instant_amount':
-                                        _userWithdrawNonInstantAmount
+                                  // widget.onAmountConfirmed({
+                                  //   'instant_amount':
+                                  //       _userWithdrawInstantAmount,
+                                  //   'non_instant_amount':
+                                  //       _userWithdrawNonInstantAmount
+                                  // });
+                                  double instantAmount =
+                                      _userWithdrawInstantAmount ?? 0;
+                                  double nonInstantAmount =
+                                      _userWithdrawNonInstantAmount ?? 0;
+                                  if (instantAmount == 0 &&
+                                      nonInstantAmount == 0) return false;
+
+                                  payService
+                                      .preProcessWithdrawal(
+                                          instantAmount.toString())
+                                      .then((combDetailsMap) {
+                                    if (combDetailsMap['flag']) {
+                                      var _withdrawalRequestDetails =
+                                          combDetailsMap;
+                                      //check if dialog required
+                                      if (combDetailsMap[
+                                              GetExitLoad.resPopUpFlag] ==
+                                          GetExitLoad.SHOW_POPUP) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (ctx) => AlertDialog(
+                                                  title: Text(
+                                                      combDetailsMap['flag']),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                              context),
+                                                      child: Text("OK"),
+                                                    )
+                                                  ],
+                                                ));
+                                      } else {
+                                        onInitiateWithdrawal(
+                                            _withdrawalRequestDetails,
+                                            instantAmount,
+                                            nonInstantAmount);
+                                      }
+                                    } else {
+                                      Navigator.of(context).pop();
+                                      baseProvider.showNegativeAlert(
+                                          'Withdrawal Failed',
+                                          'Error: ${combDetailsMap['reason']}',
+                                          context);
+                                    }
                                   });
                                   return true;
                                 },
@@ -349,7 +416,7 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
     }
     try {
       double amount = double.parse(value);
-      if (amount > widget.currentBalance ||
+      if (amount > baseProvider.myUser.icici_balance ||
           (_totalBalance != 0 && amount > _totalBalance))
         return 'Insufficient balance';
       if (amount < 1)
@@ -376,6 +443,22 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
       _isBalanceAvailble = true;
     }
     setState(() {});
+  }
+
+  onInitiateWithdrawal(Map<String, dynamic> fieldMap, double instantWithdraw,
+      double nonInstantWithdraw) {
+    payService
+        .processWithdrawal(fieldMap, instantWithdraw, nonInstantWithdraw)
+        .then((wMap) {
+      Navigator.of(context).pop();
+      if (!wMap['flag']) {
+        baseProvider.showNegativeAlert(
+            'Withdrawal Failed', 'Error: ${wMap['reason']}', context);
+      } else {
+        baseProvider.showPositiveAlert('Withdrawal Successful',
+            'Processed in less than 30 seconds!', context);
+      }
+    });
   }
 
   onShowLoadDialog() {}

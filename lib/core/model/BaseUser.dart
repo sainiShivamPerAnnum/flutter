@@ -9,6 +9,8 @@ class BaseUser {
   String _mobile;
   String _name;
   String _email;
+  String _dob;
+  String _gender; // 0: Male | 1: Female | -1: Rather Not to say
   String _client_token; //fetched from a subcollection
   int _ticket_count;
   int _account_balance;
@@ -32,6 +34,8 @@ class BaseUser {
   static final String fldMobile = "mMobile";
   static final String fldEmail = "mEmail";
   static final String fldName = "mName";
+  static final String fldDob = "mDob";
+  static final String fldGender = "mGender";
   static final String fldClient_token = "mClientToken";
   static final String fldTicket_count = "mTicketCount";
   static final String fldAcctBalance = "mAcctBalance";
@@ -56,6 +60,8 @@ class BaseUser {
       this._mobile,
       this._email,
       this._name,
+      this._dob,
+      this._gender,
       this._client_token,
       this._ticket_count,
       this._account_balance,
@@ -79,6 +85,8 @@ class BaseUser {
       : this(
             id,
             mobile,
+            null,
+            null,
             null,
             null,
             null,
@@ -106,6 +114,8 @@ class BaseUser {
             data[fldMobile],
             data[fldEmail],
             data[fldName],
+            data[fldDob],
+            data[fldGender],
             client_token,
             data[fldTicket_count] ?? BaseUtil.NEW_USER_TICKET_COUNT,
             data[fldAcctBalance] ?? 0,
@@ -131,6 +141,8 @@ class BaseUser {
       fldMobile: _mobile,
       fldName: _name,
       fldEmail: _email,
+      fldDob: _dob,
+      fldGender: _gender,
       fldTicket_count: _ticket_count,
       fldAcctBalance: _account_balance,
       fldDepositBalance: _deposit_balance,
@@ -182,6 +194,18 @@ class BaseUser {
 
   set mobile(String value) {
     _mobile = value;
+  }
+
+  String get dob => _dob;
+
+  set dob(String date) {
+    _dob = date;
+  }
+
+  String get gender => _gender;
+
+  set gender(String gen) {
+    _gender = gen;
   }
 
   String get uid => _uid;

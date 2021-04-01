@@ -10,12 +10,14 @@ import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 class LoginController extends StatefulWidget {
@@ -141,8 +143,8 @@ class _LoginControllerState extends State<LoginController> {
     localDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     fcmProvider = Provider.of<FcmListener>(context, listen: false);
     return Scaffold(
-      appBar: BaseUtil.getAppBar(),
-      backgroundColor: Colors.white,
+      // appBar: BaseUtil.getAppBar(),
+      backgroundColor: Color(0xfff1f1f1),
       body: SafeArea(
           child: Stack(
         children: <Widget>[
@@ -314,16 +316,32 @@ class _LoginControllerState extends State<LoginController> {
             }
             //baseProvider.myUser.name = nameInScreen.getName();
             baseProvider.myUser.name = _nameScreenKey.currentState.name;
+            print(baseProvider.myUser.name);
             //String email = nameInScreen.getEmail();
             String email = _nameScreenKey.currentState.email;
             if (email != null && email.isNotEmpty) {
               baseProvider.myUser.email = email;
             }
 
-            String age = _nameScreenKey.currentState.age;
-            if (age != null && age.isNotEmpty) {
-              baseProvider.myUser.age = age;
+            // String age = _nameScreenKey.currentState.age;
+            // if (age != null && age.isNotEmpty) {
+            //   baseProvider.myUser.age = age;
+            // }
+            String dob = "${_nameScreenKey.currentState.selectedDate.toLocal()}"
+                .split(" ")[0];
+
+            baseProvider.myUser.dob = dob;
+
+            int gender = _nameScreenKey.currentState.gen;
+            if (gender != null) {
+              if (gender == 1) {
+                baseProvider.myUser.gender = "M";
+              } else if (gender == 0) {
+                baseProvider.myUser.gender = "F";
+              } else
+                baseProvider.myUser.gender = "O";
             }
+
             bool isInv = _nameScreenKey.currentState.isInvested;
             if (isInv != null) baseProvider.myUser.isInvested = isInv;
             //currentPage = AddressInputScreen.index;
