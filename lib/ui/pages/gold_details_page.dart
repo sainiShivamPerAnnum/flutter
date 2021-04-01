@@ -456,54 +456,41 @@ class FundDetailsTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
-    return Row(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(
-            vertical: _height * 0.02,
+    return Container(
+      margin: EdgeInsets.all(
+        _height * 0.02,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            offset: Offset(5, 5),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 0,
           ),
-          child: Column(
-            children: [
-              Container(
-                margin: EdgeInsets.symmetric(
-                  horizontal: _height * 0.02,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      offset: Offset(5, 5),
-                      blurRadius: 5,
-                      color: Colors.black.withOpacity(0.1),
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      vertical: 20, horizontal: SizeConfig.screenWidth * 0.1),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        "images/svgs/gold.svg",
-                        height: SizeConfig.screenWidth * 0.08,
-                        // width: SizeConfig.screenWidth*0.05,
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Text(
-                          'Current Gold Balance: ${_goldBalance.toStringAsFixed(3)} grams'),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+            vertical: 20, horizontal: SizeConfig.screenWidth * 0.1),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              "images/svgs/gold.svg",
+              height: SizeConfig.screenWidth * 0.08,
+              // width: SizeConfig.screenWidth*0.05,
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            Text(
+                'Current Gold Balance: ${_goldBalance.toStringAsFixed(3)} grams'),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

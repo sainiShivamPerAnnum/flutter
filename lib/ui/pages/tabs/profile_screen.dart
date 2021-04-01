@@ -94,6 +94,8 @@ class _ProfilePageState extends State<ProfilePage> {
               },
               child: Container(
                 height: SizeConfig.screenHeight * 0.24,
+                margin: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.blockSizeHorizontal * 2),
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage(
@@ -463,12 +465,15 @@ class ShareCard extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                       fontSize: SizeConfig.cardTitleTextSize),
                 ),
+                SizedBox(
+                  height: 10,
+                ),
                 Text(
                   "You and your friend also receive 10 game tickets that week!",
                   style: GoogleFonts.montserrat(
                       color: Colors.white, fontSize: SizeConfig.mediumTextSize),
                 ),
-                SizedBox(height: 5),
+                SizedBox(height: 10),
                 ShareOptions(),
               ],
             ),

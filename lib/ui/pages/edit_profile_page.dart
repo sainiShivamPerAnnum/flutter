@@ -356,34 +356,34 @@ class _EditProfileState extends State<EditProfile> {
                   //   ),
                   // ),
                   //Text("Date of Birth"),
-                  InkWell(
-                    onTap: () {
-                      _selectDate(context);
-                    },
-                    child: TextFormField(
-                      textAlign: TextAlign.start,
-                      enabled: false,
-                      keyboardType: TextInputType.text,
-                      validator: (value) {
-                        return null;
-                      },
-                      controller: _dateController,
-                      decoration: InputDecoration(
-                        focusColor: UiConstants.primaryColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        labelText: 'DOB',
-                        hintText: 'Enter Date',
-                        prefixIcon: Icon(
-                          Icons.calendar_today,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     _selectDate(context);
+                  //   },
+                  //   child: TextFormField(
+                  //     textAlign: TextAlign.start,
+                  //     enabled: false,
+                  //     keyboardType: TextInputType.text,
+                  //     validator: (value) {
+                  //       return null;
+                  //     },
+                  //     controller: _dateController,
+                  //     decoration: InputDecoration(
+                  //       focusColor: UiConstants.primaryColor,
+                  //       border: OutlineInputBorder(
+                  //         borderRadius: BorderRadius.circular(10),
+                  //       ),
+                  //       labelText: 'DOB',
+                  //       hintText: 'Enter Date',
+                  //       prefixIcon: Icon(
+                  //         Icons.calendar_today,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   height: 20,
+                  // ),
                   // InputField(
                   //   child: DropdownButtonHideUnderline(
                   //     child: DropdownButton(
