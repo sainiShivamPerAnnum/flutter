@@ -62,6 +62,7 @@ class BaseUtil extends ChangeNotifier {
   bool isUserOnboarded = false;
   bool isLoginNextInProgress = false;
   bool isEditProfileNextInProgress = false;
+  bool isRedemptionOtpInProgress = false;
   bool isAugmontRegnInProgress = false;
   bool isIciciDepositRouteLogicInProgress = false;
   bool isAugDepositRouteLogicInProgress = false;

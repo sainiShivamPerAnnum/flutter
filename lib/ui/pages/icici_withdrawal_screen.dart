@@ -3,8 +3,8 @@ import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/ui/dialogs/icici_withdraw_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/icici_api_util.dart';
+import 'package:felloapp/ui/dialogs/icici_redemption_otp_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -13,16 +13,28 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ICICIWithdrawal extends StatefulWidget {
+  final double currentBalance;
+  final ValueChanged<Map<String, double>> onAmountConfirmed;
+  final ValueChanged<bool> onOptionConfirmed;
+  final ValueChanged<Map<String, String>> onOtpConfirmed;
+
+  ICICIWithdrawal(
+      {Key key,
+      this.currentBalance,
+      this.onAmountConfirmed,
+      this.onOptionConfirmed,
+      this.onOtpConfirmed})
+      : super(key: key);
+
   @override
-  _ICICIWithdrawalState createState() => _ICICIWithdrawalState();
+  ICICIWithdrawalState createState() => ICICIWithdrawalState();
 }
 
-class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
+class ICICIWithdrawalState extends State<ICICIWithdrawal> {
   TextEditingController _amountController = TextEditingController();
   String _amountError;
   String _errorMessage;
@@ -32,6 +44,7 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
   bool _isButtonEnabled = false;
   double _instantBalance = 0;
   double _totalBalance = 0;
+  double _currentTotalBalance = 0;
   double _userWithdrawInstantAmount = 0;
   double _userWithdrawNonInstantAmount = 0;
   final TextStyle tTextStyle =
@@ -55,18 +68,21 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
     });
   }
 
-  updateAmount() {
+
+  @override
+  void initState() {
+    super.initState();
+   _currentTotalBalance = widget.currentBalance;
+  }
+
+  _updateAmount() {
     double amount = double.tryParse(_amountController.text ?? 0);
     setState(() {
       if (amount == 0 || amount == null) {
         _userWithdrawInstantAmount = 0;
         _userWithdrawNonInstantAmount = 0;
-      } else if (amount > baseProvider.myUser.icici_balance) {
-        _userWithdrawInstantAmount = baseProvider.myUser.icici_balance * 0.9;
-        _userWithdrawNonInstantAmount = baseProvider.myUser.icici_balance * 0.1;
-      } else if (amount <= 100) {
+      } else if (amount <= _currentTotalBalance * 0.9) {
         _userWithdrawInstantAmount = amount;
-
         _userWithdrawNonInstantAmount = 0;
       } else {
         _userWithdrawInstantAmount = 0.9 * amount;
@@ -121,7 +137,7 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
                           bottom: 10,
                         ),
                         child: Text(
-                          "₹ ${baseProvider.myUser.icici_balance.toStringAsFixed(2)}",
+                          "₹ ${_currentTotalBalance.toStringAsFixed(2)}",
                           style: GoogleFonts.montserrat(
                             fontWeight: FontWeight.w700,
                             color: UiConstants.primaryColor,
@@ -148,7 +164,7 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
                                   border: OutlineInputBorder(),
                                   labelText: 'Withdrawal Amount',
                                 ),
-                                onChanged: (_) => updateAmount(),
+                                onChanged: (_) => _updateAmount(),
                               ),
                             ),
                           ],
@@ -238,6 +254,14 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
                                         fontSize: SizeConfig.largeTextSize,
                                       ),
                                     ),
+                                    Text(
+                                      "Presently unavailable",
+                                      style: GoogleFonts.montserrat(
+                                        color: Colors.black87,
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: SizeConfig.mediumTextSize,
+                                      ),
+                                    ),
                                     FittedBox(
                                       child: Text(
                                         "₹ ${_userWithdrawNonInstantAmount.toStringAsFixed(2)}",
@@ -306,17 +330,12 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
                             _amountError = null;
                           });
                           if (_amountError == null) {
-                            double amt = double.parse(_amountController.text);
                             String _confirmMsg =
                                 "Are you sure you want to continue? ";
-                            if (amt <= _instantBalance) {
-                              _userWithdrawInstantAmount = amt;
+                            if (_userWithdrawNonInstantAmount == 0) {
                               _confirmMsg = _confirmMsg +
                                   '₹${_userWithdrawInstantAmount.round()} will be withdrawn immediately.';
                             } else {
-                              _userWithdrawInstantAmount = _instantBalance;
-                              _userWithdrawNonInstantAmount =
-                                  amt - _instantBalance;
                               _confirmMsg = _confirmMsg +
                                   '₹${_userWithdrawInstantAmount.round()} will be withdrawn immediately, and ₹${_userWithdrawNonInstantAmount.round()} will be withdrawn within 1 business day';
                             }
@@ -421,7 +440,6 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
         return 'Insufficient balance';
       if (amount < 1)
         return 'Please enter value more than ₹1';
-      //else if(amount > 1500) return 'We are currently only accepting deposits below ₹1500';
       else
         return null;
     } catch (e) {
@@ -439,7 +457,7 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
 
     if (instantBalance != null && totalBalance != null) {
       _instantBalance = instantBalance;
-      _totalBalance = totalBalance;
+      _currentTotalBalance = totalBalance;
       _isBalanceAvailble = true;
     }
     setState(() {});
@@ -462,4 +480,12 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
   }
 
   onShowLoadDialog() {}
+
+
+  onShowOtpDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) =>
+            IciciRedemptionOtpDialog());
+  }
 }

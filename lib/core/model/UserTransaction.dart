@@ -50,6 +50,7 @@ class UserTransaction{
 
   ///Icici submap fields
   static final String subFldIciciTranId = 'iTranId';
+  static final String subFldIciciWithdrawType = 'iWithType';
   static final String subFldIciciMultipleId = 'iMultipleId';
   static final String subFldIciciBankRnn = 'iBankRnn';
   static final String subFldIciciUpiTime = 'iUpiDateTime';
@@ -97,6 +98,12 @@ class UserTransaction{
       double amount, String userId):
         this(null, amount,0,note??'NA',TRAN_SUBTYPE_ICICI,TRAN_TYPE_WITHDRAW,0,
           userId,TRAN_STATUS_COMPLETE,{subFldIciciTranId: tranId, subFldIciciBankRnn: bankRnn,
+            subFldIciciUpiTime: upiTimestamp}, null,null,Timestamp.now(),Timestamp.now());
+
+  UserTransaction.mfNonInstantWithdrawal(String tranId, String note, String upiTimestamp,
+      double amount, String userId):
+        this(null, amount,0,note??'NA',TRAN_SUBTYPE_ICICI,TRAN_TYPE_WITHDRAW,0,
+          userId,TRAN_STATUS_COMPLETE,{subFldIciciTranId: tranId, subFldIciciWithdrawType: 'NONINSTANT',
             subFldIciciUpiTime: upiTimestamp}, null,null,Timestamp.now(),Timestamp.now());
 
   //Augmont gold investment initiated by investor

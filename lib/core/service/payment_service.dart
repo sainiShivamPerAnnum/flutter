@@ -595,6 +595,31 @@ class PaymentService extends ChangeNotifier {
     return (usFlag && (txnDocId != null));
   }
 
+  Future<Map<String, dynamic>> _onNonInstantSendOtp(UserTransaction txn) async {
+    final redemptionMap = await iProvider.sendRedemptionOtp(
+        txn.icici[UserTransaction.subFldIciciTranId],
+        baseProvider.iciciDetail.folioNo);
+
+    if (redemptionMap == null ||
+        redemptionMap[QUERY_SUCCESS_FLAG] == QUERY_FAILED) {
+      String errReason = (redemptionMap[QUERY_FAIL_REASON] != null)
+          ? redemptionMap[QUERY_FAIL_REASON]
+          : 'Unknown';
+      Map<String, dynamic> failData = {
+        'folioNumber': baseProvider.iciciDetail.folioNo,
+        'failReason': errReason
+      };
+      bool failureLogged = await dbProvider.logFailure(baseProvider.myUser.uid,
+          FailType.UserRedemptionOTPSendFailed, failData);
+      log.debug('Failure logged correctly: $failureLogged');
+      return {'flag': false, 'reason': 'Failed to send the transaction OTP'};
+    } else {
+      return {'flag': true};
+    }
+  }
+
+  Future<bool> verifyNonInstantRedemptionOtp(String otp) {}
+
   addPaymentStatusListener(ValueChanged<int> listener) {
     _onProcessComplete = listener;
   }
@@ -718,22 +743,24 @@ class PaymentService extends ChangeNotifier {
     log.debug('$instantAmount, $nonInstantAmount');
 
     instantAmount = 0;
-    nonInstantAmount = 167;
+    nonInstantAmount = 6;
 
-    Map<String, dynamic> instantWithdrawalResult,nonInstantWithdrawalResult;
-    if(instantAmount != null && instantAmount > 0) {
-      instantWithdrawalResult = await _processInstantWithdrawal(withdrawalMap, instantAmount);
+    Map<String, dynamic> instantWithdrawalResult, nonInstantWithdrawalResult;
+    if (instantAmount != null && instantAmount > 0) {
+      instantWithdrawalResult =
+          await _processInstantWithdrawal(withdrawalMap, instantAmount);
     }
-    if(nonInstantAmount != null && nonInstantAmount > 0) {
-      nonInstantWithdrawalResult = await _processNonInstantWithdrawal(withdrawalMap, nonInstantAmount);
-    }
+    // if (nonInstantAmount != null && nonInstantAmount > 0) {
+    //   nonInstantWithdrawalResult =
+    //       await _processNonInstantWithdrawal(withdrawalMap, nonInstantAmount);
+    // }
 
-    log.debug('x');
+    log.debug('');
+    return instantWithdrawalResult;
   }
 
   Future<Map<String, dynamic>> _processInstantWithdrawal(
-      Map<String, dynamic> withdrawalMap,
-      double amount) async{
+      Map<String, dynamic> withdrawalMap, double amount) async {
     final redemptionMap = await iProvider.submitInstantWithdrawal(
         baseProvider.iciciDetail.folioNo,
         amount.toString(),
@@ -825,8 +852,7 @@ class PaymentService extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> _processNonInstantWithdrawal(
-      Map<String, dynamic> withdrawalMap,
-      double amount) async{
+      Map<String, dynamic> withdrawalMap, double amount) async {
     final redemptionMap = await iProvider.submitNonInstantWithdrawal(
         baseProvider.iciciDetail.folioNo,
         baseProvider.myUser.pan,
@@ -874,42 +900,31 @@ class PaymentService extends ChangeNotifier {
         return {
           'flag': false,
           'reason':
-          'Withdrawal failed. Please try again in sometime. We will verify the transaction from our end as well!'
+              'Withdrawal failed. Please try again in sometime. We will verify the transaction from our end as well!'
         };
       } else {
         //Transaction ID generated. Now check for IMPS Code
-        if (redemptionMap[SubmitRedemption.resIMPSCode] == null ||
-            redemptionMap[SubmitRedemption.resIMPSCode] !=
-                SubmitRedemption.IMPS_TRANSACTION_SUCCESS) {
-          Map<String, dynamic> failData = {
-            'folioNumber': baseProvider.iciciDetail.folioNo,
-            'failReason': 'Tran ID generated but IMPS status not 0'
-          };
-          bool failureLogged = await dbProvider.logFailure(
-              baseProvider.myUser.uid,
-              FailType.UserWithdrawalSubmitFailed,
-              failData);
-          log.debug('Failure logged correctly: $failureLogged');
+        double amt = 0;
+        try {
+          amt = double.parse(withdrawalMap['amount']);
+        } catch (e) {}
+        //Transaction ID generated and IMPS code is success
+        UserTransaction withTxn = UserTransaction.mfNonInstantWithdrawal(
+            redemptionMap[SubmitRedemption.resTranId],
+            redemptionMap[SubmitRedemption.resIMPSStatus] ?? 'NA',
+            redemptionMap[SubmitRedemption.resTrnTime],
+            amt,
+            baseProvider.myUser.uid);
+        Map<String, dynamic> fFlag = await _onNonInstantSendOtp(withTxn);
+        if (fFlag['flag']) {
           return {
-            'flag': false,
-            'reason': redemptionMap[SubmitRedemption.resIMPSStatus] ??
-                'Withdrawal failed. Please try again in sometime. We will verify the transaction from our end as well!'
+            'flag': true,
+            'otpid': fFlag['otpid']??''
           };
-        } else {
-          double amt = 0;
-          try {
-            amt = double.parse(withdrawalMap['amount']);
-          } catch (e) {}
-          //Transaction ID generated and IMPS code is success
-          UserTransaction withTxn = UserTransaction.mfWithdrawal(
-              redemptionMap[SubmitRedemption.resTranId],
-              redemptionMap[SubmitRedemption.resBankRnn],
-              redemptionMap[SubmitRedemption.resIMPSStatus] ?? 'NA',
-              redemptionMap[SubmitRedemption.resTrnTime],
-              amt,
-              baseProvider.myUser.uid);
-          bool fFlag = await _onWithdrawalCompleted(withTxn);
-          return {'flag': fFlag};
+        }else{
+          return {
+            'flag': false
+          };
         }
       }
     }

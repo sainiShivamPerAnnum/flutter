@@ -19,6 +19,7 @@ enum FailType{
   UserWithdrawalGetRedeemFailed,
   UserWithdrawalExitLoadFailed,
   UserWithdrawalSubmitFailed,
+  UserRedemptionOTPSendFailed,
   UserAugmontPurchaseFailed,
   UserAugmontSellFailed,
   UserRazorpayPurchaseFailed

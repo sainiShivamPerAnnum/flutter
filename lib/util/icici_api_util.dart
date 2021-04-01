@@ -509,3 +509,17 @@ class SubmitRedemptionNonInstant{
 
   static const String IMPS_TRANSACTION_SUCCESS = '0';
 }
+
+class SendRedemptionOtp{
+  static final String path = 'api/sendRedemptionOtp';
+  static final String fldFolioNo = 'foliono';
+  static final String fldTranId = 'tranid';
+}
+
+class VerifyRedemptionOtp{
+  static final String path = 'api/verifyRedemptionOtp';
+  static final String fldFolioNo = 'foliono';
+  static final String fldTranId = 'tranid';
+  static final String fldOtpId = 'otpid';
+  static final String fldOtp = 'otp';
+}
