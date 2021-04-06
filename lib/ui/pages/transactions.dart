@@ -30,14 +30,16 @@ class _TransactionsState extends State<Transactions> {
   /// Will used to access the Animated list
   // final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
 
-  getTransactions() async {
-    // isLoading = true;
+  getTransactions() {
+    isLoading = true;
     if (baseProvider != null && dbProvider != null) {
       dbProvider
           .getFilteredUserTransactions(baseProvider.myUser, null, null)
           .then((List<UserTransaction> tList) {
         baseProvider.userMiniTxnList = List.from(tList);
         filteredList = List.from(baseProvider.userMiniTxnList);
+        print(
+            "---------------------${baseProvider.userMiniTxnList}-----------------");
         setState(() {
           isLoading = false;
         });
@@ -145,8 +147,9 @@ class _TransactionsState extends State<Transactions> {
       });
     }
     if (isLoading) {
-      isLoading = false;
-      setState(() {});
+      setState(() {
+        isLoading = false;
+      });
     }
     return filteredList;
   }
@@ -155,14 +158,16 @@ class _TransactionsState extends State<Transactions> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    if (baseProvider.userMiniTxnList == null ||
-        baseProvider.userMiniTxnList.isEmpty) {
-      isLoading = true;
+    if (baseProvider.userMiniTxnList == null
+
+        // || baseProvider.userMiniTxnList.isEmpty
+        ) {
       getTransactions();
     }
     if (isInit) {
-      if (baseProvider.userMiniTxnList != null &&
-          baseProvider.userMiniTxnList.isNotEmpty) {
+      if (baseProvider.userMiniTxnList != null
+          // && baseProvider.userMiniTxnList.isNotEmpty
+          ) {
         filteredList = List.from(baseProvider.userMiniTxnList);
       } else {
         filteredList = [];

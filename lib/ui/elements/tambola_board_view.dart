@@ -57,6 +57,7 @@ class TambolaBoardState extends State<TambolaBoardView> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(6.0),
                 child: GridView.builder(
+                  physics: NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: boardLength,
                   ),
