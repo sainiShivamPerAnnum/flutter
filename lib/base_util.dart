@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/PrizeLeader.dart';
@@ -16,6 +17,7 @@ import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flushbar/flushbar.dart';
@@ -32,6 +34,7 @@ class BaseUtil extends ChangeNotifier {
   LocalDBModel _lModel = locator<LocalDBModel>();
   BaseUser _myUser;
   User firebaseUser;
+  FirebaseAnalytics baseAnalytics;
   static RemoteConfig remoteConfig;
   PaymentService _payService;
 
@@ -96,17 +99,19 @@ class BaseUtil extends ChangeNotifier {
   static const RazorpayStage activeRazorpayStage = RazorpayStage.DEV;
 
   Future init() async {
-    //fetch on-boarding status and User details
+    ///fetch on-boarding status and User details
     firebaseUser = FirebaseAuth.instance.currentUser;
     if (firebaseUser != null)
       _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
+
+    ///analytics
+    BaseAnalytics.init();
+    BaseAnalytics.analytics.logAppOpen();
+
     isUserOnboarded =
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
     if (isUserOnboarded) {
       await initRemoteConfig();
-      // String _p = remoteConfig.getString('play_screen_first');
-      // playScreenFirst = !(_p != null && _p.isNotEmpty && _p == 'false');
-
       //get user creation time
       _userCreationTimestamp = firebaseUser.metadata.creationTime;
 

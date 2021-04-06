@@ -1,11 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:camera/camera.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/game-poll-dialog.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/ui/elements/success-dialog.dart';
-import 'package:felloapp/ui/pages/onboarding/kyc/interface/cam.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -47,6 +46,13 @@ class _HomePageState extends State<HomePage> {
       return "Good Evening,";
     } else
       return "Hello,";
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    BaseAnalytics.analytics.setCurrentScreen(screenName: BaseAnalytics.PAGE_HOME);
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/ui/pages/gold_details_page.dart';
 import 'package:felloapp/ui/pages/mf_details_page.dart';
@@ -53,6 +54,13 @@ class _FinancePageState extends State<FinancePage> {
     }).catchError((err) {
       print('$err');
     });
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    BaseAnalytics.analytics.setCurrentScreen(screenName: BaseAnalytics.PAGE_FINANCE);
   }
 
   @override

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
@@ -68,6 +69,7 @@ class _HState extends State<PlayHome> {
   void initState() {
     super.initState();
     initDailyPickFlags();
+    BaseAnalytics.analytics.setCurrentScreen(screenName: BaseAnalytics.PAGE_TAMBOLA);
   }
 
   initDailyPickFlags() {
