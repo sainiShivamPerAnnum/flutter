@@ -742,21 +742,18 @@ class PaymentService extends ChangeNotifier {
 
     log.debug('$instantAmount, $nonInstantAmount');
 
-    instantAmount = 0;
-    nonInstantAmount = 6;
-
     Map<String, dynamic> instantWithdrawalResult, nonInstantWithdrawalResult;
-    if (instantAmount != null && instantAmount > 0) {
-      instantWithdrawalResult =
-          await _processInstantWithdrawal(withdrawalMap, instantAmount);
-    }
-    // if (nonInstantAmount != null && nonInstantAmount > 0) {
-    //   nonInstantWithdrawalResult =
-    //       await _processNonInstantWithdrawal(withdrawalMap, nonInstantAmount);
+    // if (instantAmount != null && instantAmount > 0) {
+    //   instantWithdrawalResult =
+    //       await _processInstantWithdrawal(withdrawalMap, instantAmount);
     // }
+    if (nonInstantAmount != null && nonInstantAmount > 0) {
+      nonInstantWithdrawalResult =
+          await _processNonInstantWithdrawal(withdrawalMap, nonInstantAmount);
+    }
 
     log.debug('');
-    return instantWithdrawalResult;
+    return nonInstantWithdrawalResult;
   }
 
   Future<Map<String, dynamic>> _processInstantWithdrawal(
