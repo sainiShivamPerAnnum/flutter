@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
@@ -232,6 +234,7 @@ class _ReferScreenState extends State<ReferScreen> {
               SizedBox(
                 height: 20,
               ),
+              (Platform.isIOS) ? Text('') :
               Container(
                 width: MediaQuery.of(context).size.width - 60,
                 height: 50.0,
@@ -256,7 +259,7 @@ class _ReferScreenState extends State<ReferScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'SHARE ON WHATSAPP',
+                                'SHARE ON WHATSAPPS',
                                 style: Theme.of(context)
                                     .textTheme
                                     .button
@@ -349,7 +352,7 @@ class _ReferScreenState extends State<ReferScreen> {
                   color: Colors.transparent,
                   borderRadius: new BorderRadius.circular(20.0),
                 ),
-              ),
+              ) ,
               SizedBox(
                 height: 20,
               ),

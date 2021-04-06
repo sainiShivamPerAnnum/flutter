@@ -604,7 +604,7 @@ class _ShareOptionsState extends State<ShareOptions> {
           ),
         ),
         Spacer(),
-        Container(
+        (Platform.isIOS) ?  Text('') : Container(
           decoration: BoxDecoration(
             border: Border.all(
               width: 2,
