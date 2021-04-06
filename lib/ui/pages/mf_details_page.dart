@@ -1,7 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
-// import 'package:felloapp/ui/dialogs/icici_withdraw_dialog.dart';
 import 'package:felloapp/ui/dialogs/integrated_icici_disabled_dialog.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/deposit_modal_sheet.dart';
@@ -182,10 +181,10 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   }
 
   String _getActionButtonText() {
-    if (baseProvider.myUser.isIciciEnabled == null ||
-        !baseProvider.myUser.isIciciEnabled) {
-      return 'UNAVAILABLE';
-    }
+    // if (baseProvider.myUser.isIciciEnabled == null ||
+    //     !baseProvider.myUser.isIciciEnabled) {
+    //   return 'UNAVAILABLE';
+    // }
     if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID)
       return 'COMPLETE KYC';
     if (!baseProvider.myUser.isIciciOnboarded)
@@ -205,15 +204,15 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     baseProvider.iciciDetail = (baseProvider.iciciDetail == null)
         ? (await dbProvider.getUserIciciDetails(baseProvider.myUser.uid))
         : baseProvider.iciciDetail;
-    if (baseProvider.myUser.isIciciEnabled == null ||
-        !baseProvider.myUser.isIciciEnabled) {
-      //icici deposits not enabled. show disabled dialog
-      baseProvider.isIciciDepositRouteLogicInProgress = false;
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => IntegratedIciciDisabled());
-      return true;
-    }
+    // if (baseProvider.myUser.isIciciEnabled == null ||
+    //     !baseProvider.myUser.isIciciEnabled) {
+    //   //icici deposits not enabled. show disabled dialog
+    //   baseProvider.isIciciDepositRouteLogicInProgress = false;
+    //   showDialog(
+    //       context: context,
+    //       builder: (BuildContext context) => IntegratedIciciDisabled());
+    //   return true;
+    // }
     if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_VALID &&
         baseProvider.myUser.isIciciOnboarded) {
       //move directly to depositing

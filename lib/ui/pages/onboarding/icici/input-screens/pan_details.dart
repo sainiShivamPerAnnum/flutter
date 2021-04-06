@@ -89,14 +89,6 @@ class PANPage extends StatelessWidget {
                               ));
                         },
                       ),
-                      // Chip(
-                      //   label: Text("Where can I get my PAN?"),
-                      //   backgroundColor: UiConstants.chipColor,
-                      // ),
-                      // Chip(
-                      //   label: Text("How does a PAN look like?"),
-                      //   backgroundColor: UiConstants.chipColor,
-                      // ),
                     ],
                   ),
                 ],

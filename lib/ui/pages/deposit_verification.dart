@@ -229,13 +229,6 @@ class _DepositVerificationState extends State<DepositVerification> {
           onTap: () {
             Navigator.pop(context); //back to mf details
             // Navigator.pop(context); //back to save tab
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (ctx) => AppRoot(
-                    pageIndex: SaveScreen.index,
-                  ),
-                ));
           },
         )
       ],
@@ -283,13 +276,6 @@ class _DepositVerificationState extends State<DepositVerification> {
           onTap: () {
             Navigator.pop(context); //back to mf details
             // Navigator.pop(context); //back to save tab
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (ctx) => AppRoot(
-                    pageIndex: SaveScreen.index,
-                  ),
-                ));
           },
         )
       ],
@@ -337,13 +323,7 @@ class _DepositVerificationState extends State<DepositVerification> {
               )),
           onTap: () {
             Navigator.pop(context); //back to mf details
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (ctx) => AppRoot(
-                    pageIndex: SaveScreen.index,
-                  ),
-                ));
+
             // Navigator.pop(context); //back to save tab
           },
         )

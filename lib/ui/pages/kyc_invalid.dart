@@ -28,7 +28,7 @@ class KYCInvalid extends StatelessWidget {
           child: new Material(
             child: MaterialButton(
               child: Text(
-                'VERIFY',
+                'UNAVAILABLE',
                 style: Theme.of(context)
                     .textTheme
                     .button
@@ -36,12 +36,12 @@ class KYCInvalid extends StatelessWidget {
               ),
               onPressed: () async {
                 HapticFeedback.vibrate();
-                // baseProvider.showNegativeAlert(
-                //     'Unavailable',
-                //     'The in-house KYC verification engine will be made available soon',
-                //     context);
-                Navigator.of(context).pop();
-                Navigator.of(context).pushNamed('/verifykyc');
+                baseProvider.showNegativeAlert(
+                    'Unavailable',
+                    'The in-house KYC verification engine will be made available soon',
+                    context);
+                // Navigator.of(context).pop();
+                // Navigator.of(context).pushNamed('/verifykyc');
               },
               highlightColor: Colors.white30,
               splashColor: Colors.white30,

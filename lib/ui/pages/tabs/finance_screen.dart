@@ -37,12 +37,13 @@ class _FinancePageState extends State<FinancePage> {
         (baseProvider.myUser.augmont_quantity == 0 &&
             baseProvider.myUser.augmont_balance == 0)) return;
     augmontProvider.getRates().then((currRates) {
-      if (currRates == null || currRates.goldBuyPrice == null) return;
+      if (currRates == null || currRates.goldSellPrice == null) return;
 
-      double gBuyRate = currRates.goldBuyPrice;
+      // double gBuyRate = currRates.goldBuyPrice;
+      double gSellRate = currRates.goldSellPrice;
       if (baseProvider.myUser.augmont_quantity == 0) return;
       baseProvider.myUser.augmont_balance =
-          (baseProvider.myUser.augmont_quantity * gBuyRate).roundToDouble();
+          (baseProvider.myUser.augmont_quantity * gSellRate).roundToDouble();
       baseProvider.myUser.account_balance =
           (baseProvider.myUser.augmont_balance +
                   baseProvider.myUser.icici_balance +
