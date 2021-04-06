@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
@@ -43,10 +44,19 @@ class AugmontModel extends ChangeNotifier {
 
   bool isInit() => (_apiKey != null);
 
-  String _constructUid(String pan) => 'fello77$pan';
+  String _constructUid(String pan) {
+    var rnd = new Random();
+    int u = rnd.nextInt(100);
+    return 'fello${u.toString()}$pan';
+  }
 
-  String _constructUsername() =>
-      'felloGY${_baseProvider.myUser.uid.replaceAll(new RegExp(r"[0-9]"), "")}';
+  String _constructUsername() {
+    var rnd = new Random();
+    int u = rnd.nextInt(26);
+    String _randomChar = String.fromCharCode(u+65);
+    String _baseUsername = _baseProvider.myUser.uid.replaceAll(new RegExp(r"[0-9]"), "");
+    return 'fello$_randomChar$_baseUsername';
+  }
 
   Future<UserAugmontDetail> createUser(
       String mobile,
