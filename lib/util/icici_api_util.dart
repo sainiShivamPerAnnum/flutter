@@ -514,6 +514,8 @@ class SendRedemptionOtp{
   static final String path = 'api/sendRedemptionOtp';
   static final String fldFolioNo = 'foliono';
   static final String fldTranId = 'tranid';
+
+  static final String resOtpId = 'OTP_ID';
 }
 
 class VerifyRedemptionOtp{
@@ -522,4 +524,6 @@ class VerifyRedemptionOtp{
   static final String fldTranId = 'tranid';
   static final String fldOtpId = 'otpid';
   static final String fldOtp = 'otp';
+
+  static final String resStatus = 'STATUS';
 }

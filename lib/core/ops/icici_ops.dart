@@ -687,7 +687,9 @@ class ICICIModel extends ChangeNotifier {
     http.StreamedResponse _response = await _request.send();
 
     final resMap = await processResponse(_response);
-    if (resMap == null) {
+    if (resMap == null ||
+        resMap[SendRedemptionOtp.resOtpId] == null ||
+        resMap[SendRedemptionOtp.resOtpId] == '') {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     } else {
@@ -710,7 +712,9 @@ class ICICIModel extends ChangeNotifier {
     http.StreamedResponse _response = await _request.send();
 
     final resMap = await processResponse(_response);
-    if (resMap == null) {
+    if (resMap == null ||
+        resMap[VerifyRedemptionOtp.resStatus] == null ||
+        resMap[VerifyRedemptionOtp.resStatus] != '1') {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     } else {

@@ -311,45 +311,45 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
               key: _withdrawalDialogKey,
               currentBalance: baseProvider.myUser.icici_balance,
               onAmountConfirmed: (Map<String, double> amountDetails) {
-                instantAmount = amountDetails['instant_amount'] ?? 0;
-                nonInstantAmount = amountDetails['non_instant_amount'] ?? 0;
-                if (instantAmount == 0 && nonInstantAmount == 0) return;
-                payService
-                    .preProcessWithdrawal(instantAmount.toString())
-                    .then((combDetailsMap) {
-                  if (combDetailsMap['flag']) {
-                    _withdrawalRequestDetails = combDetailsMap;
-                    //check if dialog required
-                    if (combDetailsMap[GetExitLoad.resPopUpFlag] ==
-                        GetExitLoad.SHOW_POPUP) {
-                      _withdrawalDialogKey.currentState.onShowLoadDialog();
-                    } else {
-                      onInitiateWithdrawal(_withdrawalRequestDetails,
-                          instantAmount, nonInstantAmount);
-                    }
-                  } else {
-                    Navigator.of(context).pop();
-                    baseProvider.showNegativeAlert('Withdrawal Failed',
-                        'Error: ${combDetailsMap['reason']}', context);
-                  }
-                });
+                // instantAmount = amountDetails['instant_amount'] ?? 0;
+                // nonInstantAmount = amountDetails['non_instant_amount'] ?? 0;
+                // if (instantAmount == 0 && nonInstantAmount == 0) return;
+                // payService
+                //     .preProcessWithdrawal(instantAmount.toString())
+                //     .then((combDetailsMap) {
+                //   if (combDetailsMap['flag']) {
+                //     _withdrawalRequestDetails = combDetailsMap;
+                //     //check if dialog required
+                //     if (combDetailsMap[GetExitLoad.resPopUpFlag] ==
+                //         GetExitLoad.SHOW_POPUP) {
+                //       _withdrawalDialogKey.currentState.onShowLoadDialog();
+                //     } else {
+                //       onInitiateWithdrawal(_withdrawalRequestDetails,
+                //           instantAmount, nonInstantAmount);
+                //     }
+                //   } else {
+                //     Navigator.of(context).pop();
+                //     baseProvider.showNegativeAlert('Withdrawal Failed',
+                //         'Error: ${combDetailsMap['reason']}', context);
+                //   }
+                // });
               },
               onOptionConfirmed: (bool flag) {
-                if (flag) {
-                  _withdrawalRequestDetails[SubmitRedemption.fldExitLoadTick] =
-                      'Y';
-                  _withdrawalRequestDetails[
-                          SubmitRedemption.fldApproxLoadAmount] =
-                      _withdrawalRequestDetails[GetExitLoad.resApproxLoadAmt];
-                  onInitiateWithdrawal(_withdrawalRequestDetails, instantAmount,
-                      nonInstantAmount);
-                } else {
-                  Navigator.of(context).pop();
-                  baseProvider.showNegativeAlert(
-                      'Withdrawal Cancelled',
-                      'Please contact us if you need any further details',
-                      context);
-                }
+                // if (flag) {
+                //   _withdrawalRequestDetails[SubmitRedemption.fldExitLoadTick] =
+                //       'Y';
+                //   _withdrawalRequestDetails[
+                //           SubmitRedemption.fldApproxLoadAmount] =
+                //       _withdrawalRequestDetails[GetExitLoad.resApproxLoadAmt];
+                //   onInitiateWithdrawal(_withdrawalRequestDetails, instantAmount,
+                //       nonInstantAmount);
+                // } else {
+                //   Navigator.of(context).pop();
+                //   baseProvider.showNegativeAlert(
+                //       'Withdrawal Cancelled',
+                //       'Please contact us if you need any further details',
+                //       context);
+                // }
               },
               onOtpConfirmed: (Map<String, String> otpMap) {
                 // payService.verifyNonInstantRedemptionOtp(otp)
@@ -406,37 +406,37 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       //         ));
     }
   }
-
-  Future<bool> onInitiateWithdrawal(Map<String, dynamic> fieldMap,
-      double instantWithdraw, double nonInstantWithdraw) {
-    return payService
-        .processWithdrawal(fieldMap, instantWithdraw, nonInstantWithdraw)
-        .then((wMap) {
-      if (nonInstantWithdraw ??
-          0 > 0 &&
-              wMap['flag'] &&
-              wMap['otpid'] != null &&
-              wMap['otpid'].isNotEmpty) {
-        ///The otp dialog needs to be opened
-        _withdrawalDialogKey.currentState.onShowOtpDialog();
-        return true;
-      } else if (nonInstantWithdraw ?? 0 == 0) {
-        ///otp dialog does not need to be opened
-        Navigator.of(context).pop();
-        if (!wMap['flag']) {
-          baseProvider.showNegativeAlert(
-              'Withdrawal Failed', 'Error: ${wMap['reason']}', context);
-          return false;
-        } else {
-          baseProvider.showPositiveAlert('Withdrawal Successful',
-              'Processed in less than 30 seconds!', context);
-          return true;
-        }
-      }else{
-        return false;
-      }
-    });
-  }
+  //
+  // Future<bool> onInitiateWithdrawal(Map<String, dynamic> fieldMap,
+  //     double instantWithdraw, double nonInstantWithdraw) {
+  //   return payService
+  //       .processWithdrawal(fieldMap, instantWithdraw, nonInstantWithdraw)
+  //       .then((wMap) {
+  //     if (nonInstantWithdraw ??
+  //         0 > 0 &&
+  //             wMap['flag'] &&
+  //             wMap['otpid'] != null &&
+  //             wMap['otpid'].isNotEmpty) {
+  //       ///The otp dialog needs to be opened
+  //       _withdrawalDialogKey.currentState.onShowOtpDialog();
+  //       return true;
+  //     } else if (nonInstantWithdraw ?? 0 == 0) {
+  //       ///otp dialog does not need to be opened
+  //       Navigator.of(context).pop();
+  //       if (!wMap['flag']) {
+  //         baseProvider.showNegativeAlert(
+  //             'Withdrawal Failed', 'Error: ${wMap['reason']}', context);
+  //         return false;
+  //       } else {
+  //         baseProvider.showPositiveAlert('Withdrawal Successful',
+  //             'Processed in less than 30 seconds!', context);
+  //         return true;
+  //       }
+  //     }else{
+  //       return false;
+  //     }
+  //   });
+  // }
 }
 
 class FundDetailsTable extends StatelessWidget {

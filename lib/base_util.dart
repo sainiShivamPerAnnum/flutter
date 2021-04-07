@@ -7,7 +7,6 @@ import 'package:felloapp/core/model/PrizeLeader.dart';
 import 'package:felloapp/core/model/ReferralLeader.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
-import 'package:felloapp/core/model/UserMiniTransaction.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
@@ -45,6 +44,7 @@ class BaseUtil extends ChangeNotifier {
   ///ICICI global objects
   UserIciciDetail _iciciDetail;
   UserTransaction _currentICICITxn;
+  UserTransaction _currentICICINonInstantWthrlTxn;
 
   ///Augmont global objects
   UserAugmontDetail _augmontDetail;
@@ -57,7 +57,7 @@ class BaseUtil extends ChangeNotifier {
   List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
   String myUserDpUrl;
-  List<UserTransaction> userMiniTxnList = [];
+  List<UserTransaction> userMiniTxnList;
 
   DateTime _userCreationTimestamp;
   int referCount = 0;
@@ -481,6 +481,13 @@ class BaseUtil extends ChangeNotifier {
 
   set currentICICITxn(UserTransaction value) {
     _currentICICITxn = value;
+  }
+
+  UserTransaction get currentICICINonInstantWthrlTxn =>
+      _currentICICINonInstantWthrlTxn;
+
+  set currentICICINonInstantWthrlTxn(UserTransaction value) {
+    _currentICICINonInstantWthrlTxn = value;
   }
 
   UserAugmontDetail get augmontDetail => _augmontDetail;

@@ -54,6 +54,8 @@ class UserTransaction{
   static final String subFldIciciMultipleId = 'iMultipleId';
   static final String subFldIciciBankRnn = 'iBankRnn';
   static final String subFldIciciUpiTime = 'iUpiDateTime';
+  static final String subFldIciciTxnOtpId = 'iWthlOtpId';
+  static final String subFldIciciTxnOtpVerified = 'iWthOtpVerified';
 
   ///Transaction statuses
   static const String TRAN_STATUS_PENDING = 'PENDING';

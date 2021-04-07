@@ -216,17 +216,17 @@ class FundChartView extends StatelessWidget {
             children: [
               Legend(
                 title: title[0],
-                amount: "₹ ${dataMap[title[0]]}",
+                amount: "₹ ${dataMap[title[0]].toStringAsFixed(1)}",
                 color: colorList[0],
               ),
               Legend(
                 title: title[1],
-                amount: "₹ ${dataMap[title[1]]}",
+                amount: "₹ ${dataMap[title[1]].toStringAsFixed(1)}",
                 color: colorList[1],
               ),
               Legend(
                 title: title[2],
-                amount: "₹ ${dataMap[title[2]]}",
+                amount: "₹ ${dataMap[title[2]].toStringAsFixed(1)}",
                 color: colorList[2],
               ),
             ],
