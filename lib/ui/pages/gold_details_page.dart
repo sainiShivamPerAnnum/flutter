@@ -527,13 +527,13 @@ class FundDetailsTable extends StatelessWidget {
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(
-            vertical: 20, horizontal: SizeConfig.screenWidth * 0.1),
+            vertical: 20, horizontal: SizeConfig.screenWidth * 0.08),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SvgPicture.asset(
               "images/svgs/gold.svg",
-              height: SizeConfig.screenWidth * 0.08,
+              height: SizeConfig.screenWidth * 0.07,
               // width: SizeConfig.screenWidth*0.05,
             ),
             SizedBox(

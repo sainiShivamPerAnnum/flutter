@@ -90,8 +90,13 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                     //     '${widget._transaction.docKey}'),
                     (widget._transaction.subType ==
                             UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
-                        ? _addListField('Lock Price:',
+                        ? _addListField('Purchase Rate:',
                             '₹${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm')
+                        : Container(),
+                    (widget._transaction.subType ==
+                        UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
+                        ? _addListField('Closing Gold Balance:',
+                        '${widget._transaction.augmnt[UserTransaction.subFldAugTotalGoldGm]} grams')
                         : Container(),
                     SizedBox(
                       height: 10,
