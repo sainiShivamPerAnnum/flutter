@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/ui/elements/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/success-dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
@@ -39,6 +40,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
   bool _isDepositInProgress = false;
   String _errorMessage;
   double _width;
+  AugmontModel augmontProvider;
 
   _initFields() {
     if (baseProvider != null) {
@@ -62,6 +64,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
 
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     _width = MediaQuery.of(context).size.width;
     if (!_isInitialized) _initFields();
     return Container(
@@ -321,8 +324,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     if (amt == null || amt < 5) {
       return Container();
     }
-    double taxDeducted = amt - (amt * netTax) / 100;
-    double grams = taxDeducted / rate;
+    double taxDeducted = augmontProvider.getAmountPostTax(amt, netTax);
+    double grams = augmontProvider.getGoldQuantityFromAmount(amt, rate, netTax);
 
     return Padding(
       padding: EdgeInsets.all(5),
@@ -343,6 +346,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
       ),
     );
   }
+
 
   onDepositComplete(bool flag) {
     _isDepositInProgress = false;

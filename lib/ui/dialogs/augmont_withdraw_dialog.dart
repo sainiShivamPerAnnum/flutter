@@ -268,7 +268,7 @@ class AugmontWithdrawDialogState extends State<AugmontWithdrawDialog> {
     else {
       double _goldAmt = _gAmt / widget.sellRate;
       return Text(
-        ' = ${_goldAmt.toStringAsFixed(3)} grams of Gold',
+        ' = ${_goldAmt.toStringAsFixed(4)} grams of Gold',
         textAlign: TextAlign.start,
         style: TextStyle(
             fontSize: SizeConfig.mediumTextSize, fontWeight: FontWeight.w400),

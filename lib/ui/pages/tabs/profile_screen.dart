@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
@@ -45,6 +46,13 @@ class _ProfilePageState extends State<ProfilePage> {
       });
       print("got the image");
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    BaseAnalytics.analytics
+        .setCurrentScreen(screenName: BaseAnalytics.PAGE_PROFILE);
   }
 
   @override
@@ -581,6 +589,10 @@ class _ShareOptionsState extends State<ShareOptions> {
                     size: 18.0,
                   ),
             onPressed: () async {
+              BaseAnalytics.analytics.logShare(
+                  contentType: 'referral',
+                  itemId: baseProvider.myUser.uid,
+                  method: 'message');
               baseProvider.isReferralLinkBuildInProgressOther = true;
               _createDynamicLink(baseProvider.myUser.uid, true, 'Other')
                   .then((url) async {
@@ -603,78 +615,85 @@ class _ShareOptionsState extends State<ShareOptions> {
             splashColor: Colors.orange.withOpacity(0.5),
           ),
         ),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              width: 2,
-              color: Colors.white,
-            ),
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(100),
-          ),
-          child: MaterialButton(
-            child: (!baseProvider.isReferralLinkBuildInProgressWhatsapp)
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('SHARE ON WHATSAPP',
-                          style: GoogleFonts.montserrat(
-                            fontSize: SizeConfig.mediumTextSize,
-                            color: Colors.white,
-                          )),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      SvgPicture.asset(
-                        "images/svgs/whatsapp.svg",
-                        color: Colors.white,
-                        height: SizeConfig.blockSizeHorizontal * 4,
-                      )
-                    ],
-                  )
-                : SpinKitThreeBounce(
-                    color: UiConstants.spinnerColor2,
-                    size: 18.0,
+        Spacer(),
+        (Platform.isIOS)
+            ? Text('')
+            : Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 2,
+                    color: Colors.white,
                   ),
-            onPressed: () async {
-              ////////////////////////////////
-              baseProvider.isReferralLinkBuildInProgressWhatsapp = true;
-              setState(() {});
-              String url;
-              try {
-                url = await _createDynamicLink(
-                    baseProvider.myUser.uid, true, 'Whatsapp');
-              } catch (e) {
-                log.error('Failed to create dynamic link');
-                log.error(e);
-              }
-              baseProvider.isReferralLinkBuildInProgressWhatsapp = false;
-              setState(() {});
-              if (url == null)
-                return;
-              else
-                log.debug(url);
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: MaterialButton(
+                  child: (!baseProvider.isReferralLinkBuildInProgressWhatsapp)
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('SHARE ON WHATSAPP',
+                                style: GoogleFonts.montserrat(
+                                  fontSize: SizeConfig.mediumTextSize,
+                                  color: Colors.white,
+                                )),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            SvgPicture.asset(
+                              "images/svgs/whatsapp.svg",
+                              color: Colors.white,
+                              height: SizeConfig.blockSizeHorizontal * 4,
+                            )
+                          ],
+                        )
+                      : SpinKitThreeBounce(
+                          color: UiConstants.spinnerColor2,
+                          size: 18.0,
+                        ),
+                  onPressed: () async {
+                    ////////////////////////////////
+                    BaseAnalytics.analytics.logShare(
+                        contentType: 'referral',
+                        itemId: baseProvider.myUser.uid,
+                        method: 'whatsapp');
+                    baseProvider.isReferralLinkBuildInProgressWhatsapp = true;
+                    setState(() {});
+                    String url;
+                    try {
+                      url = await _createDynamicLink(
+                          baseProvider.myUser.uid, true, 'Whatsapp');
+                    } catch (e) {
+                      log.error('Failed to create dynamic link');
+                      log.error(e);
+                    }
+                    baseProvider.isReferralLinkBuildInProgressWhatsapp = false;
+                    setState(() {});
+                    if (url == null)
+                      return;
+                    else
+                      log.debug(url);
 
-              FlutterShareMe()
-                  .shareToWhatsApp(msg: _shareMsg + url)
-                  .then((flag) {
-                log.debug(flag);
-              }).catchError((err) {
-                log.error('Share to whatsapp failed');
-                log.error(err);
-                FlutterShareMe()
-                    .shareToWhatsApp4Biz(msg: _shareMsg + url)
-                    .then((value) {
-                  log.debug(value);
-                }).catchError((err) {
-                  log.error('Share to whatsapp biz failed as well');
-                });
-              });
-            },
-            highlightColor: Colors.orange.withOpacity(0.5),
-            splashColor: Colors.orange.withOpacity(0.5),
-          ),
-        ),
+                    FlutterShareMe()
+                        .shareToWhatsApp(msg: _shareMsg + url)
+                        .then((flag) {
+                      log.debug(flag);
+                    }).catchError((err) {
+                      log.error('Share to whatsapp failed');
+                      log.error(err);
+                      FlutterShareMe()
+                          .shareToWhatsApp4Biz(msg: _shareMsg + url)
+                          .then((value) {
+                        log.debug(value);
+                      }).catchError((err) {
+                        log.error('Share to whatsapp biz failed as well');
+                      });
+                    });
+                  },
+                  highlightColor: Colors.orange.withOpacity(0.5),
+                  splashColor: Colors.orange.withOpacity(0.5),
+                ),
+              ),
       ],
     );
   }

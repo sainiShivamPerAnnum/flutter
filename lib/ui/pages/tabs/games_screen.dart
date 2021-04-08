@@ -1,17 +1,17 @@
 import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
+import 'package:felloapp/ui/elements/Parallax-card/game_card_list.dart';
 import 'package:felloapp/ui/elements/feedback_dialog.dart';
-import 'package:felloapp/ui/pages/root.dart';
+import 'package:felloapp/ui/elements/leaderboard.dart';
+import 'package:felloapp/ui/elements/week-winners.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:felloapp/ui/elements/Parallax-card/game_card_list.dart';
-import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
-import 'package:felloapp/ui/elements/week-winners.dart';
-import 'package:felloapp/ui/elements/leaderboard.dart';
-import 'package:felloapp/util/size_config.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -68,6 +68,8 @@ class _GamePageState extends State<GamePage> {
     //   }
     // });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -294,6 +296,7 @@ class _TicketCountState extends State<TicketCount>
   @override
   void initState() {
     super.initState();
+    BaseAnalytics.analytics.setCurrentScreen(screenName: BaseAnalytics.PAGE_GAME);
     _controller =
         AnimationController(duration: Duration(seconds: 2), vsync: this);
     _latestBegin = 0;

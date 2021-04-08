@@ -217,8 +217,8 @@ class Assets {
       '\'Know Your Customer\' is process where we verify your identity by requesting you to submit certain documents. This verification is a one time process across all services';
   static final String infoWhyKYC =
       'RBI has made KYC mandatory to verify the identity of all customers who carry out financial transactions. This process unlocks all equity and mutual funds for you to invest in!';
-  static final String infoAugmontTxnHow = '';
-  static final String infoAugmontTime = '';
+  static final String infoAugmontTxnHow = 'Simply enter the desired amount you wish to purchase and you will be redirected to a payment gateway where you can complete the payment. \n\nThe expected grams of gold and the tickets shall automatically get credited once the transaction is completed!';
+  static final String infoAugmontTime = 'Making a gold purchase is immediate and the gold and tickets get automatically credited once the payment is complete.\n\n Selling your gold is also processed within a few clicks and the amount gets reflected in your bank account within 2 business working days.';
 
   static const List<String> POLL_NEXT_GAME_LIST = [
     'Financial Quiz',

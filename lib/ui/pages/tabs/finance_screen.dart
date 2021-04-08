@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/ui/pages/gold_details_page.dart';
 import 'package:felloapp/ui/pages/mf_details_page.dart';
@@ -37,12 +38,13 @@ class _FinancePageState extends State<FinancePage> {
         (baseProvider.myUser.augmont_quantity == 0 &&
             baseProvider.myUser.augmont_balance == 0)) return;
     augmontProvider.getRates().then((currRates) {
-      if (currRates == null || currRates.goldBuyPrice == null) return;
+      if (currRates == null || currRates.goldSellPrice == null) return;
 
-      double gBuyRate = currRates.goldBuyPrice;
+      // double gBuyRate = currRates.goldBuyPrice;
+      double gSellRate = currRates.goldSellPrice;
       if (baseProvider.myUser.augmont_quantity == 0) return;
       baseProvider.myUser.augmont_balance =
-          (baseProvider.myUser.augmont_quantity * gBuyRate).roundToDouble();
+          (baseProvider.myUser.augmont_quantity * gSellRate).roundToDouble();
       baseProvider.myUser.account_balance =
           (baseProvider.myUser.augmont_balance +
                   baseProvider.myUser.icici_balance +
@@ -52,6 +54,13 @@ class _FinancePageState extends State<FinancePage> {
     }).catchError((err) {
       print('$err');
     });
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    BaseAnalytics.analytics.setCurrentScreen(screenName: BaseAnalytics.PAGE_FINANCE);
   }
 
   @override
@@ -215,17 +224,17 @@ class FundChartView extends StatelessWidget {
             children: [
               Legend(
                 title: title[0],
-                amount: "₹ ${dataMap[title[0]]}",
+                amount: "₹ ${dataMap[title[0]].toStringAsFixed(1)}",
                 color: colorList[0],
               ),
               Legend(
                 title: title[1],
-                amount: "₹ ${dataMap[title[1]]}",
+                amount: "₹ ${dataMap[title[1]].toStringAsFixed(1)}",
                 color: colorList[1],
               ),
               Legend(
                 title: title[2],
-                amount: "₹ ${dataMap[title[2]]}",
+                amount: "₹ ${dataMap[title[2]].toStringAsFixed(1)}",
                 color: colorList[2],
               ),
             ],

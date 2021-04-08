@@ -314,7 +314,7 @@ class ICICIModel extends ChangeNotifier {
     if (resMap == null) {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
-    }else if (!resMap[INTERNAL_FAIL_FLAG]) {
+    } else if (!resMap[INTERNAL_FAIL_FLAG]) {
       return {
         QUERY_SUCCESS_FLAG: QUERY_FAILED,
         QUERY_FAIL_REASON: resMap["userMessage"]
@@ -341,7 +341,7 @@ class ICICIModel extends ChangeNotifier {
         QUERY_SUCCESS_FLAG: QUERY_FAILED,
         QUERY_FAIL_REASON: resMap["userMessage"]
       };
-    }else {
+    } else {
       resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
       return resMap;
     }
@@ -443,8 +443,8 @@ class ICICIModel extends ChangeNotifier {
       SubmitUpiExistingInvestor.fldPan: panNumber,
       SubmitUpiExistingInvestor.fldVPA: vpaAddress,
     };
-    var _request = http.Request(
-        'GET', Uri.parse(constructRequest(SubmitUpiExistingInvestor.path, _params)));
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(SubmitUpiExistingInvestor.path, _params)));
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
@@ -479,7 +479,7 @@ class ICICIModel extends ChangeNotifier {
     if (resMap == null) {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
-    }else if (!resMap[INTERNAL_FAIL_FLAG]) {
+    } else if (!resMap[INTERNAL_FAIL_FLAG]) {
       return {
         QUERY_SUCCESS_FLAG: QUERY_FAILED,
         QUERY_FAIL_REASON: resMap["userMessage"]
@@ -510,11 +510,11 @@ class ICICIModel extends ChangeNotifier {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     } else {
-      Map<String, dynamic>  resMap = resList[0];
-      if(resMap[CheckIMPSStatus.resReturnCode] == null){
+      Map<String, dynamic> resMap = resList[0];
+      if (resMap[CheckIMPSStatus.resReturnCode] == null) {
         resMap[QUERY_SUCCESS_FLAG] = QUERY_FAILED;
         return resMap;
-      }else{
+      } else {
         resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
         return resMap;
       }
@@ -536,16 +536,16 @@ class ICICIModel extends ChangeNotifier {
     if (resMap == null) {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
-    }else if (!resMap[INTERNAL_FAIL_FLAG]) {
+    } else if (!resMap[INTERNAL_FAIL_FLAG]) {
       return {
         QUERY_SUCCESS_FLAG: QUERY_FAILED,
         QUERY_FAIL_REASON: resMap["userMessage"]
       };
     } else {
-      if(resMap[GetExitLoad.resPopUpFlag] == null){
+      if (resMap[GetExitLoad.resPopUpFlag] == null) {
         resMap[QUERY_SUCCESS_FLAG] = QUERY_FAILED;
         return resMap;
-      }else {
+      } else {
         resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
         return resMap;
       }
@@ -556,8 +556,8 @@ class ICICIModel extends ChangeNotifier {
     var _params = {
       GetBankRedemptionDetail.fldFolioNo: folioNumber,
     };
-    var _request = http.Request(
-        'GET', Uri.parse(constructRequest(GetBankRedemptionDetail.path, _params)));
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(GetBankRedemptionDetail.path, _params)));
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
@@ -566,12 +566,12 @@ class ICICIModel extends ChangeNotifier {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     } else {
-      Map<String, dynamic>  resMap = resList[0];
-      if(resMap[GetBankRedemptionDetail.resCombinedAccountDetails] == null
-      || resMap[GetBankRedemptionDetail.resCombinedBankDetails] == null){
+      Map<String, dynamic> resMap = resList[0];
+      if (resMap[GetBankRedemptionDetail.resCombinedAccountDetails] == null ||
+          resMap[GetBankRedemptionDetail.resCombinedBankDetails] == null) {
         resMap[QUERY_SUCCESS_FLAG] = QUERY_FAILED;
         return resMap;
-      }else{
+      } else {
         resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
         return resMap;
       }
@@ -579,9 +579,18 @@ class ICICIModel extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> submitInstantWithdrawal(
-      String folioNumber, String amount, String bankCode, String mobile,
-      String bankName, String accNo, String accType, String bankBranch,
-      String bankCity, String redeemMode, String ifsc, String exitLoadTick,
+      String folioNumber,
+      String amount,
+      String bankCode,
+      String mobile,
+      String bankName,
+      String accNo,
+      String accType,
+      String bankBranch,
+      String bankCity,
+      String redeemMode,
+      String ifsc,
+      String exitLoadTick,
       String apprxLoadAmt) async {
     var _params = {
       SubmitRedemption.fldFolioNo: folioNumber,
@@ -596,7 +605,7 @@ class ICICIModel extends ChangeNotifier {
       SubmitRedemption.fldRedeemMode: redeemMode,
       SubmitRedemption.fldIfsc: ifsc,
     };
-    if(exitLoadTick != null && apprxLoadAmt != null) {
+    if (exitLoadTick != null && apprxLoadAmt != null) {
       _params[SubmitRedemption.fldExitLoadTick] = exitLoadTick;
       _params[SubmitRedemption.fldApproxLoadAmount] = apprxLoadAmt;
     }
@@ -609,7 +618,7 @@ class ICICIModel extends ChangeNotifier {
     if (resMap == null) {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
-    }else if (!resMap[INTERNAL_FAIL_FLAG]) {
+    } else if (!resMap[INTERNAL_FAIL_FLAG]) {
       return {
         QUERY_SUCCESS_FLAG: QUERY_FAILED,
         QUERY_FAIL_REASON: resMap["userMessage"]
@@ -621,9 +630,17 @@ class ICICIModel extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> submitNonInstantWithdrawal(
-      String folioNumber, String pan, String amount, String bankCode,
-      String bankName, String accNo, String accType, String bankBranch,
-      String bankCity, String redeemMode, String ifsc) async {
+      String folioNumber,
+      String pan,
+      String amount,
+      String bankCode,
+      String bankName,
+      String accNo,
+      String accType,
+      String bankBranch,
+      String bankCity,
+      String redeemMode,
+      String ifsc) async {
     var _params = {
       SubmitRedemptionNonInstant.fldFolioNo: folioNumber,
       SubmitRedemptionNonInstant.fldPan: pan,
@@ -638,8 +655,8 @@ class ICICIModel extends ChangeNotifier {
       SubmitRedemptionNonInstant.fldIfsc: ifsc,
     };
 
-    var _request = http.Request(
-        'GET', Uri.parse(constructRequest(SubmitRedemptionNonInstant.path, _params)));
+    var _request = http.Request('GET',
+        Uri.parse(constructRequest(SubmitRedemptionNonInstant.path, _params)));
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
@@ -647,11 +664,59 @@ class ICICIModel extends ChangeNotifier {
     if (resMap == null) {
       log.error('Query Failed');
       return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
-    }else if (!resMap[INTERNAL_FAIL_FLAG]) {
+    } else if (!resMap[INTERNAL_FAIL_FLAG]) {
       return {
         QUERY_SUCCESS_FLAG: QUERY_FAILED,
         QUERY_FAIL_REASON: resMap["userMessage"]
       };
+    } else {
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+      return resMap;
+    }
+  }
+
+  Future<Map<String, dynamic>> sendRedemptionOtp(
+      String foliono, String tranid) async {
+    var _params = {
+      SendRedemptionOtp.fldFolioNo: foliono,
+      SendRedemptionOtp.fldTranId: tranid
+    };
+    var _request = http.Request(
+        'GET', Uri.parse(constructRequest(SendRedemptionOtp.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if (resMap == null ||
+        resMap[SendRedemptionOtp.resOtpId] == null ||
+        resMap[SendRedemptionOtp.resOtpId] == '') {
+      log.error('Query Failed');
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
+    } else {
+      resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
+      return resMap;
+    }
+  }
+
+  Future<Map<String, dynamic>> verifyRedemptionOtp(
+      String foliono, String tranid, String otpid, String otp) async {
+    var _params = {
+      VerifyRedemptionOtp.fldFolioNo: foliono,
+      VerifyRedemptionOtp.fldTranId: tranid,
+      VerifyRedemptionOtp.fldOtpId: otpid,
+      VerifyRedemptionOtp.fldOtp: otp
+    };
+    var _request = http.Request(
+        'GET', Uri.parse(constructRequest(VerifyRedemptionOtp.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await processResponse(_response);
+    if (resMap == null ||
+        resMap[VerifyRedemptionOtp.resStatus] == null ||
+        resMap[VerifyRedemptionOtp.resStatus] != '1') {
+      log.error('Query Failed');
+      return {QUERY_SUCCESS_FLAG: QUERY_FAILED};
     } else {
       resMap[QUERY_SUCCESS_FLAG] = QUERY_PASSED;
       return resMap;
@@ -829,8 +894,10 @@ class ICICIModel extends ChangeNotifier {
           SubmitUpiNewInvestor.resTrnId: element[SubmitUpiNewInvestor.resTrnId],
           SubmitUpiNewInvestor.resMultipleId:
               element[SubmitUpiNewInvestor.resMultipleId] ?? '',
-          SubmitUpiNewInvestor.resTrnDate: element[SubmitUpiNewInvestor.resTrnDate],
-          SubmitUpiNewInvestor.resUpiTime: element[SubmitUpiNewInvestor.resUpiTime]
+          SubmitUpiNewInvestor.resTrnDate:
+              element[SubmitUpiNewInvestor.resTrnDate],
+          SubmitUpiNewInvestor.resUpiTime:
+              element[SubmitUpiNewInvestor.resUpiTime]
         });
       });
       log.debug(refList.toString());
@@ -866,10 +933,13 @@ class ICICIModel extends ChangeNotifier {
       rList.forEach((element) {
         refList.add({
           CheckIMPSStatus.resReturnCode: element[CheckIMPSStatus.resReturnCode],
-          CheckIMPSStatus.resAllowIMPSFlag: element[CheckIMPSStatus.resAllowIMPSFlag],
+          CheckIMPSStatus.resAllowIMPSFlag:
+              element[CheckIMPSStatus.resAllowIMPSFlag],
           CheckIMPSStatus.resReturnMsg: element[CheckIMPSStatus.resReturnMsg],
-          CheckIMPSStatus.resInstantBalance: element[CheckIMPSStatus.resInstantBalance],
-          CheckIMPSStatus.resTotalBalance: element[CheckIMPSStatus.resTotalBalance]
+          CheckIMPSStatus.resInstantBalance:
+              element[CheckIMPSStatus.resInstantBalance],
+          CheckIMPSStatus.resTotalBalance:
+              element[CheckIMPSStatus.resTotalBalance]
         });
       });
       log.debug(refList.toString());
@@ -904,9 +974,12 @@ class ICICIModel extends ChangeNotifier {
       List<Map<String, dynamic>> refList = new List();
       rList.forEach((element) {
         refList.add({
-          GetBankRedemptionDetail.resBankName: element[GetBankRedemptionDetail.resBankName],
-          GetBankRedemptionDetail.resCombinedAccountDetails: element[GetBankRedemptionDetail.resCombinedAccountDetails],
-          GetBankRedemptionDetail.resCombinedBankDetails: element[GetBankRedemptionDetail.resCombinedBankDetails],
+          GetBankRedemptionDetail.resBankName:
+              element[GetBankRedemptionDetail.resBankName],
+          GetBankRedemptionDetail.resCombinedAccountDetails:
+              element[GetBankRedemptionDetail.resCombinedAccountDetails],
+          GetBankRedemptionDetail.resCombinedBankDetails:
+              element[GetBankRedemptionDetail.resCombinedBankDetails],
         });
       });
       log.debug(refList.toString());

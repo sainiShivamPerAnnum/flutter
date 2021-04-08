@@ -1,7 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
-import 'package:felloapp/ui/dialogs/icici_withdraw_dialog.dart';
 import 'package:felloapp/ui/dialogs/integrated_icici_disabled_dialog.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/deposit_modal_sheet.dart';
@@ -40,7 +39,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   DBModel dbProvider;
   PaymentService payService;
   GlobalKey<DepositModalSheetState> _modalKey = GlobalKey();
-  //GlobalKey<IciciWithdrawDialogState> _withdrawalDialogKey = GlobalKey();
+  GlobalKey<ICICIWithdrawalState> _withdrawalDialogKey = GlobalKey();
   double containerHeight = 10;
   Map<String, dynamic> _withdrawalRequestDetails;
   double instantAmount = 0, nonInstantAmount = 0;
@@ -115,7 +114,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
             //     panNumber: baseProvider.iciciDetail.panNumber,),
             // ));
             //////////////////////////////////////
-            onDepositClicked2().then((value) {
+            onDepositClicked().then((value) {
               setState(() {});
             });
           },
@@ -182,10 +181,10 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   }
 
   String _getActionButtonText() {
-    if (baseProvider.myUser.isIciciEnabled == null ||
-        !baseProvider.myUser.isIciciEnabled) {
-      return 'UNAVAILABLE';
-    }
+    // if (baseProvider.myUser.isIciciEnabled == null ||
+    //     !baseProvider.myUser.isIciciEnabled) {
+    //   return 'UNAVAILABLE';
+    // }
     if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID)
       return 'COMPLETE KYC';
     if (!baseProvider.myUser.isIciciOnboarded)
@@ -195,10 +194,9 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   }
 
   Future<bool> onDepositClicked2() async {
-    // Navigator.of(context).pop(); //go back to save tab
-    // Navigator.of(context).pushNamed('/initkyc');
+    Navigator.of(context).pop(); //go back to save tab
+    Navigator.of(context).pushNamed('/initkyc');
 
-    baseProvider.showNegativeAlert('Disabled', 'This action has been currently disabled', context);
     return true;
   }
 
@@ -206,15 +204,15 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     baseProvider.iciciDetail = (baseProvider.iciciDetail == null)
         ? (await dbProvider.getUserIciciDetails(baseProvider.myUser.uid))
         : baseProvider.iciciDetail;
-    if (baseProvider.myUser.isIciciEnabled == null ||
-        !baseProvider.myUser.isIciciEnabled) {
-      //icici deposits not enabled. show disabled dialog
-      baseProvider.isIciciDepositRouteLogicInProgress = false;
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => IntegratedIciciDisabled());
-      return true;
-    }
+    // if (baseProvider.myUser.isIciciEnabled == null ||
+    //     !baseProvider.myUser.isIciciEnabled) {
+    //   //icici deposits not enabled. show disabled dialog
+    //   baseProvider.isIciciDepositRouteLogicInProgress = false;
+    //   showDialog(
+    //       context: context,
+    //       builder: (BuildContext context) => IntegratedIciciDisabled());
+    //   return true;
+    // }
     if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_VALID &&
         baseProvider.myUser.isIciciOnboarded) {
       //move directly to depositing
@@ -310,50 +308,52 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
         context,
         CupertinoPageRoute(
           builder: (ctx) => ICICIWithdrawal(
-              //key: _withdrawalDialogKey,
-              // currentBalance: baseProvider.myUser.icici_balance,
-              // onAmountConfirmed: (Map<String, double> amountDetails) {
-              //   instantAmount = amountDetails['instant_amount'] ?? 0;
-              //   nonInstantAmount = amountDetails['non_instant_amount'] ?? 0;
-              //   if (instantAmount == 0 && nonInstantAmount == 0) return;
-              //   payService
-              //       .preProcessWithdrawal(instantAmount.toString())
-              //       .then((combDetailsMap) {
-              //     if (combDetailsMap['flag']) {
-              //       _withdrawalRequestDetails = combDetailsMap;
-              //       //check if dialog required
-              //       if (combDetailsMap[GetExitLoad.resPopUpFlag] ==
-              //           GetExitLoad.SHOW_POPUP) {
-              //         _withdrawalDialogKey.currentState.onShowLoadDialog();
-              //       } else {
-              //         onInitiateWithdrawal(_withdrawalRequestDetails,
-              //             instantAmount, nonInstantAmount);
-              //       }
-              //     } else {
-              //       Navigator.of(context).pop();
-              //       baseProvider.showNegativeAlert('Withdrawal Failed',
-              //           'Error: ${combDetailsMap['reason']}', context);
-              //     }
-              //   });
-              // },
-              // onOptionConfirmed: (bool flag) {
-              //   if (flag) {
-              //     _withdrawalRequestDetails[SubmitRedemption.fldExitLoadTick] =
-              //         'Y';
-              //     _withdrawalRequestDetails[
-              //             SubmitRedemption.fldApproxLoadAmount] =
-              //         _withdrawalRequestDetails[GetExitLoad.resApproxLoadAmt];
-              //     onInitiateWithdrawal(
-              //         _withdrawalRequestDetails, instantAmount, nonInstantAmount);
-              //   } else {
-              //     Navigator.of(context).pop();
-              //     baseProvider.showNegativeAlert(
-              //         'Withdrawal Cancelled',
-              //         'Please contact us if you need any further details',
-              //         context);
-              //   }
-              // },
-              ),
+              key: _withdrawalDialogKey,
+              currentBalance: baseProvider.myUser.icici_balance,
+              onAmountConfirmed: (Map<String, double> amountDetails) {
+                // instantAmount = amountDetails['instant_amount'] ?? 0;
+                // nonInstantAmount = amountDetails['non_instant_amount'] ?? 0;
+                // if (instantAmount == 0 && nonInstantAmount == 0) return;
+                // payService
+                //     .preProcessWithdrawal(instantAmount.toString())
+                //     .then((combDetailsMap) {
+                //   if (combDetailsMap['flag']) {
+                //     _withdrawalRequestDetails = combDetailsMap;
+                //     //check if dialog required
+                //     if (combDetailsMap[GetExitLoad.resPopUpFlag] ==
+                //         GetExitLoad.SHOW_POPUP) {
+                //       _withdrawalDialogKey.currentState.onShowLoadDialog();
+                //     } else {
+                //       onInitiateWithdrawal(_withdrawalRequestDetails,
+                //           instantAmount, nonInstantAmount);
+                //     }
+                //   } else {
+                //     Navigator.of(context).pop();
+                //     baseProvider.showNegativeAlert('Withdrawal Failed',
+                //         'Error: ${combDetailsMap['reason']}', context);
+                //   }
+                // });
+              },
+              onOptionConfirmed: (bool flag) {
+                // if (flag) {
+                //   _withdrawalRequestDetails[SubmitRedemption.fldExitLoadTick] =
+                //       'Y';
+                //   _withdrawalRequestDetails[
+                //           SubmitRedemption.fldApproxLoadAmount] =
+                //       _withdrawalRequestDetails[GetExitLoad.resApproxLoadAmt];
+                //   onInitiateWithdrawal(_withdrawalRequestDetails, instantAmount,
+                //       nonInstantAmount);
+                // } else {
+                //   Navigator.of(context).pop();
+                //   baseProvider.showNegativeAlert(
+                //       'Withdrawal Cancelled',
+                //       'Please contact us if you need any further details',
+                //       context);
+                // }
+              },
+              onOtpConfirmed: (Map<String, String> otpMap) {
+                // payService.verifyNonInstantRedemptionOtp(otp)
+              }),
         ),
       );
       // showDialog(
@@ -406,19 +406,34 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       //         ));
     }
   }
-
+  //
   // Future<bool> onInitiateWithdrawal(Map<String, dynamic> fieldMap,
   //     double instantWithdraw, double nonInstantWithdraw) {
-  //   payService
+  //   return payService
   //       .processWithdrawal(fieldMap, instantWithdraw, nonInstantWithdraw)
   //       .then((wMap) {
-  //     Navigator.of(context).pop();
-  //     if (!wMap['flag']) {
-  //       baseProvider.showNegativeAlert(
-  //           'Withdrawal Failed', 'Error: ${wMap['reason']}', context);
-  //     } else {
-  //       baseProvider.showPositiveAlert('Withdrawal Successful',
-  //           'Processed in less than 30 seconds!', context);
+  //     if (nonInstantWithdraw ??
+  //         0 > 0 &&
+  //             wMap['flag'] &&
+  //             wMap['otpid'] != null &&
+  //             wMap['otpid'].isNotEmpty) {
+  //       ///The otp dialog needs to be opened
+  //       _withdrawalDialogKey.currentState.onShowOtpDialog();
+  //       return true;
+  //     } else if (nonInstantWithdraw ?? 0 == 0) {
+  //       ///otp dialog does not need to be opened
+  //       Navigator.of(context).pop();
+  //       if (!wMap['flag']) {
+  //         baseProvider.showNegativeAlert(
+  //             'Withdrawal Failed', 'Error: ${wMap['reason']}', context);
+  //         return false;
+  //       } else {
+  //         baseProvider.showPositiveAlert('Withdrawal Successful',
+  //             'Processed in less than 30 seconds!', context);
+  //         return true;
+  //       }
+  //     }else{
+  //       return false;
   //     }
   //   });
   // }

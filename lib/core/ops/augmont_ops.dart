@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
@@ -43,10 +44,20 @@ class AugmontModel extends ChangeNotifier {
 
   bool isInit() => (_apiKey != null);
 
-  String _constructUid(String pan) => 'fello77$pan';
+  String _constructUid(String pan) {
+    var rnd = new Random();
+    int u = rnd.nextInt(100);
+    return 'fello${u.toString()}$pan';
+  }
 
-  String _constructUsername() =>
-      'felloGY${_baseProvider.myUser.uid.replaceAll(new RegExp(r"[0-9]"), "")}';
+  String _constructUsername() {
+    var rnd = new Random();
+    int u = rnd.nextInt(26);
+    String _randomChar = String.fromCharCode(u + 65);
+    String _baseUsername =
+        _baseProvider.myUser.uid.replaceAll(new RegExp(r"[0-9]"), "");
+    return 'fello$_randomChar$_baseUsername';
+  }
 
   Future<UserAugmontDetail> createUser(
       String mobile,
@@ -155,10 +166,12 @@ class AugmontModel extends ChangeNotifier {
         amount <= 0) {
       return null;
     }
+    double netTax = buyRates.cgstPercent + buyRates.sgstPercent;
     _baseProvider.currentAugmontTxn = UserTransaction.newGoldDeposit(
         amount,
         buyRates.blockId,
         buyRates.goldBuyPrice,
+        getGoldQuantityFromAmount(amount, buyRates.goldBuyPrice, netTax),
         'RZP',
         _baseProvider.myUser.uid);
     UserTransaction tTxn = await _rzpGateway.submitAugmontTransaction(
@@ -240,7 +253,7 @@ class AugmontModel extends ChangeNotifier {
           resMap[SubmitGoldPurchase.resTranId];
       _baseProvider
               .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] =
-          double.tryParse(resMap[SubmitGoldPurchase.resGoldBalance])??0.0;
+          double.tryParse(resMap[SubmitGoldPurchase.resGoldBalance]) ?? 0.0;
       //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
       if (!_baseProvider.augmontDetail.firstInvMade) {
         _baseProvider.augmontDetail.firstInvMade = true;
@@ -282,8 +295,12 @@ class AugmontModel extends ChangeNotifier {
       return null;
     }
 
-    _baseProvider.currentAugmontTxn = UserTransaction.newGoldWithdrawal(amount,
-        sellRates.blockId, sellRates.goldSellPrice, _baseProvider.myUser.uid);
+    _baseProvider.currentAugmontTxn = UserTransaction.newGoldWithdrawal(
+        amount,
+        sellRates.blockId,
+        sellRates.goldSellPrice,
+        getGoldQuantityFromSellAmount(amount, sellRates.goldSellPrice),
+        _baseProvider.myUser.uid);
 
     Map<String, String> _params = {
       SubmitGoldSell.fldMobile: _baseProvider.myUser.mobile,
@@ -329,8 +346,7 @@ class AugmontModel extends ChangeNotifier {
           resMap[SubmitGoldSell.resTranId];
       _baseProvider
               .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] =
-          double.tryParse(
-              resMap[SubmitGoldSell.resGoldBalance])??0.0;
+          double.tryParse(resMap[SubmitGoldSell.resGoldBalance]) ?? 0.0;
       //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
@@ -431,5 +447,28 @@ class AugmontModel extends ChangeNotifier {
 
     _baseProvider.userMiniTxnList =
         null; //this is to ensure that the transactions list gets refreshed
+  }
+
+  double getAmountPostTax(double amount, double taxRate) {
+    double totalTax = _digitPrecision((amount * taxRate) / (100 + taxRate));
+    return _digitPrecision(amount - totalTax);
+  }
+
+  double getGoldQuantityFromAmount(double amount, double rate, double taxRate) {
+    double totalTax = _digitPrecision((amount * taxRate) / (100 + taxRate));
+    double taxDeducted = _digitPrecision(amount - totalTax);
+
+    return taxDeducted / rate;
+  }
+
+  double getGoldQuantityFromSellAmount(double amount, double rate) {
+    double qnt = amount / rate;
+    double y = qnt * 10000;
+    return (y.round()) / 10000;
+  }
+
+  double _digitPrecision(double x) {
+    double y = x * 100;
+    return (y.round()) / 100;
   }
 }

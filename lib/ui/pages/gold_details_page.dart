@@ -4,14 +4,16 @@ import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
-import 'package:felloapp/ui/dialogs/augmont_onboarding_dialog.dart';
 import 'package:felloapp/ui/dialogs/augmont_withdraw_dialog.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/gold_profit_calculator.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
+import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -37,6 +39,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   AugmontModel augmontProvider;
+  ICICIModel iProvider;
   GlobalKey<AugmontDepositModalSheetState> _modalKey2 = GlobalKey();
   GlobalKey<AugmontOnboardingState> _onboardingKey = GlobalKey();
   GlobalKey<AugmontWithdrawDialogState> _withdrawalDialogKey2 = GlobalKey();
@@ -53,6 +56,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
+    iProvider = Provider.of<ICICIModel>(context, listen: false);
 
     return WillPopScope(
       onWillPop: () async {
@@ -258,8 +262,8 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                     String aBankIfsc = aData['bank_ifsc'];
                     _registerAugmontUser(aPan, aStateId, aBankHolderName,
                             aBankAccNo, aBankIfsc)
-                        .then((flag) {
-                      _onboardingKey.currentState.regnComplete(flag);
+                        .then((resMap) {
+                      _onboardingKey.currentState.regnComplete(resMap);
                     });
                   })));
       baseProvider.isAugDepositRouteLogicInProgress = false;
@@ -295,19 +299,67 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     return true;
   }
 
-  Future<bool> _registerAugmontUser(String aPan, String aStateId,
-      String aBankHolderName, String aBankAccNo, String aIfsc) async {
-    if (aPan != null && aStateId != null) {
-      UserAugmontDetail detail = await augmontProvider.createUser(
-          baseProvider.myUser.mobile,
-          aPan,
-          aStateId,
-          aBankHolderName,
-          aBankAccNo,
-          aIfsc);
-      if (detail != null) return true;
+  Future<Map<String, dynamic>> _registerAugmontUser(
+      String aPan,
+      String aStateId,
+      String aBankHolderName,
+      String aBankAccNo,
+      String aIfsc) async {
+    bool _flag = true;
+    String _reason = '';
+    if (aPan == null ||
+        aPan.isEmpty ||
+        aStateId == null ||
+        aStateId.isEmpty ||
+        aIfsc == null ||
+        aIfsc.isEmpty) {
+      return {'flag': false, 'reason': 'Insufficient details'};
     }
-    return false;
+
+    if (!iProvider.isInit()) await iProvider.init();
+
+    ///test pan number using icici api
+    var kObj = await iProvider.getKycStatus(aPan);
+    if (kObj == null ||
+        kObj[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
+        kObj[GetKycStatus.resStatus] == null ||
+        kObj[GetKycStatus.resName] == null ||
+        kObj[GetKycStatus.resName] == '') {
+      log.error('Couldnt fetch an appropriate response');
+      _flag = false;
+      _reason = 'Invalid PAN Number';
+    }
+    if (!_flag) {
+      return {'flag': _flag, 'reason': _reason};
+    }
+
+    ///test ifsc code using icici api
+    var bankDetail = await iProvider.getBankInfo(aPan, aIfsc);
+    if (bankDetail == null ||
+        bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
+        bankDetail[GetBankDetail.resBankName] == null) {
+      log.error('Couldnt fetch an appropriate response');
+      _flag = false;
+      _reason = 'Invalid IFSC Code';
+    }
+    if (!_flag) {
+      return {'flag': _flag, 'reason': _reason};
+    }
+
+    ///create user using augmont api
+    UserAugmontDetail detail = await augmontProvider.createUser(
+        baseProvider.myUser.mobile,
+        aPan,
+        aStateId,
+        aBankHolderName,
+        aBankAccNo,
+        aIfsc);
+    if (detail == null) {
+      _flag = false;
+      _reason = 'Failed to register at the moment. Please try again.';
+    }
+
+    return {'flag': _flag, 'reason': _reason};
   }
 
   Future<bool> _onDepositTransactionComplete(UserTransaction txn) async {
@@ -451,6 +503,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
 
 class FundDetailsTable extends StatelessWidget {
   final double _goldBalance;
+
   FundDetailsTable(this._goldBalance);
 
   @override
@@ -474,20 +527,20 @@ class FundDetailsTable extends StatelessWidget {
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(
-            vertical: 20, horizontal: SizeConfig.screenWidth * 0.1),
+            vertical: 20, horizontal: SizeConfig.screenWidth * 0.08),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SvgPicture.asset(
               "images/svgs/gold.svg",
-              height: SizeConfig.screenWidth * 0.08,
+              height: SizeConfig.screenWidth * 0.07,
               // width: SizeConfig.screenWidth*0.05,
             ),
             SizedBox(
-              width: 20,
+              width: 10,
             ),
             Text(
-                'Current Gold Balance: ${_goldBalance.toStringAsFixed(3)} grams'),
+                'Current Gold Balance: ${_goldBalance.toStringAsFixed(4)} grams'),
           ],
         ),
       ),

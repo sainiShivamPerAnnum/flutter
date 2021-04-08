@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
@@ -68,6 +69,8 @@ class _HState extends State<PlayHome> {
   void initState() {
     super.initState();
     initDailyPickFlags();
+    BaseAnalytics.analytics
+        .setCurrentScreen(screenName: BaseAnalytics.PAGE_TAMBOLA);
   }
 
   initDailyPickFlags() {
@@ -243,6 +246,38 @@ class _HState extends State<PlayHome> {
                 ],
               ),
             ),
+
+            // SafeArea(
+            //   child: Align(
+            //     alignment: Alignment.topCenter,
+            //     child: Padding(
+            //       padding: EdgeInsets.fromLTRB(5, 20, 5, 5),
+            //       child: Text('Tambola',
+            //           style: GoogleFonts.montserrat(
+            //               color: Colors.white,
+            //               fontWeight: FontWeight.w500,
+            //               fontSize: SizeConfig.largeTextSize)),
+            //     ),
+            //   ),
+            // ),
+            // Positioned(
+            //   top: 30,
+            //   right: 5,
+            //   child: IconButton(
+            //     color: Colors.white,
+            //     icon: Icon(Icons.help_outline),
+            //     onPressed: () {
+            //       HapticFeedback.vibrate();
+            //       _showTutorial = true;
+            //       if (!_startTutorial()) {
+            //         //baseProvider.showNegativeAlert('Try soon', message, context)
+            //       }
+            //     },
+            //   ),
+            // ),
+            //_buildTicketCount(),
+            SafeArea(
+                child: SingleChildScrollView(child: _buildCardCanvas(context))),
             Positioned(
               top: 5,
               child: SafeArea(
@@ -283,37 +318,6 @@ class _HState extends State<PlayHome> {
               ),
             ),
             // SafeArea(
-            //   child: Align(
-            //     alignment: Alignment.topCenter,
-            //     child: Padding(
-            //       padding: EdgeInsets.fromLTRB(5, 20, 5, 5),
-            //       child: Text('Tambola',
-            //           style: GoogleFonts.montserrat(
-            //               color: Colors.white,
-            //               fontWeight: FontWeight.w500,
-            //               fontSize: SizeConfig.largeTextSize)),
-            //     ),
-            //   ),
-            // ),
-            // Positioned(
-            //   top: 30,
-            //   right: 5,
-            //   child: IconButton(
-            //     color: Colors.white,
-            //     icon: Icon(Icons.help_outline),
-            //     onPressed: () {
-            //       HapticFeedback.vibrate();
-            //       _showTutorial = true;
-            //       if (!_startTutorial()) {
-            //         //baseProvider.showNegativeAlert('Try soon', message, context)
-            //       }
-            //     },
-            //   ),
-            // ),
-            //_buildTicketCount(),
-            SafeArea(
-                child: SingleChildScrollView(child: _buildCardCanvas(context))),
-            // SafeArea(
             //     child: Align(
             //         alignment: Alignment.bottomCenter, child: _buildPrizeButton()))
           ],
@@ -331,31 +335,30 @@ class _HState extends State<PlayHome> {
         //descTextStyle: TextStyle(fontSize: 20),
         width: 300,
         height: 140,
-        container: SafeArea(
-          child: Container(
-            padding: EdgeInsets.all(20),
-            decoration: new BoxDecoration(
-              shape: BoxShape.rectangle,
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(UiConstants.padding),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 10.0,
-                  offset: const Offset(0.0, 10.0),
-                ),
-              ],
-            ),
-            child: Center(
-              child: Text(
-                showcaseMsg,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 16,
-                    height: 1.4,
-                    fontWeight: FontWeight.w300,
-                    color: UiConstants.accentColor),
+        container: Container(
+          padding: EdgeInsets.all(20),
+          decoration: new BoxDecoration(
+            shape: BoxShape.rectangle,
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(UiConstants.padding),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10.0,
+                offset: const Offset(0.0, 10.0),
               ),
+            ],
+          ),
+          child: Container(
+            width: SizeConfig.screenWidth * 0.84,
+            child: Text(
+              showcaseMsg,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 16,
+                  height: 1.4,
+                  fontWeight: FontWeight.w300,
+                  color: UiConstants.accentColor),
             ),
           ),
         ),

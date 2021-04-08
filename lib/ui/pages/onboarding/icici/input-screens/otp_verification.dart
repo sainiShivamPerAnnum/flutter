@@ -1,13 +1,13 @@
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/data_provider.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart';
 
-class OtpVerification extends StatefulWidget{
+class OtpVerification extends StatefulWidget {
   static const int index = 4;
+
   OtpVerification({this.action});
+
   final Function action;
 
   @override
@@ -15,7 +15,6 @@ class OtpVerification extends StatefulWidget{
 }
 
 class OtpVerificationState extends State<OtpVerification> {
-
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
@@ -63,23 +62,24 @@ class OtpVerificationState extends State<OtpVerification> {
                     height: 10,
                   ),
                   Padding(
-                      padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 18.0),
+                      padding:
+                          const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 18.0),
                       child: PinInputTextField(
                         enabled: true,
                         pinLength: 5,
                         decoration: UnderlineDecoration(
                             color: Colors.grey,
-                            textStyle: TextStyle(
-                                fontSize: 20,
-                                color: Colors.black)),
+                            textStyle:
+                                TextStyle(fontSize: 20, color: Colors.black)),
                         controller: IDP.otpInput,
                         autoFocus: true,
                         textInputAction: TextInputAction.go,
                         onSubmit: (pin) {
-                          print("Pressed submit for pin: " + pin.toString() + "\n  No action taken.");
+                          print("Pressed submit for pin: " +
+                              pin.toString() +
+                              "\n  No action taken.");
                         },
-                      )
-                  ),
+                      )),
                   // Wrap(
                   //   spacing: 20,
                   //   children: [

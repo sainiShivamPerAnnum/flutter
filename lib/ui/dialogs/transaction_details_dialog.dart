@@ -82,16 +82,47 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                         'Transaction Type:', widget._transaction.type),
                     _addListField('Transaction Amount:',
                         '₹${widget._transaction.amount.toStringAsFixed(2)}'),
-                    _addListField('Closing Balance:',
-                        (widget._transaction.closingBalance == 0) ? 'N/A' : '₹${widget._transaction.closingBalance}'),
+                    _addListField(
+                        'Closing Balance:',
+                        (widget._transaction.closingBalance == 0)
+                            ? 'N/A'
+                            : '₹${widget._transaction.closingBalance}'),
                     _addListField('Tickets Added:',
                         '${widget._transaction.ticketUpCount}'),
                     // _addListField('Transaction ID:',
                     //     '${widget._transaction.docKey}'),
                     (widget._transaction.subType ==
-                            UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
-                        ? _addListField('Lock Price:',
+                                UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
+                            widget._transaction.type ==
+                                UserTransaction.TRAN_TYPE_DEPOSIT)
+                        ? _addListField('Purchase Rate:',
                             '₹${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm')
+                        : Container(),
+                    (widget._transaction.subType ==
+                                UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
+                            widget._transaction.type ==
+                                UserTransaction.TRAN_TYPE_WITHDRAW)
+                        ? _addListField('Sell Rate:',
+                            '₹${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm')
+                        : Container(),
+                    (widget._transaction.subType ==
+                                UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
+                            widget._transaction.type ==
+                                UserTransaction.TRAN_TYPE_DEPOSIT)
+                        ? _addListField('Gold Purchased:',
+                            '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm])} grams')
+                        : Container(),
+                    (widget._transaction.subType ==
+                                UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
+                            widget._transaction.type ==
+                                UserTransaction.TRAN_TYPE_WITHDRAW)
+                        ? _addListField('Gold Sold:',
+                            '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm])} grams')
+                        : Container(),
+                    (widget._transaction.subType ==
+                            UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
+                        ? _addListField('Closing Gold Balance:',
+                            '${widget._transaction.augmnt[UserTransaction.subFldAugTotalGoldGm]} grams')
                         : Container(),
                     SizedBox(
                       height: 10,
@@ -158,19 +189,26 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
         horizontal: SizeConfig.blockSizeHorizontal * 8,
         vertical: SizeConfig.blockSizeVertical * 0.4,
       ),
-      title: Text(
-        title,
-        style: GoogleFonts.montserrat(
-          color: UiConstants.accentColor,
-          fontSize: SizeConfig.mediumTextSize,
+      title: Container(
+        width: SizeConfig.screenWidth * 0.2,
+        child: Text(
+          title,
+          style: GoogleFonts.montserrat(
+            color: UiConstants.accentColor,
+            fontSize: SizeConfig.mediumTextSize,
+          ),
         ),
       ),
-      trailing: Text(
-        value,
-        style: GoogleFonts.montserrat(
-          color: Colors.black54,
-          fontSize: SizeConfig.largeTextSize,
-          fontWeight: FontWeight.w500,
+      trailing: Container(
+        width: SizeConfig.screenWidth * 0.3,
+        child: Text(
+          value,
+          overflow: TextOverflow.clip,
+          style: GoogleFonts.montserrat(
+            color: Colors.black54,
+            fontSize: SizeConfig.largeTextSize,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );
@@ -186,4 +224,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
     }
     return "Fund Name";
   }
+
+  String _getAugmontGoldGrams(double gms) =>
+      (gms == null || gms == 0) ? 'N/A' : gms.toStringAsFixed(4);
 }

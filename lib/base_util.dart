@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/PrizeLeader.dart';
 import 'package:felloapp/core/model/ReferralLeader.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
-import 'package:felloapp/core/model/UserMiniTransaction.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
@@ -16,6 +16,7 @@ import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flushbar/flushbar.dart';
@@ -32,6 +33,7 @@ class BaseUtil extends ChangeNotifier {
   LocalDBModel _lModel = locator<LocalDBModel>();
   BaseUser _myUser;
   User firebaseUser;
+  FirebaseAnalytics baseAnalytics;
   static RemoteConfig remoteConfig;
   PaymentService _payService;
 
@@ -42,6 +44,7 @@ class BaseUtil extends ChangeNotifier {
   ///ICICI global objects
   UserIciciDetail _iciciDetail;
   UserTransaction _currentICICITxn;
+  UserTransaction _currentICICINonInstantWthrlTxn;
 
   ///Augmont global objects
   UserAugmontDetail _augmontDetail;
@@ -54,7 +57,7 @@ class BaseUtil extends ChangeNotifier {
   List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
   String myUserDpUrl;
-  List<UserTransaction> userMiniTxnList = [];
+  List<UserTransaction> userMiniTxnList;
 
   DateTime _userCreationTimestamp;
   int referCount = 0;
@@ -62,7 +65,9 @@ class BaseUtil extends ChangeNotifier {
   bool isUserOnboarded = false;
   bool isLoginNextInProgress = false;
   bool isEditProfileNextInProgress = false;
+  bool isRedemptionOtpInProgress = false;
   bool isAugmontRegnInProgress = false;
+  bool isAugmontRegnCompleteAnimateInProgress = false;
   bool isIciciDepositRouteLogicInProgress = false;
   bool isAugDepositRouteLogicInProgress = false;
   bool isAugWithdrawRouteLogicInProgress = false;
@@ -94,17 +99,19 @@ class BaseUtil extends ChangeNotifier {
   static const RazorpayStage activeRazorpayStage = RazorpayStage.DEV;
 
   Future init() async {
-    //fetch on-boarding status and User details
+    ///fetch on-boarding status and User details
     firebaseUser = FirebaseAuth.instance.currentUser;
     if (firebaseUser != null)
       _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
+
+    ///analytics
+    BaseAnalytics.init();
+    BaseAnalytics.analytics.logAppOpen();
+
     isUserOnboarded =
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
     if (isUserOnboarded) {
       await initRemoteConfig();
-      // String _p = remoteConfig.getString('play_screen_first');
-      // playScreenFirst = !(_p != null && _p.isNotEmpty && _p == 'false');
-
       //get user creation time
       _userCreationTimestamp = firebaseUser.metadata.creationTime;
 
@@ -385,6 +392,7 @@ class BaseUtil extends ChangeNotifier {
     return 0;
   }
 
+
   static int getWeekNumber() {
     DateTime tdt = new DateTime.now();
     int dayn = tdt.weekday;
@@ -474,6 +482,13 @@ class BaseUtil extends ChangeNotifier {
 
   set currentICICITxn(UserTransaction value) {
     _currentICICITxn = value;
+  }
+
+  UserTransaction get currentICICINonInstantWthrlTxn =>
+      _currentICICINonInstantWthrlTxn;
+
+  set currentICICINonInstantWthrlTxn(UserTransaction value) {
+    _currentICICINonInstantWthrlTxn = value;
   }
 
   UserAugmontDetail get augmontDetail => _augmontDetail;

@@ -1,10 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/payment_service.dart';
-import 'package:felloapp/ui/dialogs/icici_withdraw_dialog.dart';
+import 'package:felloapp/ui/dialogs/icici_redemption_otp_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
-import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -13,16 +11,28 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ICICIWithdrawal extends StatefulWidget {
+  final double currentBalance;
+  final ValueChanged<Map<String, double>> onAmountConfirmed;
+  final ValueChanged<bool> onOptionConfirmed;
+  final ValueChanged<Map<String, String>> onOtpConfirmed;
+
+  ICICIWithdrawal(
+      {Key key,
+      this.currentBalance,
+      this.onAmountConfirmed,
+      this.onOptionConfirmed,
+      this.onOtpConfirmed})
+      : super(key: key);
+
   @override
-  _ICICIWithdrawalState createState() => _ICICIWithdrawalState();
+  ICICIWithdrawalState createState() => ICICIWithdrawalState();
 }
 
-class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
+class ICICIWithdrawalState extends State<ICICIWithdrawal> {
   TextEditingController _amountController = TextEditingController();
   String _amountError;
   String _errorMessage;
@@ -32,6 +42,7 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
   bool _isButtonEnabled = false;
   double _instantBalance = 0;
   double _totalBalance = 0;
+  double _currentTotalBalance = 0;
   double _userWithdrawInstantAmount = 0;
   double _userWithdrawNonInstantAmount = 0;
   final TextStyle tTextStyle =
@@ -39,9 +50,11 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
   final TextStyle gTextStyle =
       TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
   PaymentService payService;
+  GlobalKey<IciciRedemptionOtpDialogState> _withdrawalDialogKey3 = GlobalKey();
 
   getDetails() {
     payService.getWithdrawalDetails().then((withdrawalDetailsMap) {
+      _isBalanceAvailble = true;
       //refresh dialog state once balance received
       if (!withdrawalDetailsMap['flag']) {
         onDetailsReceived(0, 0, false, withdrawalDetailsMap['reason']);
@@ -55,18 +68,20 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
     });
   }
 
-  updateAmount() {
+  @override
+  void initState() {
+    super.initState();
+    _currentTotalBalance = widget.currentBalance;
+  }
+
+  _updateAmount() {
     double amount = double.tryParse(_amountController.text ?? 0);
     setState(() {
       if (amount == 0 || amount == null) {
         _userWithdrawInstantAmount = 0;
         _userWithdrawNonInstantAmount = 0;
-      } else if (amount > baseProvider.myUser.icici_balance) {
-        _userWithdrawInstantAmount = baseProvider.myUser.icici_balance * 0.9;
-        _userWithdrawNonInstantAmount = baseProvider.myUser.icici_balance * 0.1;
-      } else if (amount <= 100) {
+      } else if (amount <= _currentTotalBalance * 0.9) {
         _userWithdrawInstantAmount = amount;
-
         _userWithdrawNonInstantAmount = 0;
       } else {
         _userWithdrawInstantAmount = 0.9 * amount;
@@ -82,7 +97,7 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
     final String formatted = formatter.format(tomorrow);
     payService = Provider.of<PaymentService>(context, listen: false);
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    if (_isLoading) getDetails();
+    if (!_isBalanceAvailble) getDetails();
 
     return Scaffold(
       appBar: AppBar(
@@ -121,7 +136,7 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
                           bottom: 10,
                         ),
                         child: Text(
-                          "₹ ${baseProvider.myUser.icici_balance.toStringAsFixed(2)}",
+                          "₹ ${_currentTotalBalance.toStringAsFixed(2)}",
                           style: GoogleFonts.montserrat(
                             fontWeight: FontWeight.w700,
                             color: UiConstants.primaryColor,
@@ -148,7 +163,7 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
                                   border: OutlineInputBorder(),
                                   labelText: 'Withdrawal Amount',
                                 ),
-                                onChanged: (_) => updateAmount(),
+                                onChanged: (_) => _updateAmount(),
                               ),
                             ),
                           ],
@@ -238,6 +253,14 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
                                         fontSize: SizeConfig.largeTextSize,
                                       ),
                                     ),
+                                    Text(
+                                      "Presently unavailable",
+                                      style: GoogleFonts.montserrat(
+                                        color: Colors.black87,
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: SizeConfig.mediumTextSize,
+                                      ),
+                                    ),
                                     FittedBox(
                                       child: Text(
                                         "₹ ${_userWithdrawNonInstantAmount.toStringAsFixed(2)}",
@@ -294,104 +317,7 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
                         ),
                         onPressed: () async {
                           HapticFeedback.vibrate();
-                          final amtErr =
-                              _validateAmount(_amountController.text);
-                          if (amtErr != null) {
-                            setState(() {
-                              _amountError = amtErr;
-                            });
-                            return;
-                          }
-                          setState(() {
-                            _amountError = null;
-                          });
-                          if (_amountError == null) {
-                            double amt = double.parse(_amountController.text);
-                            String _confirmMsg =
-                                "Are you sure you want to continue? ";
-                            if (amt <= _instantBalance) {
-                              _userWithdrawInstantAmount = amt;
-                              _confirmMsg = _confirmMsg +
-                                  '₹${_userWithdrawInstantAmount.round()} will be withdrawn immediately.';
-                            } else {
-                              _userWithdrawInstantAmount = _instantBalance;
-                              _userWithdrawNonInstantAmount =
-                                  amt - _instantBalance;
-                              _confirmMsg = _confirmMsg +
-                                  '₹${_userWithdrawInstantAmount.round()} will be withdrawn immediately, and ₹${_userWithdrawNonInstantAmount.round()} will be withdrawn within 1 business day';
-                            }
-                            showDialog(
-                              context: context,
-                              builder: (ctx) => ConfirmActionDialog(
-                                title: "Please confirm your action",
-                                description: _confirmMsg,
-                                buttonText: "Withdraw",
-                                cancelBtnText: 'Cancel',
-                                confirmAction: () {
-                                  Navigator.of(context).pop();
-                                  _isLoading = true;
-                                  setState(() {});
-                                  // widget.onAmountConfirmed({
-                                  //   'instant_amount':
-                                  //       _userWithdrawInstantAmount,
-                                  //   'non_instant_amount':
-                                  //       _userWithdrawNonInstantAmount
-                                  // });
-                                  double instantAmount =
-                                      _userWithdrawInstantAmount ?? 0;
-                                  double nonInstantAmount =
-                                      _userWithdrawNonInstantAmount ?? 0;
-                                  if (instantAmount == 0 &&
-                                      nonInstantAmount == 0) return false;
-
-                                  payService
-                                      .preProcessWithdrawal(
-                                          instantAmount.toString())
-                                      .then((combDetailsMap) {
-                                    if (combDetailsMap['flag']) {
-                                      var _withdrawalRequestDetails =
-                                          combDetailsMap;
-                                      //check if dialog required
-                                      if (combDetailsMap[
-                                              GetExitLoad.resPopUpFlag] ==
-                                          GetExitLoad.SHOW_POPUP) {
-                                        showDialog(
-                                            context: context,
-                                            builder: (ctx) => AlertDialog(
-                                                  title: Text(
-                                                      combDetailsMap['flag']),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () =>
-                                                          Navigator.pop(
-                                                              context),
-                                                      child: Text("OK"),
-                                                    )
-                                                  ],
-                                                ));
-                                      } else {
-                                        onInitiateWithdrawal(
-                                            _withdrawalRequestDetails,
-                                            instantAmount,
-                                            nonInstantAmount);
-                                      }
-                                    } else {
-                                      Navigator.of(context).pop();
-                                      baseProvider.showNegativeAlert(
-                                          'Withdrawal Failed',
-                                          'Error: ${combDetailsMap['reason']}',
-                                          context);
-                                    }
-                                  });
-                                  return true;
-                                },
-                                cancelAction: () {
-                                  Navigator.of(context).pop();
-                                  return false;
-                                },
-                              ),
-                            );
-                          }
+                          _onWithdrawalClicked();
                         },
                         highlightColor: Colors.white30,
                         splashColor: Colors.white30,
@@ -410,6 +336,85 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
     );
   }
 
+  Future<void> _onWithdrawalClicked() async {
+    final amtErr = _validateAmount(_amountController.text);
+    if (amtErr != null) {
+      setState(() {
+        _amountError = amtErr;
+      });
+      return;
+    }
+    setState(() {
+      _amountError = null;
+    });
+    if (_amountError == null) {
+      String _confirmMsg = "Are you sure you want to continue? ";
+      if (_userWithdrawNonInstantAmount == 0) {
+        _confirmMsg = _confirmMsg +
+            '₹${_userWithdrawInstantAmount.round()} will be withdrawn immediately.';
+      } else {
+        _confirmMsg = _confirmMsg +
+            '₹${_userWithdrawInstantAmount.floor()} will be withdrawn immediately, and ₹${_userWithdrawNonInstantAmount.ceil()} will be withdrawn within 1 business day';
+      }
+      showDialog(
+        context: context,
+        builder: (ctx) => ConfirmActionDialog(
+          title: "Please confirm your action",
+          description: _confirmMsg,
+          buttonText: "Withdraw",
+          cancelBtnText: 'Cancel',
+          confirmAction: () {
+            Navigator.of(context).pop();
+            _isLoading = true;
+            setState(() {});
+            double instantAmount = _userWithdrawInstantAmount ?? 0;
+            double nonInstantAmount = _userWithdrawNonInstantAmount ?? 0;
+            if (instantAmount == 0 && nonInstantAmount == 0) return false;
+
+            ///preprocess to get bank details and exit load flag status
+            payService
+                .preProcessWithdrawal(instantAmount.toString())
+                .then((combDetailsMap) {
+              if (combDetailsMap['flag']) {
+                var _withdrawalRequestDetails = combDetailsMap;
+
+                ///everything looks good, now move to main withdrawal apis
+                _onInitiateWithdrawal(
+                    _withdrawalRequestDetails, instantAmount, nonInstantAmount);
+                //TODO GET EXIT LOAD check if dialog required
+                // if (combDetailsMap[GetExitLoad.resPopUpFlag] ==
+                //     GetExitLoad.SHOW_POPUP) {
+                //   showDialog(
+                //       context: context,
+                //       builder: (ctx) => AlertDialog(
+                //             title: Text(combDetailsMap['flag']),
+                //             actions: [
+                //               TextButton(
+                //                 onPressed: () => Navigator.pop(context),
+                //                 child: Text("OK"),
+                //               )
+                //             ],
+                //           ));
+                // } else {
+                //
+                // }
+              } else {
+                Navigator.of(context).pop();
+                baseProvider.showNegativeAlert('Withdrawal Failed',
+                    'Error: ${combDetailsMap['reason']}', context);
+              }
+            });
+            return true;
+          },
+          cancelAction: () {
+            Navigator.of(context).pop();
+            return false;
+          },
+        ),
+      );
+    }
+  }
+
   String _validateAmount(String value) {
     if (value == null || value.isEmpty) {
       return 'Please enter a valid amount';
@@ -421,7 +426,6 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
         return 'Insufficient balance';
       if (amount < 1)
         return 'Please enter value more than ₹1';
-      //else if(amount > 1500) return 'We are currently only accepting deposits below ₹1500';
       else
         return null;
     } catch (e) {
@@ -439,27 +443,48 @@ class _ICICIWithdrawalState extends State<ICICIWithdrawal> {
 
     if (instantBalance != null && totalBalance != null) {
       _instantBalance = instantBalance;
-      _totalBalance = totalBalance;
+      _currentTotalBalance = totalBalance;
       _isBalanceAvailble = true;
     }
     setState(() {});
   }
 
-  onInitiateWithdrawal(Map<String, dynamic> fieldMap, double instantWithdraw,
+  _onInitiateWithdrawal(Map<String, dynamic> fieldMap, double instantWithdraw,
       double nonInstantWithdraw) {
     payService
         .processWithdrawal(fieldMap, instantWithdraw, nonInstantWithdraw)
         .then((wMap) {
-      Navigator.of(context).pop();
-      if (!wMap['flag']) {
-        baseProvider.showNegativeAlert(
-            'Withdrawal Failed', 'Error: ${wMap['reason']}', context);
-      } else {
-        baseProvider.showPositiveAlert('Withdrawal Successful',
-            'Processed in less than 30 seconds!', context);
+      if (wMap['instant_flag'] == null || !wMap['instant_flag']) {
+        Navigator.of(context).pop();
+        baseProvider.showNegativeAlert('Transaction failed',
+            wMap['instant_fail_reason'] ?? 'Please try again.', context);
+      }
+      if (wMap['non_instant_flag'] != null) {
+        ///check if the non instant transaction worked correctly
+        if (!wMap['non_instant_flag']) {
+          Navigator.of(context).pop();
+          baseProvider.showNegativeAlert('Transaction failed',
+              wMap['non_instant_fail_reason'] ?? 'Please try again.', context);
+        } else {
+          ///show the otp entering dialog. the transaction is already stored as a global variable
+          onShowOtpDialog();
+        }
       }
     });
   }
 
   onShowLoadDialog() {}
+
+  onShowOtpDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => IciciRedemptionOtpDialog(
+              key: _withdrawalDialogKey3,
+              otpEntered: (otp) {
+                payService.verifyWithdrawalOtp(otp).then((flag) {
+                  _withdrawalDialogKey3.currentState.onOtpVerifyComplete(flag);
+                });
+              },
+            ));
+  }
 }
