@@ -59,6 +59,8 @@ class AugmontInvoiceService {
           data[GetInvoice.resHsnCode] ?? 'N/A');
       _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_AMOUNT),
           data[GetInvoice.resAmount] ?? 'N/A');
+      _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_SUBTOTAL),
+          data[GetInvoice.resSubtotal] ?? 'N/A');
       _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_TAXES),
           data['taxes']['totalTaxAmount'] ?? 'N/A');
 

@@ -392,6 +392,7 @@ class BaseUtil extends ChangeNotifier {
     return 0;
   }
 
+
   static int getWeekNumber() {
     DateTime tdt = new DateTime.now();
     int dayn = tdt.weekday;

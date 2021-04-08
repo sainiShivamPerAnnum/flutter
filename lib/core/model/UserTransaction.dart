@@ -46,6 +46,7 @@ class UserTransaction{
   static final String subFldAugPaymode = 'aPaymode';
   static final String subFldMerchantTranId = 'aTranId';
   static final String subFldAugTranId = 'aAugTranId';
+  static final String subFldAugCurrentGoldGm = 'aGoldInTxn';
   static final String subFldAugTotalGoldGm = 'aGoldBalance';
 
   ///Icici submap fields
@@ -109,14 +110,14 @@ class UserTransaction{
             subFldIciciUpiTime: upiTimestamp}, null,null,Timestamp.now(),Timestamp.now());
 
   //Augmont gold investment initiated by investor
-  UserTransaction.newGoldDeposit(double amount, String blockId, double lockPrice, String paymode, String userId):
+  UserTransaction.newGoldDeposit(double amount, String blockId, double lockPrice, double quantity, String paymode, String userId):
         this(null, amount, 0, 'NA', TRAN_SUBTYPE_AUGMONT_GOLD, TRAN_TYPE_DEPOSIT, 0, userId,TRAN_STATUS_PENDING, null, null,
-          {subFldAugBlockId: blockId, subFldAugLockPrice: lockPrice, subFldAugPaymode: paymode}, Timestamp.now(),Timestamp.now());
+          {subFldAugBlockId: blockId, subFldAugLockPrice: lockPrice, subFldAugPaymode: paymode, subFldAugCurrentGoldGm: quantity}, Timestamp.now(),Timestamp.now());
 
   //Augmont gold investment initiated by investor
-  UserTransaction.newGoldWithdrawal(double amount, String blockId, double lockPrice, String userId):
+  UserTransaction.newGoldWithdrawal(double amount, String blockId, double lockPrice, double quantity, String userId):
         this(null, amount, 0, 'NA', TRAN_SUBTYPE_AUGMONT_GOLD, TRAN_TYPE_WITHDRAW, 0, userId,TRAN_STATUS_PENDING, null, null,
-          {subFldAugBlockId: blockId, subFldAugLockPrice: lockPrice}, Timestamp.now(),Timestamp.now());
+          {subFldAugBlockId: blockId, subFldAugLockPrice: lockPrice, subFldAugCurrentGoldGm: quantity}, Timestamp.now(),Timestamp.now());
 
   toJson() {
     return {
