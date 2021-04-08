@@ -109,7 +109,7 @@ class _RootState extends State<Root> {
 
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Colors.white,
+      backgroundColor: UiConstants.bottomNavBarColor,
       body: Stack(
         children: [
           Container(

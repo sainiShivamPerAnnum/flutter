@@ -70,7 +70,7 @@ class _FinancePageState extends State<FinancePage> {
       child: Container(
         height: SizeConfig.screenHeight,
         decoration: BoxDecoration(
-          color: Color(0xFFEFEFEF),
+          color: UiConstants.backgroundColor,
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(50),
             bottomRight: Radius.circular(50),
@@ -117,14 +117,16 @@ class _FinancePageState extends State<FinancePage> {
                     //     Text("Pull to Refresh", style: TextStyle(fontSize: 12)),
                     //   ],
                     // ),
-                    Divider(),
+                    Divider(
+                      color: UiConstants.textColor,
+                    ),
                     Text(
                       "Available Funds",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w500,
                         fontSize: 24,
-                        color: Colors.black87,
+                        color: UiConstants.textColor,
                       ),
                     ),
                   ])),
@@ -183,10 +185,16 @@ class FundChartView extends StatelessWidget {
 
   FundChartView({this.dataMap, this.totalBal});
 
-  final List<Color> colorList = [
+  final List<Color> colorListLight = [
     UiConstants.primaryColor,
     Color(0xffF18805),
     Color(0xff03256C),
+  ];
+
+  final List<Color> colorList = [
+    UiConstants.primaryColor,
+    Color(0xffF18805),
+    Color(0xff2e89ba),
   ];
 
   @override
@@ -249,9 +257,10 @@ class FundChartView extends StatelessWidget {
             chartValuesOptions: ChartValuesOptions(
               showChartValueBackground: true,
               showChartValues: false,
+              chartValueBackgroundColor: UiConstants.backgroundColor,
               chartValueStyle: GoogleFonts.montserrat(
                 fontSize: 40,
-                color: Colors.black,
+                color: UiConstants.textColor,
               ),
               showChartValuesInPercentage: false,
               showChartValuesOutside: false,
@@ -323,6 +332,7 @@ class Legend extends StatelessWidget {
                 style: GoogleFonts.montserrat(
                   fontSize: SizeConfig.mediumTextSize,
                   fontWeight: FontWeight.w500,
+                  color: UiConstants.textColor,
                 ),
               ),
               Padding(
@@ -331,6 +341,7 @@ class Legend extends StatelessWidget {
                   title,
                   style: GoogleFonts.montserrat(
                     fontSize: SizeConfig.smallTextSize,
+                    color: UiConstants.textColor,
                   ),
                 ),
               ),

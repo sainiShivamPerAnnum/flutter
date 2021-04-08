@@ -331,29 +331,31 @@ class _HState extends State<PlayHome> {
         //descTextStyle: TextStyle(fontSize: 20),
         width: 300,
         height: 140,
-        container: Container(
-          padding: EdgeInsets.all(20),
-          decoration: new BoxDecoration(
-            shape: BoxShape.rectangle,
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(UiConstants.padding),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10.0,
-                offset: const Offset(0.0, 10.0),
+        container: SafeArea(
+          child: Container(
+            padding: EdgeInsets.all(20),
+            decoration: new BoxDecoration(
+              shape: BoxShape.rectangle,
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(UiConstants.padding),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10.0,
+                  offset: const Offset(0.0, 10.0),
+                ),
+              ],
+            ),
+            child: Center(
+              child: Text(
+                showcaseMsg,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 16,
+                    height: 1.4,
+                    fontWeight: FontWeight.w300,
+                    color: UiConstants.accentColor),
               ),
-            ],
-          ),
-          child: Center(
-            child: Text(
-              showcaseMsg,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 16,
-                  height: 1.4,
-                  fontWeight: FontWeight.w300,
-                  color: UiConstants.accentColor),
             ),
           ),
         ),
