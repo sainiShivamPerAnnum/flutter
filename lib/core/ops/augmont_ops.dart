@@ -458,17 +458,17 @@ class AugmontModel extends ChangeNotifier {
     double totalTax = _digitPrecision((amount * taxRate) / (100 + taxRate));
     double taxDeducted = _digitPrecision(amount - totalTax);
 
-    return taxDeducted / rate;
+    return _digitPrecision((taxDeducted / rate), 4, false);
   }
 
   double getGoldQuantityFromSellAmount(double amount, double rate) {
     double qnt = amount / rate;
-    double y = qnt * 10000;
-    return (y.round()) / 10000;
+    return _digitPrecision(qnt, 4, false);
   }
 
-  double _digitPrecision(double x) {
-    double y = x * 100;
-    return (y.round()) / 100;
+  double _digitPrecision(double x, [int offset = 2, bool round = true]) {
+    double y = x * pow(10, offset);
+    int z = (round) ? y.round() : y.truncate();
+    return z / pow(10, offset);
   }
 }
