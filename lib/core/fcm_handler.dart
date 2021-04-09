@@ -17,8 +17,8 @@ class FcmHandler extends ChangeNotifier
           body.isNotEmpty) {
         log.debug('Recevied message from server: $title $body');
         Map<String, String> _map = {'title': title, 'body': body};
-        if (notifListener != null)
-          notifListener(_map);
+        if (this.notifListener != null)
+          this.notifListener(_map);
       }
     }
     return true;
@@ -26,8 +26,8 @@ class FcmHandler extends ChangeNotifier
 
   Future<bool> handleNotification(String title, String body) async{
     Map<String, String> _map = {'title': title, 'body': body};
-    if (notifListener != null)
-      notifListener(_map);
+    if (this.notifListener != null)
+      this.notifListener(_map);
 
     return true;
   }

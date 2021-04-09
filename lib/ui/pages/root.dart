@@ -71,6 +71,7 @@ class _RootState extends State<Root> {
   void dispose() {
     super.dispose();
     if (baseProvider != null) baseProvider.cancelIncomingNotifications();
+    fcmProvider.addIncomingMessageListener(null);
   }
 
   Color getBurgerBorder() {
@@ -255,6 +256,8 @@ class _RootState extends State<Root> {
       return -1;
     }
   }
+
+
 }
 
 class NavBarItemData {
