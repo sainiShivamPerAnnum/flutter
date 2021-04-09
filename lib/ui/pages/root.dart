@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/fcm_handler.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/ui/elements/hamburger-dialog.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
@@ -26,12 +28,13 @@ class _RootState extends State<Root> {
   static int selectedNavIndex = 0;
   BaseUtil baseProvider;
   HttpModel httpModel;
-
+  DBModel dbProvider;
+  FcmHandler fcmProvider;
   List<Widget> _viewsByIndex;
 
   @override
   void initState() {
-    initDynamicLinks();
+    _initDynamicLinks();
     //Declare some buttons for our tab bar
     _navBarItems = [
       NavBarItemData("Home", Icons.home, 110, "images/svgs/home.svg"),
@@ -86,10 +89,25 @@ class _RootState extends State<Root> {
     }
   }
 
+  _initAdhocNotifications() {
+    if (fcmProvider != null && baseProvider != null) {
+      fcmProvider.addIncomingMessageListener((valueMap) {
+        if (valueMap['title'] != null && valueMap['body'] != null) {
+          baseProvider.showPositiveAlert(
+              valueMap['title'], valueMap['body'], context,
+              seconds: 5);
+        }
+      }, 1);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     httpModel = Provider.of<HttpModel>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    fcmProvider = Provider.of<FcmHandler>(context, listen: false);
+    _initAdhocNotifications();
     var accentColor = UiConstants.primaryColor;
 
     //Create custom navBar, pass in a list of buttons, and listen for tap event
@@ -180,17 +198,14 @@ class _RootState extends State<Root> {
     });
   }
 
-  Future<dynamic> initDynamicLinks() async {
+  Future<dynamic> _initDynamicLinks() async {
     FirebaseDynamicLinks.instance.onLink(
         onSuccess: (PendingDynamicLinkData dynamicLink) async {
       final Uri deepLink = dynamicLink?.link;
       if (deepLink == null) return null;
-      log.debug('Received deep link');
-      int addUserTicketCount =
-          await submitReferral(baseProvider.myUser.uid, deepLink);
-      log.debug(addUserTicketCount.toString() ?? 0.toString());
-      //TODO add ticket request over here
-      return addUserTicketCount;
+
+      log.debug('Received deep link. Process the referral');
+      return _processReferral(baseProvider.myUser.uid, deepLink);
     }, onError: (OnLinkErrorException e) async {
       log.error('Error in fetching deeplink');
       log.error(e);
@@ -201,16 +216,23 @@ class _RootState extends State<Root> {
         await FirebaseDynamicLinks.instance.getInitialLink();
     final Uri deepLink = data?.link;
     if (deepLink != null) {
-      log.debug('Received deep link');
-      // log.debug(deepLink.toString());
-      int addUserTicketCount =
-          await submitReferral(baseProvider.myUser.uid, deepLink);
-      log.debug(addUserTicketCount.toString() ?? 0.toString());
-      return addUserTicketCount;
+      log.debug('Received deep link. Process the referral');
+      return _processReferral(baseProvider.myUser.uid, deepLink);
     }
   }
 
-  Future<int> submitReferral(String userId, Uri deepLink) async {
+  _processReferral(String userId, Uri deepLink) async {
+    int addUserTicketCount =
+        await _submitReferral(baseProvider.myUser.uid, deepLink);
+    if(addUserTicketCount == null || addUserTicketCount < 0) {
+      log.debug('Processing complete. No extra tickets to be added');
+    } else {
+      log.debug('$addUserTicketCount tickets need to be added for the user');
+      dbProvider.pushTicketRequest(baseProvider.myUser, addUserTicketCount);
+    }
+  }
+
+  Future<int> _submitReferral(String userId, Uri deepLink) async {
     try {
       String prefix = 'https://fello.in/';
       String dLink = deepLink.toString();

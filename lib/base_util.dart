@@ -386,7 +386,7 @@ class BaseUtil extends ChangeNotifier {
       if (BaseUtil.ticketRequestSent) {
         if (requestedBoards.length > BaseUtil.ticketCountBeforeRequest) {
           log.debug(
-              'Previous request had completed and not the ticket count has increased');
+              'Previous request had completed and now the ticket count has increased');
           //BaseUtil.ticketRequestSent = false; //not really needed i think
         }
       }
@@ -447,6 +447,21 @@ class BaseUtil extends ChangeNotifier {
     } catch (e) {}
 
     return 0.0;
+  }
+
+  static int toInt(dynamic x) {
+    if (x == null) return 0;
+    try {
+      int y = _cast<int>(x);
+      if (y != null) return y;
+    } catch (e) {}
+
+    try {
+      String z = _cast<String>(x);
+      if (z != null) return int.parse(z);
+    } catch (e) {}
+
+    return 0;
   }
 
   int getTicketCountForTransaction(double investment) =>

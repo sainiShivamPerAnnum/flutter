@@ -29,9 +29,9 @@ class HttpModel extends ChangeNotifier {
           if(parsed != null && parsed['add_tickets_count'] != null) {
             try {
               log.debug(parsed['add_tickets_count'].toString());
+              int userTicketUpdateCount = BaseUtil.toInt(parsed['add_tickets_count']);
+              return userTicketUpdateCount;
             }catch(ee) {}
-            int userTicketUpdateCount = int.parse(parsed['add_tickets_count']);
-            return userTicketUpdateCount;
           }else {
             return -1;
           }
