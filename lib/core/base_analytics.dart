@@ -27,6 +27,12 @@ class BaseAnalytics{
     _analytics.setUserProperty(name: 'user_gender', value: user.gender);
     _analytics.setUserProperty(name: 'fresh_investor', value: (user.isInvested)?'N':'Y');
   }
+
+  static logProfilePictureAdded() {
+    _analytics.logEvent(name: 'has_profile_pic',parameters: <String, dynamic>{
+      'option': true
+    });
+  }
   
   static logIciciStarted() {
     _analytics.logEvent(name: 'icici_reg_started',parameters: <String, dynamic>{

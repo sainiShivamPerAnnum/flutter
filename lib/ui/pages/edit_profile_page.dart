@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
@@ -492,9 +493,11 @@ class _EditProfileState extends State<EditProfile> {
                               baseProvider.myUser.name = pName;
                               baseProvider.myUser.email = pEmail;
                               baseProvider.myUser.age = pAge;
+                              BaseAnalytics.logUserProfile(baseProvider.myUser);
                               if (profilePic != null) {
                                 updatePicture(context).then((flag) {
                                   if (flag) {
+                                    BaseAnalytics.logProfilePictureAdded();
                                     baseProvider.showPositiveAlert(
                                         'Complete',
                                         'Your profile Picture have been updated',
