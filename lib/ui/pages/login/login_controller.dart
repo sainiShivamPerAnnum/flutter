@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -74,13 +75,13 @@ class _LoginControllerState extends State<LoginController> {
       this._augmentedVerificationId = verId;
       log.debug(
           "User mobile number format verified. Sending otp and verifying");
-      if(baseProvider.isOtpResendCount == 0) {
+      if (baseProvider.isOtpResendCount == 0) {
         ///this is the first time that the otp was requested
         baseProvider.isLoginNextInProgress = false;
         _controller.animateToPage(OtpInputScreen.index,
             duration: Duration(milliseconds: 300), curve: Curves.easeIn);
         setState(() {});
-      }else {
+      } else {
         ///the otp was requested to be resent
         _otpScreenKey.currentState.onOtpResendConfirmed(true);
       }
@@ -278,8 +279,8 @@ class _LoginControllerState extends State<LoginController> {
           if (otp != null && otp.isNotEmpty && otp.length == 6) {
             baseProvider.isLoginNextInProgress = true;
             setState(() {});
-            bool flag = await baseProvider.authenticateUser(
-                baseProvider.generateAuthCredential(_augmentedVerificationId, otp));
+            bool flag = await baseProvider.authenticateUser(baseProvider
+                .generateAuthCredential(_augmentedVerificationId, otp));
             //.then((flag) {
             if (flag) {
 //                otpInScreen.onOtpReceived();
@@ -288,7 +289,7 @@ class _LoginControllerState extends State<LoginController> {
             } else {
               baseProvider.showNegativeAlert(
                   'Invalid Otp', 'Please enter a valid otp', context);
-              baseProvider.isLoginNextInProgress = true;
+              baseProvider.isLoginNextInProgress = false;
               FocusScope.of(_otpScreenKey.currentContext).unfocus();
               setState(() {});
             }
@@ -409,6 +410,8 @@ class _LoginControllerState extends State<LoginController> {
       setState(() {});
     }
     if (user == null || (user != null && user.hasIncompleteDetails())) {
+      ///First time user!
+      BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
       log.debug(
           "No existing user details found or found incomplete details for user. Moving to details page");
       baseProvider.myUser = user ??
@@ -418,6 +421,8 @@ class _LoginControllerState extends State<LoginController> {
       _controller.animateToPage(NameInputScreen.index,
           duration: Duration(milliseconds: 300), curve: Curves.easeIn);
     } else {
+      ///Existing user
+      await BaseAnalytics.analytics.logLogin(loginMethod: 'phonenumber');
       log.debug("User details available: Name: " + user.name);
       baseProvider.myUser = user;
       _onSignUpComplete();
@@ -429,26 +434,24 @@ class _LoginControllerState extends State<LoginController> {
   }
 
   _onOtpResendRequested() {
-    if(baseProvider.isOtpResendCount == 0) {
+    if (baseProvider.isOtpResendCount < 2) {
       baseProvider.isOtpResendCount++;
       _verifyPhone();
-    }else if(baseProvider.isOtpResendCount>2) {
+    } else {
       _otpScreenKey.currentState.onOtpResendConfirmed(false);
     }
   }
 
   Future _onSignUpComplete() async {
-    log.debug("User object saved locally");
     await baseProvider.init();
     await fcmProvider.setupFcm();
-    // Navigator.of(context).pop();
+    BaseAnalytics.logUserProfile(baseProvider.myUser);
     Navigator.of(context).pushReplacementNamed('/approot');
     baseProvider.showPositiveAlert(
         'Sign In Complete',
         'Welcome to ${Constants.APP_NAME}, ${baseProvider.myUser.name}',
         context);
     //process complete
-    //move to home through animation
-    //TODO
+    //TODO move to home through animation
   }
 }
