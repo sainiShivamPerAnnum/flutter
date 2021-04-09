@@ -97,7 +97,7 @@ class _RootState extends State<Root> {
               valueMap['title'], valueMap['body'], context,
               seconds: 5);
         }
-      }, 1);
+      });
     }
   }
 

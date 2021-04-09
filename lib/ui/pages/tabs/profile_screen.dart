@@ -519,28 +519,28 @@ class _ShareOptionsState extends State<ShareOptions> {
     _shareMsg =
         'Hey I am gifting you ₹$referral_bonus and $referral_ticket_bonus free Tambola tickets. Lets start saving and playing together! ';
 
-    if (fcmProvider != null && baseProvider != null && dbProvider != null) {
-      fcmProvider.addIncomingMessageListener((valueMap) {
-        if (valueMap['title'] != null && valueMap['body'] != null) {
-          baseProvider.showPositiveAlert(
-              valueMap['title'], valueMap['body'], context,
-              seconds: 5);
-        }
-      }, 2);
-
-      // if (!baseProvider.referCountFetched)
-      //   dbProvider.getReferCount(baseProvider.myUser.uid).then((count) {
-      //     baseProvider.referCountFetched = true;
-      //     baseProvider.referCount = count;
-      //     if (count > 0) setState(() {});
-      //   });
-    }
+    // if (fcmProvider != null && baseProvider != null && dbProvider != null) {
+    //   fcmProvider.addIncomingMessageListener((valueMap) {
+    //     if (valueMap['title'] != null && valueMap['body'] != null) {
+    //       baseProvider.showPositiveAlert(
+    //           valueMap['title'], valueMap['body'], context,
+    //           seconds: 5);
+    //     }
+    //   }, 2);
+    //
+    //   // if (!baseProvider.referCountFetched)
+    //   //   dbProvider.getReferCount(baseProvider.myUser.uid).then((count) {
+    //   //     baseProvider.referCountFetched = true;
+    //   //     baseProvider.referCount = count;
+    //   //     if (count > 0) setState(() {});
+    //   //   });
+    // }
   }
 
   @override
   void dispose() {
     super.dispose();
-    if (fcmProvider != null) fcmProvider.addIncomingMessageListener(null, 2);
+    // if (fcmProvider != null) fcmProvider.addIncomingMessageListener(null, 2);
   }
 
   @override

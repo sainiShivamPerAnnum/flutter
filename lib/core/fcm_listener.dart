@@ -44,8 +44,10 @@ class FcmListener extends ChangeNotifier {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
-      if (message.data != null) {
+      if (message.data != null && message.data.isNotEmpty) {
         _handler.handleMessage(message.data);
+      }else if(notification != null) {
+        _handler.handleNotification(notification.title, notification.body);
       }
     });
 

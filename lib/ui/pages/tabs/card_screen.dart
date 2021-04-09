@@ -146,15 +146,15 @@ class _HState extends State<PlayHome> {
       });
     }
 
-    if (fcmProvider != null && baseProvider != null) {
-      fcmProvider.addIncomingMessageListener((valueMap) {
-        if (valueMap['title'] != null && valueMap['body'] != null) {
-          baseProvider.showPositiveAlert(
-              valueMap['title'], valueMap['body'], context,
-              seconds: 5);
-        }
-      }, 0);
-    }
+    // if (fcmProvider != null && baseProvider != null) {
+    //   fcmProvider.addIncomingMessageListener((valueMap) {
+    //     if (valueMap['title'] != null && valueMap['body'] != null) {
+    //       baseProvider.showPositiveAlert(
+    //           valueMap['title'], valueMap['body'], context,
+    //           seconds: 5);
+    //     }
+    //   }, 0);
+    // }
   }
 
   bool _startTutorial() {
@@ -176,7 +176,7 @@ class _HState extends State<PlayHome> {
   void dispose() {
     super.dispose();
     if (dbProvider != null) dbProvider.addUserTicketListener(null);
-    if (fcmProvider != null) fcmProvider.addIncomingMessageListener(null, 0);
+    // if (fcmProvider != null) fcmProvider.addIncomingMessageListener(null, 0);
 
     if (_prizeTimer.isActive) _prizeTimer.cancel();
     balls.forEach((eWidget) {

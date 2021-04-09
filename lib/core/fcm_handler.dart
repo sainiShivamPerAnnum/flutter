@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 class FcmHandler extends ChangeNotifier
 {
   Log log = new Log("FcmHandler");
-  ValueChanged<Map> playListener;
-  ValueChanged<Map> saveListener;
-  ValueChanged<Map> referListener;
+  ValueChanged<Map> notifListener;
 
   Future<bool> handleMessage(Map data) async {
     log.debug(data.toString());
@@ -19,22 +17,23 @@ class FcmHandler extends ChangeNotifier
           body.isNotEmpty) {
         log.debug('Recevied message from server: $title $body');
         Map<String, String> _map = {'title': title, 'body': body};
-        if (playListener != null)
-          playListener(_map);
-        else if (saveListener != null)
-          saveListener(_map);
-        else if (referListener != null) referListener(_map);
+        if (notifListener != null)
+          notifListener(_map);
       }
     }
     return true;
   }
 
-  addIncomingMessageListener(ValueChanged<Map> listener, int page) {
-    if (page == 0)
-      playListener = listener;
-    else if (page == 1)
-      saveListener = listener;
-    else if (page == 2) referListener = listener;
+  Future<bool> handleNotification(String title, String body) async{
+    Map<String, String> _map = {'title': title, 'body': body};
+    if (notifListener != null)
+      notifListener(_map);
+
+    return true;
+  }
+
+  addIncomingMessageListener(ValueChanged<Map> listener) {
+    this.notifListener = listener;
   }
 
 }

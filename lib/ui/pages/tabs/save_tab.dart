@@ -50,13 +50,13 @@ class _SaveScreenState extends State<SaveScreen> {
 
   _init() {
     if (fcmProvider != null && baseProvider != null) {
-      fcmProvider.addIncomingMessageListener((valueMap) {
-        if (valueMap['title'] != null && valueMap['body'] != null) {
-          baseProvider.showPositiveAlert(
-              valueMap['title'], valueMap['body'], context,
-              seconds: 5);
-        }
-      }, 1);
+      // fcmProvider.addIncomingMessageListener((valueMap) {
+      //   if (valueMap['title'] != null && valueMap['body'] != null) {
+      //     baseProvider.showPositiveAlert(
+      //         valueMap['title'], valueMap['body'], context,
+      //         seconds: 5);
+      //   }
+      // }, 1);
       if (baseProvider.myUser.account_balance != null &&
           baseProvider.myUser.account_balance > 0)
         acctBalance = baseProvider.myUser.account_balance;
@@ -66,7 +66,7 @@ class _SaveScreenState extends State<SaveScreen> {
   @override
   void dispose() {
     super.dispose();
-    if (fcmProvider != null) fcmProvider.addIncomingMessageListener(null, 1);
+    // if (fcmProvider != null) fcmProvider.addIncomingMessageListener(null, 1);
   }
 
   @override
