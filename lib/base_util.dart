@@ -62,6 +62,8 @@ class BaseUtil extends ChangeNotifier {
   DateTime _userCreationTimestamp;
   int referCount = 0;
   int userTicketsCount = 0;
+  int isOtpResendCount = 0;
+  ///Flags in various screens defined as global variables
   bool isUserOnboarded = false;
   bool isLoginNextInProgress = false;
   bool isEditProfileNextInProgress = false;

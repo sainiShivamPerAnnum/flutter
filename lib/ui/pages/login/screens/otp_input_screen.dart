@@ -1,5 +1,3 @@
-import 'package:felloapp/ui/pages/login/login_controller.dart';
-import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -10,8 +8,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_input_text_field/pin_input_text_field.dart';
 
 class OtpInputScreen extends StatefulWidget {
+  final VoidCallback otpEntered;
+  final VoidCallback resendOtp;
   static const int index = 1; //pager index
-  OtpInputScreen({Key key}) : super(key: key);
+  OtpInputScreen({Key key, this.otpEntered, this.resendOtp}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => OtpInputScreenState();
@@ -20,9 +20,10 @@ class OtpInputScreen extends StatefulWidget {
 class OtpInputScreenState extends State<OtpInputScreen> {
   Log log = new Log("OtpInputScreen");
   String _otp;
-  String _loaderMessage = "Detecting otp..";
+  String _loaderMessage = "Enter the received otp..";
   bool _otpFieldEnabled = true;
   bool _autoDetectingOtp = true;
+  bool _isResendClicked = false;
   final _pinEditingController = new TextEditingController();
   FocusNode focusNode;
 
@@ -78,7 +79,6 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                       autoFocus: true,
                       focusNode: focusNode,
                       pinLength: 6,
-
                       decoration: BoxLooseDecoration(
                           enteredColor: UiConstants.primaryColor,
                           solidColor: UiConstants.primaryColor.withOpacity(0.1),
@@ -87,11 +87,11 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                           textStyle: GoogleFonts.montserrat(
                               fontSize: 20, color: Colors.black)),
                       controller: _pinEditingController,
-                      // onChanged: (value) {
-                      //   if (value.length == 6) {
-                      //     LoginController().processScreenInput(OtpInputScreen.index);
-                      //   }
-                      // },
+                      onChanged: (value) {
+                        if (value.length == 6) {
+                          if (widget.otpEntered != null) widget.otpEntered();
+                        }
+                      },
                       onSubmit: (pin) {
                         log.debug("Pressed submit for pin: " +
                             pin.toString() +
@@ -123,6 +123,10 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                         child: Text('Resend'),
                         onPressed: () {
                           log.debug("Resend action triggered");
+                          if (!_isResendClicked) {
+                            //ensure that button isnt clicked multiple times
+                            if (widget.resendOtp != null) widget.resendOtp();
+                          }
                         },
                       )
                     : Container()
@@ -141,9 +145,26 @@ class OtpInputScreenState extends State<OtpInputScreen> {
     setState(() {
       _otpFieldEnabled = true;
       _autoDetectingOtp = false;
-      _loaderMessage =
-          "Couldn't auto-detect otp. Please enter the received otp";
+      _loaderMessage = "Please enter the received otp or request another";
     });
+  }
+
+  onOtpResendConfirmed(bool flag) {
+    if (flag) {
+      //otp successfully resent
+      _isResendClicked = false;
+      _otpFieldEnabled = true;
+      _loaderMessage = 'OTP has been successfully resent';
+      _autoDetectingOtp = true;
+      setState(() {});
+    }else{
+      //otp tries exceeded
+      _isResendClicked = true;
+      _otpFieldEnabled = true;
+      _autoDetectingOtp = false;
+      _loaderMessage = 'OTP requests exceeded. Please try again in sometime or contact us';
+      setState(() {});
+    }
   }
 
   String get otp => _pinEditingController.text;

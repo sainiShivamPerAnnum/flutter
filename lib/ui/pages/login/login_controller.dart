@@ -4,20 +4,17 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 class LoginController extends StatefulWidget {
@@ -39,24 +36,16 @@ class _LoginControllerState extends State<LoginController> {
   PageController _controller;
   static BaseUtil baseProvider;
   static DBModel dbProvider;
-  static LocalDBModel localDbProvider;
   static FcmListener fcmProvider;
 
   String userMobile;
-  String verificationId;
+  String _verificationId;
+  String _augmentedVerificationId;
   static List<Widget> _pages;
   int _currentPage;
   final _mobileScreenKey = new GlobalKey<MobileInputScreenState>();
   final _otpScreenKey = new GlobalKey<OtpInputScreenState>();
   final _nameScreenKey = new GlobalKey<NameInputScreenState>();
-  //  final GlobalKey<FormFieldState<String>> _mobileScreenKey =
-  //     GlobalKey<FormFieldState<String>>();
-  //  final GlobalKey<FormFieldState<String>> _otpScreenKey =
-  //     GlobalKey<FormFieldState<String>>();
-  //  final GlobalKey<FormFieldState<String>> _nameScreenKey =
-  //     GlobalKey<FormFieldState<String>>();
-
-  // final _addressScreenKey = new GlobalKey<AddressInputScreenState>();
 
   @override
   void initState() {
@@ -66,26 +55,35 @@ class _LoginControllerState extends State<LoginController> {
     _controller = new PageController(initialPage: _currentPage);
     _pages = [
       MobileInputScreen(key: _mobileScreenKey),
-      OtpInputScreen(key: _otpScreenKey),
+      OtpInputScreen(
+          key: _otpScreenKey,
+          otpEntered: _onOtpFilled,
+          resendOtp: _onOtpResendRequested),
       NameInputScreen(key: _nameScreenKey),
       // AddressInputScreen(key: _addressScreenKey),
     ];
   }
 
-  Future<void> verifyPhone() async {
+  Future<void> _verifyPhone() async {
     final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
       log.debug("Phone number hasnt been auto verified yet");
       _otpScreenKey.currentState.onOtpAutoDetectTimeout();
     };
 
     final PhoneCodeSent smsCodeSent = (String verId, [int forceCodeResend]) {
-      this.verificationId = verId;
+      this._augmentedVerificationId = verId;
       log.debug(
           "User mobile number format verified. Sending otp and verifying");
-      baseProvider.isLoginNextInProgress = false;
-      _controller.animateToPage(OtpInputScreen.index,
-          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-      setState(() {});
+      if(baseProvider.isOtpResendCount == 0) {
+        ///this is the first time that the otp was requested
+        baseProvider.isLoginNextInProgress = false;
+        _controller.animateToPage(OtpInputScreen.index,
+            duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+        setState(() {});
+      }else {
+        ///the otp was requested to be resent
+        _otpScreenKey.currentState.onOtpResendConfirmed(true);
+      }
     };
 
     final PhoneVerificationCompleted verifiedSuccess =
@@ -96,15 +94,13 @@ class _LoginControllerState extends State<LoginController> {
         setState(() {});
       }
       if (_currentPage == OtpInputScreen.index) {
-        //  UiConstants.offerSnacks(context, "Mobile verified!");
-//        otpInScreen.onOtpReceived();
         _otpScreenKey.currentState.onOtpReceived();
       }
       log.debug("Now verifying user");
       bool flag = await baseProvider.authenticateUser(user); //.then((flag) {
       if (flag) {
         log.debug("User signed in successfully");
-        onSignInSuccess();
+        _onSignInSuccess();
       } else {
         log.error("User auto sign in didnt work");
         baseProvider.isLoginNextInProgress = false;
@@ -128,7 +124,7 @@ class _LoginControllerState extends State<LoginController> {
     };
 
     await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: this.verificationId,
+        phoneNumber: this._verificationId,
         codeAutoRetrievalTimeout: autoRetrieve,
         codeSent: smsCodeSent,
         timeout: const Duration(seconds: 30),
@@ -140,7 +136,6 @@ class _LoginControllerState extends State<LoginController> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    localDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     fcmProvider = Provider.of<FcmListener>(context, listen: false);
     return Scaffold(
       // appBar: BaseUtil.getAppBar(),
@@ -232,7 +227,7 @@ class _LoginControllerState extends State<LoginController> {
                                   ),
                             onPressed: () {
                               if (!baseProvider.isLoginNextInProgress)
-                                processScreenInput(_currentPage);
+                                _processScreenInput(_currentPage);
                             },
                             highlightColor: Colors.white30,
                             splashColor: Colors.white30,
@@ -252,7 +247,7 @@ class _LoginControllerState extends State<LoginController> {
     );
   }
 
-  processScreenInput(int currentPage) async {
+  _processScreenInput(int currentPage) async {
     switch (currentPage) {
       case MobileInputScreen.index:
         {
@@ -261,8 +256,8 @@ class _LoginControllerState extends State<LoginController> {
             log.debug(
                 'Mobile number validated: ${_mobileScreenKey.currentState.getMobile()}');
             this.userMobile = _mobileScreenKey.currentState.getMobile();
-            this.verificationId = '+91' + this.userMobile;
-            verifyPhone();
+            this._verificationId = '+91' + this.userMobile;
+            _verifyPhone();
             baseProvider.isLoginNextInProgress = true;
             FocusScope.of(_mobileScreenKey.currentContext).unfocus();
             setState(() {});
@@ -284,12 +279,12 @@ class _LoginControllerState extends State<LoginController> {
             baseProvider.isLoginNextInProgress = true;
             setState(() {});
             bool flag = await baseProvider.authenticateUser(
-                baseProvider.generateAuthCredential(verificationId, otp));
+                baseProvider.generateAuthCredential(_augmentedVerificationId, otp));
             //.then((flag) {
             if (flag) {
 //                otpInScreen.onOtpReceived();
               _otpScreenKey.currentState.onOtpReceived();
-              onSignInSuccess();
+              _onSignInSuccess();
             } else {
               baseProvider.showNegativeAlert(
                   'Invalid Otp', 'Please enter a valid otp', context);
@@ -348,7 +343,7 @@ class _LoginControllerState extends State<LoginController> {
             bool flag = await dbProvider.updateUser(baseProvider.myUser);
             if (flag) {
               log.debug("User object saved successfully");
-              onSignUpComplete();
+              _onSignUpComplete();
             } else {
               baseProvider.showNegativeAlert(
                   'Update failed', 'Please try again in sometime', context);
@@ -402,7 +397,7 @@ class _LoginControllerState extends State<LoginController> {
     return null;
   }
 
-  void onSignInSuccess() async {
+  void _onSignInSuccess() async {
     log.debug("User authenticated. Now check if details previously available.");
     baseProvider.firebaseUser = FirebaseAuth.instance.currentUser;
     log.debug("User is set: " + baseProvider.firebaseUser.uid);
@@ -425,11 +420,24 @@ class _LoginControllerState extends State<LoginController> {
     } else {
       log.debug("User details available: Name: " + user.name);
       baseProvider.myUser = user;
-      onSignUpComplete();
+      _onSignUpComplete();
     }
   }
 
-  Future onSignUpComplete() async {
+  _onOtpFilled() {
+    if (!baseProvider.isLoginNextInProgress) _processScreenInput(_currentPage);
+  }
+
+  _onOtpResendRequested() {
+    if(baseProvider.isOtpResendCount == 0) {
+      baseProvider.isOtpResendCount++;
+      _verifyPhone();
+    }else if(baseProvider.isOtpResendCount>2) {
+      _otpScreenKey.currentState.onOtpResendConfirmed(false);
+    }
+  }
+
+  Future _onSignUpComplete() async {
     log.debug("User object saved locally");
     await baseProvider.init();
     await fcmProvider.setupFcm();
