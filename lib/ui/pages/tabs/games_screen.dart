@@ -78,7 +78,7 @@ class _GamePageState extends State<GamePage> {
     reqProvider = Provider.of<DBModel>(context, listen: false);
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xfff1f1f1),
+        color: UiConstants.backgroundColor,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(50),
           bottomRight: Radius.circular(50),

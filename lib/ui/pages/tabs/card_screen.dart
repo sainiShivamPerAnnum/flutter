@@ -69,7 +69,8 @@ class _HState extends State<PlayHome> {
   void initState() {
     super.initState();
     initDailyPickFlags();
-    BaseAnalytics.analytics.setCurrentScreen(screenName: BaseAnalytics.PAGE_TAMBOLA);
+    BaseAnalytics.analytics
+        .setCurrentScreen(screenName: BaseAnalytics.PAGE_TAMBOLA);
   }
 
   initDailyPickFlags() {
@@ -245,6 +246,38 @@ class _HState extends State<PlayHome> {
                 ],
               ),
             ),
+
+            // SafeArea(
+            //   child: Align(
+            //     alignment: Alignment.topCenter,
+            //     child: Padding(
+            //       padding: EdgeInsets.fromLTRB(5, 20, 5, 5),
+            //       child: Text('Tambola',
+            //           style: GoogleFonts.montserrat(
+            //               color: Colors.white,
+            //               fontWeight: FontWeight.w500,
+            //               fontSize: SizeConfig.largeTextSize)),
+            //     ),
+            //   ),
+            // ),
+            // Positioned(
+            //   top: 30,
+            //   right: 5,
+            //   child: IconButton(
+            //     color: Colors.white,
+            //     icon: Icon(Icons.help_outline),
+            //     onPressed: () {
+            //       HapticFeedback.vibrate();
+            //       _showTutorial = true;
+            //       if (!_startTutorial()) {
+            //         //baseProvider.showNegativeAlert('Try soon', message, context)
+            //       }
+            //     },
+            //   ),
+            // ),
+            //_buildTicketCount(),
+            SafeArea(
+                child: SingleChildScrollView(child: _buildCardCanvas(context))),
             Positioned(
               top: 5,
               child: SafeArea(
@@ -285,37 +318,6 @@ class _HState extends State<PlayHome> {
               ),
             ),
             // SafeArea(
-            //   child: Align(
-            //     alignment: Alignment.topCenter,
-            //     child: Padding(
-            //       padding: EdgeInsets.fromLTRB(5, 20, 5, 5),
-            //       child: Text('Tambola',
-            //           style: GoogleFonts.montserrat(
-            //               color: Colors.white,
-            //               fontWeight: FontWeight.w500,
-            //               fontSize: SizeConfig.largeTextSize)),
-            //     ),
-            //   ),
-            // ),
-            // Positioned(
-            //   top: 30,
-            //   right: 5,
-            //   child: IconButton(
-            //     color: Colors.white,
-            //     icon: Icon(Icons.help_outline),
-            //     onPressed: () {
-            //       HapticFeedback.vibrate();
-            //       _showTutorial = true;
-            //       if (!_startTutorial()) {
-            //         //baseProvider.showNegativeAlert('Try soon', message, context)
-            //       }
-            //     },
-            //   ),
-            // ),
-            //_buildTicketCount(),
-            SafeArea(
-                child: SingleChildScrollView(child: _buildCardCanvas(context))),
-            // SafeArea(
             //     child: Align(
             //         alignment: Alignment.bottomCenter, child: _buildPrizeButton()))
           ],
@@ -347,7 +349,8 @@ class _HState extends State<PlayHome> {
               ),
             ],
           ),
-          child: Center(
+          child: Container(
+            width: SizeConfig.screenWidth * 0.84,
             child: Text(
               showcaseMsg,
               textAlign: TextAlign.center,

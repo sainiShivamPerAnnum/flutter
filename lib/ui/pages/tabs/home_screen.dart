@@ -6,6 +6,7 @@ import 'package:felloapp/ui/elements/game-poll-dialog.dart';
 import 'package:felloapp/ui/elements/guide_dialog.dart';
 import 'package:felloapp/ui/elements/success-dialog.dart';
 import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -65,7 +66,7 @@ class _HomePageState extends State<HomePage> {
     }
     return Container(
         decoration: BoxDecoration(
-          color: Color(0xfff1f1f1),
+          color: UiConstants.backgroundColor,
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(50),
             bottomRight: Radius.circular(50),

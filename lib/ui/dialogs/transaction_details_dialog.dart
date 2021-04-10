@@ -99,23 +99,23 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                             '₹${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm')
                         : Container(),
                     (widget._transaction.subType ==
-                        UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                        widget._transaction.type ==
-                            UserTransaction.TRAN_TYPE_WITHDRAW)
+                                UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
+                            widget._transaction.type ==
+                                UserTransaction.TRAN_TYPE_WITHDRAW)
                         ? _addListField('Sell Rate:',
-                        '₹${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm')
+                            '₹${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm')
                         : Container(),
                     (widget._transaction.subType ==
-                        UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                        widget._transaction.type ==
-                            UserTransaction.TRAN_TYPE_DEPOSIT)
+                                UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
+                            widget._transaction.type ==
+                                UserTransaction.TRAN_TYPE_DEPOSIT)
                         ? _addListField('Gold Purchased:',
-                        '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm])} grams')
+                            '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm])} grams')
                         : Container(),
                     (widget._transaction.subType ==
-                            UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                        widget._transaction.type ==
-                            UserTransaction.TRAN_TYPE_WITHDRAW)
+                                UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
+                            widget._transaction.type ==
+                                UserTransaction.TRAN_TYPE_WITHDRAW)
                         ? _addListField('Gold Sold:',
                             '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm])} grams')
                         : Container(),
@@ -189,19 +189,26 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
         horizontal: SizeConfig.blockSizeHorizontal * 8,
         vertical: SizeConfig.blockSizeVertical * 0.4,
       ),
-      title: Text(
-        title,
-        style: GoogleFonts.montserrat(
-          color: UiConstants.accentColor,
-          fontSize: SizeConfig.mediumTextSize,
+      title: Container(
+        width: SizeConfig.screenWidth * 0.2,
+        child: Text(
+          title,
+          style: GoogleFonts.montserrat(
+            color: UiConstants.accentColor,
+            fontSize: SizeConfig.mediumTextSize,
+          ),
         ),
       ),
-      trailing: Text(
-        value,
-        style: GoogleFonts.montserrat(
-          color: Colors.black54,
-          fontSize: SizeConfig.largeTextSize,
-          fontWeight: FontWeight.w500,
+      trailing: Container(
+        width: SizeConfig.screenWidth * 0.3,
+        child: Text(
+          value,
+          overflow: TextOverflow.clip,
+          style: GoogleFonts.montserrat(
+            color: Colors.black54,
+            fontSize: SizeConfig.largeTextSize,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );
@@ -218,5 +225,6 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
     return "Fund Name";
   }
 
-  String _getAugmontGoldGrams(double gms) => (gms == null || gms == 0)?'N/A':gms.toStringAsFixed(4);
+  String _getAugmontGoldGrams(double gms) =>
+      (gms == null || gms == 0) ? 'N/A' : gms.toStringAsFixed(4);
 }

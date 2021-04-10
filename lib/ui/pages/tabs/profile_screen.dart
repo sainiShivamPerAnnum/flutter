@@ -72,7 +72,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.02),
       decoration: BoxDecoration(
-        color: Color(0xfff1f1f1),
+        color: UiConstants.backgroundColor,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(50),
           bottomRight: Radius.circular(50),
@@ -356,7 +356,7 @@ class Social extends StatelessWidget {
           Text(
             "Connect With Us",
             style: GoogleFonts.montserrat(
-              color: Color(0xff333333),
+              color: UiConstants.textColor,
               fontSize: SizeConfig.screenHeight * 0.02,
             ),
           ),
@@ -474,14 +474,14 @@ class ShareCard extends StatelessWidget {
                       fontSize: SizeConfig.cardTitleTextSize),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 Text(
                   "You and your friend also receive 10 game tickets that week!",
                   style: GoogleFonts.montserrat(
                       color: Colors.white, fontSize: SizeConfig.mediumTextSize),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 20),
                 ShareOptions(),
               ],
             ),
@@ -551,7 +551,7 @@ class _ShareOptionsState extends State<ShareOptions> {
     rProvider = Provider.of<RazorpayModel>(context, listen: false);
     _init();
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Container(
           decoration: BoxDecoration(
@@ -798,7 +798,6 @@ class ProfileTabTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: width * 0.02),
@@ -813,7 +812,7 @@ class ProfileTabTile extends StatelessWidget {
             title: Text(
               title,
               style: GoogleFonts.montserrat(
-                color: Color(0xff333333),
+                color: UiConstants.textColor,
                 fontSize: SizeConfig.mediumTextSize,
               ),
             ),
@@ -852,7 +851,6 @@ class ProfileTabTilePan extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: width * 0.02),
@@ -867,7 +865,7 @@ class ProfileTabTilePan extends StatelessWidget {
               title: Text(
                 title,
                 style: GoogleFonts.montserrat(
-                  color: Color(0xff333333),
+                  color: UiConstants.textColor,
                   fontSize: SizeConfig.mediumTextSize,
                 ),
               ),

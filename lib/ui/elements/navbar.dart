@@ -35,7 +35,7 @@ class NavBar extends StatelessWidget {
     //Create a container with a row, and add our btn widgets into the row
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: UiConstants.bottomNavBarColor,
         //Add some drop-shadow to our navbar, use 2 for a slightly nicer effect
         // boxShadow: [
         //   BoxShadow(blurRadius: 16, color: Colors.black12),
@@ -139,6 +139,7 @@ class _NavbarButtonState extends State<NavbarButton>
       onTap: () => widget.onTap(),
       //Wrap in a bit of extra padding to make it easier to tap
       child: Container(
+        color: UiConstants.bottomNavBarColor,
         padding: EdgeInsets.only(top: 16, bottom: 16, right: 8, left: 8),
         //Wrap in an animated container, so changes to width & color automatically animate into place
         child: AnimatedContainer(
@@ -150,7 +151,9 @@ class _NavbarButtonState extends State<NavbarButton>
           duration: Duration(milliseconds: (700 / _animScale).round()),
           //Use BoxDecoration top create a rounded container
           decoration: BoxDecoration(
-            color: widget.isSelected ? UiConstants.primaryColor : Colors.white,
+            color: widget.isSelected
+                ? UiConstants.primaryColor
+                : UiConstants.bottomNavBarColor,
             borderRadius: BorderRadius.all(Radius.circular(24)),
           ),
           //Wrap the row in a ClippedView to suppress any overflow errors if we momentarily exceed the screen size

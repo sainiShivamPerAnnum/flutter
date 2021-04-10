@@ -191,8 +191,7 @@ class _TransactionsState extends State<Transactions> {
           child: Column(
             children: [
               Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.blockSizeHorizontal * 3),
+                padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 2),
                 height: SizeConfig.screenHeight * 0.08,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
