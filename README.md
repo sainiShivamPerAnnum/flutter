@@ -1,6 +1,6 @@
 # Fello
 
-https://img.shields.io/twitter/follow/fellofinance?style=social
+![Twitter Follow](https://img.shields.io/twitter/follow/fellofinance?style=social)
 
 Client Flutter app for Fello
 
