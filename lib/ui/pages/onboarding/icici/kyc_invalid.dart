@@ -1,5 +1,5 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/ui/elements/more_info_dialog.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +11,7 @@ class KYCInvalid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -102,10 +102,11 @@ class KYCInvalid extends StatelessWidget {
                                   HapticFeedback.vibrate();
                                   showDialog(
                                       context: context,
-                                      builder: (BuildContext context) => MoreInfoDialog(
-                                        text: Assets.infoWhatKYC,
-                                        title: 'What is KYC?',
-                                      ));
+                                      builder: (BuildContext context) =>
+                                          MoreInfoDialog(
+                                            text: Assets.infoWhatKYC,
+                                            title: 'What is KYC?',
+                                          ));
                                 },
                               ),
                               ActionChip(
@@ -115,10 +116,11 @@ class KYCInvalid extends StatelessWidget {
                                   HapticFeedback.vibrate();
                                   showDialog(
                                       context: context,
-                                      builder: (BuildContext context) => MoreInfoDialog(
-                                        text: Assets.infoWhyKYC,
-                                        title: 'Why is it required?',
-                                      ));
+                                      builder: (BuildContext context) =>
+                                          MoreInfoDialog(
+                                            text: Assets.infoWhyKYC,
+                                            title: 'Why is it required?',
+                                          ));
                                 },
                               ),
                             ],

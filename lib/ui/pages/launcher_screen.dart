@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui show Image, instantiateImageCodec;
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/ui/elements/breathing_text_widget.dart';
 import 'package:felloapp/ui/elements/logo_canvas.dart';
@@ -12,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:provider/provider.dart';
 import 'package:felloapp/util/size_config.dart';
-import '../../base_util.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -29,12 +29,12 @@ class LogoFadeIn extends State<SplashScreen> {
 
   LogoFadeIn() {
     _loadImageAsset(Assets.logoMaxSize);
-    _timer = new Timer(const Duration(seconds: 2), () {
+    _timer = new Timer(const Duration(seconds: 1), () {
       setState(() {
         _logoStyle = LogoStyle.stacked;
       });
     });
-    _timer2 = new Timer(const Duration(seconds: 2), () {
+    _timer2 = new Timer(const Duration(seconds: 1), () {
       setState(() {
         initialize();
       });
@@ -109,5 +109,13 @@ class LogoFadeIn extends State<SplashScreen> {
     logo = frameInfo.image;
     print("bkImage instantiated: $logo");
     setState(() {});
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer.cancel();
+    _timer2.cancel();
+    _timer3.cancel();
   }
 }

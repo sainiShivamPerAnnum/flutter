@@ -1,18 +1,16 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
-import 'package:felloapp/ui/dialogs/integrated_icici_disabled_dialog.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/deposit_modal_sheet.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
-import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/pages/tabs/finance/deposit_verification.dart';
-import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/pages/tabs/finance/icici_withdrawal_screen.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
+import 'package:felloapp/ui/pages/tabs/finance/deposit_verification.dart';
+import 'package:felloapp/ui/pages/tabs/finance/icici_withdrawal_screen.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -27,6 +25,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 
 class MFDetailsPage extends StatefulWidget {
   @override
@@ -291,19 +290,6 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
           'No balance', 'Your ICICI wallet has no balance presently', context);
     } else {
       HapticFeedback.vibrate();
-      // payService.getWithdrawalDetails().then((withdrawalDetailsMap) {
-      //   //refresh dialog state once balance received
-      //   if (!withdrawalDetailsMap['flag']) {
-      //     _withdrawalDialogKey.currentState
-      //         .onDetailsReceived(0, 0, false, withdrawalDetailsMap['reason']);
-      //   } else {
-      //     _withdrawalDialogKey.currentState.onDetailsReceived(
-      //         withdrawalDetailsMap['instant_balance'],
-      //         withdrawalDetailsMap['total_balance'],
-      //         withdrawalDetailsMap['is_imps_allowed'],
-      //         withdrawalDetailsMap['reason']);
-      //   }
-      // });
       Navigator.push(
         context,
         CupertinoPageRoute(
@@ -406,37 +392,37 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       //         ));
     }
   }
-  //
-  // Future<bool> onInitiateWithdrawal(Map<String, dynamic> fieldMap,
-  //     double instantWithdraw, double nonInstantWithdraw) {
-  //   return payService
-  //       .processWithdrawal(fieldMap, instantWithdraw, nonInstantWithdraw)
-  //       .then((wMap) {
-  //     if (nonInstantWithdraw ??
-  //         0 > 0 &&
-  //             wMap['flag'] &&
-  //             wMap['otpid'] != null &&
-  //             wMap['otpid'].isNotEmpty) {
-  //       ///The otp dialog needs to be opened
-  //       _withdrawalDialogKey.currentState.onShowOtpDialog();
-  //       return true;
-  //     } else if (nonInstantWithdraw ?? 0 == 0) {
-  //       ///otp dialog does not need to be opened
-  //       Navigator.of(context).pop();
-  //       if (!wMap['flag']) {
-  //         baseProvider.showNegativeAlert(
-  //             'Withdrawal Failed', 'Error: ${wMap['reason']}', context);
-  //         return false;
-  //       } else {
-  //         baseProvider.showPositiveAlert('Withdrawal Successful',
-  //             'Processed in less than 30 seconds!', context);
-  //         return true;
-  //       }
-  //     }else{
-  //       return false;
-  //     }
-  //   });
-  // }
+//
+// Future<bool> onInitiateWithdrawal(Map<String, dynamic> fieldMap,
+//     double instantWithdraw, double nonInstantWithdraw) {
+//   return payService
+//       .processWithdrawal(fieldMap, instantWithdraw, nonInstantWithdraw)
+//       .then((wMap) {
+//     if (nonInstantWithdraw ??
+//         0 > 0 &&
+//             wMap['flag'] &&
+//             wMap['otpid'] != null &&
+//             wMap['otpid'].isNotEmpty) {
+//       ///The otp dialog needs to be opened
+//       _withdrawalDialogKey.currentState.onShowOtpDialog();
+//       return true;
+//     } else if (nonInstantWithdraw ?? 0 == 0) {
+//       ///otp dialog does not need to be opened
+//       Navigator.of(context).pop();
+//       if (!wMap['flag']) {
+//         baseProvider.showNegativeAlert(
+//             'Withdrawal Failed', 'Error: ${wMap['reason']}', context);
+//         return false;
+//       } else {
+//         baseProvider.showPositiveAlert('Withdrawal Successful',
+//             'Processed in less than 30 seconds!', context);
+//         return true;
+//       }
+//     }else{
+//       return false;
+//     }
+//   });
+// }
 }
 
 class FundDetailsTable extends StatelessWidget {

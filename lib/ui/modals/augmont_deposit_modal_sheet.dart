@@ -1,8 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
-import 'package:felloapp/ui/elements/more_info_dialog.dart';
-import 'package:felloapp/ui/elements/success-dialog.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
+import 'package:felloapp/ui/dialogs/success-dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';

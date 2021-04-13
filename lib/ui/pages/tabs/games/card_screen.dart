@@ -8,12 +8,12 @@ import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/ui/dialogs/tambola_dialog.dart';
+import 'package:felloapp/ui/dialogs/weekly_draw_dialog.dart';
+import 'package:felloapp/ui/dialogs/winnings_dialog.dart';
 import 'package:felloapp/ui/elements/board_selector.dart';
 import 'package:felloapp/ui/elements/roulette.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
-import 'package:felloapp/ui/elements/tambola_dialog.dart';
-import 'package:felloapp/ui/elements/weekly_draw_dialog.dart';
-import 'package:felloapp/ui/elements/winnings_dialog.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola-cards.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -28,6 +28,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase.dart';
 import 'package:showcaseview/showcase_widget.dart';
+
 
 class PlayHome extends StatefulWidget {
   @override

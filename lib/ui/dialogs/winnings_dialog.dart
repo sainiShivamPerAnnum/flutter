@@ -18,7 +18,7 @@ class WinningsDialog extends StatefulWidget{
 }
 
 class WinningsDialogState extends State<WinningsDialog> {
-  final Log log = new Log('PrizeDialog');
+  final Log log = new Log('WinningsDialog');
   BaseUtil baseProvider;
   DBModel dbProvider;
 

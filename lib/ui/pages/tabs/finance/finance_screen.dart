@@ -1,8 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
-import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/pages/tabs/finance/gold_details_page.dart';
-import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/pages/tabs/finance/mf_details_page.dart';
+import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
+import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';

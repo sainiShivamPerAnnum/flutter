@@ -4,8 +4,8 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
-import 'package:felloapp/ui/elements/hamburger-dialog.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
+import 'package:felloapp/ui/pages/hamburger/hamburger_screen.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
@@ -257,4 +257,3 @@ class _RootState extends State<Root> {
     }
   }
 }
-
