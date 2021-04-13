@@ -20,15 +20,16 @@ class UiConstants {
   //dimens
 // MODES
 // Dark Mode
-  static final Color backgroundColor = Colors.black;
-  static final Color bottomNavBarColor = Color(0xff232931);
-  static final Color titleTextColor = Color(0xff393e46);
-  static final Color textColor = Colors.white;
+//   static final Color backgroundColor = Colors.black;
+//   static final Color bottomNavBarColor = Color(0xff232931);
+//   static final Color titleTextColor = Color(0xff393e46);
+//   static final Color textColor = Colors.white;
   //Color(0xff393e46);
 // Light Mode
-  // static final Color backgroundColor = Color(0xfff1f1f1);
-  // static final Color bottomNavBarColor = Colors.white;
-  // static final Color titleTextColor = Colors.white;
+  static final Color backgroundColor = Color(0xfff1f1f1);
+  static final Color bottomNavBarColor = Colors.white;
+  static final Color titleTextColor = Colors.white;
+  static final Color textColor = Colors.black87;
 
   static final double dialogRadius = 20.0;
   static const double padding = 16.0;

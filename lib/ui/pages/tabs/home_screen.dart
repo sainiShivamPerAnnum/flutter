@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         margin: EdgeInsets.only(
-                          top: 100,
+                          top: 70,
                           bottom: 50,
                         ),
                         width: double.infinity,
