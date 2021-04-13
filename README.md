@@ -2,6 +2,7 @@
 
 ![Twitter Follow](https://img.shields.io/twitter/follow/fellofinance?style=social)
 
-Client Flutter app for Fello
+Client Application for Fello
 
-Saving made fun: fello.in
+> Happy building!
+> - Shourya
