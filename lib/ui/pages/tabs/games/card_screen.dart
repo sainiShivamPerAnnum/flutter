@@ -14,7 +14,7 @@ import 'package:felloapp/ui/elements/tambola_board_view.dart';
 import 'package:felloapp/ui/elements/tambola_dialog.dart';
 import 'package:felloapp/ui/elements/weekly_draw_dialog.dart';
 import 'package:felloapp/ui/elements/winnings_dialog.dart';
-import 'package:felloapp/ui/pages/tambola-cards.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola-cards.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';

@@ -6,7 +6,6 @@ import 'package:felloapp/ui/elements/aboutus_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/contact_dialog.dart';
 import 'package:felloapp/ui/elements/feedback_dialog.dart';
-import 'package:felloapp/ui/pages/settings_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
@@ -264,4 +263,11 @@ class HamburgerMenu extends StatelessWidget {
       // new OptionDetail(key: 'refpolicy', value: 'Referral Policy', isEnabled: true),
     ];
   }
+}
+
+class OptionDetail {
+  final String key;
+  final String value;
+  final bool isEnabled;
+  OptionDetail({this.key, this.value, this.isEnabled});
 }

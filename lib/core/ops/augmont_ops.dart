@@ -24,7 +24,7 @@ class AugmontModel extends ChangeNotifier {
   BaseUtil _baseProvider = locator<BaseUtil>();
   ValueChanged<UserTransaction> _augmontTxnProcessListener;
   final String defaultBaseUri =
-      'https://ug0949ai64.execute-api.ap-south-1.amazonaws.com/dev';
+      'https://jg628sk4s2.execute-api.ap-south-1.amazonaws.com/prod';
   String _baseUri;
   String _apiKey;
   var headers;

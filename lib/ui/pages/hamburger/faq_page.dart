@@ -17,7 +17,7 @@ class FAQPage extends StatefulWidget {
 class _FAQList extends State<FAQPage> {
   _FAQList({this.onPush});
   final ValueChanged<String> onPush;
-  Log log = new Log('SettingsPage');
+  Log log = new Log('FAQPage');
   BaseUtil baseProvider;
   List<Item> _faqs;
 

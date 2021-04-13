@@ -180,13 +180,7 @@ class _HomePageState extends State<HomePage> {
                         subtitle:
                             "By referring, you and your friend will both receive 10 game tickets and ₹25 in rewards!",
                         buttonText: "Share now",
-                        onPressed: () {
-                          HapticFeedback.vibrate();
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => SuccessDialog(),
-                          );
-                        },
+                        onPressed: () => widget.tabChange(3),
                         //() => widget.tabChange(3),
                         gradient: [
                           Color(0xffD4AC5B),

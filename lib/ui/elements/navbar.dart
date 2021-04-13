@@ -1,11 +1,9 @@
+import 'package:felloapp/ui/pages/root.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:felloapp/ui/pages/root.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:core';
 import 'dart:math';
-
-import 'package:flutter_svg/parser.dart';
 
 class NavBar extends StatelessWidget {
   final ValueChanged<int> itemTapped;
@@ -223,4 +221,13 @@ class ClippedView extends StatelessWidget {
       child: child,
     );
   }
+}
+
+class NavBarItemData {
+  final String title;
+  final IconData icon;
+  final String iconImage;
+  final double width;
+
+  NavBarItemData(this.title, this.icon, this.width, this.iconImage);
 }

@@ -224,7 +224,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                       width: _width,
                       child: Text(
                           'We are currently not accepting deposits for ' +
-                              'Augmont Gold Fund',
+                              'Augmont Digital Gold',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 16, color: UiConstants.accentColor)),

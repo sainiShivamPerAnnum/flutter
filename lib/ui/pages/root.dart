@@ -6,10 +6,10 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/ui/elements/hamburger-dialog.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
-import 'package:felloapp/ui/pages/tabs/finance_screen.dart';
-import 'package:felloapp/ui/pages/tabs/games_screen.dart';
+import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
+import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
-import 'package:felloapp/ui/pages/tabs/profile_screen.dart';
+import 'package:felloapp/ui/pages/tabs/profile/profile_screen.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -225,7 +225,7 @@ class _RootState extends State<Root> {
   _processReferral(String userId, Uri deepLink) async {
     int addUserTicketCount =
         await _submitReferral(baseProvider.myUser.uid, deepLink);
-    if(addUserTicketCount == null || addUserTicketCount < 0) {
+    if (addUserTicketCount == null || addUserTicketCount < 0) {
       log.debug('Processing complete. No extra tickets to be added');
     } else {
       log.debug('$addUserTicketCount tickets need to be added for the user');
@@ -256,15 +256,5 @@ class _RootState extends State<Root> {
       return -1;
     }
   }
-
-
 }
 
-class NavBarItemData {
-  final String title;
-  final IconData icon;
-  final String iconImage;
-  final double width;
-
-  NavBarItemData(this.title, this.icon, this.width, this.iconImage);
-}

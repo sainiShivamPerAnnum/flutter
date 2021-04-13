@@ -147,8 +147,10 @@ class Assets {
   ];
 
   static final List<String> goldFaqHeaders = [
-    'What kind of fund is this?',
+    'What kind of asset is this?',
+    'Who is Augmont?',
     'What does digital gold mean?',
+    'What is the purity of the Gold?',
     'How does the transaction work?',
     'What is the minimum amount that I need to buy?',
     'When can I sell my gold?',
@@ -156,10 +158,12 @@ class Assets {
   ];
 
   static final List<String> goldFaqAnswers = [
-    'This is a digital gold fund. On completing a deposit, you get alloted the required grams of gold at the present gold rate',
-    'Your gold is stored as an investment with Augmont. For all purposes, it is as robust as physical ownership and can be sold at any given time.',
-    'Simply register with the gold fund by providing a few very simple details. After registration, you can purchase any amount of gold through any preferred payment method.',
-    'You can make a minimum purchase of as low as ₹5',
+    'This is digital gold. It brings the power of buying gold with the ease of online access.  On completing a deposit, you receive the required grams of digital gold at the purchased gold rate',
+    'Augmont Goldtech Private Limited is a consumer retail Goldtech company - India’s largest and completely integrated gold company-from refining to retailing.',
+    'Your gold is stored as an investment with Augmont Goldtech. For all purposes, it is as great as physical ownership and can be sold at any given time as well.',
+    'Augmont offers verified 24 carats 999 Gold.',
+    'Simply register by providing a few very simple details. After registration, you can purchase any amount of gold through any preferred payment method.',
+    'You can make a minimum purchase of as low as ₹10',
     'Gold can be sold at any given time at the selling rate during the time. Your sell amount is usually deposited to your bank account within a maximum of 2 business working days.',
     'The gold purchase and sell rates are subject to gold price fluctuation. Historically, gold is accepted to be an extremely strong asset and has given good long term returns.'
   ];

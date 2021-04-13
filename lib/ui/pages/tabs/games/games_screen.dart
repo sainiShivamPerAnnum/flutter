@@ -15,7 +15,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-import '../../../util/size_config.dart';
 
 class GamePage extends StatefulWidget {
   final ValueChanged<int> tabChange;

@@ -1,6 +1,6 @@
 import 'package:felloapp/ui/elements/Parallax-card/custom_scroll.dart';
 import 'package:felloapp/ui/elements/game-poll-dialog.dart';
-import 'package:felloapp/ui/pages/tabs/card_screen.dart';
+import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/pages/tabs/games/card_screen.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/ui/elements/Parallax-card/card_renderer.dart';

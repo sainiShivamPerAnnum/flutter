@@ -11,8 +11,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../util/size_config.dart';
-
 class Transactions extends StatefulWidget {
   @override
   _TransactionsState createState() => _TransactionsState();

@@ -1,8 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
-import 'package:felloapp/ui/pages/gold_details_page.dart';
-import 'package:felloapp/ui/pages/mf_details_page.dart';
+import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/pages/tabs/finance/gold_details_page.dart';
+import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/pages/tabs/finance/mf_details_page.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -50,17 +50,17 @@ class _FinancePageState extends State<FinancePage> {
                   baseProvider.myUser.icici_balance +
                   baseProvider.myUser.prize_balance)
               .round();
-      setState(() {}); //TODO might cause ui error if screen no longer active
+      setState(() {}); //might cause ui error if screen no longer active
     }).catchError((err) {
       print('$err');
     });
   }
 
-
   @override
   void initState() {
     super.initState();
-    BaseAnalytics.analytics.setCurrentScreen(screenName: BaseAnalytics.PAGE_FINANCE);
+    BaseAnalytics.analytics
+        .setCurrentScreen(screenName: BaseAnalytics.PAGE_FINANCE);
   }
 
   @override
@@ -415,6 +415,6 @@ List<Fund> fundList = [
   ),
   Fund(
     assetName: "images/augmont.png",
-    title: "Augmont Gold Fund",
+    title: "Augmont Digital Gold",
   ),
 ];
