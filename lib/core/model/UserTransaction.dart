@@ -1,10 +1,8 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/logger.dart';
 
-class UserTransaction{
+class UserTransaction {
   static Log log = new Log('UserTransaction');
   String _docKey;
   double _amount;
@@ -78,46 +76,153 @@ class UserTransaction{
   static const String TRAN_SUBTYPE_AUGMONT_GOLD = 'AUGGOLD99';
   static const String TRAN_SUBTYPE_TAMBOLA_WIN = 'TMB_WIN';
 
+  UserTransaction(
+      this._docKey,
+      this._amount,
+      this._closingBalance,
+      this._note,
+      this._subType,
+      this._type,
+      this._ticketUpCount,
+      this._userId,
+      this._tranStatus,
+      this._icici,
+      this._rzp,
+      this._augmnt,
+      this._timestamp,
+      this._updatedTime);
 
-  UserTransaction(this._docKey, this._amount,this._closingBalance,this._note,this._subType,
-      this._type,this._ticketUpCount,this._userId,this._tranStatus, this._icici,
-      this._rzp, this._augmnt, this._timestamp,this._updatedTime);
-
-  UserTransaction.fromMap(Map<String, dynamic> data, String documentID):
-        this(documentID, BaseUtil.toDouble(data[fldAmount]), data[fldClosingBalance], data[fldNote], data[fldSubType],
-        data[fldType], data[fldTicketUpCount], data[fldUserId], data[fldTranStatus],
-        data[fldIciciMap], data[fldRzpMap],data[fldAugmontMap],data[fldTimestamp],
-        data[fldUpdatedTime]);
+  UserTransaction.fromMap(Map<String, dynamic> data, String documentID)
+      : this(
+            documentID,
+            BaseUtil.toDouble(data[fldAmount]),
+            data[fldClosingBalance],
+            data[fldNote],
+            data[fldSubType],
+            data[fldType],
+            data[fldTicketUpCount],
+            data[fldUserId],
+            data[fldTranStatus],
+            data[fldIciciMap],
+            data[fldRzpMap],
+            data[fldAugmontMap],
+            data[fldTimestamp],
+            data[fldUpdatedTime]);
 
   //ICICI investment initiated by new investor
-  UserTransaction.mfDeposit(String tranId, String multipleId, String upiTimestamp,
-      double amount, String userId):
-      this(null, amount,0,'NA',TRAN_SUBTYPE_ICICI,TRAN_TYPE_DEPOSIT,0,userId,
-          TRAN_STATUS_PENDING, {subFldIciciTranId: tranId, subFldIciciMultipleId: multipleId,
-            subFldIciciUpiTime: upiTimestamp},null,null,Timestamp.now(),Timestamp.now());
+  UserTransaction.mfDeposit(String tranId, String multipleId,
+      String upiTimestamp, double amount, String userId)
+      : this(
+            null,
+            amount,
+            0,
+            'NA',
+            TRAN_SUBTYPE_ICICI,
+            TRAN_TYPE_DEPOSIT,
+            0,
+            userId,
+            TRAN_STATUS_PENDING,
+            {
+              subFldIciciTranId: tranId,
+              subFldIciciMultipleId: multipleId,
+              subFldIciciUpiTime: upiTimestamp
+            },
+            null,
+            null,
+            Timestamp.now(),
+            Timestamp.now());
 
   //ICICI withdrawal initiated and completed by active investor
-  UserTransaction.mfWithdrawal(String tranId, String bankRnn, String note, String upiTimestamp,
-      double amount, String userId):
-        this(null, amount,0,note??'NA',TRAN_SUBTYPE_ICICI,TRAN_TYPE_WITHDRAW,0,
-          userId,TRAN_STATUS_COMPLETE,{subFldIciciTranId: tranId, subFldIciciBankRnn: bankRnn,
-            subFldIciciUpiTime: upiTimestamp}, null,null,Timestamp.now(),Timestamp.now());
+  UserTransaction.mfWithdrawal(String tranId, String bankRnn, String note,
+      String upiTimestamp, double amount, String userId)
+      : this(
+            null,
+            amount,
+            0,
+            note ?? 'NA',
+            TRAN_SUBTYPE_ICICI,
+            TRAN_TYPE_WITHDRAW,
+            0,
+            userId,
+            TRAN_STATUS_COMPLETE,
+            {
+              subFldIciciTranId: tranId,
+              subFldIciciBankRnn: bankRnn,
+              subFldIciciUpiTime: upiTimestamp
+            },
+            null,
+            null,
+            Timestamp.now(),
+            Timestamp.now());
 
-  UserTransaction.mfNonInstantWithdrawal(String tranId, String note, String upiTimestamp,
-      double amount, String userId):
-        this(null, amount,0,note??'NA',TRAN_SUBTYPE_ICICI,TRAN_TYPE_WITHDRAW,0,
-          userId,TRAN_STATUS_COMPLETE,{subFldIciciTranId: tranId, subFldIciciWithdrawType: 'NONINSTANT',
-            subFldIciciUpiTime: upiTimestamp}, null,null,Timestamp.now(),Timestamp.now());
+  UserTransaction.mfNonInstantWithdrawal(String tranId, String note,
+      String upiTimestamp, double amount, String userId)
+      : this(
+            null,
+            amount,
+            0,
+            note ?? 'NA',
+            TRAN_SUBTYPE_ICICI,
+            TRAN_TYPE_WITHDRAW,
+            0,
+            userId,
+            TRAN_STATUS_COMPLETE,
+            {
+              subFldIciciTranId: tranId,
+              subFldIciciWithdrawType: 'NONINSTANT',
+              subFldIciciUpiTime: upiTimestamp
+            },
+            null,
+            null,
+            Timestamp.now(),
+            Timestamp.now());
 
   //Augmont gold investment initiated by investor
-  UserTransaction.newGoldDeposit(double amount, String blockId, double lockPrice, double quantity, String paymode, String userId):
-        this(null, amount, 0, 'NA', TRAN_SUBTYPE_AUGMONT_GOLD, TRAN_TYPE_DEPOSIT, 0, userId,TRAN_STATUS_PENDING, null, null,
-          {subFldAugBlockId: blockId, subFldAugLockPrice: lockPrice, subFldAugPaymode: paymode, subFldAugCurrentGoldGm: quantity}, Timestamp.now(),Timestamp.now());
+  UserTransaction.newGoldDeposit(double amount, String blockId,
+      double lockPrice, double quantity, String paymode, String userId)
+      : this(
+            null,
+            amount,
+            0,
+            'NA',
+            TRAN_SUBTYPE_AUGMONT_GOLD,
+            TRAN_TYPE_DEPOSIT,
+            0,
+            userId,
+            TRAN_STATUS_PENDING,
+            null,
+            null,
+            {
+              subFldAugBlockId: blockId,
+              subFldAugLockPrice: lockPrice,
+              subFldAugPaymode: paymode,
+              subFldAugCurrentGoldGm: quantity
+            },
+            Timestamp.now(),
+            Timestamp.now());
 
   //Augmont gold investment initiated by investor
-  UserTransaction.newGoldWithdrawal(double amount, String blockId, double lockPrice, double quantity, String userId):
-        this(null, amount, 0, 'NA', TRAN_SUBTYPE_AUGMONT_GOLD, TRAN_TYPE_WITHDRAW, 0, userId,TRAN_STATUS_PENDING, null, null,
-          {subFldAugBlockId: blockId, subFldAugLockPrice: lockPrice, subFldAugCurrentGoldGm: quantity}, Timestamp.now(),Timestamp.now());
+  UserTransaction.newGoldWithdrawal(double amount, String blockId,
+      double lockPrice, double quantity, String userId)
+      : this(
+            null,
+            amount,
+            0,
+            'NA',
+            TRAN_SUBTYPE_AUGMONT_GOLD,
+            TRAN_TYPE_WITHDRAW,
+            0,
+            userId,
+            TRAN_STATUS_PENDING,
+            null,
+            null,
+            {
+              subFldAugBlockId: blockId,
+              subFldAugLockPrice: lockPrice,
+              subFldAugCurrentGoldGm: quantity
+            },
+            Timestamp.now(),
+            Timestamp.now());
 
   toJson() {
     return {

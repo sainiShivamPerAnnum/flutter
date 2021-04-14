@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> getProfilePicUrl() async {
     baseProvider.myUserDpUrl =
-        await dbProvider.getUserDP(baseProvider.myUser.uid);
+    await dbProvider.getUserDP(baseProvider.myUser.uid);
     if (baseProvider.myUserDpUrl != null) {
       setState(() {
         isImageLoading = false;
@@ -37,7 +37,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   String getGreeting() {
-    int hour = DateTime.now().hour;
+    int hour = DateTime
+        .now()
+        .hour;
     if (hour >= 5 && hour <= 12) {
       return "Good Morning,";
     } else if (hour > 12 && hour <= 17) {
@@ -52,7 +54,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    BaseAnalytics.analytics.setCurrentScreen(screenName: BaseAnalytics.PAGE_HOME);
+    BaseAnalytics.analytics.setCurrentScreen(
+        screenName: BaseAnalytics.PAGE_HOME);
   }
 
   @override
@@ -119,15 +122,15 @@ class _HomePageState extends State<HomePage> {
                                   )),
                               child: isImageLoading
                                   ? Image.asset(
-                                      "images/profile.png",
-                                      fit: BoxFit.cover,
-                                    )
+                                "images/profile.png",
+                                fit: BoxFit.cover,
+                              )
                                   : ClipOval(
-                                      child: CachedNetworkImage(
-                                        imageUrl: baseProvider.myUserDpUrl,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
+                                child: CachedNetworkImage(
+                                  imageUrl: baseProvider.myUserDpUrl,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             ),
                             SizedBox(
                               width: 30,
@@ -159,14 +162,19 @@ class _HomePageState extends State<HomePage> {
                         title: "SAVE | PLAY | WIN",
                         asset: "images/tickets.png",
                         subtitle:
-                            "New to Fello? \nLearn a little more about how to play and win big, just by saving!",
+                        "New to Fello? \nLearn a little more about how to play and win big, just by saving!",
                         buttonText: "Learn how Fello works",
-                        onPressed: () {
-                          HapticFeedback.vibrate();
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => GuideDialog(),
-                          );
+                        onPressed: () async {
+                          print(baseProvider.myUserWallet.augGoldPrinciple.toString());
+                          baseProvider.myUserWallet = await dbProvider.updateUserAugmontGoldBalance(
+                              baseProvider.myUser.uid, baseProvider.myUserWallet,
+                              100, 0.5);
+                          print(baseProvider.myUserWallet.augGoldPrinciple.toString());
+                          // HapticFeedback.vibrate();
+                          // showDialog(
+                          //   context: context,
+                          //   builder: (BuildContext context) => GuideDialog(),
+                          // );
                         },
                         gradient: [
                           Color(0xffACB6E5),
@@ -177,7 +185,7 @@ class _HomePageState extends State<HomePage> {
                         title: "More tickets, more prizes",
                         asset: "images/referral-asset.png",
                         subtitle:
-                            "By referring, you and your friend will both receive 10 game tickets and ₹25 in rewards!",
+                        "By referring, you and your friend will both receive 10 game tickets and ₹25 in rewards!",
                         buttonText: "Share now",
                         onPressed: () => widget.tabChange(3),
                         //() => widget.tabChange(3),
@@ -190,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                         title: "We're looking for suggestions",
                         asset: "images/puzzle.png",
                         subtitle:
-                            "Vote for the next game that you would like to play on Fello",
+                        "Vote for the next game that you would like to play on Fello",
                         buttonText: "Vote now",
                         onPressed: () async {
                           HapticFeedback.vibrate();
@@ -222,17 +230,19 @@ class HomeCard extends StatelessWidget {
   final Function onPressed;
   final List<Color> gradient;
 
-  HomeCard(
-      {this.asset,
-      this.buttonText,
-      this.onPressed,
-      this.subtitle,
-      this.title,
-      this.gradient});
+  HomeCard({this.asset,
+    this.buttonText,
+    this.onPressed,
+    this.subtitle,
+    this.title,
+    this.gradient});
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
     return Container(
       margin: EdgeInsets.only(
         bottom: 30,

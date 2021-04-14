@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
@@ -8,6 +9,7 @@ import 'package:felloapp/core/model/ReferralLeader.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
+import 'package:felloapp/core/model/UserWallet.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
@@ -32,6 +34,7 @@ class BaseUtil extends ChangeNotifier {
   DBModel _dbModel = locator<DBModel>();
   LocalDBModel _lModel = locator<LocalDBModel>();
   BaseUser _myUser;
+  UserWallet _myUserWallet;
   User firebaseUser;
   FirebaseAnalytics baseAnalytics;
   static RemoteConfig remoteConfig;
@@ -101,23 +104,26 @@ class BaseUtil extends ChangeNotifier {
   static const RazorpayStage activeRazorpayStage = RazorpayStage.DEV;
 
   Future init() async {
-    ///fetch on-boarding status and User details
-    firebaseUser = FirebaseAuth.instance.currentUser;
-    if (firebaseUser != null)
-      _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
-
     ///analytics
     BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
 
+    ///fetch on-boarding status and User details
+    firebaseUser = FirebaseAuth.instance.currentUser;
+    if (firebaseUser != null) {
+      _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
+    }
+
     isUserOnboarded =
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
     if (isUserOnboarded) {
+      //get user wallet
+      _myUserWallet = await _dbModel.getUserWallet(firebaseUser.uid);
+      //remote config for various remote variables
       await initRemoteConfig();
       //get user creation time
       _userCreationTimestamp = firebaseUser.metadata.creationTime;
-
-      //check if there are any icici txns in process
+      //check if there are any icici deposits txns in process
       _payService = locator<PaymentService>();
       if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
     }
@@ -464,6 +470,12 @@ class BaseUtil extends ChangeNotifier {
     return 0;
   }
 
+  static double digitPrecision(double x, [int offset = 2, bool round = true]) {
+    double y = x * pow(10, offset);
+    int z = (round) ? y.round() : y.truncate();
+    return z / pow(10, offset);
+  }
+
   int getTicketCountForTransaction(double investment) =>
       (investment / BaseUtil.INVESTMENT_AMOUNT_FOR_TICKET).round();
 
@@ -481,6 +493,12 @@ class BaseUtil extends ChangeNotifier {
 
   set myUser(BaseUser value) {
     _myUser = value;
+  }
+
+  UserWallet get myUserWallet => _myUserWallet;
+
+  set myUserWallet(UserWallet value) {
+    _myUserWallet = value;
   }
 
   UserIciciDetail get iciciDetail => _iciciDetail;

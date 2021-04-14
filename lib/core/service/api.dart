@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
@@ -232,8 +233,7 @@ class Api {
     return ref.doc(id).update(upObj);
   }
 
-  Future<void> addUserPollResponseDocument(
-      String id, String pollId, Map data) {
+  Future<void> addUserPollResponseDocument(String id, String pollId, Map data) {
     ref = _db
         .collection(Constants.COLN_USERS)
         .doc(id)
@@ -250,6 +250,46 @@ class Api {
     return ref.doc(pollId).get();
   }
 
+  Future<DocumentSnapshot> getUserWalletById(String id) {
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(id)
+        .collection(Constants.SUBCOLN_USER_WALLET);
+    return ref.doc(Constants.DOC_USER_WALLET_BALANCE).get();
+  }
+
+  Future<bool> updateUserWalletFields(
+      String userId, String verifyFld, double verifyValue, Map data) {
+    DocumentReference _docRef = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_WALLET)
+        .doc(Constants.DOC_USER_WALLET_BALANCE);
+    return _db
+        .runTransaction((transaction) async {
+          DocumentSnapshot snapshot = await transaction.get(_docRef);
+          if (!snapshot.exists) {
+            //wallet didnt exist?
+            transaction.set(_docRef, data, SetOptions(merge: true));
+          } else {
+            Map<String, dynamic> _map = snapshot.data();
+            if (_map[verifyFld] == null) {
+              ///field doesnt exist. add the field
+              transaction.set(_docRef, data, SetOptions(merge: true));
+            } else if (_map[verifyFld] != null &&
+                _map[verifyFld] == verifyValue) {
+              ///field exists and the condition is satisfied
+              transaction.set(_docRef, data, SetOptions(merge: true));
+            } else {
+              ///field exists but there is a data discrepancy
+              throw Exception('Condition not satisfied');
+            }
+          }
+        })
+        .then((value) => true)
+        .catchError((onErr) => false);
+  }
+
   Future<QuerySnapshot> getLeaderboardDocument(String category, int weekCde) {
     Query _query = _db
         .collection(Constants.COLN_LEADERBOARD)
@@ -262,22 +302,25 @@ class Api {
     return _storage.ref('dps/$uid/$path').getDownloadURL();
   }
 
-  Future<bool> deleteUserTicketsBeforeWeekCode(String uid, int weekCde) async{
+  Future<bool> deleteUserTicketsBeforeWeekCode(String uid, int weekCde) async {
     bool flag = true;
-    Query _query = _db.collection(Constants.COLN_USERS).doc(uid)
-        .collection(Constants.SUBCOLN_USER_TICKETS).where('week_code', isLessThan: weekCde);
+    Query _query = _db
+        .collection(Constants.COLN_USERS)
+        .doc(uid)
+        .collection(Constants.SUBCOLN_USER_TICKETS)
+        .where('week_code', isLessThan: weekCde);
     List<DocumentReference> _docReferences = [];
     try {
       QuerySnapshot _querySnapshot = await _query.get();
       _querySnapshot.docs.forEach((dDoc) {
         if (dDoc.exists) _docReferences.add(dDoc.reference);
       });
-    }catch(e) {
+    } catch (e) {
       log.error('Failed to retrieve ticket documents: $e');
       flag = false;
     }
 
-    if(_docReferences.length > 0) {
+    if (_docReferences.length > 0) {
       try {
         var opBatch = _db.batch();
         for (var ref in _docReferences) {
@@ -287,7 +330,7 @@ class Api {
             'Deleting ${_docReferences.length.toString()} ticket documents');
 
         await opBatch.commit();
-      }catch(e) {
+      } catch (e) {
         log.error('DB Batch operation failed: $e');
         flag = false;
       }

@@ -21,6 +21,7 @@ class Constants {
   static final String SUBCOLN_USER_AUGMONT_DETAILS = "augmont";
   static final String SUBCOLN_USER_KYC_DETAILS = "kyc";
   static final String SUBCOLN_USER_TXNS = "txns";
+  static final String SUBCOLN_USER_WALLET = "wallet";
   static final String SUBCOLN_USER_POLL_RESPONSES = "poll";
 
   //Sub-collection docs
@@ -28,6 +29,7 @@ class Constants {
   static final String DOC_USER_ICICI_DETAIL = "detail";
   static final String DOC_USER_KYC_DETAIL = "detail";
   static final String DOC_USER_AUGMONT_DETAIL = "detail";
+  static final String DOC_USER_WALLET_BALANCE = "balance";
 
   static const int CORNERS_COMPLETED = 0;
   static const int ROW_ONE_COMPLETED = 1;
