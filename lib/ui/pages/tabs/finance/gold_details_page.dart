@@ -76,7 +76,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                     children: [
                       FundInfo(),
                       FundGraph(),
-                      FundDetailsTable(baseProvider.myUser.augmont_quantity),
+                      FundDetailsTable(baseProvider.myUserWallet.augGoldQuantity),
                       GoldProfitCalculator(),
                       FAQCard(Assets.goldFaqHeaders, Assets.goldFaqAnswers),
                       _buildBetaWithdrawButton(),
@@ -431,8 +431,8 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     if (!baseProvider.myUser.isAugmontOnboarded) {
       baseProvider.showNegativeAlert(
           'Not onboarded', 'You havent been onboarded to Augmont yet', context);
-    } else if (baseProvider.myUser.augmont_balance == null ||
-        baseProvider.myUser.augmont_balance == 0) {
+    } else if (baseProvider.myUserWallet.augGoldBalance == null ||
+        baseProvider.myUserWallet.augGoldBalance == 0) {
       baseProvider.showNegativeAlert('No balance',
           'Your Augmont wallet has no balance presently', context);
     } else {
@@ -448,7 +448,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
             context: context,
             builder: (BuildContext context) => AugmontWithdrawDialog(
                   key: _withdrawalDialogKey2,
-                  balance: baseProvider.myUser.augmont_balance,
+                  balance: baseProvider.myUserWallet.augGoldBalance,
                   sellRate: _currentSellRates.goldSellPrice,
                   onAmountConfirmed: (Map<String, double> amountDetails) {
                     _onInitiateWithdrawal(amountDetails['withdrawal_amount']);

@@ -15,6 +15,7 @@ class UserWallet {
 
   //prizes
   double _prizeBalance;
+  double _lockedPrizeBalance;
   double _prizeLifetimeWin;
 
   //tickets

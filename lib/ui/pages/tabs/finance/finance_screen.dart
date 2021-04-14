@@ -23,9 +23,9 @@ class _FinancePageState extends State<FinancePage> {
 
   Map<String, double> getChartMap() {
     return {
-      "ICICI Balance": baseProvider.myUser.icici_balance,
-      "Augmont Balance": baseProvider.myUser.augmont_balance.toDouble(),
-      "Prize Balance": baseProvider.myUser.prize_balance.toDouble(),
+      "ICICI Balance": baseProvider.myUserWallet.iciciBalance,
+      "Augmont Balance": baseProvider.myUserWallet.augGoldBalance,
+      "Prize Balance": baseProvider.myUserWallet.prizeBalance,
     };
   }
 
@@ -35,21 +35,16 @@ class _FinancePageState extends State<FinancePage> {
 
   _updateAugmontBalance() async {
     if (augmontProvider == null ||
-        (baseProvider.myUser.augmont_quantity == 0 &&
-            baseProvider.myUser.augmont_balance == 0)) return;
+        (baseProvider.myUserWallet.augGoldQuantity == 0 &&
+            baseProvider.myUserWallet.augGoldBalance == 0)) return;
     augmontProvider.getRates().then((currRates) {
       if (currRates == null || currRates.goldSellPrice == null) return;
 
       // double gBuyRate = currRates.goldBuyPrice;
       double gSellRate = currRates.goldSellPrice;
-      if (baseProvider.myUser.augmont_quantity == 0) return;
-      baseProvider.myUser.augmont_balance =
-          (baseProvider.myUser.augmont_quantity * gSellRate).roundToDouble();
-      baseProvider.myUser.account_balance =
-          (baseProvider.myUser.augmont_balance +
-                  baseProvider.myUser.icici_balance +
-                  baseProvider.myUser.prize_balance)
-              .round();
+      if (baseProvider.myUserWallet.augGoldQuantity == 0) return;
+      baseProvider.myUserWallet.augGoldBalance =
+          (baseProvider.myUserWallet.augGoldQuantity * gSellRate).roundToDouble();
       setState(() {}); //might cause ui error if screen no longer active
     }).catchError((err) {
       print('$err');
@@ -102,30 +97,15 @@ class _FinancePageState extends State<FinancePage> {
                       height: AppBar().preferredSize.height * 0.7,
                     ),
                     Container(
-                      child: baseProvider.myUser.account_balance > 0
+                      child: baseProvider.estTotalWealth > 0
                           ? FundChartView(
                               dataMap: chartData,
-                              totalBal: baseProvider.myUser.account_balance
+                              totalBal: baseProvider.estTotalWealth
                                   .toDouble(),
                             )
                           : ZeroBalView(),
                     ),
                     // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.start,
-                    //   children: [
-                    //     SizedBox(
-                    //       width: SizeConfig.screenWidth * 0.04,
-                    //     ),
-                    //     Icon(
-                    //       Icons.refresh,
-                    //       color: UiConstants.primaryColor.withGreen(600),
-                    //     ),
-                    //     SizedBox(
-                    //       width: 10,
-                    //     ),
-                    //     Text("Pull to Refresh", style: TextStyle(fontSize: 12)),
-                    //   ],
-                    // ),
                     Divider(
                       color: UiConstants.textColor,
                     ),

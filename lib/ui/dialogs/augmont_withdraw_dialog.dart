@@ -152,7 +152,7 @@ class AugmontWithdrawDialogState extends State<AugmontWithdrawDialog> {
                                   children: [
                                     TextSpan(
                                       text:
-                                          '${baseProvider.myUser.augmont_quantity.toStringAsFixed(4)} grams',
+                                          '${baseProvider.myUserWallet.augGoldQuantity.toStringAsFixed(4)} grams',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -176,7 +176,7 @@ class AugmontWithdrawDialogState extends State<AugmontWithdrawDialog> {
                                   children: [
                                     TextSpan(
                                       text:
-                                          '${baseProvider.myUser.augmont_quantity.toStringAsFixed(4)} * ${widget.sellRate} = ₹${_getTotalGoldOwned().toStringAsFixed(3)}',
+                                          '${baseProvider.myUserWallet.augGoldQuantity.toStringAsFixed(4)} * ${widget.sellRate} = ₹${_getTotalGoldOwned().toStringAsFixed(3)}',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -278,8 +278,8 @@ class AugmontWithdrawDialogState extends State<AugmontWithdrawDialog> {
 
   double _getTotalGoldOwned() {
     if (widget.sellRate != null &&
-        baseProvider.myUser.augmont_quantity != null) {
-      double _net = widget.sellRate * baseProvider.myUser.augmont_quantity;
+        baseProvider.myUserWallet.augGoldQuantity != null) {
+      double _net = widget.sellRate * baseProvider.myUserWallet.augGoldQuantity;
       return _net;
     }
     return 0;

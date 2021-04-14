@@ -55,17 +55,18 @@ class BaseUtil extends ChangeNotifier {
 
   ///KYC global object
   UserKycDetail _kycDetail;
-
   Map<String, dynamic> currentWeekWinners = {};
   List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
   String myUserDpUrl;
+  double _estTotalWealth;
   List<UserTransaction> userMiniTxnList;
 
   DateTime _userCreationTimestamp;
   int referCount = 0;
   int userTicketsCount = 0;
   int isOtpResendCount = 0;
+
   ///Flags in various screens defined as global variables
   bool isUserOnboarded = false;
   bool isLoginNextInProgress = false;
@@ -119,7 +120,7 @@ class BaseUtil extends ChangeNotifier {
     if (isUserOnboarded) {
       //get user wallet
       _myUserWallet = await _dbModel.getUserWallet(firebaseUser.uid);
-      if(_myUserWallet == null)_compileUserWallet();
+      if (_myUserWallet == null) _compileUserWallet();
       //remote config for various remote variables
       await initRemoteConfig();
       //get user creation time
@@ -401,7 +402,6 @@ class BaseUtil extends ChangeNotifier {
     return 0;
   }
 
-
   static int getWeekNumber() {
     DateTime tdt = new DateTime.now();
     int dayn = tdt.weekday;
@@ -491,26 +491,32 @@ class BaseUtil extends ChangeNotifier {
   //the new wallet logic will be empty for old user.
   //this method will copy the old values to the new wallet
   _compileUserWallet() {
-    _myUserWallet = (_myUserWallet == null)?UserWallet.newWallet():_myUserWallet;
-    if(_myUser.ticket_count > NEW_USER_TICKET_COUNT) {
+    _myUserWallet =
+        (_myUserWallet == null) ? UserWallet.newWallet() : _myUserWallet;
+    if (_myUser.ticket_count > NEW_USER_TICKET_COUNT) {
       //copy ticket count
       _myUserWallet.currentWeekTicketCount = _myUser.ticket_count;
       _myUserWallet.netTicketCount = _myUser.ticket_count;
     }
-    if(_myUser.isIciciOnboarded && _myUser.icici_balance > 0) {
+    if (_myUser.isIciciOnboarded && _myUser.icici_balance > 0) {
       _myUserWallet.iciciPrinciple = _myUser.icici_balance;
       _myUserWallet.iciciBalance = _myUser.icici_balance;
     }
-    if(_myUser.isAugmontOnboarded && _myUser.augmont_balance > 0) {
+    if (_myUser.isAugmontOnboarded && _myUser.augmont_balance > 0) {
       _myUserWallet.augGoldPrinciple = _myUser.augmont_balance;
       _myUserWallet.augGoldBalance = _myUser.augmont_balance;
       _myUserWallet.augGoldQuantity = _myUser.augmont_quantity;
     }
-    if(_myUser.prize_balance != null && _myUser.prize_balance >0) {
+    if (_myUser.prize_balance != null && _myUser.prize_balance > 0) {
       _myUserWallet.prizeBalance = _myUser.prize_balance + 0.0;
       _myUserWallet.prizeLifetimeWin = _myUser.lifetime_winnings + 0.0;
     }
   }
+
+  double get estTotalWealth =>
+      toDouble(_myUserWallet.iciciBalance) +
+      toDouble(_myUserWallet.augGoldBalance) +
+      toDouble(_myUserWallet.prizeBalance);
 
   BaseUser get myUser => _myUser;
 
