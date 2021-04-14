@@ -119,6 +119,7 @@ class BaseUtil extends ChangeNotifier {
     if (isUserOnboarded) {
       //get user wallet
       _myUserWallet = await _dbModel.getUserWallet(firebaseUser.uid);
+      if(_myUserWallet == null)_compileUserWallet();
       //remote config for various remote variables
       await initRemoteConfig();
       //get user creation time
@@ -424,18 +425,16 @@ class BaseUtil extends ChangeNotifier {
   }
 
   int getUpdatedWithdrawalClosingBalance(double investment) =>
-      (toDouble(_myUser.icici_balance) +
-              toDouble(_myUser.augmont_balance) +
-              toDouble(_myUser.prize_balance) +
-              toDouble(_myUser.deposit_balance) -
+      (toDouble(_myUserWallet.iciciBalance) +
+              toDouble(_myUserWallet.augGoldBalance) +
+              toDouble(_myUserWallet.prizeBalance) -
               investment)
           .round();
 
   int getUpdatedClosingBalance(double investment) => (investment +
-          toDouble(_myUser.icici_balance) +
-          toDouble(_myUser.augmont_balance) +
-          toDouble(_myUser.prize_balance) +
-          toDouble(_myUser.deposit_balance))
+          toDouble(_myUserWallet.iciciBalance) +
+          toDouble(_myUserWallet.augGoldBalance) +
+          toDouble(_myUserWallet.prizeBalance))
       .round();
 
   static T _cast<T>(x) => x is T ? x : null;
@@ -487,6 +486,30 @@ class BaseUtil extends ChangeNotifier {
     if (count <= 0) count = 0;
 
     return count;
+  }
+
+  //the new wallet logic will be empty for old user.
+  //this method will copy the old values to the new wallet
+  _compileUserWallet() {
+    _myUserWallet = (_myUserWallet == null)?UserWallet.newWallet():_myUserWallet;
+    if(_myUser.ticket_count > NEW_USER_TICKET_COUNT) {
+      //copy ticket count
+      _myUserWallet.currentWeekTicketCount = _myUser.ticket_count;
+      _myUserWallet.netTicketCount = _myUser.ticket_count;
+    }
+    if(_myUser.isIciciOnboarded && _myUser.icici_balance > 0) {
+      _myUserWallet.iciciPrinciple = _myUser.icici_balance;
+      _myUserWallet.iciciBalance = _myUser.icici_balance;
+    }
+    if(_myUser.isAugmontOnboarded && _myUser.augmont_balance > 0) {
+      _myUserWallet.augGoldPrinciple = _myUser.augmont_balance;
+      _myUserWallet.augGoldBalance = _myUser.augmont_balance;
+      _myUserWallet.augGoldQuantity = _myUser.augmont_quantity;
+    }
+    if(_myUser.prize_balance != null && _myUser.prize_balance >0) {
+      _myUserWallet.prizeBalance = _myUser.prize_balance + 0.0;
+      _myUserWallet.prizeLifetimeWin = _myUser.lifetime_winnings + 0.0;
+    }
   }
 
   BaseUser get myUser => _myUser;

@@ -42,6 +42,10 @@ class UserWallet {
       this._currentWeekTicketCount,
       this._netTicketCount);
 
+  UserWallet.newWallet():this(
+    0,0,0,0,0,0,0,BaseUtil.NEW_USER_TICKET_COUNT,BaseUtil.NEW_USER_TICKET_COUNT
+  );
+
   UserWallet.fromMap(Map<String, dynamic> data) : this(
     BaseUtil.toDouble(data[fldAugmontGoldPrinciple]),
     BaseUtil.toDouble(data[fldAugmontGoldBalance]),

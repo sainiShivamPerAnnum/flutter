@@ -13,6 +13,7 @@ import 'package:felloapp/ui/elements/gold_profit_calculator.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -362,7 +363,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     return {'flag': _flag, 'reason': _reason};
   }
 
-  Future<bool> _onDepositTransactionComplete(UserTransaction txn) async {
+  Future<void> _onDepositTransactionComplete(UserTransaction txn) async {
     if (txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) {
       if (baseProvider.currentAugmontTxn != null) {
         ///update augmont transaction closing balance and ticketupcount
@@ -372,26 +373,36 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         baseProvider.currentAugmontTxn.closingBalance = baseProvider
             .getUpdatedClosingBalance(baseProvider.currentAugmontTxn.amount);
 
-        ///update baseuser account balance and ticket count
-        baseProvider.myUser.account_balance =
-            baseProvider.currentAugmontTxn.closingBalance;
-        baseProvider.myUser.augmont_balance =
-            BaseUtil.toDouble(baseProvider.myUser.augmont_balance) +
-                BaseUtil.toDouble(baseProvider.currentAugmontTxn.amount);
-        baseProvider.myUser.ticket_count =
-            baseProvider.getTotalTicketsPostTransaction(
-                baseProvider.currentAugmontTxn.amount);
-        baseProvider.myUser.augmont_quantity = baseProvider
-            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm];
+        ///update user wallet object account balance and ticket count
+        double _tempCurrentBalance = baseProvider.myUserWallet.augGoldBalance;
+        baseProvider.myUserWallet =
+            await dbProvider.updateUserAugmontGoldBalance(
+                baseProvider.myUser.uid,
+                baseProvider.myUserWallet,
+                BaseUtil.toDouble(baseProvider.currentAugmontTxn.amount),
+                baseProvider.currentAugmontTxn
+                    .augmnt[UserTransaction.subFldAugTotalGoldGm]);
 
-        ///update fields
-        await dbProvider.updateUser(baseProvider.myUser);
+        ///check if balance updated correctly
+        if (baseProvider.myUserWallet.augGoldBalance == _tempCurrentBalance) {
+          //wallet balance was not updated. Transaction update failed
+          Map<String, dynamic> _data = {
+            'txn_id': baseProvider.currentAugmontTxn.docKey,
+            'aug_tran_id': baseProvider
+                .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
+            'note':
+                'Transaction completed, but found inconsistency while updating balance'
+          };
+          await dbProvider.logFailure(baseProvider.myUser.uid,
+              FailType.UserAugmontDepositUpdateDiscrepancy, _data);
+        }
+
+        ///update user transaction
         await dbProvider.updateUserTransaction(
             baseProvider.myUser.uid, baseProvider.currentAugmontTxn);
 
         ///update UI
         _modalKey2.currentState.onDepositComplete(true);
-
         augmontProvider.completeTransaction();
         return true;
       }
@@ -478,19 +489,31 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         await dbProvider.updateUserTransaction(
             baseProvider.myUser.uid, baseProvider.currentAugmontTxn);
 
-        baseProvider.myUser.augmont_balance =
-            baseProvider.myUser.augmont_balance -
-                baseProvider.currentAugmontTxn.amount;
-        baseProvider.myUser.augmont_quantity = baseProvider
-            .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm];
-        baseProvider.myUser.account_balance =
-            baseProvider.currentAugmontTxn.closingBalance;
-        baseProvider.myUser.ticket_count =
-            baseProvider.getTotalTicketsPostWithdrawalTransaction(
-                baseProvider.currentAugmontTxn.amount);
+        ///update user wallet balance
+        double _tempCurrentBalance = baseProvider.myUserWallet.augGoldBalance;
+        baseProvider.myUserWallet =
+            await dbProvider.updateUserAugmontGoldBalance(
+                baseProvider.myUser.uid,
+                baseProvider.myUserWallet,
+                -1 * baseProvider.currentAugmontTxn.amount,
+                baseProvider.currentAugmontTxn
+                    .augmnt[UserTransaction.subFldAugTotalGoldGm]);
 
-        await dbProvider.updateUser(baseProvider.myUser);
+        ///check if balance updated correctly
+        if (baseProvider.myUserWallet.augGoldBalance == _tempCurrentBalance) {
+          //wallet balance was not updated. Transaction update failed
+          Map<String, dynamic> _data = {
+            'txn_id': baseProvider.currentAugmontTxn.docKey,
+            'aug_tran_id': baseProvider
+                .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
+            'note':
+                'Transaction completed, but found inconsistency while updating balance'
+          };
+          await dbProvider.logFailure(baseProvider.myUser.uid,
+              FailType.UserAugmontWthdrwUpdateDiscrepancy, _data);
+        }
 
+        ///update UI and clear global variables
         baseProvider.currentAugmontTxn = null;
         baseProvider.userMiniTxnList = null; //make null so it refreshes
         _withdrawalDialogKey2.currentState.onTransactionProcessed(true);

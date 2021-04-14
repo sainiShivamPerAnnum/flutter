@@ -734,8 +734,13 @@ class DBModel extends ChangeNotifier {
       double totalQuantity
       ) async {
     ///make a copy of the wallet object
-    UserWallet newWalletBalance =
-    UserWallet.fromMap(originalWalletBalance.cloneMap());
+    UserWallet newWalletBalance;
+    if(originalWalletBalance == null) {
+      newWalletBalance = UserWallet.newWallet();
+    }else {
+      newWalletBalance =
+      UserWallet.fromMap(originalWalletBalance.cloneMap());
+    }
     ///first update augmont balance
     if (changeAmount < 0 &&
         (newWalletBalance.augGoldBalance + changeAmount) < 0) {

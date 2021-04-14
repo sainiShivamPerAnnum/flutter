@@ -22,7 +22,9 @@ enum FailType{
   UserRedemptionOTPSendFailed,
   UserAugmontPurchaseFailed,
   UserAugmontSellFailed,
-  UserRazorpayPurchaseFailed
+  UserRazorpayPurchaseFailed,
+  UserAugmontDepositUpdateDiscrepancy,
+  UserAugmontWthdrwUpdateDiscrepancy,
 }
 
 extension ParseToString on FailType {

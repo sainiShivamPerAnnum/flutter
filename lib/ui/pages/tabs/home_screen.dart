@@ -165,16 +165,11 @@ class _HomePageState extends State<HomePage> {
                         "New to Fello? \nLearn a little more about how to play and win big, just by saving!",
                         buttonText: "Learn how Fello works",
                         onPressed: () async {
-                          print(baseProvider.myUserWallet.augGoldPrinciple.toString());
-                          baseProvider.myUserWallet = await dbProvider.updateUserAugmontGoldBalance(
-                              baseProvider.myUser.uid, baseProvider.myUserWallet,
-                              100, 0.5);
-                          print(baseProvider.myUserWallet.augGoldPrinciple.toString());
-                          // HapticFeedback.vibrate();
-                          // showDialog(
-                          //   context: context,
-                          //   builder: (BuildContext context) => GuideDialog(),
-                          // );
+                          HapticFeedback.vibrate();
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => GuideDialog(),
+                          );
                         },
                         gradient: [
                           Color(0xffACB6E5),
