@@ -438,8 +438,25 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     } else {
       baseProvider.isAugWithdrawRouteLogicInProgress = true;
       setState(() {});
-      augmontProvider.getRates().then((rates) {
-        _currentSellRates = rates;
+      double _liveGoldQuantityBalance;
+      try {
+        _currentSellRates = await augmontProvider.getRates();
+      } catch (e) {
+        log.error('Failed to fetch current sell rates: $e');
+      }
+      try {
+        _liveGoldQuantityBalance = await augmontProvider.getGoldBalance();
+      } catch (e) {
+        log.error('Failed to fetch current gold balance: $e');
+      }
+      if (_currentSellRates == null ||
+          _liveGoldQuantityBalance == null ||
+          _liveGoldQuantityBalance == 0) {
+        baseProvider.isAugWithdrawRouteLogicInProgress = false;
+        setState(() {});
+        baseProvider.showNegativeAlert('Couldn\'t complete your request',
+            'Please try again in some time', context);
+      } else {
         baseProvider.isAugWithdrawRouteLogicInProgress = false;
         setState(() {});
         Navigator.push(
@@ -447,7 +464,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
             MaterialPageRoute(
               builder: (ctx) => AugmontWithdrawScreen(
                 key: _withdrawalDialogKey2,
-                balance: baseProvider.myUserWallet.augGoldBalance,
+                passbookBalance: _liveGoldQuantityBalance,
                 sellRate: _currentSellRates.goldSellPrice,
                 onAmountConfirmed: (Map<String, double> amountDetails) {
                   _onInitiateWithdrawal(amountDetails['withdrawal_amount']);
@@ -457,26 +474,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                 bankIfsc: baseProvider.augmontDetail.ifsc,
               ),
             ));
-        // showDialog(
-        //     barrierColor: Colors.black87,
-        //     context: context,
-        //     builder: (BuildContext context) => AugmontWithdrawDialog(
-        //           key: _withdrawalDialogKey2,
-        //           balance: baseProvider.myUserWallet.augGoldBalance,
-        //           sellRate: _currentSellRates.goldSellPrice,
-        //           onAmountConfirmed: (Map<String, double> amountDetails) {
-        //             _onInitiateWithdrawal(amountDetails['withdrawal_amount']);
-        //           },
-        //           bankHolderName: baseProvider.augmontDetail.bankHolderName,
-        //           bankAccNo: baseProvider.augmontDetail.bankAccNo,
-        //           bankIfsc: baseProvider.augmontDetail.ifsc,
-        //         ));
-      }).catchError((err) {
-        baseProvider.isAugWithdrawRouteLogicInProgress = false;
-        setState(() {});
-        baseProvider.showNegativeAlert('Couldn\'t complete your request',
-            'Please try again in some time', context);
-      });
+      }
     }
   }
 
@@ -688,7 +686,7 @@ class FundInfo extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(bottom: _height * 0.02, left: 20, right: 30),
           child: Text(
-            'A strong asset with a 56% growth in the past 5 years. Augmont is the leading ' +
+            'A strong asset with a 17% growth rate over the past 3 years. Augmont is the leading ' +
                 'gold bullion of India. Invest in 24K digital gold ' +
                 'with 999 purity.',
             textAlign: TextAlign.center,

@@ -11,7 +11,7 @@ class _GoldProfitCalculatorState extends State<GoldProfitCalculator> {
   TextEditingController inputPrice = new TextEditingController();
   int months = 1;
   double price = 1000;
-  double outputprice = 1007;
+  double outputprice = 1014;
   List<double> chipAmountList = [100, 500, 1000, 5000];
 
   Widget amoutChip(double amt) {
@@ -32,7 +32,7 @@ class _GoldProfitCalculatorState extends State<GoldProfitCalculator> {
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
-    outputprice = price + price * (0.06 / 12) * months;
+    outputprice = price + price * (0.17 / 12) * months;
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: _height * 0.02,
@@ -148,7 +148,7 @@ class _GoldProfitCalculatorState extends State<GoldProfitCalculator> {
             activeColor: UiConstants.primaryColor,
             inactiveColor: UiConstants.primaryColor,
           ),
-          Text('*Projected returns based on past 6 month performance',
+          Text('*Projected returns based on past 3 year performance',
           style: TextStyle(
             color: Colors.blueGrey[600],
             fontSize: SizeConfig.smallTextSize*1.2

@@ -14,7 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class AugmontWithdrawScreen extends StatefulWidget {
-  final double balance;
+  final double passbookBalance;
   final double sellRate;
   final String bankHolderName;
   final String bankAccNo;
@@ -23,7 +23,7 @@ class AugmontWithdrawScreen extends StatefulWidget {
 
   AugmontWithdrawScreen(
       {Key key,
-      this.balance,
+      this.passbookBalance,
       this.sellRate,
       this.bankHolderName,
       this.bankAccNo,

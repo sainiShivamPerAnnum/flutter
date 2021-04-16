@@ -313,13 +313,13 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                   baseProvider.isEditAugmontBankDetailInProgress = false;
                   setState(() {});
                   if (flag) {
-                    Navigator.of(context).pop();
+                    _goBack();
                     baseProvider.showPositiveAlert(
                         'Complete', 'Your details have been updated', context);
                   } else {
                     baseProvider.showNegativeAlert(
                         'Failed',
-                        'Your details could not be updated at the moment',
+                        'Your details could not be updated at the moment. Please try again',
                         context);
                   }
                 });
@@ -333,4 +333,6 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
               },
             ));
   }
+
+  _goBack() => Navigator.of(context).pop();
 }
