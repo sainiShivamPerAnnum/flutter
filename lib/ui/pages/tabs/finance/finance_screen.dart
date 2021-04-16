@@ -3,6 +3,7 @@ import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class FinancePage extends StatefulWidget {
 }
 
 class _FinancePageState extends State<FinancePage> {
+  Log log = new Log('FinanceScreen');
   final bool hasFund = true;
   BaseUtil baseProvider;
   AugmontModel augmontProvider;

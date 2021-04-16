@@ -442,7 +442,6 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         _currentSellRates = rates;
         baseProvider.isAugWithdrawRouteLogicInProgress = false;
         setState(() {});
-
         showDialog(
             barrierColor: Colors.black87,
             context: context,

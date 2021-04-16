@@ -100,7 +100,7 @@ class BaseUtil extends ChangeNotifier {
 
   ///STAGES - IMPORTANT
   static const AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;
-  static const AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.PROD;
+  static const AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.DEV;
   static const SignzyStage activeSignzyStage = SignzyStage.PROD;
   static const RazorpayStage activeRazorpayStage = RazorpayStage.DEV;
 
@@ -477,16 +477,6 @@ class BaseUtil extends ChangeNotifier {
 
   int getTicketCountForTransaction(double investment) =>
       (investment / BaseUtil.INVESTMENT_AMOUNT_FOR_TICKET).round();
-
-  int getTotalTicketsPostTransaction(double investment) =>
-      _myUser.ticket_count + getTicketCountForTransaction(investment);
-
-  int getTotalTicketsPostWithdrawalTransaction(double investment) {
-    int count = _myUser.ticket_count - getTicketCountForTransaction(investment);
-    if (count <= 0) count = 0;
-
-    return count;
-  }
 
   //the new wallet logic will be empty for old user.
   //this method will copy the old values to the new wallet
