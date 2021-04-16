@@ -6,12 +6,12 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
-import 'package:felloapp/ui/dialogs/augmont_withdraw_dialog.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/gold_profit_calculator.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
+import 'package:felloapp/ui/pages/tabs/finance/augmont_withdraw_screen.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
@@ -28,7 +28,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class GoldDetailsPage extends StatefulWidget {
   @override
@@ -43,7 +42,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
   ICICIModel iProvider;
   GlobalKey<AugmontDepositModalSheetState> _modalKey2 = GlobalKey();
   GlobalKey<AugmontOnboardingState> _onboardingKey = GlobalKey();
-  GlobalKey<AugmontWithdrawDialogState> _withdrawalDialogKey2 = GlobalKey();
+  GlobalKey<AugmontWithdrawScreenState> _withdrawalDialogKey2 = GlobalKey();
   double containerHeight = 10;
   Map<String, dynamic> _withdrawalRequestDetails;
   AugmontRates _currentBuyRates;
@@ -76,7 +75,8 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                     children: [
                       FundInfo(),
                       FundGraph(),
-                      FundDetailsTable(baseProvider.myUserWallet.augGoldQuantity),
+                      FundDetailsTable(
+                          baseProvider.myUserWallet.augGoldQuantity),
                       GoldProfitCalculator(),
                       FAQCard(Assets.goldFaqHeaders, Assets.goldFaqAnswers),
                       _buildBetaWithdrawButton(),
@@ -442,20 +442,35 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         _currentSellRates = rates;
         baseProvider.isAugWithdrawRouteLogicInProgress = false;
         setState(() {});
-        showDialog(
-            barrierColor: Colors.black87,
-            context: context,
-            builder: (BuildContext context) => AugmontWithdrawDialog(
-                  key: _withdrawalDialogKey2,
-                  balance: baseProvider.myUserWallet.augGoldBalance,
-                  sellRate: _currentSellRates.goldSellPrice,
-                  onAmountConfirmed: (Map<String, double> amountDetails) {
-                    _onInitiateWithdrawal(amountDetails['withdrawal_amount']);
-                  },
-                  bankHolderName: baseProvider.augmontDetail.bankHolderName,
-                  bankAccNo: baseProvider.augmontDetail.bankAccNo,
-                  bankIfsc: baseProvider.augmontDetail.ifsc,
-                ));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (ctx) => AugmontWithdrawScreen(
+                key: _withdrawalDialogKey2,
+                balance: baseProvider.myUserWallet.augGoldBalance,
+                sellRate: _currentSellRates.goldSellPrice,
+                onAmountConfirmed: (Map<String, double> amountDetails) {
+                  _onInitiateWithdrawal(amountDetails['withdrawal_amount']);
+                },
+                bankHolderName: baseProvider.augmontDetail.bankHolderName,
+                bankAccNo: baseProvider.augmontDetail.bankAccNo,
+                bankIfsc: baseProvider.augmontDetail.ifsc,
+              ),
+            ));
+        // showDialog(
+        //     barrierColor: Colors.black87,
+        //     context: context,
+        //     builder: (BuildContext context) => AugmontWithdrawDialog(
+        //           key: _withdrawalDialogKey2,
+        //           balance: baseProvider.myUserWallet.augGoldBalance,
+        //           sellRate: _currentSellRates.goldSellPrice,
+        //           onAmountConfirmed: (Map<String, double> amountDetails) {
+        //             _onInitiateWithdrawal(amountDetails['withdrawal_amount']);
+        //           },
+        //           bankHolderName: baseProvider.augmontDetail.bankHolderName,
+        //           bankAccNo: baseProvider.augmontDetail.bankAccNo,
+        //           bankIfsc: baseProvider.augmontDetail.ifsc,
+        //         ));
       }).catchError((err) {
         baseProvider.isAugWithdrawRouteLogicInProgress = false;
         setState(() {});

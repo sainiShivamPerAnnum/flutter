@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class AugmontConfirmRegnDialog extends StatefulWidget {
@@ -20,12 +21,15 @@ class AugmontConfirmRegnDialog extends StatefulWidget {
   final Function onAccept;
   final Function onReject;
 
-  AugmontConfirmRegnDialog.name({this.panNumber,
-    this.panName,
-    this.bankAccNo,
-    this.bankName,
-    this.bankIfsc,
-    this.bankHolderName, this.onAccept, this.onReject});
+  AugmontConfirmRegnDialog(
+      {this.panNumber,
+      this.panName,
+      this.bankAccNo,
+      this.bankName,
+      this.bankIfsc,
+      this.bankHolderName,
+      this.onAccept,
+      this.onReject});
 
   @override
   State createState() => AugmontConfirmRegnDialogState();
@@ -41,16 +45,13 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
   bool _isButtonEnabled = false;
   double _width;
   final TextStyle tTextStyle =
-  TextStyle(fontSize: 18, fontWeight: FontWeight.w300);
+      TextStyle(fontSize: 18, fontWeight: FontWeight.w300);
   final TextStyle gTextStyle =
-  TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+      TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
 
   @override
   Widget build(BuildContext context) {
-    _width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    _width = MediaQuery.of(context).size.width;
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     return Dialog(
       insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
@@ -72,7 +73,7 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
             physics: BouncingScrollPhysics(),
             child: Padding(
                 padding:
-                EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
+                    EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -80,7 +81,7 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                   children: [
                     SizedBox(
                       child: Image(
-                        image: AssetImage(Assets.onboardingSlide[1]),
+                        image: AssetImage(Assets.onboardingSlide[3]),
                         fit: BoxFit.contain,
                       ),
                       width: 150,
@@ -110,14 +111,14 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                     _buildRow('Bank IFSC', widget.bankIfsc),
                     (widget.panNumber != null)
                         ? Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        'Your PAN information cant be changed later',
-                        style: TextStyle(
-                            fontStyle: FontStyle.italic,
-                            fontSize: SizeConfig.smallTextSize),
-                      ),
-                    )
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              'Your PAN information cant be changed later',
+                              style: TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: SizeConfig.smallTextSize),
+                            ),
+                          )
                         : Container(),
                     SizedBox(
                       height: 20,
@@ -125,8 +126,18 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        TextButton(onPressed: widget.onReject, child: Text('CANCEL')),
-                        TextButton(onPressed: widget.onAccept, child: Text('CONFIRM')),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              widget.onReject();
+                            },
+                            child: Text('CANCEL')),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              widget.onAccept();
+                            },
+                            child: Text('CONFIRM')),
                       ],
                     )
                   ],
@@ -136,20 +147,48 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
   }
 
   _buildRow(String title, String value) {
-    return Padding(
-        padding: const EdgeInsets.all(5),
-        child: RichText(
-          text: TextSpan(
-              text: title,
-              style: TextStyle(
-                color: Colors.black,
-              ),
-              children: [
-                TextSpan(
-                  text: value,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ]),
-        ));
+    return ListTile(
+      // contentPadding: EdgeInsets.symmetric(
+      //   horizontal: SizeConfig.blockSizeHorizontal * 8,
+      //   vertical: SizeConfig.blockSizeVertical * 0.4,
+      // ),
+      title: Container(
+        width: SizeConfig.screenWidth * 0.2,
+        child: Text(
+          '$title: ',
+          style: GoogleFonts.montserrat(
+            color: UiConstants.accentColor,
+            fontSize: SizeConfig.mediumTextSize,
+          ),
+        ),
+      ),
+      trailing: Container(
+        width: SizeConfig.screenWidth * 0.3,
+        child: Text(
+          value,
+          overflow: TextOverflow.clip,
+          style: GoogleFonts.montserrat(
+            color: Colors.black54,
+            fontSize: SizeConfig.mediumTextSize,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    );
+    // return Padding(
+    //     padding: const EdgeInsets.all(5),
+    //     child: RichText(
+    //       text: TextSpan(
+    //           text: '$title: ',
+    //           style: TextStyle(
+    //             color: Colors.black,
+    //           ),
+    //           children: [
+    //             TextSpan(
+    //               text: value,
+    //               style: TextStyle(fontWeight: FontWeight.bold),
+    //             ),
+    //           ]),
+    //     ));
   }
 }

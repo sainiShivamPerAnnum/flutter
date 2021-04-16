@@ -75,6 +75,7 @@ class BaseUtil extends ChangeNotifier {
   bool isAugmontRegnInProgress = false;
   bool isAugmontRegnCompleteAnimateInProgress = false;
   bool isIciciDepositRouteLogicInProgress = false;
+  bool isEditAugmontBankDetailInProgress = false;
   bool isAugDepositRouteLogicInProgress = false;
   bool isAugWithdrawRouteLogicInProgress = false;
   bool isAugmontRealTimeBalanceFetched = false;
