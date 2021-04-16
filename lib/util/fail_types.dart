@@ -15,6 +15,8 @@ enum FailType{
   UserTransactionInitiateFailed,
   UserTransactionDetailSaveFailed,
   UserTransactionVerifyTimeoutFailed,
+  UserICICIDepositUpdateDiscrepancy,
+  UserICICIWthdrwUpdateDiscrepancy,
   UserWithdrawalCheckIMPSFailed,
   UserWithdrawalGetRedeemFailed,
   UserWithdrawalExitLoadFailed,

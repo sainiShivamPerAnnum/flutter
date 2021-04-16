@@ -758,7 +758,7 @@ class DBModel extends ChangeNotifier {
     if (changeAmount < 0) {
       //need to subtract tickets
       int ticks =
-      ((changeAmount * -1) / BaseUtil.INVESTMENT_AMOUNT_FOR_TICKET).round();
+      ((changeAmount * -1) / BaseUtil.INVESTMENT_AMOUNT_FOR_TICKET).floor();
       newWalletBalance.currentWeekTicketCount =
       (newWalletBalance.currentWeekTicketCount < ticks)
           ? 0
@@ -770,7 +770,7 @@ class DBModel extends ChangeNotifier {
     } else {
       //need to add tickets
       int ticks =
-      ((changeAmount) / BaseUtil.INVESTMENT_AMOUNT_FOR_TICKET).round();
+      ((changeAmount) / BaseUtil.INVESTMENT_AMOUNT_FOR_TICKET).floor();
       newWalletBalance.currentWeekTicketCount = newWalletBalance.currentWeekTicketCount + ticks;
       newWalletBalance.netTicketCount = newWalletBalance.netTicketCount + ticks;
     }
