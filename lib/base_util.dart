@@ -477,7 +477,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   int getTicketCountForTransaction(double investment) =>
-      (investment / BaseUtil.INVESTMENT_AMOUNT_FOR_TICKET).round();
+      (investment / BaseUtil.INVESTMENT_AMOUNT_FOR_TICKET).floor();
 
   //the new wallet logic will be empty for old user.
   //this method will copy the old values to the new wallet

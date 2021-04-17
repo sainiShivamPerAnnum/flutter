@@ -731,7 +731,8 @@ class DBModel extends ChangeNotifier {
       String id,
       UserWallet originalWalletBalance,
       double changeAmount,
-      double totalQuantity
+      double totalQuantity,
+      int ticketCount
       ) async {
     ///make a copy of the wallet object
     UserWallet newWalletBalance;
@@ -757,22 +758,18 @@ class DBModel extends ChangeNotifier {
     ///update ticket count
     if (changeAmount < 0) {
       //need to subtract tickets
-      int ticks =
-      ((changeAmount * -1) / BaseUtil.INVESTMENT_AMOUNT_FOR_TICKET).floor();
       newWalletBalance.currentWeekTicketCount =
-      (newWalletBalance.currentWeekTicketCount < ticks)
+      (newWalletBalance.currentWeekTicketCount < ticketCount)
           ? 0
-          : newWalletBalance.currentWeekTicketCount - ticks;
+          : newWalletBalance.currentWeekTicketCount - ticketCount;
       newWalletBalance.netTicketCount =
-      (newWalletBalance.netTicketCount < ticks)
+      (newWalletBalance.netTicketCount < ticketCount)
           ? 0
-          : newWalletBalance.netTicketCount - ticks;
+          : newWalletBalance.netTicketCount - ticketCount;
     } else {
       //need to add tickets
-      int ticks =
-      ((changeAmount) / BaseUtil.INVESTMENT_AMOUNT_FOR_TICKET).floor();
-      newWalletBalance.currentWeekTicketCount = newWalletBalance.currentWeekTicketCount + ticks;
-      newWalletBalance.netTicketCount = newWalletBalance.netTicketCount + ticks;
+      newWalletBalance.currentWeekTicketCount = newWalletBalance.currentWeekTicketCount + ticketCount;
+      newWalletBalance.netTicketCount = newWalletBalance.netTicketCount + ticketCount;
     }
     ///make the wallet transaction
     try {

@@ -46,6 +46,7 @@ class UserTransaction {
   static final String subFldAugTranId = 'aAugTranId';
   static final String subFldAugCurrentGoldGm = 'aGoldInTxn';
   static final String subFldAugTotalGoldGm = 'aGoldBalance';
+  static final String subFldAugPostTaxTotal = 'aTaxedGoldBalance';
 
   ///Icici submap fields
   static final String subFldIciciTranId = 'iTranId';
@@ -178,7 +179,7 @@ class UserTransaction {
             Timestamp.now());
 
   //Augmont gold investment initiated by investor
-  UserTransaction.newGoldDeposit(double amount, String blockId,
+  UserTransaction.newGoldDeposit(double amount, double postTax, String blockId,
       double lockPrice, double quantity, String paymode, String userId)
       : this(
             null,
@@ -196,7 +197,8 @@ class UserTransaction {
               subFldAugBlockId: blockId,
               subFldAugLockPrice: lockPrice,
               subFldAugPaymode: paymode,
-              subFldAugCurrentGoldGm: quantity
+              subFldAugCurrentGoldGm: quantity,
+              subFldAugPostTaxTotal: postTax
             },
             Timestamp.now(),
             Timestamp.now());

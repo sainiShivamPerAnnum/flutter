@@ -172,6 +172,7 @@ class AugmontModel extends ChangeNotifier {
     double netTax = buyRates.cgstPercent + buyRates.sgstPercent;
     _baseProvider.currentAugmontTxn = UserTransaction.newGoldDeposit(
         amount,
+        getAmountPostTax(amount, netTax),
         buyRates.blockId,
         buyRates.goldBuyPrice,
         getGoldQuantityFromAmount(amount, buyRates.goldBuyPrice, netTax),

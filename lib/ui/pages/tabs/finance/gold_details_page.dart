@@ -293,11 +293,13 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     if (txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) {
       if (baseProvider.currentAugmontTxn != null) {
         ///update augmont transaction closing balance and ticketupcount
+        ///tickets will be based on amount spent, closing balance will be based on taxed amount
         baseProvider.currentAugmontTxn.ticketUpCount =
             baseProvider.getTicketCountForTransaction(
                 baseProvider.currentAugmontTxn.amount);
-        baseProvider.currentAugmontTxn.closingBalance = baseProvider
-            .getUpdatedClosingBalance(baseProvider.currentAugmontTxn.amount);
+        baseProvider.currentAugmontTxn.closingBalance =
+            baseProvider.getUpdatedClosingBalance(baseProvider.currentAugmontTxn
+                .augmnt[UserTransaction.subFldAugPostTaxTotal]);
 
         ///update user wallet object account balance and ticket count
         double _tempCurrentBalance = baseProvider.myUserWallet.augGoldBalance;
@@ -305,9 +307,11 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
             await dbProvider.updateUserAugmontGoldBalance(
                 baseProvider.myUser.uid,
                 baseProvider.myUserWallet,
-                BaseUtil.toDouble(baseProvider.currentAugmontTxn.amount),
+                BaseUtil.toDouble(baseProvider.currentAugmontTxn
+                    .augmnt[UserTransaction.subFldAugPostTaxTotal]),
                 baseProvider.currentAugmontTxn
-                    .augmnt[UserTransaction.subFldAugTotalGoldGm]);
+                    .augmnt[UserTransaction.subFldAugTotalGoldGm],
+                baseProvider.currentAugmontTxn.ticketUpCount);
 
         ///check if balance updated correctly
         if (baseProvider.myUserWallet.augGoldBalance == _tempCurrentBalance) {
@@ -435,7 +439,8 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                 baseProvider.myUserWallet,
                 -1 * baseProvider.currentAugmontTxn.amount,
                 baseProvider.currentAugmontTxn
-                    .augmnt[UserTransaction.subFldAugTotalGoldGm]);
+                    .augmnt[UserTransaction.subFldAugTotalGoldGm],
+                baseProvider.currentAugmontTxn.ticketUpCount);
 
         ///check if balance updated correctly
         if (baseProvider.myUserWallet.augGoldBalance == _tempCurrentBalance) {
