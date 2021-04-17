@@ -106,10 +106,10 @@ class _FinancePageState extends State<FinancePage> {
                       height: AppBar().preferredSize.height * 0.7,
                     ),
                     Container(
-                      child: baseProvider.estTotalWealth > 0
+                      child: baseProvider.userFundWallet.getEstTotalWealth() > 0
                           ? FundChartView(
                               dataMap: chartData,
-                              totalBal: baseProvider.estTotalWealth
+                              totalBal: baseProvider.userFundWallet.getEstTotalWealth()
                                   .toDouble(),
                             )
                           : ZeroBalView(),

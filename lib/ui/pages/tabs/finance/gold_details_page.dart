@@ -1,6 +1,5 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
-import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -14,7 +13,6 @@ import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dar
 import 'package:felloapp/ui/pages/tabs/finance/augmont_withdraw_screen.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
-import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -301,10 +299,10 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
             baseProvider.getUpdatedClosingBalance(baseProvider.currentAugmontTxn
                 .augmnt[UserTransaction.subFldAugPostTaxTotal]);
 
-        ///update user wallet object account balance and ticket count
+        ///update user wallet object account balance
         double _tempCurrentBalance = baseProvider.userFundWallet.augGoldBalance;
-        baseProvider.userFundWallet =
-            await dbProvider.updateUserAugmontGoldBalance(
+        baseProvider.userFundWallet = await dbProvider
+            .updateUserAugmontGoldBalance(
                 baseProvider.myUser.uid,
                 baseProvider.userFundWallet,
                 BaseUtil.toDouble(baseProvider.currentAugmontTxn
@@ -324,6 +322,30 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
           };
           await dbProvider.logFailure(baseProvider.myUser.uid,
               FailType.UserAugmontDepositUpdateDiscrepancy, _data);
+        }
+
+        if(baseProvider.currentAugmontTxn.ticketUpCount > 0) {
+          ///update user ticket count
+          int _tempCurrentCount = baseProvider.userTicketWallet.augGold99Tck;
+          baseProvider.userTicketWallet =
+          await dbProvider.updateAugmontGoldUserTicketCount(
+              baseProvider.myUser.uid,
+              baseProvider.userTicketWallet,
+              baseProvider.currentAugmontTxn.ticketUpCount);
+
+          ///check if ticket count updated correctly
+          if (baseProvider.userTicketWallet.augGold99Tck == _tempCurrentCount) {
+            //ticket count did not update
+            Map<String, dynamic> _data = {
+              'txn_id': baseProvider.currentAugmontTxn.docKey,
+              'aug_tran_id': baseProvider
+                  .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
+              'note':
+              'Transaction completed, but found inconsistency while updating tickets'
+            };
+            await dbProvider.logFailure(baseProvider.myUser.uid,
+                FailType.UserAugmontDepositUpdateDiscrepancy, _data);
+          }
         }
 
         ///update user transaction
@@ -452,6 +474,30 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
           };
           await dbProvider.logFailure(baseProvider.myUser.uid,
               FailType.UserAugmontWthdrwUpdateDiscrepancy, _data);
+        }
+
+        if(baseProvider.currentAugmontTxn.ticketUpCount > 0) {
+          ///update user ticket count
+          int _tempCurrentCount = baseProvider.userTicketWallet.augGold99Tck;
+          baseProvider.userTicketWallet =
+          await dbProvider.updateAugmontGoldUserTicketCount(
+              baseProvider.myUser.uid,
+              baseProvider.userTicketWallet,
+              -1*baseProvider.currentAugmontTxn.ticketUpCount);
+
+          ///check if ticket count updated correctly
+          if (baseProvider.userTicketWallet.augGold99Tck == _tempCurrentCount) {
+            //ticket count did not update
+            Map<String, dynamic> _data = {
+              'txn_id': baseProvider.currentAugmontTxn.docKey,
+              'aug_tran_id': baseProvider
+                  .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
+              'note':
+              'Transaction completed, but found inconsistency while updating tickets'
+            };
+            await dbProvider.logFailure(baseProvider.myUser.uid,
+                FailType.UserAugmontWthdrwUpdateDiscrepancy, _data);
+          }
         }
 
         ///update UI and clear global variables

@@ -8,6 +8,7 @@ import 'package:felloapp/core/model/PrizeLeader.dart';
 import 'package:felloapp/core/model/ReferralLeader.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
+import 'package:felloapp/core/model/UserTicketWallet.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -35,6 +36,7 @@ class BaseUtil extends ChangeNotifier {
   LocalDBModel _lModel = locator<LocalDBModel>();
   BaseUser _myUser;
   UserFundWallet _userFundWallet;
+  UserTicketWallet _userTicketWallet;
   User firebaseUser;
   FirebaseAnalytics baseAnalytics;
   static RemoteConfig remoteConfig;
@@ -59,7 +61,6 @@ class BaseUtil extends ChangeNotifier {
   List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
   String myUserDpUrl;
-  double _estTotalWealth;
   List<UserTransaction> userMiniTxnList;
 
   DateTime _userCreationTimestamp;
@@ -124,6 +125,8 @@ class BaseUtil extends ChangeNotifier {
       if (_userFundWallet == null) _compileUserWallet();
 
       //get user ticket balance
+      _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
+      if(_userTicketWallet == null) _userTicketWallet = UserTicketWallet.newTicketWallet();
 
       //remote config for various remote variables
       await initRemoteConfig();
@@ -502,11 +505,6 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  double get estTotalWealth =>
-      toDouble(_userFundWallet.iciciBalance) +
-      toDouble(_userFundWallet.augGoldBalance) +
-      toDouble(_userFundWallet.prizeBalance);
-
   BaseUser get myUser => _myUser;
 
   set myUser(BaseUser value) {
@@ -561,4 +559,10 @@ class BaseUtil extends ChangeNotifier {
   }
 
   DateTime get userCreationTimestamp => _userCreationTimestamp;
+
+  UserTicketWallet get userTicketWallet => _userTicketWallet;
+
+  set userTicketWallet(UserTicketWallet value) {
+    _userTicketWallet = value;
+  }
 }

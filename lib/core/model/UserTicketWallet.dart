@@ -36,21 +36,12 @@ class UserTicketWallet {
       this._initTck = BaseUtil.NEW_USER_TICKET_COUNT;
       return;
     }
-    if (_isValidField(tMap[fldAugmontGoldTckCount])) {
-      _augGold99Tck = tMap[fldAugmontGoldTckCount];
-    }
-    if (_isValidField(tMap[fldICICI1565TckCount])) {
-      _icici1565Tck = tMap[fldICICI1565TckCount];
-    }
-    if (_isValidField(tMap[fldInitTckCount])) {
-      _initTck = tMap[fldInitTckCount];
-    }
-    if (_isValidField(tMap[fldPrizeRecurringTckCount])) {
-      _prizeTck = tMap[fldPrizeRecurringTckCount];
-    }
-    if (_isValidField(tMap[fldReferralRecurringTckCount])) {
-      _refTck = tMap[fldReferralRecurringTckCount];
-    }
+    _initTck = (_isValidField(tMap[fldInitTckCount]))?tMap[fldInitTckCount]:0;
+    _augGold99Tck = (_isValidField(tMap[fldAugmontGoldTckCount]))?tMap[fldAugmontGoldTckCount]:0;
+    _icici1565Tck = (_isValidField(tMap[fldICICI1565TckCount]))?tMap[fldICICI1565TckCount]:0;
+    _prizeTck = (_isValidField(tMap[fldPrizeRecurringTckCount]))?tMap[fldPrizeRecurringTckCount]:0;
+    _refTck = (_isValidField(tMap[fldReferralRecurringTckCount]))?tMap[fldReferralRecurringTckCount]:0;
+
     _buildNonRecurringTicketBalance(tMap);
     _buildLockedTicketBalance(tMap);
   }
@@ -82,36 +73,6 @@ class UserTicketWallet {
     }
 
     return _baseCount;
-  }
-
-  addTicketCount(UserTicketType ticketType, int count) {
-    switch (ticketType) {
-      case UserTicketType.AUGGOLD99:
-        {
-          this._augGold99Tck += count;
-          return;
-        }
-      case UserTicketType.ICICI1565:
-        {
-          this._icici1565Tck += count;
-          return;
-        }
-      case UserTicketType.PRIZE:
-        {
-          this._prizeTck += count;
-          return;
-        }
-      case UserTicketType.REFERRAL:
-        {
-          this._refTck += count;
-          return;
-        }
-      default:
-        {
-          this._initTck += count;
-          return;
-        }
-    }
   }
 
   ///NON RECURRING TICKET FIELD FORMAT
@@ -260,5 +221,3 @@ class LockedTicket {
 
   LockedTicket(this.type, this.tckCount);
 }
-
-enum UserTicketType { AUGGOLD99, ICICI1565, REFERRAL, PRIZE, INIT }

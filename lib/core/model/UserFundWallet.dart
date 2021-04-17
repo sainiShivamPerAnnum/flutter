@@ -57,6 +57,14 @@ class UserFundWallet {
         fldPrizeLifetimeWin: _prizeLifetimeWin,
       };
 
+
+  double getEstTotalWealth() {
+    return
+      BaseUtil.toDouble(_iciciBalance) +
+          BaseUtil.toDouble(_augGoldBalance) +
+          BaseUtil.toDouble(_prizeBalance);
+  }
+
   double get prizeLifetimeWin => _prizeLifetimeWin;
 
   set prizeLifetimeWin(double value) {

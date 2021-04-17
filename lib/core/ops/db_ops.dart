@@ -765,6 +765,16 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<UserTicketWallet> getUserTicketWallet(String id) async {
+    try {
+      var doc = await _api.getUserTicketWalletDocById(id);
+      return UserTicketWallet.fromMap(doc.data());
+    } catch (e) {
+      log.error("Error fetch UserTicketWallet failed: $e");
+      return null;
+    }
+  }
+
   Future<UserTicketWallet> updateAugmontGoldUserTicketCount(String uid,
       UserTicketWallet userTicketWallet, int count) async {
     if(userTicketWallet == null) return null;
