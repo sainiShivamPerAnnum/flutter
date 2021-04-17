@@ -260,8 +260,8 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
       setState(() {});
       return true;
     } else {
-      baseProvider.isAugDepositRouteLogicInProgress = false;
       _currentBuyRates = await augmontProvider.getRates();
+      baseProvider.isAugDepositRouteLogicInProgress = false;
       if (_currentBuyRates == null) {
         baseProvider.showNegativeAlert('Portal unavailable',
             'The current rates couldn\'t be loaded. Please try again', context);

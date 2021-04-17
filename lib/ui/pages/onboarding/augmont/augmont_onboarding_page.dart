@@ -173,6 +173,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                 child: TextFormField(
                   decoration: inputFieldDecoration('PAN Number'),
                   controller: _panInput,
+                  autofocus: false,
                   textCapitalization: TextCapitalization.characters,
                   enabled: true,
                 ),
@@ -231,6 +232,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                   keyboardType: TextInputType.name,
                   textCapitalization: TextCapitalization.characters,
                   enabled: true,
+                  autofocus: false,
                   validator: (value) {
                     return null;
                   },
@@ -245,6 +247,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                 child: TextFormField(
                   decoration: inputFieldDecoration('Your bank account number'),
                   controller: _bankAccountNumberInput,
+                  autofocus: false,
                   keyboardType: TextInputType.number,
                   enabled: true,
                   validator: (value) => null,
@@ -259,6 +262,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                 child: TextFormField(
                   decoration: inputFieldDecoration('Your bank\'s IFSC code'),
                   controller: _bankIfscInput,
+                  autofocus: false,
                   keyboardType: TextInputType.streetAddress,
                   textCapitalization: TextCapitalization.characters,
                   enabled: true,
@@ -346,7 +350,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                               'Invalid Details',
                               veriDetails['reason']??'Please try again',
                               context);
-                          baseProvider.isEditAugmontBankDetailInProgress = false;
+                          baseProvider.isAugmontRegnInProgress = false;
                           setState(() {});
                           return;
                         }
