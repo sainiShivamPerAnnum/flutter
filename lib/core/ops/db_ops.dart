@@ -8,6 +8,7 @@ import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
+import 'package:felloapp/core/model/UserTicketWallet.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/service/api.dart';
@@ -18,10 +19,12 @@ import 'package:felloapp/util/help_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:synchronized/synchronized.dart';
 
 class DBModel extends ChangeNotifier {
   Api _api = locator<Api>();
   ValueChanged<List<TambolaBoard>> userTicketsUpdated;
+  Lock _lock = new Lock();
   final Log log = new Log("DBModel");
 
   Future<bool> updateClientToken(BaseUser user, String token) async {
@@ -656,9 +659,9 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<UserFundWallet> getUserWallet(String id) async {
+  Future<UserFundWallet> getUserFundWallet(String id) async {
     try {
-      var doc = await _api.getUserWalletById(id);
+      var doc = await _api.getUserFundWalletDocById(id);
       return UserFundWallet.fromMap(doc.data());
     } catch (e) {
       log.error("Error fetch UserFundWallet failed: $e");
@@ -674,6 +677,7 @@ class DBModel extends ChangeNotifier {
     ///make a copy of the wallet object
     UserFundWallet newWalletBalance =
         UserFundWallet.fromMap(originalWalletBalance.cloneMap());
+
     ///first update icici balance
     if (changeAmount < 0 &&
         (newWalletBalance.iciciBalance + changeAmount) < 0) {
@@ -683,44 +687,25 @@ class DBModel extends ChangeNotifier {
     } else {
       newWalletBalance.iciciBalance =
           BaseUtil.digitPrecision(newWalletBalance.iciciBalance + changeAmount);
-      newWalletBalance.iciciPrinciple =
-          BaseUtil.digitPrecision(newWalletBalance.iciciPrinciple + changeAmount);
-    }
-    ///update ticket count
-    if (changeAmount < 0) {
-      //need to subtract tickets
-      int ticks =
-          ((changeAmount * -1) / BaseUtil.INVESTMENT_AMOUNT_FOR_TICKET).round();
-      newWalletBalance.currentWeekTicketCount =
-          (newWalletBalance.currentWeekTicketCount < ticks)
-              ? 0
-              : newWalletBalance.currentWeekTicketCount - ticks;
-      newWalletBalance.netTicketCount =
-          (newWalletBalance.netTicketCount < ticks)
-              ? 0
-              : newWalletBalance.netTicketCount - ticks;
-    } else {
-      //need to add tickets
-      int ticks =
-      ((changeAmount) / BaseUtil.INVESTMENT_AMOUNT_FOR_TICKET).round();
-      newWalletBalance.currentWeekTicketCount = newWalletBalance.currentWeekTicketCount + ticks;
-      newWalletBalance.netTicketCount = newWalletBalance.netTicketCount + ticks;
+      newWalletBalance.iciciPrinciple = BaseUtil.digitPrecision(
+          newWalletBalance.iciciPrinciple + changeAmount);
     }
     ///make the wallet transaction
     try {
       //only add the relevant fields to the map
       Map<String, dynamic> rMap = {
         UserFundWallet.fldIciciPrinciple: newWalletBalance.iciciPrinciple,
-        UserFundWallet.fldIciciBalance: newWalletBalance.iciciBalance,
-        UserFundWallet.fldNetTicketCount: newWalletBalance.netTicketCount,
-        UserFundWallet.fldWeekTicketCount: newWalletBalance.currentWeekTicketCount
+        UserFundWallet.fldIciciBalance: newWalletBalance.iciciBalance
       };
-      bool _flag = await _api.updateUserWalletFields(
-          id, UserFundWallet.fldIciciPrinciple, originalWalletBalance.iciciPrinciple, rMap);
+      bool _flag = await _api.updateUserFundWalletFields(
+          id,
+          UserFundWallet.fldIciciPrinciple,
+          originalWalletBalance.iciciPrinciple,
+          rMap);
       log.debug('User ICICI Balance update transaction successful: $_flag');
 
       //if transaction fails, return the old wallet summary
-      return (_flag)?newWalletBalance:originalWalletBalance;
+      return (_flag) ? newWalletBalance : originalWalletBalance;
     } catch (e) {
       log.error('Failed to update ICICI balance: $e');
       return originalWalletBalance;
@@ -731,17 +716,16 @@ class DBModel extends ChangeNotifier {
       String id,
       UserFundWallet originalWalletBalance,
       double changeAmount,
-      double totalQuantity,
-      int ticketCount
-      ) async {
+      double totalQuantity) async {
     ///make a copy of the wallet object
     UserFundWallet newWalletBalance;
-    if(originalWalletBalance == null) {
+    if (originalWalletBalance == null) {
       newWalletBalance = UserFundWallet.newWallet();
-    }else {
+    } else {
       newWalletBalance =
-      UserFundWallet.fromMap(originalWalletBalance.cloneMap());
+          UserFundWallet.fromMap(originalWalletBalance.cloneMap());
     }
+
     ///first update augmont balance
     if (changeAmount < 0 &&
         (newWalletBalance.augGoldBalance + changeAmount) < 0) {
@@ -749,47 +733,92 @@ class DBModel extends ChangeNotifier {
           'Augmont Balance: Attempted to subtract amount more than available balance');
       return originalWalletBalance;
     } else {
-      newWalletBalance.augGoldBalance =
-          BaseUtil.digitPrecision(newWalletBalance.augGoldBalance + changeAmount);
-      newWalletBalance.augGoldPrinciple =
-          BaseUtil.digitPrecision(newWalletBalance.augGoldPrinciple + changeAmount);
-      newWalletBalance.augGoldQuantity = totalQuantity; //precision already added
-    }
-    ///update ticket count
-    if (changeAmount < 0) {
-      //need to subtract tickets
-      newWalletBalance.currentWeekTicketCount =
-      (newWalletBalance.currentWeekTicketCount < ticketCount)
-          ? 0
-          : newWalletBalance.currentWeekTicketCount - ticketCount;
-      newWalletBalance.netTicketCount =
-      (newWalletBalance.netTicketCount < ticketCount)
-          ? 0
-          : newWalletBalance.netTicketCount - ticketCount;
-    } else {
-      //need to add tickets
-      newWalletBalance.currentWeekTicketCount = newWalletBalance.currentWeekTicketCount + ticketCount;
-      newWalletBalance.netTicketCount = newWalletBalance.netTicketCount + ticketCount;
+      newWalletBalance.augGoldBalance = BaseUtil.digitPrecision(
+          newWalletBalance.augGoldBalance + changeAmount);
+      newWalletBalance.augGoldPrinciple = BaseUtil.digitPrecision(
+          newWalletBalance.augGoldPrinciple + changeAmount);
+      newWalletBalance.augGoldQuantity =
+          totalQuantity; //precision already added
     }
     ///make the wallet transaction
     try {
       //only add the relevant fields to the map
       Map<String, dynamic> rMap = {
-        UserFundWallet.fldAugmontGoldPrinciple: newWalletBalance.augGoldPrinciple,
+        UserFundWallet.fldAugmontGoldPrinciple:
+            newWalletBalance.augGoldPrinciple,
         UserFundWallet.fldAugmontGoldBalance: newWalletBalance.augGoldBalance,
         UserFundWallet.fldAugmontGoldQuantity: newWalletBalance.augGoldQuantity,
-        UserFundWallet.fldNetTicketCount: newWalletBalance.netTicketCount,
-        UserFundWallet.fldWeekTicketCount: newWalletBalance.currentWeekTicketCount
       };
-      bool _flag = await _api.updateUserWalletFields(
-          id, UserFundWallet.fldAugmontGoldPrinciple, originalWalletBalance.augGoldPrinciple, rMap);
-      log.debug('User Augmont Gold Balance update transaction successful: $_flag');
+      bool _flag = await _api.updateUserFundWalletFields(
+          id,
+          UserFundWallet.fldAugmontGoldPrinciple,
+          originalWalletBalance.augGoldPrinciple,
+          rMap);
+      log.debug(
+          'User Augmont Gold Balance update transaction successful: $_flag');
 
       //if transaction fails, return the old wallet summary
-      return (_flag)?newWalletBalance:originalWalletBalance;
+      return (_flag) ? newWalletBalance : originalWalletBalance;
     } catch (e) {
       log.error('Failed to update Augmont Gold balance: $e');
       return originalWalletBalance;
+    }
+  }
+
+  Future<UserTicketWallet> updateAugmontGoldUserTicketCount(String uid,
+      UserTicketWallet userTicketWallet, int count) async {
+    if(userTicketWallet == null) return null;
+    int currentValue = userTicketWallet.augGold99Tck??0;
+    try {
+      return await _lock.synchronized(() async {
+        if(count < 0 && currentValue < count) {
+          userTicketWallet.augGold99Tck = 0;
+        }else{
+          userTicketWallet.augGold99Tck = currentValue + count;
+        }
+        Map<String, dynamic> tMap = {
+          UserTicketWallet.fldAugmontGoldTckCount: userTicketWallet.augGold99Tck
+        };
+        bool flag = await _api.updateUserTicketWalletFields(uid, UserTicketWallet.fldAugmontGoldTckCount, currentValue, tMap);
+        if(!flag){
+          //revert value back as the op failed
+          userTicketWallet.augGold99Tck = currentValue;
+        }
+        return userTicketWallet;
+      });
+    } catch (e) {
+      log.error('Failed to update the user ticket count');
+      userTicketWallet.augGold99Tck = currentValue;
+      return userTicketWallet;
+    }
+  }
+
+  Future<UserTicketWallet> updateICICIUserTicketCount(String uid,
+      UserTicketWallet userTicketWallet, int count) async {
+    if(userTicketWallet == null) return null;
+    int currentValue = userTicketWallet.icici1565Tck??0;
+    try {
+      return await _lock.synchronized(() async {
+        if(count < 0 && currentValue < count) {
+          userTicketWallet.icici1565Tck = 0;
+        }else{
+          userTicketWallet.icici1565Tck = currentValue + count;
+        }
+        Map<String, dynamic> tMap = {
+          UserTicketWallet.fldICICI1565TckCount: userTicketWallet.icici1565Tck
+        };
+        bool flag = await _api.updateUserTicketWalletFields(uid, UserTicketWallet.fldICICI1565TckCount, currentValue, tMap);
+        if(!flag){
+          //revert value back as the op failed
+          userTicketWallet.icici1565Tck = currentValue;
+        }
+        return userTicketWallet;
+      });
+    } catch (e) {
+      log.error('Failed to update the user ticket count');
+      //revert value back as the op failed
+      userTicketWallet.icici1565Tck = currentValue;
+      return userTicketWallet;
     }
   }
 

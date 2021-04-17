@@ -120,8 +120,11 @@ class BaseUtil extends ChangeNotifier {
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
     if (isUserOnboarded) {
       //get user wallet
-      _userFundWallet = await _dbModel.getUserWallet(firebaseUser.uid);
+      _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
       if (_userFundWallet == null) _compileUserWallet();
+
+      //get user ticket balance
+
       //remote config for various remote variables
       await initRemoteConfig();
       //get user creation time
@@ -484,11 +487,6 @@ class BaseUtil extends ChangeNotifier {
   _compileUserWallet() {
     _userFundWallet =
         (_userFundWallet == null) ? UserFundWallet.newWallet() : _userFundWallet;
-    if (_myUser.ticket_count > NEW_USER_TICKET_COUNT) {
-      //copy ticket count
-      _userFundWallet.currentWeekTicketCount = _myUser.ticket_count;
-      _userFundWallet.netTicketCount = _myUser.ticket_count;
-    }
     if (_myUser.isIciciOnboarded && _myUser.icici_balance > 0) {
       _userFundWallet.iciciPrinciple = _myUser.icici_balance;
       _userFundWallet.iciciBalance = _myUser.icici_balance;

@@ -29,6 +29,7 @@ dependencies:
   connectivity: ^0.4.6+2
   shared_preferences: ^0.5.7
   share: ^0.6.5+4
+  synchronized: ^3.0.0
   razorpay_flutter: ^1.2.5
   open_file: ^3.1.0 #for opening pdfs
   url_launcher: ^5.7.0

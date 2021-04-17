@@ -310,8 +310,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                 BaseUtil.toDouble(baseProvider.currentAugmontTxn
                     .augmnt[UserTransaction.subFldAugPostTaxTotal]),
                 baseProvider.currentAugmontTxn
-                    .augmnt[UserTransaction.subFldAugTotalGoldGm],
-                baseProvider.currentAugmontTxn.ticketUpCount);
+                    .augmnt[UserTransaction.subFldAugTotalGoldGm]);
 
         ///check if balance updated correctly
         if (baseProvider.userFundWallet.augGoldBalance == _tempCurrentBalance) {
@@ -439,8 +438,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                 baseProvider.userFundWallet,
                 -1 * baseProvider.currentAugmontTxn.amount,
                 baseProvider.currentAugmontTxn
-                    .augmnt[UserTransaction.subFldAugTotalGoldGm],
-                baseProvider.currentAugmontTxn.ticketUpCount);
+                    .augmnt[UserTransaction.subFldAugTotalGoldGm]);
 
         ///check if balance updated correctly
         if (baseProvider.userFundWallet.augGoldBalance == _tempCurrentBalance) {

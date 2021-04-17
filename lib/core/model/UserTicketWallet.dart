@@ -14,7 +14,7 @@ class UserTicketWallet {
   List<LockedTicket> _lockedTck;
 
   static final String fldAugmontGoldTckCount = 'gAUGGOLD99';
-  static final String fldAugmontICICI1565TckCount = 'gICICI1565';
+  static final String fldICICI1565TckCount = 'gICICI1565';
   static final String fldInitTckCount = 'gINIT';
   static final String fldPrizeRecurringTckCount = 'gPRIZE';
   static final String fldReferralRecurringTckCount = 'gREF';
@@ -39,8 +39,8 @@ class UserTicketWallet {
     if (_isValidField(tMap[fldAugmontGoldTckCount])) {
       _augGold99Tck = tMap[fldAugmontGoldTckCount];
     }
-    if (_isValidField(tMap[fldAugmontICICI1565TckCount])) {
-      _icici1565Tck = tMap[fldAugmontICICI1565TckCount];
+    if (_isValidField(tMap[fldICICI1565TckCount])) {
+      _icici1565Tck = tMap[fldICICI1565TckCount];
     }
     if (_isValidField(tMap[fldInitTckCount])) {
       _initTck = tMap[fldInitTckCount];
@@ -64,9 +64,9 @@ class UserTicketWallet {
         0 + _initTck ??
         0 + _refTck ??
         0;
-    if(_activeNRTck != null && _activeNRTck.length > 0) {
-      for(NonRecurringTicket ticketCnt in _activeNRTck) {
-        _baseCount = _baseCount + ticketCnt.tckCount??0;
+    if (_activeNRTck != null && _activeNRTck.length > 0) {
+      for (NonRecurringTicket ticketCnt in _activeNRTck) {
+        _baseCount = _baseCount + ticketCnt.tckCount ?? 0;
       }
     }
 
@@ -75,13 +75,43 @@ class UserTicketWallet {
 
   int getLockedTickets() {
     int _baseCount = 0;
-    if(_lockedTck != null && _lockedTck.length > 0) {
-      for(LockedTicket ticketCnt in _lockedTck) {
-        _baseCount = _baseCount + ticketCnt.tckCount??0;
+    if (_lockedTck != null && _lockedTck.length > 0) {
+      for (LockedTicket ticketCnt in _lockedTck) {
+        _baseCount = _baseCount + ticketCnt.tckCount ?? 0;
       }
     }
 
     return _baseCount;
+  }
+
+  addTicketCount(UserTicketType ticketType, int count) {
+    switch (ticketType) {
+      case UserTicketType.AUGGOLD99:
+        {
+          this._augGold99Tck += count;
+          return;
+        }
+      case UserTicketType.ICICI1565:
+        {
+          this._icici1565Tck += count;
+          return;
+        }
+      case UserTicketType.PRIZE:
+        {
+          this._prizeTck += count;
+          return;
+        }
+      case UserTicketType.REFERRAL:
+        {
+          this._refTck += count;
+          return;
+        }
+      default:
+        {
+          this._initTck += count;
+          return;
+        }
+    }
   }
 
   ///NON RECURRING TICKET FIELD FORMAT
@@ -230,3 +260,5 @@ class LockedTicket {
 
   LockedTicket(this.type, this.tckCount);
 }
+
+enum UserTicketType { AUGGOLD99, ICICI1565, REFERRAL, PRIZE, INIT }

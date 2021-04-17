@@ -17,10 +17,6 @@ class UserFundWallet {
   double _prizeBalance;
   double _prizeLifetimeWin;
 
-  //tickets
-  int _currentWeekTicketCount;
-  int _netTicketCount;
-
   static final String fldAugmontGoldPrinciple = 'wAugPrinciple';
   static final String fldAugmontGoldBalance = 'wAugBalance';
   static final String fldAugmontGoldQuantity = 'wAugQuantity';
@@ -28,8 +24,6 @@ class UserFundWallet {
   static final String fldIciciBalance = 'wICBalance';
   static final String fldPrizeBalance = 'wPriBalance';
   static final String fldPrizeLifetimeWin = 'wLifeTimeWin';
-  static final String fldWeekTicketCount = 'gWeekTickets';
-  static final String fldNetTicketCount = 'gNetTickets';
 
   UserFundWallet(
       this._augGoldPrinciple,
@@ -38,49 +32,30 @@ class UserFundWallet {
       this._iciciPrinciple,
       this._iciciBalance,
       this._prizeBalance,
-      this._prizeLifetimeWin,
-      this._currentWeekTicketCount,
-      this._netTicketCount);
+      this._prizeLifetimeWin);
 
-  UserFundWallet.newWallet():this(
-    0,0,0,0,0,0,0,BaseUtil.NEW_USER_TICKET_COUNT,BaseUtil.NEW_USER_TICKET_COUNT
-  );
+  UserFundWallet.newWallet() : this(0, 0, 0, 0, 0, 0, 0);
 
-  UserFundWallet.fromMap(Map<String, dynamic> data) : this(
-    BaseUtil.toDouble(data[fldAugmontGoldPrinciple]),
-    BaseUtil.toDouble(data[fldAugmontGoldBalance]),
-    BaseUtil.toDouble(data[fldAugmontGoldQuantity]),
-    BaseUtil.toDouble(data[fldIciciPrinciple]),
-    BaseUtil.toDouble(data[fldIciciBalance]),
-    BaseUtil.toDouble(data[fldPrizeBalance]),
-    BaseUtil.toDouble(data[fldPrizeLifetimeWin]),
-    BaseUtil.toInt(data[fldWeekTicketCount]),
-    BaseUtil.toInt(data[fldNetTicketCount]),
-  );
+  UserFundWallet.fromMap(Map<String, dynamic> data)
+      : this(
+          BaseUtil.toDouble(data[fldAugmontGoldPrinciple]),
+          BaseUtil.toDouble(data[fldAugmontGoldBalance]),
+          BaseUtil.toDouble(data[fldAugmontGoldQuantity]),
+          BaseUtil.toDouble(data[fldIciciPrinciple]),
+          BaseUtil.toDouble(data[fldIciciBalance]),
+          BaseUtil.toDouble(data[fldPrizeBalance]),
+          BaseUtil.toDouble(data[fldPrizeLifetimeWin]),
+        );
 
   Map<String, dynamic> cloneMap() => {
-    fldAugmontGoldPrinciple: _augGoldPrinciple,
-    fldAugmontGoldBalance: _augGoldBalance,
-    fldAugmontGoldQuantity: _augGoldQuantity,
-    fldIciciPrinciple: _iciciPrinciple,
-    fldIciciBalance: _iciciBalance,
-    fldPrizeBalance: _prizeBalance,
-    fldPrizeLifetimeWin: _prizeLifetimeWin,
-    fldWeekTicketCount: _currentWeekTicketCount,
-    fldNetTicketCount: _netTicketCount
-  };
-
-  int get netTicketCount => _netTicketCount;
-
-  set netTicketCount(int value) {
-    _netTicketCount = value;
-  }
-
-  int get currentWeekTicketCount => _currentWeekTicketCount;
-
-  set currentWeekTicketCount(int value) {
-    _currentWeekTicketCount = value;
-  }
+        fldAugmontGoldPrinciple: _augGoldPrinciple,
+        fldAugmontGoldBalance: _augGoldBalance,
+        fldAugmontGoldQuantity: _augGoldQuantity,
+        fldIciciPrinciple: _iciciPrinciple,
+        fldIciciBalance: _iciciBalance,
+        fldPrizeBalance: _prizeBalance,
+        fldPrizeLifetimeWin: _prizeLifetimeWin,
+      };
 
   double get prizeLifetimeWin => _prizeLifetimeWin;
 

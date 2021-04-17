@@ -35,7 +35,7 @@ class _FinancePageState extends State<FinancePage> {
 
   _refresh() {
     //TODO ADD LOADER
-    dbProvider.getUserWallet(baseProvider.myUser.uid).then((value) {
+    dbProvider.getUserFundWallet(baseProvider.myUser.uid).then((value) {
       if(value != null) baseProvider.userFundWallet = value;
       setState(() {});
     });
