@@ -29,7 +29,8 @@ class Constants {
   static final String DOC_USER_ICICI_DETAIL = "detail";
   static final String DOC_USER_KYC_DETAIL = "detail";
   static final String DOC_USER_AUGMONT_DETAIL = "detail";
-  static final String DOC_USER_WALLET_BALANCE = "balance";
+  static final String DOC_USER_WALLET_FUND_BALANCE = "fndbalance";
+  static final String DOC_USER_WALLET_TICKET_BALANCE = "tckbalance";
 
   static const int CORNERS_COMPLETED = 0;
   static const int ROW_ONE_COMPLETED = 1;

@@ -9,7 +9,7 @@ import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
-import 'package:felloapp/core/model/UserWallet.dart';
+import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
@@ -656,24 +656,24 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<UserWallet> getUserWallet(String id) async {
+  Future<UserFundWallet> getUserWallet(String id) async {
     try {
       var doc = await _api.getUserWalletById(id);
-      return UserWallet.fromMap(doc.data());
+      return UserFundWallet.fromMap(doc.data());
     } catch (e) {
-      log.error("Error fetch UserWallet failed: $e");
+      log.error("Error fetch UserFundWallet failed: $e");
       return null;
     }
   }
 
-  Future<UserWallet> updateUserIciciBalance(
+  Future<UserFundWallet> updateUserIciciBalance(
     String id,
-    UserWallet originalWalletBalance,
+    UserFundWallet originalWalletBalance,
     double changeAmount,
   ) async {
     ///make a copy of the wallet object
-    UserWallet newWalletBalance =
-        UserWallet.fromMap(originalWalletBalance.cloneMap());
+    UserFundWallet newWalletBalance =
+        UserFundWallet.fromMap(originalWalletBalance.cloneMap());
     ///first update icici balance
     if (changeAmount < 0 &&
         (newWalletBalance.iciciBalance + changeAmount) < 0) {
@@ -710,13 +710,13 @@ class DBModel extends ChangeNotifier {
     try {
       //only add the relevant fields to the map
       Map<String, dynamic> rMap = {
-        UserWallet.fldIciciPrinciple: newWalletBalance.iciciPrinciple,
-        UserWallet.fldIciciBalance: newWalletBalance.iciciBalance,
-        UserWallet.fldNetTicketCount: newWalletBalance.netTicketCount,
-        UserWallet.fldWeekTicketCount: newWalletBalance.currentWeekTicketCount
+        UserFundWallet.fldIciciPrinciple: newWalletBalance.iciciPrinciple,
+        UserFundWallet.fldIciciBalance: newWalletBalance.iciciBalance,
+        UserFundWallet.fldNetTicketCount: newWalletBalance.netTicketCount,
+        UserFundWallet.fldWeekTicketCount: newWalletBalance.currentWeekTicketCount
       };
       bool _flag = await _api.updateUserWalletFields(
-          id, UserWallet.fldIciciPrinciple, originalWalletBalance.iciciPrinciple, rMap);
+          id, UserFundWallet.fldIciciPrinciple, originalWalletBalance.iciciPrinciple, rMap);
       log.debug('User ICICI Balance update transaction successful: $_flag');
 
       //if transaction fails, return the old wallet summary
@@ -727,20 +727,20 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<UserWallet> updateUserAugmontGoldBalance(
+  Future<UserFundWallet> updateUserAugmontGoldBalance(
       String id,
-      UserWallet originalWalletBalance,
+      UserFundWallet originalWalletBalance,
       double changeAmount,
       double totalQuantity,
       int ticketCount
       ) async {
     ///make a copy of the wallet object
-    UserWallet newWalletBalance;
+    UserFundWallet newWalletBalance;
     if(originalWalletBalance == null) {
-      newWalletBalance = UserWallet.newWallet();
+      newWalletBalance = UserFundWallet.newWallet();
     }else {
       newWalletBalance =
-      UserWallet.fromMap(originalWalletBalance.cloneMap());
+      UserFundWallet.fromMap(originalWalletBalance.cloneMap());
     }
     ///first update augmont balance
     if (changeAmount < 0 &&
@@ -775,14 +775,14 @@ class DBModel extends ChangeNotifier {
     try {
       //only add the relevant fields to the map
       Map<String, dynamic> rMap = {
-        UserWallet.fldAugmontGoldPrinciple: newWalletBalance.augGoldPrinciple,
-        UserWallet.fldAugmontGoldBalance: newWalletBalance.augGoldBalance,
-        UserWallet.fldAugmontGoldQuantity: newWalletBalance.augGoldQuantity,
-        UserWallet.fldNetTicketCount: newWalletBalance.netTicketCount,
-        UserWallet.fldWeekTicketCount: newWalletBalance.currentWeekTicketCount
+        UserFundWallet.fldAugmontGoldPrinciple: newWalletBalance.augGoldPrinciple,
+        UserFundWallet.fldAugmontGoldBalance: newWalletBalance.augGoldBalance,
+        UserFundWallet.fldAugmontGoldQuantity: newWalletBalance.augGoldQuantity,
+        UserFundWallet.fldNetTicketCount: newWalletBalance.netTicketCount,
+        UserFundWallet.fldWeekTicketCount: newWalletBalance.currentWeekTicketCount
       };
       bool _flag = await _api.updateUserWalletFields(
-          id, UserWallet.fldAugmontGoldPrinciple, originalWalletBalance.augGoldPrinciple, rMap);
+          id, UserFundWallet.fldAugmontGoldPrinciple, originalWalletBalance.augGoldPrinciple, rMap);
       log.debug('User Augmont Gold Balance update transaction successful: $_flag');
 
       //if transaction fails, return the old wallet summary

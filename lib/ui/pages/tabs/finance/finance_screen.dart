@@ -27,32 +27,32 @@ class _FinancePageState extends State<FinancePage> {
 
   Map<String, double> getChartMap() {
     return {
-      "ICICI Balance": baseProvider.myUserWallet.iciciBalance,
-      "Augmont Balance": baseProvider.myUserWallet.augGoldBalance,
-      "Prize Balance": baseProvider.myUserWallet.prizeBalance,
+      "ICICI Balance": baseProvider.userFundWallet.iciciBalance,
+      "Augmont Balance": baseProvider.userFundWallet.augGoldBalance,
+      "Prize Balance": baseProvider.userFundWallet.prizeBalance,
     };
   }
 
   _refresh() {
     //TODO ADD LOADER
     dbProvider.getUserWallet(baseProvider.myUser.uid).then((value) {
-      if(value != null) baseProvider.myUserWallet = value;
+      if(value != null) baseProvider.userFundWallet = value;
       setState(() {});
     });
   }
 
   _updateAugmontBalance() async {
     if (augmontProvider == null ||
-        (baseProvider.myUserWallet.augGoldQuantity == 0 &&
-            baseProvider.myUserWallet.augGoldBalance == 0)) return;
+        (baseProvider.userFundWallet.augGoldQuantity == 0 &&
+            baseProvider.userFundWallet.augGoldBalance == 0)) return;
     augmontProvider.getRates().then((currRates) {
       if (currRates == null || currRates.goldSellPrice == null) return;
 
       // double gBuyRate = currRates.goldBuyPrice;
       double gSellRate = currRates.goldSellPrice;
-      if (baseProvider.myUserWallet.augGoldQuantity == 0) return;
-      baseProvider.myUserWallet.augGoldBalance =
-          (baseProvider.myUserWallet.augGoldQuantity * gSellRate).roundToDouble();
+      if (baseProvider.userFundWallet.augGoldQuantity == 0) return;
+      baseProvider.userFundWallet.augGoldBalance =
+          (baseProvider.userFundWallet.augGoldQuantity * gSellRate).roundToDouble();
       setState(() {}); //might cause ui error if screen no longer active
     }).catchError((err) {
       print('$err');

@@ -76,7 +76,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                       FundInfo(),
                       FundGraph(),
                       FundDetailsTable(
-                          baseProvider.myUserWallet.augGoldQuantity),
+                          baseProvider.userFundWallet.augGoldQuantity),
                       GoldProfitCalculator(),
                       FAQCard(Assets.goldFaqHeaders, Assets.goldFaqAnswers),
                       _buildBetaWithdrawButton(),
@@ -302,11 +302,11 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                 .augmnt[UserTransaction.subFldAugPostTaxTotal]);
 
         ///update user wallet object account balance and ticket count
-        double _tempCurrentBalance = baseProvider.myUserWallet.augGoldBalance;
-        baseProvider.myUserWallet =
+        double _tempCurrentBalance = baseProvider.userFundWallet.augGoldBalance;
+        baseProvider.userFundWallet =
             await dbProvider.updateUserAugmontGoldBalance(
                 baseProvider.myUser.uid,
-                baseProvider.myUserWallet,
+                baseProvider.userFundWallet,
                 BaseUtil.toDouble(baseProvider.currentAugmontTxn
                     .augmnt[UserTransaction.subFldAugPostTaxTotal]),
                 baseProvider.currentAugmontTxn
@@ -314,7 +314,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                 baseProvider.currentAugmontTxn.ticketUpCount);
 
         ///check if balance updated correctly
-        if (baseProvider.myUserWallet.augGoldBalance == _tempCurrentBalance) {
+        if (baseProvider.userFundWallet.augGoldBalance == _tempCurrentBalance) {
           //wallet balance was not updated. Transaction update failed
           Map<String, dynamic> _data = {
             'txn_id': baseProvider.currentAugmontTxn.docKey,
@@ -361,8 +361,8 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     if (!baseProvider.myUser.isAugmontOnboarded) {
       baseProvider.showNegativeAlert(
           'Not onboarded', 'You havent been onboarded to Augmont yet', context);
-    } else if (baseProvider.myUserWallet.augGoldBalance == null ||
-        baseProvider.myUserWallet.augGoldBalance == 0) {
+    } else if (baseProvider.userFundWallet.augGoldBalance == null ||
+        baseProvider.userFundWallet.augGoldBalance == 0) {
       baseProvider.showNegativeAlert('No balance',
           'Your Augmont wallet has no balance presently', context);
     } else {
@@ -432,18 +432,18 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
             baseProvider.myUser.uid, baseProvider.currentAugmontTxn);
 
         ///update user wallet balance
-        double _tempCurrentBalance = baseProvider.myUserWallet.augGoldBalance;
-        baseProvider.myUserWallet =
+        double _tempCurrentBalance = baseProvider.userFundWallet.augGoldBalance;
+        baseProvider.userFundWallet =
             await dbProvider.updateUserAugmontGoldBalance(
                 baseProvider.myUser.uid,
-                baseProvider.myUserWallet,
+                baseProvider.userFundWallet,
                 -1 * baseProvider.currentAugmontTxn.amount,
                 baseProvider.currentAugmontTxn
                     .augmnt[UserTransaction.subFldAugTotalGoldGm],
                 baseProvider.currentAugmontTxn.ticketUpCount);
 
         ///check if balance updated correctly
-        if (baseProvider.myUserWallet.augGoldBalance == _tempCurrentBalance) {
+        if (baseProvider.userFundWallet.augGoldBalance == _tempCurrentBalance) {
           //wallet balance was not updated. Transaction update failed
           Map<String, dynamic> _data = {
             'txn_id': baseProvider.currentAugmontTxn.docKey,

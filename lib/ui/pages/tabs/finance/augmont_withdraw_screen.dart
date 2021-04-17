@@ -164,13 +164,13 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                       height: 5,
                     )
                   : Container(),
-              (!_isLoading)?_buildRow('Total Gold Owned: ', '${baseProvider.myUserWallet.augGoldQuantity.toStringAsFixed(4)} grams'):Container(),
+              (!_isLoading)?_buildRow('Total Gold Owned: ', '${baseProvider.userFundWallet.augGoldQuantity.toStringAsFixed(4)} grams'):Container(),
               (!_isLoading)
                   ? SizedBox(
                       height: 5,
                     )
                   : Container(),
-              (!_isLoading)?_buildRow('Total value of Gold Owned: ', '${baseProvider.myUserWallet.augGoldQuantity.toStringAsFixed(4)} * ${widget.sellRate} = ₹${_getTotalGoldOwned().toStringAsFixed(3)}'):Container(),
+              (!_isLoading)?_buildRow('Total value of Gold Owned: ', '${baseProvider.userFundWallet.augGoldQuantity.toStringAsFixed(4)} * ${widget.sellRate} = ₹${_getTotalGoldOwned().toStringAsFixed(3)}'):Container(),
               (!_isLoading)
                   ? SizedBox(
                       height: 30,
@@ -266,8 +266,8 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
 
   double _getTotalGoldOwned() {
     if (widget.sellRate != null &&
-        baseProvider.myUserWallet.augGoldQuantity != null) {
-      double _net = widget.sellRate * baseProvider.myUserWallet.augGoldQuantity;
+        baseProvider.userFundWallet.augGoldQuantity != null) {
+      double _net = widget.sellRate * baseProvider.userFundWallet.augGoldQuantity;
       return _net;
     }
     return 0;

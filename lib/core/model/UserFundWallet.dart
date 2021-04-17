@@ -1,8 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/logger.dart';
 
-class UserWallet {
-  static Log log = new Log('UserWallet');
+class UserFundWallet {
+  static Log log = new Log('UserFundWallet');
 
   //augmont
   double _augGoldPrinciple;
@@ -15,7 +15,6 @@ class UserWallet {
 
   //prizes
   double _prizeBalance;
-  double _lockedPrizeBalance;
   double _prizeLifetimeWin;
 
   //tickets
@@ -32,7 +31,7 @@ class UserWallet {
   static final String fldWeekTicketCount = 'gWeekTickets';
   static final String fldNetTicketCount = 'gNetTickets';
 
-  UserWallet(
+  UserFundWallet(
       this._augGoldPrinciple,
       this._augGoldBalance,
       this._augGoldQuantity,
@@ -43,11 +42,11 @@ class UserWallet {
       this._currentWeekTicketCount,
       this._netTicketCount);
 
-  UserWallet.newWallet():this(
+  UserFundWallet.newWallet():this(
     0,0,0,0,0,0,0,BaseUtil.NEW_USER_TICKET_COUNT,BaseUtil.NEW_USER_TICKET_COUNT
   );
 
-  UserWallet.fromMap(Map<String, dynamic> data) : this(
+  UserFundWallet.fromMap(Map<String, dynamic> data) : this(
     BaseUtil.toDouble(data[fldAugmontGoldPrinciple]),
     BaseUtil.toDouble(data[fldAugmontGoldBalance]),
     BaseUtil.toDouble(data[fldAugmontGoldQuantity]),

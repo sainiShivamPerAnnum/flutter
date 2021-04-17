@@ -255,7 +255,7 @@ class Api {
         .collection(Constants.COLN_USERS)
         .doc(id)
         .collection(Constants.SUBCOLN_USER_WALLET);
-    return ref.doc(Constants.DOC_USER_WALLET_BALANCE).get();
+    return ref.doc(Constants.DOC_USER_WALLET_FUND_BALANCE).get();
   }
 
   Future<bool> updateUserWalletFields(
@@ -264,7 +264,7 @@ class Api {
         .collection(Constants.COLN_USERS)
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_WALLET)
-        .doc(Constants.DOC_USER_WALLET_BALANCE);
+        .doc(Constants.DOC_USER_WALLET_FUND_BALANCE);
     return _db
         .runTransaction((transaction) async {
           DocumentSnapshot snapshot = await transaction.get(_docRef);

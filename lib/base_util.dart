@@ -9,7 +9,7 @@ import 'package:felloapp/core/model/ReferralLeader.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
-import 'package:felloapp/core/model/UserWallet.dart';
+import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
@@ -34,7 +34,7 @@ class BaseUtil extends ChangeNotifier {
   DBModel _dbModel = locator<DBModel>();
   LocalDBModel _lModel = locator<LocalDBModel>();
   BaseUser _myUser;
-  UserWallet _myUserWallet;
+  UserFundWallet _userFundWallet;
   User firebaseUser;
   FirebaseAnalytics baseAnalytics;
   static RemoteConfig remoteConfig;
@@ -120,8 +120,8 @@ class BaseUtil extends ChangeNotifier {
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
     if (isUserOnboarded) {
       //get user wallet
-      _myUserWallet = await _dbModel.getUserWallet(firebaseUser.uid);
-      if (_myUserWallet == null) _compileUserWallet();
+      _userFundWallet = await _dbModel.getUserWallet(firebaseUser.uid);
+      if (_userFundWallet == null) _compileUserWallet();
       //remote config for various remote variables
       await initRemoteConfig();
       //get user creation time
@@ -426,16 +426,16 @@ class BaseUtil extends ChangeNotifier {
   }
 
   int getUpdatedWithdrawalClosingBalance(double investment) =>
-      (toDouble(_myUserWallet.iciciBalance) +
-              toDouble(_myUserWallet.augGoldBalance) +
-              toDouble(_myUserWallet.prizeBalance) -
+      (toDouble(_userFundWallet.iciciBalance) +
+              toDouble(_userFundWallet.augGoldBalance) +
+              toDouble(_userFundWallet.prizeBalance) -
               investment)
           .round();
 
   int getUpdatedClosingBalance(double investment) => (investment +
-          toDouble(_myUserWallet.iciciBalance) +
-          toDouble(_myUserWallet.augGoldBalance) +
-          toDouble(_myUserWallet.prizeBalance))
+          toDouble(_userFundWallet.iciciBalance) +
+          toDouble(_userFundWallet.augGoldBalance) +
+          toDouble(_userFundWallet.prizeBalance))
       .round();
 
   static T _cast<T>(x) => x is T ? x : null;
@@ -482,32 +482,32 @@ class BaseUtil extends ChangeNotifier {
   //the new wallet logic will be empty for old user.
   //this method will copy the old values to the new wallet
   _compileUserWallet() {
-    _myUserWallet =
-        (_myUserWallet == null) ? UserWallet.newWallet() : _myUserWallet;
+    _userFundWallet =
+        (_userFundWallet == null) ? UserFundWallet.newWallet() : _userFundWallet;
     if (_myUser.ticket_count > NEW_USER_TICKET_COUNT) {
       //copy ticket count
-      _myUserWallet.currentWeekTicketCount = _myUser.ticket_count;
-      _myUserWallet.netTicketCount = _myUser.ticket_count;
+      _userFundWallet.currentWeekTicketCount = _myUser.ticket_count;
+      _userFundWallet.netTicketCount = _myUser.ticket_count;
     }
     if (_myUser.isIciciOnboarded && _myUser.icici_balance > 0) {
-      _myUserWallet.iciciPrinciple = _myUser.icici_balance;
-      _myUserWallet.iciciBalance = _myUser.icici_balance;
+      _userFundWallet.iciciPrinciple = _myUser.icici_balance;
+      _userFundWallet.iciciBalance = _myUser.icici_balance;
     }
     if (_myUser.isAugmontOnboarded && _myUser.augmont_balance > 0) {
-      _myUserWallet.augGoldPrinciple = _myUser.augmont_balance;
-      _myUserWallet.augGoldBalance = _myUser.augmont_balance;
-      _myUserWallet.augGoldQuantity = _myUser.augmont_quantity;
+      _userFundWallet.augGoldPrinciple = _myUser.augmont_balance;
+      _userFundWallet.augGoldBalance = _myUser.augmont_balance;
+      _userFundWallet.augGoldQuantity = _myUser.augmont_quantity;
     }
     if (_myUser.prize_balance != null && _myUser.prize_balance > 0) {
-      _myUserWallet.prizeBalance = _myUser.prize_balance + 0.0;
-      _myUserWallet.prizeLifetimeWin = _myUser.lifetime_winnings + 0.0;
+      _userFundWallet.prizeBalance = _myUser.prize_balance + 0.0;
+      _userFundWallet.prizeLifetimeWin = _myUser.lifetime_winnings + 0.0;
     }
   }
 
   double get estTotalWealth =>
-      toDouble(_myUserWallet.iciciBalance) +
-      toDouble(_myUserWallet.augGoldBalance) +
-      toDouble(_myUserWallet.prizeBalance);
+      toDouble(_userFundWallet.iciciBalance) +
+      toDouble(_userFundWallet.augGoldBalance) +
+      toDouble(_userFundWallet.prizeBalance);
 
   BaseUser get myUser => _myUser;
 
@@ -515,10 +515,10 @@ class BaseUtil extends ChangeNotifier {
     _myUser = value;
   }
 
-  UserWallet get myUserWallet => _myUserWallet;
+  UserFundWallet get userFundWallet => _userFundWallet;
 
-  set myUserWallet(UserWallet value) {
-    _myUserWallet = value;
+  set userFundWallet(UserFundWallet value) {
+    _userFundWallet = value;
   }
 
   UserIciciDetail get iciciDetail => _iciciDetail;
