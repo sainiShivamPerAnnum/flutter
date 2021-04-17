@@ -130,7 +130,12 @@ class GetInvoice{
   static const PDF_KEY_HSN = 'HSN';
   static const PDF_KEY_QUANTITY = 'QUANTITY';
   static const PDF_KEY_INVOICEDATE = 'INVDATE';
+  static const PDF_KEY_CGST = 'CGST';
+  static const PDF_KEY_SGST = 'SGST';
+  static const PDF_KEY_IGST = 'IGST';
+  static const PDF_KEY_CGST_AMOUNT = 'CGSTAMT';
+  static const PDF_KEY_SGST_AMOUNT = 'SGSTAMT';
+  static const PDF_KEY_IGST_AMOUNT = 'IGSTAMT';
+  static const PDF_KEY_PRETAX_SUBTOTAL = 'PRETAX';
   static const PDF_KEY_AMOUNT = 'AMT';
-  static const PDF_KEY_TAXES = 'TAX';
-  static const PDF_KEY_SUBTOTAL = 'SUBTOTAL';
 }

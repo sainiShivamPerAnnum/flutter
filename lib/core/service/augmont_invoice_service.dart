@@ -57,12 +57,25 @@ class AugmontInvoiceService {
           _makeKey(GetInvoice.PDF_KEY_RATE), data[GetInvoice.resRate] ?? 'N/A');
       _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_HSN),
           data[GetInvoice.resHsnCode] ?? 'N/A');
+      //tax keys
+      _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_CGST),
+          data['taxes']['taxSplit'][0]['taxPerc'] ?? 'N/A');
+      _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_SGST),
+          data['taxes']['taxSplit'][1]['taxPerc'] ?? 'N/A');
+      _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_IGST),
+          data['taxes']['taxSplit'][2]['taxPerc'] ?? 'N/A');
+      //tax value
+      _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_CGST_AMOUNT),
+          data['taxes']['taxSplit'][0]['taxAmount'] ?? 'N/A');
+      _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_SGST_AMOUNT),
+          data['taxes']['taxSplit'][1]['taxAmount'] ?? 'N/A');
+      _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_IGST_AMOUNT),
+          data['taxes']['taxSplit'][2]['taxAmount'] ?? 'N/A');
+      //
       _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_AMOUNT),
           data[GetInvoice.resAmount] ?? 'N/A');
-      _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_SUBTOTAL),
+      _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_PRETAX_SUBTOTAL),
           data[GetInvoice.resSubtotal] ?? 'N/A');
-      _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_TAXES),
-          data['taxes']['totalTaxAmount'] ?? 'N/A');
 
       return _content;
     } catch (e) {
