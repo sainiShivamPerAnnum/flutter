@@ -254,19 +254,8 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
           context,
           MaterialPageRoute(
               builder: (context) => AugmontOnboarding(
-                  key: _onboardingKey,
-                  onSubmit: (Map<String, String> aData) {
-                    String aPan = aData['pan_number'];
-                    String aStateId = aData['state_id'];
-                    String aBankHolderName = aData['bank_holder_name'];
-                    String aBankAccNo = aData['bank_acc_no'];
-                    String aBankIfsc = aData['bank_ifsc'];
-                    _registerAugmontUser(aPan, aStateId, aBankHolderName,
-                            aBankAccNo, aBankIfsc)
-                        .then((resMap) {
-                      _onboardingKey.currentState.regnComplete(resMap);
-                    });
-                  })));
+                    key: _onboardingKey,
+                  )));
       baseProvider.isAugDepositRouteLogicInProgress = false;
       setState(() {});
       return true;
@@ -298,69 +287,6 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
       }
     }
     return true;
-  }
-
-  Future<Map<String, dynamic>> _registerAugmontUser(
-      String aPan,
-      String aStateId,
-      String aBankHolderName,
-      String aBankAccNo,
-      String aIfsc) async {
-    bool _flag = true;
-    String _reason = '';
-    if (aPan == null ||
-        aPan.isEmpty ||
-        aStateId == null ||
-        aStateId.isEmpty ||
-        aIfsc == null ||
-        aIfsc.isEmpty) {
-      return {'flag': false, 'reason': 'Insufficient details'};
-    }
-
-    if (!iProvider.isInit()) await iProvider.init();
-
-    ///test pan number using icici api
-    var kObj = await iProvider.getKycStatus(aPan);
-    if (kObj == null ||
-        kObj[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
-        kObj[GetKycStatus.resStatus] == null ||
-        kObj[GetKycStatus.resName] == null ||
-        kObj[GetKycStatus.resName] == '') {
-      log.error('Couldnt fetch an appropriate response');
-      _flag = false;
-      _reason = 'Invalid PAN Number';
-    }
-    if (!_flag) {
-      return {'flag': _flag, 'reason': _reason};
-    }
-
-    ///test ifsc code using icici api
-    var bankDetail = await iProvider.getBankInfo(aPan, aIfsc);
-    if (bankDetail == null ||
-        bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
-        bankDetail[GetBankDetail.resBankName] == null) {
-      log.error('Couldnt fetch an appropriate response');
-      _flag = false;
-      _reason = 'Invalid IFSC Code';
-    }
-    if (!_flag) {
-      return {'flag': _flag, 'reason': _reason};
-    }
-
-    ///create user using augmont api
-    UserAugmontDetail detail = await augmontProvider.createUser(
-        baseProvider.myUser.mobile,
-        aPan,
-        aStateId,
-        aBankHolderName,
-        aBankAccNo,
-        aIfsc);
-    if (detail == null) {
-      _flag = false;
-      _reason = 'Failed to register at the moment. Please try again.';
-    }
-
-    return {'flag': _flag, 'reason': _reason};
   }
 
   Future<void> _onDepositTransactionComplete(UserTransaction txn) async {

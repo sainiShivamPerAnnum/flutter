@@ -93,6 +93,9 @@ class AugmontModel extends ChangeNotifier {
       _baseProvider.augmontDetail = UserAugmontDetail.newUser(
           _uid, _uname, stateId, bankHolderName, bankAccNo, ifsc);
       _baseProvider.myUser.isAugmontOnboarded = true;
+      if (_baseProvider.myUser.pan == null ||
+          _baseProvider.myUser.pan.isEmpty ||
+          _baseProvider.myUser.pan != pan) _baseProvider.myUser.pan = pan;
       await _dbModel.updateUserAugmontDetails(
           _baseProvider.myUser.uid, _baseProvider.augmontDetail);
       await _dbModel.updateUser(_baseProvider.myUser);
@@ -450,12 +453,14 @@ class AugmontModel extends ChangeNotifier {
   }
 
   double getAmountPostTax(double amount, double taxRate) {
-    double totalTax = BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
+    double totalTax =
+        BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
     return BaseUtil.digitPrecision(amount - totalTax);
   }
 
   double getGoldQuantityFromAmount(double amount, double rate, double taxRate) {
-    double totalTax = BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
+    double totalTax =
+        BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
     double taxDeducted = BaseUtil.digitPrecision(amount - totalTax);
 
     return BaseUtil.digitPrecision((taxDeducted / rate), 4, false);
@@ -465,6 +470,4 @@ class AugmontModel extends ChangeNotifier {
     double qnt = amount / rate;
     return BaseUtil.digitPrecision(qnt, 4, false);
   }
-
-
 }

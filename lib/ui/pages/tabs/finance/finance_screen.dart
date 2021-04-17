@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
 import 'package:felloapp/util/logger.dart';
@@ -21,6 +22,7 @@ class _FinancePageState extends State<FinancePage> {
   final bool hasFund = true;
   BaseUtil baseProvider;
   AugmontModel augmontProvider;
+  DBModel dbProvider;
   Map<String, double> chartData;
 
   Map<String, double> getChartMap() {
@@ -31,8 +33,12 @@ class _FinancePageState extends State<FinancePage> {
     };
   }
 
-  refresh() {
-    setState(() {});
+  _refresh() {
+    //TODO ADD LOADER
+    dbProvider.getUserWallet(baseProvider.myUser.uid).then((value) {
+      if(value != null) baseProvider.myUserWallet = value;
+      setState(() {});
+    });
   }
 
   _updateAugmontBalance() async {
@@ -63,6 +69,7 @@ class _FinancePageState extends State<FinancePage> {
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     if (!baseProvider.isAugmontRealTimeBalanceFetched) {
       _updateAugmontBalance();
@@ -71,7 +78,7 @@ class _FinancePageState extends State<FinancePage> {
     chartData = getChartMap();
     return RefreshIndicator(
       onRefresh: () async {
-        setState(() {});
+        _refresh();
       },
       child: Container(
         height: SizeConfig.screenHeight,

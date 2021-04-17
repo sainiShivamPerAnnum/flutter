@@ -67,7 +67,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
         ),
       ),
       body: Container(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(10),
         child: dialogContent(context),
       ),
     );
@@ -86,7 +86,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Padding(
-          padding: EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
+          padding: EdgeInsets.only(top: 10, bottom: 0, left: 10, right: 10),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -158,72 +158,22 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
               SizedBox(
                 height: 10,
               ),
-              (!_isLoading)
-                  ? Padding(
-                      padding: const EdgeInsets.all(0),
-                      child: RichText(
-                        text: TextSpan(
-                            text: 'Current Gold Selling Rate: ',
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: '₹${widget.sellRate} per gram',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ]),
-                      ))
-                  : Container(),
+              (!_isLoading)?_buildRow('Current Gold Selling Rate: ', '₹${widget.sellRate} per gram'):Container(),
               (!_isLoading)
                   ? SizedBox(
                       height: 5,
                     )
                   : Container(),
-              (!_isLoading)
-                  ? Padding(
-                      padding: const EdgeInsets.all(0),
-                      child: RichText(
-                        text: TextSpan(
-                            text: "Total Gold Owned: ",
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                            children: [
-                              TextSpan(
-                                text:
-                                    '${baseProvider.myUserWallet.augGoldQuantity.toStringAsFixed(4)} grams',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ]),
-                      ))
-                  : Container(),
+              (!_isLoading)?_buildRow('Total Gold Owned: ', '${baseProvider.myUserWallet.augGoldQuantity.toStringAsFixed(4)} grams'):Container(),
               (!_isLoading)
                   ? SizedBox(
                       height: 5,
                     )
                   : Container(),
-              (!_isLoading)
-                  ? Padding(
-                      padding: const EdgeInsets.all(0),
-                      child: RichText(
-                        text: TextSpan(
-                            text: 'Total value of Gold owned: ',
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                            children: [
-                              TextSpan(
-                                text:
-                                    '${baseProvider.myUserWallet.augGoldQuantity.toStringAsFixed(4)} * ${widget.sellRate} = ₹${_getTotalGoldOwned().toStringAsFixed(3)}',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ]),
-                      ))
-                  : Container(),
+              (!_isLoading)?_buildRow('Total value of Gold Owned: ', '${baseProvider.myUserWallet.augGoldQuantity.toStringAsFixed(4)} * ${widget.sellRate} = ₹${_getTotalGoldOwned().toStringAsFixed(3)}'):Container(),
               (!_isLoading)
                   ? SizedBox(
-                      height: 20,
+                      height: 30,
                     )
                   : Container(),
               (!_isLoading)
@@ -237,6 +187,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                               keyboardType: TextInputType.number,
                               readOnly: false,
                               enabled: true,
+                              autofocus: false,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 labelText: 'Amount',
@@ -406,6 +357,33 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
         ),
         color: Colors.transparent,
         borderRadius: new BorderRadius.circular(20.0),
+      ),
+    );
+  }
+
+  _buildRow(String title, String value) {
+    return ListTile(
+      title: Container(
+        width: SizeConfig.screenWidth * 0.2,
+        child: Text(
+          '$title: ',
+          style: GoogleFonts.montserrat(
+            color: UiConstants.accentColor,
+            fontSize: SizeConfig.mediumTextSize,
+          ),
+        ),
+      ),
+      trailing: Container(
+        width: SizeConfig.screenWidth * 0.4,
+        child: Text(
+          value,
+          overflow: TextOverflow.clip,
+          style: GoogleFonts.montserrat(
+            color: Colors.black54,
+            fontSize: SizeConfig.mediumTextSize,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }

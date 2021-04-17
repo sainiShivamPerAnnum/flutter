@@ -1,13 +1,10 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +15,7 @@ class AugmontConfirmRegnDialog extends StatefulWidget {
   final String bankName;
   final String bankIfsc;
   final String bankHolderName;
+  final String bankBranchName;
   final Function onAccept;
   final Function onReject;
 
@@ -28,6 +26,7 @@ class AugmontConfirmRegnDialog extends StatefulWidget {
       this.bankName,
       this.bankIfsc,
       this.bankHolderName,
+      this.bankBranchName,
       this.onAccept,
       this.onReject});
 
@@ -108,6 +107,7 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                     _buildRow(
                         'Name of Bank account holder', widget.bankHolderName),
                     _buildRow('Name of Bank', widget.bankName),
+                    _buildRow('Bank Branch Name', widget.bankBranchName),
                     _buildRow('Bank IFSC', widget.bankIfsc),
                     (widget.panNumber != null)
                         ? Padding(

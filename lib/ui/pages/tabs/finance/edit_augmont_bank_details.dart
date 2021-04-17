@@ -301,6 +301,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
               bankAccNo: pBankAccNo,
               bankIfsc: pBankIfsc,
               bankName: bankDetail[GetBankDetail.resBankName],
+              bankBranchName: bankDetail[GetBankDetail.resBranchName],
               onAccept: () async{
                 ///FINALLY NOW UPDATE THE BANK DETAILS
                 baseProvider.augmontDetail.bankHolderName = pBankHolderName;
