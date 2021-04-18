@@ -18,7 +18,11 @@ class TambolaGenerationService extends ChangeNotifier {
   BaseUtil baseProvider = locator<BaseUtil>();
   DBModel dbProvider = locator<DBModel>();
   StreamSubscription<DocumentSnapshot> _currentSubscription;
-  ValueChanged<bool> _generationComplete;
+  ValueChanged<int> _generationComplete;
+  bool _generationStartedAndPartiallyCompleted = false;
+  static const int GENERATION_COMPLETE = 1;
+  static const int GENERATION_FAILED = 0;
+  static const int GENERATION_PARTIALLY_COMPLETE = 2;
 
   ///checks if new tickets need to be generated
   // processTicketGenerationRequirement(int currentTambolaBoardCount) async{
@@ -121,6 +125,7 @@ class TambolaGenerationService extends ChangeNotifier {
           //what the hell happened
           _onTicketGenerationRequestFailed();
         }else{
+          _generationStartedAndPartiallyCompleted = true;
           //more tickets need to be generated
           _initiateTicketGeneration();
         }
@@ -139,14 +144,17 @@ class TambolaGenerationService extends ChangeNotifier {
   _onTicketGenerationRequestFailed() {
     log.error('Ticket generation failed at one or many steps');
     BaseUtil.atomicTicketGenerationLeftCount = 0;// clear this so it can be attempted again
-    if (_generationComplete != null) _generationComplete(false);
+    if (_generationComplete != null) {
+      if(_generationStartedAndPartiallyCompleted) _generationComplete(GENERATION_PARTIALLY_COMPLETE);
+      else _generationComplete(GENERATION_FAILED);
+    }
   }
 
   _onTicketGenerationRequestComplete() {
-    _generationComplete(true);
+    _generationComplete(GENERATION_COMPLETE);
   }
 
-  setTambolaTicketGenerationResultListener(ValueChanged<bool> listener) {
+  setTambolaTicketGenerationResultListener(ValueChanged<int> listener) {
     this._generationComplete = listener;
   }
 }
