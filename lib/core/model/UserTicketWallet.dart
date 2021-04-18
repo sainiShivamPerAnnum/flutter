@@ -24,6 +24,9 @@ class UserTicketWallet {
 
   static final String fldReferralLockedPrefix = 'gLOCK';
 
+  static final String fldTicketGenerationCount = 'gGEN_LEFT_COUNT';
+  static final String fldActiveTicketGenerationKey = 'gGEN_ACTIVE_KEY';
+
   UserTicketWallet(this._augGold99Tck, this._icici1565Tck, this._initTck,
       this._prizeTck, this._refTck, this._activeNRTck, this._lockedTck);
 

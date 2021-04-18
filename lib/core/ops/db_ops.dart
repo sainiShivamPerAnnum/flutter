@@ -39,6 +39,7 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  //////////////////BASE USER//////////////////////////
   Future<BaseUser> getUser(String id) async {
     try {
       var doc = await _api.getUserById(id);
@@ -61,6 +62,7 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  //////////////////ICICI////////////////////////////////
   Future<UserIciciDetail> getUserIciciDetails(String id) async {
     try {
       var doc = await _api.getUserIciciDetailDocument(id);
@@ -82,6 +84,7 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  /////////////////////KYC/////////////////////////////////
   Future<UserKycDetail> getUserKycDetails(String id) async {
     try {
       var doc = await _api.getUserKycDetailDocument(id);
@@ -104,6 +107,7 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  ///////////////////////AUGMONT/////////////////////////////
   Future<UserAugmontDetail> getUserAugmontDetails(String id) async {
     try {
       var doc = await _api.getUserAugmontDetailDocument(id);
@@ -125,6 +129,7 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  /////////////////////////USER TRANSACTION/////////////////////
   //returns document key
   Future<String> addUserTransaction(String userId, UserTransaction txn) async {
     try {
@@ -158,6 +163,55 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<List<UserTransaction>> getFilteredUserTransactions(
+      BaseUser user, String type, String subtype,
+      [int limit = 30]) async {
+    List<UserTransaction> requestedTxns = [];
+    try {
+      String _id = user.uid;
+      QuerySnapshot _querySnapshot =
+          await _api.getUserTransactionsByField(_id, type, subtype, limit);
+      _querySnapshot.docs.forEach((txn) {
+        try {
+          if (txn.exists)
+            requestedTxns.add(UserTransaction.fromMap(txn.data(), txn.id));
+        } catch (e) {
+          log.error('Failed to parse user transaction $txn');
+        }
+      });
+      print("LENGTH----------------->" + requestedTxns.length.toString());
+      return requestedTxns;
+    } catch (err) {
+      log.error('Failed to fetch user mini transactions');
+      return requestedTxns;
+    }
+  }
+
+  ///////////////////////TAMBOLA TICKETING/////////////////////////
+  Future<bool> setTicketGenerationInProgress(String userId, int count) async {
+    try {
+      return await _lock.synchronized(() async {
+        if (BaseUtil.atomicTicketGenerationLeftCount > 0) {
+          log.debug('Tickets already awaiting generation.');
+          return false;
+        } else {
+          bool flag = await _api.setUserTicketWalletGenerationField(
+              userId, UserTicketWallet.fldTicketGenerationCount, count);
+          if (!flag) {
+            log.error('Failed to add ticket generation counter');
+            return false;
+          } else {
+            BaseUtil.atomicTicketGenerationLeftCount = count;
+            return true;
+          }
+        }
+      });
+    } catch (e) {
+      return false;
+    }
+  }
+
+  ///STATUS: P - PENDING, C - COMPLETE, F - FAILED
   Future<bool> pushTicketRequest(BaseUser user, int count) async {
     try {
       String _uid = user.uid;
@@ -166,6 +220,7 @@ class DBModel extends ChangeNotifier {
         'manual': false,
         'count': count,
         'week_code': _getWeekCode(),
+        'status':'P',
         'timestamp': Timestamp.now()
       };
       await _api.createTicketRequest(_uid, rMap);
@@ -176,16 +231,17 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<List<TambolaBoard>> getWeeksTambolaTickets(String userId) async{
+  Future<List<TambolaBoard>> getWeeksTambolaTickets(String userId) async {
     try {
-      QuerySnapshot _querySnapshot = await _api.getValidUserTickets(userId, _getWeekCode());
-      if(_querySnapshot == null || _querySnapshot.size == 0) return null;
+      QuerySnapshot _querySnapshot =
+          await _api.getValidUserTickets(userId, _getWeekCode());
+      if (_querySnapshot == null || _querySnapshot.size == 0) return null;
 
       List<TambolaBoard> _requestedBoards = [];
-      for(QueryDocumentSnapshot _docSnapshot in _querySnapshot.docs) {
-        if(!_docSnapshot.exists || _docSnapshot.data().isEmpty) continue;
+      for (QueryDocumentSnapshot _docSnapshot in _querySnapshot.docs) {
+        if (!_docSnapshot.exists || _docSnapshot.data().isEmpty) continue;
         TambolaBoard _board = TambolaBoard.fromMap(_docSnapshot.data());
-        if(_board.isValid()) _requestedBoards.add(_board);
+        if (_board.isValid()) _requestedBoards.add(_board);
       }
       return _requestedBoards;
     } catch (err) {
@@ -236,6 +292,7 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  ///////////////////////////CREDENTIALS//////////////////////////////
   Future<Map<String, String>> getActiveAwsIciciApiKey() async {
     String _awsKeyIndex =
         BaseUtil.remoteConfig.getString('aws_icici_key_index');
@@ -305,30 +362,6 @@ class DBModel extends ChangeNotifier {
       }
     }
     return null;
-  }
-
-  Future<List<UserTransaction>> getFilteredUserTransactions(
-      BaseUser user, String type, String subtype,
-      [int limit = 30]) async {
-    List<UserTransaction> requestedTxns = [];
-    try {
-      String _id = user.uid;
-      QuerySnapshot _querySnapshot =
-          await _api.getUserTransactionsByField(_id, type, subtype, limit);
-      _querySnapshot.docs.forEach((txn) {
-        try {
-          if (txn.exists)
-            requestedTxns.add(UserTransaction.fromMap(txn.data(), txn.id));
-        } catch (e) {
-          log.error('Failed to parse user transaction $txn');
-        }
-      });
-      print("LENGTH----------------->" + requestedTxns.length.toString());
-      return requestedTxns;
-    } catch (err) {
-      log.error('Failed to fetch user mini transactions');
-      return requestedTxns;
-    }
   }
 
   Future<bool> addCallbackRequest(
@@ -652,6 +685,7 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  //////////////////////USER FUNDS BALANCING////////////////////////////////////////
   Future<UserFundWallet> getUserFundWallet(String id) async {
     try {
       var doc = await _api.getUserFundWalletDocById(id);
@@ -683,6 +717,7 @@ class DBModel extends ChangeNotifier {
       newWalletBalance.iciciPrinciple = BaseUtil.digitPrecision(
           newWalletBalance.iciciPrinciple + changeAmount);
     }
+
     ///make the wallet transaction
     try {
       //only add the relevant fields to the map
@@ -733,6 +768,7 @@ class DBModel extends ChangeNotifier {
       newWalletBalance.augGoldQuantity =
           totalQuantity; //precision already added
     }
+
     ///make the wallet transaction
     try {
       //only add the relevant fields to the map
@@ -758,6 +794,7 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  ///////////////////USER TICKET BALANCING///////////////////////////////////
   Future<UserTicketWallet> getUserTicketWallet(String id) async {
     try {
       var doc = await _api.getUserTicketWalletDocById(id);
@@ -768,22 +805,23 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<UserTicketWallet> updateInitUserTicketCount(String uid,
-      UserTicketWallet userTicketWallet, int count) async {
-    if(userTicketWallet == null) return null;
-    int currentValue = userTicketWallet.initTck??0;
+  Future<UserTicketWallet> updateInitUserTicketCount(
+      String uid, UserTicketWallet userTicketWallet, int count) async {
+    if (userTicketWallet == null) return null;
+    int currentValue = userTicketWallet.initTck ?? 0;
     try {
       return await _lock.synchronized(() async {
-        if(count < 0 && currentValue < count) {
+        if (count < 0 && currentValue < count) {
           userTicketWallet.initTck = 0;
-        }else{
+        } else {
           userTicketWallet.initTck = currentValue + count;
         }
         Map<String, dynamic> tMap = {
           UserTicketWallet.fldInitTckCount: userTicketWallet.initTck
         };
-        bool flag = await _api.updateUserTicketWalletFields(uid, UserTicketWallet.fldInitTckCount, currentValue, tMap);
-        if(!flag){
+        bool flag = await _api.updateUserTicketWalletFields(
+            uid, UserTicketWallet.fldInitTckCount, currentValue, tMap);
+        if (!flag) {
           //revert value back as the op failed
           userTicketWallet.initTck = currentValue;
         }
@@ -796,22 +834,23 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<UserTicketWallet> updateAugmontGoldUserTicketCount(String uid,
-      UserTicketWallet userTicketWallet, int count) async {
-    if(userTicketWallet == null) return null;
-    int currentValue = userTicketWallet.augGold99Tck??0;
+  Future<UserTicketWallet> updateAugmontGoldUserTicketCount(
+      String uid, UserTicketWallet userTicketWallet, int count) async {
+    if (userTicketWallet == null) return null;
+    int currentValue = userTicketWallet.augGold99Tck ?? 0;
     try {
       return await _lock.synchronized(() async {
-        if(count < 0 && currentValue < count) {
+        if (count < 0 && currentValue < count) {
           userTicketWallet.augGold99Tck = 0;
-        }else{
+        } else {
           userTicketWallet.augGold99Tck = currentValue + count;
         }
         Map<String, dynamic> tMap = {
           UserTicketWallet.fldAugmontGoldTckCount: userTicketWallet.augGold99Tck
         };
-        bool flag = await _api.updateUserTicketWalletFields(uid, UserTicketWallet.fldAugmontGoldTckCount, currentValue, tMap);
-        if(!flag){
+        bool flag = await _api.updateUserTicketWalletFields(
+            uid, UserTicketWallet.fldAugmontGoldTckCount, currentValue, tMap);
+        if (!flag) {
           //revert value back as the op failed
           userTicketWallet.augGold99Tck = currentValue;
         }
@@ -824,22 +863,23 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<UserTicketWallet> updateICICIUserTicketCount(String uid,
-      UserTicketWallet userTicketWallet, int count) async {
-    if(userTicketWallet == null) return null;
-    int currentValue = userTicketWallet.icici1565Tck??0;
+  Future<UserTicketWallet> updateICICIUserTicketCount(
+      String uid, UserTicketWallet userTicketWallet, int count) async {
+    if (userTicketWallet == null) return null;
+    int currentValue = userTicketWallet.icici1565Tck ?? 0;
     try {
       return await _lock.synchronized(() async {
-        if(count < 0 && currentValue < count) {
+        if (count < 0 && currentValue < count) {
           userTicketWallet.icici1565Tck = 0;
-        }else{
+        } else {
           userTicketWallet.icici1565Tck = currentValue + count;
         }
         Map<String, dynamic> tMap = {
           UserTicketWallet.fldICICI1565TckCount: userTicketWallet.icici1565Tck
         };
-        bool flag = await _api.updateUserTicketWalletFields(uid, UserTicketWallet.fldICICI1565TckCount, currentValue, tMap);
-        if(!flag){
+        bool flag = await _api.updateUserTicketWalletFields(
+            uid, UserTicketWallet.fldICICI1565TckCount, currentValue, tMap);
+        if (!flag) {
           //revert value back as the op failed
           userTicketWallet.icici1565Tck = currentValue;
         }
@@ -889,5 +929,4 @@ class DBModel extends ChangeNotifier {
         return "DEC";
     }
   }
-
 }

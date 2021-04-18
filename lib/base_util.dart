@@ -88,6 +88,7 @@ class BaseUtil extends ChangeNotifier {
 
   static const int TOTAL_DRAWS = 35;
   static const int NEW_USER_TICKET_COUNT = 5;
+  static const int MAX_TICKET_GEN_PER_REQUEST = 30;
   static const int KYC_UNTESTED = 0;
   static const int KYC_INVALID = 1;
   static const int KYC_VALID = 2;
@@ -98,6 +99,7 @@ class BaseUtil extends ChangeNotifier {
   static int ticketCountBeforeRequest = NEW_USER_TICKET_COUNT;
   static int infoSliderIndex = 0;
   static bool playScreenFirst = true;
+  static int atomicTicketGenerationLeftCount = 0;
 
   ///STAGES - IMPORTANT
   static const AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;

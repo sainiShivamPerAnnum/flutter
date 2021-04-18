@@ -5,6 +5,7 @@ import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 
 class Api {
   Log log = new Log("Api");
@@ -118,6 +119,13 @@ class Api {
     return _db
         .collection(Constants.COLN_TICKETREQUEST)
         .doc()
+        .set(data, SetOptions(merge: false));
+  }
+
+  Future<void> createTicketRequest(String userId, Map data) {
+    return _db
+        .collection(Constants.COLN_TICKETREQUEST)
+        .doc('abc')
         .set(data, SetOptions(merge: false));
   }
 
@@ -322,6 +330,33 @@ class Api {
             } else {
               ///field exists but there is a data discrepancy
               throw Exception('Condition not satisfied');
+            }
+          }
+        })
+        .then((value) => true)
+        .catchError((onErr) => false);
+  }
+
+  //sets the 'gGEN_COUNT_LEFT' field in the user ticket wallet object
+  Future<bool> setUserTicketWalletGenerationField(
+      String userId, String actionFld, int count) {
+    DocumentReference _docRef = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_WALLET)
+        .doc(Constants.DOC_USER_WALLET_TICKET_BALANCE);
+    return _db
+        .runTransaction((transaction) async {
+          DocumentSnapshot snapshot = await transaction.get(_docRef);
+          if (!snapshot.exists) {
+            return false;
+          } else {
+            Map<String, dynamic> _map = snapshot.data();
+            if (_map[actionFld] != null && _map[actionFld] > 0) {
+              ///generation field already presesnt
+              throw Exception('Field already present');
+            } else {
+              transaction.update(_docRef, {'$actionFld': count});
             }
           }
         })
