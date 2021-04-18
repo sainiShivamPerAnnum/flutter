@@ -8,6 +8,7 @@ import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/tambola_generation_service.dart';
 import 'package:felloapp/ui/dialogs/tambola_dialog.dart';
 import 'package:felloapp/ui/dialogs/weekly_draw_dialog.dart';
 import 'package:felloapp/ui/dialogs/winnings_dialog.dart';
@@ -65,12 +66,15 @@ class _HState extends State<TambolaHome> {
   bool _showTutorial = false;
   Timer _prizeTimer;
 
+  TambolaGenerationService _tambolaTicketService;
+
   @override
   void initState() {
     super.initState();
     initDailyPickFlags();
     BaseAnalytics.analytics
         .setCurrentScreen(screenName: BaseAnalytics.PAGE_TAMBOLA);
+    _tambolaTicketService = new TambolaGenerationService();
   }
 
   initDailyPickFlags() {
@@ -128,12 +132,21 @@ class _HState extends State<TambolaHome> {
     }
 
     ///check if new tambola tickets need to be generated
-    int cx = baseProvider.checkTicketCountValidity(
-        baseProvider.userWeeklyBoards);
-    if (cx > 0) {
-      log.debug('Pushing ticket generation request');
-      ticketsBeingGenerated = true;
-      dbProvider.pushTicketRequest(baseProvider.myUser, cx);
+    // int cx = baseProvider.checkTicketCountValidity(
+    //     baseProvider.userWeeklyBoards);
+    // if (cx > 0) {
+    //   log.debug('Pushing ticket generation request');
+    //   ticketsBeingGenerated = true;
+    //   dbProvider.pushTicketRequest(baseProvider.myUser, cx);
+    // }
+    bool _isGenerating = await _tambolaTicketService.processTicketGenerationRequirement(_activeTambolaCardCount);
+    if(_isGenerating) {
+      _tambolaTicketService.setTambolaTicketGenerationResultListener((flag) {
+        if(flag) {
+          //new tickets have arrived
+          _refreshTambolaTickets();
+        }
+      });
     }
 
     ///Show the onboarding showcase tutorial is user is new
@@ -146,6 +159,10 @@ class _HState extends State<TambolaHome> {
         localDBModel.saveFreshUserStatus(true);
       }
     });
+  }
+
+  _refreshTambolaTickets() {
+    log.debug('Refresh this mofo');
   }
 
   bool _startTutorial() {
@@ -648,7 +665,7 @@ class _HState extends State<TambolaHome> {
           baseProvider.myUser.uid,
           baseProvider.myUser.name,
           baseProvider.myUser.mobile,
-          baseProvider.myUser.ticket_count,
+          baseProvider.userTicketWallet.getActiveTickets(),
           ticketCodeWinIndex)
           .then((flag) {
         log.debug('Added claim document');

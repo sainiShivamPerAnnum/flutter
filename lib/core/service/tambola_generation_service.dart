@@ -45,13 +45,13 @@ class TambolaGenerationService extends ChangeNotifier {
   //   }
   // }
 
-  processTicketGenerationRequirement(int currentTambolaBoardCount) async {
-    await _genLock.synchronized(() async {
+  Future<bool> processTicketGenerationRequirement(
+      int currentTambolaBoardCount) async {
+    return await _genLock.synchronized(() async {
       ///check if there is atomic field was updated before
-      if (BaseUtil.atomicTicketGenerationLeftCount > 0) return;
+      if (BaseUtil.atomicTicketGenerationLeftCount > 0) return false;
+
       ///check if there is any active ticket generation in progress presently
-      bool _activeTicketGenInProgress = await dbProvider.isTicketGenerationInProcess(baseProvider.myUser.uid);
-      if(_activeTicketGenInProgress) return;
 
       int _ticketGenerateCount = 0;
       if (currentTambolaBoardCount != null &&
@@ -65,12 +65,23 @@ class TambolaGenerationService extends ChangeNotifier {
                   currentTambolaBoardCount;
         }
       }
-      if (_ticketGenerateCount > 0 && BaseUtil.atomicTicketGenerationLeftCount == 0) {
-        BaseUtil.atomicTicketGenerationLeftCount = _ticketGenerateCount;
-        _initiateTicketGeneration();
+      if (_ticketGenerateCount > 0 &&
+          BaseUtil.atomicTicketGenerationLeftCount == 0) {
+        bool _activeTicketGenInProgress = await dbProvider
+            .isTicketGenerationInProcess(baseProvider.myUser.uid);
+        if (_activeTicketGenInProgress) {
+          log.debug('Ticket generation already in progress');
+          return false;
+        } else {
+          BaseUtil.atomicTicketGenerationLeftCount = _ticketGenerateCount;
+          _initiateTicketGeneration();
+          return true;
+        }
       } else {
         log.debug('New tickets do not/can not be generated right now');
       }
+
+      return false;
     });
   }
 
@@ -92,16 +103,25 @@ class TambolaGenerationService extends ChangeNotifier {
   }
 
   _onTicketsGenerated(TicketRequest request) {
-    _clearVariables();
-    if (request == null || request.status == 'F')
+    if(request != null && request.status == 'P') {
+      //skip this
+      return;
+    }
+    else if (request.status == 'F') {
+      _clearVariables();
       _onTicketGenerationRequestFailed();
-    if (request.status == 'C') {
-      if (BaseUtil.atomicTicketGenerationLeftCount <= request.count) {
-        BaseUtil.atomicTicketGenerationLeftCount =
-            BaseUtil.atomicTicketGenerationLeftCount - request.count;
-        if (BaseUtil.atomicTicketGenerationLeftCount == 0) {
-          _onTicketGenerationRequestComplete();
-        } else {
+    }else if (request.status == 'C') {
+      _clearVariables();
+      BaseUtil.atomicTicketGenerationLeftCount =
+          BaseUtil.atomicTicketGenerationLeftCount - request.count;
+      if (BaseUtil.atomicTicketGenerationLeftCount == 0) {
+        _onTicketGenerationRequestComplete();
+      } else {
+        if(BaseUtil.atomicTicketGenerationLeftCount < 0) {
+          //what the hell happened
+          _onTicketGenerationRequestFailed();
+        }else{
+          //more tickets need to be generated
           _initiateTicketGeneration();
         }
       }
@@ -118,10 +138,15 @@ class TambolaGenerationService extends ChangeNotifier {
 
   _onTicketGenerationRequestFailed() {
     log.error('Ticket generation failed at one or many steps');
+    BaseUtil.atomicTicketGenerationLeftCount = 0;// clear this so it can be attempted again
     if (_generationComplete != null) _generationComplete(false);
   }
 
   _onTicketGenerationRequestComplete() {
     _generationComplete(true);
+  }
+
+  setTambolaTicketGenerationResultListener(ValueChanged<bool> listener) {
+    this._generationComplete = listener;
   }
 }
