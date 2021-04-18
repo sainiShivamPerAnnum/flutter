@@ -115,18 +115,16 @@ class Api {
     return ref.doc(txnId).set(data, SetOptions(merge: true));
   }
 
-  Future<void> createTicketRequest(String userId, Map data) {
+  Future<DocumentReference> createTicketRequest(String userId, Map data) {
     return _db
         .collection(Constants.COLN_TICKETREQUEST)
-        .doc()
-        .set(data, SetOptions(merge: false));
+        .add(data);
   }
 
-  Future<void> createTicketRequest(String userId, Map data) {
+  Stream<DocumentSnapshot> getticketRequestDocumentEvent(String docId) {
     return _db
         .collection(Constants.COLN_TICKETREQUEST)
-        .doc('abc')
-        .set(data, SetOptions(merge: false));
+        .doc(docId).snapshots();
   }
 
   Future<QuerySnapshot> getValidUserTickets(String user_id, int weekCode) {

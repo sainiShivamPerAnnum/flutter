@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
@@ -11,6 +13,7 @@ import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTicketWallet.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
+import 'package:felloapp/core/model/TicketRequest.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
@@ -25,6 +28,7 @@ class DBModel extends ChangeNotifier {
   Api _api = locator<Api>();
   Lock _lock = new Lock();
   final Log log = new Log("DBModel");
+  ValueChanged<TicketRequest> _ticketRequestListener;
 
   Future<bool> updateClientToken(BaseUser user, String token) async {
     try {
@@ -211,23 +215,38 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<StreamSubscription<DocumentSnapshot>> subscribeToTicketRequest(BaseUser user, int count) async {
+    try {
+      TicketRequest _request = await pushTicketRequest(user, count);
+      if (_request.docKey != null) {
+        return _api.getticketRequestDocumentEvent(_request.docKey).listen((event) {
+          TicketRequest _changedRequest =
+              TicketRequest.fromMap(event.data(), event.id);
+          if (_ticketRequestListener != null)
+            _ticketRequestListener(_changedRequest);
+        });
+      }else{
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
   ///STATUS: P - PENDING, C - COMPLETE, F - FAILED
-  Future<bool> pushTicketRequest(BaseUser user, int count) async {
+  Future<TicketRequest> pushTicketRequest(BaseUser user, int count) async {
     try {
       String _uid = user.uid;
-      var rMap = {
-        'user_id': _uid,
-        'manual': false,
-        'count': count,
-        'week_code': _getWeekCode(),
-        'status':'P',
-        'timestamp': Timestamp.now()
-      };
-      await _api.createTicketRequest(_uid, rMap);
-      return true;
+      TicketRequest _req = new TicketRequest(
+          count, false, Timestamp.now(), user.uid, _getWeekCode(), null, 'P');
+      DocumentReference _ref =
+          await _api.createTicketRequest(_uid, _req.toJson());
+      _req.docKey = _ref.id;
+
+      return _req;
     } catch (e) {
       log.error('Failed to push new request: ' + e.toString());
-      return false;
+      return null;
     }
   }
 
@@ -686,6 +705,17 @@ class DBModel extends ChangeNotifier {
   }
 
   //////////////////////USER FUNDS BALANCING////////////////////////////////////////
+  Future<bool> isTicketGenerationInProcess(String id) async {
+    try {
+      var doc = await _api.getUserFundWalletDocById(id);
+      Map<String, dynamic> resMap = doc.data();
+      return (resMap != null && resMap['tg_in_progress'] != null && resMap['tg_in_progress']);
+    } catch (e) {
+      log.error("Error fetch UserFundWallet failed: $e");
+      return false;
+    }
+  }
+
   Future<UserFundWallet> getUserFundWallet(String id) async {
     try {
       var doc = await _api.getUserFundWalletDocById(id);
@@ -928,5 +958,9 @@ class DBModel extends ChangeNotifier {
       case 12:
         return "DEC";
     }
+  }
+
+  setTicketRequestListener(ValueChanged<TicketRequest> listener) {
+    this._ticketRequestListener = listener;
   }
 }
