@@ -775,6 +775,34 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<UserTicketWallet> updateInitUserTicketCount(String uid,
+      UserTicketWallet userTicketWallet, int count) async {
+    if(userTicketWallet == null) return null;
+    int currentValue = userTicketWallet.initTck??0;
+    try {
+      return await _lock.synchronized(() async {
+        if(count < 0 && currentValue < count) {
+          userTicketWallet.initTck = 0;
+        }else{
+          userTicketWallet.initTck = currentValue + count;
+        }
+        Map<String, dynamic> tMap = {
+          UserTicketWallet.fldInitTckCount: userTicketWallet.initTck
+        };
+        bool flag = await _api.updateUserTicketWalletFields(uid, UserTicketWallet.fldInitTckCount, currentValue, tMap);
+        if(!flag){
+          //revert value back as the op failed
+          userTicketWallet.initTck = currentValue;
+        }
+        return userTicketWallet;
+      });
+    } catch (e) {
+      log.error('Failed to update the user ticket count');
+      userTicketWallet.initTck = currentValue;
+      return userTicketWallet;
+    }
+  }
+
   Future<UserTicketWallet> updateAugmontGoldUserTicketCount(String uid,
       UserTicketWallet userTicketWallet, int count) async {
     if(userTicketWallet == null) return null;

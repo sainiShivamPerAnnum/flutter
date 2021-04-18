@@ -166,10 +166,16 @@ class _HomePageState extends State<HomePage> {
                         buttonText: "Learn how Fello works",
                         onPressed: () async {
                           HapticFeedback.vibrate();
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => GuideDialog(),
-                          );
+                          //////DUMMY//////////
+                          int _temp = baseProvider.userTicketWallet.augGold99Tck;
+                          // baseProvider.userTicketWallet = await dbProvider.updateAugmontGoldUserTicketCount(baseProvider.myUser.uid, baseProvider.userTicketWallet, 2);
+                          print(baseProvider.userTicketWallet.augGold99Tck);
+                          print(baseProvider.userTicketWallet.getActiveTickets());
+                          /////////////////////
+                          // showDialog(
+                          //   context: context,
+                          //   builder: (BuildContext context) => GuideDialog(),
+                          // );
                         },
                         gradient: [
                           Color(0xffACB6E5),

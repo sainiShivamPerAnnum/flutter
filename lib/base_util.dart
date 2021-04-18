@@ -126,8 +126,9 @@ class BaseUtil extends ChangeNotifier {
 
       //get user ticket balance
       _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
-      if(_userTicketWallet == null) _userTicketWallet = UserTicketWallet.newTicketWallet();
-
+      if(_userTicketWallet == null) {
+        await _initiateNewTicketWallet();
+      }
       //remote config for various remote variables
       await initRemoteConfig();
       //get user creation time
@@ -499,10 +500,21 @@ class BaseUtil extends ChangeNotifier {
       _userFundWallet.augGoldBalance = _myUser.augmont_balance;
       _userFundWallet.augGoldQuantity = _myUser.augmont_quantity;
     }
-    if (_myUser.prize_balance != null && _myUser.prize_balance > 0) {
-      _userFundWallet.prizeBalance = _myUser.prize_balance + 0.0;
-      _userFundWallet.prizeLifetimeWin = _myUser.lifetime_winnings + 0.0;
+    // if (_myUser.prize_balance != null && _myUser.prize_balance > 0) {
+    //   _userFundWallet.prizeBalance = _myUser.prize_balance + 0.0;
+    // }
+    if(_myUser.lifetime_winnings != null && _myUser.lifetime_winnings > 0) {
+        _userFundWallet.prizeLifetimeWin = _myUser.lifetime_winnings + 0.0;
+        //TODO update balance here
     }
+  }
+
+  Future<bool> _initiateNewTicketWallet() async{
+    _userTicketWallet = UserTicketWallet.newTicketWallet();
+    int _t = userTicketWallet.initTck;
+    _userTicketWallet = await _dbModel.updateInitUserTicketCount(myUser.uid, _userTicketWallet, NEW_USER_TICKET_COUNT);
+    //updateInitUserTicketCount method returns no change if operations fails
+    return (_userTicketWallet.initTck != _t);
   }
 
   BaseUser get myUser => _myUser;

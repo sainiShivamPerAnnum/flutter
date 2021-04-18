@@ -27,20 +27,23 @@ class UserTicketWallet {
   UserTicketWallet(this._augGold99Tck, this._icici1565Tck, this._initTck,
       this._prizeTck, this._refTck, this._activeNRTck, this._lockedTck);
 
-  UserTicketWallet.newTicketWallet()
-      : this(
-            null, null, null, BaseUtil.NEW_USER_TICKET_COUNT, null, null, null);
+  UserTicketWallet.newTicketWallet() : this(0, 0, 0, 0, 0, [], []);
 
   UserTicketWallet.fromMap(Map<String, dynamic> tMap) {
-    if (tMap == null || tMap.isEmpty) {
-      this._initTck = BaseUtil.NEW_USER_TICKET_COUNT;
-      return;
-    }
-    _initTck = (_isValidField(tMap[fldInitTckCount]))?tMap[fldInitTckCount]:0;
-    _augGold99Tck = (_isValidField(tMap[fldAugmontGoldTckCount]))?tMap[fldAugmontGoldTckCount]:0;
-    _icici1565Tck = (_isValidField(tMap[fldICICI1565TckCount]))?tMap[fldICICI1565TckCount]:0;
-    _prizeTck = (_isValidField(tMap[fldPrizeRecurringTckCount]))?tMap[fldPrizeRecurringTckCount]:0;
-    _refTck = (_isValidField(tMap[fldReferralRecurringTckCount]))?tMap[fldReferralRecurringTckCount]:0;
+    _initTck =
+        (_isValidField(tMap[fldInitTckCount])) ? tMap[fldInitTckCount] : 0;
+    _augGold99Tck = (_isValidField(tMap[fldAugmontGoldTckCount]))
+        ? tMap[fldAugmontGoldTckCount]
+        : 0;
+    _icici1565Tck = (_isValidField(tMap[fldICICI1565TckCount]))
+        ? tMap[fldICICI1565TckCount]
+        : 0;
+    _prizeTck = (_isValidField(tMap[fldPrizeRecurringTckCount]))
+        ? tMap[fldPrizeRecurringTckCount]
+        : 0;
+    _refTck = (_isValidField(tMap[fldReferralRecurringTckCount]))
+        ? tMap[fldReferralRecurringTckCount]
+        : 0;
 
     _buildNonRecurringTicketBalance(tMap);
     _buildLockedTicketBalance(tMap);
@@ -49,15 +52,10 @@ class UserTicketWallet {
   ///all recurring tickets and all the non recurring tickets from this week
   ///this DOESNT include the locked tickets
   int getActiveTickets() {
-    int _baseCount = _augGold99Tck ??
-        0 + _icici1565Tck ??
-        0 + _prizeTck ??
-        0 + _initTck ??
-        0 + _refTck ??
-        0;
+    int _baseCount = _augGold99Tck + _icici1565Tck + _prizeTck + _initTck + _refTck;
     if (_activeNRTck != null && _activeNRTck.length > 0) {
       for (NonRecurringTicket ticketCnt in _activeNRTck) {
-        _baseCount = _baseCount + ticketCnt.tckCount ?? 0;
+        _baseCount = _baseCount + ticketCnt.tckCount;
       }
     }
 
