@@ -55,8 +55,6 @@ class TambolaGenerationService extends ChangeNotifier {
       ///check if there is atomic field was updated before
       if (BaseUtil.atomicTicketGenerationLeftCount > 0) return false;
 
-      ///check if there is any active ticket generation in progress presently
-
       int _ticketGenerateCount = 0;
       if (currentTambolaBoardCount != null &&
           baseProvider.userTicketWallet.getActiveTickets() > 0) {
@@ -71,6 +69,7 @@ class TambolaGenerationService extends ChangeNotifier {
       }
       if (_ticketGenerateCount > 0 &&
           BaseUtil.atomicTicketGenerationLeftCount == 0) {
+        ///check if there is any active ticket generation in progress presently
         bool _activeTicketGenInProgress = await dbProvider
             .isTicketGenerationInProcess(baseProvider.myUser.uid);
         if (_activeTicketGenInProgress) {
@@ -84,7 +83,6 @@ class TambolaGenerationService extends ChangeNotifier {
       } else {
         log.debug('New tickets do not/can not be generated right now');
       }
-
       return false;
     });
   }
@@ -107,24 +105,23 @@ class TambolaGenerationService extends ChangeNotifier {
   }
 
   _onTicketsGenerated(TicketRequest request) {
-    if(request != null && request.status == 'P') {
+    if (request != null && request.status == 'P') {
       //skip this
       return;
-    }
-    else if (request.status == 'F') {
+    } else if (request.status == 'F') {
       _clearVariables();
       _onTicketGenerationRequestFailed();
-    }else if (request.status == 'C') {
+    } else if (request.status == 'C') {
       _clearVariables();
       BaseUtil.atomicTicketGenerationLeftCount =
           BaseUtil.atomicTicketGenerationLeftCount - request.count;
       if (BaseUtil.atomicTicketGenerationLeftCount == 0) {
         _onTicketGenerationRequestComplete();
       } else {
-        if(BaseUtil.atomicTicketGenerationLeftCount < 0) {
+        if (BaseUtil.atomicTicketGenerationLeftCount < 0) {
           //what the hell happened
           _onTicketGenerationRequestFailed();
-        }else{
+        } else {
           _generationStartedAndPartiallyCompleted = true;
           //more tickets need to be generated
           _initiateTicketGeneration();
@@ -143,10 +140,13 @@ class TambolaGenerationService extends ChangeNotifier {
 
   _onTicketGenerationRequestFailed() {
     log.error('Ticket generation failed at one or many steps');
-    BaseUtil.atomicTicketGenerationLeftCount = 0;// clear this so it can be attempted again
+    BaseUtil.atomicTicketGenerationLeftCount =
+        0; // clear this so it can be attempted again
     if (_generationComplete != null) {
-      if(_generationStartedAndPartiallyCompleted) _generationComplete(GENERATION_PARTIALLY_COMPLETE);
-      else _generationComplete(GENERATION_FAILED);
+      if (_generationStartedAndPartiallyCompleted)
+        _generationComplete(GENERATION_PARTIALLY_COMPLETE);
+      else
+        _generationComplete(GENERATION_FAILED);
     }
   }
 

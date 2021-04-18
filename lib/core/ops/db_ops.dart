@@ -259,7 +259,7 @@ class DBModel extends ChangeNotifier {
       List<TambolaBoard> _requestedBoards = [];
       for (QueryDocumentSnapshot _docSnapshot in _querySnapshot.docs) {
         if (!_docSnapshot.exists || _docSnapshot.data().isEmpty) continue;
-        TambolaBoard _board = TambolaBoard.fromMap(_docSnapshot.data());
+        TambolaBoard _board = TambolaBoard.fromMap(_docSnapshot.data(), _docSnapshot.id);
         if (_board.isValid()) _requestedBoards.add(_board);
       }
       return _requestedBoards;

@@ -4,8 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/logger.dart';
 
-class TambolaBoard{
+class TambolaBoard {
   static Log log = new Log('TambolaBoard');
+  final String doc_key;
   final Timestamp assigned_time;
   final String val;
   final String id;
@@ -14,25 +15,28 @@ class TambolaBoard{
   static final String fldId = 'id';
   static final String fldBoardValue = 'val';
   static final String fldWeekCode = 'week_code';
+
   ///////////
   static final int boardHeight = 3;
   static final int boardLength = 9;
   List<String> encodedTambolaList;
   List<List<int>> tambolaBoard =
-  new List.generate(boardHeight, (_) => new List(boardLength));
+      new List.generate(boardHeight, (_) => new List(boardLength));
   Map<int, int> indexValueMap = new HashMap();
 
-  TambolaBoard({this.assigned_time, this.val, this.id, this.week_code}){
-    if(this.val != null) decodeBoard(this.val);
+  TambolaBoard(
+      this.doc_key, this.assigned_time, this.val, this.id, this.week_code) {
+    if (this.val != null) decodeBoard(this.val);
   }
 
-  TambolaBoard.fromMap(Map<String, dynamic> data)
-    : this(
-    assigned_time: data[fldAssignedTime],
-    val: data[fldBoardValue],
-    id: data[fldId],
-    week_code: data[fldWeekCode]
-  );
+  TambolaBoard.fromMap(Map<String, dynamic> data, String docKey)
+      : this(
+          docKey,
+          data[fldAssignedTime],
+          data[fldBoardValue],
+          data[fldId],
+          data[fldWeekCode],
+        );
 
   bool isValid() {
     return (val != null); //TODO
@@ -66,7 +70,7 @@ class TambolaBoard{
       for (int j = 0; j < boardLength; j++) {
         int key = i * boardLength + j;
         tambolaBoard[i][j] =
-        (indexValueMap.containsKey(key)) ? indexValueMap[key] : 0;
+            (indexValueMap.containsKey(key)) ? indexValueMap[key] : 0;
       }
     }
     return tambolaBoard;
@@ -91,14 +95,17 @@ class TambolaBoard{
   }
 
   int getRowOdds(int rowIndex, List<int> calledDigits) {
-    if(tambolaBoard==null || tambolaBoard.isEmpty
-        || calledDigits==null || calledDigits.isEmpty) return 5;
-    int digitsLeftToBeAnnounced = BaseUtil.TOTAL_DRAWS-calledDigits.length;
+    if (tambolaBoard == null ||
+        tambolaBoard.isEmpty ||
+        calledDigits == null ||
+        calledDigits.isEmpty) return 5;
+    int digitsLeftToBeAnnounced = BaseUtil.TOTAL_DRAWS - calledDigits.length;
     int rowCalledCount = 0;
-    for(int i=0; i<boardLength; i++) {
-      if(tambolaBoard[rowIndex][i] !=0 && calledDigits.contains(tambolaBoard[rowIndex][i]))rowCalledCount++;
+    for (int i = 0; i < boardLength; i++) {
+      if (tambolaBoard[rowIndex][i] != 0 &&
+          calledDigits.contains(tambolaBoard[rowIndex][i])) rowCalledCount++;
     }
-    int rowLeftCount = 5-rowCalledCount;
+    int rowLeftCount = 5 - rowCalledCount;
 
     // if(rowLeftCount==0) return 1;
     // else if(rowLeftCount>digitsLeftToBeAnnounced)return 0;
@@ -107,29 +114,31 @@ class TambolaBoard{
   }
 
   int getCornerOdds(List<int> calledDigits) {
-    if(tambolaBoard==null || tambolaBoard.isEmpty
-        || calledDigits==null || calledDigits.isEmpty) return 4;
+    if (tambolaBoard == null ||
+        tambolaBoard.isEmpty ||
+        calledDigits == null ||
+        calledDigits.isEmpty) return 4;
     int cornerA = 0;
     int cornerB = 0;
     int cornerC = 0;
     int cornerD = 0;
     int cornerCount = 0;
-    for(int i=0; i<boardHeight; i++) {
-      for(int j=0; j<boardLength; j++) {
-        if(tambolaBoard[i][j] != 0) {
-          if(i==0 && cornerA == 0)cornerA = tambolaBoard[i][j];
-          if(i==0)cornerB = tambolaBoard[i][j];
-          if(i==2 && cornerC == 0)cornerC = tambolaBoard[i][j];
-          if(i==2)cornerD = tambolaBoard[i][j];
+    for (int i = 0; i < boardHeight; i++) {
+      for (int j = 0; j < boardLength; j++) {
+        if (tambolaBoard[i][j] != 0) {
+          if (i == 0 && cornerA == 0) cornerA = tambolaBoard[i][j];
+          if (i == 0) cornerB = tambolaBoard[i][j];
+          if (i == 2 && cornerC == 0) cornerC = tambolaBoard[i][j];
+          if (i == 2) cornerD = tambolaBoard[i][j];
         }
       }
     }
-    if(calledDigits.contains(cornerA))cornerCount++;
-    if(calledDigits.contains(cornerB))cornerCount++;
-    if(calledDigits.contains(cornerC))cornerCount++;
-    if(calledDigits.contains(cornerD))cornerCount++;
-    int digitsLeftToBeAnnounced = BaseUtil.TOTAL_DRAWS-calledDigits.length;
-    int cornerLeftCount = 4-cornerCount;
+    if (calledDigits.contains(cornerA)) cornerCount++;
+    if (calledDigits.contains(cornerB)) cornerCount++;
+    if (calledDigits.contains(cornerC)) cornerCount++;
+    if (calledDigits.contains(cornerD)) cornerCount++;
+    int digitsLeftToBeAnnounced = BaseUtil.TOTAL_DRAWS - calledDigits.length;
+    int cornerLeftCount = 4 - cornerCount;
 
     // if(cornerLeftCount==0) return 'HIT!';
     // else if(cornerLeftCount>digitsLeftToBeAnnounced) return '0';
@@ -138,18 +147,20 @@ class TambolaBoard{
   }
 
   int getFullHouseOdds(List<int> calledDigits) {
-    if(tambolaBoard==null || tambolaBoard.isEmpty
-        || calledDigits==null || calledDigits.isEmpty) return 15;
+    if (tambolaBoard == null ||
+        tambolaBoard.isEmpty ||
+        calledDigits == null ||
+        calledDigits.isEmpty) return 15;
     int fullHouseCount = 0;
-    int digitsLeftToBeAnnounced = BaseUtil.TOTAL_DRAWS-calledDigits.length;
-    for(int i=0; i<boardHeight; i++) {
-      for(int j=0; j<boardLength; j++) {
-        if(tambolaBoard[i][j] != 0) {
-          if(calledDigits.contains(tambolaBoard[i][j]))fullHouseCount++;
+    int digitsLeftToBeAnnounced = BaseUtil.TOTAL_DRAWS - calledDigits.length;
+    for (int i = 0; i < boardHeight; i++) {
+      for (int j = 0; j < boardLength; j++) {
+        if (tambolaBoard[i][j] != 0) {
+          if (calledDigits.contains(tambolaBoard[i][j])) fullHouseCount++;
         }
       }
     }
-    int fullHouseLeftCount = 15-fullHouseCount;
+    int fullHouseLeftCount = 15 - fullHouseCount;
 
     // if(fullHouseLeftCount==0) return 'HIT!';
     // else if(fullHouseLeftCount>digitsLeftToBeAnnounced) return '0';
@@ -157,7 +168,6 @@ class TambolaBoard{
 
     return fullHouseLeftCount;
   }
-
 
   String getTicketNumber() {
     try {
