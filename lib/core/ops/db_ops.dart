@@ -23,7 +23,6 @@ import 'package:synchronized/synchronized.dart';
 
 class DBModel extends ChangeNotifier {
   Api _api = locator<Api>();
-  ValueChanged<List<TambolaBoard>> userTicketsUpdated;
   Lock _lock = new Lock();
   final Log log = new Log("DBModel");
 
@@ -177,28 +176,22 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  bool subscribeUserTickets(BaseUser user) {
+  Future<List<TambolaBoard>> getWeeksTambolaTickets(String userId) async{
     try {
-      String _id = user.uid;
-      Stream<QuerySnapshot> _stream =
-          _api.getValidUserTickets(_id, _getWeekCode());
-      _stream.listen((querySnapshot) {
-        List<TambolaBoard> requestedBoards = [];
-        querySnapshot.docs.forEach((docSnapshot) {
-          if (docSnapshot.exists)
-            log.debug('Received snapshot: ' + docSnapshot.data.toString());
-          TambolaBoard board = TambolaBoard.fromMap(docSnapshot.data());
-          if (board.isValid()) requestedBoards.add(board);
-        });
-        log.debug(
-            'Post stream update-> sending ticket count to dashboard: ${requestedBoards.length}');
-        if (userTicketsUpdated != null) userTicketsUpdated(requestedBoards);
-      });
+      QuerySnapshot _querySnapshot = await _api.getValidUserTickets(userId, _getWeekCode());
+      if(_querySnapshot == null || _querySnapshot.size == 0) return null;
+
+      List<TambolaBoard> _requestedBoards = [];
+      for(QueryDocumentSnapshot _docSnapshot in _querySnapshot.docs) {
+        if(!_docSnapshot.exists || _docSnapshot.data().isEmpty) continue;
+        TambolaBoard _board = TambolaBoard.fromMap(_docSnapshot.data());
+        if(_board.isValid()) _requestedBoards.add(_board);
+      }
+      return _requestedBoards;
     } catch (err) {
       log.error('Failed to fetch tambola boards');
-      return false;
+      return null;
     }
-    return true;
   }
 
   Future<DailyPick> getWeeklyPicks() async {
@@ -897,7 +890,4 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  addUserTicketListener(ValueChanged<List<TambolaBoard>> listener) {
-    userTicketsUpdated = listener;
-  }
 }

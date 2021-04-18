@@ -15,10 +15,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-
 class GamePage extends StatefulWidget {
   final ValueChanged<int> tabChange;
+
   GamePage({this.tabChange});
+
   @override
   _GamePageState createState() => _GamePageState();
 }
@@ -68,8 +69,6 @@ class _GamePageState extends State<GamePage> {
     // });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
@@ -117,7 +116,7 @@ class _GamePageState extends State<GamePage> {
                       Container(
                         height: AppBar().preferredSize.height * 2,
                       ),
-                      TicketCount(baseProvider.myUser.ticket_count),
+                      TicketCount(baseProvider.userTicketWallet.getActiveTickets()),
                       Expanded(
                         flex: 4,
                         child: GameCardList(
@@ -187,6 +186,7 @@ class _GamePageState extends State<GamePage> {
                                                               .firebaseUser.uid,
                                                       fdbk)
                                                   .then((flag) {
+                                                Navigator.of(context).pop();
                                                 if (flag) {
                                                   baseProvider.showPositiveAlert(
                                                       'Thank You',
@@ -194,7 +194,6 @@ class _GamePageState extends State<GamePage> {
                                                       context);
                                                 }
                                               });
-                                              Navigator.of(context).pop();
                                             }
                                           },
                                         ),
@@ -273,6 +272,7 @@ class _GamePageState extends State<GamePage> {
 
 class TicketCount extends StatefulWidget {
   final int totalCount;
+
   TicketCount(this.totalCount);
 
   @override
@@ -295,7 +295,8 @@ class _TicketCountState extends State<TicketCount>
   @override
   void initState() {
     super.initState();
-    BaseAnalytics.analytics.setCurrentScreen(screenName: BaseAnalytics.PAGE_GAME);
+    BaseAnalytics.analytics
+        .setCurrentScreen(screenName: BaseAnalytics.PAGE_GAME);
     _controller =
         AnimationController(duration: Duration(seconds: 2), vsync: this);
     _latestBegin = 0;
@@ -431,7 +432,9 @@ class GameCard extends StatelessWidget {
 class GameOfferCardButton extends StatelessWidget {
   final Function onPressed;
   final String title;
+
   GameOfferCardButton({this.onPressed, this.title});
+
   @override
   Widget build(BuildContext context) {
     return Expanded(

@@ -234,12 +234,12 @@ class HamburgerMenu extends StatelessWidget {
                               : baseProvider.firebaseUser.uid,
                           fdbk)
                       .then((flag) {
+                    Navigator.of(context).pop();
                     if (flag) {
                       baseProvider.showPositiveAlert(
                           'Thank You', 'We appreciate your feedback!', context);
                     }
                   });
-                  Navigator.of(context).pop();
                 }
               },
             ),

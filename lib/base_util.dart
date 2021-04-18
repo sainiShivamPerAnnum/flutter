@@ -65,7 +65,6 @@ class BaseUtil extends ChangeNotifier {
 
   DateTime _userCreationTimestamp;
   int referCount = 0;
-  int userTicketsCount = 0;
   int isOtpResendCount = 0;
 
   ///Flags in various screens defined as global variables
@@ -388,10 +387,10 @@ class BaseUtil extends ChangeNotifier {
   }
 
   int checkTicketCountValidity(List<TambolaBoard> requestedBoards) {
-    if (requestedBoards != null && _myUser.ticket_count > 0) {
-      if (requestedBoards.length < _myUser.ticket_count) {
+    if (requestedBoards != null && _userTicketWallet.getActiveTickets() > 0) {
+      if (requestedBoards.length < _userTicketWallet.getActiveTickets()) {
         log.debug('Requested board count is less than needed tickets');
-        int ticketCountRequired = _myUser.ticket_count - requestedBoards.length;
+        int ticketCountRequired = _userTicketWallet.getActiveTickets() - requestedBoards.length;
 
         if (ticketCountRequired > 0 && !BaseUtil.ticketRequestSent) {
           BaseUtil.ticketRequestSent = true;

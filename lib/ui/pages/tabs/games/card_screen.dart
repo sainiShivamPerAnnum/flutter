@@ -29,13 +29,12 @@ import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
-
-class PlayHome extends StatefulWidget {
+class TambolaHome extends StatefulWidget {
   @override
   _HState createState() => _HState();
 }
 
-class _HState extends State<PlayHome> {
+class _HState extends State<TambolaHome> {
   Log log = new Log('CardScreen');
   TambolaBoard _currentBoard;
   TambolaBoardView _currentBoardView;
@@ -88,7 +87,7 @@ class _HState extends State<PlayHome> {
     if (dailyPickHeaderWithTimings) {
       String am_pm = (tx > 11) ? 'PM' : 'AM';
       String ttime =
-          (tx > 12) ? (tx - 12).toString() + am_pm : tx.toString() + am_pm;
+      (tx > 12) ? (tx - 12).toString() + am_pm : tx.toString() + am_pm;
       dailyPickHeaderText = 'Today\'s picks - Drawn at $ttime';
     } else {
       dailyPickHeaderText = 'Today\'s picks';
@@ -98,71 +97,61 @@ class _HState extends State<PlayHome> {
     dailyPickTextList.add('Click to see the other picks');
   }
 
-  _init() {
-    if (baseProvider != null && dbProvider != null) {
-      if (!baseProvider.weeklyDrawFetched) {
-        log.debug('Requesting for weekly picks');
-        dbProvider.getWeeklyPicks().then((picks) {
-          baseProvider.weeklyDrawFetched = true;
-          if (picks != null) baseProvider.weeklyDigits = picks;
-          log.debug('Weekly Picks received: $picks');
-          setState(() {});
-        });
-      }
-
-      dbProvider.addUserTicketListener((tickets) {
-        baseProvider.weeklyTicksFetched = true;
-        if (tickets != null) {
-          setState(() {
-            baseProvider.userWeeklyBoards = tickets;
-            baseProvider.userTicketsCount = tickets.length;
-            _tambolaBoardViews = [];
-            _currentBoard = null;
-            _currentBoardView = null;
-          });
-
-          int cx = baseProvider.checkTicketCountValidity(tickets);
-          if (cx > 0) {
-            log.debug('Pushing ticket generation request');
-            ticketsBeingGenerated = true;
-            dbProvider.pushTicketRequest(baseProvider.myUser, cx);
-          }
-        }
-      });
-
-      if (!baseProvider.weeklyTicksFetched)
-        dbProvider.subscribeUserTickets(baseProvider.myUser);
-
-      localDBModel.isFreshUser().then((flag) {
-        if (flag == 0) {
-          new Timer(const Duration(seconds: 4), () {
-            // showDialog(
-            //     context: context,
-            //     barrierDismissible: false,
-            //     builder: (BuildContext context) => OnboardDialog());
-            _showTutorial = true;
-            setState(() {});
-          });
-          localDBModel.saveFreshUserStatus(true);
-        }
-      });
+  _init() async {
+    if (baseProvider == null || dbProvider == null) {
+      return;
     }
 
-    // if (fcmProvider != null && baseProvider != null) {
-    //   fcmProvider.addIncomingMessageListener((valueMap) {
-    //     if (valueMap['title'] != null && valueMap['body'] != null) {
-    //       baseProvider.showPositiveAlert(
-    //           valueMap['title'], valueMap['body'], context,
-    //           seconds: 5);
-    //     }
-    //   }, 0);
-    // }
+    ///first get the daily picks of this week
+    if (!baseProvider.weeklyDrawFetched) {
+      log.debug('Requesting for weekly picks');
+      DailyPick _picks = await dbProvider.getWeeklyPicks();
+      baseProvider.weeklyDrawFetched = true;
+      if (_picks != null) {
+        baseProvider.weeklyDigits = _picks;
+      }
+      setState(() {});
+    }
+
+    ///next get the tambola tickets of this week
+    if (!baseProvider.weeklyTicksFetched) {
+      List<TambolaBoard> _boards = await dbProvider.getWeeksTambolaTickets(
+          baseProvider.myUser.uid);
+      baseProvider.weeklyTicksFetched = true;
+      if (_boards != null) {
+        baseProvider.userWeeklyBoards = _boards;
+        //refresh current view
+        _currentBoard = null;
+        _currentBoardView = null;
+      }
+      setState(() {});
+    }
+
+    ///check if new tambola tickets need to be generated
+    int cx = baseProvider.checkTicketCountValidity(
+        baseProvider.userWeeklyBoards);
+    if (cx > 0) {
+      log.debug('Pushing ticket generation request');
+      ticketsBeingGenerated = true;
+      dbProvider.pushTicketRequest(baseProvider.myUser, cx);
+    }
+
+    ///Show the onboarding showcase tutorial is user is new
+    localDBModel.isFreshUser().then((flag) {
+      if (flag == 0) {
+        new Timer(const Duration(seconds: 4), () {
+          _showTutorial = true;
+          setState(() {});
+        });
+        localDBModel.saveFreshUserStatus(true);
+      }
+    });
   }
 
   bool _startTutorial() {
     if (baseProvider.weeklyDrawFetched &&
         baseProvider.weeklyTicksFetched &&
-        baseProvider.userTicketsCount > 0) {
+        _activeTambolaCardCount > 0) {
       //Start showcase view after current widget frames are drawn.
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ShowCaseWidget.of(context).startShowCase(
@@ -177,13 +166,6 @@ class _HState extends State<PlayHome> {
   @override
   void dispose() {
     super.dispose();
-    if (dbProvider != null) dbProvider.addUserTicketListener(null);
-    // if (fcmProvider != null) fcmProvider.addIncomingMessageListener(null, 0);
-
-    if (_prizeTimer.isActive) _prizeTimer.cancel();
-    balls.forEach((eWidget) {
-      // eWidget.dis
-    });
   }
 
   var cardMargin = EdgeInsets.symmetric(
@@ -214,7 +196,7 @@ class _HState extends State<PlayHome> {
     _processTicketResults();
     if (_showTutorial) _startTutorial();
     return Scaffold(
-        //debugShowCheckedModeBanner: false,
+      //debugShowCheckedModeBanner: false,
         backgroundColor: Color(0xfff1f1f1),
         body: Stack(
           children: [
@@ -232,9 +214,15 @@ class _HState extends State<PlayHome> {
                 ),
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.elliptical(
-                      MediaQuery.of(context).size.width * 0.50, 18),
+                      MediaQuery
+                          .of(context)
+                          .size
+                          .width * 0.50, 18),
                   bottomRight: Radius.elliptical(
-                      MediaQuery.of(context).size.width * 0.50, 18),
+                      MediaQuery
+                          .of(context)
+                          .size
+                          .width * 0.50, 18),
                 ),
               ),
               child: Column(
@@ -323,12 +311,12 @@ class _HState extends State<PlayHome> {
             //         alignment: Alignment.bottomCenter, child: _buildPrizeButton()))
           ],
         )
-        //),
-        );
+      //),
+    );
   }
 
-  Widget _buildShowcaseWrapper(
-      GlobalKey showcaseKey, String showcaseMsg, Widget body) {
+  Widget _buildShowcaseWrapper(GlobalKey showcaseKey, String showcaseMsg,
+      Widget body) {
     return Showcase.withWidget(
         key: showcaseKey,
         description: showcaseMsg,
@@ -376,31 +364,31 @@ class _HState extends State<PlayHome> {
         SizedBox(height: SizeConfig.screenHeight * 0.143),
         (baseProvider.weeklyDrawFetched)
             ? InkWell(
-                child: _buildShowcaseWrapper(
-                    _showcaseTwo,
-                    Assets.showCaseDesc[1],
-                    _buildTodaysPicksWidget(baseProvider.weeklyDigits)),
-                onTap: () {
-                  HapticFeedback.vibrate();
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) =>
-                          WeeklyDrawDialog(baseProvider.weeklyDigits));
-                },
-              )
+          child: _buildShowcaseWrapper(
+              _showcaseTwo,
+              Assets.showCaseDesc[1],
+              _buildTodaysPicksWidget(baseProvider.weeklyDigits)),
+          onTap: () {
+            HapticFeedback.vibrate();
+            showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    WeeklyDrawDialog(baseProvider.weeklyDigits));
+          },
+        )
             : Padding(
-                //Loader
-                padding: EdgeInsets.all(10),
-                child: Container(
-                  width: double.infinity,
-                  height: 200,
-                  child: Center(
-                    child: SpinKitWave(
-                      color: UiConstants.primaryColor,
-                    ),
-                  ),
-                ),
+          //Loader
+          padding: EdgeInsets.all(10),
+          child: Container(
+            width: double.infinity,
+            height: 200,
+            child: Center(
+              child: SpinKitWave(
+                color: UiConstants.primaryColor,
               ),
+            ),
+          ),
+        ),
         SizedBox(
           height: 24.0,
         ),
@@ -418,55 +406,56 @@ class _HState extends State<PlayHome> {
                   baseProvider.weeklyTicksFetched,
                   baseProvider.weeklyDrawFetched,
                   baseProvider.userWeeklyBoards,
-                  baseProvider.userTicketsCount),
+                  _activeTambolaCardCount),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   (baseProvider.weeklyTicksFetched &&
-                          baseProvider.userWeeklyBoards != null &&
-                          baseProvider.userTicketsCount > 0 &&
-                          _currentBoard != null)
+                      baseProvider.userWeeklyBoards != null &&
+                      _activeTambolaCardCount > 0 &&
+                      _currentBoard != null)
                       ? Padding(
-                          padding: EdgeInsets.only(left: 25),
-                          child: Text(
-                            'Ticket #${_currentBoard.getTicketNumber()}',
-                            style: GoogleFonts.montserrat(
-                              fontSize: SizeConfig.smallTextSize,
-                            ),
-                          ),
-                        )
+                    padding: EdgeInsets.only(left: 25),
+                    child: Text(
+                      'Ticket #${_currentBoard.getTicketNumber()}',
+                      style: GoogleFonts.montserrat(
+                        fontSize: SizeConfig.smallTextSize,
+                      ),
+                    ),
+                  )
                       : Container(),
-                  baseProvider.userTicketsCount > 10
+                  _activeTambolaCardCount > 10
                       ? GestureDetector(
-                          child: Text(
-                            "Show All Tickets   ",
-                            style: GoogleFonts.montserrat(
-                              color: UiConstants.primaryColor.withGreen(600),
-                            ),
-                          ),
-                          onTap: () {
-                            _tambolaBoardViews = [];
-                            baseProvider.userWeeklyBoards.forEach((board) {
-                              _tambolaBoardViews.add(new TambolaBoardView(
-                                  tambolaBoard: board.tambolaBoard,
-                                  calledDigits:
-                                      (baseProvider.weeklyDrawFetched &&
-                                              baseProvider.weeklyDigits != null)
-                                          ? baseProvider.weeklyDigits.toList()
-                                          : [],
-                                  boardColor:
-                                      UiConstants.primaryColor.withGreen(200)));
-                            });
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (ctx) => TambolaCardsList(
-                                  tambolaBoardView: _tambolaBoardViews,
-                                ),
+                    child: Text(
+                      "Show All Tickets   ",
+                      style: GoogleFonts.montserrat(
+                        color: UiConstants.primaryColor.withGreen(600),
+                      ),
+                    ),
+                    onTap: () {
+                      _tambolaBoardViews = [];
+                      baseProvider.userWeeklyBoards.forEach((board) {
+                        _tambolaBoardViews.add(new TambolaBoardView(
+                            tambolaBoard: board.tambolaBoard,
+                            calledDigits:
+                            (baseProvider.weeklyDrawFetched &&
+                                baseProvider.weeklyDigits != null)
+                                ? baseProvider.weeklyDigits.toList()
+                                : [],
+                            boardColor:
+                            UiConstants.primaryColor.withGreen(200)));
+                      });
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (ctx) =>
+                              TambolaCardsList(
+                                tambolaBoardView: _tambolaBoardViews,
                               ),
-                            );
-                          },
-                        )
+                        ),
+                      );
+                    },
+                  )
                       : SizedBox(),
                 ],
               ),
@@ -480,22 +469,22 @@ class _HState extends State<PlayHome> {
           height: 16,
         ),
         (baseProvider.weeklyTicksFetched &&
-                baseProvider.userWeeklyBoards != null &&
-                baseProvider.userTicketsCount > 0 &&
-                baseProvider.weeklyDrawFetched)
+            baseProvider.userWeeklyBoards != null &&
+            _activeTambolaCardCount > 0 &&
+            baseProvider.weeklyDrawFetched)
             ? _buildShowcaseWrapper(
-                _showcaseFour,
-                Assets.showCaseDesc[3],
-                Odds(baseProvider.weeklyDigits, _currentBoard,
-                    _refreshBestBoards()))
+            _showcaseFour,
+            Assets.showCaseDesc[3],
+            Odds(baseProvider.weeklyDigits, _currentBoard,
+                _refreshBestBoards()))
             : Padding(
-                //Loader
-                padding: EdgeInsets.all(10),
-                child: Container(
-                  width: double.infinity,
-                  height: 50,
-                ),
-              ),
+          //Loader
+          padding: EdgeInsets.all(10),
+          child: Container(
+            width: double.infinity,
+            height: 50,
+          ),
+        ),
         SizedBox(
           height: 16,
         ),
@@ -537,14 +526,14 @@ class _HState extends State<PlayHome> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  baseProvider.userTicketsCount.toString(),
+                  _activeTambolaCardCount.toString(),
                   style: GoogleFonts.montserrat(
                       fontSize: SizeConfig.cardTitleTextSize,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
                 ),
                 Text(
-                  (baseProvider.userTicketsCount == 1)
+                  (_activeTambolaCardCount == 1)
                       ? 'Tambola ticket'
                       : 'Tambola tickets',
                   style: GoogleFonts.montserrat(
@@ -571,14 +560,18 @@ class _HState extends State<PlayHome> {
     if (baseProvider.userWeeklyBoards == null ||
         baseProvider.userWeeklyBoards.isEmpty ||
         baseProvider.weeklyDigits == null ||
-        baseProvider.weeklyDigits.toList().isEmpty ||
+        baseProvider.weeklyDigits
+            .toList()
+            .isEmpty ||
         localDBModel == null) {
       log.debug('Testing is not ready yet');
       return false;
     }
     DateTime date = DateTime.now();
     if (date.weekday == 7) {
-      if (baseProvider.weeklyDigits.toList().length == 35) {
+      if (baseProvider.weeklyDigits
+          .toList()
+          .length == 35) {
         localDBModel.isUserOnboarded().then((flag) {
           if (flag == 1) {
             log.debug('Ticket results not yet displayed. Displaying: ');
@@ -601,7 +594,9 @@ class _HState extends State<PlayHome> {
     if (baseProvider.userWeeklyBoards == null ||
         baseProvider.userWeeklyBoards.isEmpty ||
         baseProvider.weeklyDigits == null ||
-        baseProvider.weeklyDigits.toList().isEmpty) {
+        baseProvider.weeklyDigits
+            .toList()
+            .isEmpty) {
       log.debug('Testing is not ready yet');
       return false;
     }
@@ -640,7 +635,8 @@ class _HState extends State<PlayHome> {
       new Timer(const Duration(seconds: 4), () {
         showDialog(
             context: context,
-            builder: (BuildContext context) => WinningsDialog(
+            builder: (BuildContext context) =>
+                WinningsDialog(
                   winningsMap: ticketCodeWinIndex,
                 ));
       });
@@ -649,11 +645,11 @@ class _HState extends State<PlayHome> {
     if (ticketCodeWinIndex.length > 0) {
       dbProvider
           .addWinClaim(
-              baseProvider.myUser.uid,
-              baseProvider.myUser.name,
-              baseProvider.myUser.mobile,
-              baseProvider.myUser.ticket_count,
-              ticketCodeWinIndex)
+          baseProvider.myUser.uid,
+          baseProvider.myUser.name,
+          baseProvider.myUser.mobile,
+          baseProvider.myUser.ticket_count,
+          ticketCodeWinIndex)
           .then((flag) {
         log.debug('Added claim document');
       });
@@ -674,7 +670,9 @@ class _HState extends State<PlayHome> {
     _bestTambolaBoards[4] = baseProvider.userWeeklyBoards[0];
 
     if (baseProvider.weeklyDigits == null ||
-        baseProvider.weeklyDigits.toList().isEmpty) {
+        baseProvider.weeklyDigits
+            .toList()
+            .isEmpty) {
       return _bestTambolaBoards;
     }
 
@@ -686,27 +684,27 @@ class _HState extends State<PlayHome> {
       if (_bestTambolaBoards[4] == null) _bestTambolaBoards[4] = board;
 
       if (_bestTambolaBoards[0]
-              .getRowOdds(0, baseProvider.weeklyDigits.toList()) >
+          .getRowOdds(0, baseProvider.weeklyDigits.toList()) >
           board.getRowOdds(0, baseProvider.weeklyDigits.toList())) {
         _bestTambolaBoards[0] = board;
       }
       if (_bestTambolaBoards[1]
-              .getRowOdds(1, baseProvider.weeklyDigits.toList()) >
+          .getRowOdds(1, baseProvider.weeklyDigits.toList()) >
           board.getRowOdds(1, baseProvider.weeklyDigits.toList())) {
         _bestTambolaBoards[1] = board;
       }
       if (_bestTambolaBoards[2]
-              .getRowOdds(2, baseProvider.weeklyDigits.toList()) >
+          .getRowOdds(2, baseProvider.weeklyDigits.toList()) >
           board.getRowOdds(2, baseProvider.weeklyDigits.toList())) {
         _bestTambolaBoards[2] = board;
       }
       if (_bestTambolaBoards[3]
-              .getCornerOdds(baseProvider.weeklyDigits.toList()) >
+          .getCornerOdds(baseProvider.weeklyDigits.toList()) >
           board.getCornerOdds(baseProvider.weeklyDigits.toList())) {
         _bestTambolaBoards[3] = board;
       }
       if (_bestTambolaBoards[4]
-              .getFullHouseOdds(baseProvider.weeklyDigits.toList()) >
+          .getFullHouseOdds(baseProvider.weeklyDigits.toList()) >
           board.getFullHouseOdds(baseProvider.weeklyDigits.toList())) {
         _bestTambolaBoards[4] = board;
       }
@@ -748,7 +746,7 @@ class _HState extends State<PlayHome> {
       _tambolaBoardViews.add(new TambolaBoardView(
         tambolaBoard: baseProvider.userWeeklyBoards[0].tambolaBoard,
         calledDigits: (baseProvider.weeklyDrawFetched &&
-                baseProvider.weeklyDigits != null)
+            baseProvider.weeklyDigits != null)
             ? baseProvider.weeklyDigits.toList()
             : [],
         boardColor: UiConstants
@@ -769,23 +767,13 @@ class _HState extends State<PlayHome> {
         _tambolaBoardViews.add(new TambolaBoardView(
           tambolaBoard: baseProvider.userWeeklyBoards[i].tambolaBoard,
           calledDigits: (baseProvider.weeklyDrawFetched &&
-                  baseProvider.weeklyDigits != null)
+              baseProvider.weeklyDigits != null)
               ? baseProvider.weeklyDigits.toList()
               : [],
           boardColor: UiConstants.primaryColor.withGreen(200),
         ));
       }
-      // baseProvider.userWeeklyBoards.forEach((board) {
-      //   _tambolaBoardViews.add(new TambolaBoardView(
-      //     tambolaBoard: board.tambolaBoard,
-      //     calledDigits: (baseProvider.weeklyDrawFetched &&
-      //             baseProvider.weeklyDigits != null)
-      //         ? baseProvider.weeklyDigits.toList()
-      //         : [],
-      //     boardColor: UiConstants
-      //         .boardColors[rnd.nextInt(UiConstants.boardColors.length)],
-      //   ));
-      // });
+
       _widget = _buildShowcaseWrapper(
           _showcaseThree,
           Assets.showCaseDesc[2],
@@ -814,6 +802,80 @@ class _HState extends State<PlayHome> {
         dailyPickTextList: dailyPickTextList,
         digits: _getDailyPickData(baseProvider.weeklyDigits, date.weekday));
   }
+  
+  Widget _buildPrizeTabView() {
+    String win_corner = BaseUtil.remoteConfig.getString('tambola_win_corner');
+    String win_top = BaseUtil.remoteConfig.getString('tambola_win_top');
+    String win_middle = BaseUtil.remoteConfig.getString('tambola_win_middle');
+    String win_bottom = BaseUtil.remoteConfig.getString('tambola_win_bottom');
+    String win_full = BaseUtil.remoteConfig.getString('tambola_win_full');
+    String referral_bonus = BaseUtil.remoteConfig.getString('referral_bonus');
+    return Padding(
+      padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _getPrizeRow(
+              'Referral',
+              (referral_bonus == null || referral_bonus.isEmpty)
+                  ? '₹25'
+                  : '₹$referral_bonus'),
+          _getPrizeRow(
+              'Corners',
+              (win_corner == null || win_corner.isEmpty)
+                  ? '₹500'
+                  : '₹$win_corner'),
+          _getPrizeRow('First Row',
+              (win_top == null || win_top.isEmpty) ? '₹1500' : '₹$win_top'),
+          _getPrizeRow(
+              'Second Row',
+              (win_middle == null || win_middle.isEmpty)
+                  ? '₹1500'
+                  : '₹$win_middle'),
+          _getPrizeRow(
+              'Third Row',
+              (win_bottom == null || win_bottom.isEmpty)
+                  ? '₹1500'
+                  : '₹$win_bottom'),
+          _getPrizeRow('Full House',
+              (win_full == null || win_full.isEmpty) ? '₹10,000' : '₹$win_full'),
+        ],
+      ),
+    );
+    // );
+  }
+
+  Widget _getPrizeRow(String title, String prize) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.blockSizeHorizontal * 1.6,
+          vertical: SizeConfig.blockSizeVertical * 0.5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            child: Text(title,
+                textAlign: TextAlign.left,
+                style: GoogleFonts.montserrat(
+                    fontSize: SizeConfig.mediumTextSize,
+                    height: 1.6,
+                    color: UiConstants.accentColor)),
+          ),
+          Expanded(
+            child: Text(prize,
+                textAlign: TextAlign.end,
+                style: GoogleFonts.montserrat(
+                    fontSize: SizeConfig.mediumTextSize,
+                    height: 1.6,
+                    fontWeight: FontWeight.bold,
+                    color: UiConstants.primaryColor)),
+          ),
+        ],
+      ),
+    );
+  }
 
   List<int> _getDailyPickData(DailyPick draws, int day) {
     List<int> picks = [];
@@ -828,81 +890,13 @@ class _HState extends State<PlayHome> {
     }
     return picks;
   }
+  
+  int get _activeTambolaCardCount {
+    if(baseProvider == null || baseProvider.userWeeklyBoards == null) return 0;
+    return baseProvider.userWeeklyBoards.length;
+  }
 }
 
-Widget _buildPrizeTabView() {
-  String win_corner = BaseUtil.remoteConfig.getString('tambola_win_corner');
-  String win_top = BaseUtil.remoteConfig.getString('tambola_win_top');
-  String win_middle = BaseUtil.remoteConfig.getString('tambola_win_middle');
-  String win_bottom = BaseUtil.remoteConfig.getString('tambola_win_bottom');
-  String win_full = BaseUtil.remoteConfig.getString('tambola_win_full');
-  String referral_bonus = BaseUtil.remoteConfig.getString('referral_bonus');
-  return Padding(
-    padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        _getPrizeRow(
-            'Referral',
-            (referral_bonus == null || referral_bonus.isEmpty)
-                ? '₹25'
-                : '₹$referral_bonus'),
-        _getPrizeRow(
-            'Corners',
-            (win_corner == null || win_corner.isEmpty)
-                ? '₹500'
-                : '₹$win_corner'),
-        _getPrizeRow('First Row',
-            (win_top == null || win_top.isEmpty) ? '₹1500' : '₹$win_top'),
-        _getPrizeRow(
-            'Second Row',
-            (win_middle == null || win_middle.isEmpty)
-                ? '₹1500'
-                : '₹$win_middle'),
-        _getPrizeRow(
-            'Third Row',
-            (win_bottom == null || win_bottom.isEmpty)
-                ? '₹1500'
-                : '₹$win_bottom'),
-        _getPrizeRow('Full House',
-            (win_full == null || win_full.isEmpty) ? '₹10,000' : '₹$win_full'),
-      ],
-    ),
-  );
-  // );
-}
-
-Widget _getPrizeRow(String title, String prize) {
-  return Container(
-    margin: EdgeInsets.only(bottom: 8),
-    padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.blockSizeHorizontal * 1.6,
-        vertical: SizeConfig.blockSizeVertical * 0.5),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Expanded(
-          child: Text(title,
-              textAlign: TextAlign.left,
-              style: GoogleFonts.montserrat(
-                  fontSize: SizeConfig.mediumTextSize,
-                  height: 1.6,
-                  color: UiConstants.accentColor)),
-        ),
-        Expanded(
-          child: Text(prize,
-              textAlign: TextAlign.end,
-              style: GoogleFonts.montserrat(
-                  fontSize: SizeConfig.mediumTextSize,
-                  height: 1.6,
-                  fontWeight: FontWeight.bold,
-                  color: UiConstants.primaryColor)),
-        ),
-      ],
-    ),
-  );
-}
 
 class Odds extends StatelessWidget {
   final DailyPick _digitsObj;
@@ -1070,36 +1064,37 @@ class Odds extends StatelessWidget {
               ),
               Expanded(
                   child: InkWell(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Text(
-                      _oOdd,
-                      style: GoogleFonts.montserrat(
-                        color: Colors.blueGrey,
-                        fontSize: SizeConfig.mediumTextSize,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          _oOdd,
+                          style: GoogleFonts.montserrat(
+                            color: Colors.blueGrey,
+                            fontSize: SizeConfig.mediumTextSize,
+                          ),
+                        ),
+                        Text(
+                          'Best ticket',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.montserrat(
+                            color: Colors.blue[900],
+                            fontSize: SizeConfig.smallTextSize,
+                          ),
+                        )
+                      ],
                     ),
-                    Text(
-                      'Best ticket',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
-                        color: Colors.blue[900],
-                        fontSize: SizeConfig.smallTextSize,
-                      ),
-                    )
-                  ],
-                ),
-                onTap: () {
-                  HapticFeedback.vibrate();
-                  showDialog(
-                      context: cx,
-                      builder: (BuildContext context) => TambolaDialog(
-                            board: _bestBoard,
-                            digits: _digits,
-                          ));
-                },
-              )),
+                    onTap: () {
+                      HapticFeedback.vibrate();
+                      showDialog(
+                          context: cx,
+                          builder: (BuildContext context) =>
+                              TambolaDialog(
+                                board: _bestBoard,
+                                digits: _digits,
+                              ));
+                    },
+                  )),
             ]));
   }
 }

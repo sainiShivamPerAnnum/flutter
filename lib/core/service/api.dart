@@ -121,15 +121,15 @@ class Api {
         .set(data, SetOptions(merge: false));
   }
 
-  Stream<QuerySnapshot> getValidUserTickets(String user_id, int weekCode) {
+  Future<QuerySnapshot> getValidUserTickets(String user_id, int weekCode) {
     Query query = _db
         .collection(Constants.COLN_USERS)
         .doc(user_id)
         .collection(Constants.SUBCOLN_USER_TICKETS);
     query = query.where(TambolaBoard.fldWeekCode, isEqualTo: weekCode);
 
-    return query.snapshots();
-    //return query.getDocuments();
+    //return query.snapshots();
+    return query.get();
   }
 
   Future<QuerySnapshot> getWeekPickByCde(int weekCde) {
