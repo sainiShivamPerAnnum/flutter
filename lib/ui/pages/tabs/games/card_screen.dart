@@ -132,13 +132,6 @@ class _TambolaGameScreen extends State<TambolaHome> {
     }
 
     ///check if new tambola tickets need to be generated
-    // int cx = baseProvider.checkTicketCountValidity(
-    //     baseProvider.userWeeklyBoards);
-    // if (cx > 0) {
-    //   log.debug('Pushing ticket generation request');
-    //   ticketsBeingGenerated = true;
-    //   dbProvider.pushTicketRequest(baseProvider.myUser, cx);
-    // }
     bool _isGenerating = await _tambolaTicketService
         .processTicketGenerationRequirement(_activeTambolaCardCount);
     if (_isGenerating) {
@@ -162,6 +155,12 @@ class _TambolaGameScreen extends State<TambolaHome> {
       });
     }
 
+    ///check if tickets need to be deleted
+    bool _isDeleted = await _tambolaTicketService.processTicketDeletionRequirement(_activeTambolaCardCount);
+    if(_isDeleted) {
+      setState(() {});
+    }
+
     ///Show the onboarding showcase tutorial is user is new
     localDBModel.isFreshUser().then((flag) {
       if (flag == 0) {
@@ -175,7 +174,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
   }
 
   _refreshTambolaTickets() async {
-    log.debug('Refresh this mofo');
+    log.debug('Refreshing..');
     baseProvider.weeklyTicksFetched = false;
     setState(() {});
   }

@@ -192,29 +192,6 @@ class DBModel extends ChangeNotifier {
   }
 
   ///////////////////////TAMBOLA TICKETING/////////////////////////
-  Future<bool> setTicketGenerationInProgress(String userId, int count) async {
-    try {
-      return await _lock.synchronized(() async {
-        if (BaseUtil.atomicTicketGenerationLeftCount > 0) {
-          log.debug('Tickets already awaiting generation.');
-          return false;
-        } else {
-          bool flag = await _api.setUserTicketWalletGenerationField(
-              userId, UserTicketWallet.fldTicketGenerationCount, count);
-          if (!flag) {
-            log.error('Failed to add ticket generation counter');
-            return false;
-          } else {
-            BaseUtil.atomicTicketGenerationLeftCount = count;
-            return true;
-          }
-        }
-      });
-    } catch (e) {
-      return false;
-    }
-  }
-
   Future<StreamSubscription<DocumentSnapshot>> subscribeToTicketRequest(BaseUser user, int count) async {
     try {
       TicketRequest _request = await pushTicketRequest(user, count);
@@ -658,6 +635,15 @@ class DBModel extends ChangeNotifier {
       } else {
         return false;
       }
+    } catch (e) {
+      log.error('$e');
+      return false;
+    }
+  }
+
+  Future<bool> deleteSelectUserTickets(String userId, List<String> ticketRef) async {
+    try {
+      return await _api.deleteUserTicketDocuments(userId, ticketRef);
     } catch (e) {
       log.error('$e');
       return false;

@@ -100,6 +100,7 @@ class BaseUtil extends ChangeNotifier {
   static int infoSliderIndex = 0;
   static bool playScreenFirst = true;
   static int atomicTicketGenerationLeftCount = 0;
+  static int atomicTicketDeletionLeftCount = 0;
 
   ///STAGES - IMPORTANT
   static const AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;

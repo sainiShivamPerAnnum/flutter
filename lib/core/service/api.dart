@@ -116,15 +116,11 @@ class Api {
   }
 
   Future<DocumentReference> createTicketRequest(String userId, Map data) {
-    return _db
-        .collection(Constants.COLN_TICKETREQUEST)
-        .add(data);
+    return _db.collection(Constants.COLN_TICKETREQUEST).add(data);
   }
 
   Stream<DocumentSnapshot> getticketRequestDocumentEvent(String docId) {
-    return _db
-        .collection(Constants.COLN_TICKETREQUEST)
-        .doc(docId).snapshots();
+    return _db.collection(Constants.COLN_TICKETREQUEST).doc(docId).snapshots();
   }
 
   Future<QuerySnapshot> getValidUserTickets(String user_id, int weekCode) {
@@ -408,5 +404,30 @@ class Api {
       }
     }
     return flag;
+  }
+
+  Future<bool> deleteUserTicketDocuments(String uid, List<String> references) async{
+    if (references.length > 0) {
+      CollectionReference colnReference = _db
+          .collection(Constants.COLN_USERS)
+          .doc(uid)
+          .collection(Constants.SUBCOLN_USER_TICKETS);
+      try {
+        var opBatch = _db.batch();
+        for (String ref in references) {
+          opBatch.delete(colnReference.doc(ref));
+        }
+        log.debug(
+            'Deleting ${references.length.toString()} ticket documents');
+
+        await opBatch.commit();
+        return true;
+      } catch (e) {
+        log.error('DB Batch operation failed: $e');
+        return false;
+      }
+    }else{
+      return false;
+    }
   }
 }

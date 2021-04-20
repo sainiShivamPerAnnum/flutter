@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -12,6 +13,7 @@ import 'package:felloapp/core/model/TicketRequest.dart';
 class TambolaGenerationService extends ChangeNotifier {
   Log log = new Log('TambolaGenerationService');
   Lock _genLock = new Lock();
+  Lock _delLock = new Lock();
 
   TambolaGenerationService();
 
@@ -24,31 +26,10 @@ class TambolaGenerationService extends ChangeNotifier {
   static const int GENERATION_FAILED = 0;
   static const int GENERATION_PARTIALLY_COMPLETE = 2;
 
-  ///checks if new tickets need to be generated
-  // processTicketGenerationRequirement(int currentTambolaBoardCount) async{
-  //   int _ticketGenerateCount = 0;
-  //   if (currentTambolaBoardCount != null &&
-  //       baseProvider.userTicketWallet.getActiveTickets() > 0) {
-  //     if (currentTambolaBoardCount <
-  //         baseProvider.userTicketWallet.getActiveTickets()) {
-  //       log.debug(
-  //           'Currently generated ticket count is less than needed tickets');
-  //       _ticketGenerateCount =
-  //           baseProvider.userTicketWallet.getActiveTickets() -
-  //               currentTambolaBoardCount;
-  //     }
-  //   }
-  //   if(_ticketGenerateCount > 0 && BaseUtil.atomicTicketGenerationLeftCount == 0) {
-  //     bool flag = await dbProvider.setTicketGenerationInProgress(baseProvider.myUser.uid, _ticketGenerateCount);
-  //     if(flag) {
-  //       log.debug('Ticket generation process can be started');
-  //       _initiateTicketGeneration(_ticketGenerateCount);
-  //     }
-  //   }else{
-  //     log.debug('New tickets do not/can not be generated right now');
-  //   }
-  // }
+  static const int DELETION_COMPLETE = 1;
+  static const int DELETION_FAILED = 0;
 
+  ///checks if new tickets need to be generated
   Future<bool> processTicketGenerationRequirement(
       int currentTambolaBoardCount) async {
     return await _genLock.synchronized(() async {
@@ -84,6 +65,69 @@ class TambolaGenerationService extends ChangeNotifier {
         log.debug('New tickets do not/can not be generated right now');
       }
       return false;
+    });
+  }
+
+  Future<bool> processTicketDeletionRequirement(
+      int currentTambolaBoardCount) async {
+    return await _genLock.synchronized(() async {
+      ///check if there is atomic field was updated before
+      if (BaseUtil.atomicTicketDeletionLeftCount > 0) return false;
+
+      int _ticketDeleteCount = 0;
+      if (currentTambolaBoardCount != null &&
+          baseProvider.userTicketWallet.getActiveTickets() > 0) {
+        if (currentTambolaBoardCount >
+            baseProvider.userTicketWallet.getActiveTickets()) {
+          log.debug(
+              'Currently generated ticket count is more than needed tickets');
+          _ticketDeleteCount = currentTambolaBoardCount -
+              baseProvider.userTicketWallet.getActiveTickets();
+        }
+      }
+      if (_ticketDeleteCount > 0 &&
+          BaseUtil.atomicTicketDeletionLeftCount == 0) {
+        BaseUtil.atomicTicketDeletionLeftCount = _ticketDeleteCount;
+        return await _initiateTicketDeletion();
+      } else {
+        log.debug('New tickets do not/can not be deleted right now');
+      }
+      return false;
+    });
+  }
+
+  Future<bool> _initiateTicketDeletion() async{
+    return await _delLock.synchronized(() async{
+      if (baseProvider.userWeeklyBoards == null ||
+          baseProvider.userWeeklyBoards.isEmpty ||
+          BaseUtil.atomicTicketDeletionLeftCount == 0) return _onTicketDeletionRequestFailed();
+      baseProvider.userWeeklyBoards.sort((a, b) => a
+          .assigned_time.millisecondsSinceEpoch
+          .compareTo(b.assigned_time.millisecondsSinceEpoch));
+      print('post sort');
+
+      List<TambolaBoard> _tList = [];
+      for(TambolaBoard board in baseProvider.userWeeklyBoards) {
+        _tList.add(board);
+      }
+
+      int _k = 0;
+      int _t = BaseUtil.atomicTicketDeletionLeftCount;
+      List<String> _deleteTicketRefList = [];
+      while(_t > 0) {
+        _deleteTicketRefList.add(baseProvider.userWeeklyBoards[_k].doc_key);
+        _k++;
+        _t--;
+      }
+      if(_deleteTicketRefList.length > 0) {
+        bool flag = await dbProvider.deleteSelectUserTickets(baseProvider.myUser.uid, _deleteTicketRefList);
+        if(flag) {
+          baseProvider.userWeeklyBoards.removeRange(0, BaseUtil.atomicTicketDeletionLeftCount);
+          BaseUtil.atomicTicketDeletionLeftCount = 0;
+          return true;
+        }
+      }
+      return _onTicketDeletionRequestFailed();
     });
   }
 
@@ -154,7 +198,18 @@ class TambolaGenerationService extends ChangeNotifier {
     _generationComplete(GENERATION_COMPLETE);
   }
 
+  bool _onTicketDeletionRequestComplete() {
+    BaseUtil.atomicTicketDeletionLeftCount = 0;
+    return true;
+  }
+
+  bool _onTicketDeletionRequestFailed() {
+    BaseUtil.atomicTicketDeletionLeftCount = 0; //so it can be tried again
+    return false;
+  }
+
   setTambolaTicketGenerationResultListener(ValueChanged<int> listener) {
     this._generationComplete = listener;
   }
+
 }
