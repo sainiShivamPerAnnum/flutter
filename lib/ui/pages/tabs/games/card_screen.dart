@@ -41,12 +41,10 @@ class _TambolaGameScreen extends State<TambolaHome> {
   TambolaBoardView _currentBoardView;
   bool _winnerDialogCalled = false;
 
-  //GlobalKey<TambolaBoardState> _currentKey;
   List<TambolaBoardView> _tambolaBoardViews;
   List<TambolaBoard> _bestTambolaBoards;
   List<Widget> balls = [];
 
-  //List<GlobalKey<TambolaBoardState>> _boardKeys;
   var rnd = new Random();
   BaseUtil baseProvider;
   DBModel dbProvider;
@@ -64,8 +62,6 @@ class _TambolaGameScreen extends State<TambolaHome> {
   GlobalKey _showcaseThree = GlobalKey();
   GlobalKey _showcaseFour = GlobalKey();
   bool _showTutorial = false;
-  Timer _prizeTimer;
-
   TambolaGenerationService _tambolaTicketService;
 
   @override
@@ -156,8 +152,9 @@ class _TambolaGameScreen extends State<TambolaHome> {
     }
 
     ///check if tickets need to be deleted
-    bool _isDeleted = await _tambolaTicketService.processTicketDeletionRequirement(_activeTambolaCardCount);
-    if(_isDeleted) {
+    bool _isDeleted = await _tambolaTicketService
+        .processTicketDeletionRequirement(_activeTambolaCardCount);
+    if (_isDeleted) {
       setState(() {});
     }
 
@@ -224,7 +221,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
     fcmProvider = Provider.of<FcmHandler>(context, listen: false);
     localDBModel = Provider.of<LocalDBModel>(context, listen: false);
     _init();
-    _processTicketResults();
+    _checkSundayResultsProcessing();
     if (_showTutorial) _startTutorial();
     return Scaffold(
         //debugShowCheckedModeBanner: false,
@@ -430,15 +427,8 @@ class _TambolaGameScreen extends State<TambolaHome> {
                           onTap: () {
                             _tambolaBoardViews = [];
                             baseProvider.userWeeklyBoards.forEach((board) {
-                              _tambolaBoardViews.add(new TambolaBoardView(
-                                  tambolaBoard: board.tambolaBoard,
-                                  calledDigits:
-                                      (baseProvider.weeklyDrawFetched &&
-                                              baseProvider.weeklyDigits != null)
-                                          ? baseProvider.weeklyDigits.toList()
-                                          : [],
-                                  boardColor:
-                                      UiConstants.primaryColor.withGreen(200)));
+                              _tambolaBoardViews.add(_buildBoardView(
+                                  board, baseProvider.weeklyDigits));
                             });
                             Navigator.push(
                               context,
@@ -550,7 +540,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
     );
   }
 
-  _processTicketResults() {
+  _checkSundayResultsProcessing() {
     if (baseProvider.userWeeklyBoards == null ||
         baseProvider.userWeeklyBoards.isEmpty ||
         baseProvider.weeklyDigits == null ||
@@ -565,10 +555,13 @@ class _TambolaGameScreen extends State<TambolaHome> {
         localDBModel.isUserOnboarded().then((flag) {
           if (flag == 1) {
             log.debug('Ticket results not yet displayed. Displaying: ');
-            _testTickets();
+            _examineTicketsForWins();
+
+            ///save the status that results have been saved
             localDBModel.saveOnboardStatus(false);
           }
-          //also delete all the old tickets here
+
+          ///also delete all the old tickets while we're at it
           //no need to await
           dbProvider.deleteExpiredUserTickets(baseProvider.myUser.uid);
         });
@@ -580,7 +573,9 @@ class _TambolaGameScreen extends State<TambolaHome> {
     }
   }
 
-  _testTickets() {
+  ///check if any of the tickets aced any of the categories.
+  ///if any did, add it to a list and submit the list as a win claim
+  _examineTicketsForWins() {
     if (baseProvider.userWeeklyBoards == null ||
         baseProvider.userWeeklyBoards.isEmpty ||
         baseProvider.weeklyDigits == null ||
@@ -590,27 +585,43 @@ class _TambolaGameScreen extends State<TambolaHome> {
     }
     Map<String, int> ticketCodeWinIndex = {};
     baseProvider.userWeeklyBoards.forEach((boardObj) {
-      if (boardObj.getCornerOdds(baseProvider.weeklyDigits.toList()) == 0) {
+      if (boardObj.getCornerOdds(baseProvider.weeklyDigits
+              .getPicksPostDate(boardObj.generatedDayCode)) ==
+          0) {
         if (boardObj.getTicketNumber() != 'NA')
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
               Constants.CORNERS_COMPLETED;
       }
-      if (boardObj.getRowOdds(0, baseProvider.weeklyDigits.toList()) == 0) {
+      if (boardObj.getRowOdds(
+              0,
+              baseProvider.weeklyDigits
+                  .getPicksPostDate(boardObj.generatedDayCode)) ==
+          0) {
         if (boardObj.getTicketNumber() != 'NA')
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
               Constants.ROW_ONE_COMPLETED;
       }
-      if (boardObj.getRowOdds(1, baseProvider.weeklyDigits.toList()) == 0) {
+      if (boardObj.getRowOdds(
+              1,
+              baseProvider.weeklyDigits
+                  .getPicksPostDate(boardObj.generatedDayCode)) ==
+          0) {
         if (boardObj.getTicketNumber() != 'NA')
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
               Constants.ROW_TWO_COMPLETED;
       }
-      if (boardObj.getRowOdds(2, baseProvider.weeklyDigits.toList()) == 0) {
+      if (boardObj.getRowOdds(
+              2,
+              baseProvider.weeklyDigits
+                  .getPicksPostDate(boardObj.generatedDayCode)) ==
+          0) {
         if (boardObj.getTicketNumber() != 'NA')
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
               Constants.ROW_THREE_COMPLETED;
       }
-      if (boardObj.getFullHouseOdds(baseProvider.weeklyDigits.toList()) == 0) {
+      if (boardObj.getFullHouseOdds(baseProvider.weeklyDigits
+              .getPicksPostDate(boardObj.generatedDayCode)) ==
+          0) {
         if (boardObj.getTicketNumber() != 'NA')
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
               Constants.FULL_HOUSE_COMPLETED;
@@ -638,7 +649,8 @@ class _TambolaGameScreen extends State<TambolaHome> {
               baseProvider.userTicketWallet.getActiveTickets(),
               ticketCodeWinIndex)
           .then((flag) {
-        log.debug('Added claim document');
+        baseProvider.showPositiveAlert('Congratulations 🎉',
+            'Your ticket results have been submitted for approval!', context);
       });
     }
   }
@@ -646,9 +658,9 @@ class _TambolaGameScreen extends State<TambolaHome> {
   List<TambolaBoard> _refreshBestBoards() {
     if (baseProvider.userWeeklyBoards == null ||
         baseProvider.userWeeklyBoards.isEmpty) {
-      return new List<TambolaBoard>(5);
+      return [];
     }
-    _bestTambolaBoards = new List<TambolaBoard>(5);
+    _bestTambolaBoards = [];
     //initialise
     _bestTambolaBoards[0] = baseProvider.userWeeklyBoards[0];
     _bestTambolaBoards[1] = baseProvider.userWeeklyBoards[0];
@@ -668,29 +680,46 @@ class _TambolaGameScreen extends State<TambolaHome> {
       if (_bestTambolaBoards[3] == null) _bestTambolaBoards[3] = board;
       if (_bestTambolaBoards[4] == null) _bestTambolaBoards[4] = board;
 
-      if (_bestTambolaBoards[0]
-              .getRowOdds(0, baseProvider.weeklyDigits.toList()) >
-          board.getRowOdds(0, baseProvider.weeklyDigits.toList())) {
+      if (_bestTambolaBoards[0].getRowOdds(
+              0,
+              baseProvider.weeklyDigits
+                  .getPicksPostDate(_bestTambolaBoards[0].generatedDayCode)) >
+          board.getRowOdds(
+              0,
+              baseProvider.weeklyDigits
+                  .getPicksPostDate(board.generatedDayCode))) {
         _bestTambolaBoards[0] = board;
       }
-      if (_bestTambolaBoards[1]
-              .getRowOdds(1, baseProvider.weeklyDigits.toList()) >
-          board.getRowOdds(1, baseProvider.weeklyDigits.toList())) {
+      if (_bestTambolaBoards[1].getRowOdds(
+              1,
+              baseProvider.weeklyDigits
+                  .getPicksPostDate(_bestTambolaBoards[1].generatedDayCode)) >
+          board.getRowOdds(
+              1,
+              baseProvider.weeklyDigits
+                  .getPicksPostDate(board.generatedDayCode))) {
         _bestTambolaBoards[1] = board;
       }
-      if (_bestTambolaBoards[2]
-              .getRowOdds(2, baseProvider.weeklyDigits.toList()) >
-          board.getRowOdds(2, baseProvider.weeklyDigits.toList())) {
+      if (_bestTambolaBoards[2].getRowOdds(
+              2,
+              baseProvider.weeklyDigits
+                  .getPicksPostDate(_bestTambolaBoards[2].generatedDayCode)) >
+          board.getRowOdds(
+              2,
+              baseProvider.weeklyDigits
+                  .getPicksPostDate(board.generatedDayCode))) {
         _bestTambolaBoards[2] = board;
       }
-      if (_bestTambolaBoards[3]
-              .getCornerOdds(baseProvider.weeklyDigits.toList()) >
-          board.getCornerOdds(baseProvider.weeklyDigits.toList())) {
+      if (_bestTambolaBoards[3].getCornerOdds(baseProvider.weeklyDigits
+              .getPicksPostDate(_bestTambolaBoards[3].generatedDayCode)) >
+          board.getCornerOdds(baseProvider.weeklyDigits
+              .getPicksPostDate(board.generatedDayCode))) {
         _bestTambolaBoards[3] = board;
       }
-      if (_bestTambolaBoards[4]
-              .getFullHouseOdds(baseProvider.weeklyDigits.toList()) >
-          board.getFullHouseOdds(baseProvider.weeklyDigits.toList())) {
+      if (_bestTambolaBoards[4].getFullHouseOdds(baseProvider.weeklyDigits
+              .getPicksPostDate(_bestTambolaBoards[4].generatedDayCode)) >
+          board.getFullHouseOdds(baseProvider.weeklyDigits
+              .getPicksPostDate(board.generatedDayCode))) {
         _bestTambolaBoards[4] = board;
       }
     });
@@ -728,15 +757,8 @@ class _TambolaGameScreen extends State<TambolaHome> {
               )));
     } else if (count == 1) {
       _tambolaBoardViews = [];
-      _tambolaBoardViews.add(new TambolaBoardView(
-        tambolaBoard: baseProvider.userWeeklyBoards[0].tambolaBoard,
-        calledDigits: (baseProvider.weeklyDrawFetched &&
-                baseProvider.weeklyDigits != null)
-            ? baseProvider.weeklyDigits.toList()
-            : [],
-        boardColor: UiConstants
-            .boardColors[rnd.nextInt(UiConstants.boardColors.length)],
-      ));
+      _tambolaBoardViews.add(_buildBoardView(
+          baseProvider.userWeeklyBoards[0], baseProvider.weeklyDigits));
       _currentBoardView = _tambolaBoardViews[0];
       _currentBoard = baseProvider.userWeeklyBoards[0];
       _widget = _buildShowcaseWrapper(
@@ -749,14 +771,8 @@ class _TambolaGameScreen extends State<TambolaHome> {
     } else {
       _tambolaBoardViews = [];
       for (int i = 0; i < 5; i++) {
-        _tambolaBoardViews.add(new TambolaBoardView(
-          tambolaBoard: baseProvider.userWeeklyBoards[i].tambolaBoard,
-          calledDigits: (baseProvider.weeklyDrawFetched &&
-                  baseProvider.weeklyDigits != null)
-              ? baseProvider.weeklyDigits.toList()
-              : [],
-          boardColor: UiConstants.primaryColor.withGreen(200),
-        ));
+        _tambolaBoardViews.add(_buildBoardView(
+            baseProvider.userWeeklyBoards[i], baseProvider.weeklyDigits));
       }
 
       _widget = _buildShowcaseWrapper(
@@ -779,6 +795,22 @@ class _TambolaGameScreen extends State<TambolaHome> {
         _currentBoard = baseProvider.userWeeklyBoards[0];
     }
     return _widget;
+  }
+
+  TambolaBoardView _buildBoardView(TambolaBoard board, DailyPick picks) {
+    if (board == null || !board.isValid()) return null;
+    List<int> _calledDigits;
+    if (!baseProvider.weeklyDrawFetched ||
+        picks == null ||
+        picks.toList().isEmpty)
+      _calledDigits = [];
+    else {
+      _calledDigits = picks.getPicksPostDate(board.generatedDayCode);
+    }
+    return TambolaBoardView(
+        tambolaBoard: board.tambolaBoard,
+        calledDigits: _calledDigits,
+        boardColor: UiConstants.primaryColor.withGreen(200));
   }
 
   Widget _buildTodaysPicksWidget(DailyPick draws) {

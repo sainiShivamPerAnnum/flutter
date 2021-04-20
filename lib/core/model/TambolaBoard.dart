@@ -21,22 +21,22 @@ class TambolaBoard {
   static final int boardLength = 9;
   List<String> encodedTambolaList;
   List<List<int>> tambolaBoard =
-      new List.generate(boardHeight, (_) => new List(boardLength));
+  new List.generate(boardHeight, (_) => new List(boardLength));
   Map<int, int> indexValueMap = new HashMap();
 
-  TambolaBoard(
-      this.doc_key, this.assigned_time, this.val, this.id, this.week_code) {
+  TambolaBoard(this.doc_key, this.assigned_time, this.val, this.id,
+      this.week_code) {
     if (this.val != null) decodeBoard(this.val);
   }
 
   TambolaBoard.fromMap(Map<String, dynamic> data, String docKey)
       : this(
-          docKey,
-          data[fldAssignedTime],
-          data[fldBoardValue],
-          data[fldId],
-          data[fldWeekCode],
-        );
+    docKey,
+    data[fldAssignedTime],
+    data[fldBoardValue],
+    data[fldId],
+    data[fldWeekCode],
+  );
 
   bool isValid() {
     return (val != null); //TODO
@@ -70,7 +70,7 @@ class TambolaBoard {
       for (int j = 0; j < boardLength; j++) {
         int key = i * boardLength + j;
         tambolaBoard[i][j] =
-            (indexValueMap.containsKey(key)) ? indexValueMap[key] : 0;
+        (indexValueMap.containsKey(key)) ? indexValueMap[key] : 0;
       }
     }
     return tambolaBoard;
@@ -88,7 +88,8 @@ class TambolaBoard {
       }
     } else {
       log.error(
-          'Invalid decomposition of boardCode: ${encodedTambolaList.toString()}');
+          'Invalid decomposition of boardCode: ${encodedTambolaList
+              .toString()}');
     }
 
     return tambolaBoard;
@@ -181,6 +182,13 @@ class TambolaBoard {
     } catch (e) {}
     return 'NA';
   }
+
+  get generatedDayCode {
+    if(this.assigned_time == null) return DateTime.monday;
+    return this.assigned_time
+        .toDate()
+        .weekday;
+  }
 }
 
 class TambolaValueObject {
@@ -219,6 +227,7 @@ class TambolaValueObject {
       }
     }
   }
+
 
   bool get indexInvalid => _indexInvalid;
 
