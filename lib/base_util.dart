@@ -493,15 +493,15 @@ class BaseUtil extends ChangeNotifier {
   _compileUserWallet() {
     _userFundWallet =
         (_userFundWallet == null) ? UserFundWallet.newWallet() : _userFundWallet;
-    if (_myUser.isIciciOnboarded && _myUser.icici_balance > 0) {
-      _userFundWallet.iciciPrinciple = _myUser.icici_balance;
-      _userFundWallet.iciciBalance = _myUser.icici_balance;
-    }
-    if (_myUser.isAugmontOnboarded && _myUser.augmont_balance > 0) {
-      _userFundWallet.augGoldPrinciple = _myUser.augmont_balance;
-      _userFundWallet.augGoldBalance = _myUser.augmont_balance;
-      _userFundWallet.augGoldQuantity = _myUser.augmont_quantity;
-    }
+    // if (_myUser.isIciciOnboarded && _myUser.icici_balance > 0) {
+    //   _userFundWallet.iciciPrinciple = _myUser.icici_balance;
+    //   _userFundWallet.iciciBalance = _myUser.icici_balance;
+    // }
+    // if (_myUser.isAugmontOnboarded && _myUser.augmont_balance > 0) {
+    //   _userFundWallet.augGoldPrinciple = _myUser.augmont_balance;
+    //   _userFundWallet.augGoldBalance = _myUser.augmont_balance;
+    //   _userFundWallet.augGoldQuantity = _myUser.augmont_quantity;
+    // }
     // if (_myUser.prize_balance != null && _myUser.prize_balance > 0) {
     //   _userFundWallet.prizeBalance = _myUser.prize_balance + 0.0;
     // }

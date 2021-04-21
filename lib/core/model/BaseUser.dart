@@ -63,13 +63,7 @@ class BaseUser {
       this._dob,
       this._gender,
       this._client_token,
-      this._ticket_count,
-      this._account_balance,
-      this._deposit_balance,
       this._prize_balance,
-      this._icici_balance,
-      this._augmont_balance,
-      this._augmont_quantity,
       this._lifetime_winnings,
       this._pan,
       this._age,
@@ -90,14 +84,7 @@ class BaseUser {
             null,
             null,
             null,
-            BaseUtil.NEW_USER_TICKET_COUNT,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
+            0,0,
             null,
             null,
             false,
@@ -105,8 +92,8 @@ class BaseUser {
             false,
             BaseUtil.KYC_UNTESTED,
             null,
-            null,
-            null);
+            true,
+            true);
 
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token])
       : this(
@@ -117,13 +104,7 @@ class BaseUser {
             data[fldDob],
             data[fldGender],
             client_token,
-            data[fldTicket_count] ?? BaseUtil.NEW_USER_TICKET_COUNT,
-            data[fldAcctBalance] ?? 0,
-            data[fldDepositBalance] ?? 0,
             data[fldPriBalance] ?? 0,
-            BaseUtil.toDouble(data[fldICICIBalance]),
-            BaseUtil.toDouble(data[fldAugmontBalance]),
-            BaseUtil.toDouble(data[fldAugmontQuantity]),
             data[fldLifeTimeWinnings] ?? 0,
             data[fldPan],
             data[fldAge],
@@ -143,13 +124,7 @@ class BaseUser {
       fldEmail: _email,
       fldDob: _dob,
       fldGender: _gender,
-      fldTicket_count: _ticket_count,
-      fldAcctBalance: _account_balance,
-      fldDepositBalance: _deposit_balance,
       fldPriBalance: _prize_balance,
-      fldICICIBalance: _icici_balance,
-      fldAugmontBalance: _augmont_balance,
-      fldAugmontQuantity: _augmont_quantity,
       fldLifeTimeWinnings: _lifetime_winnings,
       fldPan: _pan,
       fldAge: _age,
@@ -214,24 +189,6 @@ class BaseUser {
     _uid = value;
   }
 
-  int get ticket_count => _ticket_count;
-
-  set ticket_count(int value) {
-    _ticket_count = value;
-  }
-
-  int get account_balance => _account_balance;
-
-  set account_balance(int value) {
-    _account_balance = value;
-  }
-
-  double get augmont_balance => _augmont_balance;
-
-  set augmont_balance(double value) {
-    _augmont_balance = value;
-  }
-
   String get pan => _pan;
 
   set pan(String value) {
@@ -274,18 +231,6 @@ class BaseUser {
     _prize_balance = value;
   }
 
-  int get deposit_balance => _deposit_balance;
-
-  set deposit_balance(int value) {
-    _deposit_balance = value;
-  }
-
-  double get icici_balance => _icici_balance;
-
-  set icici_balance(double value) {
-    _icici_balance = value;
-  }
-
   String get pendingTxnId => _pendingTxnId;
 
   set pendingTxnId(String value) {
@@ -310,9 +255,4 @@ class BaseUser {
     _isAugmontOnboarded = value;
   }
 
-  double get augmont_quantity => _augmont_quantity;
-
-  set augmont_quantity(double value) {
-    _augmont_quantity = value;
-  }
 }

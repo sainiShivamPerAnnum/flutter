@@ -224,16 +224,17 @@ class _RootState extends State<Root> {
 
   _processReferral(String userId, Uri deepLink) async {
     int addUserTicketCount =
-        await _submitReferral(baseProvider.myUser.uid, deepLink);
+        await _submitReferral(baseProvider.myUser.uid, baseProvider.myUser.name, deepLink);
     if (addUserTicketCount == null || addUserTicketCount < 0) {
       log.debug('Processing complete. No extra tickets to be added');
     } else {
       log.debug('$addUserTicketCount tickets need to be added for the user');
-      dbProvider.pushTicketRequest(baseProvider.myUser, addUserTicketCount);
+      //NO LONGER REQUIRED
+      // dbProvider.pushTicketRequest(baseProvider.myUser, addUserTicketCount);
     }
   }
 
-  Future<int> _submitReferral(String userId, Uri deepLink) async {
+  Future<int> _submitReferral(String userId, String userName, Uri deepLink) async {
     try {
       String prefix = 'https://fello.in/';
       String dLink = deepLink.toString();
@@ -242,7 +243,7 @@ class _RootState extends State<Root> {
         log.debug(referee);
         if (prefix.length > 0 && prefix != userId) {
           return httpModel
-              .postUserReferral(userId, referee)
+              .postUserReferral(userId, referee, userName)
               .then((userTicketUpdateCount) {
             log.debug('User deserves $userTicketUpdateCount more tickets');
             return userTicketUpdateCount;

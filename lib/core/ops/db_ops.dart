@@ -194,7 +194,7 @@ class DBModel extends ChangeNotifier {
   ///////////////////////TAMBOLA TICKETING/////////////////////////
   Future<StreamSubscription<DocumentSnapshot>> subscribeToTicketRequest(BaseUser user, int count) async {
     try {
-      TicketRequest _request = await pushTicketRequest(user, count);
+      TicketRequest _request = await _pushTicketRequest(user, count);
       if (_request.docKey != null) {
         return _api.getticketRequestDocumentEvent(_request.docKey).listen((event) {
           TicketRequest _changedRequest =
@@ -211,7 +211,7 @@ class DBModel extends ChangeNotifier {
   }
 
   ///STATUS: P - PENDING, C - COMPLETE, F - FAILED
-  Future<TicketRequest> pushTicketRequest(BaseUser user, int count) async {
+  Future<TicketRequest> _pushTicketRequest(BaseUser user, int count) async {
     try {
       String _uid = user.uid;
       TicketRequest _req = new TicketRequest(

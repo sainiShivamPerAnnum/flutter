@@ -15,12 +15,12 @@ class HttpModel extends ChangeNotifier {
       'https://us-central1-fello-d3a9c.cloudfunctions.net/razorpayops';
 
   ///Returns the number of tickets that need to be added to user's balance
-  Future<int> postUserReferral(String userId, String referee) async {
+  Future<int> postUserReferral(String userId, String userName, String referee) async {
     if (_baseUtil == null || _baseUtil.firebaseUser == null) return -1;
     String idToken = await _baseUtil.firebaseUser.getIdToken();
     log.debug('Fetched user IDToken: ' + idToken);
     try {
-      http.Response _response = await http.post('$_homeuri/validateUserReferral?uid=$userId&rid=$referee',
+      http.Response _response = await http.post('$_homeuri/validateUserReferral?uid=$userId&rid=$referee&uname=$userName',
           headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
       log.debug(_response.body);
       if(_response.statusCode == 200) {
@@ -31,7 +31,9 @@ class HttpModel extends ChangeNotifier {
               log.debug(parsed['add_tickets_count'].toString());
               int userTicketUpdateCount = BaseUtil.toInt(parsed['add_tickets_count']);
               return userTicketUpdateCount;
-            }catch(ee) {}
+            }catch(ee) {
+              return -1;
+            }
           }else {
             return -1;
           }
