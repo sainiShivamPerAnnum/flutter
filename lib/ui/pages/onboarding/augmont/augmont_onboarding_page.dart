@@ -35,6 +35,8 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
       new TextEditingController();
   static TextEditingController _bankAccountNumberInput =
       new TextEditingController();
+  static TextEditingController _reenterbankAccountNumberInput =
+      new TextEditingController();
   static TextEditingController _bankIfscInput = new TextEditingController();
   bool _isInit = false;
   static String stateChosenValue;
@@ -256,6 +258,22 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
               SizedBox(height: 10),
               Padding(
                 padding: EdgeInsets.only(left: 10),
+                child: Text("Confirm Bank Account Number"),
+              ),
+              InputField(
+                child: TextFormField(
+                  decoration: inputFieldDecoration('Re-enter bank account number'),
+                  controller: _reenterbankAccountNumberInput,
+                  autofocus: false,
+                  obscureText: true,
+                  keyboardType: TextInputType.number,
+                  enabled: true,
+                  validator: (value) => null,
+                ),
+              ),
+              SizedBox(height: 10),
+              Padding(
+                padding: EdgeInsets.only(left: 10),
                 child: Text("Bank IFSC"),
               ),
               InputField(
@@ -394,6 +412,10 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     } else if (_bankAccountNumberInput.text.isEmpty) {
       baseProvider.showNegativeAlert('Account missing',
           'Kindly enter your bank account number', context);
+      return false;
+    } else if(_bankAccountNumberInput.text != _reenterbankAccountNumberInput.text){
+      baseProvider.showNegativeAlert('Account number mismatch',
+          'The bank account numbers did not match', context);
       return false;
     } else if (_bankIfscInput.text.isEmpty) {
       baseProvider.showNegativeAlert('Name missing',
