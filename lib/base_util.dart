@@ -128,7 +128,7 @@ class BaseUtil extends ChangeNotifier {
 
       //get user ticket balance
       _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
-      if(_userTicketWallet == null) {
+      if (_userTicketWallet == null) {
         await _initiateNewTicketWallet();
       }
       //remote config for various remote variables
@@ -393,7 +393,8 @@ class BaseUtil extends ChangeNotifier {
     if (requestedBoards != null && _userTicketWallet.getActiveTickets() > 0) {
       if (requestedBoards.length < _userTicketWallet.getActiveTickets()) {
         log.debug('Requested board count is less than needed tickets');
-        int ticketCountRequired = _userTicketWallet.getActiveTickets() - requestedBoards.length;
+        int ticketCountRequired =
+            _userTicketWallet.getActiveTickets() - requestedBoards.length;
 
         if (ticketCountRequired > 0 && !BaseUtil.ticketRequestSent) {
           BaseUtil.ticketRequestSent = true;
@@ -434,18 +435,18 @@ class BaseUtil extends ChangeNotifier {
     return n;
   }
 
-  int getUpdatedWithdrawalClosingBalance(double investment) =>
+  double getUpdatedWithdrawalClosingBalance(double investment) =>
       (toDouble(_userFundWallet.iciciBalance) +
-              toDouble(_userFundWallet.augGoldBalance) +
-              toDouble(_userFundWallet.prizeBalance) -
-              investment)
-          .round();
-
-  int getUpdatedClosingBalance(double investment) => (investment +
-          toDouble(_userFundWallet.iciciBalance) +
           toDouble(_userFundWallet.augGoldBalance) +
-          toDouble(_userFundWallet.prizeBalance))
-      .round();
+          toDouble(_userFundWallet.prizeBalance) +
+          toDouble(_userFundWallet.lockedPrizeBalance) -
+          investment);
+
+  double getUpdatedClosingBalance(double investment) => (investment +
+      toDouble(_userFundWallet.iciciBalance) +
+      toDouble(_userFundWallet.augGoldBalance) +
+      toDouble(_userFundWallet.prizeBalance) +
+      toDouble(_userFundWallet.lockedPrizeBalance));
 
   static T _cast<T>(x) => x is T ? x : null;
 
@@ -491,8 +492,9 @@ class BaseUtil extends ChangeNotifier {
   //the new wallet logic will be empty for old user.
   //this method will copy the old values to the new wallet
   _compileUserWallet() {
-    _userFundWallet =
-        (_userFundWallet == null) ? UserFundWallet.newWallet() : _userFundWallet;
+    _userFundWallet = (_userFundWallet == null)
+        ? UserFundWallet.newWallet()
+        : _userFundWallet;
     // if (_myUser.isIciciOnboarded && _myUser.icici_balance > 0) {
     //   _userFundWallet.iciciPrinciple = _myUser.icici_balance;
     //   _userFundWallet.iciciBalance = _myUser.icici_balance;
@@ -505,16 +507,17 @@ class BaseUtil extends ChangeNotifier {
     // if (_myUser.prize_balance != null && _myUser.prize_balance > 0) {
     //   _userFundWallet.prizeBalance = _myUser.prize_balance + 0.0;
     // }
-    if(_myUser.lifetime_winnings != null && _myUser.lifetime_winnings > 0) {
-        _userFundWallet.prizeLifetimeWin = _myUser.lifetime_winnings + 0.0;
-        //TODO update balance here
+    if (_myUser.lifetime_winnings != null && _myUser.lifetime_winnings > 0) {
+      _userFundWallet.prizeLifetimeWin = _myUser.lifetime_winnings + 0.0;
+      //TODO update balance here
     }
   }
 
-  Future<bool> _initiateNewTicketWallet() async{
+  Future<bool> _initiateNewTicketWallet() async {
     _userTicketWallet = UserTicketWallet.newTicketWallet();
     int _t = userTicketWallet.initTck;
-    _userTicketWallet = await _dbModel.updateInitUserTicketCount(myUser.uid, _userTicketWallet, NEW_USER_TICKET_COUNT);
+    _userTicketWallet = await _dbModel.updateInitUserTicketCount(
+        myUser.uid, _userTicketWallet, NEW_USER_TICKET_COUNT);
     //updateInitUserTicketCount method returns no change if operations fails
     return (_userTicketWallet.initTck != _t);
   }

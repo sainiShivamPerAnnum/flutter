@@ -480,21 +480,31 @@ class PaymentService extends ChangeNotifier {
         UserTransaction.TRAN_STATUS_COMPLETE;
 
     double amt = baseProvider.currentICICITxn.amount;
-    int ticketCount = (amt / BaseUtil.BALANCE_TO_TICKET_RATIO).floor();
+    int ticketCount = (amt / BaseUtil.BALANCE_TO_TICKET_RATIO).ceil();
 
-    double iBal = baseProvider.myUser.icici_balance ?? 0;
-    int totalBal = baseProvider.myUser.account_balance ?? 0;
-    int iTckCnt = baseProvider.myUser.ticket_count ?? 0;
+    double totalBal = baseProvider.userFundWallet.getEstTotalWealth() ?? 0.0;
 
     //update transaction object
     baseProvider.currentICICITxn.ticketUpCount = ticketCount;
-    baseProvider.currentICICITxn.closingBalance = totalBal + amt.toInt();
+    baseProvider.currentICICITxn.closingBalance = totalBal + amt;
 
     //update user object
     baseProvider.myUser.pendingTxnId = null;
-    baseProvider.myUser.icici_balance = iBal + amt;
-    baseProvider.myUser.account_balance = totalBal + amt.toInt();
-    baseProvider.myUser.ticket_count = iTckCnt + ticketCount;
+    bool usFlag = await dbProvider.updateUser(baseProvider.myUser);
+
+    //update fund wallet
+    double _f = baseProvider.userFundWallet.iciciPrinciple;
+    baseProvider.userFundWallet = await dbProvider.updateUserIciciBalance(baseProvider.myUser.uid, baseProvider.userFundWallet, amt);
+    bool isFundWalletUpdated = (_f != baseProvider.userFundWallet.iciciPrinciple);
+
+    //update ticket count
+    int _t = baseProvider.userTicketWallet.icici1565Tck;
+    baseProvider.userTicketWallet = await dbProvider.updateICICIUserTicketCount(baseProvider.myUser.uid, baseProvider.userTicketWallet, ticketCount);
+    bool isTckWalletUpdated = (_t != baseProvider.userTicketWallet.icici1565Tck);
+
+    //update user transaction
+    bool txnFlag = await dbProvider.updateUserTransaction(
+        baseProvider.myUser.uid, baseProvider.currentICICITxn);
 
     bool icFlag = true;
     //check if the user vpa needs to be added
@@ -511,13 +521,10 @@ class PaymentService extends ChangeNotifier {
       icFlag = await dbProvider.updateUserIciciDetails(
           baseProvider.myUser.uid, baseProvider.iciciDetail);
     }
-    bool usFlag = await dbProvider.updateUser(baseProvider.myUser);
-    bool txnFlag = await dbProvider.updateUserTransaction(
-        baseProvider.myUser.uid, baseProvider.currentICICITxn);
-    baseProvider.currentICICITxn = null;
-    log.debug('Updated all flags:: $icFlag\t$usFlag\t$txnFlag');
 
-    return (icFlag && usFlag && txnFlag);
+    baseProvider.currentICICITxn = null;
+    log.debug('Updated all flags:: $icFlag\t$usFlag\t$txnFlag\t$isFundWalletUpdated\t$isTckWalletUpdated');
+    return (icFlag && usFlag && txnFlag && isFundWalletUpdated && isTckWalletUpdated);
   }
 
   Future<bool> _onTransactionRejected() async {
@@ -536,7 +543,7 @@ class PaymentService extends ChangeNotifier {
     baseProvider.currentICICITxn.tranStatus =
         UserTransaction.TRAN_STATUS_CANCELLED;
     baseProvider.currentICICITxn.closingBalance =
-        baseProvider.myUser.account_balance ?? 0;
+        baseProvider.userFundWallet.getEstTotalWealth() ?? 0.0;
 
     //update user field
     baseProvider.myUser.pendingTxnId = null;
@@ -571,36 +578,35 @@ class PaymentService extends ChangeNotifier {
     //update user balance
     //update user ticket count
     double amt = txn.amount;
-    int ticketCount = (amt / BaseUtil.BALANCE_TO_TICKET_RATIO).floor();
+    int ticketCount = (amt / BaseUtil.BALANCE_TO_TICKET_RATIO).ceil();
 
-    double iBal = baseProvider.myUser.icici_balance ?? 0;
-    int totalBal = baseProvider.myUser.account_balance ?? 0;
-    int iTckCnt = baseProvider.myUser.ticket_count ?? 0;
+    double totalBal = baseProvider.userFundWallet.getEstTotalWealth() ?? 0.0;
 
     //update transaction object
     txn.ticketUpCount = ticketCount;
-    txn.closingBalance = totalBal - amt.toInt();
+    txn.closingBalance = totalBal - amt;
 
-    //update user object
-    baseProvider.myUser.icici_balance = iBal - amt;
-    baseProvider.myUser.account_balance = totalBal - amt.toInt();
-    baseProvider.myUser.ticket_count = iTckCnt - ticketCount;
-    if (baseProvider.myUser.ticket_count < 0)
-      baseProvider.myUser.ticket_count = 0;
+    //update user funds
+    double _f = baseProvider.userFundWallet.iciciPrinciple;
+    baseProvider.userFundWallet = await dbProvider.updateUserIciciBalance(baseProvider.myUser.uid, baseProvider.userFundWallet, amt*-1);
+    bool isFundWalletUpdated = (_f != baseProvider.userFundWallet.iciciPrinciple);
 
-    bool usFlag = await dbProvider.updateUser(baseProvider.myUser);
+    int _t = baseProvider.userTicketWallet.icici1565Tck;
+    baseProvider.userTicketWallet = await dbProvider.updateICICIUserTicketCount(baseProvider.myUser.uid, baseProvider.userTicketWallet, ticketCount*-1);
+    bool isTckWalletUpdated = (_t != baseProvider.userTicketWallet.icici1565Tck);
+
     baseProvider.userMiniTxnList = null; //so transactions get refreshed
     if (isInstantTxn) {
       String txnDocId =
           await dbProvider.addUserTransaction(baseProvider.myUser.uid, txn);
-      log.debug('Updated all flags:: $usFlag\t${txnDocId != null}');
+      log.debug('Updated all flags:: ${txnDocId != null}');
 
-      return (usFlag && (txnDocId != null));
+      return (isFundWalletUpdated && isTckWalletUpdated && txnDocId != null);
     } else {
       bool tFlag =
           await dbProvider.updateUserTransaction(baseProvider.myUser.uid, txn);
 
-      return (usFlag && tFlag);
+      return (isFundWalletUpdated && isTckWalletUpdated && tFlag);
     }
   }
 

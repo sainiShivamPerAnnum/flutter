@@ -6,7 +6,7 @@ class UserTransaction {
   static Log log = new Log('UserTransaction');
   String _docKey;
   double _amount;
-  int _closingBalance;
+  double _closingBalance;
   String _type;
   String _subType;
   int _ticketUpCount;
@@ -97,7 +97,7 @@ class UserTransaction {
       : this(
             documentID,
             BaseUtil.toDouble(data[fldAmount]),
-            data[fldClosingBalance],
+            BaseUtil.toDouble(data[fldClosingBalance]),
             data[fldNote],
             data[fldSubType],
             data[fldType],
@@ -288,9 +288,9 @@ class UserTransaction {
     _note = value;
   }
 
-  int get closingBalance => _closingBalance;
+  double get closingBalance => _closingBalance;
 
-  set closingBalance(int value) {
+  set closingBalance(double value) {
     _closingBalance = value;
   }
 

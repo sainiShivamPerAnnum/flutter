@@ -15,6 +15,7 @@ class UserFundWallet {
 
   //prizes
   double _prizeBalance;
+  double _lockedPrizeBalance;
   double _prizeLifetimeWin;
 
   static final String fldAugmontGoldPrinciple = 'wAugPrinciple';
@@ -23,6 +24,7 @@ class UserFundWallet {
   static final String fldIciciPrinciple = 'wICPrinciple';
   static final String fldIciciBalance = 'wICBalance';
   static final String fldPrizeBalance = 'wPriBalance';
+  static final String fldPrizeLockedBalance = 'wPriLockBalance';
   static final String fldPrizeLifetimeWin = 'wLifeTimeWin';
 
   UserFundWallet(
@@ -32,9 +34,10 @@ class UserFundWallet {
       this._iciciPrinciple,
       this._iciciBalance,
       this._prizeBalance,
+      this._lockedPrizeBalance,
       this._prizeLifetimeWin);
 
-  UserFundWallet.newWallet() : this(0, 0, 0, 0, 0, 0, 0);
+  UserFundWallet.newWallet() : this(0, 0, 0, 0, 0, 0, 0, 0);
 
   UserFundWallet.fromMap(Map<String, dynamic> data)
       : this(
@@ -44,6 +47,7 @@ class UserFundWallet {
           BaseUtil.toDouble(data[fldIciciPrinciple]),
           BaseUtil.toDouble(data[fldIciciBalance]),
           BaseUtil.toDouble(data[fldPrizeBalance]),
+          BaseUtil.toDouble(data[fldPrizeLockedBalance]),
           BaseUtil.toDouble(data[fldPrizeLifetimeWin]),
         );
 
@@ -54,6 +58,7 @@ class UserFundWallet {
         fldIciciPrinciple: _iciciPrinciple,
         fldIciciBalance: _iciciBalance,
         fldPrizeBalance: _prizeBalance,
+        fldPrizeLockedBalance: _lockedPrizeBalance,
         fldPrizeLifetimeWin: _prizeLifetimeWin,
       };
 
@@ -62,7 +67,8 @@ class UserFundWallet {
     return
       BaseUtil.toDouble(_iciciBalance) +
           BaseUtil.toDouble(_augGoldBalance) +
-          BaseUtil.toDouble(_prizeBalance);
+          BaseUtil.toDouble(_prizeBalance) + 
+          BaseUtil.toDouble(_lockedPrizeBalance);
   }
 
   double get prizeLifetimeWin => _prizeLifetimeWin;
@@ -105,5 +111,11 @@ class UserFundWallet {
 
   set augGoldPrinciple(double value) {
     _augGoldPrinciple = value;
+  }
+
+  double get lockedPrizeBalance => _lockedPrizeBalance;
+
+  set lockedPrizeBalance(double value) {
+    _lockedPrizeBalance = value;
   }
 }

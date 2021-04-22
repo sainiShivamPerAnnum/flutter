@@ -41,7 +41,6 @@ class ICICIWithdrawalState extends State<ICICIWithdrawal> {
   bool _isBalanceAvailble = false;
   bool _isButtonEnabled = false;
   double _instantBalance = 0;
-  double _totalBalance = 0;
   double _currentTotalBalance = 0;
   double _userWithdrawInstantAmount = 0;
   double _userWithdrawNonInstantAmount = 0;
@@ -421,8 +420,7 @@ class ICICIWithdrawalState extends State<ICICIWithdrawal> {
     }
     try {
       double amount = double.parse(value);
-      if (amount > baseProvider.myUser.icici_balance ||
-          (_totalBalance != 0 && amount > _totalBalance))
+      if (amount > baseProvider.userFundWallet.iciciBalance)
         return 'Insufficient balance';
       if (amount < 1)
         return 'Please enter value more than ₹1';
@@ -472,8 +470,6 @@ class ICICIWithdrawalState extends State<ICICIWithdrawal> {
       }
     });
   }
-
-  onShowLoadDialog() {}
 
   onShowOtpDialog() {
     showDialog(
