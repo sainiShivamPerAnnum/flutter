@@ -7,13 +7,14 @@ import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/PrizeLeader.dart';
 import 'package:felloapp/core/model/ReferralLeader.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
+import 'package:felloapp/core/model/TicketRequest.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
+import 'package:felloapp/core/model/FeedCard.dart';
+import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTicketWallet.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
-import 'package:felloapp/core/model/UserFundWallet.dart';
-import 'package:felloapp/core/model/TicketRequest.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
@@ -21,6 +22,7 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/help_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:synchronized/synchronized.dart';
 
@@ -907,6 +909,20 @@ class DBModel extends ChangeNotifier {
       userTicketWallet.icici1565Tck = currentValue;
       return userTicketWallet;
     }
+  }
+
+  Future<List<FeedCard>> getHomeCards() async{
+    List<FeedCard> _cards = [];
+    try{
+      QuerySnapshot querySnapshot = await _api.getHomeCardCollection();
+      if(querySnapshot != null && querySnapshot.docs.length > 0) {
+        for(QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+          if(documentSnapshot != null && documentSnapshot.exists && documentSnapshot.data().length > 0)
+            _cards.add(FeedCard.fromMap(documentSnapshot.data()));
+        }
+      }
+    }catch(e) {}
+    return _cards;
   }
 
   int _getWeekCode() {

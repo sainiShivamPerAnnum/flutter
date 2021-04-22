@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
+import 'package:felloapp/core/model/FeedCard.dart';
 import 'package:felloapp/core/model/PrizeLeader.dart';
 import 'package:felloapp/core/model/ReferralLeader.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
@@ -41,6 +42,7 @@ class BaseUtil extends ChangeNotifier {
   FirebaseAnalytics baseAnalytics;
   static RemoteConfig remoteConfig;
   PaymentService _payService;
+  List<FeedCard> feedCards;
 
   ///Tambola global objects
   DailyPick weeklyDigits;
@@ -85,6 +87,7 @@ class BaseUtil extends ChangeNotifier {
   bool isProfilePictureUpdated = false;
   bool isReferralLinkBuildInProgressWhatsapp = false;
   bool isReferralLinkBuildInProgressOther = false;
+  bool isHomeCardsFetched = false;
 
   static const int TOTAL_DRAWS = 35;
   static const int NEW_USER_TICKET_COUNT = 5;
