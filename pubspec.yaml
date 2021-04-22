@@ -33,6 +33,7 @@ dependencies:
   razorpay_flutter: ^1.2.5
   open_file: ^3.1.0 #for opening pdfs
   url_launcher: ^5.7.0
+  encrypt: ^4.1.0
   #ui packages
   camera: ^0.7.0+2
   cached_network_image: ^2.0.0

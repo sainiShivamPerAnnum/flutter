@@ -1,6 +1,8 @@
 import 'dart:collection';
+import 'package:encrypt/encrypt.dart' as encrypt;
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 
 class BaseUser {
@@ -76,24 +78,8 @@ class BaseUser {
       this._isAugmontEnabled);
 
   BaseUser.newUser(String id, String mobile)
-      : this(
-            id,
-            mobile,
-            null,
-            null,
-            null,
-            null,
-            null,
-            0,0,
-            null,
-            null,
-            false,
-            false,
-            false,
-            BaseUtil.KYC_UNTESTED,
-            null,
-            true,
-            true);
+      : this(id, mobile, null, null, null, null, null, 0, 0, null, null, false,
+            false, false, BaseUtil.KYC_UNTESTED, null, true, true);
 
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token])
       : this(
@@ -106,7 +92,7 @@ class BaseUser {
             client_token,
             data[fldPriBalance] ?? 0,
             data[fldLifeTimeWinnings] ?? 0,
-            data[fldPan],
+            _decryptPan(data[fldPan]),
             data[fldAge],
             data[fldIsInvested] ?? false,
             data[fldIsIciciOnboarded] ?? false,
@@ -126,7 +112,7 @@ class BaseUser {
       fldGender: _gender,
       fldPriBalance: _prize_balance,
       fldLifeTimeWinnings: _lifetime_winnings,
-      fldPan: _pan,
+      fldPan: _encryptPan(_pan),
       fldAge: _age,
       fldIsInvested: _isInvested,
       fldIsIciciOnboarded: _isIciciOnboarded,
@@ -141,10 +127,44 @@ class BaseUser {
     return userObj;
   }
 
+  static String _decryptPan(String encde) {
+    if (encde == null || encde.isEmpty) {
+      return null;
+    }
+    RegExp panCheck = RegExp(r"[A-Z]{5}[0-9]{4}[A-Z]{1}");
+    if (!panCheck.hasMatch(encde) || encde.length != 10) {
+      //this is encrypted
+      final key = encrypt.Key.fromUtf8(Constants.PAN_AES_KEY);
+      final iv = encrypt.IV.fromLength(16);
+
+      final encrypter = encrypt.Encrypter(encrypt.AES(key));
+
+      final decrypted = encrypter.decrypt64(encde, iv: iv);
+      log.debug('Decrypted PAN: $decrypted');
+      return decrypted;
+    } else {
+      //not yet encrypted
+      return encde;
+    }
+  }
+
+  static String _encryptPan(String decde) {
+    if(decde == null || decde.isEmpty) return null;
+    final key = encrypt.Key.fromUtf8(Constants.PAN_AES_KEY);
+    final iv = encrypt.IV.fromLength(16);
+
+    final encrypter = encrypt.Encrypter(encrypt.AES(key));
+
+    final encrypted = encrypter.encrypt(decde, iv: iv);
+
+    String cde = encrypted.base64;
+    log.debug('Encrypted PAN: $cde');
+    return cde;
+  }
+
   bool hasIncompleteDetails() {
     //return ((_mobile?.isEmpty??true) || (_name?.isEmpty??true) || (_email?.isEmpty??true));
-    return (((_mobile?.isEmpty ?? true) || (_name?.isEmpty ?? true)) ||
-        _ticket_count == null);
+    return (((_mobile?.isEmpty ?? true) || (_name?.isEmpty ?? true)));
   }
 
   String get client_token => _client_token;
@@ -254,5 +274,4 @@ class BaseUser {
   set isAugmontOnboarded(bool value) {
     _isAugmontOnboarded = value;
   }
-
 }

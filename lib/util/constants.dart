@@ -1,5 +1,6 @@
 class Constants {
   static const String APP_NAME = "Fello";
+  static const String PAN_AES_KEY = 'felloisquitefun!';
   // static final String DEBUG_TAG = "DEBUG_KANTA::";
 
   //Collections

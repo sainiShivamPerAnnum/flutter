@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:felloapp/core/model/FeedCard.dart';
@@ -67,110 +69,6 @@ class _HomePageState extends State<HomePage> {
         setState(() {});
       });
     }
-  }
-
-  @override
-  Widget build2(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    dbProvider = Provider.of<DBModel>(context, listen: false);
-    if (baseProvider.myUserDpUrl == null) {
-      isImageLoading = true;
-      getProfilePicUrl();
-    }
-    if (!_isInit) {
-      _init();
-    }
-    return Container(
-        decoration: BoxDecoration(
-          color: UiConstants.backgroundColor,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(50),
-            bottomRight: Radius.circular(50),
-          ),
-        ),
-        child: Stack(
-          children: [
-            Container(
-              height: SizeConfig.screenHeight * 0.45,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("images/home-asset.png"),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            SafeArea(
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(50),
-                  bottomRight: Radius.circular(50),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.only(left: SizeConfig.screenWidth * 0.05),
-                  child: ListView(
-                    physics: BouncingScrollPhysics(),
-                    children: [
-                      Container(
-                        height: AppBar().preferredSize.height,
-                      ),
-                      _buildProfileRow(),
-                      HomeCard(
-                        title: "SAVE | PLAY | WIN",
-                        asset: "images/tickets.png",
-                        subtitle:
-                            "New to Fello? \nLearn a little more about how to play and win big, just by saving!",
-                        buttonText: "Learn how Fello works",
-                        onPressed: () async {
-                          HapticFeedback.vibrate();
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => GuideDialog(),
-                          );
-                        },
-                        gradient: [
-                          Color(0xffACB6E5),
-                          Color(0xff74EBD5),
-                        ],
-                      ),
-                      HomeCard(
-                        title: "More tickets, more prizes",
-                        asset: "images/referral-asset.png",
-                        subtitle:
-                            "By referring, you and your friend will both receive 10 game tickets and ₹25 in rewards!",
-                        buttonText: "Share now",
-                        onPressed: () => widget.tabChange(3),
-                        //() => widget.tabChange(3),
-                        gradient: [
-                          Color(0xffD4AC5B),
-                          Color(0xffDECBA4),
-                        ],
-                      ),
-                      HomeCard(
-                        title: "We're looking for suggestions",
-                        asset: "images/puzzle.png",
-                        subtitle:
-                            "Vote for the next game that you would like to play on Fello",
-                        buttonText: "Vote now",
-                        onPressed: () async {
-                          HapticFeedback.vibrate();
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => GamePoll(),
-                          );
-                        },
-                        gradient: [
-                          Color(0xff2495B2),
-                          Color(0xff67D0E8),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            )
-          ],
-        ));
   }
 
   @override
