@@ -198,11 +198,6 @@ class TambolaGenerationService extends ChangeNotifier {
     _generationComplete(GENERATION_COMPLETE);
   }
 
-  bool _onTicketDeletionRequestComplete() {
-    BaseUtil.atomicTicketDeletionLeftCount = 0;
-    return true;
-  }
-
   bool _onTicketDeletionRequestFailed() {
     BaseUtil.atomicTicketDeletionLeftCount = 0; //so it can be tried again
     return false;

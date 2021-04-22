@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
@@ -30,12 +32,13 @@ class _FinancePageState extends State<FinancePage> {
       "ICICI Balance": baseProvider.userFundWallet.iciciBalance,
       "Augmont Balance": baseProvider.userFundWallet.augGoldBalance,
       "Prize Balance": baseProvider.userFundWallet.prizeBalance,
+      "Locked Balance": baseProvider.userFundWallet.lockedPrizeBalance
     };
   }
 
-  _refresh() {
+  Future<void> _onFundsRefresh() async{
     //TODO ADD LOADER
-    dbProvider.getUserFundWallet(baseProvider.myUser.uid).then((value) {
+    return dbProvider.getUserFundWallet(baseProvider.myUser.uid).then((value) {
       if(value != null) baseProvider.userFundWallet = value;
       setState(() {});
     });
@@ -78,7 +81,7 @@ class _FinancePageState extends State<FinancePage> {
     chartData = getChartMap();
     return RefreshIndicator(
       onRefresh: () async {
-        _refresh();
+        await _onFundsRefresh();
       },
       child: Container(
         height: SizeConfig.screenHeight,
@@ -193,6 +196,7 @@ class FundChartView extends StatelessWidget {
     UiConstants.primaryColor,
     Color(0xffF18805),
     Color(0xff2e89ba),
+    Colors.blueGrey,
   ];
 
   @override
@@ -226,11 +230,16 @@ class FundChartView extends StatelessWidget {
                 amount: "₹ ${dataMap[title[2]].toStringAsFixed(1)}",
                 color: colorList[2],
               ),
+              (dataMap[title[3]] > 0)?Legend(
+                title: title[3],
+                amount: "₹ ${dataMap[title[3]].toStringAsFixed(1)}",
+                color: colorList[3],
+              ):Container(),
             ],
           ),
         ),
         SizedBox(
-          width: SizeConfig.blockSizeHorizontal * 10,
+          width: SizeConfig.blockSizeHorizontal * 8,
         ),
         Container(
           child: PieChart(
@@ -338,7 +347,7 @@ class Legend extends StatelessWidget {
                 child: Text(
                   title,
                   style: GoogleFonts.montserrat(
-                    fontSize: SizeConfig.smallTextSize,
+                    fontSize: SizeConfig.smallTextSize*1.2,
                     color: UiConstants.textColor,
                   ),
                 ),

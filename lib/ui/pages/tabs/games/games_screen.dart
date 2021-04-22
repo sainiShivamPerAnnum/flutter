@@ -30,8 +30,8 @@ class _GamePageState extends State<GamePage> {
   ConfettiController _confeticontroller;
   LocalDBModel lclDbProvider;
   BaseUtil baseProvider;
+  DBModel dbProvider;
   int currentPage;
-  DBModel reqProvider;
 
   PageController _controller = new PageController(
     initialPage: 0,
@@ -69,202 +69,217 @@ class _GamePageState extends State<GamePage> {
     // });
   }
 
+  Future<void> _onTicketsRefresh() async{
+    //TODO ADD LOADER
+    return dbProvider.getUserTicketWallet(baseProvider.myUser.uid).then((value) {
+      if(value != null) baseProvider.userTicketWallet = value;
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    reqProvider = Provider.of<DBModel>(context, listen: false);
-    return Container(
-      decoration: BoxDecoration(
-        color: UiConstants.backgroundColor,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(50),
-          bottomRight: Radius.circular(50),
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    return RefreshIndicator(
+      onRefresh: () async {
+        await _onTicketsRefresh();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: UiConstants.backgroundColor,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(50),
+            bottomRight: Radius.circular(50),
+          ),
         ),
-      ),
-      child: Stack(
-        children: [
-          Container(
-            height: SizeConfig.screenHeight * 0.45,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("images/game-asset.png"),
-                fit: BoxFit.cover,
+        child: Stack(
+          children: [
+            Container(
+              height: SizeConfig.screenHeight * 0.45,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("images/game-asset.png"),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          PageView(
-            scrollDirection: Axis.vertical,
-            controller: _controller,
-            onPageChanged: (int page) {
-              setState(() {
-                currentPage = page;
-                if (currentPage == 1 && SizeConfig.isGamefirstTime == true) {
-                  checkConfetti();
-                }
-              });
-            },
-            children: [
-              ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(50),
-                    bottomRight: Radius.circular(50),
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: AppBar().preferredSize.height * 2,
-                      ),
-                      TicketCount(baseProvider.userTicketWallet.getActiveTickets()),
-                      Expanded(
-                        flex: 4,
-                        child: GameCardList(
-                          games: _gameList,
-                          onGameChange: _handleCityChange,
+            PageView(
+              scrollDirection: Axis.vertical,
+              controller: _controller,
+              onPageChanged: (int page) {
+                setState(() {
+                  currentPage = page;
+                  if (currentPage == 1 && SizeConfig.isGamefirstTime == true) {
+                    checkConfetti();
+                  }
+                });
+              },
+              children: [
+                ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(50),
+                      bottomRight: Radius.circular(50),
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: AppBar().preferredSize.height * 2,
                         ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Container(
-                          width: SizeConfig.screenWidth,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            physics: BouncingScrollPhysics(),
-                            children: [
-                              GameCard(
-                                gradient: [
-                                  Color(0xffACB6E5),
-                                  Color(0xff74EBD5),
-                                ],
-                                title: "Want more tickets?",
-                                action: [
-                                  GameOfferCardButton(
-                                    onPressed: () => widget.tabChange(2),
-                                    title: "Invest",
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  GameOfferCardButton(
-                                    onPressed: () => widget.tabChange(3),
-                                    title: "Share",
-                                  ),
-                                ],
-                              ),
-                              GameCard(
-                                gradient: [
-                                  Color(0xffD4AC5B),
-                                  Color(0xffDECBA4),
-                                ],
-                                title: "Share your thoughts with us",
-                                action: [
-                                  GameOfferCardButton(
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            FeedbackDialog(
-                                          title: "Tell us what you think",
-                                          description:
-                                              "We'd love to hear from you",
-                                          buttonText: "Submit",
-                                          dialogAction: (String fdbk) {
-                                            if (fdbk != null &&
-                                                fdbk.isNotEmpty) {
-                                              //feedback submission allowed even if user not signed in
-                                              reqProvider
-                                                  .submitFeedback(
-                                                      (baseProvider.firebaseUser ==
-                                                                  null ||
-                                                              baseProvider
-                                                                      .firebaseUser
-                                                                      .uid ==
-                                                                  null)
-                                                          ? 'UNKNOWN'
-                                                          : baseProvider
-                                                              .firebaseUser.uid,
-                                                      fdbk)
-                                                  .then((flag) {
-                                                Navigator.of(context).pop();
-                                                if (flag) {
-                                                  baseProvider.showPositiveAlert(
-                                                      'Thank You',
-                                                      'We appreciate your feedback!',
-                                                      context);
-                                                }
-                                              });
-                                            }
-                                          },
-                                        ),
-                                      );
-                                    },
-                                    title: "Feedback",
-                                  ),
-                                ],
-                              )
-                            ],
+                        TicketCount(
+                            baseProvider.userTicketWallet.getActiveTickets()),
+                        Expanded(
+                          flex: 4,
+                          child: GameCardList(
+                            games: _gameList,
+                            onGameChange: _handleCityChange,
                           ),
                         ),
-                      ),
-                    ],
-                  )),
-              Container(
-                child: Column(
-                  children: [
-                    Container(
-                      height: AppBar().preferredSize.height,
-                    ),
-                    WeekWinnerBoard(),
-                    Leaderboard(),
-                  ],
-                ),
-              )
-            ],
-          ),
-          Container(
-            height: 100,
-            width: 100,
-            child: ConfettiWidget(
-              blastDirectionality: BlastDirectionality.explosive,
-              confettiController: _confeticontroller,
-              particleDrag: 0.05,
-              emissionFrequency: 0.05,
-              numberOfParticles: 25,
-              gravity: 0.05,
-              shouldLoop: false,
-              colors: [
-                UiConstants.primaryColor,
-                Color(0xfff7ff00),
-                Color(0xffFC5C7D),
-                Color(0xff2B32B2),
-              ],
-            ),
-          ),
-          currentPage == 0
-              ? Positioned(
-                  bottom: 10,
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        LottieBuilder.asset(
-                          'images/lottie/swipeup.json',
-                          height: SizeConfig.screenHeight * 0.05,
-                        ),
-                        Text(
-                          "Swipe up to see prizes and leaderboards",
-                          style: GoogleFonts.montserrat(
-                            fontSize: 8,
+                        Expanded(
+                          flex: 2,
+                          child: Container(
+                            width: SizeConfig.screenWidth,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              physics: BouncingScrollPhysics(),
+                              children: [
+                                GameCard(
+                                  gradient: [
+                                    Color(0xffACB6E5),
+                                    Color(0xff74EBD5),
+                                  ],
+                                  title: "Want more tickets?",
+                                  action: [
+                                    GameOfferCardButton(
+                                      onPressed: () => widget.tabChange(2),
+                                      title: "Invest",
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    GameOfferCardButton(
+                                      onPressed: () => widget.tabChange(3),
+                                      title: "Share",
+                                    ),
+                                  ],
+                                ),
+                                GameCard(
+                                  gradient: [
+                                    Color(0xffD4AC5B),
+                                    Color(0xffDECBA4),
+                                  ],
+                                  title: "Share your thoughts with us",
+                                  action: [
+                                    GameOfferCardButton(
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              FeedbackDialog(
+                                            title: "Tell us what you think",
+                                            description:
+                                                "We'd love to hear from you",
+                                            buttonText: "Submit",
+                                            dialogAction: (String fdbk) {
+                                              if (fdbk != null &&
+                                                  fdbk.isNotEmpty) {
+                                                //feedback submission allowed even if user not signed in
+                                                dbProvider
+                                                    .submitFeedback(
+                                                        (baseProvider.firebaseUser ==
+                                                                    null ||
+                                                                baseProvider
+                                                                        .firebaseUser
+                                                                        .uid ==
+                                                                    null)
+                                                            ? 'UNKNOWN'
+                                                            : baseProvider
+                                                                .firebaseUser
+                                                                .uid,
+                                                        fdbk)
+                                                    .then((flag) {
+                                                  Navigator.of(context).pop();
+                                                  if (flag) {
+                                                    baseProvider.showPositiveAlert(
+                                                        'Thank You',
+                                                        'We appreciate your feedback!',
+                                                        context);
+                                                  }
+                                                });
+                                              }
+                                            },
+                                          ),
+                                        );
+                                      },
+                                      title: "Feedback",
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ],
-                    ),
+                    )),
+                Container(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: AppBar().preferredSize.height,
+                      ),
+                      WeekWinnerBoard(),
+                      Leaderboard(),
+                    ],
                   ),
                 )
-              : SizedBox()
-        ],
+              ],
+            ),
+            Container(
+              height: 100,
+              width: 100,
+              child: ConfettiWidget(
+                blastDirectionality: BlastDirectionality.explosive,
+                confettiController: _confeticontroller,
+                particleDrag: 0.05,
+                emissionFrequency: 0.05,
+                numberOfParticles: 25,
+                gravity: 0.05,
+                shouldLoop: false,
+                colors: [
+                  UiConstants.primaryColor,
+                  Color(0xfff7ff00),
+                  Color(0xffFC5C7D),
+                  Color(0xff2B32B2),
+                ],
+              ),
+            ),
+            currentPage == 0
+                ? Positioned(
+                    bottom: 10,
+                    child: Container(
+                      width: SizeConfig.screenWidth,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          LottieBuilder.asset(
+                            'images/lottie/swipeup.json',
+                            height: SizeConfig.screenHeight * 0.05,
+                          ),
+                          Text(
+                            "Swipe up to see prizes and leaderboards",
+                            style: GoogleFonts.montserrat(
+                              fontSize: 8,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : SizedBox()
+          ],
+        ),
       ),
     );
   }

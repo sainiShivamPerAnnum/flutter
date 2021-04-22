@@ -194,6 +194,8 @@ class _TambolaGameScreen extends State<TambolaHome> {
   @override
   void dispose() {
     super.dispose();
+    if (_tambolaTicketService != null)
+      _tambolaTicketService.setTambolaTicketGenerationResultListener(null);
   }
 
   var cardMargin = EdgeInsets.symmetric(
@@ -660,13 +662,9 @@ class _TambolaGameScreen extends State<TambolaHome> {
         baseProvider.userWeeklyBoards.isEmpty) {
       return [];
     }
-    _bestTambolaBoards = [];
     //initialise
-    _bestTambolaBoards[0] = baseProvider.userWeeklyBoards[0];
-    _bestTambolaBoards[1] = baseProvider.userWeeklyBoards[0];
-    _bestTambolaBoards[2] = baseProvider.userWeeklyBoards[0];
-    _bestTambolaBoards[3] = baseProvider.userWeeklyBoards[0];
-    _bestTambolaBoards[4] = baseProvider.userWeeklyBoards[0];
+    _bestTambolaBoards =
+        List<TambolaBoard>.filled(5, baseProvider.userWeeklyBoards[0]);
 
     if (baseProvider.weeklyDigits == null ||
         baseProvider.weeklyDigits.toList().isEmpty) {

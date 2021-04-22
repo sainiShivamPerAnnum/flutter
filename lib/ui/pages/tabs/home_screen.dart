@@ -34,10 +34,14 @@ class _HomePageState extends State<HomePage> {
     baseProvider.myUserDpUrl =
         await dbProvider.getUserDP(baseProvider.myUser.uid);
     if (baseProvider.myUserDpUrl != null) {
-      setState(() {
-        isImageLoading = false;
-      });
-      print("got the image");
+      try {
+        setState(() {
+          isImageLoading = false;
+        });
+        print("got the image");
+      }catch(e) {
+        print('HomeScreen: SetState called after dispose');
+      }
     }
   }
 
@@ -200,7 +204,7 @@ class _HomePageState extends State<HomePage> {
         borderRadius: BorderRadius.circular(20),
       ),
       margin: EdgeInsets.only(
-        top: 70,
+        top: 50,
         bottom: 50,
       ),
       width: double.infinity,
