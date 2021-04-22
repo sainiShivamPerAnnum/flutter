@@ -15,7 +15,7 @@ class HttpModel extends ChangeNotifier {
       'https://us-central1-fello-d3a9c.cloudfunctions.net/razorpayops';
 
   ///Returns the number of tickets that need to be added to user's balance
-  Future<int> postUserReferral(String userId, String userName, String referee) async {
+  Future<int> postUserReferral(String userId, String referee, String userName) async {
     if (_baseUtil == null || _baseUtil.firebaseUser == null) return -1;
     String idToken = await _baseUtil.firebaseUser.getIdToken();
     log.debug('Fetched user IDToken: ' + idToken);
