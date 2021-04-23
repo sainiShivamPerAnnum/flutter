@@ -297,10 +297,12 @@ class Api {
         .collection(Constants.COLN_USERS)
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_TXNS);
-    _query.where(UserTransaction.fldSubType,
+    _query = _query.where(UserTransaction.fldSubType,
         isEqualTo: UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
-        .where(UserTransaction.fldTimestamp,
-            isGreaterThanOrEqualTo: cmpTimestamp);
+        .where(UserTransaction.fldType, isEqualTo: UserTransaction.TRAN_TYPE_DEPOSIT)
+        .where(UserTransaction.fldTranStatus, isEqualTo: UserTransaction.TRAN_STATUS_COMPLETE)
+        .where(UserTransaction.fldTimestamp, isGreaterThanOrEqualTo: cmpTimestamp);
+        // .orderBy(UserTransaction.fldTimestamp, descending: true).startAfter([cmpTimestamp]);
 
     return _query.get();
   }

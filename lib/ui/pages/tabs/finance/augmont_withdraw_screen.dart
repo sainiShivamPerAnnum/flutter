@@ -312,8 +312,8 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
     ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
     if (widget.withdrawableGoldQnty == 0.0) {
       _gradient = new LinearGradient(colors: [
-        UiConstants.accentColor,
-        UiConstants.accentColor.withBlue(190),
+        Colors.blueGrey,
+        Colors.blueGrey.withBlue(150),
       ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
     }
     return Container(
@@ -432,52 +432,52 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
       ),
       trailing: Container(
         width: SizeConfig.screenWidth * 0.4,
-        child: Row(
-          children: [
-            Text(
-              value,
-              overflow: TextOverflow.clip,
-              style: GoogleFonts.montserrat(
-                color: Colors.black54,
-                fontSize: SizeConfig.mediumTextSize,
-                fontWeight: FontWeight.bold,
+        child: GestureDetector(
+          child: Row(
+            children: [
+              Text(
+                '$value ',
+                overflow: TextOverflow.clip,
+                style: GoogleFonts.montserrat(
+                  color: Colors.black54,
+                  fontSize: SizeConfig.mediumTextSize,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            GestureDetector(
-              child: Icon(
+              Icon(
                 Icons.info_outline,
-                size: 12,
+                size: 13,
                 color: UiConstants.spinnerColor,
               ),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => new AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(UiConstants.padding),
-                    ),
-                    title: new Text(title),
-                    content: Text(
-                        'All gold deposits are available for withdrawal after 24 hours. The ${_rem_gold.toStringAsFixed(4)} grams can be withdrawn tomorrow.'),
-                    actions: <Widget>[
-                      new TextButton(
-                        onPressed: () {
-                          Navigator.of(context, rootNavigator: true)
-                              .pop(); // dismisses only the dialog and returns nothing
-                        },
-                        child: new Text(
-                          'OK',
-                          style: TextStyle(
-                            color: UiConstants.primaryColor,
-                          ),
-                        ),
+            ],
+          ),
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) => new AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(UiConstants.padding),
+                ),
+                title: new Text(title),
+                content: Text(
+                    'All gold deposits are available for withdrawal after ${BaseUtil.AUG_GOLD_WITHDRAW_OFFSET*24} hours. The ${_rem_gold.toStringAsFixed(4)} grams can be withdrawn tomorrow.'),
+                actions: <Widget>[
+                  new TextButton(
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true)
+                          .pop(); // dismisses only the dialog and returns nothing
+                    },
+                    child: new Text(
+                      'OK',
+                      style: TextStyle(
+                        color: UiConstants.primaryColor,
                       ),
-                    ],
+                    ),
                   ),
-                );
-              },
-            )
-          ],
+                ],
+              ),
+            );
+          },
         ),
       ),
     );

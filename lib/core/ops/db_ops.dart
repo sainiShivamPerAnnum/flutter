@@ -830,6 +830,7 @@ class DBModel extends ChangeNotifier {
             }
           }
         }
+        if(_netQuantity > 0.0) _netQuantity = BaseUtil.digitPrecision(_netQuantity, 4, false);
         return _netQuantity;
       }
     }catch(e) {
