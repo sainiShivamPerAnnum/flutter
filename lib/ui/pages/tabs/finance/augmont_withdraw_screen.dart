@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 
 class AugmontWithdrawScreen extends StatefulWidget {
   final double passbookBalance;
+  final double withdrawableGoldQnty;
   final double sellRate;
   final String bankHolderName;
   final String bankAccNo;
@@ -24,6 +25,7 @@ class AugmontWithdrawScreen extends StatefulWidget {
   AugmontWithdrawScreen(
       {Key key,
       this.passbookBalance,
+      this.withdrawableGoldQnty,
       this.sellRate,
       this.bankHolderName,
       this.bankAccNo,
@@ -158,19 +160,34 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
               SizedBox(
                 height: 10,
               ),
-              (!_isLoading)?_buildRow('Current Gold Selling Rate: ', '₹${widget.sellRate} per gram'):Container(),
+              (!_isLoading)
+                  ? _buildRow('Current Gold Selling Rate: ',
+                      '₹${widget.sellRate} per gram')
+                  : Container(),
               (!_isLoading)
                   ? SizedBox(
                       height: 5,
                     )
                   : Container(),
-              (!_isLoading)?_buildRow('Total Gold Owned: ', '${baseProvider.userFundWallet.augGoldQuantity.toStringAsFixed(4)} grams'):Container(),
+              (!_isLoading)
+                  ? _buildRow('Total Gold Owned: ',
+                      '${baseProvider.userFundWallet.augGoldQuantity.toStringAsFixed(4)} grams')
+                  : Container(),
+              (!_isLoading &&
+                      widget.withdrawableGoldQnty !=
+                          baseProvider.userFundWallet.augGoldQuantity)
+                  ? _buildLockedGoldRow('Total Gold available for withdrawal: ',
+                      '${widget.withdrawableGoldQnty.toStringAsFixed(4)} grams')
+                  : Container(),
               (!_isLoading)
                   ? SizedBox(
                       height: 5,
                     )
                   : Container(),
-              (!_isLoading)?_buildRow('Total value of Gold Owned: ', '${baseProvider.userFundWallet.augGoldQuantity.toStringAsFixed(4)} * ${widget.sellRate} = ₹${_getTotalGoldOwned().toStringAsFixed(3)}'):Container(),
+              (!_isLoading)
+                  ? _buildRow('Total withdrawable balance: ',
+                      '${widget.withdrawableGoldQnty.toStringAsFixed(4)} * ${widget.sellRate} = ₹${_getTotalGoldAvailable().toStringAsFixed(3)}')
+                  : Container(),
               (!_isLoading)
                   ? SizedBox(
                       height: 30,
@@ -264,10 +281,11 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
     }
   }
 
-  double _getTotalGoldOwned() {
+  double _getTotalGoldAvailable() {
     if (widget.sellRate != null &&
-        baseProvider.userFundWallet.augGoldQuantity != null) {
-      double _net = widget.sellRate * baseProvider.userFundWallet.augGoldQuantity;
+        widget.withdrawableGoldQnty != null) {
+      double _net =
+          widget.sellRate * widget.withdrawableGoldQnty;
       return _net;
     }
     return 0;
@@ -288,14 +306,21 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
   }
 
   Widget _buildSubmitButton(BuildContext context) {
+    Gradient _gradient = new LinearGradient(colors: [
+      UiConstants.primaryColor,
+      UiConstants.primaryColor.withBlue(190),
+    ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
+    if (widget.withdrawableGoldQnty == 0.0) {
+      _gradient = new LinearGradient(colors: [
+        UiConstants.accentColor,
+        UiConstants.accentColor.withBlue(190),
+      ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
+    }
     return Container(
       width: MediaQuery.of(context).size.width - 40,
       height: 50.0,
       decoration: BoxDecoration(
-        gradient: new LinearGradient(colors: [
-          UiConstants.primaryColor,
-          UiConstants.primaryColor.withBlue(190),
-        ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
+        gradient: _gradient,
         borderRadius: new BorderRadius.circular(10.0),
       ),
       child: new Material(
@@ -314,6 +339,9 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
           ),
           onPressed: () async {
             HapticFeedback.vibrate();
+            if (widget.withdrawableGoldQnty == 0.0) {
+              return;
+            }
             final amtErr = _validateAmount(_amountController.text);
             if (amtErr != null) {
               setState(() {
@@ -388,13 +416,80 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
     );
   }
 
+  _buildLockedGoldRow(String title, String value) {
+    double _rem_gold = baseProvider.userFundWallet.augGoldQuantity -
+        widget.withdrawableGoldQnty;
+    return ListTile(
+      title: Container(
+        width: SizeConfig.screenWidth * 0.2,
+        child: Text(
+          '$title: ',
+          style: GoogleFonts.montserrat(
+            color: UiConstants.accentColor,
+            fontSize: SizeConfig.mediumTextSize,
+          ),
+        ),
+      ),
+      trailing: Container(
+        width: SizeConfig.screenWidth * 0.4,
+        child: Row(
+          children: [
+            Text(
+              value,
+              overflow: TextOverflow.clip,
+              style: GoogleFonts.montserrat(
+                color: Colors.black54,
+                fontSize: SizeConfig.mediumTextSize,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            GestureDetector(
+              child: Icon(
+                Icons.info_outline,
+                size: 12,
+                color: UiConstants.spinnerColor,
+              ),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => new AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(UiConstants.padding),
+                    ),
+                    title: new Text(title),
+                    content: Text(
+                        'All gold deposits are available for withdrawal after 24 hours. The ${_rem_gold.toStringAsFixed(4)} grams can be withdrawn tomorrow.'),
+                    actions: <Widget>[
+                      new TextButton(
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true)
+                              .pop(); // dismisses only the dialog and returns nothing
+                        },
+                        child: new Text(
+                          'OK',
+                          style: TextStyle(
+                            color: UiConstants.primaryColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   String _validateAmount(String value) {
     if (value == null || value.isEmpty) {
       return 'Please enter a valid amount';
     }
     try {
       double amount = double.parse(value);
-      if (amount > _getTotalGoldOwned()) return 'Insufficient balance';
+      if (amount > _getTotalGoldAvailable()) return 'Insufficient balance';
       if (amount < 5)
         return 'Please enter value more than ₹5';
       else

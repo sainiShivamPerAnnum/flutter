@@ -45,6 +45,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
   Map<String, dynamic> _withdrawalRequestDetails;
   AugmontRates _currentBuyRates;
   AugmontRates _currentSellRates;
+  double _withdrawableGoldQnty;
   static const int STATUS_UNAVAILABLE = 0;
   static const int STATUS_REGISTER = 1;
   static const int STATUS_OPEN = 2;
@@ -400,6 +401,12 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
       } catch (e) {
         log.error('Failed to fetch current gold balance: $e');
       }
+      try{
+        double _w = await dbProvider.getNonWithdrawableAugGoldQuantity(baseProvider.myUser.uid);
+        _withdrawableGoldQnty = (_w != null)?_liveGoldQuantityBalance - _w:_liveGoldQuantityBalance;
+      }catch(e) {
+        log.error('Failed to fetch non withdrawable gold quantity');
+      }
       if (_currentSellRates == null ||
           _liveGoldQuantityBalance == null ||
           _liveGoldQuantityBalance == 0) {
@@ -416,6 +423,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
               builder: (ctx) => AugmontWithdrawScreen(
                 key: _withdrawalDialogKey2,
                 passbookBalance: _liveGoldQuantityBalance,
+                withdrawableGoldQnty: _withdrawableGoldQnty,
                 sellRate: _currentSellRates.goldSellPrice,
                 onAmountConfirmed: (Map<String, double> amountDetails) {
                   _onInitiateWithdrawal(amountDetails['withdrawal_amount']);

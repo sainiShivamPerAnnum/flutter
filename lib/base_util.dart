@@ -97,6 +97,7 @@ class BaseUtil extends ChangeNotifier {
   static const int KYC_VALID = 2;
   static const int INVESTMENT_AMOUNT_FOR_TICKET = 100;
   static const int BALANCE_TO_TICKET_RATIO = 100;
+  static const int AUG_GOLD_WITHDRAW_OFFSET = 1;  //no of days to wait before withdrawal
   static bool isDeviceOffline = false;
   static bool ticketRequestSent = false;
   static int ticketCountBeforeRequest = NEW_USER_TICKET_COUNT;

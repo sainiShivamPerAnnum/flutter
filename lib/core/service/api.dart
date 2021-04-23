@@ -291,6 +291,20 @@ class Api {
         .catchError((onErr) => false);
   }
 
+  Future<QuerySnapshot> getRecentAugmontDepositTxn(
+      String userId, Timestamp cmpTimestamp) {
+    Query _query = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_TXNS);
+    _query.where(UserTransaction.fldSubType,
+        isEqualTo: UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
+        .where(UserTransaction.fldTimestamp,
+            isGreaterThanOrEqualTo: cmpTimestamp);
+
+    return _query.get();
+  }
+
   Future<DocumentSnapshot> getUserTicketWalletDocById(String id) {
     ref = _db
         .collection(Constants.COLN_USERS)
@@ -365,7 +379,7 @@ class Api {
         .where('week_code', isEqualTo: weekCde);
     return _query.get();
   }
-  
+
   Future<QuerySnapshot> getHomeCardCollection() {
     Query _query = _db.collection(Constants.COLN_HOMECARDS).orderBy('id');
     return _query.get();
@@ -411,7 +425,8 @@ class Api {
     return flag;
   }
 
-  Future<bool> deleteUserTicketDocuments(String uid, List<String> references) async{
+  Future<bool> deleteUserTicketDocuments(
+      String uid, List<String> references) async {
     if (references.length > 0) {
       CollectionReference colnReference = _db
           .collection(Constants.COLN_USERS)
@@ -422,8 +437,7 @@ class Api {
         for (String ref in references) {
           opBatch.delete(colnReference.doc(ref));
         }
-        log.debug(
-            'Deleting ${references.length.toString()} ticket documents');
+        log.debug('Deleting ${references.length.toString()} ticket documents');
 
         await opBatch.commit();
         return true;
@@ -431,7 +445,7 @@ class Api {
         log.error('DB Batch operation failed: $e');
         return false;
       }
-    }else{
+    } else {
       return false;
     }
   }

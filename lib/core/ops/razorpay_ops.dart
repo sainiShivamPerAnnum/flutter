@@ -113,7 +113,7 @@ class RazorpayModel extends ChangeNotifier
       'name': 'Augmont Gold',
       'order_id': orderDetails['order_id'],
       'description': 'Gold Purchase',
-      'timeout': 60, // in seconds
+      'timeout': 120, // in seconds
       'prefill': {'contact': mobile, 'email': email}
     };
 

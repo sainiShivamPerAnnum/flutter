@@ -104,7 +104,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                 keyboardType: TextInputType.number,
                 decoration: inputFieldDecoration("Enter an amount"),
                 validator: (value) {
-                  RegExp amRegex = RegExp(r"[0-9]");
+                  Pattern pattern = "^[0-9]*\$";
+                  RegExp amRegex = RegExp(pattern);
                   if (value.isEmpty)
                     return 'Please enter an amount';
                   else if (!amRegex.hasMatch(value))
@@ -113,8 +114,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                   int amount = int.parse(value);
                   if (amount < 10)
                     return 'Minimum deposit amount is ₹10 per transaction';
-                  else if (amount > 2000)
-                    return 'We are currently only accepting a max deposit of ₹2000 per transaction';
+                  else if (amount > 10000)
+                    return 'We are currently only accepting a max deposit of ₹10000 per transaction';
                   else
                     return null;
                 },

@@ -812,6 +812,31 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<double> getNonWithdrawableAugGoldQuantity(String userId, [int dayOffset = BaseUtil.AUG_GOLD_WITHDRAW_OFFSET]) async{
+    try{
+      DateTime _dt = DateTime.now();
+      DateTime _reqDate = DateTime(_dt.year, _dt.month, _dt.day-dayOffset, _dt.hour, _dt.minute, _dt.second);
+
+      QuerySnapshot querySnapshot = await _api.getRecentAugmontDepositTxn(userId, Timestamp.fromDate(_reqDate));
+      if(querySnapshot.size == 0) return 0.0;
+      else {
+        double _netQuantity = 0.0;
+        for(QueryDocumentSnapshot snapshot in querySnapshot.docs) {
+          if(snapshot.exists && snapshot.data().isNotEmpty) {
+            UserTransaction _txn = UserTransaction.fromMap(snapshot.data(), snapshot.id);
+            if(_txn != null && _txn.augmnt != null && _txn.augmnt[UserTransaction.subFldAugCurrentGoldGm] != null) {
+              double _qnt = BaseUtil.toDouble(_txn.augmnt[UserTransaction.subFldAugCurrentGoldGm]);
+              _netQuantity += _qnt;
+            }
+          }
+        }
+        return _netQuantity;
+      }
+    }catch(e) {
+      return 0.0;
+    }
+  }
+
   ///////////////////USER TICKET BALANCING///////////////////////////////////
   Future<UserTicketWallet> getUserTicketWallet(String id) async {
     try {

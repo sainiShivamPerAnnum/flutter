@@ -103,7 +103,8 @@ class DepositModalSheetState extends State<DepositModalSheet>
                 keyboardType: TextInputType.number,
                 decoration: inputFieldDecoration("Enter an amount"),
                 validator: (value) {
-                  RegExp amRegex = RegExp(r"[0-9]");
+                  Pattern pattern = "^[0-9]*\$";
+                  RegExp amRegex = RegExp(pattern);
                   if (value.isEmpty)
                     return 'Please enter an amount';
                   else if (!amRegex.hasMatch(value))
