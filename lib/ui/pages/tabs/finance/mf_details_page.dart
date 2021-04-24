@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
+import 'package:felloapp/ui/dialogs/integrated_icici_disabled_dialog.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/deposit_modal_sheet.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
@@ -112,7 +113,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
             //     panNumber: baseProvider.iciciDetail.panNumber,),
             // ));
             //////////////////////////////////////
-            onDepositClicked().then((value) {
+            onDepositClicked2().then((value) {
               setState(() {});
             });
           },
@@ -179,22 +180,24 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   }
 
   String _getActionButtonText() {
+    return 'COMING SOON!';
     // if (baseProvider.myUser.isIciciEnabled == null ||
     //     !baseProvider.myUser.isIciciEnabled) {
     //   return 'UNAVAILABLE';
     // }
-    if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID)
-      return 'COMPLETE KYC';
-    if (!baseProvider.myUser.isIciciOnboarded)
-      return 'REGISTER';
-    else
-      return 'DEPOSIT';
+    // if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID)
+    //   return 'COMPLETE KYC';
+    // if (!baseProvider.myUser.isIciciOnboarded)
+    //   return 'REGISTER';
+    // else
+    //   return 'DEPOSIT';
   }
 
   Future<bool> onDepositClicked2() async {
-    Navigator.of(context).pop(); //go back to save tab
-    Navigator.of(context).pushNamed('/initkyc');
-
+    baseProvider.isIciciDepositRouteLogicInProgress = false;
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => IntegratedIciciDisabled());
     return true;
   }
 
@@ -202,15 +205,15 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     baseProvider.iciciDetail = (baseProvider.iciciDetail == null)
         ? (await dbProvider.getUserIciciDetails(baseProvider.myUser.uid))
         : baseProvider.iciciDetail;
-    // if (baseProvider.myUser.isIciciEnabled == null ||
-    //     !baseProvider.myUser.isIciciEnabled) {
-    //   //icici deposits not enabled. show disabled dialog
-    //   baseProvider.isIciciDepositRouteLogicInProgress = false;
-    //   showDialog(
-    //       context: context,
-    //       builder: (BuildContext context) => IntegratedIciciDisabled());
-    //   return true;
-    // }
+    if (baseProvider.myUser.isIciciEnabled == null ||
+        !baseProvider.myUser.isIciciEnabled) {
+      //icici deposits not enabled. show disabled dialog
+      baseProvider.isIciciDepositRouteLogicInProgress = false;
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => IntegratedIciciDisabled());
+      return true;
+    }
     if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_VALID &&
         baseProvider.myUser.isIciciOnboarded) {
       //move directly to depositing

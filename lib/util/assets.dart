@@ -202,8 +202,7 @@ class Assets {
   ];
 
   static final String integratedICICIUnavailable =
-      "We are slowly moving towards a fully automated system of deposits and withdrawals. " +
-          "Currently, we have started integrated transactions with only a small set of users.\n\n Please use manual deposits in the meanwhile!";
+      "Mutual Fund deposits are currently being tested within a small cohort. \n\n It will soon be available for everyone. Stay tuned! 😎";
 
   static final String augmontUnavailable =
       "We are slowly moving towards a fully automated system of deposits and withdrawals. " +
