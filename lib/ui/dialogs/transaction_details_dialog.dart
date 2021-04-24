@@ -221,8 +221,10 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
       return "Augmont Gold";
     } else if (type == UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN) {
       return "Tambola Win";
+    } else if(type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
+      return "Referral Bonus";
     }
-    return "Fund Name";
+    return 'Fund Name';
   }
 
   String _getAugmontGoldGrams(double gms) =>

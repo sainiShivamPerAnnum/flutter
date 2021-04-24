@@ -86,103 +86,106 @@ class _ReferralsPageState extends State<ReferralsPage> {
         rDetail.isRefereeBonusUnlocked ||
         rDetail.isUserBonusUnlocked == null ||
         rDetail.isUserBonusUnlocked);
-    return Container(
-      height: SizeConfig.screenHeight * 0.15,
-      margin:
-          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 2),
-      decoration: BoxDecoration(
-        color: (_isBonusUnlocked)
-            ? UiConstants.primaryColor
-            : Colors.blueGrey[400],
-        gradient: (_isBonusUnlocked)
-            ? LinearGradient(
-                colors: [
-                  UiConstants.primaryColor,
-                  UiConstants.primaryColor.withGreen(220)
-                ],
-              )
-            : LinearGradient(
-                colors: [
-                  Colors.blueGrey[600],
-                  Colors.blueGrey[400]
-                ],
-              ),
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(UiConstants.padding),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 10.0,
-            offset: const Offset(0.0, 10.0),
-          ),
-        ],
-      ),
+    return Padding(
+      padding: EdgeInsets.only(top: 5, bottom: 5),
       child: Container(
-        padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
-        width: double.infinity,
-        child: Column(
-          children: [
-            SizedBox(
-              height: SizeConfig.screenHeight * 0.02,
+        height: SizeConfig.screenHeight * 0.15,
+        margin:
+        EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 2),
+        decoration: BoxDecoration(
+          color: (_isBonusUnlocked)
+              ? UiConstants.primaryColor
+              : Colors.blueGrey[400],
+          gradient: (_isBonusUnlocked)
+              ? LinearGradient(
+            colors: [
+              UiConstants.primaryColor,
+              UiConstants.primaryColor.withGreen(220)
+            ],
+          )
+              : LinearGradient(
+            colors: [
+              Colors.blueGrey[600],
+              Colors.blueGrey[400]
+            ],
+          ),
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(UiConstants.padding),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 10.0,
+              offset: const Offset(0.0, 10.0),
             ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Image.asset(
-                    "images/profile.png",
-                    height: SizeConfig.screenWidth * 0.25,
-                    fit: BoxFit.cover,
-                  ),
-                  SizedBox(
-                    width: SizeConfig.screenWidth * 0.05,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: SizeConfig.screenWidth * 0.5,
-                        child: Text(
-                          rDetail.userName ?? '',
-                          style: GoogleFonts.montserrat(
-                            color: Colors.white,
-                            fontSize: SizeConfig.cardTitleTextSize,
-                            fontWeight: FontWeight.w500,
+          ],
+        ),
+        child: Container(
+          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
+          width: double.infinity,
+          child: Column(
+            children: [
+              SizedBox(
+                height: SizeConfig.screenHeight * 0.02,
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Image.asset(
+                      "images/profile.png",
+                      height: SizeConfig.screenWidth * 0.25,
+                      fit: BoxFit.cover,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.screenWidth * 0.05,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: SizeConfig.screenWidth * 0.5,
+                          child: Text(
+                            rDetail.userName ?? '',
+                            style: GoogleFonts.montserrat(
+                              color: Colors.white,
+                              fontSize: SizeConfig.cardTitleTextSize,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Text(
-                        'Referred on ${_getUserMembershipDate(rDetail.timestamp)}',
-                        style: GoogleFonts.montserrat(
-                          color: Colors.black,
-                          fontSize: SizeConfig.smallTextSize * 1.3,
+                        SizedBox(
+                          height: 8,
                         ),
-                      ),
-                    ],
-                  )
-                ],
+                        Text(
+                          'Referred on ${_getUserMembershipDate(rDetail.timestamp)}',
+                          style: GoogleFonts.montserrat(
+                            color: Colors.black,
+                            fontSize: SizeConfig.smallTextSize * 1.3,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              _getBonusText(rDetail),
-              style: GoogleFonts.montserrat(
-                color: Colors.white,
+              SizedBox(
+                height: 5,
               ),
-            ),
-            SizedBox(
-              height: 8,
-            )
-          ],
+              Text(
+                _getBonusText(rDetail),
+                style: GoogleFonts.montserrat(
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(
+                height: 8,
+              )
+            ],
+          ),
         ),
       ),
     );

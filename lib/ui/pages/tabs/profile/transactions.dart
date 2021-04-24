@@ -66,6 +66,8 @@ class _TransactionsState extends State<Transactions> {
       return "Augmont Gold";
     } else if (type == UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN) {
       return "Tambola Win";
+    }else if(type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
+      return "Referral Bonus";
     }
     return "Fund Name";
   }

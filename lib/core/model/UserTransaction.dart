@@ -76,6 +76,7 @@ class UserTransaction {
   static const String TRAN_SUBTYPE_ICICI = 'ICICI1565';
   static const String TRAN_SUBTYPE_AUGMONT_GOLD = 'AUGGOLD99';
   static const String TRAN_SUBTYPE_TAMBOLA_WIN = 'TMB_WIN';
+  static const String TRAN_SUBTYPE_REF_BONUS = 'REF_BONUS';
 
   UserTransaction(
       this._docKey,

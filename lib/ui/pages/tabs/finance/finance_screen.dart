@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
 import 'package:felloapp/util/logger.dart';
@@ -36,10 +37,10 @@ class _FinancePageState extends State<FinancePage> {
     };
   }
 
-  Future<void> _onFundsRefresh() async{
+  Future<void> _onFundsRefresh() async {
     //TODO ADD LOADER
     return dbProvider.getUserFundWallet(baseProvider.myUser.uid).then((value) {
-      if(value != null) baseProvider.userFundWallet = value;
+      if (value != null) baseProvider.userFundWallet = value;
       setState(() {});
     });
   }
@@ -55,7 +56,8 @@ class _FinancePageState extends State<FinancePage> {
       double gSellRate = currRates.goldSellPrice;
       if (baseProvider.userFundWallet.augGoldQuantity == 0) return;
       baseProvider.userFundWallet.augGoldBalance =
-          (baseProvider.userFundWallet.augGoldQuantity * gSellRate).roundToDouble();
+          (baseProvider.userFundWallet.augGoldQuantity * gSellRate)
+              .roundToDouble();
       setState(() {}); //might cause ui error if screen no longer active
     }).catchError((err) {
       print('$err');
@@ -112,7 +114,8 @@ class _FinancePageState extends State<FinancePage> {
                       child: baseProvider.userFundWallet.getEstTotalWealth() > 0
                           ? FundChartView(
                               dataMap: chartData,
-                              totalBal: baseProvider.userFundWallet.getEstTotalWealth(),
+                              totalBal: baseProvider.userFundWallet
+                                  .getEstTotalWealth(),
                             )
                           : ZeroBalView(),
                     ),
@@ -229,11 +232,21 @@ class FundChartView extends StatelessWidget {
                 amount: "₹ ${dataMap[title[2]].toStringAsFixed(1)}",
                 color: colorList[2],
               ),
-              (dataMap[title[3]] > 0)?Legend(
-                title: title[3],
-                amount: "₹ ${dataMap[title[3]].toStringAsFixed(1)}",
-                color: colorList[3],
-              ):Container(),
+              (dataMap[title[3]] > 0)
+                  ? Legend(
+                      title: title[3],
+                      amount: "₹ ${dataMap[title[3]].toStringAsFixed(1)}",
+                      color: colorList[3],
+                      onClick: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) => MoreInfoDialog(
+                                  text: 'Referral rewards get unlocked once your friends makes their first successful investment',
+                                  title:'Locked Balance',
+                                ));
+                      },
+                    )
+                  : Container(),
             ],
           ),
         ),
@@ -313,49 +326,52 @@ class ZeroBalView extends StatelessWidget {
 class Legend extends StatelessWidget {
   final String title, amount;
   final Color color;
+  final Function onClick;
 
-  Legend({this.amount, this.title, this.color});
+  Legend({this.amount, this.title, this.color, this.onClick});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.bottomCenter,
-      padding: const EdgeInsets.only(top: 8, bottom: 8),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: MediaQuery.of(context).size.width * 0.016,
-            backgroundColor: color,
-          ),
-          SizedBox(
-            width: 8,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        alignment: Alignment.bottomCenter,
+        padding: const EdgeInsets.only(top: 8, bottom: 8),
+        child: GestureDetector(
+          onTap: onClick,
+          child: Row(
             children: [
-              Text(
-                amount,
-                style: GoogleFonts.montserrat(
-                  fontSize: SizeConfig.mediumTextSize,
-                  fontWeight: FontWeight.w500,
-                  color: UiConstants.textColor,
-                ),
+              CircleAvatar(
+                radius: MediaQuery.of(context).size.width * 0.016,
+                backgroundColor: color,
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: Text(
-                  title,
-                  style: GoogleFonts.montserrat(
-                    fontSize: SizeConfig.smallTextSize*1.2,
-                    color: UiConstants.textColor,
+              SizedBox(
+                width: 8,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    amount,
+                    style: GoogleFonts.montserrat(
+                      fontSize: SizeConfig.mediumTextSize,
+                      fontWeight: FontWeight.w500,
+                      color: UiConstants.textColor,
+                    ),
                   ),
-                ),
-              ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      title,
+                      style: GoogleFonts.montserrat(
+                        fontSize: SizeConfig.smallTextSize * 1.2,
+                        color: UiConstants.textColor,
+                      ),
+                    ),
+                  ),
+                ],
+              )
             ],
-          )
-        ],
-      ),
-    );
+          ),
+        ));
   }
 }
 

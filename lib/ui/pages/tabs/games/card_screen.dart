@@ -51,7 +51,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
   FcmHandler fcmProvider;
   LocalDBModel localDBModel;
 
-  bool ticketsBeingGenerated = false;
+  bool ticketsBeingGenerated = true;
   bool dailyPickHeaderWithTimings = false;
   String dailyPickHeaderText = 'Today\'s picks';
   List<String> dailyPickTextList = [];
@@ -131,7 +131,9 @@ class _TambolaGameScreen extends State<TambolaHome> {
     bool _isGenerating = await _tambolaTicketService
         .processTicketGenerationRequirement(_activeTambolaCardCount);
     if (_isGenerating) {
+      ticketsBeingGenerated = true;
       _tambolaTicketService.setTambolaTicketGenerationResultListener((flag) {
+        ticketsBeingGenerated = false;
         if (flag == TambolaGenerationService.GENERATION_COMPLETE) {
           //new tickets have arrived
           _refreshTambolaTickets();

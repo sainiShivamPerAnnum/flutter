@@ -89,6 +89,13 @@ class BaseUtil extends ChangeNotifier {
   bool isReferralLinkBuildInProgressWhatsapp = false;
   bool isReferralLinkBuildInProgressOther = false;
   bool isHomeCardsFetched = false;
+  static bool isDeviceOffline = false;
+  static bool ticketRequestSent = false;
+  static int ticketCountBeforeRequest = NEW_USER_TICKET_COUNT;
+  static int infoSliderIndex = 0;
+  static bool playScreenFirst = true;
+  static int atomicTicketGenerationLeftCount = 0;
+  static int atomicTicketDeletionLeftCount = 0;
 
   static const int TOTAL_DRAWS = 35;
   static const int NEW_USER_TICKET_COUNT = 5;
@@ -98,14 +105,8 @@ class BaseUtil extends ChangeNotifier {
   static const int KYC_VALID = 2;
   static const int INVESTMENT_AMOUNT_FOR_TICKET = 100;
   static const int BALANCE_TO_TICKET_RATIO = 100;
-  static const int AUG_GOLD_WITHDRAW_OFFSET = 1;  //no of days to wait before withdrawal
-  static bool isDeviceOffline = false;
-  static bool ticketRequestSent = false;
-  static int ticketCountBeforeRequest = NEW_USER_TICKET_COUNT;
-  static int infoSliderIndex = 0;
-  static bool playScreenFirst = true;
-  static int atomicTicketGenerationLeftCount = 0;
-  static int atomicTicketDeletionLeftCount = 0;
+  static const int AUG_GOLD_WITHDRAW_OFFSET =
+      1; //no of days to wait before withdrawal
 
   ///STAGES - IMPORTANT
   static const AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;
@@ -200,21 +201,6 @@ class BaseUtil extends ChangeNotifier {
     } catch (exception) {
       print(
           'Unable to fetch remote config. Cached or default values will be used');
-    }
-  }
-
-  _checkPendingTransactions() async {
-    if (_myUser.pendingTxnId != null) {
-      //there is a pending icici transaction
-      iciciDetail = await _dbModel.getUserIciciDetails(_myUser.uid);
-      UserTransaction txn =
-          await _dbModel.getUserTransaction(_myUser.uid, _myUser.pendingTxnId);
-      if (txn != null &&
-          txn.tranStatus == UserTransaction.TRAN_STATUS_PENDING) {
-      } else {
-        //transaction doesnt exist or is no longer in PENDING status
-
-      }
     }
   }
 
@@ -387,6 +373,57 @@ class BaseUtil extends ChangeNotifier {
       log.debug('Signed Out Firebase User');
       await _lModel.deleteLocalAppData();
       log.debug('Cleared local cache');
+
+      //TODO better fix required
+      _myUser = null;
+      _userFundWallet = null;
+      _userTicketWallet = null;
+      _payService = null;
+      feedCards = null;
+      weeklyDigits = null;
+      userWeeklyBoards = null;
+      _iciciDetail = null;
+      _currentICICITxn = null;
+      _currentICICINonInstantWthrlTxn = null;
+      _augmontDetail = null;
+      _currentAugmontTxn = null;
+      _kycDetail = null;
+      currentWeekWinners = null;
+      prizeLeaders = null;
+      referralLeaders = null;
+      myUserDpUrl = null;
+      userMiniTxnList = null;
+      userReferralsList = null;
+      _userCreationTimestamp = null;
+
+      isOtpResendCount = 0;
+
+      isUserOnboarded = false;
+      isLoginNextInProgress = false;
+      isEditProfileNextInProgress = false;
+      isRedemptionOtpInProgress = false;
+      isAugmontRegnInProgress = false;
+      isAugmontRegnCompleteAnimateInProgress = false;
+      isIciciDepositRouteLogicInProgress = false;
+      isEditAugmontBankDetailInProgress = false;
+      isAugDepositRouteLogicInProgress = false;
+      isAugWithdrawRouteLogicInProgress = false;
+      isAugmontRealTimeBalanceFetched = false;
+      weeklyDrawFetched = false;
+      weeklyTicksFetched = false;
+      referralsFetched = false;
+      isProfilePictureUpdated = false;
+      isReferralLinkBuildInProgressWhatsapp = false;
+      isReferralLinkBuildInProgressOther = false;
+      isHomeCardsFetched = false;
+      isDeviceOffline = false;
+      ticketRequestSent = false;
+      ticketCountBeforeRequest = NEW_USER_TICKET_COUNT;
+      infoSliderIndex = 0;
+      playScreenFirst = true;
+      atomicTicketGenerationLeftCount = 0;
+      atomicTicketDeletionLeftCount = 0;
+
       return true;
     } catch (e) {
       log.error('Failed to clear data/sign out user: ' + e.toString());
