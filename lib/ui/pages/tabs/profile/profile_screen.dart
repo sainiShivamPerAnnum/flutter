@@ -9,6 +9,7 @@ import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/tabs/profile/edit_profile_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions.dart';
+import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
@@ -63,12 +64,20 @@ class _ProfilePageState extends State<ProfilePage> {
       isImageLoading = true;
       getProfilePicUrl();
     }
-    if (!baseProvider.referCountFetched)
-      dbProvider.getReferCount(baseProvider.myUser.uid).then((count) {
-        baseProvider.referCountFetched = true;
-        baseProvider.referCount = count;
-        if (count > 0) setState(() {});
+    // if (!baseProvider.referralsFetched)
+    //   dbProvider.getReferCount(baseProvider.myUser.uid).then((count) {
+    //     baseProvider.referCountFetched = true;
+    //     baseProvider.referCount = count;
+    //     if (count > 0) setState(() {});
+    //   });
+    if (!baseProvider.referralsFetched) {
+      dbProvider.getUserReferrals(baseProvider.myUser.uid).then((refList) {
+        baseProvider.referralsFetched = true;
+        baseProvider.userReferralsList = refList;
+        if (baseProvider.userReferralsList != null &&
+            baseProvider.userReferralsList.length > 0) setState(() {});
       });
+    }
     return Container(
       padding: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.02),
       decoration: BoxDecoration(
@@ -259,8 +268,18 @@ class _ProfilePageState extends State<ProfilePage> {
                   ProfileTabTile(
                     logo: "images/referrals.png",
                     title: "Referrals",
-                    value: baseProvider.referCount.toString(),
-                    onPress: () {},
+                    value: _getReferralCount().toString(),
+                    onPress: () {
+                      HapticFeedback.vibrate();
+                      if (baseProvider.userReferralsList == null ||
+                          baseProvider.userReferralsList.length == 0) return;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ReferralsPage(baseProvider.userReferralsList)),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -344,6 +363,12 @@ class _ProfilePageState extends State<ProfilePage> {
     } else {
       return '\'Unavailable\'';
     }
+  }
+
+  int _getReferralCount() {
+    if (baseProvider == null || baseProvider.userReferralsList == null)
+      return 0;
+    return baseProvider.userReferralsList.length;
   }
 }
 

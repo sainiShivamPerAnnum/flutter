@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/PrizeLeader.dart';
 import 'package:felloapp/core/model/ReferralLeader.dart';
+import 'package:felloapp/core/model/ReferralDetail.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/model/TicketRequest.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
@@ -572,13 +573,32 @@ class DBModel extends ChangeNotifier {
 
   Future<int> getReferCount(String uid) async {
     try {
-      var docs = await _api.getReferedDocs(uid);
+      var docs = await _api.getReferralDocs(uid);  //TODO to be changed to _api.getUserReferDoc
       if (docs != null && docs.docs != null && docs.docs.length > 0)
         return docs.docs.length;
     } catch (e) {
       log.error("Error fetch referrals details: " + e.toString());
     }
     return 0;
+  }
+
+  Future<List<ReferralDetail>> getUserReferrals(String uid) async {
+    try {
+      QuerySnapshot querySnapshot = await _api.getReferralDocs(uid);
+      List<ReferralDetail> _refDetail = [];
+      if(querySnapshot.size > 0) {
+        for(QueryDocumentSnapshot snapshot in querySnapshot.docs) {
+          if(snapshot.exists && snapshot.data().isNotEmpty) {
+            ReferralDetail _detail = ReferralDetail.fromMap(snapshot.data());
+            _refDetail.add(_detail);
+          }
+        }
+      }
+      return _refDetail;
+    } catch (e) {
+      log.error("Error fetch referrals details: " + e.toString());
+    }
+    return null;
   }
 
   Future<bool> addFundDeposit(

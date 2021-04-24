@@ -1,0 +1,245 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/ReferralDetail.dart';
+import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/ui_constants.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+class ReferralsPage extends StatefulWidget {
+  final List<ReferralDetail> _referralList;
+
+  ReferralsPage(this._referralList);
+
+  @override
+  State createState() => _ReferralsPageState();
+}
+
+class _ReferralsPageState extends State<ReferralsPage> {
+  BaseUtil baseProvider;
+  DateTime oldVersionReferralDate =
+      DateTime(2021, 4, 1); //all users before april 2021 are marked old
+
+  @override
+  Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    return Scaffold(
+        appBar: AppBar(
+          iconTheme: IconThemeData(
+            color: Colors.white, //change your color here
+          ),
+          title: Text(
+            "Your Referrals",
+            style: GoogleFonts.montserrat(
+              color: Colors.white,
+            ),
+          ),
+        ),
+        body: Container(
+            width: SizeConfig.screenWidth,
+            height: SizeConfig.screenHeight * 0.9,
+            padding: EdgeInsets.only(
+                left: SizeConfig.blockSizeHorizontal * 2,
+                right: SizeConfig.blockSizeHorizontal * 2),
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    // height: SizeConfig.screenHeight*0.8,
+                    // width: SizeConfig.screenWidth*0.9,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(6.0),
+                      itemBuilder: (context, i) {
+                        return _buildRefItem(widget._referralList[i]);
+                      },
+                      itemCount: widget._referralList.length,
+                    ),
+                  ),
+                  _isOldCustomer()
+                      ? Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            'Referrals before April 2021 are not mentioned here',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.grey[500],
+                                fontSize: SizeConfig.mediumTextSize),
+                          ),
+                        )
+                      : Container()
+                ],
+              ),
+            )));
+  }
+
+  Widget _buildRefItem(ReferralDetail rDetail) {
+    if (rDetail.timestamp == null ||
+        rDetail.timestamp.toDate().isBefore(oldVersionReferralDate))
+      return Container();
+    bool _isBonusUnlocked = (rDetail.isRefereeBonusUnlocked == null ||
+        rDetail.isRefereeBonusUnlocked ||
+        rDetail.isUserBonusUnlocked == null ||
+        rDetail.isUserBonusUnlocked);
+    return Container(
+      height: SizeConfig.screenHeight * 0.15,
+      margin:
+          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 2),
+      decoration: BoxDecoration(
+        color: (_isBonusUnlocked)
+            ? UiConstants.primaryColor
+            : Colors.blueGrey[400],
+        gradient: (_isBonusUnlocked)
+            ? LinearGradient(
+                colors: [
+                  UiConstants.primaryColor,
+                  UiConstants.primaryColor.withGreen(220)
+                ],
+              )
+            : LinearGradient(
+                colors: [
+                  Colors.blueGrey[600],
+                  Colors.blueGrey[400]
+                ],
+              ),
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(UiConstants.padding),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 10.0,
+            offset: const Offset(0.0, 10.0),
+          ),
+        ],
+      ),
+      child: Container(
+        padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
+        width: double.infinity,
+        child: Column(
+          children: [
+            SizedBox(
+              height: SizeConfig.screenHeight * 0.02,
+            ),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Image.asset(
+                    "images/profile.png",
+                    height: SizeConfig.screenWidth * 0.25,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(
+                    width: SizeConfig.screenWidth * 0.05,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: SizeConfig.screenWidth * 0.5,
+                        child: Text(
+                          rDetail.userName ?? '',
+                          style: GoogleFonts.montserrat(
+                            color: Colors.white,
+                            fontSize: SizeConfig.cardTitleTextSize,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        'Referred on ${_getUserMembershipDate(rDetail.timestamp)}',
+                        style: GoogleFonts.montserrat(
+                          color: Colors.black,
+                          fontSize: SizeConfig.smallTextSize * 1.3,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              _getBonusText(rDetail),
+              style: GoogleFonts.montserrat(
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              height: 8,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _getBonusText(ReferralDetail rDetail) {
+    bool _isBonusUnlocked = (rDetail.isRefereeBonusUnlocked == null ||
+        rDetail.isRefereeBonusUnlocked ||
+        rDetail.isUserBonusUnlocked == null ||
+        rDetail.isUserBonusUnlocked);
+    if (!_isBonusUnlocked)
+      return 'Not yet invested 🔒';
+    else {
+      if (rDetail.bonusMap != null &&
+          rDetail.bonusMap['uamt'] != null &&
+          rDetail.bonusMap['utck'] != null) {
+        int _amt = BaseUtil.toInt(rDetail.bonusMap['uamt']);
+        int _tck = BaseUtil.toInt(rDetail.bonusMap['utck']);
+        if (_amt != null && _tck != null)
+          return 'You earned ₹$_amt and $_tck tickets 🥳';
+      }
+    }
+    return 'Rewards unlocked 🥳';
+  }
+
+  String _getUserMembershipDate(Timestamp tmp) {
+    List<String> months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+    if (tmp != null) {
+      DateTime _dt = tmp.toDate();
+      int day = _dt.day;
+      int month = _dt.month;
+      int year = _dt.year;
+      int yearShort = year % 2000;
+
+      return '${day.toString()} ${months[month - 1]}\'$yearShort';
+    } else {
+      return '\'Unavailable\'';
+    }
+  }
+
+  bool _isOldCustomer() {
+    if (baseProvider == null || baseProvider.userCreationTimestamp == null)
+      return false;
+    return (baseProvider.userCreationTimestamp
+        .isBefore(oldVersionReferralDate));
+  }
+}

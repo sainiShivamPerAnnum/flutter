@@ -112,8 +112,7 @@ class _FinancePageState extends State<FinancePage> {
                       child: baseProvider.userFundWallet.getEstTotalWealth() > 0
                           ? FundChartView(
                               dataMap: chartData,
-                              totalBal: baseProvider.userFundWallet.getEstTotalWealth()
-                                  .toDouble(),
+                              totalBal: baseProvider.userFundWallet.getEstTotalWealth(),
                             )
                           : ZeroBalView(),
                     ),

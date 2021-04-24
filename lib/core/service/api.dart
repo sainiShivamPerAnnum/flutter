@@ -216,9 +216,14 @@ class Api {
     return _db.collection('claims').doc().set(data, SetOptions(merge: false));
   }
 
-  Future<QuerySnapshot> getReferedDocs(String id) {
+  Future<QuerySnapshot> getReferralDocs(String id) {
     ref = _db.collection(Constants.COLN_REFERRALS);
     return ref.where('ref_by', isEqualTo: id).get();
+  }
+
+  Future<DocumentSnapshot> getUserReferDoc(String id) {
+    ref = _db.collection(Constants.COLN_REFERRALS);
+    return ref.doc(id).get();
   }
 
   Future<DocumentSnapshot> getPollDocument(String id) {

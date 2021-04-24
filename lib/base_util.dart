@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/FeedCard.dart';
 import 'package:felloapp/core/model/PrizeLeader.dart';
+import 'package:felloapp/core/model/ReferralDetail.dart';
 import 'package:felloapp/core/model/ReferralLeader.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
@@ -64,9 +65,9 @@ class BaseUtil extends ChangeNotifier {
   List<ReferralLeader> referralLeaders = [];
   String myUserDpUrl;
   List<UserTransaction> userMiniTxnList;
+  List<ReferralDetail> userReferralsList;
 
   DateTime _userCreationTimestamp;
-  int referCount = 0;
   int isOtpResendCount = 0;
 
   ///Flags in various screens defined as global variables
@@ -83,7 +84,7 @@ class BaseUtil extends ChangeNotifier {
   bool isAugmontRealTimeBalanceFetched = false;
   bool weeklyDrawFetched = false;
   bool weeklyTicksFetched = false;
-  bool referCountFetched = false;
+  bool referralsFetched = false;
   bool isProfilePictureUpdated = false;
   bool isReferralLinkBuildInProgressWhatsapp = false;
   bool isReferralLinkBuildInProgressOther = false;

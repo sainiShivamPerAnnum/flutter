@@ -65,10 +65,10 @@ class UserFundWallet {
 
   double getEstTotalWealth() {
     return
-      BaseUtil.toDouble(_iciciBalance) +
+      BaseUtil.digitPrecision(BaseUtil.toDouble(_iciciBalance) +
           BaseUtil.toDouble(_augGoldBalance) +
           BaseUtil.toDouble(_prizeBalance) + 
-          BaseUtil.toDouble(_lockedPrizeBalance);
+          BaseUtil.toDouble(_lockedPrizeBalance));
   }
 
   double get prizeLifetimeWin => _prizeLifetimeWin;
