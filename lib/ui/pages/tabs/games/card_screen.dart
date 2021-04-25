@@ -55,7 +55,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
   bool dailyPickHeaderWithTimings = false;
   String dailyPickHeaderText = 'Today\'s picks';
   List<String> dailyPickTextList = [];
-  List<String> prizeEmoji = ['🥇', '🏆', ' 🎊', ' 🎉'];
+  // List<String> prizeEmoji = ['🥇', '🏆', ' 🎊', ' 🎉'];
 
   GlobalKey _showcaseOne = GlobalKey();
   GlobalKey _showcaseTwo = GlobalKey();
@@ -74,27 +74,29 @@ class _TambolaGameScreen extends State<TambolaHome> {
   }
 
   initDailyPickFlags() {
-    String remoteTime = BaseUtil.remoteConfig.getString('draw_pick_time');
-    remoteTime = (remoteTime == null || remoteTime.isEmpty) ? '18' : remoteTime;
-    int tx = 18;
-    try {
-      tx = int.parse(remoteTime);
-    } catch (e) {
-      tx = 18;
-    }
-    DateTime _time = DateTime.now();
-    dailyPickHeaderWithTimings = (_time.hour < tx);
-    if (dailyPickHeaderWithTimings) {
-      String am_pm = (tx > 11) ? 'PM' : 'AM';
-      String ttime =
-          (tx > 12) ? (tx - 12).toString() + am_pm : tx.toString() + am_pm;
-      dailyPickHeaderText = 'Today\'s picks - Drawn at $ttime';
-    } else {
-      dailyPickHeaderText = 'Today\'s picks';
-    }
+    // String remoteTime = BaseUtil.remoteConfig.getString('draw_pick_time');
+    // remoteTime = (remoteTime == null || remoteTime.isEmpty) ? '18' : remoteTime;
+    // int tx = 18;
+    // try {
+    //   tx = int.parse(remoteTime);
+    // } catch (e) {
+    //   tx = 18;
+    // }
+    // DateTime _time = DateTime.now();
+    // dailyPickHeaderWithTimings = (_time.hour < tx);
+    // if (dailyPickHeaderWithTimings) {
+    //   String am_pm = (tx > 11) ? 'PM' : 'AM';
+    //   String ttime =
+    //       (tx > 12) ? (tx - 12).toString() + am_pm : tx.toString() + am_pm;
+    //   dailyPickHeaderText = 'Today\'s picks - Drawn at $ttime';
+    // } else {
+    //   dailyPickHeaderText = 'Today\'s picks';
+    // }
+    String remoteStr1 = BaseUtil.remoteConfig.getString('tambola_header_1');
+    String remoteStr2 = BaseUtil.remoteConfig.getString('tambola_header_2');
 
-    dailyPickTextList.add(dailyPickHeaderText);
-    dailyPickTextList.add('Click to see the other picks');
+    dailyPickTextList.add(remoteStr1);
+    dailyPickTextList.add(remoteStr2);
   }
 
   _init() async {

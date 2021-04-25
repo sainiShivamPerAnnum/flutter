@@ -175,6 +175,8 @@ class BaseUtil extends ChangeNotifier {
     remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(<String, dynamic>{
       'draw_pick_time': '18',
+      'tambola_header_1': 'Today\'s picks',
+      'tambola_header_2': 'Click to see the other picks',
       'deposit_upi_address': '9769637379@okbizaxis',
       'play_screen_first': 'true',
       'tambola_win_corner': '500',

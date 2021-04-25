@@ -325,14 +325,14 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
               FailType.UserAugmontDepositUpdateDiscrepancy, _data);
         }
 
-        if(baseProvider.currentAugmontTxn.ticketUpCount > 0) {
+        if (baseProvider.currentAugmontTxn.ticketUpCount > 0) {
           ///update user ticket count
           int _tempCurrentCount = baseProvider.userTicketWallet.augGold99Tck;
           baseProvider.userTicketWallet =
-          await dbProvider.updateAugmontGoldUserTicketCount(
-              baseProvider.myUser.uid,
-              baseProvider.userTicketWallet,
-              baseProvider.currentAugmontTxn.ticketUpCount);
+              await dbProvider.updateAugmontGoldUserTicketCount(
+                  baseProvider.myUser.uid,
+                  baseProvider.userTicketWallet,
+                  baseProvider.currentAugmontTxn.ticketUpCount);
 
           ///check if ticket count updated correctly
           if (baseProvider.userTicketWallet.augGold99Tck == _tempCurrentCount) {
@@ -342,7 +342,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
               'aug_tran_id': baseProvider
                   .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
               'note':
-              'Transaction completed, but found inconsistency while updating tickets'
+                  'Transaction completed, but found inconsistency while updating tickets'
             };
             await dbProvider.logFailure(baseProvider.myUser.uid,
                 FailType.UserAugmontDepositUpdateDiscrepancy, _data);
@@ -383,8 +383,8 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     if (!baseProvider.myUser.isAugmontOnboarded) {
       baseProvider.showNegativeAlert(
           'Not onboarded', 'You havent been onboarded to Augmont yet', context);
-    } else if (baseProvider.userFundWallet.augGoldBalance == null ||
-        baseProvider.userFundWallet.augGoldBalance == 0) {
+    } else if (baseProvider.userFundWallet.augGoldQuantity == null &&
+        baseProvider.userFundWallet.augGoldQuantity == 0) {
       baseProvider.showNegativeAlert('No balance',
           'Your Augmont wallet has no balance presently', context);
     } else {
@@ -401,10 +401,13 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
       } catch (e) {
         log.error('Failed to fetch current gold balance: $e');
       }
-      try{
-        double _w = await dbProvider.getNonWithdrawableAugGoldQuantity(baseProvider.myUser.uid);
-        _withdrawableGoldQnty = (_w != null)?_liveGoldQuantityBalance - _w:_liveGoldQuantityBalance;
-      }catch(e) {
+      try {
+        double _w = await dbProvider
+            .getNonWithdrawableAugGoldQuantity(baseProvider.myUser.uid);
+        _withdrawableGoldQnty = (_w != null)
+            ? _liveGoldQuantityBalance - _w
+            : _liveGoldQuantityBalance;
+      } catch (e) {
         log.error('Failed to fetch non withdrawable gold quantity');
       }
       if (_currentSellRates == null ||
@@ -484,14 +487,14 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
               FailType.UserAugmontWthdrwUpdateDiscrepancy, _data);
         }
 
-        if(baseProvider.currentAugmontTxn.ticketUpCount > 0) {
+        if (baseProvider.currentAugmontTxn.ticketUpCount > 0) {
           ///update user ticket count
           int _tempCurrentCount = baseProvider.userTicketWallet.augGold99Tck;
           baseProvider.userTicketWallet =
-          await dbProvider.updateAugmontGoldUserTicketCount(
-              baseProvider.myUser.uid,
-              baseProvider.userTicketWallet,
-              -1*baseProvider.currentAugmontTxn.ticketUpCount);
+              await dbProvider.updateAugmontGoldUserTicketCount(
+                  baseProvider.myUser.uid,
+                  baseProvider.userTicketWallet,
+                  -1 * baseProvider.currentAugmontTxn.ticketUpCount);
 
           ///check if ticket count updated correctly
           if (baseProvider.userTicketWallet.augGold99Tck == _tempCurrentCount) {
@@ -501,7 +504,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
               'aug_tran_id': baseProvider
                   .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
               'note':
-              'Transaction completed, but found inconsistency while updating tickets'
+                  'Transaction completed, but found inconsistency while updating tickets'
             };
             await dbProvider.logFailure(baseProvider.myUser.uid,
                 FailType.UserAugmontWthdrwUpdateDiscrepancy, _data);

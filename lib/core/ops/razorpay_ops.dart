@@ -1,10 +1,12 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/razorpay_api_util.dart';
+import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
@@ -109,11 +111,15 @@ class RazorpayModel extends ChangeNotifier
     String _keyId = RZP_KEY[BaseUtil.activeRazorpayStage.value()];
     var options = {
       'key': _keyId,
-      'amount': txn.amount.round(),
+      'amount': txn.amount.ceil(),
       'name': 'Augmont Gold',
       'order_id': orderDetails['order_id'],
-      'description': 'Gold Purchase',
+      'description': 'Digital Gold Purchase',
       'timeout': 120, // in seconds
+      'image': Assets.logoBase64,
+      'remember_customer':false,
+      'readonly':{'contact':true,'email':true,'name':false},
+      'theme':{'hide_topbar':false,'color':'#2EB19F','backdrop_color':'#F1F1F1'},
       'prefill': {'contact': mobile, 'email': email}
     };
 

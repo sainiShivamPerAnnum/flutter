@@ -488,10 +488,15 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
       return 'Please enter a valid amount';
     }
     try {
+      Pattern pattern = "^[0-9]*\$";
+      RegExp amRegex = RegExp(pattern);
+      if (!amRegex.hasMatch(value)) {
+        return 'Please enter a valid amount';
+      }
       double amount = double.parse(value);
       if (amount > _getTotalGoldAvailable()) return 'Insufficient balance';
-      if (amount < 5)
-        return 'Please enter value more than ₹5';
+      if (amount < 2)
+        return 'Please enter value more than ₹2';
       else
         return null;
     } catch (e) {
