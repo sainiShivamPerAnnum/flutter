@@ -268,18 +268,16 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> getWeeklyWinners() async {
+    Map<String, dynamic> rMap = {};
     try {
-      // DateTime date = new DateTime.now();
-      // int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
+      DateTime date = new DateTime.now();
+      int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
 
-      ////DUMMY
-      int weekCde = 202105;
-      /////
       QuerySnapshot querySnapshot = await _api.getWinnersByWeekCde(weekCde);
       if (querySnapshot != null && querySnapshot.docs.length == 1) {
         DocumentSnapshot snapshot = querySnapshot.docs[0];
         if (snapshot.exists && snapshot.data()['winners'] != null) {
-          Map<String, dynamic> rMap = snapshot.data()['winners'];
+          rMap = snapshot.data()['winners'];
           log.debug(rMap.toString());
           return rMap;
         }
@@ -287,7 +285,7 @@ class DBModel extends ChangeNotifier {
       return null;
     } catch (e) {
       log.error("Error fetch weekly winners details: " + e.toString());
-      return null;
+      return {};
     }
   }
 

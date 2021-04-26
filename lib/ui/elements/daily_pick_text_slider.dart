@@ -83,7 +83,7 @@ class DPTextSliderState extends State<DPTextSlider> {
         Text(
           info,
           style: GoogleFonts.montserrat(
-              color: Colors.white70, fontSize: SizeConfig.smallTextSize),
+              color: Colors.white70, fontSize: SizeConfig.smallTextSize*1.4),
           textAlign: TextAlign.center,
         ),
       );

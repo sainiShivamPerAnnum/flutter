@@ -1,5 +1,6 @@
 import 'package:felloapp/ui/elements/daily_pick_text_slider.dart';
 import 'package:felloapp/util/size_config.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Roulette extends StatelessWidget {
@@ -38,12 +39,13 @@ class Roulette extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 0),
+                padding: EdgeInsets.only(top: 0, bottom: 3),
                 child: DPTextSlider(
                   infoList: dailyPickTextList,
                 ),
               ),
               Container(
+                padding: EdgeInsets.only(bottom: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
