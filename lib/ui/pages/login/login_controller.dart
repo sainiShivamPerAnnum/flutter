@@ -263,14 +263,6 @@ class _LoginControllerState extends State<LoginController> {
             FocusScope.of(_mobileScreenKey.currentContext).unfocus();
             setState(() {});
           }
-//          if (formatMobileNumber(id) != null) {
-//            this.userMobile = formatMobileNumber(id);
-//            this.verificationId = "+91" + this.userMobile;
-//            //TODO add a progress bar until smsCode sent
-//            verifyPhone();
-//          } else {
-//            mobileInScreen.setMobileTextError();
-//          }
           break;
         }
       case OtpInputScreen.index:
@@ -304,6 +296,23 @@ class _LoginControllerState extends State<LoginController> {
         {
           //if(nameInScreen.validate()) {
           if (_nameScreenKey.currentState.formKey.currentState.validate()) {
+            if (_nameScreenKey.currentState.selectedDate == null) {
+              baseProvider.showNegativeAlert('Invalid details',
+                  'Please enter your date of birth', context);
+              return false;
+            } else if (!_isAdult(_nameScreenKey.currentState.selectedDate)) {
+              baseProvider.showNegativeAlert('Invalid details',
+                  'You need to be above 18 to join', context);
+              return false;
+            }
+            if (_nameScreenKey.currentState.gen == null ||
+                _nameScreenKey.currentState.isInvested == null) {
+              baseProvider.showNegativeAlert(
+                  'Invalid details', 'Please enter all the fields', context);
+              return false;
+            }
+            baseProvider.isLoginNextInProgress = true;
+            setState(() {});
             if (baseProvider.myUser == null) {
               //firebase user should never be null at this point
               baseProvider.myUser = BaseUser.newUser(
@@ -319,10 +328,6 @@ class _LoginControllerState extends State<LoginController> {
               baseProvider.myUser.email = email;
             }
 
-            // String age = _nameScreenKey.currentState.age;
-            // if (age != null && age.isNotEmpty) {
-            //   baseProvider.myUser.age = age;
-            // }
             String dob = "${_nameScreenKey.currentState.selectedDate.toLocal()}"
                 .split(" ")[0];
 
@@ -354,32 +359,6 @@ class _LoginControllerState extends State<LoginController> {
           }
           break;
         }
-      // case AddressInputScreen.index:
-      //   {
-      //     if (_addressScreenKey.currentState.formKey.currentState.validate()) {
-      //       Society selSociety =
-      //           _addressScreenKey.currentState.selected_society;
-      //       String selFlatNo = _addressScreenKey.currentState.flat_no;
-      //       int selBhk = _addressScreenKey.currentState.bhk;
-      //       if (selSociety != null && selFlatNo != null && selBhk != 0) {
-      //         //added safegaurd
-      //         baseProvider.myUser.flat_no = selFlatNo;
-      //         baseProvider.myUser.society_id = selSociety.sId;
-      //         baseProvider.myUser.sector = selSociety.sector;
-      //         baseProvider.myUser.bhk = selBhk;
-      //         //if nothing was invalid:
-      //         bool flag = await dbProvider
-      //             .updateUser(baseProvider.myUser); //.then((flag) {
-      //         if (flag) {
-      //           log.debug("User object saved successfully");
-      //           onSignUpComplete();
-      //         } else {
-      //           baseProvider.showNegativeAlert(
-      //               'Update failed', 'Please try again in sometime', context);
-      //         }
-      //       }
-      //     }
-      //   }
     }
   }
 
@@ -396,6 +375,19 @@ class _LoginControllerState extends State<LoginController> {
       }
     }
     return null;
+  }
+
+  bool _isAdult(DateTime dt) {
+    // Current time - at this moment
+    DateTime today = DateTime.now();
+    // Date to check but moved 18 years ahead
+    DateTime adultDate = DateTime(
+      dt.year + 18,
+      dt.month,
+      dt.day,
+    );
+
+    return adultDate.isBefore(today);
   }
 
   void _onSignInSuccess() async {
@@ -443,6 +435,7 @@ class _LoginControllerState extends State<LoginController> {
   }
 
   Future _onSignUpComplete() async {
+    baseProvider.isLoginNextInProgress = false;
     await baseProvider.init();
     await fcmProvider.setupFcm();
     BaseAnalytics.logUserProfile(baseProvider.myUser);

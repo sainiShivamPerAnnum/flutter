@@ -42,6 +42,10 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   double containerHeight = 10;
   Map<String, dynamic> _withdrawalRequestDetails;
   double instantAmount = 0, nonInstantAmount = 0;
+  static const int _STATUS_UNAVAILABLE = 0;
+  static const int _STATUS_REGISTER = 1;
+  static const int _STATUS_OPEN = 2;
+  static const int _STATUS_KYC_REQD = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -104,16 +108,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
             HapticFeedback.vibrate();
             baseProvider.isIciciDepositRouteLogicInProgress = true;
             setState(() {});
-            ///////////DUMMY///////////////////////////////////
-            // baseProvider.iciciDetail =
-            // await dbProvider.getUserIciciDetails(baseProvider.myUser.uid);
-            // Navigator.of(context).pop();
-            // Navigator.push(context, MaterialPageRoute(
-            //   builder: (ctx) => DepositVerification(tranId: '3433559',userTxnId: 'tdcT4bxF0Gyv9qlhqmlx',
-            //     panNumber: baseProvider.iciciDetail.panNumber,),
-            // ));
-            //////////////////////////////////////
-            onDepositClicked2().then((value) {
+            onDepositClicked().then((value) {
               setState(() {});
             });
           },
@@ -144,13 +139,6 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
           begin: Alignment(0.5, -1.0),
           end: Alignment(0.5, 1.0),
         ),
-        // boxShadow: [
-        //   new BoxShadow(
-        //     color: Colors.black12,
-        //     offset: Offset.fromDirection(20, 7),
-        //     blurRadius: 3.0,
-        //   )
-        // ],
       ),
       child: new Material(
         child: MaterialButton(
@@ -179,107 +167,143 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     );
   }
 
-  String _getActionButtonText() {
-    return 'COMING SOON!';
-    // if (baseProvider.myUser.isIciciEnabled == null ||
-    //     !baseProvider.myUser.isIciciEnabled) {
-    //   return 'UNAVAILABLE';
-    // }
-    // if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID)
-    //   return 'COMPLETE KYC';
-    // if (!baseProvider.myUser.isIciciOnboarded)
-    //   return 'REGISTER';
-    // else
-    //   return 'DEPOSIT';
+  int _checkICICIDespositStatus() {
+    //check who is allowed to deposit
+    String _perm = BaseUtil.remoteConfig.getString('icici_deposit_permission');
+    int _isGeneralUserAllowed = 1;
+    bool _isAllowed = false;
+    if (_perm != null && _perm.isNotEmpty) {
+      try {
+        _isGeneralUserAllowed = int.parse(_perm);
+      } catch (e) {
+        _isGeneralUserAllowed = 1;
+      }
+    }
+    if (_isGeneralUserAllowed == 0) {
+      //General permission is denied. Check if specific user permission granted
+      if (baseProvider.myUser.isIciciEnabled != null &&
+          baseProvider.myUser.isIciciEnabled) {
+        //this specific user is allowed to use Augmont
+        _isAllowed = true;
+      } else {
+        _isAllowed = false;
+      }
+    } else {
+      _isAllowed = true;
+    }
+
+    if (!_isAllowed) return _STATUS_UNAVAILABLE;
+    if (baseProvider.myUser.isKycVerified != null &&
+        baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID)
+      return _STATUS_KYC_REQD;
+    if (baseProvider.myUser.isIciciOnboarded == null ||
+        baseProvider.myUser.isIciciOnboarded == false)
+      return _STATUS_REGISTER;
+    else
+      return _STATUS_OPEN;
   }
 
-  Future<bool> onDepositClicked2() async {
-    baseProvider.isIciciDepositRouteLogicInProgress = false;
-    showDialog(
-        context: context,
-        builder: (BuildContext context) => IntegratedIciciDisabled());
-    return true;
+  String _getActionButtonText() {
+    int _status = _checkICICIDespositStatus();
+    switch (_status) {
+      case _STATUS_UNAVAILABLE:
+        return 'COMING SOON!';
+      case _STATUS_KYC_REQD:
+        return 'COMPLETE KYC';
+      case _STATUS_REGISTER:
+        return 'REGISTER';
+      case _STATUS_OPEN:
+        return 'DEPOSIT';
+      default:
+        return 'DEPOSIT';
+    }
   }
 
   Future<bool> onDepositClicked() async {
     baseProvider.iciciDetail = (baseProvider.iciciDetail == null)
         ? (await dbProvider.getUserIciciDetails(baseProvider.myUser.uid))
         : baseProvider.iciciDetail;
-    if (baseProvider.myUser.isIciciEnabled == null ||
-        !baseProvider.myUser.isIciciEnabled) {
-      //icici deposits not enabled. show disabled dialog
-      baseProvider.isIciciDepositRouteLogicInProgress = false;
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => IntegratedIciciDisabled());
-      return true;
+    int _status = _checkICICIDespositStatus();
+    switch (_status) {
+      case _STATUS_UNAVAILABLE:
+        {
+          baseProvider.isIciciDepositRouteLogicInProgress = false;
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => IntegratedIciciDisabled());
+          return true;
+        }
+      case _STATUS_KYC_REQD:
+        {
+          baseProvider.isIciciDepositRouteLogicInProgress = false;
+          Navigator.of(context).pop(); //go back to save tab
+          Navigator.of(context).pushNamed('/initkyc');
+          return true;
+        }
+      case _STATUS_REGISTER:
+        {
+          Navigator.of(context).pop(); //go back to save tab
+          if (baseProvider.iciciDetail != null &&
+              baseProvider.iciciDetail.panNumber != null &&
+              baseProvider.iciciDetail.appId != null &&
+              baseProvider.iciciDetail.panName != null) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (ctx) => IciciOnboardController(
+                    startIndex: PersonalPage.index,
+                    appIdExists: true,
+                  ),
+                ));
+          } else {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (ctx) => IciciOnboardController(
+                    startIndex: PANPage.index,
+                    appIdExists: false,
+                  ),
+                ));
+          }
+          baseProvider.isIciciDepositRouteLogicInProgress = false;
+          return true;
+        }
+      case _STATUS_OPEN:
+      default:
+        {
+          //move directly to depositing
+          baseProvider.isIciciDepositRouteLogicInProgress = false;
+          showModalBottomSheet(
+              backgroundColor: Colors.transparent,
+              context: context,
+              isScrollControlled: true,
+              builder: (context) {
+                return DepositModalSheet(
+                  key: _modalKey,
+                  onDepositConfirmed: (Map<String, dynamic> rMap) {
+                    payService
+                        .initiateTransaction(rMap['amount'], rMap['vpa'])
+                        .then((resMap) {
+                      if (!resMap['flag']) {
+                        _modalKey.currentState.onErrorReceived(
+                            resMap['reason'] ??
+                                'Error: Unknown. Please restart the app');
+                      } else {
+                        Navigator.of(context).pop();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (ctx) => DepositVerification(),
+                            ));
+                      }
+                      return;
+                    });
+                  },
+                );
+              });
+          return true;
+        }
     }
-    if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_VALID &&
-        baseProvider.myUser.isIciciOnboarded) {
-      //move directly to depositing
-      baseProvider.isIciciDepositRouteLogicInProgress = false;
-      showModalBottomSheet(
-          backgroundColor: Colors.transparent,
-          context: context,
-          isScrollControlled: true,
-          builder: (context) {
-            return DepositModalSheet(
-              key: _modalKey,
-              onDepositConfirmed: (Map<String, dynamic> rMap) {
-                payService
-                    .initiateTransaction(rMap['amount'], rMap['vpa'])
-                    .then((resMap) {
-                  if (!resMap['flag']) {
-                    _modalKey.currentState.onErrorReceived(resMap['reason'] ??
-                        'Error: Unknown. Please restart the app');
-                  } else {
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (ctx) => DepositVerification(),
-                        ));
-                  }
-                  return;
-                });
-              },
-            );
-          });
-      return true;
-    }
-    if (baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID) {
-      baseProvider.isIciciDepositRouteLogicInProgress = false;
-      Navigator.of(context).pop(); //go back to save tab
-      // Navigator.of(context).pushNamed('/verifykyc');
-      Navigator.of(context).pushNamed('/initkyc');
-      return true;
-    } else {
-      Navigator.of(context).pop(); //go back to save tab
-      if (baseProvider.iciciDetail != null &&
-          baseProvider.iciciDetail.panNumber != null &&
-          baseProvider.iciciDetail.appId != null &&
-          baseProvider.iciciDetail.panName != null) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (ctx) => IciciOnboardController(
-                startIndex: PersonalPage.index,
-                appIdExists: true,
-              ),
-            ));
-      } else {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (ctx) => IciciOnboardController(
-                startIndex: PANPage.index,
-                appIdExists: false,
-              ),
-            ));
-      }
-      baseProvider.isIciciDepositRouteLogicInProgress = false;
-    }
-    return true;
   }
 
   onWithdrawalClicked() {

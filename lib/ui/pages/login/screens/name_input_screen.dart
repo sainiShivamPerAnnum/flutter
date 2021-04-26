@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -28,27 +27,21 @@ class NameInputScreenState extends State<NameInputScreen> {
   String _name;
   String _email;
   String _age;
-  bool _isInvested = false;
+  bool _isInvested = null;
   bool _isInitialized = false;
   bool _validate = true;
-  int gen = 1;
+  int gen = null;
   bool isPlayer = false;
   TextEditingController _nameFieldController;
   TextEditingController _emailFieldController;
   TextEditingController _ageFieldController;
   static BaseUtil authProvider;
-  DateTime initialDate = DateTime(2000, 1, 1, 0, 0);
+  DateTime initialDate = DateTime(1997, 1, 1, 0, 0);
   List<bool> _selections = [false, true];
   final _formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  DateTime selectedDate = DateTime.now();
+  DateTime selectedDate = null;
   TextEditingController _dateController = new TextEditingController(
-      text: '${DateTime.now().toLocal()}'.split(' ')[0]);
+      text: '');
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -92,8 +85,9 @@ class NameInputScreenState extends State<NameInputScreen> {
                   Container(
                     height: 400,
                     child: CupertinoDatePicker(
+                        backgroundColor: Colors.white70,
                         mode: CupertinoDatePickerMode.date,
-                        minimumDate: DateTime(1949, 1, 1, 0, 0),
+                        minimumDate: DateTime(1950, 1, 1, 0, 0),
                         maximumDate: DateTime(2008, 1, 1, 0, 0),
                         initialDateTime: initialDate,
                         onDateTimeChanged: (val) {
@@ -112,8 +106,9 @@ class NameInputScreenState extends State<NameInputScreen> {
                         style: TextStyle(color: UiConstants.primaryColor),
                       ),
                       onPressed: () {
-                        initialDate = selectedDate;
+                        if(selectedDate != null)initialDate = selectedDate;
                         Navigator.of(ctx).pop();
+                        FocusScope.of(context).unfocus();
                       })
                 ],
               ),
@@ -179,13 +174,11 @@ class NameInputScreenState extends State<NameInputScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
+                autofocus: false,
                 validator: (value) {
                   return (value != null && value.isNotEmpty)
                       ? null
                       : 'Please enter your name';
-                },
-                onFieldSubmitted: (v) {
-                  FocusScope.of(context).nextFocus();
                 },
               ),
               SizedBox(
@@ -194,6 +187,7 @@ class NameInputScreenState extends State<NameInputScreen> {
               TextFormField(
                 controller: _emailFieldController,
                 keyboardType: TextInputType.emailAddress,
+                autofocus: false,
                 decoration: InputDecoration(
                   labelText: 'Email',
                   prefixIcon: Icon(Icons.email),
@@ -210,25 +204,6 @@ class NameInputScreenState extends State<NameInputScreen> {
                       : 'Please enter a valid email';
                 },
               ),
-              // Padding(
-              //   padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 18.0),
-              //   child: TextFormField(
-              //     controller: _ageFieldController,
-              //     keyboardType: TextInputType.number,
-              //     decoration: InputDecoration(
-              //       labelText: 'Age',
-              //       prefixIcon: Icon(Icons.perm_contact_calendar),
-              //     ),
-              //     validator: (value) {
-              //       return (value != null && value.isNotEmpty)
-              //           ? null
-              //           : 'Please enter your age';
-              //     },
-              //     onFieldSubmitted: (v) {
-              //       FocusScope.of(context).nextFocus();
-              //     },
-              //   ),
-              // ),
               SizedBox(
                 height: 20,
               ),
@@ -236,6 +211,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                 onTap: () {
                   // _selectDate(context);
                   _showDatePicker(context);
+                  FocusScope.of(context).unfocus();
                 },
                 child: TextFormField(
                   textAlign: TextAlign.start,
@@ -244,6 +220,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                   validator: (value) {
                     return null;
                   },
+                  autofocus: false,
                   controller: _dateController,
                   decoration: InputDecoration(
                     focusColor: UiConstants.primaryColor,
@@ -251,7 +228,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                       borderSide: BorderSide(color: Colors.grey),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    labelText: 'DOB',
+                    labelText: 'Date of Birth',
                     hintText: 'Choose a date',
                     prefixIcon: Icon(
                       Icons.calendar_today,
@@ -293,6 +270,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                         child: DropdownButton(
                             iconEnabledColor: UiConstants.primaryColor,
                             value: gen,
+                            hint: Text('Gender'),
                             items: [
                               DropdownMenuItem(
                                 child: Text(
@@ -342,7 +320,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         RaisedButton(
-                          color: _isInvested
+                          color: (_isInvested??false)
                               ? UiConstants.primaryColor
                               : Color(0xffe9e9ea),
                           onPressed: () {
@@ -354,14 +332,14 @@ class NameInputScreenState extends State<NameInputScreen> {
                             " YES ",
                             style: TextStyle(
                                 color:
-                                    _isInvested ? Colors.white : Colors.grey),
+                                (_isInvested??false) ? Colors.white : Colors.grey),
                           ),
                         ),
                         SizedBox(
                           width: 20,
                         ),
                         RaisedButton(
-                          color: _isInvested
+                          color: (_isInvested??true)
                               ? Color(0xffe9e9ea)
                               : UiConstants.primaryColor,
                           onPressed: () {
@@ -372,7 +350,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                           child: Text(
                             " NO ",
                             style: TextStyle(
-                                color: isInvested ? Colors.grey : Colors.white),
+                                color: (isInvested??true) ? Colors.grey : Colors.white),
                           ),
                         ),
                       ],
@@ -381,52 +359,6 @@ class NameInputScreenState extends State<NameInputScreen> {
                   ],
                 ),
               ),
-
-              // Padding(
-              //     padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 18.0),
-              //     child: Column(
-              //       children: [
-              //         Text(
-              //           'Have you ever invested in mutual funds before?',
-              //           textAlign: TextAlign.start,
-              //           style: TextStyle(
-              //               fontSize: 18,
-              //               color: Colors.grey[600],
-              //               fontStyle: FontStyle.italic),
-              //         ),
-              //         SizedBox(
-              //           height: 20,
-              //         ),
-              //         ToggleButtons(
-              //           children: [
-              //             Padding(
-              //               padding: EdgeInsets.all(15),
-              //               child: Column(
-              //                 children: [Icon(Icons.check), Text('YES')],
-              //               ),
-              //             ),
-              //             Padding(
-              //               padding: EdgeInsets.all(15),
-              //               child: Column(
-              //                 children: [Icon(Icons.clear), Text('NO')],
-              //               ),
-              //             ),
-              //           ],
-              //           fillColor: UiConstants.primaryColor.withOpacity(0.3),
-              //           isSelected: _selections,
-              //           selectedColor: UiConstants.primaryColor,
-              //           disabledColor: UiConstants.accentColor,
-              //           onPressed: (int index) {
-              //             _selections[index] = !_selections[index];
-              //             if (index == 0)
-              //               _selections[1] = !_selections[1];
-              //             else
-              //               _selections[0] = !_selections[0];
-              //             setState(() {});
-              //           },
-              //         )
-              //       ],
-              //     )),
               SizedBox(
                 height: SizeConfig.screenHeight * 0.2,
               ),
@@ -437,6 +369,7 @@ class NameInputScreenState extends State<NameInputScreen> {
           ),
     );
   }
+
 
   setError() {
     setState(() {

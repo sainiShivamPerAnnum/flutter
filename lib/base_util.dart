@@ -189,6 +189,7 @@ class BaseUtil extends ChangeNotifier {
       'aws_icici_key_index': '1',
       'aws_augmont_key_index': '1',
       'icici_deposits_enabled': '1',
+      'icici_deposit_permission':'1',
       'augmont_deposits_enabled': '1',
       'augmont_deposit_permission': '1',
       'kyc_completion_prize': 'You have won ₹50 and 10 Tambola tickets!'

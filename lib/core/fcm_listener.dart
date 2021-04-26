@@ -36,7 +36,7 @@ class FcmListener extends ChangeNotifier {
 
     _fcm.getInitialMessage().then((RemoteMessage message) {
       log.debug("onMessage recieved: " + message.toString());
-      if (message.data != null) {
+      if (message != null && message.data != null) {
         _handler.handleMessage(message.data);
       }
     });
