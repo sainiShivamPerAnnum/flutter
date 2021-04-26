@@ -22,8 +22,6 @@ class _LeaderboardState extends State<Leaderboard> {
   bool isPrizeLeadersLoading = false;
   bool isReferralLeadersLoading = false;
   PageController _pageController = new PageController(initialPage: 0);
-  List<PrizeLeader> prizeLeaders;
-  List<ReferralLeader> referralLeaders;
   ScrollController _controller;
 
   viewpage(int index) {
@@ -36,6 +34,7 @@ class _LeaderboardState extends State<Leaderboard> {
 
   Future<void> getPrizeLeaderBoardData() async {
     baseProvider.prizeLeaders = await dbProvider.getPrizeLeaderboard();
+    baseProvider.isPrizeLeadersFetched = true;
     print("prizeleaders length: " + baseProvider.prizeLeaders.toString());
     baseProvider.prizeLeaders.sort((a, b) => a.totalWin.compareTo(b.totalWin));
     if (isPrizeLeadersLoading) {
@@ -47,6 +46,7 @@ class _LeaderboardState extends State<Leaderboard> {
 
   Future<void> getReferralLeaderBoardData() async {
     baseProvider.referralLeaders = await dbProvider.getReferralLeaderboard();
+    baseProvider.isReferralLeadersFetched = true;
     baseProvider.referralLeaders
         .sort((a, b) => a.refCount.compareTo(b.refCount));
 
@@ -59,8 +59,6 @@ class _LeaderboardState extends State<Leaderboard> {
 
   @override
   void initState() {
-    prizeLeaders = [];
-    referralLeaders = [];
     _controller = ScrollController();
     super.initState();
   }
@@ -75,18 +73,16 @@ class _LeaderboardState extends State<Leaderboard> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    if (baseProvider.prizeLeaders == null) {
+    if (baseProvider.isPrizeLeadersFetched == false) {
       isPrizeLeadersLoading = true;
       setState(() {});
       getPrizeLeaderBoardData();
     }
-    if (baseProvider.referralLeaders == null) {
+    if (baseProvider.isReferralLeadersFetched == false) {
       isReferralLeadersLoading = true;
       setState(() {});
       getReferralLeaderBoardData();
     }
-    prizeLeaders = baseProvider.prizeLeaders;
-    referralLeaders = baseProvider.referralLeaders;
     return Expanded(
       child: Container(
         margin: EdgeInsets.symmetric(
@@ -216,7 +212,7 @@ class _LeaderboardState extends State<Leaderboard> {
                                   backgroundColor: Colors.white,
                                 ),
                               )
-                            : (prizeLeaders.length != 0
+                            : (baseProvider.prizeLeaders.length != 0
                                 ? Scrollbar(
                                     thickness: 20,
                                     radius: Radius.circular(100),
@@ -258,7 +254,7 @@ class _LeaderboardState extends State<Leaderboard> {
                                   backgroundColor: Colors.white,
                                 ),
                               )
-                            : (referralLeaders.length != 0
+                            : (baseProvider.referralLeaders.length != 0
                                 ? Scrollbar(
                                     thickness: 20,
                                     radius: Radius.circular(100),
@@ -308,7 +304,7 @@ class _LeaderboardState extends State<Leaderboard> {
 
   List<Widget> buildLeaderBoardList(String type) {
     List<ListTile> leaderBoardItems = [];
-    int length = type == "Prize" ? prizeLeaders.length : referralLeaders.length;
+    int length = type == "Prize" ? baseProvider.prizeLeaders.length : baseProvider.referralLeaders.length;
     for (int i = length - 1; i > -1; i--) {
       leaderBoardItems.add(ListTile(
         contentPadding: EdgeInsets.symmetric(
@@ -328,8 +324,8 @@ class _LeaderboardState extends State<Leaderboard> {
         ),
         title: Text(
           type == "Prize"
-              ? "${prizeLeaders[i].name[0].toUpperCase()}${prizeLeaders[i].name.substring(1).toLowerCase()}"
-              : "${referralLeaders[i].name[0].toUpperCase()}${referralLeaders[i].name.substring(1).toLowerCase()}",
+              ? "${baseProvider.prizeLeaders[i].name[0].toUpperCase()}${baseProvider.prizeLeaders[i].name.substring(1).toLowerCase()}"
+              : "${baseProvider.referralLeaders[i].name[0].toUpperCase()}${baseProvider.referralLeaders[i].name.substring(1).toLowerCase()}",
           style: GoogleFonts.montserrat(
             color: Colors.white,
             fontSize: SizeConfig.mediumTextSize,
@@ -338,7 +334,7 @@ class _LeaderboardState extends State<Leaderboard> {
         trailing: Text(
           type == "Prize"
               ? "₹ ${baseProvider.prizeLeaders[i].totalWin.toString()}"
-              : "₹ ${(referralLeaders[i].refCount * 25).toString()}",
+              : "₹ ${(baseProvider.referralLeaders[i].refCount * 25).toString()}",
           style: GoogleFonts.montserrat(
             color: Colors.white,
             fontSize: SizeConfig.largeTextSize,

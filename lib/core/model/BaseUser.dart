@@ -79,7 +79,7 @@ class BaseUser {
 
   BaseUser.newUser(String id, String mobile)
       : this(id, mobile, null, null, null, null, null, 0, 0, null, null, false,
-            false, false, BaseUtil.KYC_UNTESTED, null, true, true);
+            false, false, BaseUtil.KYC_UNTESTED, null, false, true);
 
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token])
       : this(

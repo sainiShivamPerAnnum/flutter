@@ -16,6 +16,7 @@ import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
+import 'package:felloapp/ui/elements/week-winners.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/locator.dart';
@@ -60,7 +61,7 @@ class BaseUtil extends ChangeNotifier {
 
   ///KYC global object
   UserKycDetail _kycDetail;
-  Map<String, dynamic> currentWeekWinners = {};
+  List<WeekWinner> currentWeekWinners = [];
   List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
   String myUserDpUrl;
@@ -82,6 +83,9 @@ class BaseUtil extends ChangeNotifier {
   bool isAugDepositRouteLogicInProgress = false;
   bool isAugWithdrawRouteLogicInProgress = false;
   bool isAugmontRealTimeBalanceFetched = false;
+  bool isWeekWinnersFetched = false;
+  bool isPrizeLeadersFetched = false;
+  bool isReferralLeadersFetched = false;
   bool weeklyDrawFetched = false;
   bool weeklyTicksFetched = false;
   bool referralsFetched = false;

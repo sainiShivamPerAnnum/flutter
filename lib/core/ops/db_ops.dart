@@ -17,6 +17,7 @@ import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTicketWallet.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/ui/elements/week-winners.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -195,17 +196,20 @@ class DBModel extends ChangeNotifier {
   }
 
   ///////////////////////TAMBOLA TICKETING/////////////////////////
-  Future<StreamSubscription<DocumentSnapshot>> subscribeToTicketRequest(BaseUser user, int count) async {
+  Future<StreamSubscription<DocumentSnapshot>> subscribeToTicketRequest(
+      BaseUser user, int count) async {
     try {
       TicketRequest _request = await _pushTicketRequest(user, count);
       if (_request.docKey != null) {
-        return _api.getticketRequestDocumentEvent(_request.docKey).listen((event) {
+        return _api
+            .getticketRequestDocumentEvent(_request.docKey)
+            .listen((event) {
           TicketRequest _changedRequest =
               TicketRequest.fromMap(event.data(), event.id);
           if (_ticketRequestListener != null)
             _ticketRequestListener(_changedRequest);
         });
-      }else{
+      } else {
         return null;
       }
     } catch (e) {
@@ -239,7 +243,8 @@ class DBModel extends ChangeNotifier {
       List<TambolaBoard> _requestedBoards = [];
       for (QueryDocumentSnapshot _docSnapshot in _querySnapshot.docs) {
         if (!_docSnapshot.exists || _docSnapshot.data().isEmpty) continue;
-        TambolaBoard _board = TambolaBoard.fromMap(_docSnapshot.data(), _docSnapshot.id);
+        TambolaBoard _board =
+            TambolaBoard.fromMap(_docSnapshot.data(), _docSnapshot.id);
         if (_board.isValid()) _requestedBoards.add(_board);
       }
       return _requestedBoards;
@@ -267,8 +272,9 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> getWeeklyWinners() async {
+  Future<List<WeekWinner>> getWeeklyWinners() async {
     Map<String, dynamic> rMap = {};
+    List<WeekWinner> _weekWinners = [];
     try {
       DateTime date = new DateTime.now();
       int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
@@ -279,13 +285,20 @@ class DBModel extends ChangeNotifier {
         if (snapshot.exists && snapshot.data()['winners'] != null) {
           rMap = snapshot.data()['winners'];
           log.debug(rMap.toString());
-          return rMap;
+        }
+        if (rMap != null && rMap.length > 0) {
+          for (String k in rMap.keys) {
+            if (k != null && BaseUtil.toInt(rMap[k]) != 0) {
+              _weekWinners
+                  .add(WeekWinner(name: k, prize: BaseUtil.toInt(rMap[k])));
+            }
+          }
         }
       }
-      return null;
+      return _weekWinners;
     } catch (e) {
       log.error("Error fetch weekly winners details: " + e.toString());
-      return {};
+      return _weekWinners;
     }
   }
 
@@ -571,7 +584,8 @@ class DBModel extends ChangeNotifier {
 
   Future<int> getReferCount(String uid) async {
     try {
-      var docs = await _api.getReferralDocs(uid);  //TODO to be changed to _api.getUserReferDoc
+      var docs = await _api
+          .getReferralDocs(uid); //TODO to be changed to _api.getUserReferDoc
       if (docs != null && docs.docs != null && docs.docs.length > 0)
         return docs.docs.length;
     } catch (e) {
@@ -584,9 +598,9 @@ class DBModel extends ChangeNotifier {
     try {
       QuerySnapshot querySnapshot = await _api.getReferralDocs(uid);
       List<ReferralDetail> _refDetail = [];
-      if(querySnapshot.size > 0) {
-        for(QueryDocumentSnapshot snapshot in querySnapshot.docs) {
-          if(snapshot.exists && snapshot.data().isNotEmpty) {
+      if (querySnapshot.size > 0) {
+        for (QueryDocumentSnapshot snapshot in querySnapshot.docs) {
+          if (snapshot.exists && snapshot.data().isNotEmpty) {
             ReferralDetail _detail = ReferralDetail.fromMap(snapshot.data());
             _refDetail.add(_detail);
           }
@@ -661,7 +675,8 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> deleteSelectUserTickets(String userId, List<String> ticketRef) async {
+  Future<bool> deleteSelectUserTickets(
+      String userId, List<String> ticketRef) async {
     try {
       return await _api.deleteUserTicketDocuments(userId, ticketRef);
     } catch (e) {
@@ -715,7 +730,9 @@ class DBModel extends ChangeNotifier {
     try {
       var doc = await _api.getUserFundWalletDocById(id);
       Map<String, dynamic> resMap = doc.data();
-      return (resMap != null && resMap['tg_in_progress'] != null && resMap['tg_in_progress']);
+      return (resMap != null &&
+          resMap['tg_in_progress'] != null &&
+          resMap['tg_in_progress']);
     } catch (e) {
       log.error("Error fetch UserFundWallet failed: $e");
       return false;
@@ -830,28 +847,37 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<double> getNonWithdrawableAugGoldQuantity(String userId, [int dayOffset = BaseUtil.AUG_GOLD_WITHDRAW_OFFSET]) async{
-    try{
+  Future<double> getNonWithdrawableAugGoldQuantity(String userId,
+      [int dayOffset = BaseUtil.AUG_GOLD_WITHDRAW_OFFSET]) async {
+    try {
       DateTime _dt = DateTime.now();
-      DateTime _reqDate = DateTime(_dt.year, _dt.month, _dt.day-dayOffset, _dt.hour, _dt.minute, _dt.second);
+      DateTime _reqDate = DateTime(_dt.year, _dt.month, _dt.day - dayOffset,
+          _dt.hour, _dt.minute, _dt.second);
 
-      QuerySnapshot querySnapshot = await _api.getRecentAugmontDepositTxn(userId, Timestamp.fromDate(_reqDate));
-      if(querySnapshot.size == 0) return 0.0;
+      QuerySnapshot querySnapshot = await _api.getRecentAugmontDepositTxn(
+          userId, Timestamp.fromDate(_reqDate));
+      if (querySnapshot.size == 0)
+        return 0.0;
       else {
         double _netQuantity = 0.0;
-        for(QueryDocumentSnapshot snapshot in querySnapshot.docs) {
-          if(snapshot.exists && snapshot.data().isNotEmpty) {
-            UserTransaction _txn = UserTransaction.fromMap(snapshot.data(), snapshot.id);
-            if(_txn != null && _txn.augmnt != null && _txn.augmnt[UserTransaction.subFldAugCurrentGoldGm] != null) {
-              double _qnt = BaseUtil.toDouble(_txn.augmnt[UserTransaction.subFldAugCurrentGoldGm]);
+        for (QueryDocumentSnapshot snapshot in querySnapshot.docs) {
+          if (snapshot.exists && snapshot.data().isNotEmpty) {
+            UserTransaction _txn =
+                UserTransaction.fromMap(snapshot.data(), snapshot.id);
+            if (_txn != null &&
+                _txn.augmnt != null &&
+                _txn.augmnt[UserTransaction.subFldAugCurrentGoldGm] != null) {
+              double _qnt = BaseUtil.toDouble(
+                  _txn.augmnt[UserTransaction.subFldAugCurrentGoldGm]);
               _netQuantity += _qnt;
             }
           }
         }
-        if(_netQuantity > 0.0) _netQuantity = BaseUtil.digitPrecision(_netQuantity, 4, false);
+        if (_netQuantity > 0.0)
+          _netQuantity = BaseUtil.digitPrecision(_netQuantity, 4, false);
         return _netQuantity;
       }
-    }catch(e) {
+    } catch (e) {
       return 0.0;
     }
   }
@@ -955,17 +981,19 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<List<FeedCard>> getHomeCards() async{
+  Future<List<FeedCard>> getHomeCards() async {
     List<FeedCard> _cards = [];
-    try{
+    try {
       QuerySnapshot querySnapshot = await _api.getHomeCardCollection();
-      if(querySnapshot != null && querySnapshot.docs.length > 0) {
-        for(QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
-          if(documentSnapshot != null && documentSnapshot.exists && documentSnapshot.data().length > 0)
+      if (querySnapshot != null && querySnapshot.docs.length > 0) {
+        for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+          if (documentSnapshot != null &&
+              documentSnapshot.exists &&
+              documentSnapshot.data().length > 0)
             _cards.add(FeedCard.fromMap(documentSnapshot.data()));
         }
       }
-    }catch(e) {}
+    } catch (e) {}
     return _cards;
   }
 

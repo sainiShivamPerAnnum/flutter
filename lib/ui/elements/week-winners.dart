@@ -6,7 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class WeekWinner {
-  final name, prize;
+  final String name;
+  final int prize;
   WeekWinner({this.name, this.prize});
 }
 
@@ -19,18 +20,10 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
   bool isLoading = false;
   DBModel dbProvider;
   BaseUtil baseProvider;
-  List<WeekWinner> currentWeekWinners;
-
-  Future<void> getWeekWinners() async {
-    baseProvider.currentWeekWinners = await dbProvider.getWeeklyWinners();
-  }
-
   ScrollController _controller;
 
   @override
   void initState() {
-    currentWeekWinners = [];
-
     _controller = ScrollController();
     super.initState();
   }
@@ -104,28 +97,23 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
 
   @override
   Widget build(BuildContext context) {
+    List<WeekWinner> _displayList;
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    if (baseProvider.currentWeekWinners == null ||
-        baseProvider.currentWeekWinners.isEmpty) {
+    if (!baseProvider.isWeekWinnersFetched) {
       isLoading = true;
-      getWeekWinners().then((value) {
-        if (isLoading) {
-          setState(() {
-            isLoading = false;
-          });
+      dbProvider.getWeeklyWinners().then((vList) {
+        if(vList != null)baseProvider.currentWeekWinners = vList;
+        baseProvider.isWeekWinnersFetched = true;
+        if(isLoading) {
+          isLoading = false;
+          setState(() {});
         }
       });
     }
-    baseProvider.currentWeekWinners.forEach((key, value) {
-      currentWeekWinners.add(WeekWinner(
-        name: key,
-        prize: value.toString(),
-      ));
-    });
-    currentWeekWinners
-        .sort((a, b) => int.tryParse(a.prize).compareTo(int.tryParse(b.prize)));
-    currentWeekWinners = currentWeekWinners.reversed.toList();
+    baseProvider.currentWeekWinners
+        .sort((a, b) => (a.prize).compareTo(b.prize));
+    _displayList = baseProvider.currentWeekWinners.reversed.toList();
     return Expanded(
       child: Container(
         margin: EdgeInsets.symmetric(
@@ -159,7 +147,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
         child: Column(
           children: [
             Text(
-              "This Week's Winners",
+              "Last Week's Winners",
               style: GoogleFonts.montserrat(
                 color: Colors.white,
                 fontSize: SizeConfig.largeTextSize,
@@ -195,7 +183,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
-                    : (currentWeekWinners.length != 0
+                    : (baseProvider.currentWeekWinners.length != 0
                         ? Scrollbar(
                             thickness: 20,
                             radius: Radius.circular(100),
@@ -206,7 +194,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                             child: ListView.builder(
                               controller: _controller,
                               physics: BouncingScrollPhysics(),
-                              itemCount: currentWeekWinners.length,
+                              itemCount: baseProvider.currentWeekWinners.length,
                               itemBuilder: (ctx, i) {
                                 return ListTile(
                                   contentPadding: EdgeInsets.symmetric(
@@ -232,14 +220,14 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                                   //   child: Image.asset("images/profile.png"),
                                   // ),
                                   title: Text(
-                                    "${currentWeekWinners[i].name[0].toUpperCase()}${currentWeekWinners[i].name.substring(1).toLowerCase()}",
+                                    "${baseProvider.currentWeekWinners[i].name[0].toUpperCase()}${baseProvider.currentWeekWinners[i].name.substring(1).toLowerCase()}",
                                     style: GoogleFonts.montserrat(
                                       color: Colors.white,
                                       fontSize: SizeConfig.mediumTextSize,
                                     ),
                                   ),
                                   trailing: Text(
-                                    "₹ ${currentWeekWinners[i].prize.toString()}",
+                                    "₹ ${baseProvider.currentWeekWinners[i].prize.toString()}",
                                     style: GoogleFonts.montserrat(
                                       color: Colors.white,
                                       fontSize: SizeConfig.largeTextSize,
