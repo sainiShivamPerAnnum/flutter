@@ -34,49 +34,6 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
     super.dispose();
   }
 
-  String getMonthName(int monthNum) {
-    switch (monthNum) {
-      case 1:
-        return "Jan";
-        break;
-      case 2:
-        return "Feb";
-        break;
-      case 3:
-        return "Mar";
-        break;
-      case 4:
-        return "Apr";
-        break;
-      case 5:
-        return "May";
-        break;
-      case 6:
-        return "June";
-        break;
-      case 7:
-        return "July";
-        break;
-      case 8:
-        return "Aug";
-        break;
-      case 9:
-        return "Sept";
-        break;
-      case 10:
-        return "Oct";
-        break;
-      case 11:
-        return "Nov";
-        break;
-      case 12:
-        return "Dec";
-        break;
-      default:
-        return "Month";
-    }
-  }
-
   List<String> getWeek() {
     int weekNumber = BaseUtil.getWeekNumber(); //12
     var date = ((weekNumber - 2) * 7);
@@ -89,8 +46,8 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
     int startMon =
         DateTime.utc(DateTime.now().year, 1, startDate).toLocal().month;
     int endMon = DateTime.utc(DateTime.now().year, 1, endDate).toLocal().month;
-    String startMonth = getMonthName(startMon);
-    String endMonth = getMonthName(endMon);
+    String startMonth = BaseUtil.getMonthName(startMon);
+    String endMonth = BaseUtil.getMonthName(endMon);
 
     return ["$startDay $startMonth", "$endDay $endMonth"];
   }

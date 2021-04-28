@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/UserTicketWallet.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/util/logger.dart';
@@ -12,9 +13,9 @@ import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 class TicketDetailsDialog extends StatefulWidget {
-  final UserTransaction _transaction;
+  final UserTicketWallet _userTicketWallet;
 
-  TicketDetailsDialog(this._transaction);
+  TicketDetailsDialog(this._userTicketWallet);
 
   @override
   State createState() => TicketDetailsDialogState();
@@ -23,24 +24,10 @@ class TicketDetailsDialog extends StatefulWidget {
 class TicketDetailsDialogState extends State<TicketDetailsDialog> {
   final Log log = new Log('TicketDetailsDialog');
   double _width;
-  AugmontModel augmontProvider;
   BaseUtil baseProvider;
-  bool _showInvoiceButton = false;
-  bool _isInvoiceLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget._transaction.subType ==
-            UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-        widget._transaction.type == UserTransaction.TRAN_TYPE_DEPOSIT) {
-      _showInvoiceButton = true;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     _width = MediaQuery.of(context).size.width;
     return Dialog(
@@ -70,120 +57,76 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'Transaction Details',
+                      'Your Tickets Breakdown',
                       style: TextStyle(
                           fontSize: SizeConfig.largeTextSize,
                           color: UiConstants.accentColor),
                     ),
                     Divider(),
-                    _addListField('Fund Name:',
-                        _getTileTitle(widget._transaction.subType)),
-                    _addListField(
-                        'Transaction Type:', widget._transaction.type),
-                    _addListField('Transaction Amount:',
-                        '₹${widget._transaction.amount.toStringAsFixed(2)}'),
-                    _addListField(
-                        'Closing Balance:',
-                        (widget._transaction.closingBalance == 0)
-                            ? 'N/A'
-                            : '₹${widget._transaction.closingBalance}'),
-                    _addListField('Tickets Added:',
-                        '${widget._transaction.ticketUpCount}'),
-                    // _addListField('Transaction ID:',
-                    //     '${widget._transaction.docKey}'),
-                    (widget._transaction.subType ==
-                                UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                            widget._transaction.type ==
-                                UserTransaction.TRAN_TYPE_DEPOSIT)
-                        ? _addListField('Purchase Rate:',
-                            '₹${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm')
+                    (widget._userTicketWallet.initTck > 0)
+                        ? _addListField(
+                            'Initial:',
+                            '',
+                            widget._userTicketWallet.initTck,
+                            'Refreshes every Monday')
                         : Container(),
-                    (widget._transaction.subType ==
-                                UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                            widget._transaction.type ==
-                                UserTransaction.TRAN_TYPE_WITHDRAW)
-                        ? _addListField('Sell Rate:',
-                            '₹${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm')
+                    (widget._userTicketWallet.augGold99Tck > 0)
+                        ? _addListField(
+                            'For Gold Investment:',
+                            '',
+                            widget._userTicketWallet.augGold99Tck,
+                            'Refreshes every Monday')
                         : Container(),
-                    (widget._transaction.subType ==
-                                UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                            widget._transaction.type ==
-                                UserTransaction.TRAN_TYPE_DEPOSIT)
-                        ? _addListField('Gold Purchased:',
-                            '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm])} grams')
+                    (widget._userTicketWallet.icici1565Tck > 0)
+                        ? _addListField(
+                            'For Mutual Fund Investment:',
+                            '',
+                            widget._userTicketWallet.icici1565Tck,
+                            'Refreshes every Monday')
                         : Container(),
-                    (widget._transaction.subType ==
-                                UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                            widget._transaction.type ==
-                                UserTransaction.TRAN_TYPE_WITHDRAW)
-                        ? _addListField('Gold Sold:',
-                            '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm])} grams')
+                    (widget._userTicketWallet.prizeTck > 0)
+                        ? _addListField(
+                            'Prize awarded:',
+                            '',
+                            widget._userTicketWallet.prizeTck,
+                            'Refreshes every Monday')
                         : Container(),
-                    (widget._transaction.subType ==
-                            UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
-                        ? _addListField('Closing Gold Balance:',
-                            '${widget._transaction.augmnt[UserTransaction.subFldAugTotalGoldGm]} grams')
+                    (widget._userTicketWallet.refTck > 0)
+                        ? _addListField(
+                            'Referral Bonus:',
+                            '',
+                            widget._userTicketWallet.initTck,
+                            'Refreshes every Monday')
                         : Container(),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    (_showInvoiceButton && !_isInvoiceLoading)
-                        ? InkWell(
-                            child: Padding(
-                              padding: EdgeInsets.all(20),
-                              child: Text(
-                                'Download Invoice',
-                                style: TextStyle(
-                                    color: UiConstants.primaryColor,
-                                    fontSize: SizeConfig.mediumTextSize),
-                              ),
-                            ),
-                            onTap: () async {
-                              if (widget._transaction.augmnt[
-                                      UserTransaction.subFldAugTranId] !=
-                                  null) {
-                                _isInvoiceLoading = true;
-                                setState(() {});
-                                String trnId = widget._transaction
-                                    .augmnt[UserTransaction.subFldAugTranId];
-                                augmontProvider
-                                    .generatePurchaseInvoicePdf(trnId)
-                                    .then((generatedPdfFilePath) {
-                                  _isInvoiceLoading = false;
-                                  setState(() {});
-                                  if (generatedPdfFilePath != null) {
-                                    OpenFile.open(generatedPdfFilePath);
-                                  } else {
-                                    baseProvider.showNegativeAlert(
-                                        'Invoice could\'nt be loaded',
-                                        'Please try again in some time',
-                                        context);
-                                  }
-                                });
-                              } else {
-                                baseProvider.showNegativeAlert(
-                                    'Invoice could\'nt be loaded',
-                                    'Please try again in some time',
-                                    context);
-                              }
-                            },
-                          )
+                    (widget._userTicketWallet.getNRTicketBalance() > 0)
+                        ? _addListField(
+                            'Referral Bonus:',
+                            '',
+                            widget._userTicketWallet.initTck,
+                            'Expires on ${widget._userTicketWallet.getNRExpiryDate()}')
                         : Container(),
-                    (_showInvoiceButton && _isInvoiceLoading)
-                        ? Padding(
-                            padding: EdgeInsets.all(20),
-                            child: SpinKitThreeBounce(
-                              color: UiConstants.spinnerColor2,
-                              size: 18.0,
-                            ))
-                        : Container()
+                    (widget._userTicketWallet.getLockedTickets() > 0)
+                        ? _addListField(
+                            'Locked Bonus:',
+                            '',
+                            widget._userTicketWallet.getLockedTickets(),
+                            'Unlocked once referrals are completed')
+                        : Container(),
+                    (widget._userTicketWallet.getActiveTickets() > 0)
+                        ? _addListField(
+                        'In Total:',
+                        '',
+                        widget._userTicketWallet.getLockedTickets(),
+                        '', true)
+                        : Container(),
                   ],
                 )),
           )
         ]);
   }
 
-  Widget _addListField(String title, String value) {
+  Widget _addListField(
+      String title, String subtitle, int count, String trailingText, [isTotal = false]) {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(
         horizontal: SizeConfig.blockSizeHorizontal * 8,
@@ -193,23 +136,43 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
         width: SizeConfig.screenWidth * 0.2,
         child: Text(
           title,
-          style: GoogleFonts.montserrat(
+          style: (!isTotal)?GoogleFonts.montserrat(
             color: UiConstants.accentColor,
             fontSize: SizeConfig.mediumTextSize,
+          ):GoogleFonts.montserrat(
+            color: UiConstants.accentColor,
+            fontSize: SizeConfig.mediumTextSize,
+            fontWeight: FontWeight.bold
           ),
         ),
       ),
       trailing: Container(
         width: SizeConfig.screenWidth * 0.3,
-        child: Text(
-          value,
-          overflow: TextOverflow.clip,
-          style: GoogleFonts.montserrat(
-            color: Colors.black54,
-            fontSize: SizeConfig.largeTextSize,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        child: Column(
+          children: [
+            Text(
+              '$count tickets',
+              overflow: TextOverflow.clip,
+              style: (!isTotal)?GoogleFonts.montserrat(
+                color: Colors.black54,
+                fontSize: SizeConfig.largeTextSize,
+                fontWeight: FontWeight.w400,
+              ):GoogleFonts.montserrat(
+                color: Colors.black54,
+                fontSize: SizeConfig.largeTextSize,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              trailingText,
+              overflow: TextOverflow.clip,
+              style: GoogleFonts.montserrat(
+                color: UiConstants.accentColor,
+                fontSize: SizeConfig.mediumTextSize,
+              ),
+            ),
+          ],
+        )
       ),
     );
   }
@@ -221,7 +184,7 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
       return "Augmont Gold";
     } else if (type == UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN) {
       return "Tambola Win";
-    } else if(type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
+    } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
       return "Referral Bonus";
     }
     return 'Fund Name';

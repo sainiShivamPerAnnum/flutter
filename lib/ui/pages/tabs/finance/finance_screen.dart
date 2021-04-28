@@ -241,8 +241,9 @@ class FundChartView extends StatelessWidget {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) => MoreInfoDialog(
-                                  text: 'Referral rewards get unlocked once your friends makes their first successful investment',
-                                  title:'Locked Balance',
+                                  text:
+                                      'Referral rewards get unlocked once you and your friends make a successful investment',
+                                  title: 'Locked Balance',
                                 ));
                       },
                     )

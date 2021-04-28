@@ -8,8 +8,8 @@ class UserTicketWallet {
   int _augGold99Tck;
   int _icici1565Tck;
   int _initTck;
-  int _prizeTck;
-  int _refTck;
+  int _prizeTck; //recurring prize tickets
+  int _refTck; //recurring referral tickets
   List<NonRecurringTicket> _activeNRTck;
   List<LockedTicket> _lockedTck;
 
@@ -55,7 +55,8 @@ class UserTicketWallet {
   ///all recurring tickets and all the non recurring tickets from this week
   ///this DOESNT include the locked tickets
   int getActiveTickets() {
-    int _baseCount = _augGold99Tck + _icici1565Tck + _prizeTck + _initTck + _refTck;
+    int _baseCount =
+        _augGold99Tck + _icici1565Tck + _prizeTck + _initTck + _refTck;
     if (_activeNRTck != null && _activeNRTck.length > 0) {
       for (NonRecurringTicket ticketCnt in _activeNRTck) {
         _baseCount = _baseCount + ticketCnt.tckCount;
@@ -73,6 +74,16 @@ class UserTicketWallet {
       }
     }
 
+    return _baseCount;
+  }
+
+  int getNRTicketBalance() {
+    int _baseCount = 0;
+    if (_activeNRTck != null && _activeNRTck.length > 0) {
+      for (NonRecurringTicket ticketCnt in _activeNRTck) {
+        _baseCount = _baseCount + ticketCnt.tckCount;
+      }
+    }
     return _baseCount;
   }
 
@@ -160,6 +171,37 @@ class UserTicketWallet {
     } catch (e) {}
 
     return false;
+  }
+
+  ///pick the NR Ticket that is expiring most recently
+  ///compose the date string for it and return
+  String getNRExpiryDate() {
+    if (_activeNRTck == null || _activeNRTck.isEmpty) return '';
+    int _recentWeekNumber = 99;
+    for (NonRecurringTicket tck in _activeNRTck) {
+      int _wk = tck.weekCode;
+      if (_wk == null || _wk == 0) continue;
+      _wk = _wk % 10000; //removing year from _wk
+      if (_wk < _recentWeekNumber) _recentWeekNumber = _wk;
+    }
+    if (_recentWeekNumber == 99) return '';
+
+    //now we have the most recent week code
+    //construct date string
+    try {
+      var date = ((_recentWeekNumber - 1) * 7);
+      var weekEnd =
+          DateTime.utc(DateTime.now().year, 1, date).toLocal().weekday;
+      var endDate = date + (7 - weekEnd);
+      int endDay = DateTime.utc(DateTime.now().year, 1, endDate).toLocal().day;
+      int endMon =
+          DateTime.utc(DateTime.now().year, 1, endDate).toLocal().month;
+      String endMonth = BaseUtil.getMonthName(endMon);
+
+      return '$endDay $endMonth';
+    } catch (e) {
+      return '';
+    }
   }
 
   static T _cast<T>(x) => x is T ? x : null;

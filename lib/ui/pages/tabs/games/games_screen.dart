@@ -4,6 +4,7 @@ import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
+import 'package:felloapp/ui/dialogs/ticket_details_dialog.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'package:felloapp/ui/elements/Parallax-card/game_card_list.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
@@ -11,6 +12,7 @@ import 'package:felloapp/ui/elements/week-winners.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -69,10 +71,12 @@ class _GamePageState extends State<GamePage> {
     // });
   }
 
-  Future<void> _onTicketsRefresh() async{
+  Future<void> _onTicketsRefresh() async {
     //TODO ADD LOADER
-    return dbProvider.getUserTicketWallet(baseProvider.myUser.uid).then((value) {
-      if(value != null) baseProvider.userTicketWallet = value;
+    return dbProvider
+        .getUserTicketWallet(baseProvider.myUser.uid)
+        .then((value) {
+      if (value != null) baseProvider.userTicketWallet = value;
       setState(() {});
     });
   }
@@ -128,8 +132,19 @@ class _GamePageState extends State<GamePage> {
                         Container(
                           height: AppBar().preferredSize.height * 2,
                         ),
-                        TicketCount(
-                            baseProvider.userTicketWallet.getActiveTickets()),
+                        InkWell(
+                          onTap: () {
+                            HapticFeedback.vibrate();
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  TicketDetailsDialog(
+                                      baseProvider.userTicketWallet),
+                            );
+                          },
+                          child: TicketCount(
+                              baseProvider.userTicketWallet.getActiveTickets()),
+                        ),
                         Expanded(
                           flex: 4,
                           child: GameCardList(
