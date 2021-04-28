@@ -353,6 +353,24 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         await dbProvider.updateUserTransaction(
             baseProvider.myUser.uid, baseProvider.currentAugmontTxn);
 
+        ///if this was the user's first investment
+        ///- update AugmontDetail obj
+        ///- process referrals if any
+        if (!baseProvider.augmontDetail.firstInvMade) {
+          baseProvider.augmontDetail.firstInvMade = true;
+          bool _aflag = await dbProvider.updateUserAugmontDetails(
+              baseProvider.myUser.uid, baseProvider.augmontDetail);
+          if (_aflag) {
+            bool _isUnlocked =
+                await dbProvider.unlockReferralTickets(baseProvider.myUser.uid);
+            if (_isUnlocked)
+              baseProvider.showPositiveAlert(
+                  'Congratulations on your first Gold purchase',
+                  'Your referral bonus has been unlocked! 🎉',
+                  context);
+          }
+        }
+
         ///update UI
         _modalKey2.currentState.onDepositComplete(true);
         augmontProvider.completeTransaction();

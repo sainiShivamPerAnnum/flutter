@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
+import 'package:felloapp/core/model/ReferralDetail.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class Api {
   Log log = new Log("Api");
@@ -140,6 +142,46 @@ class Api {
         .where(DailyPick.fldWeekCode, isEqualTo: weekCde);
 
     return query.get();
+  }
+
+  //set the mentioned fields to true
+  Future<bool> setReferralDocBonusField(String uid) async{
+    DocumentReference _rRef = _db.collection(Constants.COLN_REFERRALS).doc(uid);
+    return _db
+        .runTransaction((transaction) async {
+          DocumentSnapshot snapshot = await transaction.get(_rRef);
+          if (!snapshot.exists) {
+            //did not sign up via referral
+            throw Exception('No referral found');
+          } else if (snapshot.data() == null ||
+              snapshot.data()[ReferralDetail.fldUsrBonusFlag] == null ||
+              snapshot.data()[ReferralDetail.fldRefereeBonusFlag] == null) {
+            throw Exception('Empty/invalid data');
+          }else {
+            bool _uFlag, _rFlag;
+            try{
+              _uFlag = snapshot.data()[ReferralDetail.fldUsrBonusFlag];
+              _rFlag = snapshot.data()[ReferralDetail.fldRefereeBonusFlag];
+            }catch(e) {
+              throw Exception('Failed to create bool flags');
+            }
+            if(_uFlag == null || _rFlag == null) {
+              throw Exception('Failed to create bool flags');
+            }
+            if(_uFlag == true && _rFlag == true) {
+              //referral bonus already unlocked
+              throw Exception('Referral bonus already unlocked');
+            }else{
+              Map<String, dynamic> rMap = {};
+              rMap[ReferralDetail.fldUsrBonusFlag] = true;
+              rMap[ReferralDetail.fldRefereeBonusFlag] = true;
+              transaction.set(_rRef, rMap, SetOptions(merge: true));
+              return true;
+            }
+          }
+        })
+        .then((value) => true)
+        .catchError((onErr) => false);
   }
 
   Future<void> addFeedbackDocument(Map data) {
@@ -302,12 +344,16 @@ class Api {
         .collection(Constants.COLN_USERS)
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_TXNS);
-    _query = _query.where(UserTransaction.fldSubType,
-        isEqualTo: UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
-        .where(UserTransaction.fldType, isEqualTo: UserTransaction.TRAN_TYPE_DEPOSIT)
-        .where(UserTransaction.fldTranStatus, isEqualTo: UserTransaction.TRAN_STATUS_COMPLETE)
-        .where(UserTransaction.fldTimestamp, isGreaterThanOrEqualTo: cmpTimestamp);
-        // .orderBy(UserTransaction.fldTimestamp, descending: true).startAfter([cmpTimestamp]);
+    _query = _query
+        .where(UserTransaction.fldSubType,
+            isEqualTo: UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
+        .where(UserTransaction.fldType,
+            isEqualTo: UserTransaction.TRAN_TYPE_DEPOSIT)
+        .where(UserTransaction.fldTranStatus,
+            isEqualTo: UserTransaction.TRAN_STATUS_COMPLETE)
+        .where(UserTransaction.fldTimestamp,
+            isGreaterThanOrEqualTo: cmpTimestamp);
+    // .orderBy(UserTransaction.fldTimestamp, descending: true).startAfter([cmpTimestamp]);
 
     return _query.get();
   }

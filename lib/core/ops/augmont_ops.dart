@@ -247,7 +247,7 @@ class AugmontModel extends ChangeNotifier {
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
     } else {
-      //success
+      //success - update transaction fields and call listener
       _baseProvider.currentAugmontTxn.tranStatus =
           UserTransaction.TRAN_STATUS_COMPLETE;
       _baseProvider.currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId] =
@@ -259,11 +259,7 @@ class AugmontModel extends ChangeNotifier {
               .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm] =
           double.tryParse(resMap[SubmitGoldPurchase.resGoldBalance]) ?? 0.0;
       //bool flag = await _dbModel.updateUserTransaction(_baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
-      if (!_baseProvider.augmontDetail.firstInvMade) {
-        _baseProvider.augmontDetail.firstInvMade = true;
-        await _dbModel.updateUserAugmontDetails(
-            _baseProvider.myUser.uid, _baseProvider.augmontDetail);
-      }
+
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
     }

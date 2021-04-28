@@ -302,6 +302,15 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<bool> unlockReferralTickets(String userId) async {
+    try{
+      return await _api.setReferralDocBonusField(userId);
+    }catch(e) {
+      log.error('Failed to unlock referral tickets');
+      return false;
+    }
+  }
+
   ///////////////////////////CREDENTIALS//////////////////////////////
   Future<Map<String, String>> getActiveAwsIciciApiKey() async {
     String _awsKeyIndex =
