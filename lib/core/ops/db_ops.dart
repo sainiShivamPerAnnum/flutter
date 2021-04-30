@@ -303,9 +303,9 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<bool> unlockReferralTickets(String userId) async {
-    try{
+    try {
       return await _api.setReferralDocBonusField(userId);
-    }catch(e) {
+    } catch (e) {
       log.error('Failed to unlock referral tickets');
       return false;
     }
@@ -802,11 +802,15 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  ///Total Gold Balance = (current total grams owned * current selling rate)
+  ///Total Gold Principle = old principle + changeAmount
+  ///it shouldnt matter if its a deposit or a sell, all based on selling rate
   Future<UserFundWallet> updateUserAugmontGoldBalance(
       String id,
       UserFundWallet originalWalletBalance,
-      double changeAmount,
-      double totalQuantity) async {
+      double sellingRate,
+      double totalQuantity,
+      double changeAmt) async {
     ///make a copy of the wallet object
     UserFundWallet newWalletBalance;
     if (originalWalletBalance == null) {
@@ -817,19 +821,11 @@ class DBModel extends ChangeNotifier {
     }
 
     ///first update augmont balance
-    if (changeAmount < 0 &&
-        (newWalletBalance.augGoldBalance + changeAmount) < 0) {
-      log.error(
-          'Augmont Balance: Attempted to subtract amount more than available balance');
-      return originalWalletBalance;
-    } else {
-      newWalletBalance.augGoldBalance = BaseUtil.digitPrecision(
-          newWalletBalance.augGoldBalance + changeAmount);
-      newWalletBalance.augGoldPrinciple = BaseUtil.digitPrecision(
-          newWalletBalance.augGoldPrinciple + changeAmount);
-      newWalletBalance.augGoldQuantity =
-          totalQuantity; //precision already added
-    }
+    newWalletBalance.augGoldBalance =
+        BaseUtil.digitPrecision(totalQuantity * sellingRate);
+    newWalletBalance.augGoldPrinciple = BaseUtil.digitPrecision(
+        newWalletBalance.augGoldPrinciple + changeAmt);
+    newWalletBalance.augGoldQuantity = totalQuantity; //precision already added
 
     ///make the wallet transaction
     try {

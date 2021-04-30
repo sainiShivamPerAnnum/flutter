@@ -42,9 +42,6 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
   GlobalKey<AugmontOnboardingState> _onboardingKey = GlobalKey();
   GlobalKey<AugmontWithdrawScreenState> _withdrawalDialogKey2 = GlobalKey();
   double containerHeight = 10;
-  Map<String, dynamic> _withdrawalRequestDetails;
-  AugmontRates _currentBuyRates;
-  AugmontRates _currentSellRates;
   double _withdrawableGoldQnty;
   static const int STATUS_UNAVAILABLE = 0;
   static const int STATUS_REGISTER = 1;
@@ -259,9 +256,10 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
       setState(() {});
       return true;
     } else {
-      _currentBuyRates = await augmontProvider.getRates();
+      baseProvider.augmontGoldRates =
+          await augmontProvider.getRates(); //refresh rates
       baseProvider.isAugDepositRouteLogicInProgress = false;
-      if (_currentBuyRates == null) {
+      if (baseProvider.augmontGoldRates == null) {
         baseProvider.showNegativeAlert('Portal unavailable',
             'The current rates couldn\'t be loaded. Please try again', context);
         return false;
@@ -276,11 +274,11 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                 key: _modalKey2,
                 onDepositConfirmed: (double amount) {
                   augmontProvider.initiateGoldPurchase(
-                      _currentBuyRates, amount);
+                      baseProvider.augmontGoldRates, amount);
                   augmontProvider.setAugmontTxnProcessListener(
                       _onDepositTransactionComplete);
                 },
-                currentRates: _currentBuyRates,
+                currentRates: baseProvider.augmontGoldRates,
               );
             });
       }
@@ -291,25 +289,16 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
   Future<void> _onDepositTransactionComplete(UserTransaction txn) async {
     if (txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) {
       if (baseProvider.currentAugmontTxn != null) {
-        ///update augmont transaction closing balance and ticketupcount
-        ///tickets will be based on amount spent, closing balance will be based on taxed amount
-        baseProvider.currentAugmontTxn.ticketUpCount =
-            baseProvider.getTicketCountForTransaction(
-                baseProvider.currentAugmontTxn.amount);
-        baseProvider.currentAugmontTxn.closingBalance =
-            baseProvider.getUpdatedClosingBalance(baseProvider.currentAugmontTxn
-                .augmnt[UserTransaction.subFldAugPostTaxTotal]);
-
         ///update user wallet object account balance
         double _tempCurrentBalance = baseProvider.userFundWallet.augGoldBalance;
-        baseProvider.userFundWallet = await dbProvider
-            .updateUserAugmontGoldBalance(
+        baseProvider.userFundWallet =
+            await dbProvider.updateUserAugmontGoldBalance(
                 baseProvider.myUser.uid,
                 baseProvider.userFundWallet,
-                BaseUtil.toDouble(baseProvider.currentAugmontTxn
-                    .augmnt[UserTransaction.subFldAugPostTaxTotal]),
+                baseProvider.augmontGoldRates.goldSellPrice,
                 baseProvider.currentAugmontTxn
-                    .augmnt[UserTransaction.subFldAugTotalGoldGm]);
+                    .augmnt[UserTransaction.subFldAugTotalGoldGm],
+                baseProvider.currentAugmontTxn.amount);
 
         ///check if balance updated correctly
         if (baseProvider.userFundWallet.augGoldBalance == _tempCurrentBalance) {
@@ -325,14 +314,17 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
               FailType.UserAugmontDepositUpdateDiscrepancy, _data);
         }
 
-        if (baseProvider.currentAugmontTxn.ticketUpCount > 0) {
-          ///update user ticket count
+        ///update user ticket count
+        ///tickets will be updated based on total amount spent
+        int _ticketUpdateCount = baseProvider.getTicketCountForTransaction(
+            baseProvider.currentAugmontTxn.amount);
+        if (_ticketUpdateCount > 0) {
           int _tempCurrentCount = baseProvider.userTicketWallet.augGold99Tck;
           baseProvider.userTicketWallet =
               await dbProvider.updateAugmontGoldUserTicketCount(
                   baseProvider.myUser.uid,
                   baseProvider.userTicketWallet,
-                  baseProvider.currentAugmontTxn.ticketUpCount);
+                  _ticketUpdateCount);
 
           ///check if ticket count updated correctly
           if (baseProvider.userTicketWallet.augGold99Tck == _tempCurrentCount) {
@@ -350,6 +342,11 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         }
 
         ///update user transaction
+        ///update augmont transaction closing balance and ticketupcount
+        ///closing balance will be based on taxed amount
+        baseProvider.currentAugmontTxn.ticketUpCount = _ticketUpdateCount;
+        baseProvider.currentAugmontTxn.closingBalance =
+            baseProvider.getCurrentTotalClosingBalance();
         await dbProvider.updateUserTransaction(
             baseProvider.myUser.uid, baseProvider.currentAugmontTxn);
 
@@ -410,7 +407,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
       setState(() {});
       double _liveGoldQuantityBalance;
       try {
-        _currentSellRates = await augmontProvider.getRates();
+        baseProvider.augmontGoldRates = await augmontProvider.getRates();
       } catch (e) {
         log.error('Failed to fetch current sell rates: $e');
       }
@@ -428,7 +425,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
       } catch (e) {
         log.error('Failed to fetch non withdrawable gold quantity');
       }
-      if (_currentSellRates == null ||
+      if (baseProvider.augmontGoldRates == null ||
           _liveGoldQuantityBalance == null ||
           _liveGoldQuantityBalance == 0) {
         baseProvider.isAugWithdrawRouteLogicInProgress = false;
@@ -445,7 +442,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                 key: _withdrawalDialogKey2,
                 passbookBalance: _liveGoldQuantityBalance,
                 withdrawableGoldQnty: _withdrawableGoldQnty,
-                sellRate: _currentSellRates.goldSellPrice,
+                sellRate: baseProvider.augmontGoldRates.goldSellPrice,
                 onAmountConfirmed: (Map<String, double> amountDetails) {
                   _onInitiateWithdrawal(amountDetails['withdrawal_amount']);
                 },
@@ -459,8 +456,8 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
   }
 
   _onInitiateWithdrawal(double amt) {
-    if (_currentSellRates != null && amt != null) {
-      augmontProvider.initiateWithdrawal(_currentSellRates, amt);
+    if (baseProvider.augmontGoldRates != null && amt != null) {
+      augmontProvider.initiateWithdrawal(baseProvider.augmontGoldRates, amt);
       augmontProvider.setAugmontTxnProcessListener(_onSellComplete);
     }
   }
@@ -487,9 +484,10 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
             await dbProvider.updateUserAugmontGoldBalance(
                 baseProvider.myUser.uid,
                 baseProvider.userFundWallet,
-                -1 * baseProvider.currentAugmontTxn.amount,
-                baseProvider.currentAugmontTxn
-                    .augmnt[UserTransaction.subFldAugTotalGoldGm]);
+                baseProvider.augmontGoldRates.goldSellPrice,
+                BaseUtil.toDouble(baseProvider.currentAugmontTxn
+                    .augmnt[UserTransaction.subFldAugTotalGoldGm]),
+                -1 * baseProvider.currentAugmontTxn.amount);
 
         ///check if balance updated correctly
         if (baseProvider.userFundWallet.augGoldBalance == _tempCurrentBalance) {

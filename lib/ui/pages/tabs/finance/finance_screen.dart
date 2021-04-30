@@ -31,7 +31,7 @@ class _FinancePageState extends State<FinancePage> {
   Map<String, double> getChartMap() {
     return {
       "ICICI Balance": baseProvider.userFundWallet.iciciBalance,
-      "Augmont Balance": baseProvider.userFundWallet.augGoldBalance,
+      "Gold Balance": baseProvider.userFundWallet.augGoldBalance,
       "Prize Balance": baseProvider.userFundWallet.prizeBalance,
       "Locked Balance": baseProvider.userFundWallet.lockedPrizeBalance
     };
@@ -39,25 +39,27 @@ class _FinancePageState extends State<FinancePage> {
 
   Future<void> _onFundsRefresh() async {
     //TODO ADD LOADER
-    return dbProvider.getUserFundWallet(baseProvider.myUser.uid).then((value) {
-      if (value != null) baseProvider.userFundWallet = value;
-      setState(() {});
+    return dbProvider.getUserFundWallet(baseProvider.myUser.uid).then((aValue) {
+      if (aValue != null) {
+        baseProvider.userFundWallet = aValue;
+        _updateAugmontBalance();  //setstate call in method
+      }
     });
   }
 
-  _updateAugmontBalance() async {
+  Future<void> _updateAugmontBalance() async {
     if (augmontProvider == null ||
         (baseProvider.userFundWallet.augGoldQuantity == 0 &&
             baseProvider.userFundWallet.augGoldBalance == 0)) return;
     augmontProvider.getRates().then((currRates) {
-      if (currRates == null || currRates.goldSellPrice == null) return;
+      if (currRates == null ||
+          currRates.goldSellPrice == null ||
+          baseProvider.userFundWallet.augGoldQuantity == 0) return;
 
-      // double gBuyRate = currRates.goldBuyPrice;
-      double gSellRate = currRates.goldSellPrice;
-      if (baseProvider.userFundWallet.augGoldQuantity == 0) return;
+      baseProvider.augmontGoldRates = currRates;
+      double gSellRate = baseProvider.augmontGoldRates.goldSellPrice;
       baseProvider.userFundWallet.augGoldBalance =
-          (baseProvider.userFundWallet.augGoldQuantity * gSellRate)
-              .roundToDouble();
+          BaseUtil.digitPrecision(baseProvider.userFundWallet.augGoldQuantity * gSellRate);
       setState(() {}); //might cause ui error if screen no longer active
     }).catchError((err) {
       print('$err');

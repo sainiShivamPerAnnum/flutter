@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/FeedCard.dart';
@@ -58,6 +59,7 @@ class BaseUtil extends ChangeNotifier {
   ///Augmont global objects
   UserAugmontDetail _augmontDetail;
   UserTransaction _currentAugmontTxn;
+  AugmontRates augmontGoldRates;
 
   ///KYC global object
   UserKycDetail _kycDetail;
@@ -193,7 +195,7 @@ class BaseUtil extends ChangeNotifier {
       'aws_icici_key_index': '1',
       'aws_augmont_key_index': '1',
       'icici_deposits_enabled': '1',
-      'icici_deposit_permission':'1',
+      'icici_deposit_permission': '1',
       'augmont_deposits_enabled': '1',
       'augmont_deposit_permission': '1',
       'kyc_completion_prize': 'You have won ₹50 and 10 Tambola tickets!'
@@ -491,11 +493,11 @@ class BaseUtil extends ChangeNotifier {
           toDouble(_userFundWallet.lockedPrizeBalance) -
           investment);
 
-  double getUpdatedClosingBalance(double investment) => (investment +
-      toDouble(_userFundWallet.iciciBalance) +
-      toDouble(_userFundWallet.augGoldBalance) +
-      toDouble(_userFundWallet.prizeBalance) +
-      toDouble(_userFundWallet.lockedPrizeBalance));
+  double getCurrentTotalClosingBalance() =>
+      (toDouble(_userFundWallet.iciciBalance) +
+          toDouble(_userFundWallet.augGoldBalance) +
+          toDouble(_userFundWallet.prizeBalance) +
+          toDouble(_userFundWallet.lockedPrizeBalance));
 
   static T _cast<T>(x) => x is T ? x : null;
 
@@ -570,7 +572,6 @@ class BaseUtil extends ChangeNotifier {
     //updateInitUserTicketCount method returns no change if operations fails
     return (_userTicketWallet.initTck != _t);
   }
-
 
   static String getMonthName(int monthNum) {
     switch (monthNum) {
