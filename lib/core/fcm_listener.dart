@@ -41,12 +41,17 @@ class FcmListener extends ChangeNotifier {
       }
     });
 
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(_androidChannel);
+
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
       if (message.data != null && message.data.isNotEmpty) {
         _handler.handleMessage(message.data);
-      }else if(notification != null) {
+      } else if (notification != null) {
         _handler.handleNotification(notification.title, notification.body);
       }
     });
@@ -63,7 +68,7 @@ class FcmListener extends ChangeNotifier {
     _fcm.requestPermission();
 
     //_fcm.subscribeToTopic('dailypickbroadcast');
-    if(_baseUtil.isOldCustomer()) {
+    if (_baseUtil.isOldCustomer()) {
       await _fcm.subscribeToTopic('oldcustomer');
     }
 
