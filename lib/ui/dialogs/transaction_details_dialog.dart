@@ -82,11 +82,10 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                         'Transaction Type:', widget._transaction.type),
                     _addListField('Transaction Amount:',
                         '₹${widget._transaction.amount.toStringAsFixed(2)}'),
-                    _addListField(
-                        'Closing Balance:',
-                        (widget._transaction.closingBalance == 0)
-                            ? 'N/A'
-                            : '₹${widget._transaction.closingBalance}'),
+                    (widget._transaction.closingBalance > 0)
+                        ? _addListField('Overall Closing Balance:',
+                            '₹${widget._transaction.closingBalance}')
+                        : Container(),
                     _addListField('Tickets Added:',
                         '${widget._transaction.ticketUpCount}'),
                     // _addListField('Transaction ID:',
@@ -221,7 +220,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
       return "Augmont Gold";
     } else if (type == UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN) {
       return "Tambola Win";
-    } else if(type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
+    } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
       return "Referral Bonus";
     }
     return 'Fund Name';

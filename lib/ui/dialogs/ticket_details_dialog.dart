@@ -95,14 +95,14 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
                         ? _addListField(
                             'Referral Bonus:',
                             '',
-                            widget._userTicketWallet.initTck,
+                            widget._userTicketWallet.refTck,
                             'Refreshes every Monday')
                         : Container(),
                     (widget._userTicketWallet.getNRTicketBalance() > 0)
                         ? _addListField(
                             'Referral Bonus:',
                             '',
-                            widget._userTicketWallet.initTck,
+                            widget._userTicketWallet.getNRTicketBalance(),
                             'Expires on ${widget._userTicketWallet.getNRExpiryDate()}')
                         : Container(),
                     (widget._userTicketWallet.getLockedTickets() > 0)
@@ -110,14 +110,14 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
                             'Locked Bonus:',
                             '',
                             widget._userTicketWallet.getLockedTickets(),
-                            'Unlocked once referrals are completed')
+                            'Unlocked once an investment is made')
                         : Container(),
                     (widget._userTicketWallet.getActiveTickets() > 0)
                         ? _addListField(
-                        'In Total:',
+                        'Total Active:',
                         '',
-                        widget._userTicketWallet.getLockedTickets(),
-                        '', true)
+                        widget._userTicketWallet.getActiveTickets(),
+                        'This week', true)
                         : Container(),
                   ],
                 )),
@@ -140,7 +140,7 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
             color: UiConstants.accentColor,
             fontSize: SizeConfig.mediumTextSize,
           ):GoogleFonts.montserrat(
-            color: UiConstants.accentColor,
+            color: Colors.black54,
             fontSize: SizeConfig.mediumTextSize,
             fontWeight: FontWeight.bold
           ),
@@ -151,7 +151,7 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
         child: Column(
           children: [
             Text(
-              '$count tickets',
+              (count==1)?'$count ticket':'$count tickets',
               overflow: TextOverflow.clip,
               style: (!isTotal)?GoogleFonts.montserrat(
                 color: Colors.black54,
@@ -165,10 +165,11 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
             ),
             Text(
               trailingText,
+              textAlign: TextAlign.center,
               overflow: TextOverflow.clip,
               style: GoogleFonts.montserrat(
                 color: UiConstants.accentColor,
-                fontSize: SizeConfig.mediumTextSize,
+                fontSize: SizeConfig.smallTextSize,
               ),
             ),
           ],
@@ -176,20 +177,4 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
       ),
     );
   }
-
-  String _getTileTitle(String type) {
-    if (type == UserTransaction.TRAN_SUBTYPE_ICICI) {
-      return "ICICI Prudential Fund";
-    } else if (type == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD) {
-      return "Augmont Gold";
-    } else if (type == UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN) {
-      return "Tambola Win";
-    } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
-      return "Referral Bonus";
-    }
-    return 'Fund Name';
-  }
-
-  String _getAugmontGoldGrams(double gms) =>
-      (gms == null || gms == 0) ? 'N/A' : gms.toStringAsFixed(4);
 }

@@ -1,5 +1,5 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/AugGoldRates.dart';
+import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -28,8 +28,46 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class GoldDetailsPage extends StatefulWidget {
+  static const int STATUS_UNAVAILABLE = 0;
+  static const int STATUS_REGISTER = 1;
+  static const int STATUS_OPEN = 2;
   @override
   _GoldDetailsPageState createState() => _GoldDetailsPageState();
+
+  static int checkAugmontStatus(BaseUser baseUser) {
+    //check who is allowed to deposit
+    String _perm =
+    BaseUtil.remoteConfig.getString('augmont_deposit_permission');
+    int _isGeneralUserAllowed = 1;
+    bool _isAllowed = false;
+    if (_perm != null && _perm.isNotEmpty) {
+      try {
+        _isGeneralUserAllowed = int.parse(_perm);
+      } catch (e) {
+        _isGeneralUserAllowed = 1;
+      }
+    }
+    if (_isGeneralUserAllowed == 0) {
+      //General permission is denied. Check if specific user permission granted
+      if (baseUser.isAugmontEnabled != null &&
+          baseUser.isAugmontEnabled) {
+        //this specific user is allowed to use Augmont
+        _isAllowed = true;
+      } else {
+        _isAllowed = false;
+      }
+    } else {
+      _isAllowed = true;
+    }
+
+    if (!_isAllowed)
+      return STATUS_UNAVAILABLE;
+    else if (baseUser.isAugmontOnboarded == null ||
+        baseUser.isAugmontOnboarded == false)
+      return STATUS_REGISTER;
+    else
+      return STATUS_OPEN;
+  }
 }
 
 class _GoldDetailsPageState extends State<GoldDetailsPage> {
@@ -43,9 +81,6 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
   GlobalKey<AugmontWithdrawScreenState> _withdrawalDialogKey2 = GlobalKey();
   double containerHeight = 10;
   double _withdrawableGoldQnty;
-  static const int STATUS_UNAVAILABLE = 0;
-  static const int STATUS_REGISTER = 1;
-  static const int STATUS_OPEN = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -188,46 +223,11 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     );
   }
 
-  int _checkAugmontStatus() {
-    //check who is allowed to deposit
-    String _perm =
-        BaseUtil.remoteConfig.getString('augmont_deposit_permission');
-    int _isGeneralUserAllowed = 1;
-    bool _isAllowed = false;
-    if (_perm != null && _perm.isNotEmpty) {
-      try {
-        _isGeneralUserAllowed = int.parse(_perm);
-      } catch (e) {
-        _isGeneralUserAllowed = 1;
-      }
-    }
-    if (_isGeneralUserAllowed == 0) {
-      //General permission is denied. Check if specific user permission granted
-      if (baseProvider.myUser.isAugmontEnabled != null &&
-          baseProvider.myUser.isAugmontEnabled) {
-        //this specific user is allowed to use Augmont
-        _isAllowed = true;
-      } else {
-        _isAllowed = false;
-      }
-    } else {
-      _isAllowed = true;
-    }
-
-    if (!_isAllowed)
-      return STATUS_UNAVAILABLE;
-    else if (baseProvider.myUser.isAugmontOnboarded == null ||
-        baseProvider.myUser.isAugmontOnboarded == false)
-      return STATUS_REGISTER;
-    else
-      return STATUS_OPEN;
-  }
-
   String _getActionButtonText() {
-    int _status = _checkAugmontStatus();
-    if (_status == STATUS_UNAVAILABLE)
+    int _status = GoldDetailsPage.checkAugmontStatus(baseProvider.myUser);
+    if (_status == GoldDetailsPage.STATUS_UNAVAILABLE)
       return 'UNAVAILABLE';
-    else if (_status == STATUS_REGISTER)
+    else if (_status == GoldDetailsPage.STATUS_REGISTER)
       return 'REGISTER';
     else
       return 'DEPOSIT';
@@ -237,15 +237,15 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     baseProvider.augmontDetail = (baseProvider.augmontDetail == null)
         ? (await dbProvider.getUserAugmontDetails(baseProvider.myUser.uid))
         : baseProvider.augmontDetail;
-    int _status = _checkAugmontStatus();
-    if (_status == STATUS_UNAVAILABLE) {
+    int _status = GoldDetailsPage.checkAugmontStatus(baseProvider.myUser);
+    if (_status == GoldDetailsPage.STATUS_UNAVAILABLE) {
       baseProvider.isAugDepositRouteLogicInProgress = false;
       showDialog(
           context: context,
           builder: (BuildContext context) => AugmontDisabled());
       setState(() {});
       return true;
-    } else if (_status == STATUS_REGISTER) {
+    } else if (_status == GoldDetailsPage.STATUS_REGISTER) {
       await Navigator.push(
           context,
           MaterialPageRoute(

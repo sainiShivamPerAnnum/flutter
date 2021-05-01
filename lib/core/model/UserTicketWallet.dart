@@ -22,7 +22,8 @@ class UserTicketWallet {
   static final String fldPrizeNonRecurringPrefix = 'gPRIZE';
   static final String fldReferralNonRecurringPrefix = 'gREF';
 
-  static final String fldReferralLockedPrefix = 'gLOCK';
+  static final String fldReferralLocked = 'gREF_LOCK';
+  static final String fldPrizeLocked = 'gPRIZE_LOCK';
 
   static final String fldTicketGenerationCount = 'gGEN_LEFT_COUNT';
   static final String fldActiveTicketGenerationKey = 'gGEN_ACTIVE_KEY';
@@ -135,24 +136,20 @@ class UserTicketWallet {
   }
 
   ///LOCKED TICKET FIELD FORMAT
-  /// gLOCK_SUFFIX
+  /// gREF_LOCK
+  /// gPRIZE_LOCK
   /// where SUFFIX = {REF}
   _buildLockedTicketBalance(Map<String, dynamic> tMap) {
     _lockedTck = [];
-    for (String key in tMap.keys) {
-      if (key.startsWith(fldReferralLockedPrefix)) {
-        //first break the parts
-        List<String> _strList = key.split('_');
-        if (_strList.length < 2) {
-          log.error('Invalid format for entry');
-          continue;
-        }
-        if (_isValidField(tMap[key])) {
-          LockedTicket _ticketCnt = LockedTicket(_strList[1], tMap[key]);
-          _lockedTck.add(_ticketCnt);
-        }
-      }
-    }
+    int _refLockedTck = (_isValidField(tMap[fldReferralLocked]))
+        ? tMap[fldReferralLocked]
+        : 0;
+    if(_refLockedTck > 0) _lockedTck.add(LockedTicket("REF", _refLockedTck));
+
+    int _prizeLockedTck = (_isValidField(tMap[fldPrizeLocked]))
+        ? tMap[fldPrizeLocked]
+        : 0;
+    if(_prizeLockedTck > 0) _lockedTck.add(LockedTicket("PRIZE", _prizeLockedTck));
   }
 
   int _getWeekCode() {
@@ -181,7 +178,7 @@ class UserTicketWallet {
     for (NonRecurringTicket tck in _activeNRTck) {
       int _wk = tck.weekCode;
       if (_wk == null || _wk == 0) continue;
-      _wk = _wk % 10000; //removing year from _wk
+      _wk = _wk % 100; //removing year from _wk
       if (_wk < _recentWeekNumber) _recentWeekNumber = _wk;
     }
     if (_recentWeekNumber == 99) return '';

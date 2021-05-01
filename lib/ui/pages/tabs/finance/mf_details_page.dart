@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/ui/dialogs/integrated_icici_disabled_dialog.dart';
@@ -28,8 +29,49 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MFDetailsPage extends StatefulWidget {
+  static const int STATUS_UNAVAILABLE = 0;
+  static const int STATUS_REGISTER = 1;
+  static const int STATUS_OPEN = 2;
+  static const int STATUS_KYC_REQD = 3;
+
   @override
   _MFDetailsPageState createState() => _MFDetailsPageState();
+
+  static int checkICICIDespositStatus(BaseUser baseUser) {
+    //check who is allowed to deposit
+    String _perm = BaseUtil.remoteConfig.getString('icici_deposit_permission');
+    int _isGeneralUserAllowed = 1;
+    bool _isAllowed = false;
+    if (_perm != null && _perm.isNotEmpty) {
+      try {
+        _isGeneralUserAllowed = int.parse(_perm);
+      } catch (e) {
+        _isGeneralUserAllowed = 1;
+      }
+    }
+    if (_isGeneralUserAllowed == 0) {
+      //General permission is denied. Check if specific user permission granted
+      if (baseUser.isIciciEnabled != null &&
+          baseUser.isIciciEnabled) {
+        //this specific user is allowed to use Augmont
+        _isAllowed = true;
+      } else {
+        _isAllowed = false;
+      }
+    } else {
+      _isAllowed = true;
+    }
+
+    if (!_isAllowed) return STATUS_UNAVAILABLE;
+    if (baseUser.isKycVerified != null &&
+        baseUser.isKycVerified == BaseUtil.KYC_INVALID)
+      return STATUS_KYC_REQD;
+    if (baseUser.isIciciOnboarded == null ||
+        baseUser.isIciciOnboarded == false)
+      return STATUS_REGISTER;
+    else
+      return STATUS_OPEN;
+  }
 }
 
 class _MFDetailsPageState extends State<MFDetailsPage> {
@@ -42,10 +84,6 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
   double containerHeight = 10;
   Map<String, dynamic> _withdrawalRequestDetails;
   double instantAmount = 0, nonInstantAmount = 0;
-  static const int _STATUS_UNAVAILABLE = 0;
-  static const int _STATUS_REGISTER = 1;
-  static const int _STATUS_OPEN = 2;
-  static const int _STATUS_KYC_REQD = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -167,52 +205,18 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     );
   }
 
-  int _checkICICIDespositStatus() {
-    //check who is allowed to deposit
-    String _perm = BaseUtil.remoteConfig.getString('icici_deposit_permission');
-    int _isGeneralUserAllowed = 1;
-    bool _isAllowed = false;
-    if (_perm != null && _perm.isNotEmpty) {
-      try {
-        _isGeneralUserAllowed = int.parse(_perm);
-      } catch (e) {
-        _isGeneralUserAllowed = 1;
-      }
-    }
-    if (_isGeneralUserAllowed == 0) {
-      //General permission is denied. Check if specific user permission granted
-      if (baseProvider.myUser.isIciciEnabled != null &&
-          baseProvider.myUser.isIciciEnabled) {
-        //this specific user is allowed to use Augmont
-        _isAllowed = true;
-      } else {
-        _isAllowed = false;
-      }
-    } else {
-      _isAllowed = true;
-    }
 
-    if (!_isAllowed) return _STATUS_UNAVAILABLE;
-    if (baseProvider.myUser.isKycVerified != null &&
-        baseProvider.myUser.isKycVerified == BaseUtil.KYC_INVALID)
-      return _STATUS_KYC_REQD;
-    if (baseProvider.myUser.isIciciOnboarded == null ||
-        baseProvider.myUser.isIciciOnboarded == false)
-      return _STATUS_REGISTER;
-    else
-      return _STATUS_OPEN;
-  }
 
   String _getActionButtonText() {
-    int _status = _checkICICIDespositStatus();
+    int _status = MFDetailsPage.checkICICIDespositStatus(baseProvider.myUser);
     switch (_status) {
-      case _STATUS_UNAVAILABLE:
+      case MFDetailsPage.STATUS_UNAVAILABLE:
         return 'COMING SOON!';
-      case _STATUS_KYC_REQD:
+      case MFDetailsPage.STATUS_KYC_REQD:
         return 'COMPLETE KYC';
-      case _STATUS_REGISTER:
+      case MFDetailsPage.STATUS_REGISTER:
         return 'REGISTER';
-      case _STATUS_OPEN:
+      case MFDetailsPage.STATUS_OPEN:
         return 'DEPOSIT';
       default:
         return 'DEPOSIT';
@@ -223,9 +227,9 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     baseProvider.iciciDetail = (baseProvider.iciciDetail == null)
         ? (await dbProvider.getUserIciciDetails(baseProvider.myUser.uid))
         : baseProvider.iciciDetail;
-    int _status = _checkICICIDespositStatus();
+    int _status = MFDetailsPage.checkICICIDespositStatus(baseProvider.myUser);
     switch (_status) {
-      case _STATUS_UNAVAILABLE:
+      case MFDetailsPage.STATUS_UNAVAILABLE:
         {
           baseProvider.isIciciDepositRouteLogicInProgress = false;
           showDialog(
@@ -233,14 +237,14 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
               builder: (BuildContext context) => IntegratedIciciDisabled());
           return true;
         }
-      case _STATUS_KYC_REQD:
+      case MFDetailsPage.STATUS_KYC_REQD:
         {
           baseProvider.isIciciDepositRouteLogicInProgress = false;
           Navigator.of(context).pop(); //go back to save tab
           Navigator.of(context).pushNamed('/initkyc');
           return true;
         }
-      case _STATUS_REGISTER:
+      case MFDetailsPage.STATUS_REGISTER:
         {
           Navigator.of(context).pop(); //go back to save tab
           if (baseProvider.iciciDetail != null &&
@@ -268,7 +272,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
           baseProvider.isIciciDepositRouteLogicInProgress = false;
           return true;
         }
-      case _STATUS_OPEN:
+      case MFDetailsPage.STATUS_OPEN:
       default:
         {
           //move directly to depositing

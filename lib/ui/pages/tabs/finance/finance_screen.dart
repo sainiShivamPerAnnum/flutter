@@ -11,6 +11,7 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +43,10 @@ class _FinancePageState extends State<FinancePage> {
     return dbProvider.getUserFundWallet(baseProvider.myUser.uid).then((aValue) {
       if (aValue != null) {
         baseProvider.userFundWallet = aValue;
-        _updateAugmontBalance();  //setstate call in method
+        if (baseProvider.userFundWallet.augGoldQuantity > 0)
+          _updateAugmontBalance(); //setstate call in method
+        else
+          setState(() {});
       }
     });
   }
@@ -58,8 +62,8 @@ class _FinancePageState extends State<FinancePage> {
 
       baseProvider.augmontGoldRates = currRates;
       double gSellRate = baseProvider.augmontGoldRates.goldSellPrice;
-      baseProvider.userFundWallet.augGoldBalance =
-          BaseUtil.digitPrecision(baseProvider.userFundWallet.augGoldQuantity * gSellRate);
+      baseProvider.userFundWallet.augGoldBalance = BaseUtil.digitPrecision(
+          baseProvider.userFundWallet.augGoldQuantity * gSellRate);
       setState(() {}); //might cause ui error if screen no longer active
     }).catchError((err) {
       print('$err');
@@ -109,32 +113,34 @@ class _FinancePageState extends State<FinancePage> {
                 slivers: [
                   SliverList(
                       delegate: SliverChildListDelegate([
-                    Container(
-                      height: AppBar().preferredSize.height * 0.7,
-                    ),
-                    Container(
-                      child: baseProvider.userFundWallet.getEstTotalWealth() > 0
-                          ? FundChartView(
+                        Container(
+                          height: AppBar().preferredSize.height * 0.7,
+                        ),
+                        Container(
+                          child: baseProvider.userFundWallet
+                              .getEstTotalWealth() > 0
+                              ? FundChartView(
                               dataMap: chartData,
                               totalBal: baseProvider.userFundWallet
                                   .getEstTotalWealth(),
-                            )
-                          : ZeroBalView(),
-                    ),
-                    // Row(
-                    Divider(
-                      color: UiConstants.textColor,
-                    ),
-                    Text(
-                      "Available Funds",
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 24,
-                        color: UiConstants.textColor,
-                      ),
-                    ),
-                  ])),
+                              goldMoreInfo: goldMoreInfoStr
+                          )
+                              : ZeroBalView(),
+                        ),
+                        // Row(
+                        Divider(
+                          color: UiConstants.textColor,
+                        ),
+                        Text(
+                          "Available Funds",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 24,
+                            color: UiConstants.textColor,
+                          ),
+                        ),
+                      ])),
                   SliverGrid(
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 275,
@@ -145,20 +151,10 @@ class _FinancePageState extends State<FinancePage> {
                     delegate: SliverChildListDelegate(
                       [
                         FundWidget(
-                            fund: fundList[0],
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (ctx) => MFDetailsPage(),
-                                ),
-                              );
-                              //baseProvider.showNegativeAlert('Locked', 'Feature currently locked', context);
-
-                              setState(() {});
-                            }),
-                        FundWidget(
                           fund: fundList[1],
+                          isAvailable: (GoldDetailsPage.checkAugmontStatus(
+                              baseProvider.myUser) !=
+                              GoldDetailsPage.STATUS_UNAVAILABLE),
                           onPressed: () async {
                             bool res = await Navigator.push(
                               context,
@@ -171,6 +167,22 @@ class _FinancePageState extends State<FinancePage> {
                             }
                           },
                         ),
+                        FundWidget(
+                            fund: fundList[0],
+                            isAvailable:
+                            (MFDetailsPage.checkICICIDespositStatus(
+                                baseProvider.myUser) !=
+                                MFDetailsPage.STATUS_UNAVAILABLE),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (ctx) => MFDetailsPage(),
+                                ),
+                              );
+                              //baseProvider.showNegativeAlert('Locked', 'Feature currently locked', context);
+                              setState(() {});
+                            }),
                       ],
                     ),
                   ),
@@ -182,13 +194,26 @@ class _FinancePageState extends State<FinancePage> {
       ),
     );
   }
+
+  String get goldMoreInfoStr {
+    String _s = 'The balance shown here is based on the current live selling rate of gold';
+    String _t = '.';
+    if (baseProvider.userFundWallet.augGoldQuantity > 0 &&
+        baseProvider.augmontGoldRates != null) {
+      _t =
+      ', which is ₹${baseProvider.augmontGoldRates.goldSellPrice} per gram';
+    }
+    return '$_s$_t';
+  }
 }
 
 class FundChartView extends StatelessWidget {
   final Map<String, double> dataMap;
   final double totalBal;
+  final String
+  goldMoreInfo; //should be altered to a more info array for all assets
 
-  FundChartView({this.dataMap, this.totalBal});
+  FundChartView({this.dataMap, this.totalBal, this.goldMoreInfo});
 
   final List<Color> colorListLight = [
     UiConstants.primaryColor,
@@ -213,7 +238,10 @@ class FundChartView extends StatelessWidget {
           padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.blockSizeHorizontal,
           ),
-          height: MediaQuery.of(context).size.height * 0.3,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height * 0.3,
           alignment: Alignment.centerRight,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,6 +256,16 @@ class FundChartView extends StatelessWidget {
                 title: title[1],
                 amount: "₹ ${dataMap[title[1]].toStringAsFixed(1)}",
                 color: colorList[1],
+                onClick: () {
+                  HapticFeedback.vibrate();
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          MoreInfoDialog(
+                            text: goldMoreInfo,
+                            title: 'Your Gold Balance',
+                          ));
+                },
               ),
               Legend(
                 title: title[2],
@@ -236,19 +274,21 @@ class FundChartView extends StatelessWidget {
               ),
               (dataMap[title[3]] > 0)
                   ? Legend(
-                      title: title[3],
-                      amount: "₹ ${dataMap[title[3]].toStringAsFixed(1)}",
-                      color: colorList[3],
-                      onClick: () {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) => MoreInfoDialog(
-                                  text:
-                                      'Referral rewards get unlocked once you and your friends make a successful investment',
-                                  title: 'Locked Balance',
-                                ));
-                      },
-                    )
+                title: title[3],
+                amount: "₹ ${dataMap[title[3]].toStringAsFixed(1)}",
+                color: colorList[3],
+                onClick: () {
+                  HapticFeedback.vibrate();
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          MoreInfoDialog(
+                            text:
+                            'Referral rewards get unlocked once you and your friends make a successful investment',
+                            title: 'Locked Balance',
+                          ));
+                },
+              )
                   : Container(),
             ],
           ),
@@ -261,7 +301,10 @@ class FundChartView extends StatelessWidget {
             dataMap: dataMap,
             animationDuration: Duration(milliseconds: 800),
             chartLegendSpacing: 40,
-            chartRadius: MediaQuery.of(context).size.width / 2,
+            chartRadius: MediaQuery
+                .of(context)
+                .size
+                .width / 2,
             colorList: colorList,
             initialAngleInDegree: 0,
             chartType: ChartType.ring,
@@ -313,7 +356,7 @@ class ZeroBalView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Text(
-              "Your savings and prizes will show up here!",
+              "Your savings and prize balance is currently zero",
               style: GoogleFonts.montserrat(
                 fontWeight: FontWeight.w500,
                 fontSize: SizeConfig.mediumTextSize,
@@ -343,7 +386,10 @@ class Legend extends StatelessWidget {
           child: Row(
             children: [
               CircleAvatar(
-                radius: MediaQuery.of(context).size.width * 0.016,
+                radius: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.016,
                 backgroundColor: color,
               ),
               SizedBox(
@@ -381,38 +427,60 @@ class Legend extends StatelessWidget {
 class FundWidget extends StatelessWidget {
   final Fund fund;
   final Function onPressed;
+  final bool isAvailable;
 
-  FundWidget({this.fund, this.onPressed});
+  FundWidget({this.fund, this.onPressed, this.isAvailable=true});
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
+    double height = MediaQuery
+        .of(context)
+        .size
+        .height;
     return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        padding: EdgeInsets.all(
-          height * 0.02,
-        ),
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(fund.assetName),
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              fund.title,
-              style: GoogleFonts.montserrat(
-                color: Colors.white,
-                fontSize: height * 0.024,
-                fontWeight: FontWeight.w500,
+        onTap: onPressed,
+        child: Opacity(
+          opacity: (isAvailable) ? 1 : 0.75,
+          child: Container(
+            padding: EdgeInsets.all(
+              height * 0.02,
+            ),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(fund.assetName),
               ),
-            )
-          ],
-        ),
-      ),
-    );
+            ),
+            child: Stack(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Text(
+                    fund.title,
+                    style: GoogleFonts.montserrat(
+                      color: Colors.white,
+                      fontSize: height * 0.024,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                (!isAvailable)?Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: height * 0.022),
+                    child: Text(
+                      'Coming Soon',
+                      style: GoogleFonts.montserrat(
+                        color: Colors.white,
+                        fontSize: height * 0.020,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  )
+                ):Container()
+              ],
+            ),
+          ),
+        ));
   }
 }
 
