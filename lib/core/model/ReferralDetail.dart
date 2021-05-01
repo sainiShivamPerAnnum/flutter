@@ -7,22 +7,24 @@ class ReferralDetail {
   final Timestamp _timestamp;
   bool _isUserBonusUnlocked;
   bool _isRefereeBonusUnlocked;
-  final int _refCount;
+  int _refCount;
   final Map<String, dynamic> _bonusMap;
 
   static const String fldUsrBonusFlag = 'usr_bonus_unlocked';
   static const String fldRefereeBonusFlag = 'referee_bonus_unlocked';
+  static const String fldUserReferralCount = 'ref_count';
 
   ReferralDetail(this._userName, this._timestamp, this._isUserBonusUnlocked,
       this._isRefereeBonusUnlocked, this._refCount, this._bonusMap);
 
   ReferralDetail.fromMap(Map<String, dynamic> rMap) :this(
       rMap['usr_name'], rMap['timestamp'], rMap[fldUsrBonusFlag],
-      rMap[fldRefereeBonusFlag],rMap['ref_count'], rMap['bonus_values']);
+      rMap[fldRefereeBonusFlag],rMap[fldUserReferralCount], rMap['bonus_values']);
 
   toJson() => {
     fldUsrBonusFlag: _isUserBonusUnlocked,
-    fldRefereeBonusFlag: _isRefereeBonusUnlocked
+    fldRefereeBonusFlag: _isRefereeBonusUnlocked,
+    fldUserReferralCount: _refCount
   };
 
   bool get isRefereeBonusUnlocked => _isRefereeBonusUnlocked;
@@ -34,6 +36,10 @@ class ReferralDetail {
   String get userName => _userName;
 
   int get refCount => _refCount;
+
+  set refCount(int value) {
+    _refCount = value;
+  }
 
   Map<String, dynamic> get bonusMap => _bonusMap;
 

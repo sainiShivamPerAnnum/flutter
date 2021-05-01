@@ -184,6 +184,10 @@ class Api {
         .catchError((onErr) => false);
   }
 
+  Future<void> updateReferralDocument(String docId, Map data) {
+    return _db.collection(Constants.COLN_REFERRALS).doc(docId).set(data, SetOptions(merge: true));
+  }
+
   Future<void> addFeedbackDocument(Map data) {
     return _db.collection(Constants.COLN_FEEDBACK).add(data);
   }

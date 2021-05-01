@@ -204,8 +204,8 @@ class _HomePageState extends State<HomePage> {
         borderRadius: BorderRadius.circular(20),
       ),
       margin: EdgeInsets.only(
-        top: 50,
-        bottom: 50,
+        top: SizeConfig.screenWidth * 0.10,
+        bottom: SizeConfig.screenWidth * 0.08,
       ),
       width: double.infinity,
       child: Row(

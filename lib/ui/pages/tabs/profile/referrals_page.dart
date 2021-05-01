@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/ReferralDetail.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class ReferralsPage extends StatefulWidget {
-  final List<ReferralDetail> _referralList;
-
-  ReferralsPage(this._referralList);
+  ReferralsPage();
 
   @override
   State createState() => _ReferralsPageState();
@@ -18,12 +18,37 @@ class ReferralsPage extends StatefulWidget {
 
 class _ReferralsPageState extends State<ReferralsPage> {
   BaseUtil baseProvider;
-  DateTime oldVersionReferralDate =
-      DateTime(2021, 4, 1); //all users before april 2021 are marked old
+  DBModel dbProvider;
 
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    if (!baseProvider.referralsFetched) {
+      dbProvider.getUserReferrals(baseProvider.myUser.uid).then((refList) {
+        baseProvider.referralsFetched = true;
+        baseProvider.userReferralsList = refList ?? [];
+
+        ///check if user referral count is correct in the user object
+        ///if not, update it
+        if (baseProvider.userReferralsList != null &&
+            baseProvider.userReferralsList.length > 0) {
+          int _n = baseProvider.userReferralsList.length;
+          int _t = 0;
+          if (baseProvider.myReferralInfo != null &&
+              baseProvider.myReferralInfo.refCount != null &&
+              baseProvider.myReferralInfo.refCount > 0) {
+            _t = baseProvider.myReferralInfo.refCount;
+          }
+          if (baseProvider.myReferralInfo != null && _t < _n) {
+            baseProvider.myReferralInfo.refCount = _n;
+            dbProvider.updateUserReferralCount(baseProvider.myUser.uid,
+                baseProvider.myReferralInfo); //await not required
+          }
+        }
+        setState(() {});
+      });
+    }
     return Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(
@@ -42,45 +67,54 @@ class _ReferralsPageState extends State<ReferralsPage> {
             padding: EdgeInsets.only(
                 left: SizeConfig.blockSizeHorizontal * 2,
                 right: SizeConfig.blockSizeHorizontal * 2),
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    // height: SizeConfig.screenHeight*0.8,
-                    // width: SizeConfig.screenWidth*0.9,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.all(6.0),
-                      itemBuilder: (context, i) {
-                        return _buildRefItem(widget._referralList[i]);
-                      },
-                      itemCount: widget._referralList.length,
-                    ),
-                  ),
-                  _isOldCustomer()
-                      ? Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                            'Referrals before April 2021 are not mentioned here',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.grey[500],
-                                fontSize: SizeConfig.mediumTextSize),
+            child: (baseProvider.referralsFetched)
+                ? SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          // height: SizeConfig.screenHeight*0.8,
+                          // width: SizeConfig.screenWidth*0.9,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.all(6.0),
+                            itemBuilder: (context, i) {
+                              return _buildRefItem(
+                                  baseProvider.userReferralsList[i]);
+                            },
+                            itemCount: baseProvider.userReferralsList.length,
                           ),
-                        )
-                      : Container()
-                ],
-              ),
-            )));
+                        ),
+                        baseProvider.isOldCustomer()
+                            ? Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Text(
+                                  'Referrals before April 2021 are not mentioned here',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.grey[500],
+                                      fontSize: SizeConfig.mediumTextSize),
+                                ),
+                              )
+                            : Container()
+                      ],
+                    ),
+                  )
+                : Center(
+                    child: Padding(
+                    padding: EdgeInsets.all(30),
+                    child: SpinKitWave(
+                      color: UiConstants.primaryColor,
+                    ),
+                  ))));
   }
 
   Widget _buildRefItem(ReferralDetail rDetail) {
     if (rDetail.timestamp == null ||
-        rDetail.timestamp.toDate().isBefore(oldVersionReferralDate))
+        rDetail.timestamp.toDate().isBefore(BaseUtil.VERSION_2_RELEASE))
       return Container();
     bool _isBonusUnlocked = (rDetail.isRefereeBonusUnlocked == null ||
         rDetail.isRefereeBonusUnlocked ||
@@ -90,25 +124,22 @@ class _ReferralsPageState extends State<ReferralsPage> {
       padding: EdgeInsets.only(top: 5, bottom: 5),
       child: Container(
         height: SizeConfig.screenHeight * 0.15,
-        margin:
-        EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 2),
+        margin: EdgeInsets.symmetric(
+            horizontal: SizeConfig.blockSizeHorizontal * 2),
         decoration: BoxDecoration(
           color: (_isBonusUnlocked)
               ? UiConstants.primaryColor
               : Colors.blueGrey[400],
           gradient: (_isBonusUnlocked)
               ? LinearGradient(
-            colors: [
-              UiConstants.primaryColor,
-              UiConstants.primaryColor.withGreen(220)
-            ],
-          )
+                  colors: [
+                    UiConstants.primaryColor,
+                    UiConstants.primaryColor.withGreen(220)
+                  ],
+                )
               : LinearGradient(
-            colors: [
-              Colors.blueGrey[600],
-              Colors.blueGrey[400]
-            ],
-          ),
+                  colors: [Colors.blueGrey[600], Colors.blueGrey[400]],
+                ),
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(UiConstants.padding),
           boxShadow: [
@@ -239,10 +270,4 @@ class _ReferralsPageState extends State<ReferralsPage> {
     }
   }
 
-  bool _isOldCustomer() {
-    if (baseProvider == null || baseProvider.userCreationTimestamp == null)
-      return false;
-    return (baseProvider.userCreationTimestamp
-        .isBefore(oldVersionReferralDate));
-  }
 }

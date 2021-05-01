@@ -62,7 +62,10 @@ class FcmListener extends ChangeNotifier {
         alert: true, badge: true, sound: true);
     _fcm.requestPermission();
 
-    _fcm.subscribeToTopic('dailypickbroadcast');
+    //_fcm.subscribeToTopic('dailypickbroadcast');
+    if(_baseUtil.isOldCustomer()) {
+      await _fcm.subscribeToTopic('oldcustomer');
+    }
 
     if (_baseUtil.myUser != null && _baseUtil.myUser.mobile != null)
       await _saveDeviceToken();

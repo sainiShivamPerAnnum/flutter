@@ -69,6 +69,7 @@ class BaseUtil extends ChangeNotifier {
   String myUserDpUrl;
   List<UserTransaction> userMiniTxnList;
   List<ReferralDetail> userReferralsList;
+  ReferralDetail myReferralInfo;
 
   DateTime _userCreationTimestamp;
   int isOtpResendCount = 0;
@@ -91,6 +92,7 @@ class BaseUtil extends ChangeNotifier {
   bool weeklyDrawFetched = false;
   bool weeklyTicksFetched = false;
   bool referralsFetched = false;
+  bool userReferralInfoFetched = false;
   bool isProfilePictureUpdated = false;
   bool isReferralLinkBuildInProgressWhatsapp = false;
   bool isReferralLinkBuildInProgressOther = false;
@@ -113,7 +115,7 @@ class BaseUtil extends ChangeNotifier {
   static const int BALANCE_TO_TICKET_RATIO = 100;
   static const int AUG_GOLD_WITHDRAW_OFFSET =
       1; //no of days to wait before withdrawal
-
+  static final DateTime VERSION_2_RELEASE = DateTime(2021, 4, 1);
   ///STAGES - IMPORTANT
   static const AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;
   static const AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.DEV;
@@ -462,6 +464,12 @@ class BaseUtil extends ChangeNotifier {
       }
     }
     return 0;
+  }
+
+  bool isOldCustomer() {
+     //all users before april 2021 are marked old
+    if (userCreationTimestamp == null) return false;
+    return (userCreationTimestamp.isBefore(VERSION_2_RELEASE));
   }
 
   static int getWeekNumber() {

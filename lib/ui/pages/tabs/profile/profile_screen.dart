@@ -39,14 +39,16 @@ class _ProfilePageState extends State<ProfilePage> {
   bool isPanFieldHidden = true;
 
   Future<void> getProfilePicUrl() async {
-    baseProvider.myUserDpUrl =
-        await dbProvider.getUserDP(baseProvider.myUser.uid);
-    if (baseProvider.myUserDpUrl != null) {
-      setState(() {
-        isImageLoading = false;
-      });
-      print("got the image");
-    }
+    try {
+      baseProvider.myUserDpUrl =
+          await dbProvider.getUserDP(baseProvider.myUser.uid);
+      if (baseProvider.myUserDpUrl != null) {
+        setState(() {
+          isImageLoading = false;
+        });
+        print("got the image");
+      }
+    } catch (e) {}
   }
 
   @override
@@ -64,20 +66,23 @@ class _ProfilePageState extends State<ProfilePage> {
       isImageLoading = true;
       getProfilePicUrl();
     }
-    // if (!baseProvider.referralsFetched)
-    //   dbProvider.getReferCount(baseProvider.myUser.uid).then((count) {
-    //     baseProvider.referCountFetched = true;
-    //     baseProvider.referCount = count;
-    //     if (count > 0) setState(() {});
-    //   });
-    if (!baseProvider.referralsFetched) {
-      dbProvider.getUserReferrals(baseProvider.myUser.uid).then((refList) {
-        baseProvider.referralsFetched = true;
-        baseProvider.userReferralsList = refList;
-        if (baseProvider.userReferralsList != null &&
-            baseProvider.userReferralsList.length > 0) setState(() {});
+    if (!baseProvider.userReferralInfoFetched)
+      dbProvider.getUserReferralInfo(baseProvider.myUser.uid).then((value) {
+        baseProvider.userReferralInfoFetched = true;
+        if (value != null) baseProvider.myReferralInfo = value;
+
+        if (baseProvider.myReferralInfo != null &&
+            baseProvider.myReferralInfo.refCount != null &&
+            baseProvider.myReferralInfo.refCount > 0) setState(() {});
       });
-    }
+    // if (!baseProvider.referralsFetched) {
+    //   dbProvider.getUserReferrals(baseProvider.myUser.uid).then((refList) {
+    //     baseProvider.referralsFetched = true;
+    //     baseProvider.userReferralsList = refList;
+    //     if (baseProvider.userReferralsList != null &&
+    //         baseProvider.userReferralsList.length > 0) setState(() {});
+    //   });
+    // }
     return Container(
       padding: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.02),
       decoration: BoxDecoration(
@@ -268,16 +273,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   ProfileTabTile(
                     logo: "images/referrals.png",
                     title: "Referrals",
-                    value: _getReferralCount().toString(),
+                    value: _myReferralCount.toString(),
                     onPress: () {
                       HapticFeedback.vibrate();
-                      if (baseProvider.userReferralsList == null ||
-                          baseProvider.userReferralsList.length == 0) return;
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                ReferralsPage(baseProvider.userReferralsList)),
+                            builder: (context) => ReferralsPage()),
                       );
                     },
                   ),
@@ -365,10 +367,11 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  int _getReferralCount() {
-    if (baseProvider == null || baseProvider.userReferralsList == null)
-      return 0;
-    return baseProvider.userReferralsList.length;
+  int get _myReferralCount {
+    if (baseProvider == null ||
+        baseProvider.myReferralInfo == null ||
+        baseProvider.myReferralInfo.refCount == null) return 0;
+    return baseProvider.myReferralInfo.refCount;
   }
 }
 
@@ -527,7 +530,6 @@ class _ShareOptionsState extends State<ShareOptions> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   RazorpayModel rProvider;
-  FcmHandler fcmProvider;
   String referral_bonus = BaseUtil.remoteConfig.getString('referral_bonus');
   String referral_ticket_bonus =
       BaseUtil.remoteConfig.getString('referral_ticket_bonus');
@@ -543,23 +545,6 @@ class _ShareOptionsState extends State<ShareOptions> {
             : referral_ticket_bonus;
     _shareMsg =
         'Hey I am gifting you ₹$referral_bonus and $referral_ticket_bonus free Tambola tickets. Lets start saving and playing together! ';
-
-    // if (fcmProvider != null && baseProvider != null && dbProvider != null) {
-    //   fcmProvider.addIncomingMessageListener((valueMap) {
-    //     if (valueMap['title'] != null && valueMap['body'] != null) {
-    //       baseProvider.showPositiveAlert(
-    //           valueMap['title'], valueMap['body'], context,
-    //           seconds: 5);
-    //     }
-    //   }, 2);
-    //
-    //   // if (!baseProvider.referCountFetched)
-    //   //   dbProvider.getReferCount(baseProvider.myUser.uid).then((count) {
-    //   //     baseProvider.referCountFetched = true;
-    //   //     baseProvider.referCount = count;
-    //   //     if (count > 0) setState(() {});
-    //   //   });
-    // }
   }
 
   @override
@@ -572,7 +557,6 @@ class _ShareOptionsState extends State<ShareOptions> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    fcmProvider = Provider.of<FcmHandler>(context, listen: false);
     rProvider = Provider.of<RazorpayModel>(context, listen: false);
     _init();
     return Row(

@@ -302,6 +302,18 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<bool> updateUserReferralCount(String userId, ReferralDetail detail) async {
+    try {
+      Map<String, dynamic> _map = {};
+      _map[ReferralDetail.fldUserReferralCount] = detail.refCount;
+      await _api.updateReferralDocument(userId, _map);
+      return true;
+    } catch (e) {
+      log.error('Failed to update referral count');
+      return false;
+    }
+  }
+
   Future<bool> unlockReferralTickets(String userId) async {
     try {
       return await _api.setReferralDocBonusField(userId);
@@ -591,16 +603,17 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<int> getReferCount(String uid) async {
+  Future<ReferralDetail> getUserReferralInfo(String uid) async {
     try {
-      var docs = await _api
-          .getReferralDocs(uid); //TODO to be changed to _api.getUserReferDoc
-      if (docs != null && docs.docs != null && docs.docs.length > 0)
-        return docs.docs.length;
+      DocumentSnapshot snapshot = await _api.getUserReferDoc(uid);
+          // .getReferralDocs(uid);
+      if (snapshot.exists && snapshot.data().isNotEmpty) {
+        return ReferralDetail.fromMap(snapshot.data());
+      }
     } catch (e) {
       log.error("Error fetch referrals details: " + e.toString());
     }
-    return 0;
+    return null;
   }
 
   Future<List<ReferralDetail>> getUserReferrals(String uid) async {
