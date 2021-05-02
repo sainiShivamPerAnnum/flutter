@@ -386,6 +386,10 @@ class BaseUtil extends ChangeNotifier {
       log.debug('Cleared local cache');
 
       //TODO better fix required
+      ///IMP: When a user signs out and attempts
+      /// to sign in again without closing the app,
+      /// the old variables are still in effect
+      /// resetting them like below for now
       _myUser = null;
       _userFundWallet = null;
       _userTicketWallet = null;
@@ -405,6 +409,7 @@ class BaseUtil extends ChangeNotifier {
       myUserDpUrl = null;
       userMiniTxnList = null;
       userReferralsList = null;
+      myReferralInfo = null;
       _userCreationTimestamp = null;
 
       isOtpResendCount = 0;
@@ -423,6 +428,7 @@ class BaseUtil extends ChangeNotifier {
       weeklyDrawFetched = false;
       weeklyTicksFetched = false;
       referralsFetched = false;
+      userReferralInfoFetched = false;
       isProfilePictureUpdated = false;
       isReferralLinkBuildInProgressWhatsapp = false;
       isReferralLinkBuildInProgressOther = false;
