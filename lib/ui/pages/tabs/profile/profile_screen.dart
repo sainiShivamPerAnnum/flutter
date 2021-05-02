@@ -578,10 +578,10 @@ class _ShareOptionsState extends State<ShareOptions> {
                     children: [
                       Text(
                         'SHARE',
-                        style: Theme.of(context)
-                            .textTheme
-                            .button
-                            .copyWith(color: Colors.white),
+                        style: GoogleFonts.montserrat(
+                          fontSize: SizeConfig.mediumTextSize * 0.8,
+                          color: Colors.white,
+                        ),
                       ),
                       SizedBox(
                         width: 5,
@@ -643,7 +643,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                           children: [
                             Text('SHARE ON WHATSAPP',
                                 style: GoogleFonts.montserrat(
-                                  fontSize: SizeConfig.mediumTextSize,
+                                  fontSize: SizeConfig.mediumTextSize * 0.8,
                                   color: Colors.white,
                                 )),
                             SizedBox(
@@ -710,14 +710,14 @@ class _ShareOptionsState extends State<ShareOptions> {
   Future<String> _createDynamicLink(
       String userId, bool short, String source) async {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://fello.page.link',
+      uriPrefix: 'https://fello.in/app/referral',
       link: Uri.parse('https://fello.in/$userId'),
       socialMetaTagParameters: SocialMetaTagParameters(
           title: 'Download ${Constants.APP_NAME}',
           description:
               'Fello makes saving fun, and investing a lot more simple!',
           imageUrl: Uri.parse(
-              'https://play-lh.googleusercontent.com/yA_k3_efLEwy4slB6RUa-aBzJNuS5Bta7LudVRxYAThc0wnU0jgNih7lt95gHDgR_Ew=s360-rw')),
+              'https://fello-assets.s3.ap-south-1.amazonaws.com/ic_social.png')),
       googleAnalyticsParameters: GoogleAnalyticsParameters(
         campaign: 'referrals',
         medium: 'social',
