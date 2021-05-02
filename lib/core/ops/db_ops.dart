@@ -336,7 +336,7 @@ class DBModel extends ChangeNotifier {
       keyIndex = 1;
     }
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'aws-icici', BaseUtil.activeAwsIciciStage.value(), keyIndex);
+        'aws-icici', Constants.activeAwsIciciStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
       if (snapshot.exists && snapshot.data()['apiKey'] != null) {
@@ -363,7 +363,7 @@ class DBModel extends ChangeNotifier {
       keyIndex = 1;
     }
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'aws-augmont', BaseUtil.activeAwsAugmontStage.value(), keyIndex);
+        'aws-augmont', Constants.activeAwsAugmontStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
       if (snapshot.exists && snapshot.data()['apiKey'] != null) {
@@ -381,7 +381,7 @@ class DBModel extends ChangeNotifier {
   Future<Map<String, String>> getActiveSignzyApiKey() async {
     int keyIndex = 1;
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'signzy', BaseUtil.activeSignzyStage.value(), keyIndex);
+        'signzy', Constants.activeSignzyStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
       if (snapshot.exists && snapshot.data()['apiKey'] != null) {
@@ -866,7 +866,7 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<double> getNonWithdrawableAugGoldQuantity(String userId,
-      [int dayOffset = BaseUtil.AUG_GOLD_WITHDRAW_OFFSET]) async {
+      [int dayOffset = Constants.AUG_GOLD_WITHDRAW_OFFSET]) async {
     try {
       DateTime _dt = DateTime.now();
       DateTime _reqDate = DateTime(_dt.year, _dt.month, _dt.day - dayOffset,

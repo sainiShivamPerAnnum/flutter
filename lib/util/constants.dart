@@ -1,3 +1,5 @@
+import 'package:felloapp/util/credentials_stage.dart';
+
 class Constants {
   static const String APP_NAME = "Fello";
   static const String PAN_AES_KEY = 'felloisquitefun!';
@@ -41,4 +43,21 @@ class Constants {
   static const int FULL_HOUSE_COMPLETED = 4;
 
   static const String POLL_NEXTGAME_ID = "nextgame";
+
+  static const int REFERRAL_TICKET_BONUS = 10;
+  static const int REFERRAL_AMT_BONUS = 25;
+  static const int TOTAL_DRAWS = 35;
+  static const int NEW_USER_TICKET_COUNT = 5;
+  static const int MAX_TICKET_GEN_PER_REQUEST = 30;
+  static const int KYC_UNTESTED = 0;
+  static const int KYC_INVALID = 1;
+  static const int KYC_VALID = 2;
+  static const int INVESTMENT_AMOUNT_FOR_TICKET = 100;
+  static const int AUG_GOLD_WITHDRAW_OFFSET = 1; //no of days to wait before withdrawal
+  static final DateTime VERSION_2_RELEASE_DATE = DateTime(2021, 4, 1);
+  ///STAGES - IMPORTANT
+  static const AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;
+  static const AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.PROD;
+  static const SignzyStage activeSignzyStage = SignzyStage.PROD;
+  static const RazorpayStage activeRazorpayStage = RazorpayStage.PROD;
 }

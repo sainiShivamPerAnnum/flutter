@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -133,12 +134,12 @@ class TambolaGenerationService extends ChangeNotifier {
 
   _initiateTicketGeneration() async {
     int iterationsRequired = (BaseUtil.atomicTicketGenerationLeftCount /
-            BaseUtil.MAX_TICKET_GEN_PER_REQUEST)
+            Constants.MAX_TICKET_GEN_PER_REQUEST)
         .ceil();
 
     int _countPacket = (BaseUtil.atomicTicketGenerationLeftCount >
-            BaseUtil.MAX_TICKET_GEN_PER_REQUEST)
-        ? BaseUtil.MAX_TICKET_GEN_PER_REQUEST
+        Constants.MAX_TICKET_GEN_PER_REQUEST)
+        ? Constants.MAX_TICKET_GEN_PER_REQUEST
         : BaseUtil.atomicTicketGenerationLeftCount;
     _currentSubscription = await dbProvider.subscribeToTicketRequest(
         baseProvider.myUser, _countPacket);

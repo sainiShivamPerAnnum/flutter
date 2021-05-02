@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 
 class TambolaBoard {
@@ -100,7 +101,7 @@ class TambolaBoard {
         tambolaBoard.isEmpty ||
         calledDigits == null ||
         calledDigits.isEmpty) return 5;
-    int digitsLeftToBeAnnounced = BaseUtil.TOTAL_DRAWS - calledDigits.length;
+    int digitsLeftToBeAnnounced = Constants.TOTAL_DRAWS - calledDigits.length;
     int rowCalledCount = 0;
     for (int i = 0; i < boardLength; i++) {
       if (tambolaBoard[rowIndex][i] != 0 &&
@@ -138,7 +139,7 @@ class TambolaBoard {
     if (calledDigits.contains(cornerB)) cornerCount++;
     if (calledDigits.contains(cornerC)) cornerCount++;
     if (calledDigits.contains(cornerD)) cornerCount++;
-    int digitsLeftToBeAnnounced = BaseUtil.TOTAL_DRAWS - calledDigits.length;
+    int digitsLeftToBeAnnounced = Constants.TOTAL_DRAWS - calledDigits.length;
     int cornerLeftCount = 4 - cornerCount;
 
     // if(cornerLeftCount==0) return 'HIT!';
@@ -153,7 +154,7 @@ class TambolaBoard {
         calledDigits == null ||
         calledDigits.isEmpty) return 15;
     int fullHouseCount = 0;
-    int digitsLeftToBeAnnounced = BaseUtil.TOTAL_DRAWS - calledDigits.length;
+    int digitsLeftToBeAnnounced = Constants.TOTAL_DRAWS - calledDigits.length;
     for (int i = 0; i < boardHeight; i++) {
       for (int j = 0; j < boardLength; j++) {
         if (tambolaBoard[i][j] != 0) {

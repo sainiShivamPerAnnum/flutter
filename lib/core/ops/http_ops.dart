@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +63,7 @@ class HttpModel extends ChangeNotifier {
     log.debug('Fetched user IDToken: ' + idToken);
 
     String amx = (amount*100).round().toString();
-    String _stage = BaseUtil.activeRazorpayStage.value();
+    String _stage = Constants.activeRazorpayStage.value();
     String _uri = '$_rzphomeuri/$_stage/api/orderid?amount=$amx';
     if (notes != null) _uri = _uri + '&notes=${Uri.encodeComponent(notes)}';
     log.debug('URL: $_uri');
@@ -91,7 +92,7 @@ class HttpModel extends ChangeNotifier {
     idToken = await _baseUtil.firebaseUser.getIdToken();
     log.debug('Fetched user IDToken: ' + idToken);
 
-    String _stage = BaseUtil.activeRazorpayStage.value();
+    String _stage = Constants.activeRazorpayStage.value();
     String _uri =
         '$_rzphomeuri/$_stage/api/signature?orderid=$orderId&payid=$paymentId';
     log.debug('URL: $_uri');

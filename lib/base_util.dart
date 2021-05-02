@@ -19,7 +19,6 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/ui/elements/week-winners.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -99,28 +98,11 @@ class BaseUtil extends ChangeNotifier {
   bool isHomeCardsFetched = false;
   static bool isDeviceOffline = false;
   static bool ticketRequestSent = false;
-  static int ticketCountBeforeRequest = NEW_USER_TICKET_COUNT;
+  static int ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
   static int infoSliderIndex = 0;
   static bool playScreenFirst = true;
   static int atomicTicketGenerationLeftCount = 0;
   static int atomicTicketDeletionLeftCount = 0;
-
-  static const int TOTAL_DRAWS = 35;
-  static const int NEW_USER_TICKET_COUNT = 5;
-  static const int MAX_TICKET_GEN_PER_REQUEST = 30;
-  static const int KYC_UNTESTED = 0;
-  static const int KYC_INVALID = 1;
-  static const int KYC_VALID = 2;
-  static const int INVESTMENT_AMOUNT_FOR_TICKET = 100;
-  static const int BALANCE_TO_TICKET_RATIO = 100;
-  static const int AUG_GOLD_WITHDRAW_OFFSET =
-      1; //no of days to wait before withdrawal
-  static final DateTime VERSION_2_RELEASE = DateTime(2021, 4, 1);
-  ///STAGES - IMPORTANT
-  static const AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;
-  static const AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.PROD;
-  static const SignzyStage activeSignzyStage = SignzyStage.PROD;
-  static const RazorpayStage activeRazorpayStage = RazorpayStage.PROD;
 
   Future init() async {
     ///analytics
@@ -435,7 +417,7 @@ class BaseUtil extends ChangeNotifier {
       isHomeCardsFetched = false;
       isDeviceOffline = false;
       ticketRequestSent = false;
-      ticketCountBeforeRequest = NEW_USER_TICKET_COUNT;
+      ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
       infoSliderIndex = 0;
       playScreenFirst = true;
       atomicTicketGenerationLeftCount = 0;
@@ -475,7 +457,7 @@ class BaseUtil extends ChangeNotifier {
   bool isOldCustomer() {
      //all users before april 2021 are marked old
     if (userCreationTimestamp == null) return false;
-    return (userCreationTimestamp.isBefore(VERSION_2_RELEASE));
+    return (userCreationTimestamp.isBefore(Constants.VERSION_2_RELEASE_DATE));
   }
 
   static int getWeekNumber() {
@@ -552,7 +534,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   int getTicketCountForTransaction(double investment) =>
-      (investment / BaseUtil.INVESTMENT_AMOUNT_FOR_TICKET).floor();
+      (investment / Constants.INVESTMENT_AMOUNT_FOR_TICKET).floor();
 
   //the new wallet logic will be empty for old user.
   //this method will copy the old values to the new wallet
@@ -582,7 +564,7 @@ class BaseUtil extends ChangeNotifier {
     _userTicketWallet = UserTicketWallet.newTicketWallet();
     int _t = userTicketWallet.initTck;
     _userTicketWallet = await _dbModel.updateInitUserTicketCount(
-        myUser.uid, _userTicketWallet, NEW_USER_TICKET_COUNT);
+        myUser.uid, _userTicketWallet, Constants.NEW_USER_TICKET_COUNT);
     //updateInitUserTicketCount method returns no change if operations fails
     return (_userTicketWallet.initTck != _t);
   }

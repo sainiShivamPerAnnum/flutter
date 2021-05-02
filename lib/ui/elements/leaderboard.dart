@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/PrizeLeader.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -334,7 +335,7 @@ class _LeaderboardState extends State<Leaderboard> {
         trailing: Text(
           type == "Prize"
               ? "₹ ${baseProvider.prizeLeaders[i].totalWin.toString()}"
-              : "₹ ${(baseProvider.referralLeaders[i].refCount * 25).toString()}",
+              : "₹ ${(baseProvider.referralLeaders[i].refCount * Constants.REFERRAL_AMT_BONUS).toString()}",
           style: GoogleFonts.montserrat(
             color: Colors.white,
             fontSize: SizeConfig.largeTextSize,

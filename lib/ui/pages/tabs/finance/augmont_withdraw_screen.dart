@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/tabs/finance/edit_augmont_bank_details.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -460,7 +461,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                 ),
                 title: new Text(title),
                 content: Text(
-                    'All gold deposits are available for withdrawal after ${BaseUtil.AUG_GOLD_WITHDRAW_OFFSET*24} hours. The ${_rem_gold.toStringAsFixed(4)} grams can be withdrawn tomorrow.'),
+                    'All gold deposits are available for withdrawal after ${Constants.AUG_GOLD_WITHDRAW_OFFSET*24} hours. The ${_rem_gold.toStringAsFixed(4)} grams can be withdrawn tomorrow.'),
                 actions: <Widget>[
                   new TextButton(
                     onPressed: () {

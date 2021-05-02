@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 
 class KycUrls {
@@ -7,7 +8,7 @@ class KycUrls {
   static String userName;
 
   static init() {
-    if (BaseUtil.activeSignzyStage == SignzyStage.DEV) {
+    if (Constants.activeSignzyStage == SignzyStage.DEV) {
       defaultBaseUri = 'https://multi-channel-preproduction.signzy.tech';
       channelId = "6007e4edf3be1f1190757519";
     } else {

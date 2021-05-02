@@ -16,6 +16,7 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dar
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
@@ -579,14 +580,14 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
       bool iciciUpdated = await dbProvider.updateUserIciciDetails(
           baseProvider.myUser.uid, baseProvider.iciciDetail);
       //update flags in user document
-      baseProvider.myUser.isKycVerified = BaseUtil.KYC_VALID;
+      baseProvider.myUser.isKycVerified = Constants.KYC_VALID;
       baseProvider.myUser.pan = panNumber;
       bool userFlagUpdated = await dbProvider.updateUser(baseProvider.myUser);
       log.debug(
           'Flags for icici update and user update: $iciciUpdated, $userFlagUpdated');
     } else if (fKycStatus == GetKycStatus.KYC_STATUS_ALLOW_VIDEO) {
       log.debug('User is NOT KYC verified');
-      baseProvider.myUser.isKycVerified = BaseUtil.KYC_INVALID;
+      baseProvider.myUser.isKycVerified = Constants.KYC_INVALID;
       baseProvider.myUser.pan = panNumber;
       bool userFlagUpdated = await dbProvider.updateUser(baseProvider.myUser);
       log.debug('Flags for icici update:$userFlagUpdated');

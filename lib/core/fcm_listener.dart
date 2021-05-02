@@ -68,13 +68,24 @@ class FcmListener extends ChangeNotifier {
     _fcm.requestPermission();
 
     //_fcm.subscribeToTopic('dailypickbroadcast');
-    if (_baseUtil.isOldCustomer()) {
-      await _fcm.subscribeToTopic('oldcustomer');
-    }
 
     if (_baseUtil.myUser != null && _baseUtil.myUser.mobile != null)
       await _saveDeviceToken();
     return _fcm;
+  }
+
+  _manageInitSubscriptions() async{
+    if (_baseUtil.isOldCustomer()) {
+      await _fcm.subscribeToTopic('oldcustomer');
+    }
+
+    if(!_baseUtil.myUser.isInvested) {
+      await _fcm.subscribeToTopic('neverinvestedbefore');
+    }
+  }
+
+  addSubscription(String subId) async {
+    await _fcm.subscribeToTopic(subId);
   }
 
   Future<void> _firebaseMessagingBackgroundHandler(

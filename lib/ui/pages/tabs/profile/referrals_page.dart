@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/ReferralDetail.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +115,7 @@ class _ReferralsPageState extends State<ReferralsPage> {
 
   Widget _buildRefItem(ReferralDetail rDetail) {
     if (rDetail.timestamp == null ||
-        rDetail.timestamp.toDate().isBefore(BaseUtil.VERSION_2_RELEASE))
+        rDetail.timestamp.toDate().isBefore(Constants.VERSION_2_RELEASE_DATE))
       return Container();
     bool _isBonusUnlocked = (rDetail.isRefereeBonusUnlocked == null ||
         rDetail.isRefereeBonusUnlocked ||

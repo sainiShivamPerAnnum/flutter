@@ -13,6 +13,7 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_detail
 import 'package:felloapp/ui/pages/tabs/finance/deposit_verification.dart';
 import 'package:felloapp/ui/pages/tabs/finance/icici_withdrawal_screen.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -64,7 +65,7 @@ class MFDetailsPage extends StatefulWidget {
 
     if (!_isAllowed) return STATUS_UNAVAILABLE;
     if (baseUser.isKycVerified != null &&
-        baseUser.isKycVerified == BaseUtil.KYC_INVALID)
+        baseUser.isKycVerified == Constants.KYC_INVALID)
       return STATUS_KYC_REQD;
     if (baseUser.isIciciOnboarded == null ||
         baseUser.isIciciOnboarded == false)

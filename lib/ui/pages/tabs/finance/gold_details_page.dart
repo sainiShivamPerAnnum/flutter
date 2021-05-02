@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
@@ -75,6 +78,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   AugmontModel augmontProvider;
+  FcmListener fcmProvider;
   ICICIModel iProvider;
   GlobalKey<AugmontDepositModalSheetState> _modalKey2 = GlobalKey();
   GlobalKey<AugmontOnboardingState> _onboardingKey = GlobalKey();
@@ -88,7 +92,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     iProvider = Provider.of<ICICIModel>(context, listen: false);
-
+    fcmProvider = Provider.of<FcmListener>(context,listen:false);
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context, true);
@@ -353,6 +357,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         ///if this was the user's first investment
         ///- update AugmontDetail obj
         ///- process referrals if any
+        ///- add notification subscription
         if (!baseProvider.augmontDetail.firstInvMade) {
           baseProvider.augmontDetail.firstInvMade = true;
           bool _aflag = await dbProvider.updateUserAugmontDetails(
@@ -360,11 +365,16 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
           if (_aflag) {
             bool _isUnlocked =
                 await dbProvider.unlockReferralTickets(baseProvider.myUser.uid);
-            if (_isUnlocked)
-              baseProvider.showPositiveAlert(
-                  'Congratulations on your first Gold purchase',
-                  'Your referral bonus has been unlocked! 🎉',
-                  context);
+            if (_isUnlocked) {
+              //give it a few seconds before showing congratulatory message
+              Timer(const Duration(seconds: 4), () {
+                baseProvider.showPositiveAlert(
+                    'Congratulations on your first Gold purchase',
+                    'Your referral bonus has been unlocked! 🎉',
+                    context);
+              });
+            }
+            fcmProvider.addSubscription('goldinvestor');
           }
         }
 

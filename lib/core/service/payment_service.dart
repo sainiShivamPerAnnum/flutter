@@ -5,6 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/locator.dart';
@@ -480,7 +481,7 @@ class PaymentService extends ChangeNotifier {
         UserTransaction.TRAN_STATUS_COMPLETE;
 
     double amt = baseProvider.currentICICITxn.amount;
-    int ticketCount = (amt / BaseUtil.BALANCE_TO_TICKET_RATIO).ceil();
+    int ticketCount = (amt / Constants.INVESTMENT_AMOUNT_FOR_TICKET).floor();
 
     double totalBal = baseProvider.userFundWallet.getEstTotalWealth() ?? 0.0;
 
@@ -578,7 +579,7 @@ class PaymentService extends ChangeNotifier {
     //update user balance
     //update user ticket count
     double amt = txn.amount;
-    int ticketCount = (amt / BaseUtil.BALANCE_TO_TICKET_RATIO).ceil();
+    int ticketCount = (amt / Constants.INVESTMENT_AMOUNT_FOR_TICKET).floor();
 
     double totalBal = baseProvider.userFundWallet.getEstTotalWealth() ?? 0.0;
 

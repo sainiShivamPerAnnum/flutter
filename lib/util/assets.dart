@@ -54,7 +54,7 @@ class Assets {
         'We make saving a lot more rewarding, and investing a lot more simple.',
     '${Constants.APP_NAME} compiles carefully selected funds that are highly liquid and '
         'have historically given higher returns than traditional banks.',
-    'For every ₹${BaseUtil.INVESTMENT_AMOUNT_FOR_TICKET} invested through ${Constants.APP_NAME}, '
+    'For every ₹${Constants.INVESTMENT_AMOUNT_FOR_TICKET} invested through ${Constants.APP_NAME}, '
         'you receive a weekly Tambola ticket. Participate, win and boost your savings faster!',
     '${Constants.APP_NAME} follows SEBI regulated guidelines and invests directly into the instrument of your choice,'
         ' while giving you the freedom to withdraw at any point.',
