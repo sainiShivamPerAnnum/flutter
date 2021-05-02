@@ -209,7 +209,7 @@ class Assets {
           "Currently, we have started integrated transactions with only a small set of users.\n\n Please use manual deposits in the meanwhile!";
 
   static final String infoWhyPan =
-      'Your PAN Card is required by ICICI to set up your investment folio';
+      'Your PAN Card is used as your unique ID to set up your investment profile in different assets';
   static final String infoWherePan =
       'Your PAN Number is a 10 character ID that can be found on your PAN Card';
   static final String infoWhatUPI =

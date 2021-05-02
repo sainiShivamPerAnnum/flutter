@@ -403,7 +403,6 @@ class _LoginControllerState extends State<LoginController> {
     }
     if (user == null || (user != null && user.hasIncompleteDetails())) {
       ///First time user!
-      BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
       log.debug(
           "No existing user details found or found incomplete details for user. Moving to details page");
       baseProvider.myUser = user ??
@@ -436,9 +435,11 @@ class _LoginControllerState extends State<LoginController> {
 
   Future _onSignUpComplete() async {
     baseProvider.isLoginNextInProgress = false;
+    await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
+    await BaseAnalytics.logUserProfile(baseProvider.myUser);
+
     await baseProvider.init();
     await fcmProvider.setupFcm();
-    BaseAnalytics.logUserProfile(baseProvider.myUser);
     Navigator.of(context).pushReplacementNamed('/approot');
     baseProvider.showPositiveAlert(
         'Sign In Complete',

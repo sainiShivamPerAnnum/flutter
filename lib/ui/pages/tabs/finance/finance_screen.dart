@@ -129,7 +129,7 @@ class _FinancePageState extends State<FinancePage> {
                         ),
                         // Row(
                         Divider(
-                          color: UiConstants.textColor,
+                          color: Colors.black38,
                         ),
                         Text(
                           "Available Funds",
@@ -356,7 +356,7 @@ class ZeroBalView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Text(
-              "Your savings and prize balance is currently zero",
+              "Your savings and prize balance is currently zero.",
               style: GoogleFonts.montserrat(
                 fontWeight: FontWeight.w500,
                 fontSize: SizeConfig.mediumTextSize,

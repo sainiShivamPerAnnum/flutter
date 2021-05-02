@@ -68,9 +68,9 @@ class LogoFadeIn extends State<SplashScreen> {
   Widget build(BuildContext context) {
     //if(!_timer.isActive)initialize();
     SizeConfig().init(context);
-
     return MaterialApp(
-      home: Scaffold(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
           body: Stack(
         children: <Widget>[
           (logo != null)

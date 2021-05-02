@@ -1,14 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/model/FeedCard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:felloapp/core/model/FeedCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -39,7 +37,7 @@ class _HomePageState extends State<HomePage> {
           isImageLoading = false;
         });
         print("got the image");
-      }catch(e) {
+      } catch (e) {
         print('HomeScreen: SetState called after dispose');
       }
     }
@@ -128,28 +126,32 @@ class _HomePageState extends State<HomePage> {
   }
 
   Function getFixedAction(int id) {
-    switch(id) {
-      case 108: return () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => GuideDialog(),
-        );
-      };
-      case 120: return () {
-        widget.tabChange(3);
-      };
-      case 140: return () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => GamePoll(),
-        );
-      };
-      default: return () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => GuideDialog(),
-        );
-      };
+    switch (id) {
+      case 108:
+        return () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => GuideDialog(),
+          );
+        };
+      case 120:
+        return () {
+          widget.tabChange(3);
+        };
+      case 140:
+        return () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => GamePoll(),
+          );
+        };
+      default:
+        return () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => GuideDialog(),
+          );
+        };
     }
   }
 

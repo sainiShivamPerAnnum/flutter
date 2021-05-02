@@ -18,14 +18,14 @@ class BaseAnalytics{
     FirebaseAnalyticsObserver(analytics: _analytics);
   }
   
-  static logUserProfile(BaseUser user) {
+  static logUserProfile(BaseUser user) async{
     try{
-      _analytics.setUserId(user.uid);
+      await _analytics.setUserId(user.uid);
     }catch(e) {
       print('User ID Analytics failed');
     }
-    _analytics.setUserProperty(name: 'user_gender', value: user.gender);
-    _analytics.setUserProperty(name: 'fresh_investor', value: (user.isInvested)?'N':'Y');
+    await _analytics.setUserProperty(name: 'user_gender', value: user.gender);
+    await _analytics.setUserProperty(name: 'fresh_investor', value: (user.isInvested)?'N':'Y');
   }
 
   static logProfilePictureAdded() {
