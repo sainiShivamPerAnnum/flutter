@@ -1,81 +1,386 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/model/FeedCard.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
+import 'package:felloapp/ui/dialogs/guide_dialog.dart';
+import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class HomePage extends StatefulWidget {
+  final ValueChanged<int> tabChange;
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  HomePage({this.tabChange});
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _HomePageState extends State<HomePage> {
+  bool isImageLoading = false;
+  BaseUtil baseProvider;
+  DBModel dbProvider;
+  bool _isInit = false;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  Future<void> getProfilePicUrl() async {
+    baseProvider.myUserDpUrl =
+        await dbProvider.getUserDP(baseProvider.myUser.uid);
+    if (baseProvider.myUserDpUrl != null) {
+      try {
+        setState(() {
+          isImageLoading = false;
+        });
+        print("got the image");
+      } catch (e) {
+        print('HomeScreen: SetState called after dispose');
+      }
+    }
+  }
+
+  String getGreeting() {
+    int hour = DateTime.now().hour;
+    if (hour >= 5 && hour <= 12) {
+      return "Good Morning,";
+    } else if (hour > 12 && hour <= 17) {
+      return "Good Afternoon,";
+    } else if (hour >= 18 && hour <= 22) {
+      return "Good Evening,";
+    } else
+      return "Hello,";
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    BaseAnalytics.analytics
+        .setCurrentScreen(screenName: BaseAnalytics.PAGE_HOME);
+  }
+
+  _init() {
+    if (!baseProvider.isHomeCardsFetched) {
+      dbProvider.getHomeCards().then((cards) {
+        baseProvider.feedCards = cards;
+        _isInit = true;
+        baseProvider.isHomeCardsFetched = true;
+        setState(() {});
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    if (baseProvider.myUserDpUrl == null) {
+      isImageLoading = true;
+      getProfilePicUrl();
+    }
+    if (!_isInit) {
+      _init();
+    }
+    return Container(
+        decoration: BoxDecoration(
+          color: UiConstants.backgroundColor,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(50),
+            bottomRight: Radius.circular(50),
+          ),
         ),
+        child: Stack(
+          children: [
+            Container(
+              height: SizeConfig.screenHeight * 0.45,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("images/home-asset.png"),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            SafeArea(
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(50),
+                  bottomRight: Radius.circular(50),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(left: SizeConfig.screenWidth * 0.05),
+                  child: ListView(
+                    physics: BouncingScrollPhysics(),
+                    children: (!baseProvider.isHomeCardsFetched)
+                        ? _buildLoadingFeed()
+                        : _buildHomeFeed(baseProvider.feedCards),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ));
+  }
+
+  Function getFixedAction(int id) {
+    switch (id) {
+      case 108:
+        return () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => GuideDialog(),
+          );
+        };
+      case 120:
+        return () {
+          widget.tabChange(3);
+        };
+      case 140:
+        return () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => GamePoll(),
+          );
+        };
+      default:
+        return () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => GuideDialog(),
+          );
+        };
+    }
+  }
+
+  void logError(String code, String message) =>
+      print('Error: $code\nError Message: $message');
+
+  List<Widget> _buildLoadingFeed() {
+    return [
+      Container(
+        height: AppBar().preferredSize.height,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      _buildProfileRow(),
+      Padding(
+          padding: EdgeInsets.all(30),
+          child: SpinKitWave(
+            color: UiConstants.primaryColor,
+          ))
+    ];
+  }
+
+  List<Widget> _buildHomeFeed(List<FeedCard> cards) {
+    List<Widget> _widget = [
+      Container(
+        height: AppBar().preferredSize.height,
+      ),
+      _buildProfileRow(),
+    ];
+    for (FeedCard card in cards) {
+      _widget.add(HomeCard(
+        title: card.title,
+        asset: card.assetLocalLink,
+        subtitle: card.subtitle,
+        buttonText: card.btnText,
+        onPressed: () async {
+          HapticFeedback.vibrate();
+          var _f = getFixedAction(card.id);
+          _f();
+        },
+        gradient: [
+          Color(card.clrCodeA),
+          Color(card.clrCodeB),
+        ],
+      ));
+    }
+
+    return _widget;
+  }
+
+  Widget _buildProfileRow() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      margin: EdgeInsets.only(
+        top: SizeConfig.screenWidth * 0.10,
+        bottom: SizeConfig.screenWidth * 0.08,
+      ),
+      width: double.infinity,
+      child: Row(
+        children: [
+          Container(
+            height: SizeConfig.screenWidth * 0.25,
+            width: SizeConfig.screenWidth * 0.25,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white,
+                  width: 5,
+                )),
+            child: isImageLoading
+                ? Image.asset(
+                    "images/profile.png",
+                    fit: BoxFit.cover,
+                  )
+                : ClipOval(
+                    child: CachedNetworkImage(
+                      imageUrl: baseProvider.myUserDpUrl,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+          ),
+          SizedBox(
+            width: 30,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                getGreeting().toUpperCase(),
+                style: GoogleFonts.montserrat(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: SizeConfig.largeTextSize),
+              ),
+              Text(
+                baseProvider.myUser.name,
+                textAlign: TextAlign.start,
+                style: GoogleFonts.montserrat(
+                    color: Colors.white, fontSize: SizeConfig.largeTextSize),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class HomeCard extends StatelessWidget {
+  final String asset, title, subtitle, buttonText;
+  final Function onPressed;
+  final List<Color> gradient;
+
+  HomeCard(
+      {this.asset,
+      this.buttonText,
+      this.onPressed,
+      this.subtitle,
+      this.title,
+      this.gradient});
+
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    return Container(
+      margin: EdgeInsets.only(
+        bottom: 30,
+        right: width * 0.05,
+      ),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: new LinearGradient(
+            colors: gradient,
+            begin: Alignment.bottomLeft,
+            end: Alignment.topRight,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: gradient[0].withOpacity(0.3),
+              offset: Offset(5, 5),
+              blurRadius: 10,
+            ),
+            BoxShadow(
+              color: gradient[1].withOpacity(0.3),
+              offset: Offset(5, 5),
+              blurRadius: 10,
+            ),
+          ]),
+      width: double.infinity,
+      child: Stack(
+        children: [
+          Positioned(
+            right: 10,
+            bottom: 0,
+            child: Opacity(
+              opacity: 0.3,
+              child: Image.asset(
+                asset,
+                //height: height * 0.25,
+                width: width * 0.5,
+              ),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(width * 0.05),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.montserrat(
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          offset: Offset(5, 5),
+                          color: Colors.black26,
+                          blurRadius: 10,
+                        )
+                      ],
+                      fontWeight: FontWeight.w700,
+                      fontSize: SizeConfig.cardTitleTextSize),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  subtitle,
+                  style: GoogleFonts.montserrat(
+                      color: Colors.white,
+                      fontSize: SizeConfig.mediumTextSize * 1.2,
+                      fontWeight: FontWeight.w400),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                GestureDetector(
+                  onTap: onPressed,
+                  child: Container(
+                    padding: EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 2,
+                        color: Colors.white,
+                      ),
+                      color: Colors.transparent,
+                      boxShadow: [
+                        BoxShadow(
+                            color: gradient[0].withOpacity(0.2),
+                            blurRadius: 20,
+                            offset: Offset(5, 5),
+                            spreadRadius: 10),
+                      ],
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Text(
+                      buttonText,
+                      style: GoogleFonts.montserrat(
+                          color: Colors.white, fontSize: width * 0.035),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

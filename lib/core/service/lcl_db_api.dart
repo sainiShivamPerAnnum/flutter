@@ -23,6 +23,10 @@ class LocalApi {
     return File('$path/freshuser.txt');
   }
 
+  Future<File> get confettiFile async{
+    final path = await _localPath;
+    return File('$path/confettitrack.txt');
+  }
 
   Future<List<String>> readUserFile() async{
     final file = await userFile;
@@ -56,6 +60,17 @@ class LocalApi {
 
   Future<void> deleteFreshUserFile() async{
     final file = await freshUserFile;
+    if(file != null)return file.delete();
+  }
+
+
+  Future<File> writeConfettiTrackFile(String content) async{
+    final file = await confettiFile;
+    return file.writeAsString(content);
+  }
+
+  Future<void> deleteConfettiFile() async{
+    final file = await confettiFile;
     if(file != null)return file.delete();
   }
 }

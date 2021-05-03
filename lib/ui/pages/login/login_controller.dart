@@ -1,10 +1,10 @@
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/fcm_listener.dart';
-import 'package:felloapp/core/model/User.dart';
+import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
@@ -12,7 +12,9 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
@@ -35,17 +37,16 @@ class _LoginControllerState extends State<LoginController> {
   PageController _controller;
   static BaseUtil baseProvider;
   static DBModel dbProvider;
-  static LocalDBModel localDbProvider;
   static FcmListener fcmProvider;
 
   String userMobile;
-  String verificationId;
+  String _verificationId;
+  String _augmentedVerificationId;
   static List<Widget> _pages;
   int _currentPage;
   final _mobileScreenKey = new GlobalKey<MobileInputScreenState>();
   final _otpScreenKey = new GlobalKey<OtpInputScreenState>();
   final _nameScreenKey = new GlobalKey<NameInputScreenState>();
-  // final _addressScreenKey = new GlobalKey<AddressInputScreenState>();
 
   @override
   void initState() {
@@ -55,26 +56,35 @@ class _LoginControllerState extends State<LoginController> {
     _controller = new PageController(initialPage: _currentPage);
     _pages = [
       MobileInputScreen(key: _mobileScreenKey),
-      OtpInputScreen(key: _otpScreenKey),
+      OtpInputScreen(
+          key: _otpScreenKey,
+          otpEntered: _onOtpFilled,
+          resendOtp: _onOtpResendRequested),
       NameInputScreen(key: _nameScreenKey),
       // AddressInputScreen(key: _addressScreenKey),
     ];
   }
 
-  Future<void> verifyPhone() async {
+  Future<void> _verifyPhone() async {
     final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
       log.debug("Phone number hasnt been auto verified yet");
       _otpScreenKey.currentState.onOtpAutoDetectTimeout();
     };
 
     final PhoneCodeSent smsCodeSent = (String verId, [int forceCodeResend]) {
-      this.verificationId = verId;
+      this._augmentedVerificationId = verId;
       log.debug(
           "User mobile number format verified. Sending otp and verifying");
-      baseProvider.isLoginNextInProgress = false;
-      _controller.animateToPage(OtpInputScreen.index,
-          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-      setState(() {});
+      if (baseProvider.isOtpResendCount == 0) {
+        ///this is the first time that the otp was requested
+        baseProvider.isLoginNextInProgress = false;
+        _controller.animateToPage(OtpInputScreen.index,
+            duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+        setState(() {});
+      } else {
+        ///the otp was requested to be resent
+        _otpScreenKey.currentState.onOtpResendConfirmed(true);
+      }
     };
 
     final PhoneVerificationCompleted verifiedSuccess =
@@ -85,15 +95,13 @@ class _LoginControllerState extends State<LoginController> {
         setState(() {});
       }
       if (_currentPage == OtpInputScreen.index) {
-        //  UiConstants.offerSnacks(context, "Mobile verified!");
-//        otpInScreen.onOtpReceived();
         _otpScreenKey.currentState.onOtpReceived();
       }
       log.debug("Now verifying user");
       bool flag = await baseProvider.authenticateUser(user); //.then((flag) {
       if (flag) {
         log.debug("User signed in successfully");
-        onSignInSuccess();
+        _onSignInSuccess();
       } else {
         log.error("User auto sign in didnt work");
         baseProvider.isLoginNextInProgress = false;
@@ -103,7 +111,8 @@ class _LoginControllerState extends State<LoginController> {
       }
     };
 
-    final PhoneVerificationFailed veriFailed = (AuthException exception) {
+    final PhoneVerificationFailed veriFailed =
+        (FirebaseAuthException exception) {
       //codes: 'quotaExceeded'
       if (exception.code == 'quotaExceeded') {
         log.error("Quota for otps exceeded");
@@ -116,23 +125,22 @@ class _LoginControllerState extends State<LoginController> {
     };
 
     await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: this.verificationId,
+        phoneNumber: this._verificationId,
         codeAutoRetrievalTimeout: autoRetrieve,
         codeSent: smsCodeSent,
-        timeout: const Duration(seconds: 10),
+        timeout: const Duration(seconds: 30),
         verificationCompleted: verifiedSuccess,
         verificationFailed: veriFailed);
   }
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
-    dbProvider = Provider.of<DBModel>(context);
-    localDbProvider = Provider.of<LocalDBModel>(context);
-    fcmProvider = Provider.of<FcmListener>(context);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    fcmProvider = Provider.of<FcmListener>(context, listen: false);
     return Scaffold(
-      appBar: BaseUtil.getAppBar(),
-      backgroundColor: Colors.white,
+      // appBar: BaseUtil.getAppBar(),
+      backgroundColor: Color(0xfff1f1f1),
       body: SafeArea(
           child: Stack(
         children: <Widget>[
@@ -157,84 +165,82 @@ class _LoginControllerState extends State<LoginController> {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  //Back button check
-                  // (_currentPage == AddressInputScreen.index)
-                  //     ? Container(
-                  //         width: 150.0,
-                  //         height: 50.0,
-                  //         decoration: BoxDecoration(
-                  //           borderRadius: new BorderRadius.circular(30.0),
-                  //           border: Border.all(
-                  //               color: UiConstants.primaryColor, width: 1.0),
-                  //           color: Colors.transparent,
-                  //         ),
-                  //         child: new Material(
-                  //           child: MaterialButton(
-                  //             child: Text(
-                  //               'BACK',
-                  //               style: Theme.of(context)
-                  //                   .textTheme
-                  //                   .button
-                  //                   .copyWith(color: UiConstants.primaryColor),
-                  //             ),
-                  //             onPressed: () {
-                  //               _currentPage--;
-                  //               _controller.animateToPage(_currentPage,
-                  //                   duration: Duration(milliseconds: 300),
-                  //                   curve: Curves.easeIn);
-                  //             },
-                  //             highlightColor: Colors.orange.withOpacity(0.5),
-                  //             splashColor: Colors.orange.withOpacity(0.5),
-                  //           ),
-                  //           color: Colors.transparent,
-                  //           borderRadius: new BorderRadius.circular(30.0),
-                  //         ),
-                  //       )
-                  //     : new Container(),
-                  new Container(
-                    width: 150.0,
-                    height: 50.0,
-                    decoration: BoxDecoration(
-                      gradient: new LinearGradient(colors: [
-                        UiConstants.primaryColor,
-                        UiConstants.primaryColor.withBlue(200),
-                      ],
-                      begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
-                      borderRadius: new BorderRadius.circular(30.0),
-                    ),
-                    child: new Material(
-                      child: MaterialButton(
-                        child: (!baseProvider.isLoginNextInProgress)
-                            ? Text(
-                                'NEXT',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .button
-                                    .copyWith(color: Colors.white),
-                              )
-                            : SpinKitThreeBounce(
-                                color: UiConstants.spinnerColor2,
-                                size: 18.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                (_currentPage == MobileInputScreen.index)
+                    ? Padding(
+                        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        child: RichText(
+                          text: new TextSpan(
+                            children: [
+                              new TextSpan(
+                                text: 'By continuing, you agree to our ',
+                                style: new TextStyle(color: Colors.black45),
                               ),
-                        onPressed: () {
-                          if (!baseProvider.isLoginNextInProgress)
-                            processScreenInput(_currentPage);
-                        },
-                        highlightColor: Colors.white30,
-                        splashColor: Colors.white30,
+                              new TextSpan(
+                                text: 'Terms of Service',
+                                style: new TextStyle(
+                                    color: Colors.black45,
+                                    decoration: TextDecoration.underline),
+                                recognizer: new TapGestureRecognizer()
+                                  ..onTap = () {
+                                    HapticFeedback.vibrate();
+                                    Navigator.of(context).pushNamed('/tnc');
+                                  },
+                              ),
+                            ],
+                          ),
+                        ))
+                    : Container(),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      new Container(
+                        width: MediaQuery.of(context).size.width - 50,
+                        height: 50.0,
+                        decoration: BoxDecoration(
+                          gradient: new LinearGradient(
+                              colors: [
+                                UiConstants.primaryColor,
+                                UiConstants.primaryColor.withBlue(200),
+                              ],
+                              begin: Alignment(0.5, -1.0),
+                              end: Alignment(0.5, 1.0)),
+                          borderRadius: new BorderRadius.circular(10.0),
+                        ),
+                        child: new Material(
+                          child: MaterialButton(
+                            child: (!baseProvider.isLoginNextInProgress)
+                                ? Text(
+                                    'NEXT',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .button
+                                        .copyWith(color: Colors.white),
+                                  )
+                                : SpinKitThreeBounce(
+                                    color: UiConstants.spinnerColor2,
+                                    size: 18.0,
+                                  ),
+                            onPressed: () {
+                              if (!baseProvider.isLoginNextInProgress)
+                                _processScreenInput(_currentPage);
+                            },
+                            highlightColor: Colors.white30,
+                            splashColor: Colors.white30,
+                          ),
+                          color: Colors.transparent,
+                          borderRadius: new BorderRadius.circular(30.0),
+                        ),
                       ),
-                      color: Colors.transparent,
-                      borderRadius: new BorderRadius.circular(30.0),
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                )
+              ],
             ),
           ),
         ],
@@ -242,7 +248,7 @@ class _LoginControllerState extends State<LoginController> {
     );
   }
 
-  processScreenInput(int currentPage) async {
+  _processScreenInput(int currentPage) async {
     switch (currentPage) {
       case MobileInputScreen.index:
         {
@@ -251,19 +257,12 @@ class _LoginControllerState extends State<LoginController> {
             log.debug(
                 'Mobile number validated: ${_mobileScreenKey.currentState.getMobile()}');
             this.userMobile = _mobileScreenKey.currentState.getMobile();
-            this.verificationId = '+91' + this.userMobile;
-            verifyPhone();
+            this._verificationId = '+91' + this.userMobile;
+            _verifyPhone();
             baseProvider.isLoginNextInProgress = true;
+            FocusScope.of(_mobileScreenKey.currentContext).unfocus();
             setState(() {});
           }
-//          if (formatMobileNumber(id) != null) {
-//            this.userMobile = formatMobileNumber(id);
-//            this.verificationId = "+91" + this.userMobile;
-//            //TODO add a progress bar until smsCode sent
-//            verifyPhone();
-//          } else {
-//            mobileInScreen.setMobileTextError();
-//          }
           break;
         }
       case OtpInputScreen.index:
@@ -272,17 +271,18 @@ class _LoginControllerState extends State<LoginController> {
           if (otp != null && otp.isNotEmpty && otp.length == 6) {
             baseProvider.isLoginNextInProgress = true;
             setState(() {});
-            bool flag = await baseProvider.authenticateUser(
-                baseProvider.generateAuthCredential(verificationId, otp));
+            bool flag = await baseProvider.authenticateUser(baseProvider
+                .generateAuthCredential(_augmentedVerificationId, otp));
             //.then((flag) {
             if (flag) {
 //                otpInScreen.onOtpReceived();
               _otpScreenKey.currentState.onOtpReceived();
-              onSignInSuccess();
+              _onSignInSuccess();
             } else {
               baseProvider.showNegativeAlert(
                   'Invalid Otp', 'Please enter a valid otp', context);
-              baseProvider.isLoginNextInProgress = true;
+              baseProvider.isLoginNextInProgress = false;
+              FocusScope.of(_otpScreenKey.currentContext).unfocus();
               setState(() {});
             }
 //            });
@@ -296,30 +296,60 @@ class _LoginControllerState extends State<LoginController> {
         {
           //if(nameInScreen.validate()) {
           if (_nameScreenKey.currentState.formKey.currentState.validate()) {
+            if (_nameScreenKey.currentState.selectedDate == null) {
+              baseProvider.showNegativeAlert('Invalid details',
+                  'Please enter your date of birth', context);
+              return false;
+            } else if (!_isAdult(_nameScreenKey.currentState.selectedDate)) {
+              baseProvider.showNegativeAlert('Invalid details',
+                  'You need to be above 18 to join', context);
+              return false;
+            }
+            if (_nameScreenKey.currentState.gen == null ||
+                _nameScreenKey.currentState.isInvested == null) {
+              baseProvider.showNegativeAlert(
+                  'Invalid details', 'Please enter all the fields', context);
+              return false;
+            }
+            baseProvider.isLoginNextInProgress = true;
+            setState(() {});
             if (baseProvider.myUser == null) {
               //firebase user should never be null at this point
-              baseProvider.myUser = User.newUser(baseProvider.firebaseUser.uid,
+              baseProvider.myUser = BaseUser.newUser(
+                  baseProvider.firebaseUser.uid,
                   formatMobileNumber(baseProvider.firebaseUser.phoneNumber));
             }
             //baseProvider.myUser.name = nameInScreen.getName();
             baseProvider.myUser.name = _nameScreenKey.currentState.name;
+            print(baseProvider.myUser.name);
             //String email = nameInScreen.getEmail();
             String email = _nameScreenKey.currentState.email;
             if (email != null && email.isNotEmpty) {
               baseProvider.myUser.email = email;
             }
 
-            String age = _nameScreenKey.currentState.age;
-            if(age != null && age.isNotEmpty){
-              baseProvider.myUser.age = age;
+            String dob = "${_nameScreenKey.currentState.selectedDate.toLocal()}"
+                .split(" ")[0];
+
+            baseProvider.myUser.dob = dob;
+
+            int gender = _nameScreenKey.currentState.gen;
+            if (gender != null) {
+              if (gender == 1) {
+                baseProvider.myUser.gender = "M";
+              } else if (gender == 0) {
+                baseProvider.myUser.gender = "F";
+              } else
+                baseProvider.myUser.gender = "O";
             }
+
             bool isInv = _nameScreenKey.currentState.isInvested;
-            if(isInv != null)baseProvider.myUser.isInvested = isInv;
+            if (isInv != null) baseProvider.myUser.isInvested = isInv;
             //currentPage = AddressInputScreen.index;
             bool flag = await dbProvider.updateUser(baseProvider.myUser);
             if (flag) {
               log.debug("User object saved successfully");
-              onSignUpComplete();
+              _onSignUpComplete();
             } else {
               baseProvider.showNegativeAlert(
                   'Update failed', 'Please try again in sometime', context);
@@ -329,32 +359,6 @@ class _LoginControllerState extends State<LoginController> {
           }
           break;
         }
-      // case AddressInputScreen.index:
-      //   {
-      //     if (_addressScreenKey.currentState.formKey.currentState.validate()) {
-      //       Society selSociety =
-      //           _addressScreenKey.currentState.selected_society;
-      //       String selFlatNo = _addressScreenKey.currentState.flat_no;
-      //       int selBhk = _addressScreenKey.currentState.bhk;
-      //       if (selSociety != null && selFlatNo != null && selBhk != 0) {
-      //         //added safegaurd
-      //         baseProvider.myUser.flat_no = selFlatNo;
-      //         baseProvider.myUser.society_id = selSociety.sId;
-      //         baseProvider.myUser.sector = selSociety.sector;
-      //         baseProvider.myUser.bhk = selBhk;
-      //         //if nothing was invalid:
-      //         bool flag = await dbProvider
-      //             .updateUser(baseProvider.myUser); //.then((flag) {
-      //         if (flag) {
-      //           log.debug("User object saved successfully");
-      //           onSignUpComplete();
-      //         } else {
-      //           baseProvider.showNegativeAlert(
-      //               'Update failed', 'Please try again in sometime', context);
-      //         }
-      //       }
-      //     }
-      //   }
     }
   }
 
@@ -373,16 +377,24 @@ class _LoginControllerState extends State<LoginController> {
     return null;
   }
 
-  void onSignInSuccess() async {
+  bool _isAdult(DateTime dt) {
+    // Current time - at this moment
+    DateTime today = DateTime.now();
+    // Date to check but moved 18 years ahead
+    DateTime adultDate = DateTime(
+      dt.year + 18,
+      dt.month,
+      dt.day,
+    );
+
+    return adultDate.isBefore(today);
+  }
+
+  void _onSignInSuccess() async {
     log.debug("User authenticated. Now check if details previously available.");
-    //FirebaseAuth.instance.currentUser().then((fUser) => baseProvider.firebaseUser);
-    baseProvider.firebaseUser =
-        await FirebaseAuth.instance.currentUser(); //.then((fUser) {
-    //baseProvider.firebaseUser = fUser;
+    baseProvider.firebaseUser = FirebaseAuth.instance.currentUser;
     log.debug("User is set: " + baseProvider.firebaseUser.uid);
-    //dbProvider.getUser(this.userMobile).then((user) {
-    User user = await dbProvider
-        .getUser(baseProvider.firebaseUser.uid); //.then((user) {
+    BaseUser user = await dbProvider.getUser(baseProvider.firebaseUser.uid);
     //user variable is pre cast into User object
     //dbProvider.logDeviceId(fUser.uid); //TODO do someday
     if (baseProvider.isLoginNextInProgress == true) {
@@ -390,41 +402,50 @@ class _LoginControllerState extends State<LoginController> {
       setState(() {});
     }
     if (user == null || (user != null && user.hasIncompleteDetails())) {
+      ///First time user!
       log.debug(
           "No existing user details found or found incomplete details for user. Moving to details page");
-      baseProvider.myUser =
-          user ?? User.newUser(baseProvider.firebaseUser.uid, this.userMobile);
+      baseProvider.myUser = user ??
+          BaseUser.newUser(baseProvider.firebaseUser.uid, this.userMobile);
       //Move to name input page
       //_currentPage = NameInputScreen.index;
       _controller.animateToPage(NameInputScreen.index,
           duration: Duration(milliseconds: 300), curve: Curves.easeIn);
     } else {
-      log.debug("User details available: Name: " +
-          user.name);
+      ///Existing user
+      await BaseAnalytics.analytics.logLogin(loginMethod: 'phonenumber');
+      log.debug("User details available: Name: " + user.name);
       baseProvider.myUser = user;
-      onSignUpComplete();
+      _onSignUpComplete();
     }
   }
 
-  Future onSignUpComplete() async {
-    bool flag = await localDbProvider.saveUser(baseProvider.myUser);
-    if (flag) {
-      log.debug("User object saved locally");
-      await baseProvider.init();
-      await fcmProvider.setupFcm();
-      // Navigator.of(context).pop();
-      Navigator.of(context).pushReplacementNamed('/approot');
-      baseProvider.showPositiveAlert(
-          'Sign In Complete',
-          'Welcome to ${Constants.APP_NAME}, ${baseProvider.myUser.name}',
-          context);
+  _onOtpFilled() {
+    if (!baseProvider.isLoginNextInProgress) _processScreenInput(_currentPage);
+  }
+
+  _onOtpResendRequested() {
+    if (baseProvider.isOtpResendCount < 2) {
+      baseProvider.isOtpResendCount++;
+      _verifyPhone();
     } else {
-      log.error("Failed to save user data to local db");
-      baseProvider.showNegativeAlert('Sign In Failed',
-          'Please restart ${Constants.APP_NAME} and try again', context);
+      _otpScreenKey.currentState.onOtpResendConfirmed(false);
     }
+  }
+
+  Future _onSignUpComplete() async {
+    baseProvider.isLoginNextInProgress = false;
+    await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
+    await BaseAnalytics.logUserProfile(baseProvider.myUser);
+
+    await baseProvider.init();
+    await fcmProvider.setupFcm();
+    Navigator.of(context).pushReplacementNamed('/approot');
+    baseProvider.showPositiveAlert(
+        'Sign In Complete',
+        'Welcome to ${Constants.APP_NAME}, ${baseProvider.myUser.name}',
+        context);
     //process complete
-    //move to home through animation
-    //TODO
+    //TODO move to home through animation
   }
 }
