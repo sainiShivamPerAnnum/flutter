@@ -357,8 +357,9 @@ class ZeroBalView extends StatelessWidget {
             padding: const EdgeInsets.all(20.0),
             child: Text(
               "Your savings and prize balance is currently zero.",
+              textAlign: TextAlign.center,
               style: GoogleFonts.montserrat(
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w400,
                 fontSize: SizeConfig.mediumTextSize,
               ),
             ),
