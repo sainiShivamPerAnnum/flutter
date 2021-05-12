@@ -2,6 +2,6 @@
 
 ![Twitter Follow](https://img.shields.io/twitter/follow/fellofinance?style=social)
 
-Client Application for Fello
+Client App for Fello
 
 > Happy building!
