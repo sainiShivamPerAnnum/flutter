@@ -5,6 +5,7 @@ import 'package:felloapp/core/model/FeedCard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
+import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -129,9 +130,15 @@ class _HomePageState extends State<HomePage> {
     switch (id) {
       case 108:
         return () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => GuideDialog(),
+          // showDialog(
+          //   context: context,
+          //   builder: (BuildContext context) => GuideDialog(),
+          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (ctx) => GetStartedPage(),
+            ),
           );
         };
       case 120:
