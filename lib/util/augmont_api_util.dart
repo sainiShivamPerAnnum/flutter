@@ -67,6 +67,7 @@ class SubmitGoldSell {
   static final String path = 'api/submitGoldSell';
   static final String fldLockPrice = 'lockprice';
   static final String fldAmount = 'amount';
+  static final String fldQuantity = 'quantity';
   static final String fldMobile = 'mobile';
   static final String fldAugmontUid = 'uid';
   static final String fldUsername = 'uname';

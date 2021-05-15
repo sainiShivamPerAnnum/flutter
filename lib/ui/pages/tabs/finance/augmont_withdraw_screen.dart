@@ -40,7 +40,7 @@ class AugmontWithdrawScreen extends StatefulWidget {
 
 class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
   final Log log = new Log('AugmontWithdrawScreen');
-  TextEditingController _amountController = TextEditingController();
+  TextEditingController _quantityController = TextEditingController();
   BaseUtil baseProvider;
   String _amountError;
   String _errorMessage;
@@ -201,14 +201,14 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                         children: <Widget>[
                           Expanded(
                             child: TextField(
-                              controller: _amountController,
+                              controller: _quantityController,
                               keyboardType: TextInputType.number,
                               readOnly: false,
                               enabled: true,
                               autofocus: false,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
-                                labelText: 'Amount',
+                                labelText: 'Quantity',
                               ),
                               onChanged: (value) {
                                 setState(() {});
@@ -222,7 +222,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
               (!_isLoading)
                   ? Padding(
                       padding: EdgeInsets.only(top: 10),
-                      child: _getGoldAmount(_amountController.text),
+                      child: _getGoldAmount(_quantityController.text),
                     )
                   : Container(),
               (!_isLoading && _amountError != null)
@@ -343,7 +343,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
             if (widget.withdrawableGoldQnty == 0.0) {
               return;
             }
-            final amtErr = _validateAmount(_amountController.text);
+            final amtErr = _validateAmount(_quantityController.text);
             if (amtErr != null) {
               setState(() {
                 _amountError = amtErr;
@@ -354,9 +354,9 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
               _amountError = null;
             });
             if (_amountError == null) {
-              double amt = double.parse(_amountController.text);
+              double qnt = double.parse(_quantityController.text);
               String _confirmMsg =
-                  "Are you sure you want to continue? ₹$amt worth of digital gold shall be processed.";
+                  "Are you sure you want to continue? $qnt grams of digital gold shall be processed.";
               showDialog(
                 context: context,
                 builder: (ctx) => ConfirmActionDialog(
@@ -369,7 +369,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                     _isLoading = true;
                     setState(() {});
                     widget.onAmountConfirmed({
-                      'withdrawal_amount': amt,
+                      'withdrawal_quantity': qnt,
                     });
                     return true;
                   },

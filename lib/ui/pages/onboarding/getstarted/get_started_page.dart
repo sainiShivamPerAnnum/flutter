@@ -5,6 +5,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class GetStartedPage extends StatefulWidget {
@@ -102,6 +103,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
                 .copyWith(color: Colors.white),
           ),
           onPressed: () {
+            HapticFeedback.vibrate();
             Navigator.of(context)
                 .pushReplacementNamed('/login');
           },

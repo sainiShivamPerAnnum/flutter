@@ -280,7 +280,7 @@ class AugmontModel extends ChangeNotifier {
 
   ///submit gold purchase augmont api
   ///update object
-  initiateWithdrawal(AugmontRates sellRates, double amount) async {
+  initiateWithdrawal(AugmontRates sellRates, double quantity) async {
     if (!isInit()) await _init();
 
     if (_baseProvider.augmontDetail == null ||
@@ -290,21 +290,21 @@ class AugmontModel extends ChangeNotifier {
         _baseProvider.augmontDetail.bankAccNo == null ||
         _baseProvider.augmontDetail.ifsc == null ||
         sellRates == null ||
-        amount == null ||
-        amount <= 0) {
+        quantity == null ||
+        quantity <= 0.0) {
       return null;
     }
 
     _baseProvider.currentAugmontTxn = UserTransaction.newGoldWithdrawal(
-        amount,
+        BaseUtil.digitPrecision(quantity*sellRates.goldSellPrice),
         sellRates.blockId,
         sellRates.goldSellPrice,
-        getGoldQuantityFromSellAmount(amount, sellRates.goldSellPrice),
+        quantity,
         _baseProvider.myUser.uid);
 
     Map<String, String> _params = {
       SubmitGoldSell.fldMobile: _baseProvider.myUser.mobile,
-      SubmitGoldSell.fldAmount: amount.toString(),
+      SubmitGoldSell.fldQuantity: quantity.toString(),
       SubmitGoldSell.fldAugmontUid: _baseProvider.augmontDetail.userId,
       SubmitGoldSell.fldBlockId: sellRates.blockId,
       SubmitGoldSell.fldLockPrice: sellRates.goldSellPrice.toString(),

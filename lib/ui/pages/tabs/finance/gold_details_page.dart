@@ -454,7 +454,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
                 withdrawableGoldQnty: _withdrawableGoldQnty,
                 sellRate: baseProvider.augmontGoldRates.goldSellPrice,
                 onAmountConfirmed: (Map<String, double> amountDetails) {
-                  _onInitiateWithdrawal(amountDetails['withdrawal_amount']);
+                  _onInitiateWithdrawal(amountDetails['withdrawal_quantity']);
                 },
                 bankHolderName: baseProvider.augmontDetail.bankHolderName,
                 bankAccNo: baseProvider.augmontDetail.bankAccNo,
@@ -465,9 +465,9 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     }
   }
 
-  _onInitiateWithdrawal(double amt) {
-    if (baseProvider.augmontGoldRates != null && amt != null) {
-      augmontProvider.initiateWithdrawal(baseProvider.augmontGoldRates, amt);
+  _onInitiateWithdrawal(double qnt) {
+    if (baseProvider.augmontGoldRates != null && qnt != null) {
+      augmontProvider.initiateWithdrawal(baseProvider.augmontGoldRates, qnt);
       augmontProvider.setAugmontTxnProcessListener(_onSellComplete);
     }
   }

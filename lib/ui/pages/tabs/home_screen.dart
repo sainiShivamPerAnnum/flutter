@@ -130,16 +130,16 @@ class _HomePageState extends State<HomePage> {
     switch (id) {
       case 108:
         return () {
-          // showDialog(
-          //   context: context,
-          //   builder: (BuildContext context) => GuideDialog(),
-          // );
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (ctx) => GetStartedPage(),
-            ),
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => GuideDialog(),
           );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (ctx) => GetStartedPage(),
+          //   ),
+          // );
         };
       case 120:
         return () {

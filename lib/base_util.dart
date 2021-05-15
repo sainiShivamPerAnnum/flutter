@@ -158,7 +158,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   cancelIncomingNotifications() {
-    _payService.addPaymentStatusListener(null);
+    if(_payService != null)_payService.addPaymentStatusListener(null);
   }
 
   initRemoteConfig() async {

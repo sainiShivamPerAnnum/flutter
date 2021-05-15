@@ -163,13 +163,13 @@ class _TambolaGameScreen extends State<TambolaHome> {
     }
 
     ///Show the onboarding showcase tutorial is user is new
-    localDBModel.isFreshUser().then((flag) {
+    localDBModel.isTambolaTutorialComplete.then((flag) {
       if (flag == 0) {
         new Timer(const Duration(seconds: 4), () {
           _showTutorial = true;
           setState(() {});
         });
-        localDBModel.saveFreshUserStatus(true);
+        localDBModel.saveTambolaTutorialComplete = true;
       }
     });
   }
@@ -556,15 +556,15 @@ class _TambolaGameScreen extends State<TambolaHome> {
       return false;
     }
     DateTime date = DateTime.now();
-    if (date.weekday == 7) {
+    if (date.weekday == DateTime.sunday) {
       if (baseProvider.weeklyDigits.toList().length == 35) {
-        localDBModel.isUserOnboarded().then((flag) {
+        localDBModel.isTambolaResultProcessingDone().then((flag) {
           if (flag == 1) {
             log.debug('Ticket results not yet displayed. Displaying: ');
             _examineTicketsForWins();
 
             ///save the status that results have been saved
-            localDBModel.saveOnboardStatus(false);
+            localDBModel.saveTambolaResultProcessingStatus(false);
           }
 
           ///also delete all the old tickets while we're at it
@@ -573,8 +573,8 @@ class _TambolaGameScreen extends State<TambolaHome> {
         });
       }
     } else {
-      localDBModel.isUserOnboarded().then((flag) {
-        if (flag == 0) localDBModel.saveOnboardStatus(true);
+      localDBModel.isTambolaResultProcessingDone().then((flag) {
+        if (flag == 0) localDBModel.saveTambolaResultProcessingStatus(true);
       });
     }
   }
