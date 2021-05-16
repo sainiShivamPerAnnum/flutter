@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcase_widget.dart';
 
 class GamePage extends StatefulWidget {
   final ValueChanged<int> tabChange;
@@ -42,6 +43,8 @@ class _GamePageState extends State<GamePage> {
   @override
   void initState() {
     super.initState();
+    BaseAnalytics.analytics
+        .setCurrentScreen(screenName: BaseAnalytics.PAGE_GAME);
     var data = DemoData();
     _gameList = data.getCities();
     _currentPage = _gameList[1];
@@ -133,18 +136,19 @@ class _GamePageState extends State<GamePage> {
                           height: AppBar().preferredSize.height * 2,
                         ),
                         InkWell(
-                          onTap: () {
-                            HapticFeedback.vibrate();
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  TicketDetailsDialog(
-                                      baseProvider.userTicketWallet),
-                            );
-                          },
-                          child: TicketCount(
-                              baseProvider.userTicketWallet.getActiveTickets()),
-                        ),
+                            onTap: () {
+                              HapticFeedback.vibrate();
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    TicketDetailsDialog(
+                                        baseProvider.userTicketWallet),
+                              );
+                            },
+                            child: TicketCount(
+                                baseProvider.userTicketWallet
+                                    .getActiveTickets(),
+                                baseProvider.show_game_tutorial)),
                         Expanded(
                           flex: 4,
                           child: GameCardList(
@@ -302,8 +306,9 @@ class _GamePageState extends State<GamePage> {
 
 class TicketCount extends StatefulWidget {
   final int totalCount;
+  final bool showTutorial;
 
-  TicketCount(this.totalCount);
+  TicketCount(this.totalCount, this.showTutorial);
 
   @override
   _TicketCountState createState() => _TicketCountState();
@@ -315,6 +320,7 @@ class _TicketCountState extends State<TicketCount>
   Animation<double> _animation;
   double _latestBegin;
   double _latestEnd;
+  GlobalKey _showcaseKey = GlobalKey();
 
   @override
   void dispose() {
@@ -325,8 +331,6 @@ class _TicketCountState extends State<TicketCount>
   @override
   void initState() {
     super.initState();
-    BaseAnalytics.analytics
-        .setCurrentScreen(screenName: BaseAnalytics.PAGE_GAME);
     _controller =
         AnimationController(duration: Duration(seconds: 2), vsync: this);
     _latestBegin = 0;
@@ -351,29 +355,39 @@ class _TicketCountState extends State<TicketCount>
         setState(() {});
       });
       _controller.forward();
+
+      if ((_animation == null || _animation.value.round() == _latestEnd) &&
+          widget.showTutorial) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ShowCaseWidget.of(context).startShowCase([_showcaseKey]);
+        });
+      }
     }
 
-    return Container(
-      child: Column(
-        children: [
-          Text(
-            _animation != null
-                ? _animation.value.round().toString()
-                : "${widget.totalCount}",
-            style: GoogleFonts.montserrat(
-              color: Colors.white,
-              fontSize: SizeConfig.screenHeight * 0.08,
-              fontWeight: FontWeight.w700,
-            ),
+    return BaseUtil.buildShowcaseWrapper(
+        _showcaseKey,
+        'This is a test',
+        Container(
+          child: Column(
+            children: [
+              Text(
+                _animation != null
+                    ? _animation.value.round().toString()
+                    : "${widget.totalCount}",
+                style: GoogleFonts.montserrat(
+                  color: Colors.white,
+                  fontSize: SizeConfig.screenHeight * 0.08,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Text(
+                "Tickets",
+                style: GoogleFonts.montserrat(
+                    color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+              ),
+            ],
           ),
-          Text(
-            "Tickets",
-            style: GoogleFonts.montserrat(
-                color: Colors.white, fontSize: SizeConfig.mediumTextSize),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 }
 
