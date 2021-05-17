@@ -366,7 +366,7 @@ class _TicketCountState extends State<TicketCount>
 
     return BaseUtil.buildShowcaseWrapper(
         _showcaseKey,
-        'This is a test',
+        'Your game tickets appear here. You can also click on it to see a further breakdown.',
         Container(
           child: Column(
             children: [

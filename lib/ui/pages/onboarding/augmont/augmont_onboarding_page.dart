@@ -31,6 +31,8 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
   ICICIModel iProvider;
   double _width;
   static TextEditingController _panInput = new TextEditingController();
+  static TextEditingController _panHolderNameInput =
+      new TextEditingController();
   static TextEditingController _bankHolderNameInput =
       new TextEditingController();
   static TextEditingController _bankAccountNumberInput =
@@ -180,6 +182,24 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                   enabled: true,
                 ),
               ),
+              Padding(
+                padding: EdgeInsets.only(top: 10, left: 10),
+                child: Text("Name on PAN Card"),
+              ),
+              InputField(
+                child: TextFormField(
+                  decoration:
+                      inputFieldDecoration('Your name as per your PAN Card'),
+                  controller: _panHolderNameInput,
+                  keyboardType: TextInputType.name,
+                  textCapitalization: TextCapitalization.characters,
+                  enabled: true,
+                  autofocus: false,
+                  validator: (value) {
+                    return null;
+                  },
+                ),
+              ),
               SizedBox(height: 10),
               Padding(
                 padding: EdgeInsets.only(left: 10),
@@ -262,7 +282,8 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
               ),
               InputField(
                 child: TextFormField(
-                  decoration: inputFieldDecoration('Re-enter bank account number'),
+                  decoration:
+                      inputFieldDecoration('Re-enter bank account number'),
                   controller: _reenterbankAccountNumberInput,
                   autofocus: false,
                   obscureText: true,
@@ -314,65 +335,79 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                             color: UiConstants.spinnerColor2,
                             size: 18.0,
                           ),
-                    onPressed: () async{
+                    onPressed: () async {
                       ///check if all fields are valid
-                      if(_preVerifyInputs()) {
+                      if (_preVerifyInputs()) {
                         baseProvider.isAugmontRegnInProgress = true;
                         setState(() {});
-                        ///next get all details required for registration
-                        Map<String, dynamic> veriDetails = await _getVerifiedDetails(_panInput.text, _bankIfscInput.text);
 
-                        if(veriDetails != null && veriDetails['flag'] != null && veriDetails['flag']) {
+                        ///next get all details required for registration
+                        Map<String, dynamic> veriDetails =
+                            await _getVerifiedDetails(_panInput.text,
+                                _panHolderNameInput.text, _bankIfscInput.text);
+
+                        if (veriDetails != null &&
+                            veriDetails['flag'] != null &&
+                            veriDetails['flag']) {
                           ///show confirmation dialog to user
                           showDialog(
                               context: context,
                               barrierDismissible: false,
-                              builder: (BuildContext context) => AugmontConfirmRegnDialog(
-                                panNumber: _panInput.text,
-                                panName: veriDetails['pan_name'],
-                                bankHolderName: _bankHolderNameInput.text,
-                                bankBranchName: veriDetails['bank_branch'],
-                                bankAccNo: _bankAccountNumberInput.text,
-                                bankIfsc: _bankIfscInput.text,
-                                bankName: veriDetails['bank_name'],
-                                onAccept: () async{
-                                  ///finally now register the augmont user
-                                  UserAugmontDetail detail = await augmontProvider.createUser(
-                                      baseProvider.myUser.mobile,
-                                      _panInput.text,
-                                      stateChosenValue,
-                                      _bankHolderNameInput.text,
-                                      _bankAccountNumberInput.text,
-                                      _bankIfscInput.text);
-                                  if (detail == null) {
-                                    baseProvider.showNegativeAlert(
-                                        'Registration Failed', 'Failed to regsiter at the moment. Please try again.', context);
-                                    baseProvider.isAugmontRegnInProgress = false;
-                                    setState(() {});
-                                    return;
-                                  }else{
-                                    ///show completion animation
-                                    _regnComplete();
-                                  }
-                                },
-                                onReject: () {
-                                  baseProvider.showNegativeAlert(
-                                      'Registration Cancelled', 'Please try again', context);
-                                  baseProvider.isAugmontRegnInProgress = false;
-                                  setState(() {});
-                                  return;
-                                },
-                              ));
-                        }else{
+                              builder: (BuildContext context) =>
+                                  AugmontConfirmRegnDialog(
+                                    panNumber: _panInput.text,
+                                    panName: _panHolderNameInput.text,
+                                    bankHolderName: _bankHolderNameInput.text,
+                                    bankBranchName: veriDetails['bank_branch'],
+                                    bankAccNo: _bankAccountNumberInput.text,
+                                    bankIfsc: _bankIfscInput.text,
+                                    bankName: veriDetails['bank_name'],
+                                    onAccept: () async {
+                                      ///finally now register the augmont user
+                                      UserAugmontDetail detail =
+                                          await augmontProvider.createUser(
+                                              baseProvider.myUser.mobile,
+                                              _panInput.text,
+                                              stateChosenValue,
+                                              _bankHolderNameInput.text,
+                                              _bankAccountNumberInput.text,
+                                              _bankIfscInput.text);
+                                      if (detail == null) {
+                                        baseProvider.showNegativeAlert(
+                                            'Registration Failed',
+                                            'Failed to regsiter at the moment. Please try again.',
+                                            context);
+                                        baseProvider.isAugmontRegnInProgress =
+                                            false;
+                                        setState(() {});
+                                        return;
+                                      } else {
+                                        ///show completion animation
+                                        _regnComplete();
+                                      }
+                                    },
+                                    onReject: () {
+                                      baseProvider.showNegativeAlert(
+                                          'Registration Cancelled',
+                                          'Please try again',
+                                          context);
+                                      baseProvider.isAugmontRegnInProgress =
+                                          false;
+                                      setState(() {});
+                                      return;
+                                    },
+                                  ));
+                        } else {
                           baseProvider.showNegativeAlert(
                               'Invalid Details',
-                              veriDetails['reason']??'Please try again',
+                              veriDetails['reason'] ?? 'Please try again',
                               context);
                           baseProvider.isAugmontRegnInProgress = false;
                           setState(() {});
                           return;
                         }
-                      }else return;
+                      } else
+                        return;
                     },
                     highlightColor: Colors.white30,
                     splashColor: Colors.white30,
@@ -389,59 +424,67 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
   bool _preVerifyInputs() {
     RegExp panCheck = RegExp(r"[A-Z]{5}[0-9]{4}[A-Z]{1}");
     if (_panInput.text.isEmpty) {
-      baseProvider.showNegativeAlert('Invalid Pan',
-          'Kindly enter a valid PAN Number', context);
-      return false;
-    } else if (!panCheck.hasMatch(_panInput.text) || _panInput.text.length != 10) {
-      baseProvider.showNegativeAlert('Invalid Pan',
-          'Kindly enter a valid PAN Number', context);
-      return false;
-    } else if (stateChosenValue == null ||
-        stateChosenValue.isEmpty) {
       baseProvider.showNegativeAlert(
-          'State missing',
-          'Kindly enter your current residential state',
-          context);
+          'Invalid Pan', 'Kindly enter a valid PAN Number', context);
+      return false;
+    } else if (!panCheck.hasMatch(_panInput.text) ||
+        _panInput.text.length != 10) {
+      baseProvider.showNegativeAlert(
+          'Invalid Pan', 'Kindly enter a valid PAN Number', context);
+      return false;
+    } else if (_panHolderNameInput.text.isEmpty) {
+      baseProvider.showNegativeAlert('Name missing',
+          'Kindly enter your name as per your pan card', context);
+      return false;
+    } else if (stateChosenValue == null || stateChosenValue.isEmpty) {
+      baseProvider.showNegativeAlert('State missing',
+          'Kindly enter your current residential state', context);
       return false;
     } else if (_bankHolderNameInput.text.isEmpty) {
       baseProvider.showNegativeAlert(
-          'Name missing',
-          'Kindly enter your name as per your your bank',
-          context);
+          'Name missing', 'Kindly enter your name as per your bank', context);
       return false;
     } else if (_bankAccountNumberInput.text.isEmpty) {
-      baseProvider.showNegativeAlert('Account missing',
-          'Kindly enter your bank account number', context);
+      baseProvider.showNegativeAlert(
+          'Account missing', 'Kindly enter your bank account number', context);
       return false;
-    } else if(_bankAccountNumberInput.text != _reenterbankAccountNumberInput.text){
+    } else if (_bankAccountNumberInput.text !=
+        _reenterbankAccountNumberInput.text) {
       baseProvider.showNegativeAlert('Account number mismatch',
           'The bank account numbers did not match', context);
       return false;
     } else if (_bankIfscInput.text.isEmpty) {
-      baseProvider.showNegativeAlert('Name missing',
-          'Kindly enter your bank IFSC code', context);
+      baseProvider.showNegativeAlert(
+          'Name missing', 'Kindly enter your bank IFSC code', context);
       return false;
     }
     return true;
   }
 
-  Future<Map<String, dynamic>> _getVerifiedDetails(String aPan, String aIfsc) async{
-    if(aPan == null || aPan.isEmpty || aIfsc == null || aIfsc.isEmpty) return {'flag' : false, 'reason': 'Invalid Details' };
+  Future<Map<String, dynamic>> _getVerifiedDetails(
+      String aPan, String aPanName, String aIfsc) async {
+    if (aPan == null || aPan.isEmpty || aIfsc == null || aIfsc.isEmpty)
+      return {'flag': false, 'reason': 'Invalid Details'};
     Map<String, dynamic> resMap = {};
     bool _flag = true;
     String _reason = '';
     if (!iProvider.isInit()) await iProvider.init();
 
-    ///test pan number using icici api
+    ///test pan number using icici api and verify if the name entered by user matches name fetched
     var kObj = await iProvider.getKycStatus(aPan);
     if (kObj == null ||
         kObj[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
         kObj[GetKycStatus.resStatus] == null ||
-        kObj[GetKycStatus.resName] == null ||
-        kObj[GetKycStatus.resName] == '') {
+        kObj[GetKycStatus.resName] == null || kObj[GetKycStatus.resName] == '') {
       log.error('Couldnt fetch an appropriate response');
-      _flag = false;
-      _reason = 'Invalid PAN Number';
+      ///set name test to true as we couldnt find it in the cams database
+      _flag = true;
+    }else {
+      String aName = kObj[GetKycStatus.resName];
+      if(aName.toUpperCase().trim() != aPanName.trim()) {
+        _flag = false;
+        _reason = 'The entered name does not match with the name on your PAN Card';
+      }
     }
     if (!_flag) {
       return {'flag': _flag, 'reason': _reason};
