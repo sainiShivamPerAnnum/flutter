@@ -45,9 +45,6 @@ class GameCardListState extends State<GameCardList>
       () => Navigator.push(
           context, MaterialPageRoute(builder: (ctx) => ShowCaseWidget(
         builder: Builder(builder: (context) => TambolaHome()),
-        autoPlay: true,
-        autoPlayDelay: Duration(seconds: 5),
-        autoPlayLockEnable: true,
       ))),
       () {
         HapticFeedback.vibrate();

@@ -55,6 +55,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
   bool dailyPickHeaderWithTimings = false;
   String dailyPickHeaderText = 'Today\'s picks';
   List<String> dailyPickTextList = [];
+
   // List<String> prizeEmoji = ['🥇', '🏆', ' 🎊', ' 🎉'];
 
   GlobalKey _showcaseOne = GlobalKey();
@@ -713,9 +714,25 @@ class _TambolaGameScreen extends State<TambolaHome> {
               width: double.infinity,
               height: 200,
               child: Center(
-                child: Text((ticketsBeingGenerated)
-                    ? 'Your new tickets are being generated..'
-                    : 'No tickets yet'),
+                child: (ticketsBeingGenerated)
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: SpinKitWave(color: UiConstants.primaryColor),
+                          ),
+                          Text(
+                            'Your tickets are being generated..',
+                            style: TextStyle(
+                              fontSize: SizeConfig.mediumTextSize,
+                            ),
+                          )
+                        ],
+                      )
+                    : Text('No tickets yet'),
               )));
     } else if (count == 1) {
       _tambolaBoardViews = [];

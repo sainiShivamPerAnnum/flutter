@@ -127,7 +127,7 @@ class _FinancePageState extends State<FinancePage> {
                     ),
                     BaseUtil.buildShowcaseWrapper(
                       _showcaseHeader,
-                      'Your savings and investments show up here. They are based on real-time market data',
+                      'Your savings and investments show up here. The balances are based on live market rates.',
                       Container(
                         child:
                             baseProvider.userFundWallet.getEstTotalWealth() > 0
@@ -179,7 +179,7 @@ class _FinancePageState extends State<FinancePage> {
                       [
                         BaseUtil.buildShowcaseWrapper(
                           _showcaseFooter,
-                          'Choose any of the assets to deposit in. The more you invest, the more weekly tickets you earn!',
+                          'Choose any of the assets to deposit in. The more you save, the more weekly tickets you earn!',
                           FundWidget(
                             fund: fundList[1],
                             isAvailable: (GoldDetailsPage.checkAugmontStatus(

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
@@ -35,6 +37,8 @@ class _GamePageState extends State<GamePage> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   int currentPage;
+  GlobalKey _showcaseHeader = GlobalKey();
+  GlobalKey _showcaseFooter = GlobalKey();
 
   PageController _controller = new PageController(
     initialPage: 0,
@@ -89,6 +93,14 @@ class _GamePageState extends State<GamePage> {
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    if (baseProvider.show_game_tutorial) {
+      Timer(const Duration(milliseconds: 2100), () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ShowCaseWidget.of(context)
+              .startShowCase([_showcaseHeader, _showcaseFooter]);
+        });
+      });
+    }
     return RefreshIndicator(
       onRefresh: () async {
         await _onTicketsRefresh();
@@ -145,15 +157,20 @@ class _GamePageState extends State<GamePage> {
                                         baseProvider.userTicketWallet),
                               );
                             },
-                            child: TicketCount(
-                                baseProvider.userTicketWallet
-                                    .getActiveTickets(),
-                                baseProvider.show_game_tutorial)),
+                            child: BaseUtil.buildShowcaseWrapper(
+                                _showcaseHeader,
+                                'Your game tickets appear here. You can also click on it to see a further breakdown.',
+                                TicketCount(baseProvider.userTicketWallet
+                                    .getActiveTickets()))),
                         Expanded(
                           flex: 4,
-                          child: GameCardList(
-                            games: _gameList,
-                            onGameChange: _handleCityChange,
+                          child: BaseUtil.buildShowcaseWrapper(
+                              _showcaseFooter,
+                              'Use the tickets to play fun exciting weekly contests and win prizes!',
+                              GameCardList(
+                                games: _gameList,
+                                onGameChange: _handleCityChange,
+                              )
                           ),
                         ),
                         Expanded(
@@ -306,9 +323,8 @@ class _GamePageState extends State<GamePage> {
 
 class TicketCount extends StatefulWidget {
   final int totalCount;
-  final bool showTutorial;
 
-  TicketCount(this.totalCount, this.showTutorial);
+  TicketCount(this.totalCount);
 
   @override
   _TicketCountState createState() => _TicketCountState();
@@ -320,7 +336,6 @@ class _TicketCountState extends State<TicketCount>
   Animation<double> _animation;
   double _latestBegin;
   double _latestEnd;
-  GlobalKey _showcaseKey = GlobalKey();
 
   @override
   void dispose() {
@@ -355,39 +370,29 @@ class _TicketCountState extends State<TicketCount>
         setState(() {});
       });
       _controller.forward();
-
-      if ((_animation == null || _animation.value.round() == _latestEnd) &&
-          widget.showTutorial) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          ShowCaseWidget.of(context).startShowCase([_showcaseKey]);
-        });
-      }
     }
 
-    return BaseUtil.buildShowcaseWrapper(
-        _showcaseKey,
-        'Your game tickets appear here. You can also click on it to see a further breakdown.',
-        Container(
-          child: Column(
-            children: [
-              Text(
-                _animation != null
-                    ? _animation.value.round().toString()
-                    : "${widget.totalCount}",
-                style: GoogleFonts.montserrat(
-                  color: Colors.white,
-                  fontSize: SizeConfig.screenHeight * 0.08,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              Text(
-                "Tickets",
-                style: GoogleFonts.montserrat(
-                    color: Colors.white, fontSize: SizeConfig.mediumTextSize),
-              ),
-            ],
+    return Container(
+      child: Column(
+        children: [
+          Text(
+            _animation != null
+                ? _animation.value.round().toString()
+                : "${widget.totalCount}",
+            style: GoogleFonts.montserrat(
+              color: Colors.white,
+              fontSize: SizeConfig.screenHeight * 0.08,
+              fontWeight: FontWeight.w700,
+            ),
           ),
-        ));
+          Text(
+            "Tickets",
+            style: GoogleFonts.montserrat(
+                color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+          ),
+        ],
+      ),
+    );
   }
 }
 

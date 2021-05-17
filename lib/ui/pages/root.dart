@@ -86,8 +86,8 @@ class _RootState extends State<Root> {
         onFinish: () {
           baseProvider.show_finance_tutorial = false;
           _navBarItems[2].showFocus = false;
+          lclDbProvider.saveHomeTutorialComplete = true;
           setState(() {});
-          //lclDbProvider.saveHomeTutorialComplete = true;
         },
       ),
       ProfilePage(),

@@ -28,10 +28,10 @@ class WeeklyDrawDialog extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.all(10),
             child: Text('This week\'s numbers have not been drawn yet.',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black54
               ),
-
             ),
           )
         ),
