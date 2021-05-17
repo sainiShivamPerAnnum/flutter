@@ -15,6 +15,7 @@ import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/augmont_withdraw_screen.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -356,25 +357,28 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
 
         ///if this was the user's first investment
         ///- update AugmontDetail obj
-        ///- process referrals if any
         ///- add notification subscription
         if (!baseProvider.augmontDetail.firstInvMade) {
           baseProvider.augmontDetail.firstInvMade = true;
           bool _aflag = await dbProvider.updateUserAugmontDetails(
               baseProvider.myUser.uid, baseProvider.augmontDetail);
           if (_aflag) {
-            bool _isUnlocked =
-                await dbProvider.unlockReferralTickets(baseProvider.myUser.uid);
-            if (_isUnlocked) {
-              //give it a few seconds before showing congratulatory message
-              Timer(const Duration(seconds: 4), () {
-                baseProvider.showPositiveAlert(
-                    'Congratulations on your first Gold purchase',
-                    'Your referral bonus has been unlocked! 🎉',
-                    context);
-              });
-            }
             fcmProvider.addSubscription('goldinvestor');
+          }
+        }
+
+        ///check if referral bonuses need to be unlocked
+        if(baseProvider.userFundWallet.augGoldPrinciple >= Constants.UNLOCK_REFERRAL_AMT) {
+          bool _isUnlocked =
+          await dbProvider.unlockReferralTickets(baseProvider.myUser.uid);
+          if (_isUnlocked) {
+            //give it a few seconds before showing congratulatory message
+            Timer(const Duration(seconds: 4), () {
+              baseProvider.showPositiveAlert(
+                  'Congratulations are in order!',
+                  'Your referral bonus has been unlocked 🎉',
+                  context);
+            });
           }
         }
 
@@ -408,7 +412,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     if (!baseProvider.myUser.isAugmontOnboarded) {
       baseProvider.showNegativeAlert(
           'Not onboarded', 'You havent been onboarded to Augmont yet', context);
-    } else if (baseProvider.userFundWallet.augGoldQuantity == null &&
+    } else if (baseProvider.userFundWallet.augGoldQuantity == null ||
         baseProvider.userFundWallet.augGoldQuantity == 0) {
       baseProvider.showNegativeAlert('No balance',
           'Your Augmont wallet has no balance presently', context);

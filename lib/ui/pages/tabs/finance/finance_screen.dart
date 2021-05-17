@@ -7,6 +7,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -278,12 +279,12 @@ class FundChartView extends StatelessWidget {
             children: [
               Legend(
                 title: title[0],
-                amount: "₹ ${dataMap[title[0]].toStringAsFixed(1)}",
+                amount: "₹ ${dataMap[title[0]].toStringAsFixed(2)}",
                 color: colorList[0],
               ),
               Legend(
                 title: title[1],
-                amount: "₹ ${dataMap[title[1]].toStringAsFixed(1)}",
+                amount: "₹ ${dataMap[title[1]].toStringAsFixed(2)}",
                 color: colorList[1],
                 onClick: () {
                   HapticFeedback.vibrate();
@@ -297,13 +298,13 @@ class FundChartView extends StatelessWidget {
               ),
               Legend(
                 title: title[2],
-                amount: "₹ ${dataMap[title[2]].toStringAsFixed(1)}",
+                amount: "₹ ${dataMap[title[2]].toStringAsFixed(2)}",
                 color: colorList[2],
               ),
               (dataMap[title[3]] > 0)
                   ? Legend(
                       title: title[3],
-                      amount: "₹ ${dataMap[title[3]].toStringAsFixed(1)}",
+                      amount: "₹ ${dataMap[title[3]].toStringAsFixed(2)}",
                       color: colorList[3],
                       onClick: () {
                         HapticFeedback.vibrate();
@@ -311,7 +312,7 @@ class FundChartView extends StatelessWidget {
                             context: context,
                             builder: (BuildContext context) => MoreInfoDialog(
                                   text:
-                                      'Referral rewards get unlocked once you and your friends make a successful investment',
+                                      'Referral rewards could be locked due to either of the reasons: \n\n• You were referred by your friend but you haven\'t saved at least ₹${Constants.UNLOCK_REFERRAL_AMT} yet. \n\n• You referred your friends but they haven\'t saved at least ₹${Constants.UNLOCK_REFERRAL_AMT} yet.',
                                   title: 'Locked Balance',
                                 ));
                       },

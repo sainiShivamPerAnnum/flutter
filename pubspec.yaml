@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 2.2.1+10
+version: 2.2.2+11
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -76,29 +76,6 @@ flutter:
   uses-material-design: true
 
   assets:
-    - images/logo_full_size.png
-    - images/transfer.png
-    - images/diagonal-strike.png
-    - images/games-small.png
-    - images/grow-small.png
-    - images/safe-small.png
-    - images/save-small.png
-    - images/winners-small.png
-    - images/prizes-small.png
-    - images/fello_logo.png
-    - images/icici.png
-    - images/sebi.png
-    - images/amfi.png
-    - images/whatsapp.png
-    - images/onboard_collage-small.png
-    - images/PAN_card.png
-    - images/PAN_card_no_focussed.png
-    - images/kyc_unavailable.png
-    - images/checkmark.json
-    - images/verification.json
-    - images/scratch-card.png
-    - images/Aadhar_card.jpg
-    - images/Cancelled_cheque.png
     - images/
     - images/Tambola/
     - images/GamePoll/
