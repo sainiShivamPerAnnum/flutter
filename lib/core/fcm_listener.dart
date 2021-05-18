@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -15,8 +16,6 @@ class FcmListener extends ChangeNotifier {
   DBModel _dbModel = locator<DBModel>();
   FcmHandler _handler = locator<FcmHandler>();
   FirebaseMessaging _fcm;
-
-  FcmListener() {}
 
   /// Create a [AndroidNotificationChannel] for heads up notifications
   static const AndroidNotificationChannel _androidChannel =
@@ -75,20 +74,25 @@ class FcmListener extends ChangeNotifier {
   }
 
   _manageInitSubscriptions() async {
-    if(_baseUtil == null) return;
+    if (_baseUtil == null) return;
     if (_baseUtil.isOldCustomer()) {
-      await _fcm.subscribeToTopic('oldcustomer');
+      addSubscription(FcmTopic.OLDCUSTOMER);
     }
 
     if (_baseUtil.myUser != null &&
         _baseUtil.myUser.isInvested != null &&
         !_baseUtil.myUser.isInvested) {
-      await _fcm.subscribeToTopic('neverinvestedbefore');
+      addSubscription(FcmTopic.NEVERINVESTEDBEFORE);
+    }
+
+    if (_baseUtil.userTicketWallet != null &&
+        _baseUtil.userTicketWallet.getActiveTickets() > 0) {
+      addSubscription(FcmTopic.TAMBOLAPLAYER);
     }
   }
 
-  addSubscription(String subId) async {
-    await _fcm.subscribeToTopic(subId);
+  Future addSubscription(FcmTopic subId) async {
+    await _fcm.subscribeToTopic(subId.value());
   }
 
   Future<void> _firebaseMessagingBackgroundHandler(

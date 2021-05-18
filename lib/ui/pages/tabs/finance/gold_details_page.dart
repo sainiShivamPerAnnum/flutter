@@ -17,6 +17,7 @@ import 'package:felloapp/ui/pages/tabs/finance/augmont_withdraw_screen.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -363,7 +364,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
           bool _aflag = await dbProvider.updateUserAugmontDetails(
               baseProvider.myUser.uid, baseProvider.augmontDetail);
           if (_aflag) {
-            fcmProvider.addSubscription('goldinvestor');
+            fcmProvider.addSubscription(FcmTopic.GOLDINVESTOR);
           }
         }
 
