@@ -54,8 +54,6 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    final onboardProvider = Provider.of<LocalDBModel>(context, listen: false);
-    bool isDone = page == _pages.length - 1;
     return new Scaffold(
         backgroundColor: Colors.transparent,
         body: new Stack(

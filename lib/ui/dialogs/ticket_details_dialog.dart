@@ -110,7 +110,7 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
                             'Locked Bonus:',
                             '',
                             widget._userTicketWallet.getLockedTickets(),
-                            'Unlocked once an investment is made')
+                            'Unlocked once referral criteria is met')
                         : Container(),
                     (widget._userTicketWallet.getActiveTickets() > 0)
                         ? _addListField(

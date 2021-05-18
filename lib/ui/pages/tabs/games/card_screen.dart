@@ -55,6 +55,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
   bool dailyPickHeaderWithTimings = false;
   String dailyPickHeaderText = 'Today\'s picks';
   List<String> dailyPickTextList = [];
+
   // List<String> prizeEmoji = ['🥇', '🏆', ' 🎊', ' 🎉'];
 
   GlobalKey _showcaseOne = GlobalKey();
@@ -163,13 +164,13 @@ class _TambolaGameScreen extends State<TambolaHome> {
     }
 
     ///Show the onboarding showcase tutorial is user is new
-    localDBModel.isFreshUser().then((flag) {
+    localDBModel.isTambolaTutorialComplete.then((flag) {
       if (flag == 0) {
         new Timer(const Duration(seconds: 4), () {
           _showTutorial = true;
           setState(() {});
         });
-        localDBModel.saveFreshUserStatus(true);
+        localDBModel.saveTambolaTutorialComplete = true;
       }
     });
   }
@@ -313,46 +314,6 @@ class _TambolaGameScreen extends State<TambolaHome> {
         );
   }
 
-  Widget _buildShowcaseWrapper(
-      GlobalKey showcaseKey, String showcaseMsg, Widget body) {
-    return Showcase.withWidget(
-        key: showcaseKey,
-        description: showcaseMsg,
-        contentPadding: EdgeInsets.all(20),
-        //descTextStyle: TextStyle(fontSize: 20),
-        width: 300,
-        height: 140,
-        container: Container(
-          padding: EdgeInsets.all(20),
-          decoration: new BoxDecoration(
-            shape: BoxShape.rectangle,
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(UiConstants.padding),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10.0,
-                offset: const Offset(0.0, 10.0),
-              ),
-            ],
-          ),
-          child: Container(
-            width: SizeConfig.screenWidth * 0.84,
-            child: Text(
-              showcaseMsg,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 16,
-                  height: 1.4,
-                  fontWeight: FontWeight.w300,
-                  color: UiConstants.accentColor),
-            ),
-          ),
-        ),
-        overlayOpacity: 0.6,
-        child: body);
-  }
-
   Widget _buildCardCanvas(BuildContext c) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -362,7 +323,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
         SizedBox(height: SizeConfig.screenHeight * 0.143),
         (baseProvider.weeklyDrawFetched)
             ? InkWell(
-                child: _buildShowcaseWrapper(
+                child: BaseUtil.buildShowcaseWrapper(
                     _showcaseTwo,
                     Assets.showCaseDesc[1],
                     _buildTodaysPicksWidget(baseProvider.weeklyDigits)),
@@ -462,7 +423,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
                 baseProvider.userWeeklyBoards != null &&
                 _activeTambolaCardCount > 0 &&
                 baseProvider.weeklyDrawFetched)
-            ? _buildShowcaseWrapper(
+            ? BaseUtil.buildShowcaseWrapper(
                 _showcaseFour,
                 Assets.showCaseDesc[3],
                 Odds(baseProvider.weeklyDigits, _currentBoard,
@@ -509,7 +470,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
       child: Padding(
         padding: EdgeInsets.only(
             top: AppBar().preferredSize.height * 1.2, bottom: 24),
-        child: _buildShowcaseWrapper(
+        child: BaseUtil.buildShowcaseWrapper(
             _showcaseOne,
             Assets.showCaseDesc[0],
             Column(
@@ -556,15 +517,15 @@ class _TambolaGameScreen extends State<TambolaHome> {
       return false;
     }
     DateTime date = DateTime.now();
-    if (date.weekday == 7) {
+    if (date.weekday == DateTime.sunday) {
       if (baseProvider.weeklyDigits.toList().length == 35) {
-        localDBModel.isUserOnboarded().then((flag) {
+        localDBModel.isTambolaResultProcessingDone().then((flag) {
           if (flag == 1) {
             log.debug('Ticket results not yet displayed. Displaying: ');
             _examineTicketsForWins();
 
             ///save the status that results have been saved
-            localDBModel.saveOnboardStatus(false);
+            localDBModel.saveTambolaResultProcessingStatus(false);
           }
 
           ///also delete all the old tickets while we're at it
@@ -573,8 +534,8 @@ class _TambolaGameScreen extends State<TambolaHome> {
         });
       }
     } else {
-      localDBModel.isUserOnboarded().then((flag) {
-        if (flag == 0) localDBModel.saveOnboardStatus(true);
+      localDBModel.isTambolaResultProcessingDone().then((flag) {
+        if (flag == 0) localDBModel.saveTambolaResultProcessingStatus(true);
       });
     }
   }
@@ -753,9 +714,25 @@ class _TambolaGameScreen extends State<TambolaHome> {
               width: double.infinity,
               height: 200,
               child: Center(
-                child: Text((ticketsBeingGenerated)
-                    ? 'Your new tickets are being generated..'
-                    : 'No tickets yet'),
+                child: (ticketsBeingGenerated)
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: SpinKitWave(color: UiConstants.primaryColor),
+                          ),
+                          Text(
+                            'Your tickets are being generated..',
+                            style: TextStyle(
+                              fontSize: SizeConfig.mediumTextSize,
+                            ),
+                          )
+                        ],
+                      )
+                    : Text('No tickets yet'),
               )));
     } else if (count == 1) {
       _tambolaBoardViews = [];
@@ -763,7 +740,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
           baseProvider.userWeeklyBoards[0], baseProvider.weeklyDigits));
       _currentBoardView = _tambolaBoardViews[0];
       _currentBoard = baseProvider.userWeeklyBoards[0];
-      _widget = _buildShowcaseWrapper(
+      _widget = BaseUtil.buildShowcaseWrapper(
           _showcaseThree,
           Assets.showCaseDesc[2],
           Padding(
@@ -777,7 +754,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
             baseProvider.userWeeklyBoards[i], baseProvider.weeklyDigits));
       }
 
-      _widget = _buildShowcaseWrapper(
+      _widget = BaseUtil.buildShowcaseWrapper(
           _showcaseThree,
           Assets.showCaseDesc[2],
           CardSelector(

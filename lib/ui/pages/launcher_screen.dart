@@ -23,21 +23,19 @@ class LogoFadeIn extends State<SplashScreen> {
   Log log = new Log("SplashScreen");
   bool _isSlowConnection = false;
   bool _isAnimVisible = true;
-  Timer _timer, _timer2, _timer3;
+  Timer _timer3;
   LogoStyle _logoStyle = LogoStyle.markOnly;
   ui.Image logo;
 
   LogoFadeIn() {
     _loadImageAsset(Assets.logoMaxSize);
-    _timer = new Timer(const Duration(seconds: 1), () {
+    Timer(const Duration(milliseconds: 700), () {
       setState(() {
         _logoStyle = LogoStyle.stacked;
       });
     });
-    _timer2 = new Timer(const Duration(seconds: 1), () {
-      setState(() {
-        initialize();
-      });
+    Timer(const Duration(seconds: 1), () {
+      initialize();
     });
     _timer3 = new Timer(const Duration(seconds: 6), () {
       //display slow internet message
@@ -114,8 +112,6 @@ class LogoFadeIn extends State<SplashScreen> {
   @override
   void dispose() {
     super.dispose();
-    _timer.cancel();
-    _timer2.cancel();
     _timer3.cancel();
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 
 class LocalApi {
@@ -8,9 +9,9 @@ class LocalApi {
     return directory.path;
   }
 
-  Future<File> get onboardFile async {
+  Future<File> get tambolaResultFile async {
     final path = await _localPath;
-    return File('$path/onboarded.txt');
+    return File('$path/tmbresult.txt');
   }
 
   Future<File> get userFile async {
@@ -18,9 +19,14 @@ class LocalApi {
     return File('$path/userdetails.txt');
   }
 
-  Future<File> get freshUserFile async {
+  Future<File> get tambolaTutorialFile async {
     final path = await _localPath;
-    return File('$path/freshuser.txt');
+    return File('$path/freshtambolauser.txt');
+  }
+
+  Future<File> get homeTutorialFile async {
+    final path = await _localPath;
+    return File('$path/freshhomeuser.txt');
   }
 
   Future<File> get confettiFile async{
@@ -43,26 +49,36 @@ class LocalApi {
     if(file != null)return file.delete();
   }
 
-  Future<File> writeOnboardFile(String content) async {
-    final file = await onboardFile;
+  Future<File> writeTmbResultFile(String content) async {
+    final file = await tambolaResultFile;
     return file.writeAsString(content);
   }
 
-  Future<void> deleteOnboardFile() async{
-    final file = await onboardFile;
+  Future<void> deleteTmbResultFile() async{
+    final file = await tambolaResultFile;
     if(file != null)return file.delete();
   }
 
-  Future<File> writeFreshUserFile(String content) async {
-    final file = await freshUserFile;
+  Future<File> writeFreshTambolaTutorialFile(String content) async {
+    final file = await tambolaTutorialFile;
     return file.writeAsString(content);
   }
 
-  Future<void> deleteFreshUserFile() async{
-    final file = await freshUserFile;
+  Future<void> deleteFreshTambolaTutorialFile() async{
+    final file = await tambolaTutorialFile;
     if(file != null)return file.delete();
   }
 
+
+  Future<File> writeFreshHomeTutorialFile(String content) async {
+    final file = await homeTutorialFile;
+    return file.writeAsString(content);
+  }
+
+  Future<void> deleteFreshHomeTutorialFile() async{
+    final file = await homeTutorialFile;
+    if(file != null)return file.delete();
+  }
 
   Future<File> writeConfettiTrackFile(String content) async{
     final file = await confettiFile;

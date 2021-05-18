@@ -1,6 +1,8 @@
 import 'package:felloapp/ui/pages/root.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:core';
 import 'dart:math';
@@ -22,7 +24,8 @@ class NavBar extends StatelessWidget {
     //For each item in our list of data, create a NavBtn widget
     List<Widget> buttonWidgets = items.map((data) {
       //Create a button, and add the onTap listener
-      return NavbarButton(data, data == selectedItem, onTap: () {
+      return NavbarButton(data, data == selectedItem, data.showFocus,
+          onTap: () {
         //Get the index for the clicked data
         var index = items.indexOf(data);
         //Notify any listeners that we've been tapped, we rely on a parent widget to change our selectedIndex and redraw
@@ -60,9 +63,11 @@ class NavBar extends StatelessWidget {
 class NavbarButton extends StatefulWidget {
   final NavBarItemData data;
   final bool isSelected;
+  final bool isFocus;
   final VoidCallback onTap;
 
-  const NavbarButton(this.data, this.isSelected, {@required this.onTap});
+  const NavbarButton(this.data, this.isSelected, this.isFocus,
+      {@required this.onTap});
 
   @override
   _NavbarButtonState createState() => _NavbarButtonState();
@@ -96,13 +101,10 @@ class _NavbarButtonState extends State<NavbarButton>
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    _startAnimIfSelectedChanged(widget.isSelected);
-    //Create our main button, a Row, with an icon and some text
-    //Inject the data from our widget.data property
-    var content = Row(
+  Widget _buildContent() {
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         //Rotate the icon using the current animation value
         Rotation3d(
@@ -111,14 +113,7 @@ class _NavbarButtonState extends State<NavbarButton>
               widget.data.iconImage,
               height: 24,
               color: widget.isSelected ? Colors.white : Color(0xffcccccc),
-            )
-
-            // Icon(
-            //   widget.data.icon,
-            //   size: 24,
-            //   color: widget.isSelected ? Colors.white : Color(0xffcccccc),
-            // ),
-            ),
+            )),
         //Add some hz spacing
         SizedBox(width: 12),
         //Label
@@ -131,6 +126,22 @@ class _NavbarButtonState extends State<NavbarButton>
         ),
       ],
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _startAnimIfSelectedChanged(widget.isSelected);
+    //Create our main button, a Row, with an icon and some text
+    //Inject the data from our widget.data property
+    var content = (widget.isFocus)
+        ? Stack(children: [
+            Center(
+                child: SpinKitPulse(
+              color: UiConstants.primaryColor,
+            )),
+            _buildContent()
+          ])
+        : _buildContent();
 
     //Wrap btn in GestureDetector so we can listen to taps
     return GestureDetector(
@@ -228,6 +239,8 @@ class NavBarItemData {
   final IconData icon;
   final String iconImage;
   final double width;
+  bool showFocus;
 
-  NavBarItemData(this.title, this.icon, this.width, this.iconImage);
+  NavBarItemData(
+      this.title, this.icon, this.width, this.iconImage, this.showFocus);
 }

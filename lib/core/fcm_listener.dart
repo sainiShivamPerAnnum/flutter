@@ -74,12 +74,15 @@ class FcmListener extends ChangeNotifier {
     return _fcm;
   }
 
-  _manageInitSubscriptions() async{
+  _manageInitSubscriptions() async {
+    if(_baseUtil == null) return;
     if (_baseUtil.isOldCustomer()) {
       await _fcm.subscribeToTopic('oldcustomer');
     }
 
-    if(!_baseUtil.myUser.isInvested) {
+    if (_baseUtil.myUser != null &&
+        _baseUtil.myUser.isInvested != null &&
+        !_baseUtil.myUser.isInvested) {
       await _fcm.subscribeToTopic('neverinvestedbefore');
     }
   }

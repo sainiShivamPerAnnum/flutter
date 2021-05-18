@@ -40,12 +40,11 @@ class AugmontWithdrawScreen extends StatefulWidget {
 
 class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
   final Log log = new Log('AugmontWithdrawScreen');
-  TextEditingController _amountController = TextEditingController();
+  TextEditingController _quantityController = TextEditingController();
   BaseUtil baseProvider;
   String _amountError;
   String _errorMessage;
   bool _isLoading = false;
-  bool _isButtonEnabled = false;
   double _width;
   final TextStyle tTextStyle =
       TextStyle(fontSize: 18, fontWeight: FontWeight.w300);
@@ -74,15 +73,6 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
         child: dialogContent(context),
       ),
     );
-    // return Dialog(
-    //   insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
-    //   shape: RoundedRectangleBorder(
-    //     borderRadius: BorderRadius.circular(20.0),
-    //   ),
-    //   elevation: 0.0,
-    //   backgroundColor: Colors.white,
-    //   child: dialogContent(context),
-    // );
   }
 
   dialogContent(BuildContext context) {
@@ -201,14 +191,14 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                         children: <Widget>[
                           Expanded(
                             child: TextField(
-                              controller: _amountController,
+                              controller: _quantityController,
                               keyboardType: TextInputType.number,
                               readOnly: false,
                               enabled: true,
                               autofocus: false,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
-                                labelText: 'Amount',
+                                labelText: 'Quantity (in grams)',
                               ),
                               onChanged: (value) {
                                 setState(() {});
@@ -222,7 +212,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
               (!_isLoading)
                   ? Padding(
                       padding: EdgeInsets.only(top: 10),
-                      child: _getGoldAmount(_amountController.text),
+                      child: _getGoldAmount(_quantityController.text),
                     )
                   : Container(),
               (!_isLoading && _amountError != null)
@@ -261,23 +251,24 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
     );
   }
 
-  Widget _getGoldAmount(String amt) {
-    if (amt == null || amt.isEmpty) return Container();
-    double _gAmt = 0;
+  Widget _getGoldAmount(String qnt) {
+    if (qnt == null || qnt.isEmpty) return Container();
+    double _gQnt = 0;
     try {
-      _gAmt = double.parse(amt);
+      _gQnt = double.parse(qnt);
     } catch (e) {
       return Container();
     }
-    if (_gAmt == null || _gAmt < 5)
+    if (_gQnt == null || _gQnt < 0.0001)
       return Container();
     else {
-      double _goldAmt = _gAmt / widget.sellRate;
+      double _goldAmt = BaseUtil.digitPrecision(_gQnt * widget.sellRate);
+      bool _isValid = (_goldAmt > _getTotalGoldAvailable());
       return Text(
-        ' = ${_goldAmt.toStringAsFixed(4)} grams of Gold',
+        ' = ₹ ${_goldAmt.toStringAsFixed(2)}',
         textAlign: TextAlign.start,
-        style: TextStyle(
-            fontSize: SizeConfig.mediumTextSize, fontWeight: FontWeight.w400),
+        style: TextStyle(color: (_isValid)?Colors.red:Colors.black87,
+            fontSize: SizeConfig.mediumTextSize*1.2, fontWeight: FontWeight.bold),
       );
     }
   }
@@ -286,7 +277,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
     if (widget.sellRate != null &&
         widget.withdrawableGoldQnty != null) {
       double _net =
-          widget.sellRate * widget.withdrawableGoldQnty;
+          BaseUtil.digitPrecision(widget.sellRate * widget.withdrawableGoldQnty);
       return _net;
     }
     return 0;
@@ -343,7 +334,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
             if (widget.withdrawableGoldQnty == 0.0) {
               return;
             }
-            final amtErr = _validateAmount(_amountController.text);
+            final amtErr = _validateAmount(_quantityController.text);
             if (amtErr != null) {
               setState(() {
                 _amountError = amtErr;
@@ -354,9 +345,9 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
               _amountError = null;
             });
             if (_amountError == null) {
-              double amt = double.parse(_amountController.text);
+              double qnt = double.parse(_quantityController.text);
               String _confirmMsg =
-                  "Are you sure you want to continue? ₹$amt worth of digital gold shall be processed.";
+                  "Are you sure you want to continue? $qnt grams of digital gold shall be processed.";
               showDialog(
                 context: context,
                 builder: (ctx) => ConfirmActionDialog(
@@ -369,7 +360,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                     _isLoading = true;
                     setState(() {});
                     widget.onAmountConfirmed({
-                      'withdrawal_amount': amt,
+                      'withdrawal_quantity': qnt,
                     });
                     return true;
                   },
@@ -447,12 +438,13 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
               ),
               Icon(
                 Icons.info_outline,
-                size: 13,
+                size: 14,
                 color: UiConstants.spinnerColor,
               ),
             ],
           ),
           onTap: () {
+            HapticFeedback.vibrate();
             showDialog(
               context: context,
               builder: (context) => new AlertDialog(
@@ -489,15 +481,17 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
       return 'Please enter a valid amount';
     }
     try {
-      Pattern pattern = "^[0-9]*\$";
+      Pattern pattern = "^[0-9.]*\$";
       RegExp amRegex = RegExp(pattern);
       if (!amRegex.hasMatch(value)) {
         return 'Please enter a valid amount';
       }
       double amount = double.parse(value);
-      if (amount > _getTotalGoldAvailable()) return 'Insufficient balance';
-      if (amount < 2)
-        return 'Please enter value more than ₹2';
+      if (amount > widget.withdrawableGoldQnty) return 'Insufficient balance';
+      if (amount < 0.0001)
+        return 'Please enter a greater amount';
+      if(BaseUtil.digitPrecision(amount,4,false) < amount)
+        return 'Upto 4 decimals allowed';
       else
         return null;
     } catch (e) {

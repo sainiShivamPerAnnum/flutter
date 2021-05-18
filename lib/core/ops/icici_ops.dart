@@ -929,7 +929,7 @@ class ICICIModel extends ChangeNotifier {
         return null;
       }
       List<dynamic> rList = json.decode(res);
-      List<Map<String, dynamic>> refList = new List();
+      List<Map<String, dynamic>> refList = [];
       rList.forEach((element) {
         refList.add({
           CheckIMPSStatus.resReturnCode: element[CheckIMPSStatus.resReturnCode],

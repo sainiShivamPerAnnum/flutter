@@ -14,7 +14,7 @@ import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
-import 'package:felloapp/ui/pages/onboarding/app/onboarding_widget.dart';
+import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/kyc_invalid.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/interface/kyc_onboarding_interface.dart';
@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
         routes: <String, WidgetBuilder>{
           '/launcher': (BuildContext context) => SplashScreen(),
           '/approot': (BuildContext context) => Root(),
-          '/onboarding': (BuildContext context) => OnboardingMainPage(),
+          '/onboarding': (BuildContext context) => GetStartedPage(),
           '/login': (BuildContext context) => LoginController(),
           '/faq': (BuildContext context) => FAQPage(),
           '/tnc': (BuildContext context) => TnC(),

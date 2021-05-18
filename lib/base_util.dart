@@ -28,6 +28,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:showcaseview/showcase.dart';
 
 import 'core/model/TambolaBoard.dart';
 import 'core/model/UserAugmontDetail.dart';
@@ -96,6 +97,8 @@ class BaseUtil extends ChangeNotifier {
   bool isReferralLinkBuildInProgressWhatsapp = false;
   bool isReferralLinkBuildInProgressOther = false;
   bool isHomeCardsFetched = false;
+  bool show_game_tutorial = false;
+  bool show_finance_tutorial = false;
   static bool isDeviceOffline = false;
   static bool ticketRequestSent = false;
   static int ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
@@ -158,7 +161,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   cancelIncomingNotifications() {
-    _payService.addPaymentStatusListener(null);
+    if(_payService != null)_payService.addPaymentStatusListener(null);
   }
 
   initRemoteConfig() async {
@@ -452,6 +455,46 @@ class BaseUtil extends ChangeNotifier {
       }
     }
     return 0;
+  }
+
+  static Widget buildShowcaseWrapper(
+      GlobalKey showcaseKey, String showcaseMsg, Widget body) {
+    return Showcase.withWidget(
+        key: showcaseKey,
+        description: showcaseMsg,
+        contentPadding: EdgeInsets.all(20),
+        //descTextStyle: TextStyle(fontSize: 20),
+        width: 300,
+        height: 140,
+        container: Container(
+          padding: EdgeInsets.all(20),
+          decoration: new BoxDecoration(
+            shape: BoxShape.rectangle,
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(UiConstants.padding),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10.0,
+                offset: const Offset(0.0, 10.0),
+              ),
+            ],
+          ),
+          child: Container(
+            width: SizeConfig.screenWidth * 0.84,
+            child: Text(
+              showcaseMsg,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 16,
+                  height: 1.4,
+                  fontWeight: FontWeight.w300,
+                  color: UiConstants.accentColor),
+            ),
+          ),
+        ),
+        overlayOpacity: 0.6,
+        child: body);
   }
 
   bool isOldCustomer() {

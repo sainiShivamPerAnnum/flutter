@@ -28,9 +28,9 @@ class LocalDBModel extends ChangeNotifier {
   //   }
   // }
 
-  Future<int> isUserOnboarded() async {
+  Future<int> isTambolaResultProcessingDone() async {
     try {
-      final file = await _api.onboardFile;
+      final file = await _api.tambolaResultFile;
       String contents = await file.readAsString();
       return int.parse(contents);
     } catch (e) {
@@ -55,16 +55,19 @@ class LocalDBModel extends ChangeNotifier {
     return _api.writeConfettiTrackFile('$weekCde');
   }
 
-  Future saveOnboardStatus(bool flag) async {
+  Future saveTambolaResultProcessingStatus(bool flag) async {
     // Write the file
     int status = (flag)?1:0;
-    return _api.writeOnboardFile('$status');
+    return _api.writeTmbResultFile('$status');
   }
 
-  Future<int> isFreshUser() async {
+  Future<int> get isTambolaTutorialComplete async {
     try {
-      final file = await _api.freshUserFile;
+      final file = await _api.tambolaTutorialFile;
+      if(file == null) return 0;
       String contents = await file.readAsString();
+      if(contents == null || contents.isEmpty) return 0;
+
       return int.parse(contents);
     } catch (e) {
       log.error("Didnt find fresh user flag. Defaulting to 0.");
@@ -72,20 +75,43 @@ class LocalDBModel extends ChangeNotifier {
     }
   }
 
-  Future saveFreshUserStatus(bool flag) async {
-    // Write the file
+  set saveTambolaTutorialComplete(bool flag) {
     int status = (flag)?1:0;
-    return _api.writeFreshUserFile('$status');
+    _api.writeFreshTambolaTutorialFile('$status');
+  }
+
+  Future<int> get isHomeTutorialComplete async {
+    try {
+      final file = await _api.homeTutorialFile;
+      if(file == null) return 0;
+      String contents = await file.readAsString();
+      if(contents == null || contents.isEmpty) return 0;
+
+      return int.parse(contents);
+    } catch (e) {
+      log.error("Didnt find fresh home tutorial flag. Defaulting to 0.");
+      return 0;
+    }
+  }
+
+  set saveHomeTutorialComplete(bool flag) {
+    int status = (flag)?1:0;
+    _api.writeFreshHomeTutorialFile('$status');
   }
 
   Future<bool> deleteLocalAppData() async{
     try{
-      await _api.deleteOnboardFile();
+      await _api.deleteTmbResultFile();
     }catch(e) {
       log.error('Failed to delete onboarding file:' + e.toString());
     }
     try{
-      await _api.deleteFreshUserFile();
+      await _api.deleteFreshTambolaTutorialFile();
+    }catch(e) {
+      log.error('Failed to delete fresh tambola tutorial file:' + e.toString());
+    }
+    try{
+      await _api.deleteFreshHomeTutorialFile();
     }catch(e) {
       log.error('Failed to delete fresh user file:' + e.toString());
     }

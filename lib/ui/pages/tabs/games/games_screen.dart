@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
@@ -16,6 +18,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcase_widget.dart';
 
 class GamePage extends StatefulWidget {
   final ValueChanged<int> tabChange;
@@ -34,6 +37,8 @@ class _GamePageState extends State<GamePage> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   int currentPage;
+  GlobalKey _showcaseHeader = GlobalKey();
+  GlobalKey _showcaseFooter = GlobalKey();
 
   PageController _controller = new PageController(
     initialPage: 0,
@@ -42,6 +47,8 @@ class _GamePageState extends State<GamePage> {
   @override
   void initState() {
     super.initState();
+    BaseAnalytics.analytics
+        .setCurrentScreen(screenName: BaseAnalytics.PAGE_GAME);
     var data = DemoData();
     _gameList = data.getCities();
     _currentPage = _gameList[1];
@@ -86,6 +93,14 @@ class _GamePageState extends State<GamePage> {
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    if (baseProvider.show_game_tutorial) {
+      Timer(const Duration(milliseconds: 2100), () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ShowCaseWidget.of(context)
+              .startShowCase([_showcaseHeader, _showcaseFooter]);
+        });
+      });
+    }
     return RefreshIndicator(
       onRefresh: () async {
         await _onTicketsRefresh();
@@ -133,23 +148,29 @@ class _GamePageState extends State<GamePage> {
                           height: AppBar().preferredSize.height * 2,
                         ),
                         InkWell(
-                          onTap: () {
-                            HapticFeedback.vibrate();
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  TicketDetailsDialog(
-                                      baseProvider.userTicketWallet),
-                            );
-                          },
-                          child: TicketCount(
-                              baseProvider.userTicketWallet.getActiveTickets()),
-                        ),
+                            onTap: () {
+                              HapticFeedback.vibrate();
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    TicketDetailsDialog(
+                                        baseProvider.userTicketWallet),
+                              );
+                            },
+                            child: BaseUtil.buildShowcaseWrapper(
+                                _showcaseHeader,
+                                'Your game tickets appear here. You can also click on it to see a further breakdown.',
+                                TicketCount(baseProvider.userTicketWallet
+                                    .getActiveTickets()))),
                         Expanded(
                           flex: 4,
-                          child: GameCardList(
-                            games: _gameList,
-                            onGameChange: _handleCityChange,
+                          child: BaseUtil.buildShowcaseWrapper(
+                              _showcaseFooter,
+                              'Use the tickets to play fun exciting weekly contests and win prizes!',
+                              GameCardList(
+                                games: _gameList,
+                                onGameChange: _handleCityChange,
+                              )
                           ),
                         ),
                         Expanded(
@@ -325,8 +346,6 @@ class _TicketCountState extends State<TicketCount>
   @override
   void initState() {
     super.initState();
-    BaseAnalytics.analytics
-        .setCurrentScreen(screenName: BaseAnalytics.PAGE_GAME);
     _controller =
         AnimationController(duration: Duration(seconds: 2), vsync: this);
     _latestBegin = 0;
