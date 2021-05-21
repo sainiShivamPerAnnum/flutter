@@ -157,7 +157,6 @@ class BaseUtil extends ChangeNotifier {
         }
       });
     }
-    //
   }
 
   cancelIncomingNotifications() {
