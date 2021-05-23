@@ -19,6 +19,8 @@ dependencies:
   firebase_in_app_messaging: ^0.3.0+1
   firebase_messaging: ^8.0.0-dev.14
   #core packages
+  connectivity: ^0.4.6+2
+  encrypt: ^4.1.0
   flutter_local_notifications: ^4.0.1+2
   flutter_html_to_pdf: ^0.6.0
   path: ^1.8.0
@@ -27,14 +29,13 @@ dependencies:
   get_it: ^6.0.0
   geolocator: ^6.1.14
   http: ^0.12.0+3
-  connectivity: ^0.4.6+2
+  open_file: ^3.1.0 #for opening pdfs
+  package_info: ^2.0.0
+  razorpay_flutter: ^1.2.5
   shared_preferences: ^0.5.7
   share: ^0.6.5+4
   synchronized: ^3.0.0
-  razorpay_flutter: ^1.2.5
-  open_file: ^3.1.0 #for opening pdfs
   url_launcher: ^5.7.0
-  encrypt: ^4.1.0
   #ui packages
   camera: ^0.7.0+2
   cached_network_image: ^2.0.0

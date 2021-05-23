@@ -28,6 +28,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:package_info/package_info.dart';
 import 'package:showcaseview/showcase.dart';
 
 import 'core/model/TambolaBoard.dart';
@@ -70,6 +71,7 @@ class BaseUtil extends ChangeNotifier {
   List<UserTransaction> userMiniTxnList;
   List<ReferralDetail> userReferralsList;
   ReferralDetail myReferralInfo;
+  String version;
 
   DateTime _userCreationTimestamp;
   int isOtpResendCount = 0;
@@ -117,6 +119,9 @@ class BaseUtil extends ChangeNotifier {
     if (firebaseUser != null) {
       _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
     }
+
+    PackageInfo _packageInfo = await PackageInfo.fromPlatform();
+    version = '${_packageInfo.version}+${_packageInfo.buildNumber}';
 
     isUserOnboarded =
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);

@@ -84,8 +84,8 @@ class FcmListener extends ChangeNotifier {
     return _fcm;
   }
 
-  Future addSubscription(FcmTopic subId) async {
-    await _fcm.subscribeToTopic(subId.value());
+  Future addSubscription(FcmTopic subId, {String suffix=''}) async {
+    await _fcm.subscribeToTopic((suffix.isEmpty)?subId.value():'${subId.value()}$suffix');
   }
 
   _manageInitSubscriptions() async {
@@ -104,6 +104,14 @@ class FcmListener extends ChangeNotifier {
         _baseUtil.userTicketWallet.getActiveTickets() > 0) {
       addSubscription(FcmTopic.TAMBOLAPLAYER);
     }
+
+    if(_baseUtil.version != null && _baseUtil.version.isNotEmpty) {
+      String cde = _baseUtil.version.replaceAll('+', '');
+      cde = cde.replaceAll('.', '');
+      addSubscription(FcmTopic.VERSION, suffix: cde);
+    }
+
+    addSubscription(FcmTopic.PROMOTION);
   }
 
   _androidNativeSetup() async {
@@ -117,7 +125,7 @@ class FcmListener extends ChangeNotifier {
     _channel.invokeMethod('createNotificationChannel', tambolaChannelMap).then((value) {
       log.debug('Tambola Notification channel created successfully');
     }).catchError((e) {
-      log.error('Tambola notifcation channel setup failed');
+      log.error('Tambola notification channel setup failed');
     });
     //
     // const AndroidNotificationChannel _androidTambolaChannel =
