@@ -85,10 +85,13 @@ class BaseRemoteConfig {
   static Future<bool> init() async{
     remoteConfig.setDefaults(DEFAULTS);
     try {
-      // Fetches every 12 hrs
+      // Fetches every 6 hrs
       await remoteConfig.fetch();
       await remoteConfig.activateFetched();
-
+      await remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeoutMillis: 30000,
+        minimumFetchIntervalMillis: 21600000,
+      ));
       return true;
     } on FetchThrottledException catch (exception) {
       // Fetch throttled.

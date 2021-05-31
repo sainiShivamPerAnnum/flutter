@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
@@ -45,7 +46,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
   _initFields() {
     if (baseProvider != null) {
       String _isEnabledStr =
-          BaseUtil.remoteConfig.getString('augmont_deposits_enabled');
+          BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.AUGMONT_DEPOSITS_ENABLED);
       try {
         int t = (_isEnabledStr != null) ? int.parse(_isEnabledStr) : 1;
         _isDepositsEnabled = (t == 1);

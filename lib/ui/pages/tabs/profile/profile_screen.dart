@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
@@ -530,9 +531,9 @@ class _ShareOptionsState extends State<ShareOptions> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   RazorpayModel rProvider;
-  String referral_bonus = BaseUtil.remoteConfig.getString('referral_bonus');
+  String referral_bonus = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
   String referral_ticket_bonus =
-      BaseUtil.remoteConfig.getString('referral_ticket_bonus');
+      BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_TICKET_BONUS);
   String _shareMsg;
 
   _init() {

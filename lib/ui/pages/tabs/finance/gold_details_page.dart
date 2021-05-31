@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
@@ -42,7 +43,7 @@ class GoldDetailsPage extends StatefulWidget {
   static int checkAugmontStatus(BaseUser baseUser) {
     //check who is allowed to deposit
     String _perm =
-    BaseUtil.remoteConfig.getString('augmont_deposit_permission');
+    BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.AUGMONT_DEPOSIT_PERMISSION);
     int _isGeneralUserAllowed = 1;
     bool _isAllowed = false;
     if (_perm != null && _perm.isNotEmpty) {
