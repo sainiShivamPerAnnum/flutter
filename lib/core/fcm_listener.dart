@@ -105,8 +105,8 @@ class FcmListener extends ChangeNotifier {
       addSubscription(FcmTopic.TAMBOLAPLAYER);
     }
 
-    if(_baseUtil.version != null && _baseUtil.version.isNotEmpty) {
-      String cde = _baseUtil.version.replaceAll('+', '');
+    if(BaseUtil.version != null && BaseUtil.version.isNotEmpty) {
+      String cde = BaseUtil.version.replaceAll('+', '');
       cde = cde.replaceAll('.', '');
       addSubscription(FcmTopic.VERSION, suffix: cde);
     }

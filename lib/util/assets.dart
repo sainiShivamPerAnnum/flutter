@@ -62,7 +62,7 @@ class Assets {
 
   static final List<String> getStartedDesc = [
     'Save or invest ₹100 and get 1 game ticket every Monday',
-    'Use the tickets to participate in exciting weekly contests',
+    'Use the tickets to participate in exciting weekly games',
     'Your money keeps growing with great returns while you play fun games and win prizes!',
   ];
 

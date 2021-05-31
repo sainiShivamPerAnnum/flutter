@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/PrizeLeader.dart';
@@ -326,7 +327,7 @@ class DBModel extends ChangeNotifier {
   ///////////////////////////CREDENTIALS//////////////////////////////
   Future<Map<String, String>> getActiveAwsIciciApiKey() async {
     String _awsKeyIndex =
-        BaseUtil.remoteConfig.getString('aws_icici_key_index');
+        BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.AWS_ICICI_KEY_INDEX);
     if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
     int keyIndex = 1;
     try {
@@ -353,7 +354,7 @@ class DBModel extends ChangeNotifier {
 
   Future<Map<String, String>> getActiveAwsAugmontApiKey() async {
     String _awsKeyIndex =
-        BaseUtil.remoteConfig.getString('aws_augmont_key_index');
+        BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
     if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
     int keyIndex = 1;
     try {
@@ -681,13 +682,38 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<bool> deleteExpiredUserTickets(String userId) async {
+    // try {
+    //   return await _lock.synchronized(() async {
+    //     if (count < 0 && currentValue < count) {
+    //       userTicketWallet.initTck = 0;
+    //     } else {
+    //       userTicketWallet.initTck = currentValue + count;
+    //     }
+    //     Map<String, dynamic> tMap = {
+    //       UserTicketWallet.fldInitTckCount: userTicketWallet.initTck
+    //     };
+    //     bool flag = await _api.updateUserTicketWalletFields(
+    //         uid, UserTicketWallet.fldInitTckCount, currentValue, tMap);
+    //     if (!flag) {
+    //       //revert value back as the op failed
+    //       userTicketWallet.initTck = currentValue;
+    //     }
+    //     return userTicketWallet;
+    //   });
+    // } catch (e) {
+    //   log.error('Failed to update the user ticket count');
+    //   userTicketWallet.initTck = currentValue;
+    //   return userTicketWallet;
+    // }
     try {
       int weekNumber = BaseUtil.getWeekNumber();
       if (weekNumber > 2) {
-        ///eg: weekcode: 202105 -> delete all tickets older than 202103
-        int weekCde = _getWeekCode();
-        weekCde--;
-        return await _api.deleteUserTicketsBeforeWeekCode(userId, weekCde);
+        return await _lock.synchronized(() async{
+          ///eg: weekcode: 202105 -> delete all tickets older than 202103
+          int weekCde = _getWeekCode();
+          weekCde--;
+          return await _api.deleteUserTicketsBeforeWeekCode(userId, weekCde);
+        });
       } else {
         return false;
       }
@@ -738,6 +764,7 @@ class DBModel extends ChangeNotifier {
       dMap['user_id'] = userId;
       dMap['fail_type'] = failType.value();
       dMap['manually_resolved'] = false;
+      dMap['app_version'] = BaseUtil.version??'';
       dMap['timestamp'] = Timestamp.now();
       await _api.addFailedReportDocument(dMap);
       return true;

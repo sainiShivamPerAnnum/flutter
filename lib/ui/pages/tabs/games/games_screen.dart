@@ -166,7 +166,7 @@ class _GamePageState extends State<GamePage> {
                           flex: 4,
                           child: BaseUtil.buildShowcaseWrapper(
                               _showcaseFooter,
-                              'Use the tickets to play fun exciting weekly contests and win prizes!',
+                              'Use the tickets to play fun exciting weekly games and win prizes!',
                               GameCardList(
                                 games: _gameList,
                                 onGameChange: _handleCityChange,

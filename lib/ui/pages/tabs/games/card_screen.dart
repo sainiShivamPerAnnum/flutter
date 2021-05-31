@@ -520,12 +520,12 @@ class _TambolaGameScreen extends State<TambolaHome> {
     if (date.weekday == DateTime.sunday) {
       if (baseProvider.weeklyDigits.toList().length == 35) {
         localDBModel.isTambolaResultProcessingDone().then((flag) {
-          if (flag == 1) {
+          if (flag == 0) {
             log.debug('Ticket results not yet displayed. Displaying: ');
             _examineTicketsForWins();
 
             ///save the status that results have been saved
-            localDBModel.saveTambolaResultProcessingStatus(false);
+            localDBModel.saveTambolaResultProcessingStatus(true);
           }
 
           ///also delete all the old tickets while we're at it
@@ -535,7 +535,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
       }
     } else {
       localDBModel.isTambolaResultProcessingDone().then((flag) {
-        if (flag == 0) localDBModel.saveTambolaResultProcessingStatus(true);
+        if (flag == 1) localDBModel.saveTambolaResultProcessingStatus(false);
       });
     }
   }
@@ -598,7 +598,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
     log.debug('Resultant wins: ${ticketCodeWinIndex.toString()}');
 
     if (!_winnerDialogCalled)
-      new Timer(const Duration(seconds: 4), () {
+      new Timer(const Duration(seconds: 3), () {
         showDialog(
             context: context,
             builder: (BuildContext context) => WinningsDialog(
