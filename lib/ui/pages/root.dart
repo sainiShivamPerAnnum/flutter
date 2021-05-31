@@ -72,10 +72,9 @@ class _RootState extends State<Root> {
           ),
         ),
         onFinish: () {
-          baseProvider.show_finance_tutorial = false;
-          _navBarItems[2].showFocus = false;
-          baseProvider.show_game_tutorial = true;
-          _navBarItems[1].showFocus = true;
+          baseProvider.show_game_tutorial = false;
+          _navBarItems[1].showFocus = false;
+          // lclDbProvider.saveHomeTutorialComplete = true;
           setState(() {});
         },
       ),
@@ -84,9 +83,10 @@ class _RootState extends State<Root> {
           builder: (context) => FinancePage(),
         ),
         onFinish: () {
-          baseProvider.show_game_tutorial = false;
-          _navBarItems[1].showFocus = false;
-          // lclDbProvider.saveHomeTutorialComplete = true;
+          baseProvider.show_finance_tutorial = false;
+          _navBarItems[2].showFocus = false;
+          baseProvider.show_game_tutorial = true;
+          _navBarItems[1].showFocus = true;
           setState(() {});
         },
       ),

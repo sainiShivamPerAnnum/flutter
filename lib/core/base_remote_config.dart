@@ -83,6 +83,7 @@ class BaseRemoteConfig {
 
 
   static Future<bool> init() async{
+    remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(DEFAULTS);
     try {
       // Fetches every 6 hrs
