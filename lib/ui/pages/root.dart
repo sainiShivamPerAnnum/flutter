@@ -74,7 +74,7 @@ class _RootState extends State<Root> {
         onFinish: () {
           baseProvider.show_game_tutorial = false;
           _navBarItems[1].showFocus = false;
-          // lclDbProvider.saveHomeTutorialComplete = true;
+          lclDbProvider.saveHomeTutorialComplete = true;
           setState(() {});
         },
       ),

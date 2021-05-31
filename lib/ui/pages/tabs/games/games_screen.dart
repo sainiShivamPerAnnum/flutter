@@ -11,6 +11,7 @@ import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'package:felloapp/ui/elements/Parallax-card/game_card_list.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
 import 'package:felloapp/ui/elements/week-winners.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -159,14 +160,14 @@ class _GamePageState extends State<GamePage> {
                             },
                             child: BaseUtil.buildShowcaseWrapper(
                                 _showcaseHeader,
-                                'Your game tickets appear here. You can also click on it to see a further breakdown.',
+                                'Your game tickets appear here. You receive 1 game ticket for every ₹${Constants.INVESTMENT_AMOUNT_FOR_TICKET} you save. You can also click here to see a further breakdown.',
                                 TicketCount(baseProvider.userTicketWallet
                                     .getActiveTickets()))),
                         Expanded(
                           flex: 4,
                           child: BaseUtil.buildShowcaseWrapper(
                               _showcaseFooter,
-                              'Use the tickets to play fun exciting weekly games and win prizes!',
+                              'Use the tickets to play exciting weekly games and win fun prizes!',
                               GameCardList(
                                 games: _gameList,
                                 onGameChange: _handleCityChange,
