@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/kyc_ops.dart';
 import 'package:felloapp/core/service/location.dart';
@@ -146,7 +147,7 @@ class KycOnboardData {
             title: Text("Success"),
             content: Text("Details updated!"),
             actions: [
-              FlatButton(
+              TextButton(
                 child: Text("Ok"),
                 onPressed: () => Navigator.pop(context),
               ),
@@ -169,7 +170,7 @@ class KycOnboardData {
             title: Text("Error"),
             content: Text(message),
             actions: [
-              FlatButton(
+              TextButton(
                 child: Text("Retry"),
                 onPressed: () => Navigator.pop(context),
               ),
@@ -308,7 +309,7 @@ class KycOnboardData {
           "Here are the details we extracted",
           'Kindly update if required and confirm',
           createForm(createPANFields()), [
-        FlatButton(
+        TextButton(
           child: Text("Confirm"),
           onPressed: () async {
             if (_formKey.currentState.validate()) {
@@ -343,23 +344,23 @@ class KycOnboardData {
     Navigator.pop(context);
     if (result["flag"] == true) {
       print(result["fields"]);
-      _accNo.text = result["fields"]["accountno"];
-      _accHoldName.text = result["fields"]["name"];
-      _ifsc.text = result["fields"]["ifsc"];
+      _accNo.text = result["fields"]['result']["accountNumber"];
+      _accHoldName.text = result["fields"]['result']["name"];
+      _ifsc.text = result["fields"]['result']["ifsc"];
       showStepDialog(
           context, "Penny Transfer", '', createForm(createBankFormFields()), [
-        FlatButton(
-          child: Text("Cancle"),
+        TextButton(
+          child: Text("Cancel"),
           onPressed: () => Navigator.pop(context),
         ),
-        FlatButton(
+        TextButton(
           child: Text("Ok"),
           onPressed: () async {
             if (_formKey.currentState.validate()) {
               Navigator.pop(context);
               showLoadingDialog(context);
-              var result =
-                  await kycModel.bankPennyTransfer(_accNo, _ifsc, _accHoldName);
+              var result = await kycModel.bankPennyTransfer(
+                  _accNo.text, _ifsc.text, _accHoldName.text);
               Navigator.pop(context);
               if (result["flag"] == true) {
                 _markStepCompleted(2);
@@ -402,7 +403,7 @@ class KycOnboardData {
             face == 0 ? "Front-Side Upload" : "Back-Side Upload",
             '',
             Text("Choose image from"), [
-          new FlatButton(
+          new TextButton(
             child: Text('Camera'),
             onPressed: () async {
               _markStepAttempted(1);
@@ -416,7 +417,7 @@ class KycOnboardData {
               //print(result);
             },
           ),
-          FlatButton(
+          TextButton(
             child: Text('Gallery'),
             onPressed: () async {
               _markStepAttempted(1);
@@ -515,11 +516,11 @@ class KycOnboardData {
     if (step != 0 && baseProvider.kycDetail.isStepComplete[step - 1] != 1) {
       showStepDialog(
         context,
-        "!Oops",
+        "Error",
         "You missed a step in between",
         Text(""),
         [
-          FlatButton(
+          TextButton(
             child: Text("OK"),
             onPressed: () => Navigator.pop(context),
           ),
@@ -532,7 +533,7 @@ class KycOnboardData {
         '',
         Text("You have already completed this process"),
         [
-          FlatButton(
+          TextButton(
             child: Text("OK"),
             onPressed: () => Navigator.pop(context),
           ),
@@ -565,7 +566,7 @@ class KycOnboardData {
         // ---------------------------------------------------------------------------//
         showStepDialog(
             context, "PAN Card Upload", '', Text("Choose image from"), [
-          new FlatButton(
+          new TextButton(
             child: Text('Camera'),
             onPressed: () async {
               _markStepAttempted(0);
@@ -574,7 +575,7 @@ class KycOnboardData {
               continuePanProcess(context, imagePath);
             },
           ),
-          FlatButton(
+          TextButton(
             child: Text('Gallery'),
             onPressed: () async {
               _markStepAttempted(0);
@@ -602,10 +603,10 @@ class KycOnboardData {
                     ],
                   ),
                   actions: [
-                    FlatButton(
+                    TextButton(
                         onPressed: () => Navigator.pop(context),
                         child: Text("Cancel")),
-                    FlatButton(
+                    TextButton(
                         onPressed: () async {
                           if (imagef == null || imageb == null) {
                             showErrorDialog(context,
@@ -619,21 +620,26 @@ class KycOnboardData {
                             Navigator.pop(context);
                             Navigator.pop(context);
                             if (result["flag"] == true) {
-                              _uid.text = result["fields"]["uid"];
-                              _pin.text =
-                                  result["fields"]["splitAddress"]["pincode"];
-                              _address.text = result["fields"]["address"];
-                              _name.text = result["fields"]["name"];
-                              _dob.text = result["fields"]["dob"];
-                              // _city.text =
-                              //     result["fields"]["splitAddress"]["city"];
-                              // _state.text =
-                              //     result["fields"]["splitAddress"]["state"];
-                              // _district.text =
-                              //     result["fields"]["splitAddress"]["district"];
+                              _uid.text = result["fields"]["uid"].toString();
+                              _pin.text = result["fields"]["splitAddress"]
+                                      ["pincode"]
+                                  .toString();
+                              _address.text =
+                                  result["fields"]["address"].toString();
+                              _name.text = result["fields"]["name"].toString();
+                              _dob.text = result["fields"]["dob"].toString();
+                              _city.text = result["fields"]["splitAddress"]
+                                      ["city"]
+                                  .toString();
+                              _state.text = result["fields"]["splitAddress"]
+                                      ["state"]
+                                  .toString();
+                              _district.text = result["fields"]["splitAddress"]
+                                      ["district"]
+                                  .toString();
                               showStepDialog(context, "Confirm you Details", '',
                                   createForm(createADDFields()), [
-                                FlatButton(
+                                TextButton(
                                   child: Text("Confirm"),
                                   onPressed: () async {
                                     if (_formKey.currentState.validate()) {
@@ -650,8 +656,7 @@ class KycOnboardData {
                                       isLoading = false;
                                       Navigator.pop(context);
                                       if (result["flag"]) {
-                                        _markStepCompleted(0);
-
+                                        _markStepCompleted(1);
                                         showSuccessDialog(context);
                                       } else {
                                         showErrorDialog(
@@ -684,7 +689,7 @@ class KycOnboardData {
           '',
           Text("Choose image from"),
           [
-            new FlatButton(
+            new TextButton(
               child: Text('Camera'),
               onPressed: () async {
                 _markStepAttempted(2);
@@ -694,7 +699,7 @@ class KycOnboardData {
                 continueBankVerification(context, imagePath);
               },
             ),
-            FlatButton(
+            TextButton(
               child: Text('Gallery'),
               onPressed: () async {
                 _markStepAttempted(2);
@@ -715,13 +720,28 @@ class KycOnboardData {
         final result = await Navigator.push(context,
             MaterialPageRoute(builder: (context) => SignatureScreen()));
         print(result);
+        if (result["flag"] == true) {
+          _markStepCompleted(3);
+          showSuccessDialog(context);
+        } else {
+          showErrorDialog(context,
+              result['message'] ?? 'Something went wrong. Please try again');
+        }
       }
       //------------------------------------------------------FATCA-------------------------------------------------//
       else if (step == 4) {
         print("FATCA");
         //await kycModel.Fatca();
-        Navigator.push(
+        final result = await Navigator.push(
             context, MaterialPageRoute(builder: (context) => FatcaForms()));
+
+        if (result["flag"] == true) {
+          _markStepCompleted(4);
+          showSuccessDialog(context);
+        } else {
+          showErrorDialog(context,
+              result['message'] ?? 'Something went wrong. Please try again');
+        }
       }
       //-------------------------------------------LOCATION----------------------------------------------------------//
       else if (step == 5) {
@@ -746,7 +766,7 @@ class KycOnboardData {
           '',
           Text("Choose image from"),
           [
-            new FlatButton(
+            new TextButton(
               child: Text('Camera'),
               onPressed: () async {
                 _markStepAttempted(6);
@@ -755,7 +775,7 @@ class KycOnboardData {
                 continueProfilePictureProcess(context, imagePath);
               },
             ),
-            FlatButton(
+            TextButton(
               child: Text('Gallery'),
               onPressed: () async {
                 final image =
@@ -793,13 +813,12 @@ class KycOnboardData {
           print("-----------------------------Data recieved: $imagePath");
         }
         // _markStepAttempted(7);
-        //showLoadingDialog(context);
-        // Navigator.pop(context);
-        // if (result["flag"] == true) {
-        //   _markStepCompleted(7);
-        //   showSuccessDialog(context);
-        // }
-        else {
+        showLoadingDialog(context);
+        Navigator.pop(context);
+        if (result["flag"] == true) {
+          _markStepCompleted(7);
+          showSuccessDialog(context);
+        } else {
           showErrorDialog(context,
               result['message'] ?? 'Something went wrong. Please try again');
         }
@@ -807,7 +826,31 @@ class KycOnboardData {
       //--------------------------------------------PDF REVIEW--------------------------------------------------------//
       else if (step == 8) {
         print("PDF Review");
-        await kycModel.generatePdf();
+        var ress = await kycModel.kycVerificationEngine();
+
+        var data = await kycModel.generatePdf();
+
+        if (data['flag']) {
+          print("data is $data");
+          //url to redirect to signzy otp verification
+          var url = data['fields']['result']['url'].toString();
+          print("url is $url");
+          // var result = await Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //       builder: (context) => KycWebview(
+          //             url: url,
+          //           )),
+          // );
+          var result = true;
+
+          if (result) {
+            _markStepCompleted(8);
+            showSuccessDialog(context);
+          } else {
+            showErrorDialog(context, 'Something went wrong. Please try again');
+          }
+        } else {}
       }
       //--------------------------------------COMPLETION REWARD----------------------------------------------------------//
       else if (step == 9) {
@@ -860,8 +903,8 @@ class KycOnboardData {
                                         margin: const EdgeInsets.symmetric(
                                             horizontal: 20.0),
                                         child: Text(
-                                            BaseUtil.remoteConfig.getString(
-                                                'kyc_completion_prize'),
+                                            BaseRemoteConfig.remoteConfig.getString(
+                                                BaseRemoteConfig.KYC_COMPLETION_PRIZE),
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontWeight: FontWeight.w700,
@@ -888,7 +931,7 @@ class KycOnboardData {
                                   ],
                                 )
                                 // Image.network(
-                                //   //TODO BaseUtil.remoteConfig.getString('kyc_completion_prize');
+                                //   //TODO BaseRemoteConfig.remoteConfig.getString('kyc_completion_prize');
                                 //   "https://babblesports.com/wp-content/uploads/2020/06/Untitled-design-7-1200x675.jpg",
                                 //   fit: BoxFit.cover,
                                 // ),

@@ -1,7 +1,11 @@
-import 'package:felloapp/util/assets.dart';
 import 'package:flutter/material.dart';
 
 class FAQCard extends StatelessWidget {
+  final List<String> _faqHeaders;
+  final List<String> _faqResponses;
+
+  FAQCard(this._faqHeaders, this._faqResponses);
+
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
@@ -37,9 +41,13 @@ class FAQCard extends StatelessWidget {
           ),
           ListView.builder(
             shrinkWrap: true,
-            itemCount: Assets.mfFaqHeaders.length,
+            itemCount: _faqHeaders.length,
             itemBuilder: (ctx, i) {
-              return FAQCardItems(idx: i);
+              return FAQCardItems(
+                idx: i,
+                itemHeader: _faqHeaders[i],
+                itemResponse: _faqResponses[i],
+              );
             },
           )
         ],
@@ -50,13 +58,21 @@ class FAQCard extends StatelessWidget {
 
 class FAQCardItems extends StatefulWidget {
   final int idx;
-  FAQCardItems({@required this.idx});
+  final String itemHeader;
+  final String itemResponse;
+
+  FAQCardItems(
+      {@required this.idx,
+      @required this.itemHeader,
+      @required this.itemResponse});
+
   @override
   _FAQCardItemsState createState() => _FAQCardItemsState();
 }
 
 class _FAQCardItemsState extends State<FAQCardItems> {
   bool open = false;
+
   void toggleContainerHeight() {
     if (!open) {
       setState(() {
@@ -77,7 +93,7 @@ class _FAQCardItemsState extends State<FAQCardItems> {
           children: [
             Expanded(
               child: Text(
-                Assets.mfFaqHeaders[widget.idx],
+                widget.itemHeader,
                 softWrap: true,
                 maxLines: 2,
               ),
@@ -98,7 +114,7 @@ class _FAQCardItemsState extends State<FAQCardItems> {
             right: 30,
           ),
           width: double.infinity,
-          child: Text(Assets.mfFaqAnswers[widget.idx]),
+          child: Text(widget.itemResponse),
         ),
       ],
     );

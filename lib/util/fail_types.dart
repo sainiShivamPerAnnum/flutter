@@ -15,10 +15,18 @@ enum FailType{
   UserTransactionInitiateFailed,
   UserTransactionDetailSaveFailed,
   UserTransactionVerifyTimeoutFailed,
+  UserICICIDepositUpdateDiscrepancy,
+  UserICICIWthdrwUpdateDiscrepancy,
   UserWithdrawalCheckIMPSFailed,
   UserWithdrawalGetRedeemFailed,
   UserWithdrawalExitLoadFailed,
-  UserWithdrawalSubmitFailed
+  UserWithdrawalSubmitFailed,
+  UserRedemptionOTPSendFailed,
+  UserAugmontPurchaseFailed,
+  UserAugmontSellFailed,
+  UserRazorpayPurchaseFailed,
+  UserAugmontDepositUpdateDiscrepancy,
+  UserAugmontWthdrwUpdateDiscrepancy,
 }
 
 extension ParseToString on FailType {

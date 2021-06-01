@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/util/logger.dart';
 
-class UserIciciDetail{
+class UserIciciDetail {
   static Log log = new Log('UserIciciDetail');
   String _appId;
   String _panNumber;
@@ -51,26 +51,77 @@ class UserIciciDetail{
 
   static const String NO_ISSUES = "NA";
 
-  UserIciciDetail(this._appId, this._panNumber, this._kycStatus, this._appMode,
-      this._panName, this._hasIssue, this._verifiedOtpId, this._folioNo, this._expDate,
-      this._amcRefNo, this._payoutId, this._chkDigit, this._bankAccNo, this._bankCode,
-      this._bankName, this._bankCity, this._vpa, this._fatcaFlag, this._firstInvMade,
-      this._createdTime, this._updatedTime);
+  UserIciciDetail(
+      this._appId,
+      this._panNumber,
+      this._kycStatus,
+      this._appMode,
+      this._panName,
+      this._hasIssue,
+      this._verifiedOtpId,
+      this._folioNo,
+      this._expDate,
+      this._amcRefNo,
+      this._payoutId,
+      this._chkDigit,
+      this._bankAccNo,
+      this._bankCode,
+      this._bankName,
+      this._bankCity,
+      this._vpa,
+      this._fatcaFlag,
+      this._firstInvMade,
+      this._createdTime,
+      this._updatedTime);
 
   UserIciciDetail.newApplication(String applicationId, String panNumber,
-      String kycStatus, String appMode, String fatcaFlag):
-      this(applicationId, panNumber, kycStatus, appMode, '', NO_ISSUES, null,
-          null, null,null,null,null,null,null,null,null,null,fatcaFlag,false,
-          Timestamp.now(), Timestamp.now());
+      String kycStatus, String appMode, String fatcaFlag)
+      : this(
+            applicationId,
+            panNumber,
+            kycStatus,
+            appMode,
+            '',
+            NO_ISSUES,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            fatcaFlag,
+            false,
+            Timestamp.now(),
+            Timestamp.now());
 
-  UserIciciDetail.fromMap(Map<String, dynamic> data):
-      this(data[fldAppId], data[fldPanNumber], data[fldKycStatus],
-          data[fldAppMode], data[fldPanName], data[fldHasIssue],
-          data[fldVerifiedOtpId], data[fldFolioNo], data[fldExpDate],
-          data[fldAMCRefNo], data[fldPayoutId], data[fldChkDigit],
-          data[fldBankAccNo], data[fldBankCode], data[fldBankName],
-          data[fldBankCity], data[fldVpa], data[fldFatcaFlag],
-          data[fldFirstInvMade], data[fldCreatedTime], data[fldUpdatedTime]);
+  UserIciciDetail.fromMap(Map<String, dynamic> data)
+      : this(
+            data[fldAppId],
+            data[fldPanNumber],
+            data[fldKycStatus],
+            data[fldAppMode],
+            data[fldPanName],
+            data[fldHasIssue],
+            data[fldVerifiedOtpId],
+            data[fldFolioNo],
+            data[fldExpDate],
+            data[fldAMCRefNo],
+            data[fldPayoutId],
+            data[fldChkDigit],
+            data[fldBankAccNo],
+            data[fldBankCode],
+            data[fldBankName],
+            data[fldBankCity],
+            data[fldVpa],
+            data[fldFatcaFlag],
+            data[fldFirstInvMade],
+            data[fldCreatedTime],
+            data[fldUpdatedTime]);
 
   toJson() {
     return {

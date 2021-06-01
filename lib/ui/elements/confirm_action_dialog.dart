@@ -88,7 +88,7 @@ class _FormDialogState extends State<ConfirmActionDialog> {
                 children: <Widget>[
                   Align(
                     alignment: Alignment.bottomLeft,
-                    child: FlatButton(
+                    child: TextButton(
                       onPressed: () {
                         HapticFeedback.vibrate();
                         log.debug('DialogAction cancelled');
@@ -99,7 +99,7 @@ class _FormDialogState extends State<ConfirmActionDialog> {
                   ),
                   Align(
                     alignment: Alignment.bottomRight,
-                    child: FlatButton(
+                    child: TextButton(
                       onPressed: () {
                         HapticFeedback.vibrate();
                         log.debug('DialogAction clicked');

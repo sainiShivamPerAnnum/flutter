@@ -11,12 +11,12 @@ class ContactUsBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
-    baseProvider = Provider.of<BaseUtil>(context);
-    reqProvider = Provider.of<DBModel>(context);
+    baseProvider = Provider.of<BaseUtil>(context,listen:false);
+    reqProvider = Provider.of<DBModel>(context,listen:false);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        FlatButton(
+        TextButton(
           onPressed: () => showDialog(
               context: context,
               builder: (BuildContext dialogContext) => ContactUsDialog(

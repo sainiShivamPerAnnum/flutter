@@ -135,8 +135,8 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface>
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
-    baseProvider = Provider.of<BaseUtil>(context);
-    dbProvider = Provider.of<DBModel>(context);
+    baseProvider = Provider.of<BaseUtil>(context,listen:false);
+    dbProvider = Provider.of<DBModel>(context,listen:false);
     return Scaffold(
       key: _kycOnboardScaffoldKey,
       body: Stack(

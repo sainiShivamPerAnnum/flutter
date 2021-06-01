@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/ui/elements/board_selector.dart';
 import 'package:felloapp/ui/elements/dots_indicator.dart';
 import 'package:felloapp/ui/pages/onboarding/app/screens/page1.dart';
 import 'package:felloapp/ui/pages/onboarding/app/screens/page2.dart';
@@ -28,6 +28,7 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
   @override
   void initState() {
     super.initState();
+    BaseAnalytics.analytics.logTutorialBegin();
     _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
       if (page < 3) {
         page++;
@@ -35,11 +36,12 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
         page = 0;
       }
 
-      if(_controller.positions.isNotEmpty)_controller.animateToPage(
-        page,
-        duration: Duration(milliseconds: 600),
-        curve: Curves.easeIn,
-      );
+      if (_controller.positions.isNotEmpty)
+        _controller.animateToPage(
+          page,
+          duration: Duration(milliseconds: 600),
+          curve: Curves.easeIn,
+        );
     });
   }
 
@@ -52,8 +54,6 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    final onboardProvider = Provider.of<LocalDBModel>(context);
-    bool isDone = page == _pages.length - 1;
     return new Scaffold(
         backgroundColor: Colors.transparent,
         body: new Stack(
@@ -66,7 +66,7 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
                 itemBuilder: (BuildContext context, int index) {
                   return _pages[index % _pages.length];
                 },
-                onPageChanged: (int p){
+                onPageChanged: (int p) {
                   setState(() {
                     page = p;
                   });
@@ -76,17 +76,16 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
             Align(
               alignment: Alignment.topCenter,
               child: SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 30),
-                  child: SizedBox(
-                    child: Image(
-                      image: AssetImage(Assets.logoMaxSize),
-                      fit: BoxFit.contain,
-                    ),
-                    width: 80,
+                  child: Padding(
+                padding: EdgeInsets.only(top: 30),
+                child: SizedBox(
+                  child: Image(
+                    image: AssetImage(Assets.logoMaxSize),
+                    fit: BoxFit.contain,
                   ),
-                )
-              ),
+                  width: 80,
+                ),
+              )),
             ),
             new Positioned(
               bottom: 30.0,
@@ -114,34 +113,38 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         new Container(
-                          width: MediaQuery.of(context).size.width-50,
+                          width: MediaQuery.of(context).size.width - 50,
                           height: 50.0,
                           decoration: BoxDecoration(
                             gradient: new LinearGradient(
                                 colors: [
-                                    UiConstants.primaryColor,
-                                    UiConstants.primaryColor.withBlue(190),
+                                  UiConstants.primaryColor,
+                                  UiConstants.primaryColor.withBlue(190),
 //                                    Colors.green[400],
 //                                    Colors.green[600],
 //                                  Colors.orange[600],
 //                                  Colors.orange[900],
                                 ],
                                 begin: Alignment(0.5, -1.0),
-                                end: Alignment(0.5, 1.0)
-                            ),
+                                end: Alignment(0.5, 1.0)),
                             borderRadius: new BorderRadius.circular(10.0),
                           ),
                           child: new Material(
                             child: MaterialButton(
-                              child: Text('LOGIN',
-                                style: Theme.of(context).textTheme.button.copyWith(color: Colors.white),
+                              child: Text(
+                                'LOGIN',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .button
+                                    .copyWith(color: Colors.white),
                               ),
-                              onPressed: (){
+                              onPressed: () {
                                 log.debug("Setting Onboarding flag to true.");
                                 //onboardProvider.saveOnboardStatus(true);
                                 _controller.dispose();
                                 // Navigator.of(context).pop();
-                                Navigator.of(context).pushReplacementNamed('/login');
+                                Navigator.of(context)
+                                    .pushReplacementNamed('/login');
                               },
                               highlightColor: Colors.orange.withOpacity(0.5),
                               splashColor: Colors.orange.withOpacity(0.5),
@@ -183,8 +186,7 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
               ),
             ),
           ],
-        )
-    );
+        ));
   }
 }
 

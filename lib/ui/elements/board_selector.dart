@@ -1,3 +1,4 @@
+import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/widgets.dart';
 
 const defaultAnimationDuration = 150;
@@ -91,7 +92,7 @@ class _CardSelectorState extends State<CardSelector> {
     widgets.add(lastCardPreview());
 
     return SizedBox(
-      width: double.infinity,
+      width: SizeConfig.screenWidth,
       height: widget.mainCardHeight,
       child: Stack(
         children: widgets,
@@ -105,7 +106,7 @@ class _CardSelectorState extends State<CardSelector> {
 
   Widget lastCardPreview() {
     var lastCardAnimDuration =
-    Duration(milliseconds: widget.cardAnimationDurationMs);
+        Duration(milliseconds: widget.cardAnimationDurationMs);
     var leftPaddingLastCard = -widget.mainCardWidth;
     if (csState == CardSelectorState.targetBack) {
       leftPaddingLastCard = leftPaddingLastCard + dropWidth * 2;
@@ -129,7 +130,7 @@ class _CardSelectorState extends State<CardSelector> {
   Widget targetNext() {
     return Container(
       height: widget.mainCardHeight,
-      width: dropWidth*3,
+      width: dropWidth * 3,
       child: DragTarget(
         builder: (context, List<String> candidateData, rejectedData) {
           return Container(
@@ -198,7 +199,7 @@ class _CardSelectorState extends State<CardSelector> {
     if (position > positionFirstCard) {
       var idx = cardListLength - position + positionFirstCard;
       var factor =
-      scaleBetween(idx, widget.lastCardSizeFactor, 1.0, 0, cardListLength);
+          scaleBetween(idx, widget.lastCardSizeFactor, 1.0, 0, cardListLength);
       cardWidth = widget.mainCardWidth * factor;
       cardHeight = widget.mainCardHeight * factor;
     }
@@ -251,37 +252,37 @@ class _CardSelectorState extends State<CardSelector> {
         duration: Duration(milliseconds: duration),
         child: draggable
             ? Draggable(
-          data: "card",
-          axis: Axis.horizontal,
-          feedback: Container(
-            width: cardWidth,
-            height: cardHeight,
-            child: w,
-          ),
-          childWhenDragging: AnimatedOpacity(
-            opacity: showLastCard ? 1 : 0,
-            duration: Duration(
-                milliseconds:
-                showLastCard ? widget.cardAnimationDurationMs : 0),
-            child: Container(
-              width: cardWidth,
-              height: cardHeight,
-              child: w,
-            ),
-          ),
-          child: Container(
-            width: cardWidth,
-            height: cardHeight,
-            child: w,
-          ),
-        )
+                data: "card",
+                axis: Axis.horizontal,
+                feedback: Container(
+                  width: cardWidth,
+                  height: cardHeight,
+                  child: w,
+                ),
+                childWhenDragging: AnimatedOpacity(
+                  opacity: showLastCard ? 1 : 0,
+                  duration: Duration(
+                      milliseconds:
+                          showLastCard ? widget.cardAnimationDurationMs : 0),
+                  child: Container(
+                    width: cardWidth,
+                    height: cardHeight,
+                    child: w,
+                  ),
+                ),
+                child: Container(
+                  width: cardWidth,
+                  height: cardHeight,
+                  child: w,
+                ),
+              )
             : AnimatedContainer(
-          duration: Duration(milliseconds: duration),
-          curve: Curves.easeOut,
-          width: cardWidth,
-          height: cardHeight,
-          child: w,
-        ),
+                duration: Duration(milliseconds: duration),
+                curve: Curves.easeOut,
+                width: cardWidth,
+                height: cardHeight,
+                child: w,
+              ),
       ),
     );
   }

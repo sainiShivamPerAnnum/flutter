@@ -29,8 +29,8 @@ class TransactionHelpDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
-    dbProvider = Provider.of<DBModel>(context);
+    baseProvider = Provider.of<BaseUtil>(context,listen:false);
+    dbProvider = Provider.of<DBModel>(context,listen:false);
     _width = MediaQuery.of(context).size.width;
     _height = MediaQuery.of(context).size.height;
     return Dialog(

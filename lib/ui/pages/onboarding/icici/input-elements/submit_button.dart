@@ -36,7 +36,7 @@ class SubmitButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(80),
       ),
       alignment: Alignment.center,
-      child: FlatButton(
+      child: TextButton(
         onPressed: action,
         child: Text(
           title,

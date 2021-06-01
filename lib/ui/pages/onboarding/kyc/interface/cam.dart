@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:camera/camera.dart';
+import 'package:felloapp/core/ops/kyc_ops.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/interface/kyc_onboard_data.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -25,6 +27,8 @@ class _MyCamState extends State<MyCam> {
   XFile videoFile;
   VideoPlayerController videoController;
   VoidCallback videoPlayerListener;
+
+  KYCModel kycModel = KYCModel();
 
   // Counting pointers (number of user fingers on screen)
   int _pointers = 0;
@@ -69,97 +73,111 @@ class _MyCamState extends State<MyCam> {
                   ),
                   Expanded(
                     child: Container(
-                        alignment: Alignment.center,
-                        width: _width,
-                        color: Color(0xff333333),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // CircleAvatar(
-                            //   backgroundColor: Colors.black,
-                            //   radius: _width * 0.05,
-                            //   child: IconButton(
-                            //     icon: controller != null &&
-                            //             controller.value.isRecordingPaused
-                            //         ? Icon(
-                            //             Icons.play_arrow,
-                            //             color: Colors.white,
-                            //           )
-                            //         : Icon(
-                            //             Icons.pause,
-                            //             color: Colors.white,
-                            //           ),
-                            //     onPressed: controller != null &&
-                            //             controller.value.isInitialized &&
-                            //             controller.value.isRecordingVideo
-                            //         ? (controller != null &&
-                            //                 controller.value.isRecordingPaused
-                            //             ? onResumeButtonPressed
-                            //             : onPauseButtonPressed)
-                            //         : null,
-                            //   ),
-                            // ),
-                            // SizedBox(
-                            //   width: 20,
-                            // ),
-                            CircleAvatar(
-                              backgroundColor: Colors.black,
-                              radius: _width * 0.08,
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.videocam,
-                                  size: _width * 0.06,
-                                ),
-                                color: Colors.amber,
-                                onPressed: controller != null &&
-                                        controller.value.isInitialized &&
-                                        !controller.value.isRecordingVideo
-                                    ? onVideoRecordButtonPressed
-                                    : null,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            CircleAvatar(
-                              backgroundColor: Colors.black,
-                              radius: _width * 0.05,
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.stop,
-                                  color: Colors.red,
-                                ),
-                                onPressed: controller != null &&
-                                        controller.value.isInitialized &&
-                                        controller.value.isRecordingVideo
-                                    ? onStopButtonPressed
-                                    : null,
-                              ),
-                            ),
-                          ],
-                        )),
+                      alignment: Alignment.center,
+                      width: _width,
+                      color: Color(0xff333333),
+                    ),
                   )
                 ],
               ),
               Positioned(
-                top: _height * 0.03,
-                right: _width * 0.25,
+                top: SizeConfig.screenHeight * 0.03,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(200),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Please say '${widget.randNum}' while recording video",
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
+                  width: SizeConfig.screenWidth,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(200),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Please say '${widget.randNum}' while recording video",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 ),
-              )
+              ),
+              Positioned(
+                bottom: 10,
+                child: Container(
+                  width: SizeConfig.screenWidth,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // CircleAvatar(
+                      //   backgroundColor: Colors.black,
+                      //   radius: _width * 0.05,
+                      //   child: IconButton(
+                      //     icon: controller != null &&
+                      //             controller.value.isRecordingPaused
+                      //         ? Icon(
+                      //             Icons.play_arrow,
+                      //             color: Colors.white,
+                      //           )
+                      //         : Icon(
+                      //             Icons.pause,
+                      //             color: Colors.white,
+                      //           ),
+                      //     onPressed: controller != null &&
+                      //             controller.value.isInitialized &&
+                      //             controller.value.isRecordingVideo
+                      //         ? (controller != null &&
+                      //                 controller.value.isRecordingPaused
+                      //             ? onResumeButtonPressed
+                      //             : onPauseButtonPressed)
+                      //         : null,
+                      //   ),
+                      // ),
+                      // SizedBox(
+                      //   width: 20,
+                      // ),
+                      CircleAvatar(
+                        backgroundColor: Colors.black,
+                        radius: _width * 0.08,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.videocam,
+                            size: _width * 0.06,
+                          ),
+                          color: Colors.amber,
+                          onPressed: controller != null &&
+                                  controller.value.isInitialized &&
+                                  !controller.value.isRecordingVideo
+                              ? onVideoRecordButtonPressed
+                              : null,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      CircleAvatar(
+                        backgroundColor: Colors.black,
+                        radius: _width * 0.05,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.stop,
+                            color: Colors.red,
+                          ),
+                          onPressed: controller != null &&
+                                  controller.value.isInitialized &&
+                                  controller.value.isRecordingVideo
+                              ? onStopButtonPressed
+                              : null,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           )),
     );
@@ -273,15 +291,21 @@ class _MyCamState extends State<MyCam> {
                     ),
                   ),
                   actions: [
-                    FlatButton(
+                    TextButton(
                       child: Text("Looks Good"),
-                      onPressed: () {
+                      onPressed: () async{
                         print(videoFile.path);
+
+                       var result =  await kycModel.recordVideo(videoFile.path);
+
+                       print(result);
+
+
                         Navigator.pop(context);
                         Navigator.of(context).pop(videoFile.path);
                       },
                     ),
-                    FlatButton(
+                    TextButton(
                       child: Text("Retake"),
                       onPressed: () {
                         videoController.pause();
@@ -329,5 +353,4 @@ class _MyCamState extends State<MyCam> {
 
   void logError(String code, String message) =>
       print('Error: $code\nError Message: $message');
-
 }

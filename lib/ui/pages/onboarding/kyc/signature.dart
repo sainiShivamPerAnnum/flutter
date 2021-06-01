@@ -70,7 +70,7 @@ class _SignatureScreenState extends State<SignatureScreen> {
                           await image.toByteData(format: ImageByteFormat.png);
                       // var name = '$order+.png';
                       final tempFile = File(
-                          "${(await getTemporaryDirectory()).path}signature.png}");
+                          "${(await getTemporaryDirectory()).path}signature.png");
 
                       final file = await tempFile.writeAsBytes(
                         data.buffer.asUint8List(
@@ -91,6 +91,9 @@ class _SignatureScreenState extends State<SignatureScreen> {
                         setState(() {
                           loading = false;
                         });
+
+                        Navigator.of(context).pop(res);
+
 
                         print("error");
                       }

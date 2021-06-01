@@ -6,7 +6,6 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/ui/elements/contact_dialog.dart';
 import 'package:felloapp/ui/elements/milestone_progress.dart';
-import 'package:felloapp/ui/pages/mf_details_page.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/data_provider.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/error_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/submit_button.dart';
@@ -15,7 +14,9 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-screens/income_details.
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/otp_verification.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
+import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
@@ -191,28 +192,6 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
       setState(() {});
       if (widget.appIdExists) {
         //dont generate a new app id again
-// <<<<<<< HEAD
-//         onBasicDetailsEntered(
-//                 baseProvider.myUser.mobile, IDP.email.text, IDP.selectedDate)
-//             .then((basicObj) {
-//           if (!basicObj['flag']) {
-//             _isProcessing = false;
-//             if (basicObj['reason'] != null) {
-//               _errorMessage = 'Error: ${basicObj['reason']}';
-//             } else {
-//               _errorMessage =
-//                   'Error: Unknown error occurred. Please try again.';
-//             }
-//             setState(() {});
-//           } else {
-//             _isProcessing = false;
-//             setState(() {});
-//             new Timer(const Duration(milliseconds: 1000), () {
-//               onTabTapped(IncomeDetailsInputScreen.index);
-//             });
-//           }
-//         });
-// =======
         runBasicDetailsAndFatcaApi();
       } else {
         //first generate an app id using name and pannumber
@@ -228,25 +207,6 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
             }
             setState(() {});
           } else {
-// <<<<<<< HEAD
-//             onBasicDetailsEntered(baseProvider.myUser.mobile, IDP.email.text,
-//                     IDP.selectedDate)
-//                 .then((basicObj) {
-//               if (!basicObj['flag']) {
-//                 _isProcessing = false;
-//                 if (basicObj['reason'] != null) {
-//                   _errorMessage = 'Error: ${basicObj['reason']}';
-//                 } else {
-//                   _errorMessage =
-//                       'Error: Unknown error occurred. Please try again.';
-//                 }
-//                 setState(() {});
-//               } else {
-//                 _isProcessing = false;
-//                 setState(() {});
-//                 new Timer(const Duration(milliseconds: 1000), () {
-//                   onTabTapped(IncomeDetailsInputScreen.index);
-// =======
             runBasicDetailsAndFatcaApi();
           }
         });
@@ -282,7 +242,6 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
               if (userAcctList != null) IDP.userAcctTypes = userAcctList;
               new Timer(const Duration(milliseconds: 500), () {
                 onTabTapped(BankDetailsInputScreen.index);
-// >>>>>>> fe967712be963b72ac3e0241fe9b31044dee0fa8
               });
             });
           }
@@ -311,17 +270,17 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
         {
           bool data = await showDialog(
                 context: context,
-                child: new AlertDialog(
+                builder: (BuildContext context) => new AlertDialog(
                   title: new Text(
                       'Is any of the applicant\'s/guardian/Power of Attorney ' +
                           'holder\'s country of birth/citizenship/nationality/tax residency'
                               ' status other than India?'),
                   actions: <Widget>[
-                    new FlatButton(
+                    new TextButton(
                       onPressed: () => Navigator.of(context).pop(false),
                       child: new Text('No'),
                     ),
-                    new FlatButton(
+                    new TextButton(
                       onPressed: () {
                         Navigator.of(context).pop(true);
                       },
@@ -340,16 +299,16 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
         {
           bool data = await showDialog(
                 context: context,
-                child: new AlertDialog(
+                builder: (BuildContext context) => new AlertDialog(
                   title: new Text(
                       'As per ICICI, FATCA Status for your record is \'Unable to confirm\'' +
                           '. Do you wish to update the FATCA?'),
                   actions: <Widget>[
-                    new FlatButton(
+                    new TextButton(
                       onPressed: () => Navigator.of(context).pop(false),
                       child: new Text('No'),
                     ),
-                    new FlatButton(
+                    new TextButton(
                       onPressed: () {
                         Navigator.of(context).pop(true);
                       },
@@ -368,11 +327,11 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
         {
           bool data = await showDialog(
                 context: context,
-                child: new AlertDialog(
+                builder: (BuildContext context) => new AlertDialog(
                   title: new Text('US/Canada Person(s) are not allowed ' +
                       'to do the subscription/Switch In transaction.'),
                   actions: <Widget>[
-                    new FlatButton(
+                    new TextButton(
                       onPressed: () => Navigator.of(context).pop(false),
                       child: new Text('Okay'),
                     ),
@@ -389,12 +348,12 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
         {
           bool data = await showDialog(
                 context: context,
-                child: new AlertDialog(
+                builder: (BuildContext context) => new AlertDialog(
                   title: new Text('As per ICICI, your additional KYC, FATCA ' +
                       'and CRS Self declaration information is not ' +
                       'available, Kindly submit the same.'),
                   actions: <Widget>[
-                    new FlatButton(
+                    new TextButton(
                       onPressed: () => Navigator.of(context).pop(false),
                       child: new Text('Okay'),
                     ),
@@ -621,14 +580,14 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
       bool iciciUpdated = await dbProvider.updateUserIciciDetails(
           baseProvider.myUser.uid, baseProvider.iciciDetail);
       //update flags in user document
-      baseProvider.myUser.isKycVerified = BaseUtil.KYC_VALID;
+      baseProvider.myUser.isKycVerified = Constants.KYC_VALID;
       baseProvider.myUser.pan = panNumber;
       bool userFlagUpdated = await dbProvider.updateUser(baseProvider.myUser);
       log.debug(
           'Flags for icici update and user update: $iciciUpdated, $userFlagUpdated');
     } else if (fKycStatus == GetKycStatus.KYC_STATUS_ALLOW_VIDEO) {
       log.debug('User is NOT KYC verified');
-      baseProvider.myUser.isKycVerified = BaseUtil.KYC_INVALID;
+      baseProvider.myUser.isKycVerified = Constants.KYC_INVALID;
       baseProvider.myUser.pan = panNumber;
       bool userFlagUpdated = await dbProvider.updateUser(baseProvider.myUser);
       log.debug('Flags for icici update:$userFlagUpdated');
@@ -1196,14 +1155,14 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
-    dbProvider = Provider.of<DBModel>(context);
-    iProvider = Provider.of<ICICIModel>(context);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    iProvider = Provider.of<ICICIModel>(context, listen: false);
     _height = MediaQuery.of(context).size.height;
     _width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -1272,12 +1231,8 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
                                                 .addCallbackRequest(
                                                     baseProvider
                                                         .firebaseUser.uid,
-// <<<<<<< HEAD
-//                                                     baseProvider.myUser.mobile)
-// =======
                                                     baseProvider.myUser.name,
                                                     baseProvider.myUser.mobile)
-// >>>>>>> fe967712be963b72ac3e0241fe9b31044dee0fa8
                                                 .then((flag) {
                                               if (flag) {
                                                 Navigator.of(context).pop();

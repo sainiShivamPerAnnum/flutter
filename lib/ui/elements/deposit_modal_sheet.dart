@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/ui/elements/more_info_dialog.dart';
+import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
@@ -46,7 +47,7 @@ class DepositModalSheetState extends State<DepositModalSheet>
       _isFirstInvestment = (!baseProvider.iciciDetail.firstInvMade) ?? true;
       _isPendingTransaction = (baseProvider.myUser.pendingTxnId != null);
       String isEnabledStr =
-          BaseUtil.remoteConfig.getString('icici_deposits_enabled');
+          BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.ICICI_DEPOSITS_ENABLED);
       try {
         int t = (isEnabledStr != null) ? int.parse(isEnabledStr) : 1;
         _isDepositsEnabled = (t == 1);
@@ -64,12 +65,12 @@ class DepositModalSheetState extends State<DepositModalSheet>
   }
 
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
     _width = MediaQuery.of(context).size.width;
     if (!_isInitialized) _initFields();
     return Container(
       padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom),
       margin: EdgeInsets.only(left: 18, right: 18),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -103,7 +104,8 @@ class DepositModalSheetState extends State<DepositModalSheet>
                 keyboardType: TextInputType.number,
                 decoration: inputFieldDecoration("Enter an amount"),
                 validator: (value) {
-                  RegExp amRegex = RegExp(r"[0-9]");
+                  Pattern pattern = "^[0-9]*\$";
+                  RegExp amRegex = RegExp(pattern);
                   if (value.isEmpty)
                     return 'Please enter an amount';
                   else if (!amRegex.hasMatch(value))

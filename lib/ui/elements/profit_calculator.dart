@@ -1,3 +1,4 @@
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -146,35 +147,17 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
             divisions: 18,
             activeColor: UiConstants.primaryColor,
             inactiveColor: UiConstants.primaryColor,
-          )
+          ),
+          Text('*Projected returns based on past 6 month performance',
+            style: TextStyle(
+                color: Colors.blueGrey[600],
+                fontSize: SizeConfig.smallTextSize*1.2
+            ),)
         ],
       ),
     );
   }
 }
-
-// class AmountChip extends StatefulWidget {
-//   @override
-//   _AmountChipState createState() => _AmountChipState();
-// }
-
-// class _AmountChipState extends State<AmountChip> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//                 onTap: () {
-//                   setState(() {
-//                     price += 100;
-//                     inputPrice.text = price.toString();
-//                   });
-//                 },
-//                 child: Chip(
-//                   backgroundColor: UiConstants.chipColor,
-//                   label: Text("+100"),
-//                 ),
-//               );
-//   }
-// }
 
 class CalculatorCapsule extends StatelessWidget {
   final List<Color> gradColors;

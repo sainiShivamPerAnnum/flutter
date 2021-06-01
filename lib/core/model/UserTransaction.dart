@@ -1,24 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/logger.dart';
 
-class UserTransaction{
+class UserTransaction {
   static Log log = new Log('UserTransaction');
   String _docKey;
   double _amount;
-  int _closingBalance;
-  String _note;
+  double _closingBalance;
+  String _type;
   String _subType;
   int _ticketUpCount;
-  String _type;
+  String _note;
   String _userId;
-  String _tranId;
-  String _multipleId;
-  String _bankRnn;
   String _tranStatus;
-  String _upiTime;
+  Map<String, dynamic> _icici;
+  Map<String, dynamic> _rzp;
+  Map<String, dynamic> _augmnt;
   Timestamp _timestamp;
   Timestamp _updatedTime;
-
 
   static final String fldAmount = 'tAmount';
   static final String fldClosingBalance = 'tClosingBalance';
@@ -26,48 +25,207 @@ class UserTransaction{
   static final String fldSubType = 'tSubtype';
   static final String fldType = 'tType';
   static final String fldTicketUpCount = 'tTicketUpdCount';
+  static final String fldTranStatus = 'tTranStatus';
+  static final String fldRzpMap = 'tRzpMap';
+  static final String fldAugmontMap = 'tAugmontMap';
+  static final String fldIciciMap = 'tIciciMap';
   static final String fldUserId = 'tUserId';
   static final String fldTimestamp = 'timestamp';
   static final String fldUpdatedTime = 'tUpdateTime';
-  static final String fldTranId = 'tTranId';
-  static final String fldMultipleId = 'tMultipleId';
-  static final String fldBankRnn = 'tBankRnn';
-  static final String fldTranStatus = 'tTranStatus';
-  static final String fldUpiTime = 'tUpiDateTime';
 
+  ///razorpay submap fields
+  static final String subFldRzpOrderId = 'rOrderId';
+  static final String subFldRzpPaymentId = 'rPaymentId';
+  static final String subFldRzpStatus = 'rStatus';
+
+  ///augmont submap fields
+  static final String subFldAugBlockId = 'aBlockId';
+  static final String subFldAugLockPrice = 'aLockPrice';
+  static final String subFldAugPaymode = 'aPaymode';
+  static final String subFldMerchantTranId = 'aTranId';
+  static final String subFldAugTranId = 'aAugTranId';
+  static final String subFldAugCurrentGoldGm = 'aGoldInTxn';
+  static final String subFldAugTotalGoldGm = 'aGoldBalance';
+  static final String subFldAugPostTaxTotal = 'aTaxedGoldBalance';
+
+  ///Icici submap fields
+  static final String subFldIciciTranId = 'iTranId';
+  static final String subFldIciciWithdrawType = 'iWithType';
+  static final String subFldIciciMultipleId = 'iMultipleId';
+  static final String subFldIciciBankRnn = 'iBankRnn';
+  static final String subFldIciciUpiTime = 'iUpiDateTime';
+  static final String subFldIciciTxnOtpId = 'iWthlOtpId';
+  static final String subFldIciciTxnOtpVerified = 'iWthOtpVerified';
+
+  ///Transaction statuses
   static const String TRAN_STATUS_PENDING = 'PENDING';
   static const String TRAN_STATUS_COMPLETE = 'COMPLETE';
   static const String TRAN_STATUS_CANCELLED = 'CANCELLED';
 
+  ///Razorpay payment status
+  static const String RZP_TRAN_STATUS_NEW = 'NEW';
+  static const String RZP_TRAN_STATUS_FAILED = 'FAILED';
+  static const String RZP_TRAN_STATUS_COMPLETE = 'COMPLETE';
+
+  ///Transaction types
   static const String TRAN_TYPE_DEPOSIT = 'DEPOSIT';
   static const String TRAN_TYPE_WITHDRAW = 'WITHDRAWAL';
-  static const String TRAN_SUBTYPE_ICICI_DEPOSIT = 'ICICI1565';
+  static const String TRAN_TYPE_PRIZE = 'PRIZE';
 
-  UserTransaction(this._amount,this._closingBalance,this._note,this._subType,
-      this._type,this._ticketUpCount,this._userId,this._tranId,this._multipleId,
-      this._bankRnn, this._upiTime, this._tranStatus, this._timestamp,this._updatedTime);
+  ///Transaction Subtype
+  static const String TRAN_SUBTYPE_ICICI = 'ICICI1565';
+  static const String TRAN_SUBTYPE_AUGMONT_GOLD = 'AUGGOLD99';
+  static const String TRAN_SUBTYPE_TAMBOLA_WIN = 'TMB_WIN';
+  static const String TRAN_SUBTYPE_REF_BONUS = 'REF_BONUS';
 
-  UserTransaction.fromMap(Map<String, dynamic> data, String documentID):
-        this(data[fldAmount], data[fldClosingBalance], data[fldNote], data[fldSubType],
-        data[fldType], data[fldTicketUpCount], data[fldUserId], data[fldTranId], data[fldMultipleId],
-        data[fldBankRnn], data[fldUpiTime], data[fldTranStatus], data[fldTimestamp],
-        data[fldUpdatedTime]);
+  UserTransaction(
+      this._docKey,
+      this._amount,
+      this._closingBalance,
+      this._note,
+      this._subType,
+      this._type,
+      this._ticketUpCount,
+      this._userId,
+      this._tranStatus,
+      this._icici,
+      this._rzp,
+      this._augmnt,
+      this._timestamp,
+      this._updatedTime);
 
-  //investment by new investor
-  UserTransaction.newMFDeposit(String tranId, String multipleId, String upiTimestamp, double amount, String userId):
-      this(amount,0,'NA',TRAN_SUBTYPE_ICICI_DEPOSIT,TRAN_TYPE_DEPOSIT,0,userId,tranId,multipleId,
-      null, upiTimestamp, TRAN_STATUS_PENDING,Timestamp.now(),Timestamp.now());
+  UserTransaction.fromMap(Map<String, dynamic> data, String documentID)
+      : this(
+            documentID,
+            BaseUtil.toDouble(data[fldAmount]),
+            BaseUtil.toDouble(data[fldClosingBalance]),
+            data[fldNote],
+            data[fldSubType],
+            data[fldType],
+            data[fldTicketUpCount],
+            data[fldUserId],
+            data[fldTranStatus],
+            data[fldIciciMap],
+            data[fldRzpMap],
+            data[fldAugmontMap],
+            data[fldTimestamp],
+            data[fldUpdatedTime]);
 
-  //investment by existing investor
-  UserTransaction.extMFDeposit(String tranId, String multipleId, double amount, String upiTimestamp, String userId):
-        this(amount,0,'NA',TRAN_SUBTYPE_ICICI_DEPOSIT,TRAN_TYPE_DEPOSIT,0,userId,tranId,
-          multipleId, null,upiTimestamp, TRAN_STATUS_PENDING,Timestamp.now(),Timestamp.now());
+  //ICICI investment initiated by new investor
+  UserTransaction.mfDeposit(String tranId, String multipleId,
+      String upiTimestamp, double amount, String userId)
+      : this(
+            null,
+            amount,
+            0,
+            'NA',
+            TRAN_SUBTYPE_ICICI,
+            TRAN_TYPE_DEPOSIT,
+            0,
+            userId,
+            TRAN_STATUS_PENDING,
+            {
+              subFldIciciTranId: tranId,
+              subFldIciciMultipleId: multipleId,
+              subFldIciciUpiTime: upiTimestamp
+            },
+            null,
+            null,
+            Timestamp.now(),
+            Timestamp.now());
 
-  //withdrawal by active investor
-  UserTransaction.extMFWithdrawal(String tranId, String bankRnn, String note, String upiTimestamp,
-      double amount, String userId):
-        this(amount,0,note??'NA',TRAN_SUBTYPE_ICICI_DEPOSIT,TRAN_TYPE_WITHDRAW,0,userId,tranId,
-          null, bankRnn, upiTimestamp, TRAN_STATUS_COMPLETE,Timestamp.now(),Timestamp.now());
+  //ICICI withdrawal initiated and completed by active investor
+  UserTransaction.mfWithdrawal(String tranId, String bankRnn, String note,
+      String upiTimestamp, double amount, String userId)
+      : this(
+            null,
+            amount,
+            0,
+            note ?? 'NA',
+            TRAN_SUBTYPE_ICICI,
+            TRAN_TYPE_WITHDRAW,
+            0,
+            userId,
+            TRAN_STATUS_COMPLETE,
+            {
+              subFldIciciTranId: tranId,
+              subFldIciciBankRnn: bankRnn,
+              subFldIciciUpiTime: upiTimestamp
+            },
+            null,
+            null,
+            Timestamp.now(),
+            Timestamp.now());
+
+  UserTransaction.mfNonInstantWithdrawal(String tranId, String note,
+      String upiTimestamp, double amount, String userId)
+      : this(
+            null,
+            amount,
+            0,
+            note ?? 'NA',
+            TRAN_SUBTYPE_ICICI,
+            TRAN_TYPE_WITHDRAW,
+            0,
+            userId,
+            TRAN_STATUS_COMPLETE,
+            {
+              subFldIciciTranId: tranId,
+              subFldIciciWithdrawType: 'NONINSTANT',
+              subFldIciciUpiTime: upiTimestamp
+            },
+            null,
+            null,
+            Timestamp.now(),
+            Timestamp.now());
+
+  //Augmont gold investment initiated by investor
+  UserTransaction.newGoldDeposit(double amount, double postTax, String blockId,
+      double lockPrice, double quantity, String paymode, String userId)
+      : this(
+            null,
+            amount,
+            0,
+            'NA',
+            TRAN_SUBTYPE_AUGMONT_GOLD,
+            TRAN_TYPE_DEPOSIT,
+            0,
+            userId,
+            TRAN_STATUS_PENDING,
+            null,
+            null,
+            {
+              subFldAugBlockId: blockId,
+              subFldAugLockPrice: lockPrice,
+              subFldAugPaymode: paymode,
+              subFldAugCurrentGoldGm: quantity,
+              subFldAugPostTaxTotal: postTax
+            },
+            Timestamp.now(),
+            Timestamp.now());
+
+  //Augmont gold investment initiated by investor
+  UserTransaction.newGoldWithdrawal(double amount, String blockId,
+      double lockPrice, double quantity, String userId)
+      : this(
+            null,
+            amount,
+            0,
+            'NA',
+            TRAN_SUBTYPE_AUGMONT_GOLD,
+            TRAN_TYPE_WITHDRAW,
+            0,
+            userId,
+            TRAN_STATUS_PENDING,
+            null,
+            null,
+            {
+              subFldAugBlockId: blockId,
+              subFldAugLockPrice: lockPrice,
+              subFldAugCurrentGoldGm: quantity
+            },
+            Timestamp.now(),
+            Timestamp.now());
 
   toJson() {
     return {
@@ -78,13 +236,12 @@ class UserTransaction{
       fldType: _type,
       fldTicketUpCount: _ticketUpCount,
       fldUserId: _userId,
+      fldTranStatus: _tranStatus,
+      fldIciciMap: _icici,
+      fldRzpMap: _rzp,
+      fldAugmontMap: _augmnt,
       fldTimestamp: _timestamp,
       fldUpdatedTime: Timestamp.now(),
-      fldTranId: _tranId,
-      fldMultipleId: _multipleId,
-      fldBankRnn: _bankRnn,
-      fldTranStatus: _tranStatus,
-      fldUpiTime: _upiTime
     };
   }
 
@@ -100,18 +257,6 @@ class UserTransaction{
 
   set tranStatus(String value) {
     _tranStatus = value;
-  }
-
-  String get multipleId => _multipleId;
-
-  set multipleId(String value) {
-    _multipleId = value;
-  }
-
-  String get tranId => _tranId;
-
-  set tranId(String value) {
-    _tranId = value;
   }
 
   String get userId => _userId;
@@ -144,9 +289,9 @@ class UserTransaction{
     _note = value;
   }
 
-  int get closingBalance => _closingBalance;
+  double get closingBalance => _closingBalance;
 
-  set closingBalance(int value) {
+  set closingBalance(double value) {
     _closingBalance = value;
   }
 
@@ -156,21 +301,33 @@ class UserTransaction{
     _amount = value;
   }
 
-  String get bankRnn => _bankRnn;
+  Map<String, dynamic> get icici => _icici;
 
-  set bankRnn(String value) {
-    _bankRnn = value;
+  set icici(Map<String, dynamic> value) {
+    _icici = value;
   }
 
-  String get upiTime => _upiTime;
+  Map<String, dynamic> get rzp => _rzp;
 
-  set upiTime(String value) {
-    _upiTime = value;
+  set rzp(Map<String, dynamic> value) {
+    _rzp = value;
+  }
+
+  Map<String, dynamic> get augmnt => _augmnt;
+
+  set augmnt(Map<String, dynamic> value) {
+    _augmnt = value;
   }
 
   String get docKey => _docKey;
 
   set docKey(String value) {
     _docKey = value;
+  }
+
+  Timestamp get timestamp => _timestamp;
+
+  set timestamp(Timestamp value) {
+    _timestamp = value;
   }
 }
