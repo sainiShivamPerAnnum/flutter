@@ -334,7 +334,12 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             onTap: () {
               HapticFeedback.vibrate();
-              Navigator.of(context).pushNamed('/refpolicy');
+              Navigator.of(context).pushNamed('/faq').then(
+                    (value) => Navigator.pushNamed(
+                      context,
+                      ('/refpolicy'),
+                    ),
+                  );
             },
           ),
         )
@@ -531,9 +536,10 @@ class _ShareOptionsState extends State<ShareOptions> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   RazorpayModel rProvider;
-  String referral_bonus = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
-  String referral_ticket_bonus =
-      BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_TICKET_BONUS);
+  String referral_bonus =
+      BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
+  String referral_ticket_bonus = BaseRemoteConfig.remoteConfig
+      .getString(BaseRemoteConfig.REFERRAL_TICKET_BONUS);
   String _shareMsg;
 
   _init() {

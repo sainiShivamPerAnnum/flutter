@@ -22,12 +22,14 @@ import 'package:felloapp/ui/pages/root.dart';
 import 'package:felloapp/ui/pages/tabs/profile/edit_profile_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/route_legend.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -61,6 +63,7 @@ class MyApp extends StatelessWidget {
             textTheme: GoogleFonts.montserratTextTheme()),
         debugShowCheckedModeBanner: false,
         home: SplashScreen(),
+        //onGenerateRoute: generateRoute,
         routes: <String, WidgetBuilder>{
           '/launcher': (BuildContext context) => SplashScreen(),
           '/approot': (BuildContext context) => Root(),
