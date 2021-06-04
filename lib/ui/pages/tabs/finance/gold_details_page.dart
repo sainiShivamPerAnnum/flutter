@@ -42,8 +42,8 @@ class GoldDetailsPage extends StatefulWidget {
 
   static int checkAugmontStatus(BaseUser baseUser) {
     //check who is allowed to deposit
-    String _perm =
-    BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.AUGMONT_DEPOSIT_PERMISSION);
+    String _perm = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.AUGMONT_DEPOSIT_PERMISSION);
     int _isGeneralUserAllowed = 1;
     bool _isAllowed = false;
     if (_perm != null && _perm.isNotEmpty) {
@@ -55,8 +55,7 @@ class GoldDetailsPage extends StatefulWidget {
     }
     if (_isGeneralUserAllowed == 0) {
       //General permission is denied. Check if specific user permission granted
-      if (baseUser.isAugmontEnabled != null &&
-          baseUser.isAugmontEnabled) {
+      if (baseUser.isAugmontEnabled != null && baseUser.isAugmontEnabled) {
         //this specific user is allowed to use Augmont
         _isAllowed = true;
       } else {
@@ -95,7 +94,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     iProvider = Provider.of<ICICIModel>(context, listen: false);
-    fcmProvider = Provider.of<FcmListener>(context,listen:false);
+    fcmProvider = Provider.of<FcmListener>(context, listen: false);
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context, true);
@@ -273,7 +272,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
       } else {
         showModalBottomSheet(
             isDismissible: false,
-            backgroundColor: Colors.transparent,
+            // backgroundColor: Colors.transparent,
             context: context,
             isScrollControlled: true,
             builder: (context) {
@@ -370,16 +369,15 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         }
 
         ///check if referral bonuses need to be unlocked
-        if(baseProvider.userFundWallet.augGoldPrinciple >= Constants.UNLOCK_REFERRAL_AMT) {
+        if (baseProvider.userFundWallet.augGoldPrinciple >=
+            Constants.UNLOCK_REFERRAL_AMT) {
           bool _isUnlocked =
-          await dbProvider.unlockReferralTickets(baseProvider.myUser.uid);
+              await dbProvider.unlockReferralTickets(baseProvider.myUser.uid);
           if (_isUnlocked) {
             //give it a few seconds before showing congratulatory message
             Timer(const Duration(seconds: 4), () {
-              baseProvider.showPositiveAlert(
-                  'Congratulations are in order!',
-                  'Your referral bonus has been unlocked 🎉',
-                  context);
+              baseProvider.showPositiveAlert('Congratulations are in order!',
+                  'Your referral bonus has been unlocked 🎉', context);
             });
           }
         }

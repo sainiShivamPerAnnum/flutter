@@ -13,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:slider_button/slider_button.dart';
 
@@ -45,8 +46,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
 
   _initFields() {
     if (baseProvider != null) {
-      String _isEnabledStr =
-          BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.AUGMONT_DEPOSITS_ENABLED);
+      String _isEnabledStr = BaseRemoteConfig.remoteConfig
+          .getString(BaseRemoteConfig.AUGMONT_DEPOSITS_ENABLED);
       try {
         int t = (_isEnabledStr != null) ? int.parse(_isEnabledStr) : 1;
         _isDepositsEnabled = (t == 1);
@@ -97,6 +98,39 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 0),
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    "images/svgs/gold.svg",
+                    height: SizeConfig.largeTextSize,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    "Gold Deposit",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      height: 1.5,
+                      fontSize: SizeConfig.largeTextSize,
+                    ),
+                  ),
+                  Spacer(),
+                  IconButton(
+                    icon: Icon(
+                      Icons.clear_rounded,
+                      size: 30,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  )
+                ],
+              ),
+            ),
+            Divider(
+              endIndent: SizeConfig.screenWidth * 0.3,
+            ),
             _buildRateCard(),
             InputField(
               child: TextFormField(
@@ -251,22 +285,21 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
 
   Widget _buildRateCard() {
     return Container(
-      padding: EdgeInsets.all(10),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _buildRateRow(
-              'Rate per gram',
+              'Rate per gram:',
               '₹${widget.currentRates.goldBuyPrice.toStringAsFixed(2)}',
               'This is the current price of 1 gram of gold'),
           _buildRateRow(
-              'CGST',
+              'CGST:',
               '${widget.currentRates.cgstPercent.toString()}%',
               'This is the Goods and Services Tax(GST) charged by the central government'),
           _buildRateRow(
-              'SGST',
+              'SGST:',
               '${widget.currentRates.sgstPercent.toString()}%',
               'This is the Goods and Services Tax(GST) charged by the state government'),
         ],
@@ -283,7 +316,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
           Expanded(
             child: Text(
               title,
-              style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
+              style: TextStyle(fontSize: SizeConfig.mediumTextSize),
             ),
           ),
           Expanded(
@@ -291,7 +324,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
             children: [
               Text(
                 value,
-                style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
+                style: TextStyle(fontSize: SizeConfig.mediumTextSize),
               ),
               SizedBox(
                 width: 4,
@@ -299,7 +332,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
               InkWell(
                 child: Icon(
                   Icons.info_outline,
-                  size: SizeConfig.mediumTextSize * 1.3,
+                  color: Colors.grey,
+                  size: SizeConfig.mediumTextSize,
                 ),
                 onTap: () {
                   HapticFeedback.vibrate();
@@ -348,7 +382,6 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
       ),
     );
   }
-
 
   onDepositComplete(bool flag) {
     _isDepositInProgress = false;
