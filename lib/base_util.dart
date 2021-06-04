@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/FeedCard.dart';
 import 'package:felloapp/core/model/PrizeLeader.dart';
 import 'package:felloapp/core/model/ReferralDetail.dart';
 import 'package:felloapp/core/model/ReferralLeader.dart';
+import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTicketWallet.dart';
