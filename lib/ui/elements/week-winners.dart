@@ -54,18 +54,20 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     if (!baseProvider.isWeekWinnersFetched) {
       isLoading = true;
-      dbProvider.getWeeklyWinners().then((vList) {
-        if(vList != null)baseProvider.currentWeekWinners = vList;
+      dbProvider.getWeeklyWinners().then((TambolaWinnersDetail vObj) {
+        if (vObj != null && vObj.isWinnerListAvailable)
+          baseProvider.tambolaWinnersDetail = vObj;
         baseProvider.isWeekWinnersFetched = true;
-        if(isLoading) {
+        if (isLoading) {
           isLoading = false;
           setState(() {});
         }
       });
     }
-    baseProvider.currentWeekWinners
+    baseProvider.tambolaWinnersDetail.winnerList
         .sort((a, b) => (a.prize).compareTo(b.prize));
-    _displayList = baseProvider.currentWeekWinners.reversed.toList();
+    _displayList =
+        baseProvider.tambolaWinnersDetail.winnerList.reversed.toList();
     return Expanded(
       child: Container(
         margin: EdgeInsets.symmetric(
@@ -108,7 +110,8 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
             ),
             SizedBox(height: 10),
             Text(
-              "Tambola Winners for week: ${getWeek()[0]} to ${getWeek()[1]}", //TODO CHANGE BASED ON WEEK
+              "Tambola Winners for week: ${getWeek()[0]} to ${getWeek()[1]}",
+              //TODO CHANGE BASED ON WEEK
               style: GoogleFonts.montserrat(
                   color: Colors.white, fontSize: SizeConfig.smallTextSize),
             ),
@@ -135,7 +138,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
-                    : (baseProvider.currentWeekWinners.length != 0
+                    : (baseProvider.tambolaWinnersDetail.winnerList.length != 0
                         ? Scrollbar(
                             thickness: 20,
                             radius: Radius.circular(100),
@@ -146,7 +149,8 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                             child: ListView.builder(
                               controller: _controller,
                               physics: BouncingScrollPhysics(),
-                              itemCount: baseProvider.currentWeekWinners.length,
+                              itemCount: baseProvider
+                                  .tambolaWinnersDetail.winnerList.length,
                               itemBuilder: (ctx, i) {
                                 return ListTile(
                                   contentPadding: EdgeInsets.symmetric(
@@ -172,14 +176,14 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                                   //   child: Image.asset("images/profile.png"),
                                   // ),
                                   title: Text(
-                                    "${baseProvider.currentWeekWinners[i].name[0].toUpperCase()}${baseProvider.currentWeekWinners[i].name.substring(1).toLowerCase()}",
+                                    "${baseProvider.tambolaWinnersDetail.winnerList[i].name[0].toUpperCase()}${baseProvider.tambolaWinnersDetail.winnerList[i].name.substring(1).toLowerCase()}",
                                     style: GoogleFonts.montserrat(
                                       color: Colors.white,
                                       fontSize: SizeConfig.mediumTextSize,
                                     ),
                                   ),
                                   trailing: Text(
-                                    "₹ ${baseProvider.currentWeekWinners[i].prize.toString()}",
+                                    "₹ ${baseProvider.tambolaWinnersDetail.winnerList[i].prize.toString()}",
                                     style: GoogleFonts.montserrat(
                                       color: Colors.white,
                                       fontSize: SizeConfig.largeTextSize,

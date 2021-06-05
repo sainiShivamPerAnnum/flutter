@@ -199,9 +199,13 @@ class Api {
   Future<QuerySnapshot> getWinnersByWeekCde(int weekCde) async {
     Query query = _db
         .collection(Constants.COLN_WINNERS)
-        .where('week_code', isEqualTo: weekCde);
+        .where('week_code', isEqualTo: weekCde).where('win_type', isEqualTo: 'tambola');
     final response = await query.get();
     return response;
+  }
+
+  Future updateWeeklyWinnerDocument(String docId, Map data) async {
+    return _db.collection(Constants.COLN_WINNERS).doc(docId).update(data);
   }
 
   Future<QuerySnapshot> getCredentialsByTypeAndStage(
