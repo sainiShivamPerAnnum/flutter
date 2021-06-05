@@ -11,6 +11,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:freshchat_sdk/freshchat_sdk.dart';
 
 class FcmListener extends ChangeNotifier {
   Log log = new Log("FcmListener");
@@ -38,7 +39,7 @@ class FcmListener extends ChangeNotifier {
 
     _fcm.getInitialMessage().then((RemoteMessage message) {
       log.debug("onMessage recieved: " + message.toString());
-      if (message != null && message.data != null) {
+      if(message != null && message.data != null) {
         _handler.handleMessage(message.data);
       }
     });
@@ -48,9 +49,13 @@ class FcmListener extends ChangeNotifier {
     //         AndroidFlutterLocalNotificationsPlugin>()
     //     ?.createNotificationChannel(_androidChannel);
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
+      // if(await Freshchat.isFreshchatNotification(message.data)) {
+      //   print('freshchat notification received');
+      //   Freshchat.handlePushNotification(message.data);
+      // }
       if (message.data != null && message.data.isNotEmpty) {
         _handler.handleMessage(message.data);
       } else if (notification != null) {

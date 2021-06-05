@@ -136,39 +136,41 @@ class HamburgerMenu extends StatelessWidget {
         }
       case 'contUs':
         {
-          showDialog(
-              context: context,
-              builder: (BuildContext dialogContext) => ContactUsDialog(
-                    isResident: (baseProvider.isSignedIn() &&
-                        baseProvider.isActiveUser()),
-                    isUnavailable: BaseUtil.isDeviceOffline,
-                    onClick: () {
-                      if (BaseUtil.isDeviceOffline) {
-                        baseProvider.showNoInternetAlert(context);
-                        return;
-                      }
-                      if (baseProvider.isSignedIn() &&
-                          baseProvider.isActiveUser()) {
-                        reqProvider
-                            .addCallbackRequest(
-                                baseProvider.firebaseUser.uid,
-                                baseProvider.myUser.name,
-                                baseProvider.myUser.mobile)
-                            .then((flag) {
-                          if (flag) {
-                            Navigator.of(context).pop();
-                            baseProvider.showPositiveAlert(
-                                'Callback placed!',
-                                'We\'ll contact you soon on your registered mobile',
-                                context);
-                          }
-                        });
-                      } else {
-                        baseProvider.showNegativeAlert('Unavailable',
-                            'Callbacks are reserved for active users', context);
-                      }
-                    },
-                  ));
+          HapticFeedback.vibrate();
+          Navigator.of(context).pushNamed('/support');
+          // showDialog(
+          //     context: context,
+          //     builder: (BuildContext dialogContext) => ContactUsDialog(
+          //           isResident: (baseProvider.isSignedIn() &&
+          //               baseProvider.isActiveUser()),
+          //           isUnavailable: BaseUtil.isDeviceOffline,
+          //           onClick: () {
+          //             if (BaseUtil.isDeviceOffline) {
+          //               baseProvider.showNoInternetAlert(context);
+          //               return;
+          //             }
+          //             if (baseProvider.isSignedIn() &&
+          //                 baseProvider.isActiveUser()) {
+          //               reqProvider
+          //                   .addCallbackRequest(
+          //                       baseProvider.firebaseUser.uid,
+          //                       baseProvider.myUser.name,
+          //                       baseProvider.myUser.mobile)
+          //                   .then((flag) {
+          //                 if (flag) {
+          //                   Navigator.of(context).pop();
+          //                   baseProvider.showPositiveAlert(
+          //                       'Callback placed!',
+          //                       'We\'ll contact you soon on your registered mobile',
+          //                       context);
+          //                 }
+          //               });
+          //             } else {
+          //               baseProvider.showNegativeAlert('Unavailable',
+          //                   'Callbacks are reserved for active users', context);
+          //             }
+          //           },
+          //         ));
           break;
         }
       // case 'kyc':

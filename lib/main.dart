@@ -19,6 +19,7 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_c
 import 'package:felloapp/ui/pages/onboarding/icici/kyc_invalid.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/interface/kyc_onboarding_interface.dart';
 import 'package:felloapp/ui/pages/root.dart';
+import 'package:felloapp/ui/pages/supportchat/chatsupport_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/edit_profile_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
@@ -67,6 +68,7 @@ class MyApp extends StatelessWidget {
           '/onboarding': (BuildContext context) => GetStartedPage(),
           '/login': (BuildContext context) => LoginController(),
           '/faq': (BuildContext context) => FAQPage(),
+          '/support' : (BuildContext context) => ChatSupport(),
           '/tnc': (BuildContext context) => TnC(),
           '/refpolicy': (BuildContext context) => ReferralPolicy(),
           '/verifykyc': (BuildContext context) => KycOnboardInterface(),
