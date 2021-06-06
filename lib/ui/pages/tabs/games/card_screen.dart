@@ -28,7 +28,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcase.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 class TambolaHome extends StatefulWidget {
@@ -460,14 +459,6 @@ class _TambolaGameScreen extends State<TambolaHome> {
                 indent: SizeConfig.blockSizeHorizontal * 10,
               ),
               _buildPrizeTabView(),
-              Container(
-                child: Text(
-                  "How can I win these exciting cash prizes",
-                  style: Theme.of(context).textTheme.bodyText2.copyWith(
-                        color: UiConstants.primaryColor,
-                      ),
-                ),
-              )
             ],
           ),
         )

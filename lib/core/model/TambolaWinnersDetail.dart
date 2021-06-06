@@ -20,28 +20,28 @@ class TambolaWinnersDetail {
     Map<String, dynamic> _stats = data['stats'];
     if (_stats != null && _stats.isNotEmpty) {
       try {
-        _weeksAvgTicketCount = BaseUtil.toInt(data['avg_tck_cnt']);
-        _totalWinners = BaseUtil.toInt(data['tot_winners']);
-        _highestTicketCount = BaseUtil.toInt(data['high_tck_cnt']);
+        _weeksAvgTicketCount = BaseUtil.toInt(data['stats']['avg_tck_cnt']);
+        _totalWinners = BaseUtil.toInt(data['stats']['tot_winners']);
+        _highestTicketCount = BaseUtil.toInt(data['stats']['high_tck_cnt']);
       } catch (e) {}
     }
     //now compile winner list
     Map<String, dynamic> _winners = data['winners'];
+    _winnerList = [];
     if (_winners != null && _winners.isNotEmpty) {
       for (String wKey in _winners.keys) {
         try {
           Map<String, dynamic> wValue = _winners[wKey];
           WeekWinner _weekWinner = new WeekWinner(
-              uid: wKey,
-              name: wValue['name'],
-              prize: BaseUtil.toDouble(wValue['prize']),
-              claimChoice: _getChoiceEnumValue(wValue['claim_type']));
+              wKey,wValue['name'],BaseUtil.toDouble(wValue['prize']),
+              _getChoiceEnumValue(wValue['claim_type']));
           _winnerList.add(_weekWinner);
         } catch (error) {
           log.error('Failed to create WeekWinner object');
         }
       }
     }
+    log.debug(_winnerList.toString());
   }
 
   bool isUserPrizeClaimComplete(String uid) {
@@ -69,7 +69,7 @@ class TambolaWinnersDetail {
 
   String get winnerDocumentId => _winnerDocumentId;
 
-  List<WeekWinner> get winnerList => _winnerList;
+  List<WeekWinner> get winnerList => (_winnerList == null)?{}:_winnerList;
 
   set winnerList(List<WeekWinner> value) {
     _winnerList = value;
@@ -77,12 +77,18 @@ class TambolaWinnersDetail {
 }
 
 class WeekWinner {
-  final String uid;
-  final String name;
-  final double prize;
+  final String _uid;
+  final String _name;
+  final double _prize;
   PrizeClaimChoice claimChoice;
 
-  WeekWinner({this.uid, this.name, this.prize, this.claimChoice});
+  WeekWinner(this._uid, this._name, this._prize, this.claimChoice);
+
+  double get prize => (_prize == null)?0.0:_prize;
+
+  String get name => (_name == null)?'Anonymous':_name;
+
+  String get uid => _uid;
 }
 
 enum PrizeClaimChoice{

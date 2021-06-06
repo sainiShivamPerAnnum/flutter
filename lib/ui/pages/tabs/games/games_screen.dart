@@ -198,38 +198,11 @@ class _GamePageState extends State<GamePage> {
                                         context: context,
                                         barrierDismissible: false,
                                         builder: (ctx) {
-                                          // _confeticontroller.play();
                                           return Center(
                                             child: Material(
                                               color: Colors.transparent,
                                               child: Stack(
                                                 children: [
-                                                  // IF CLAIMED THE SHOW CONFETTI
-                                                  // Center(
-                                                  //   child: Container(
-                                                  //     height: 100,
-                                                  //     width: 100,
-                                                  //     child: ConfettiWidget(
-                                                  //       blastDirectionality:
-                                                  //           BlastDirectionality
-                                                  //               .explosive,
-                                                  //       confettiController:
-                                                  //           _confeticontroller,
-                                                  //       particleDrag: 0.05,
-                                                  //       emissionFrequency: 0.05,
-                                                  //       numberOfParticles: 25,
-                                                  //       gravity: 0.05,
-                                                  //       shouldLoop: false,
-                                                  //       colors: [
-                                                  //         UiConstants
-                                                  //             .primaryColor,
-                                                  //         Color(0xfff7ff00),
-                                                  //         Color(0xffFC5C7D),
-                                                  //         Color(0xff2B32B2),
-                                                  //       ],
-                                                  //     ),
-                                                  //   ),
-                                                  // ),
                                                   Center(child: FCard()),
                                                 ],
                                               ),

@@ -16,10 +16,12 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
   DBModel dbProvider;
   BaseUtil baseProvider;
   ScrollController _controller;
-
+  List<WeekWinner> _weekPrizeWinnersList;
+  
   @override
   void initState() {
     _controller = ScrollController();
+    _weekPrizeWinnersList = [];
     super.initState();
   }
 
@@ -49,14 +51,15 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
 
   @override
   Widget build(BuildContext context) {
-    List<WeekWinner> _displayList;
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     if (!baseProvider.isWeekWinnersFetched) {
       isLoading = true;
       dbProvider.getWeeklyWinners().then((TambolaWinnersDetail vObj) {
-        if (vObj != null && vObj.isWinnerListAvailable)
+        if (vObj != null && vObj.isWinnerListAvailable) {
           baseProvider.tambolaWinnersDetail = vObj;
+          _weekPrizeWinnersList = vObj.winnerList;
+        }
         baseProvider.isWeekWinnersFetched = true;
         if (isLoading) {
           isLoading = false;
@@ -64,10 +67,10 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
         }
       });
     }
-    baseProvider.tambolaWinnersDetail.winnerList
+    _weekPrizeWinnersList
         .sort((a, b) => (a.prize).compareTo(b.prize));
-    _displayList =
-        baseProvider.tambolaWinnersDetail.winnerList.reversed.toList();
+    _weekPrizeWinnersList =
+        _weekPrizeWinnersList.reversed.toList();
     return Expanded(
       child: Container(
         margin: EdgeInsets.symmetric(
@@ -138,7 +141,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
-                    : (baseProvider.tambolaWinnersDetail.winnerList.length != 0
+                    : (_weekPrizeWinnersList.length != 0
                         ? Scrollbar(
                             thickness: 20,
                             radius: Radius.circular(100),
@@ -176,14 +179,14 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                                   //   child: Image.asset("images/profile.png"),
                                   // ),
                                   title: Text(
-                                    "${baseProvider.tambolaWinnersDetail.winnerList[i].name[0].toUpperCase()}${baseProvider.tambolaWinnersDetail.winnerList[i].name.substring(1).toLowerCase()}",
+                                    "${_weekPrizeWinnersList[i].name[0].toUpperCase()}${_weekPrizeWinnersList[i].name.substring(1).toLowerCase()}",
                                     style: GoogleFonts.montserrat(
                                       color: Colors.white,
                                       fontSize: SizeConfig.mediumTextSize,
                                     ),
                                   ),
                                   trailing: Text(
-                                    "₹ ${baseProvider.tambolaWinnersDetail.winnerList[i].prize.toString()}",
+                                    "₹ ${_weekPrizeWinnersList[i].prize.toString()}",
                                     style: GoogleFonts.montserrat(
                                       color: Colors.white,
                                       fontSize: SizeConfig.largeTextSize,

@@ -1,16 +1,14 @@
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
 import 'package:felloapp/ui/dialogs/Fold-Card/fold-card.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-
-enum claim { na, amazon, augmont }
 
 class FCard extends StatefulWidget {
   static const double nominalOpenHeight = 400;
@@ -32,7 +30,7 @@ class _TicketState extends State<FCard> {
   Widget middleCard;
   Widget bottomCard;
   bool _isOpen;
-  claim claimtype;
+  PrizeClaimChoice claimtype;
   BaseUtil baseProvider;
 
   Widget get backCard => Container(
@@ -46,7 +44,7 @@ class _TicketState extends State<FCard> {
   void initState() {
     super.initState();
     _isOpen = false;
-    claimtype = claim.na;
+    claimtype = PrizeClaimChoice.NA;
     frontCard = CloseCard(
       claimtype: claimtype,
     );
@@ -70,7 +68,7 @@ class _TicketState extends State<FCard> {
 
   void _handleOnTap() {
     //widget.onClick();
-    if (claimtype == claim.na)
+    if (claimtype == PrizeClaimChoice.NA)
       setState(() {
         _isOpen = true;
         topCard = buildTopCard();
@@ -228,7 +226,7 @@ class _TicketState extends State<FCard> {
             child: ElevatedButton(
               onPressed: () {
                 setState(() {
-                  claimtype = claim.amazon;
+                  claimtype = PrizeClaimChoice.AMZ_VOUCHER;
                   frontCard = CloseCard(claimtype: claimtype);
                   _isOpen = false;
                 });
@@ -253,7 +251,7 @@ class _TicketState extends State<FCard> {
             child: ElevatedButton(
               onPressed: () {
                 setState(() {
-                  claimtype = claim.augmont;
+                  claimtype = PrizeClaimChoice.GOLD_CREDIT;
                   frontCard = CloseCard(claimtype: claimtype);
 
                   _isOpen = false;
@@ -279,14 +277,14 @@ class _TicketState extends State<FCard> {
 }
 
 class CloseCard extends StatelessWidget {
-  final claim claimtype;
+  final PrizeClaimChoice claimtype;
   BaseUtil baseProvider;
   CloseCard({this.claimtype});
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     print(claimtype);
-    return claimtype != claim.na
+    return claimtype != PrizeClaimChoice.NA
         ? Container(
             height: double.infinity,
             width: double.infinity,
@@ -314,7 +312,7 @@ class CloseCard extends StatelessWidget {
                       height: 10,
                     ),
                     Text(
-                      claimtype == claim.amazon
+                      claimtype == PrizeClaimChoice.AMZ_VOUCHER
                           ? "You claimed for amazon gift card"
                           : "You claimed for augmont gold",
                       style: GoogleFonts.montserrat(
@@ -329,8 +327,6 @@ class CloseCard extends StatelessWidget {
                     IconButton(
                         onPressed: () {
                           Navigator.pop(context);
-                          // Future.delayed(Duration(milliseconds: 800))
-                          //     .then((value) => Navigator.pop(context));
                         },
                         icon: Icon(
                           Icons.clear_rounded,
@@ -406,7 +402,7 @@ class CloseCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Winner Winner",
+                              "Congratulations 🎉",
                               style: GoogleFonts.montserrat(
                                 fontWeight: FontWeight.w700,
                                 color: Color(0xff194350),
@@ -415,7 +411,7 @@ class CloseCard extends StatelessWidget {
                             ),
                             SizedBox(height: 10),
                             Text(
-                              "You are a winner for last week",
+                              "You were one of the tambola winners last week!",
                               style: GoogleFonts.montserrat(
                                 color: Colors.black,
                               ),
@@ -432,7 +428,7 @@ class CloseCard extends StatelessWidget {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 10),
                               child: Text(
-                                "Claim you prize",
+                                "Redeem your prize",
                                 style: GoogleFonts.montserrat(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w500,
