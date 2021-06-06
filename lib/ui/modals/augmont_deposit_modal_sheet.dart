@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:slider_button/slider_button.dart';
 
@@ -44,8 +46,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
 
   _initFields() {
     if (baseProvider != null) {
-      String _isEnabledStr =
-          BaseUtil.remoteConfig.getString('augmont_deposits_enabled');
+      String _isEnabledStr = BaseRemoteConfig.remoteConfig
+          .getString(BaseRemoteConfig.AUGMONT_DEPOSITS_ENABLED);
       try {
         int t = (_isEnabledStr != null) ? int.parse(_isEnabledStr) : 1;
         _isDepositsEnabled = (t == 1);
@@ -96,6 +98,39 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 0),
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    "images/svgs/gold.svg",
+                    height: SizeConfig.largeTextSize,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    "Gold Deposit",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      height: 1.5,
+                      fontSize: SizeConfig.largeTextSize,
+                    ),
+                  ),
+                  Spacer(),
+                  IconButton(
+                    icon: Icon(
+                      Icons.clear_rounded,
+                      size: 30,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  )
+                ],
+              ),
+            ),
+            Divider(
+              endIndent: SizeConfig.screenWidth * 0.3,
+            ),
             _buildRateCard(),
             InputField(
               child: TextFormField(
@@ -114,8 +149,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                   int amount = int.parse(value);
                   if (amount < 10)
                     return 'Minimum deposit amount is ₹10 per transaction';
-                  else if (amount > 10000)
-                    return 'We are currently only accepting a max deposit of ₹10000 per transaction';
+                  else if (amount > 20000)
+                    return 'Max deposit of ₹20000 allowed per transaction';
                   else
                     return null;
                 },
@@ -125,7 +160,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
               ),
             ),
             _buildPurchaseDescriptionCard(
-                _getCurrentAmount(_amtController.text)),
+                _getDouble(_amtController.text)),
             Wrap(
               spacing: 20,
               children: [
@@ -184,7 +219,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                           _isDepositInProgress = true;
                           setState(() {});
                           widget.onDepositConfirmed(
-                              _getCurrentAmount(_amtController.text));
+                              _getTaxIncludedAmount(_amtController.text));
                         }
                       },
                       alignLabel: Alignment.center,
@@ -237,7 +272,20 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     );
   }
 
-  double _getCurrentAmount(String amt) {
+  double _getTaxIncludedAmount(String amt) {
+    if (amt == null || amt.isEmpty) return null;
+    double t = 0;
+    try {
+      t = double.parse(amt);
+      double netTax =
+          widget.currentRates.sgstPercent + widget.currentRates.cgstPercent;
+      return t + augmontProvider.getTaxOnAmount(t, netTax);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  double _getDouble(String amt) {
     if (amt == null || amt.isEmpty) return null;
     double t = 0;
     try {
@@ -250,22 +298,21 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
 
   Widget _buildRateCard() {
     return Container(
-      padding: EdgeInsets.all(10),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _buildRateRow(
-              'Rate per gram',
+              'Rate per gram:',
               '₹${widget.currentRates.goldBuyPrice.toStringAsFixed(2)}',
               'This is the current price of 1 gram of gold'),
           _buildRateRow(
-              'CGST',
+              'CGST:',
               '${widget.currentRates.cgstPercent.toString()}%',
               'This is the Goods and Services Tax(GST) charged by the central government'),
           _buildRateRow(
-              'SGST',
+              'SGST:',
               '${widget.currentRates.sgstPercent.toString()}%',
               'This is the Goods and Services Tax(GST) charged by the state government'),
         ],
@@ -282,7 +329,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
           Expanded(
             child: Text(
               title,
-              style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
+              style: TextStyle(fontSize: SizeConfig.mediumTextSize),
             ),
           ),
           Expanded(
@@ -290,7 +337,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
             children: [
               Text(
                 value,
-                style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
+                style: TextStyle(fontSize: SizeConfig.mediumTextSize),
               ),
               SizedBox(
                 width: 4,
@@ -298,7 +345,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
               InkWell(
                 child: Icon(
                   Icons.info_outline,
-                  size: SizeConfig.mediumTextSize * 1.3,
+                  color: Colors.grey,
+                  size: SizeConfig.mediumTextSize,
                 ),
                 onTap: () {
                   HapticFeedback.vibrate();
@@ -325,29 +373,32 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     if (amt == null || amt < 5) {
       return Container();
     }
-    double taxDeducted = augmontProvider.getAmountPostTax(amt, netTax);
-    double grams = augmontProvider.getGoldQuantityFromAmount(amt, rate, netTax);
+    double taxIncluded = amt + augmontProvider.getTaxOnAmount(amt, netTax);
+    // double taxDeducted = augmontProvider.getAmountPostTax(amt, netTax);
+    double grams = augmontProvider.getGoldQuantityFromTaxedAmount(amt, rate);
 
     return Padding(
-      padding: EdgeInsets.all(5),
+      padding: EdgeInsets.fromLTRB(5,0,5,5),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Investment after Tax: ₹${taxDeducted.toStringAsFixed(2)}',
-            style: TextStyle(fontSize: SizeConfig.mediumTextSize),
+            '+ GST = ₹${taxIncluded.toStringAsFixed(2)}',
+            style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),
+          ),
+          SizedBox(
+            height: 3,
           ),
           Text(
             'Gold amount: ${grams.toStringAsFixed(4)} grams',
-            style: TextStyle(fontSize: SizeConfig.mediumTextSize),
+            style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),
           )
         ],
       ),
     );
   }
-
 
   onDepositComplete(bool flag) {
     _isDepositInProgress = false;

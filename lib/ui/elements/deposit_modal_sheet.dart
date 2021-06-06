@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
@@ -46,7 +47,7 @@ class DepositModalSheetState extends State<DepositModalSheet>
       _isFirstInvestment = (!baseProvider.iciciDetail.firstInvMade) ?? true;
       _isPendingTransaction = (baseProvider.myUser.pendingTxnId != null);
       String isEnabledStr =
-          BaseUtil.remoteConfig.getString('icici_deposits_enabled');
+          BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.ICICI_DEPOSITS_ENABLED);
       try {
         int t = (isEnabledStr != null) ? int.parse(isEnabledStr) : 1;
         _isDepositsEnabled = (t == 1);

@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FcmListener extends ChangeNotifier {
@@ -16,16 +20,14 @@ class FcmListener extends ChangeNotifier {
   FcmHandler _handler = locator<FcmHandler>();
   FirebaseMessaging _fcm;
 
-  FcmListener() {}
-
-  /// Create a [AndroidNotificationChannel] for heads up notifications
-  static const AndroidNotificationChannel _androidChannel =
-      AndroidNotificationChannel(
-    'high_importance_channel', // id
-    'High Importance Notifications', // title
-    'This channel is used for important notifications.', // description
-    importance: Importance.high,
-  );
+  // /// Create a [AndroidNotificationChannel] for heads up notifications
+  // static const AndroidNotificationChannel _androidChannel =
+  //     AndroidNotificationChannel(
+  //   'high_importance_channel', // id
+  //   'High Importance Notifications', // title
+  //   'This channel is used for important notifications.', // description
+  //   importance: Importance.high,
+  // );
 
   /// Initialize the [FlutterLocalNotificationsPlugin] package.
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -41,10 +43,10 @@ class FcmListener extends ChangeNotifier {
       }
     });
 
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(_androidChannel);
+    // await flutterLocalNotificationsPlugin
+    //     .resolvePlatformSpecificImplementation<
+    //         AndroidFlutterLocalNotificationsPlugin>()
+    //     ?.createNotificationChannel(_androidChannel);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification notification = message.notification;
@@ -67,37 +69,86 @@ class FcmListener extends ChangeNotifier {
         alert: true, badge: true, sound: true);
     _fcm.requestPermission();
 
+    ///add subscriptions to relevant topics
     await _manageInitSubscriptions();
 
+    ///setup android notification channels
+    if(Platform.isAndroid) {
+      _androidNativeSetup();
+    }
+
+    ///update fcm user token if required
     if (_baseUtil.myUser != null && _baseUtil.myUser.mobile != null)
       await _saveDeviceToken();
+
     return _fcm;
   }
 
+  Future addSubscription(FcmTopic subId, {String suffix=''}) async {
+    await _fcm.subscribeToTopic((suffix.isEmpty)?subId.value():'${subId.value()}$suffix');
+  }
+
   _manageInitSubscriptions() async {
-    if(_baseUtil == null) return;
+    if (_baseUtil == null) return;
     if (_baseUtil.isOldCustomer()) {
-      await _fcm.subscribeToTopic('oldcustomer');
+      addSubscription(FcmTopic.OLDCUSTOMER);
     }
 
     if (_baseUtil.myUser != null &&
         _baseUtil.myUser.isInvested != null &&
         !_baseUtil.myUser.isInvested) {
-      await _fcm.subscribeToTopic('neverinvestedbefore');
+      addSubscription(FcmTopic.NEVERINVESTEDBEFORE);
     }
+
+    if (_baseUtil.userTicketWallet != null &&
+        _baseUtil.userTicketWallet.getActiveTickets() > 0) {
+      addSubscription(FcmTopic.TAMBOLAPLAYER);
+    }
+
+    if(BaseUtil.packageInfo != null) {
+      String cde = BaseUtil.packageInfo.version??'NA';
+      cde = cde.replaceAll('.', '');
+      addSubscription(FcmTopic.VERSION, suffix: cde);
+    }
+
+    addSubscription(FcmTopic.PROMOTION);
   }
 
-  addSubscription(String subId) async {
-    await _fcm.subscribeToTopic(subId);
+  _androidNativeSetup() async {
+    const MethodChannel _channel = MethodChannel('fello.in/dev/notifications/channel/tambola');
+    Map<String, String> tambolaChannelMap = {
+      "id": "TAMBOLA_PICK_NOTIF",
+      "name": "Tambola Daily Picks",
+      "description": "Tambola notifications",
+    };
+
+    _channel.invokeMethod('createNotificationChannel', tambolaChannelMap).then((value) {
+      log.debug('Tambola Notification channel created successfully');
+    }).catchError((e) {
+      log.error('Tambola notification channel setup failed');
+    });
+    //
+    // const AndroidNotificationChannel _androidTambolaChannel =
+    //     AndroidNotificationChannel(
+    //   'TAMBOLA_PICK_NOTIF_2', // id
+    //   'Tambola Daily Picks', // title
+    //   'Tambola notifications', // description
+    //   importance: Importance.high,
+    // );
+    //
+    // await flutterLocalNotificationsPlugin
+    //     .resolvePlatformSpecificImplementation<
+    //         AndroidFlutterLocalNotificationsPlugin>()
+    //     ?.createNotificationChannel(_androidTambolaChannel);
   }
 
-  Future<void> _firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
-    // If you're going to use other Firebase services in the background, such as Firestore,
-    // make sure you call `initializeApp` before using other Firebase services.
-    //await Firebase.initializeApp();
-    print('Handling a background message ${message.messageId}');
-  }
+  // Future<void> _firebaseMessagingBackgroundHandler(
+  //     RemoteMessage message) async {
+  //   // If you're going to use other Firebase services in the background, such as Firestore,
+  //   // make sure you call `initializeApp` before using other Firebase services.
+  //   //await Firebase.initializeApp();
+  //   print('Handling a background message ${message.messageId}');
+  // }
 
   _saveDeviceToken() async {
     bool flag = true;
@@ -117,43 +168,5 @@ class FcmListener extends ChangeNotifier {
       //       _baseUtil.myUser); //user cache has client token field available
     }
     return flag;
-  }
-
-  FirebaseMessaging get fcm => _fcm;
-
-  set fcm(FirebaseMessaging value) {
-    _fcm = value;
-  }
-}
-
-class TestNotifications extends StatefulWidget {
-  @override
-  _TestNotificationsState createState() => _TestNotificationsState();
-}
-
-class _TestNotificationsState extends State<TestNotifications> {
-  @override
-  void initState() {
-    super.initState();
-    final fbm = FirebaseMessaging.instance;
-
-    // IOS Configurations
-    fbm.setForegroundNotificationPresentationOptions(
-        alert: true, badge: true, sound: true);
-    fbm.requestPermission();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('IOS Listener');
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
-
-      if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }

@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
@@ -27,7 +28,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcase.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 class TambolaHome extends StatefulWidget {
@@ -75,7 +75,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
   }
 
   initDailyPickFlags() {
-    // String remoteTime = BaseUtil.remoteConfig.getString('draw_pick_time');
+    // String remoteTime = BaseRemoteConfig.remoteConfig.getString('draw_pick_time');
     // remoteTime = (remoteTime == null || remoteTime.isEmpty) ? '18' : remoteTime;
     // int tx = 18;
     // try {
@@ -93,8 +93,10 @@ class _TambolaGameScreen extends State<TambolaHome> {
     // } else {
     //   dailyPickHeaderText = 'Today\'s picks';
     // }
-    String remoteStr1 = BaseUtil.remoteConfig.getString('tambola_header_1');
-    String remoteStr2 = BaseUtil.remoteConfig.getString('tambola_header_2');
+    String remoteStr1 = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.TAMBOLA_HEADER_FIRST);
+    String remoteStr2 = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.TAMBOLA_HEADER_SECOND);
 
     dailyPickTextList.add(remoteStr1);
     dailyPickTextList.add(remoteStr2);
@@ -520,12 +522,12 @@ class _TambolaGameScreen extends State<TambolaHome> {
     if (date.weekday == DateTime.sunday) {
       if (baseProvider.weeklyDigits.toList().length == 35) {
         localDBModel.isTambolaResultProcessingDone().then((flag) {
-          if (flag == 1) {
+          if (flag == 0) {
             log.debug('Ticket results not yet displayed. Displaying: ');
             _examineTicketsForWins();
 
             ///save the status that results have been saved
-            localDBModel.saveTambolaResultProcessingStatus(false);
+            localDBModel.saveTambolaResultProcessingStatus(true);
           }
 
           ///also delete all the old tickets while we're at it
@@ -535,7 +537,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
       }
     } else {
       localDBModel.isTambolaResultProcessingDone().then((flag) {
-        if (flag == 0) localDBModel.saveTambolaResultProcessingStatus(true);
+        if (flag == 1) localDBModel.saveTambolaResultProcessingStatus(false);
       });
     }
   }
@@ -598,7 +600,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
     log.debug('Resultant wins: ${ticketCodeWinIndex.toString()}');
 
     if (!_winnerDialogCalled)
-      new Timer(const Duration(seconds: 4), () {
+      new Timer(const Duration(seconds: 3), () {
         showDialog(
             context: context,
             builder: (BuildContext context) => WinningsDialog(
@@ -800,12 +802,18 @@ class _TambolaGameScreen extends State<TambolaHome> {
   }
 
   Widget _buildPrizeTabView() {
-    String win_corner = BaseUtil.remoteConfig.getString('tambola_win_corner');
-    String win_top = BaseUtil.remoteConfig.getString('tambola_win_top');
-    String win_middle = BaseUtil.remoteConfig.getString('tambola_win_middle');
-    String win_bottom = BaseUtil.remoteConfig.getString('tambola_win_bottom');
-    String win_full = BaseUtil.remoteConfig.getString('tambola_win_full');
-    String referral_bonus = BaseUtil.remoteConfig.getString('referral_bonus');
+    String win_corner = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.TAMBOLA_WIN_CORNER);
+    String win_top = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.TAMBOLA_WIN_TOP);
+    String win_middle = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.TAMBOLA_WIN_MIDDLE);
+    String win_bottom = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.TAMBOLA_WIN_BOTTOM);
+    String win_full = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.TAMBOLA_WIN_FULL);
+    String referral_bonus = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.REFERRAL_BONUS);
     return Padding(
       padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
       child: Column(

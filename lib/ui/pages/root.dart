@@ -74,8 +74,7 @@ class _RootState extends State<Root> {
         onFinish: () {
           baseProvider.show_game_tutorial = false;
           _navBarItems[1].showFocus = false;
-          baseProvider.show_finance_tutorial = true;
-          _navBarItems[2].showFocus = true;
+          lclDbProvider.saveHomeTutorialComplete = true;
           setState(() {});
         },
       ),
@@ -86,7 +85,8 @@ class _RootState extends State<Root> {
         onFinish: () {
           baseProvider.show_finance_tutorial = false;
           _navBarItems[2].showFocus = false;
-          lclDbProvider.saveHomeTutorialComplete = true;
+          baseProvider.show_game_tutorial = true;
+          _navBarItems[1].showFocus = true;
           setState(() {});
         },
       ),
@@ -136,8 +136,8 @@ class _RootState extends State<Root> {
       lclDbProvider.isHomeTutorialComplete.then((value) {
         if (value == 0) {
           //show tutorial
-          baseProvider.show_game_tutorial = true;
-          _navBarItems[1].showFocus = true;
+          baseProvider.show_finance_tutorial = true;
+          _navBarItems[2].showFocus = true;
           setState(() {});
         }
       });

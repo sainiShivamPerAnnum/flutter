@@ -172,10 +172,12 @@ class AugmontModel extends ChangeNotifier {
     double netTax = buyRates.cgstPercent + buyRates.sgstPercent;
     _baseProvider.currentAugmontTxn = UserTransaction.newGoldDeposit(
         amount,
-        getAmountPostTax(amount, netTax),
+        BaseUtil.digitPrecision(amount - getTaxOnAmount(amount, netTax)),
         buyRates.blockId,
         buyRates.goldBuyPrice,
-        getGoldQuantityFromAmount(amount, buyRates.goldBuyPrice, netTax),
+        getGoldQuantityFromTaxedAmount(
+            BaseUtil.digitPrecision(amount - getTaxOnAmount(amount, netTax)),
+            buyRates.goldBuyPrice),
         'RZP',
         _baseProvider.myUser.uid);
     UserTransaction tTxn = await _rzpGateway.submitAugmontTransaction(
@@ -296,7 +298,7 @@ class AugmontModel extends ChangeNotifier {
     }
 
     _baseProvider.currentAugmontTxn = UserTransaction.newGoldWithdrawal(
-        BaseUtil.digitPrecision(quantity*sellRates.goldSellPrice),
+        BaseUtil.digitPrecision(quantity * sellRates.goldSellPrice),
         sellRates.blockId,
         sellRates.goldSellPrice,
         quantity,
@@ -449,18 +451,12 @@ class AugmontModel extends ChangeNotifier {
         null; //this is to ensure that the transactions list gets refreshed
   }
 
-  double getAmountPostTax(double amount, double taxRate) {
-    double totalTax =
-        BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
-    return BaseUtil.digitPrecision(amount - totalTax);
+  double getTaxOnAmount(double amount, double taxRate) {
+    return BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
   }
 
-  double getGoldQuantityFromAmount(double amount, double rate, double taxRate) {
-    double totalTax =
-        BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
-    double taxDeducted = BaseUtil.digitPrecision(amount - totalTax);
-
-    return BaseUtil.digitPrecision((taxDeducted / rate), 4, false);
+  double getGoldQuantityFromTaxedAmount(double amount, double rate) {
+    return BaseUtil.digitPrecision((amount / rate), 4, false);
   }
 
   double getGoldQuantityFromSellAmount(double amount, double rate) {

@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
@@ -40,7 +41,7 @@ class MFDetailsPage extends StatefulWidget {
 
   static int checkICICIDespositStatus(BaseUser baseUser) {
     //check who is allowed to deposit
-    String _perm = BaseUtil.remoteConfig.getString('icici_deposit_permission');
+    String _perm = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.ICICI_DEPOSIT_PERMISSION);
     int _isGeneralUserAllowed = 1;
     bool _isAllowed = false;
     if (_perm != null && _perm.isNotEmpty) {

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/kyc_ops.dart';
 import 'package:felloapp/core/service/location.dart';
@@ -902,8 +903,8 @@ class KycOnboardData {
                                         margin: const EdgeInsets.symmetric(
                                             horizontal: 20.0),
                                         child: Text(
-                                            BaseUtil.remoteConfig.getString(
-                                                'kyc_completion_prize'),
+                                            BaseRemoteConfig.remoteConfig.getString(
+                                                BaseRemoteConfig.KYC_COMPLETION_PRIZE),
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontWeight: FontWeight.w700,
@@ -930,7 +931,7 @@ class KycOnboardData {
                                   ],
                                 )
                                 // Image.network(
-                                //   //TODO BaseUtil.remoteConfig.getString('kyc_completion_prize');
+                                //   //TODO BaseRemoteConfig.remoteConfig.getString('kyc_completion_prize');
                                 //   "https://babblesports.com/wp-content/uploads/2020/06/Untitled-design-7-1200x675.jpg",
                                 //   fit: BoxFit.cover,
                                 // ),

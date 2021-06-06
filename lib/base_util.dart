@@ -9,27 +9,28 @@ import 'package:felloapp/core/model/FeedCard.dart';
 import 'package:felloapp/core/model/PrizeLeader.dart';
 import 'package:felloapp/core/model/ReferralDetail.dart';
 import 'package:felloapp/core/model/ReferralLeader.dart';
+import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
+import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTicketWallet.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
-import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
-import 'package:felloapp/ui/elements/week-winners.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:package_info/package_info.dart';
 import 'package:showcaseview/showcase.dart';
 
+import 'core/base_remote_config.dart';
 import 'core/model/TambolaBoard.dart';
 import 'core/model/UserAugmontDetail.dart';
 import 'util/size_config.dart';
@@ -43,7 +44,6 @@ class BaseUtil extends ChangeNotifier {
   UserTicketWallet _userTicketWallet;
   User firebaseUser;
   FirebaseAnalytics baseAnalytics;
-  static RemoteConfig remoteConfig;
   PaymentService _payService;
   List<FeedCard> feedCards;
 
@@ -63,13 +63,14 @@ class BaseUtil extends ChangeNotifier {
 
   ///KYC global object
   UserKycDetail _kycDetail;
-  List<WeekWinner> currentWeekWinners = [];
+  TambolaWinnersDetail tambolaWinnersDetail;
   List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
   String myUserDpUrl;
   List<UserTransaction> userMiniTxnList;
   List<ReferralDetail> userReferralsList;
   ReferralDetail myReferralInfo;
+  static PackageInfo packageInfo;
 
   DateTime _userCreationTimestamp;
   int isOtpResendCount = 0;
@@ -117,6 +118,7 @@ class BaseUtil extends ChangeNotifier {
     if (firebaseUser != null) {
       _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
     }
+    packageInfo = await PackageInfo.fromPlatform();
 
     isUserOnboarded =
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
@@ -131,12 +133,14 @@ class BaseUtil extends ChangeNotifier {
         await _initiateNewTicketWallet();
       }
       //remote config for various remote variables
-      await initRemoteConfig();
+      await BaseRemoteConfig.init();
       //get user creation time
       _userCreationTimestamp = firebaseUser.metadata.creationTime;
       //check if there are any icici deposits txns in process
       _payService = locator<PaymentService>();
-      if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
+
+      //TODO not required for now
+      // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
     }
   }
 
@@ -157,47 +161,10 @@ class BaseUtil extends ChangeNotifier {
         }
       });
     }
-    //
   }
 
   cancelIncomingNotifications() {
     if(_payService != null)_payService.addPaymentStatusListener(null);
-  }
-
-  initRemoteConfig() async {
-    remoteConfig = await RemoteConfig.instance;
-    remoteConfig.setDefaults(<String, dynamic>{
-      'draw_pick_time': '18',
-      'tambola_header_1': 'Today\'s picks',
-      'tambola_header_2': 'Click to see the other picks',
-      'deposit_upi_address': '9769637379@okbizaxis',
-      'play_screen_first': 'true',
-      'tambola_win_corner': '500',
-      'tambola_win_top': '1500',
-      'tambola_win_middle': '1500',
-      'tambola_win_bottom': '1500',
-      'tambola_win_full': '10,000',
-      'referral_bonus': '25',
-      'referral_ticket_bonus': '10',
-      'aws_icici_key_index': '1',
-      'aws_augmont_key_index': '1',
-      'icici_deposits_enabled': '1',
-      'icici_deposit_permission': '1',
-      'augmont_deposits_enabled': '1',
-      'augmont_deposit_permission': '1',
-      'kyc_completion_prize': 'You have won ₹50 and 10 Tambola tickets!'
-    });
-    try {
-      // Fetches every 12 hrs
-      await remoteConfig.fetch();
-      await remoteConfig.activateFetched();
-    } on FetchThrottledException catch (exception) {
-      // Fetch throttled.
-      print(exception);
-    } catch (exception) {
-      print(
-          'Unable to fetch remote config. Cached or default values will be used');
-    }
   }
 
   static Widget getAppBar() {
@@ -388,7 +355,7 @@ class BaseUtil extends ChangeNotifier {
       _augmontDetail = null;
       _currentAugmontTxn = null;
       _kycDetail = null;
-      currentWeekWinners = null;
+      tambolaWinnersDetail = null;
       prizeLeaders = null;
       referralLeaders = null;
       myUserDpUrl = null;

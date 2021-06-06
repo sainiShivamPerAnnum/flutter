@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
@@ -11,14 +12,18 @@ import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'package:felloapp/ui/elements/Parallax-card/game_card_list.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
 import 'package:felloapp/ui/elements/week-winners.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-elements/submit_button.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
+import 'package:felloapp/ui/dialogs/Fold-Card/card.dart';
 
 class GamePage extends StatefulWidget {
   final ValueChanged<int> tabChange;
@@ -159,19 +164,18 @@ class _GamePageState extends State<GamePage> {
                             },
                             child: BaseUtil.buildShowcaseWrapper(
                                 _showcaseHeader,
-                                'Your game tickets appear here. You can also click on it to see a further breakdown.',
+                                'Your game tickets appear here. You receive 1 game ticket for every ₹${Constants.INVESTMENT_AMOUNT_FOR_TICKET} you save. You can also click here to see a further breakdown.',
                                 TicketCount(baseProvider.userTicketWallet
                                     .getActiveTickets()))),
                         Expanded(
                           flex: 4,
                           child: BaseUtil.buildShowcaseWrapper(
                               _showcaseFooter,
-                              'Use the tickets to play fun exciting weekly contests and win prizes!',
+                              'Use the tickets to play exciting weekly games and win fun prizes!',
                               GameCardList(
                                 games: _gameList,
                                 onGameChange: _handleCityChange,
-                              )
-                          ),
+                              )),
                         ),
                         Expanded(
                           flex: 2,
@@ -190,6 +194,22 @@ class _GamePageState extends State<GamePage> {
                                   action: [
                                     GameOfferCardButton(
                                       onPressed: () => widget.tabChange(2),
+                                      // onPressed: () => showDialog(
+                                      //   context: context,
+                                      //   barrierDismissible: false,
+                                      //   builder: (ctx) {
+                                      //     return Center(
+                                      //       child: Material(
+                                      //         color: Colors.transparent,
+                                      //         child: Stack(
+                                      //           children: [
+                                      //             Center(child: FCard()),
+                                      //           ],
+                                      //         ),
+                                      //       ),
+                                      //     );
+                                      //   },
+                                      // ),
                                       title: "Invest",
                                     ),
                                     SizedBox(
@@ -313,7 +333,111 @@ class _GamePageState extends State<GamePage> {
                       ),
                     ),
                   )
-                : SizedBox()
+                : SizedBox(),
+            // Expanded(
+            //   child: Container(
+            //     child: BackdropFilter(
+            //       filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+            //       child: Center(
+            //         child: Card(
+            //           margin: EdgeInsets.symmetric(horizontal: 40),
+            //           shape: RoundedRectangleBorder(
+            //               borderRadius: BorderRadius.circular(20)),
+            //           child: Wrap(
+            //             children: [
+            //               Container(
+            //                 padding: EdgeInsets.all(20),
+            //                 child: Column(
+            //                   crossAxisAlignment: CrossAxisAlignment.center,
+            //                   children: [
+            //                     LottieBuilder.asset(
+            //                       "images/lottie/winner.json",
+            //                       width: SizeConfig.screenWidth * 0.4,
+            //                       height: SizeConfig.screenWidth * 0.4,
+            //                     ),
+            //                     SizedBox(
+            //                       height: 20,
+            //                     ),
+            //                     Text(
+            //                       "Hurray, You are a Winner",
+            //                       style: Theme.of(context).textTheme.headline5,
+            //                     ),
+            //                     Text("For week 4 June to 11 June"),
+            //                     // Padding(
+            //                     //   padding: const EdgeInsets.all(8.0),
+            //                     //   child: Text(
+            //                     //     "Winning amount: \$20",
+            //                     //     style: Theme.of(context)
+            //                     //         .textTheme
+            //                     //         .headline4
+            //                     //         .copyWith(
+            //                     //             color: UiConstants.primaryColor),
+            //                     //   ),
+            //                     // ),
+            //                     // Container(
+            //                     //   decoration: BoxDecoration(
+            //                     //     borderRadius: BorderRadius.circular(15),
+            //                     //     border: Border.all(
+            //                     //       width: 2,
+            //                     //       color: UiConstants.primaryColor,
+            //                     //     ),
+            //                     //   ),
+            //                     //   padding: EdgeInsets.symmetric(
+            //                     //       horizontal: 20, vertical: 10),
+            //                     //   margin: EdgeInsets.all(10),
+            //                     //   child: Row(
+            //                     //     mainAxisAlignment: MainAxisAlignment.center,
+            //                     //     children: [
+            //                     //       SvgPicture.asset(
+            //                     //           "images/svgs/amazon-gift-voucher.svg",
+            //                     //           height: 20,
+            //                     //           width: 20),
+            //                     //       SizedBox(
+            //                     //         width: 10,
+            //                     //       ),
+            //                     //       Text(
+            //                     //           "Reedem it with Amazon gift voucher"),
+            //                     //     ],
+            //                     //   ),
+            //                     // ),
+            //                     // Text("Or"),
+            //                     // Container(
+            //                     //   decoration: BoxDecoration(
+            //                     //     borderRadius: BorderRadius.circular(15),
+            //                     //     border: Border.all(
+            //                     //       width: 2,
+            //                     //       color: UiConstants.primaryColor,
+            //                     //     ),
+            //                     //   ),
+            //                     //   padding: EdgeInsets.symmetric(
+            //                     //       horizontal: 20, vertical: 10),
+            //                     //   margin: EdgeInsets.all(10),
+            //                     //   child: Row(
+            //                     //     mainAxisAlignment: MainAxisAlignment.center,
+            //                     //     children: [
+            //                     //       SvgPicture.asset("images/svgs/gold.svg",
+            //                     //           height: 20, width: 20),
+            //                     //       SizedBox(
+            //                     //         width: 10,
+            //                     //       ),
+            //                     //       Text("Reedem it Augmont Gold"),
+            //                     //     ],
+            //                     //   ),
+            //                     // ),
+            //                     SubmitButton(
+            //                         action: () {},
+            //                         title: "Claim your prize now",
+            //                         isDisabled: false)
+            //                   ],
+            //                 ),
+            //               )
+            //             ],
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // )
           ],
         ),
       ),

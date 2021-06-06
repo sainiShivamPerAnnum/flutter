@@ -84,10 +84,14 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                         '₹${widget._transaction.amount.toStringAsFixed(2)}'),
                     (widget._transaction.closingBalance > 0)
                         ? _addListField('Overall Closing Balance:',
-                            '₹${widget._transaction.closingBalance}')
+                            '₹${widget._transaction.closingBalance.toStringAsFixed(2)}')
                         : Container(),
-                    _addListField('Tickets Added:',
-                        '${widget._transaction.ticketUpCount}'),
+                    (widget._transaction.type !=
+                            UserTransaction.TRAN_TYPE_WITHDRAW)
+                        ? _addListField('Tickets Added:',
+                            '${widget._transaction.ticketUpCount}')
+                        : _addListField('Tickets Reduced:',
+                            '${widget._transaction.ticketUpCount}'),
                     // _addListField('Transaction ID:',
                     //     '${widget._transaction.docKey}'),
                     (widget._transaction.subType ==

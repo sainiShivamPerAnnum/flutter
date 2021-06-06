@@ -93,7 +93,7 @@ class _FinancePageState extends State<FinancePage> {
     if (baseProvider.show_finance_tutorial) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ShowCaseWidget.of(context)
-            .startShowCase([_showcaseHeader, _showcaseFooter]);
+            .startShowCase([_showcaseFooter, _showcaseHeader]);
       });
     }
     chartData = getChartMap();
@@ -128,7 +128,7 @@ class _FinancePageState extends State<FinancePage> {
                     ),
                     BaseUtil.buildShowcaseWrapper(
                       _showcaseHeader,
-                      'Your savings and investments show up here. The balances are based on live market rates.',
+                      'Your savings and investments will show up here. The balances are based on live market rates.',
                       Container(
                         child:
                             baseProvider.userFundWallet.getEstTotalWealth() > 0
@@ -180,7 +180,7 @@ class _FinancePageState extends State<FinancePage> {
                       [
                         BaseUtil.buildShowcaseWrapper(
                           _showcaseFooter,
-                          'Choose any of the assets to deposit in. The more you save, the more weekly tickets you earn!',
+                          'Choose any of the assets to deposit in. Fello lists strong proven assets with great historical returns.',
                           FundWidget(
                             fund: fundList[1],
                             isAvailable: (GoldDetailsPage.checkAugmontStatus(

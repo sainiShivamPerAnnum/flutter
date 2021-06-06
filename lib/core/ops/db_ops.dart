@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/PrizeLeader.dart';
 import 'package:felloapp/core/model/ReferralLeader.dart';
 import 'package:felloapp/core/model/ReferralDetail.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
+import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
 import 'package:felloapp/core/model/TicketRequest.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/model/FeedCard.dart';
@@ -81,8 +83,8 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateUserIciciDetails(
-      String userId, UserIciciDetail iciciDetail) async {
+  Future<bool> updateUserIciciDetails(String userId,
+      UserIciciDetail iciciDetail) async {
     try {
       await _api.updateUserIciciDetailDocument(userId, iciciDetail.toJson());
       return true;
@@ -104,8 +106,8 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateUserKycDetails(
-      String userId, UserKycDetail kycDetail) async {
+  Future<bool> updateUserKycDetails(String userId,
+      UserKycDetail kycDetail) async {
     try {
       await _api.updateUserKycDetailDocument(userId, kycDetail.toJson());
       return true;
@@ -126,8 +128,8 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateUserAugmontDetails(
-      String userId, UserAugmontDetail augDetail) async {
+  Future<bool> updateUserAugmontDetails(String userId,
+      UserAugmontDetail augDetail) async {
     try {
       await _api.updateUserAugmontDetailDocument(userId, augDetail.toJson());
       return true;
@@ -149,8 +151,8 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<UserTransaction> getUserTransaction(
-      String userId, String docId) async {
+  Future<UserTransaction> getUserTransaction(String userId,
+      String docId) async {
     try {
       var doc = await _api.getUserTransactionDocument(userId, docId);
       return UserTransaction.fromMap(doc.data(), doc.id);
@@ -171,14 +173,14 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<List<UserTransaction>> getFilteredUserTransactions(
-      BaseUser user, String type, String subtype,
+  Future<List<UserTransaction>> getFilteredUserTransactions(BaseUser user,
+      String type, String subtype,
       [int limit = 30]) async {
     List<UserTransaction> requestedTxns = [];
     try {
       String _id = user.uid;
       QuerySnapshot _querySnapshot =
-          await _api.getUserTransactionsByField(_id, type, subtype, limit);
+      await _api.getUserTransactionsByField(_id, type, subtype, limit);
       _querySnapshot.docs.forEach((txn) {
         try {
           if (txn.exists)
@@ -205,7 +207,7 @@ class DBModel extends ChangeNotifier {
             .getticketRequestDocumentEvent(_request.docKey)
             .listen((event) {
           TicketRequest _changedRequest =
-              TicketRequest.fromMap(event.data(), event.id);
+          TicketRequest.fromMap(event.data(), event.id);
           if (_ticketRequestListener != null)
             _ticketRequestListener(_changedRequest);
         });
@@ -222,9 +224,15 @@ class DBModel extends ChangeNotifier {
     try {
       String _uid = user.uid;
       TicketRequest _req = new TicketRequest(
-          count, false, Timestamp.now(), user.uid, _getWeekCode(), null, 'P');
+          count,
+          false,
+          Timestamp.now(),
+          user.uid,
+          _getWeekCode(),
+          null,
+          'P');
       DocumentReference _ref =
-          await _api.createTicketRequest(_uid, _req.toJson());
+      await _api.createTicketRequest(_uid, _req.toJson());
       _req.docKey = _ref.id;
 
       return _req;
@@ -237,14 +245,16 @@ class DBModel extends ChangeNotifier {
   Future<List<TambolaBoard>> getWeeksTambolaTickets(String userId) async {
     try {
       QuerySnapshot _querySnapshot =
-          await _api.getValidUserTickets(userId, _getWeekCode());
+      await _api.getValidUserTickets(userId, _getWeekCode());
       if (_querySnapshot == null || _querySnapshot.size == 0) return null;
 
       List<TambolaBoard> _requestedBoards = [];
       for (QueryDocumentSnapshot _docSnapshot in _querySnapshot.docs) {
-        if (!_docSnapshot.exists || _docSnapshot.data().isEmpty) continue;
+        if (!_docSnapshot.exists || _docSnapshot
+            .data()
+            .isEmpty) continue;
         TambolaBoard _board =
-            TambolaBoard.fromMap(_docSnapshot.data(), _docSnapshot.id);
+        TambolaBoard.fromMap(_docSnapshot.data(), _docSnapshot.id);
         if (_board.isValid()) _requestedBoards.add(_board);
       }
       return _requestedBoards;
@@ -272,37 +282,44 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<List<WeekWinner>> getWeeklyWinners() async {
-    Map<String, dynamic> rMap = {};
-    List<WeekWinner> _weekWinners = [];
+  Future<TambolaWinnersDetail> getWeeklyWinners() async {
+    TambolaWinnersDetail _detail;
     try {
       DateTime date = new DateTime.now();
       int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
 
       QuerySnapshot querySnapshot = await _api.getWinnersByWeekCde(weekCde);
+      //there should only be one document for a week
       if (querySnapshot != null && querySnapshot.docs.length == 1) {
         DocumentSnapshot snapshot = querySnapshot.docs[0];
-        if (snapshot.exists && snapshot.data()['winners'] != null) {
-          rMap = snapshot.data()['winners'];
-          log.debug(rMap.toString());
-        }
-        if (rMap != null && rMap.length > 0) {
-          for (String k in rMap.keys) {
-            if (k != null && BaseUtil.toInt(rMap[k]) != 0) {
-              _weekWinners
-                  .add(WeekWinner(name: k, prize: BaseUtil.toInt(rMap[k])));
-            }
-          }
+        if (snapshot.exists && snapshot
+            .data()
+            .isNotEmpty) {
+          _detail = TambolaWinnersDetail.fromMap(snapshot.data(), snapshot.id);
         }
       }
-      return _weekWinners;
+      return _detail;
     } catch (e) {
       log.error("Error fetch weekly winners details: " + e.toString());
-      return _weekWinners;
+      return _detail;
     }
   }
 
-  Future<bool> updateUserReferralCount(String userId, ReferralDetail detail) async {
+  Future<bool> pushUserPrizeClaimChoice(String uid, TambolaWinnersDetail detail,
+      PrizeClaimChoice choice) async {
+    try {
+      String key = 'winners.$uid.claim_data';
+      Map<String, dynamic> updateMap = {key: choice.value()};
+      await _api.updateWeeklyWinnerDocument(detail.winnerDocumentId, updateMap);
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> updateUserReferralCount(String userId,
+      ReferralDetail detail) async {
     try {
       Map<String, dynamic> _map = {};
       _map[ReferralDetail.fldUserReferralCount] = detail.refCount;
@@ -326,7 +343,8 @@ class DBModel extends ChangeNotifier {
   ///////////////////////////CREDENTIALS//////////////////////////////
   Future<Map<String, String>> getActiveAwsIciciApiKey() async {
     String _awsKeyIndex =
-        BaseUtil.remoteConfig.getString('aws_icici_key_index');
+    BaseRemoteConfig.remoteConfig.getString(
+        BaseRemoteConfig.AWS_ICICI_KEY_INDEX);
     if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
     int keyIndex = 1;
     try {
@@ -353,7 +371,8 @@ class DBModel extends ChangeNotifier {
 
   Future<Map<String, String>> getActiveAwsAugmontApiKey() async {
     String _awsKeyIndex =
-        BaseUtil.remoteConfig.getString('aws_augmont_key_index');
+    BaseRemoteConfig.remoteConfig.getString(
+        BaseRemoteConfig.AWS_AUGMONT_KEY_INDEX);
     if (_awsKeyIndex == null || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
     int keyIndex = 1;
     try {
@@ -395,8 +414,8 @@ class DBModel extends ChangeNotifier {
     return null;
   }
 
-  Future<bool> addCallbackRequest(
-      String uid, String name, String mobile) async {
+  Future<bool> addCallbackRequest(String uid, String name,
+      String mobile) async {
     try {
       DateTime today = DateTime.now();
       String year = today.year.toString();
@@ -415,8 +434,8 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> addHelpRequest(
-      String uid, String name, String mobile, HelpType helpType) async {
+  Future<bool> addHelpRequest(String uid, String name, String mobile,
+      HelpType helpType) async {
     try {
       DateTime today = DateTime.now();
       String year = today.year.toString();
@@ -469,7 +488,9 @@ class DBModel extends ChangeNotifier {
       [String pollId = Constants.POLL_NEXTGAME_ID]) async {
     try {
       DocumentSnapshot snapshot = await _api.getPollDocument(pollId);
-      if (snapshot.exists && snapshot.data().length > 0) {
+      if (snapshot.exists && snapshot
+          .data()
+          .length > 0) {
         return snapshot.data();
       }
     } catch (e) {
@@ -515,7 +536,7 @@ class DBModel extends ChangeNotifier {
       [String pollId = Constants.POLL_NEXTGAME_ID]) async {
     try {
       DocumentSnapshot docSnapshot =
-          await _api.getUserPollResponseDocument(uid, pollId);
+      await _api.getUserPollResponseDocument(uid, pollId);
       if (docSnapshot.exists) {
         Map<String, dynamic> docData = docSnapshot.data();
         if (docData != null && docData['pResponse'] != null) {
@@ -534,7 +555,7 @@ class DBModel extends ChangeNotifier {
     try {
       int weekCode = _getWeekCode();
       QuerySnapshot _querySnapshot =
-          await _api.getLeaderboardDocument('referral', weekCode);
+      await _api.getLeaderboardDocument('referral', weekCode);
       if (_querySnapshot == null || _querySnapshot.size != 1) return [];
 
       DocumentSnapshot _docSnapshot = _querySnapshot.docs[0];
@@ -568,7 +589,7 @@ class DBModel extends ChangeNotifier {
     try {
       int weekCode = _getWeekCode();
       QuerySnapshot _querySnapshot =
-          await _api.getLeaderboardDocument('prize', weekCode);
+      await _api.getLeaderboardDocument('prize', weekCode);
       if (_querySnapshot == null || _querySnapshot.size != 1) return [];
 
       DocumentSnapshot _docSnapshot = _querySnapshot.docs[0];
@@ -606,8 +627,10 @@ class DBModel extends ChangeNotifier {
   Future<ReferralDetail> getUserReferralInfo(String uid) async {
     try {
       DocumentSnapshot snapshot = await _api.getUserReferDoc(uid);
-          // .getReferralDocs(uid);
-      if (snapshot.exists && snapshot.data().isNotEmpty) {
+      // .getReferralDocs(uid);
+      if (snapshot.exists && snapshot
+          .data()
+          .isNotEmpty) {
         return ReferralDetail.fromMap(snapshot.data());
       }
     } catch (e) {
@@ -622,7 +645,9 @@ class DBModel extends ChangeNotifier {
       List<ReferralDetail> _refDetail = [];
       if (querySnapshot.size > 0) {
         for (QueryDocumentSnapshot snapshot in querySnapshot.docs) {
-          if (snapshot.exists && snapshot.data().isNotEmpty) {
+          if (snapshot.exists && snapshot
+              .data()
+              .isNotEmpty) {
             ReferralDetail _detail = ReferralDetail.fromMap(snapshot.data());
             _refDetail.add(_detail);
           }
@@ -635,8 +660,8 @@ class DBModel extends ChangeNotifier {
     return null;
   }
 
-  Future<bool> addFundDeposit(
-      String uid, String amount, String rawResponse, String status) async {
+  Future<bool> addFundDeposit(String uid, String amount, String rawResponse,
+      String status) async {
     try {
       DateTime today = DateTime.now();
       String year = today.year.toString();
@@ -658,8 +683,8 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> addFundWithdrawal(
-      String uid, String amount, String upiAddress) async {
+  Future<bool> addFundWithdrawal(String uid, String amount,
+      String upiAddress) async {
     try {
       DateTime today = DateTime.now();
       String year = today.year.toString();
@@ -681,13 +706,38 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<bool> deleteExpiredUserTickets(String userId) async {
+    // try {
+    //   return await _lock.synchronized(() async {
+    //     if (count < 0 && currentValue < count) {
+    //       userTicketWallet.initTck = 0;
+    //     } else {
+    //       userTicketWallet.initTck = currentValue + count;
+    //     }
+    //     Map<String, dynamic> tMap = {
+    //       UserTicketWallet.fldInitTckCount: userTicketWallet.initTck
+    //     };
+    //     bool flag = await _api.updateUserTicketWalletFields(
+    //         uid, UserTicketWallet.fldInitTckCount, currentValue, tMap);
+    //     if (!flag) {
+    //       //revert value back as the op failed
+    //       userTicketWallet.initTck = currentValue;
+    //     }
+    //     return userTicketWallet;
+    //   });
+    // } catch (e) {
+    //   log.error('Failed to update the user ticket count');
+    //   userTicketWallet.initTck = currentValue;
+    //   return userTicketWallet;
+    // }
     try {
       int weekNumber = BaseUtil.getWeekNumber();
       if (weekNumber > 2) {
-        ///eg: weekcode: 202105 -> delete all tickets older than 202103
-        int weekCde = _getWeekCode();
-        weekCde--;
-        return await _api.deleteUserTicketsBeforeWeekCode(userId, weekCde);
+        return await _lock.synchronized(() async {
+          ///eg: weekcode: 202105 -> delete all tickets older than 202103
+          int weekCde = _getWeekCode();
+          weekCde--;
+          return await _api.deleteUserTicketsBeforeWeekCode(userId, weekCde);
+        });
       } else {
         return false;
       }
@@ -697,8 +747,8 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> deleteSelectUserTickets(
-      String userId, List<String> ticketRef) async {
+  Future<bool> deleteSelectUserTickets(String userId,
+      List<String> ticketRef) async {
     try {
       return await _api.deleteUserTicketDocuments(userId, ticketRef);
     } catch (e) {
@@ -731,13 +781,14 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> logFailure(
-      String userId, FailType failType, Map<String, dynamic> data) async {
+  Future<bool> logFailure(String userId, FailType failType,
+      Map<String, dynamic> data) async {
     try {
       Map<String, dynamic> dMap = (data == null) ? {} : data;
       dMap['user_id'] = userId;
       dMap['fail_type'] = failType.value();
       dMap['manually_resolved'] = false;
+      dMap['app_version'] = '${BaseUtil.packageInfo.version}+${BaseUtil.packageInfo.buildNumber}';
       dMap['timestamp'] = Timestamp.now();
       await _api.addFailedReportDocument(dMap);
       return true;
@@ -771,14 +822,12 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<UserFundWallet> updateUserIciciBalance(
-    String id,
-    UserFundWallet originalWalletBalance,
-    double changeAmount,
-  ) async {
+  Future<UserFundWallet> updateUserIciciBalance(String id,
+      UserFundWallet originalWalletBalance,
+      double changeAmount,) async {
     ///make a copy of the wallet object
     UserFundWallet newWalletBalance =
-        UserFundWallet.fromMap(originalWalletBalance.cloneMap());
+    UserFundWallet.fromMap(originalWalletBalance.cloneMap());
 
     ///first update icici balance
     if (changeAmount < 0 &&
@@ -818,8 +867,7 @@ class DBModel extends ChangeNotifier {
   ///Total Gold Balance = (current total grams owned * current selling rate)
   ///Total Gold Principle = old principle + changeAmount
   ///it shouldnt matter if its a deposit or a sell, all based on selling rate
-  Future<UserFundWallet> updateUserAugmontGoldBalance(
-      String id,
+  Future<UserFundWallet> updateUserAugmontGoldBalance(String id,
       UserFundWallet originalWalletBalance,
       double sellingRate,
       double totalQuantity,
@@ -845,7 +893,7 @@ class DBModel extends ChangeNotifier {
       //only add the relevant fields to the map
       Map<String, dynamic> rMap = {
         UserFundWallet.fldAugmontGoldPrinciple:
-            newWalletBalance.augGoldPrinciple,
+        newWalletBalance.augGoldPrinciple,
         UserFundWallet.fldAugmontGoldBalance: newWalletBalance.augGoldBalance,
         UserFundWallet.fldAugmontGoldQuantity: newWalletBalance.augGoldQuantity,
       };
@@ -879,9 +927,11 @@ class DBModel extends ChangeNotifier {
       else {
         double _netQuantity = 0.0;
         for (QueryDocumentSnapshot snapshot in querySnapshot.docs) {
-          if (snapshot.exists && snapshot.data().isNotEmpty) {
+          if (snapshot.exists && snapshot
+              .data()
+              .isNotEmpty) {
             UserTransaction _txn =
-                UserTransaction.fromMap(snapshot.data(), snapshot.id);
+            UserTransaction.fromMap(snapshot.data(), snapshot.id);
             if (_txn != null &&
                 _txn.augmnt != null &&
                 _txn.augmnt[UserTransaction.subFldAugCurrentGoldGm] != null) {
@@ -911,8 +961,8 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<UserTicketWallet> updateInitUserTicketCount(
-      String uid, UserTicketWallet userTicketWallet, int count) async {
+  Future<UserTicketWallet> updateInitUserTicketCount(String uid,
+      UserTicketWallet userTicketWallet, int count) async {
     if (userTicketWallet == null) return null;
     int currentValue = userTicketWallet.initTck ?? 0;
     try {
@@ -940,8 +990,8 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<UserTicketWallet> updateAugmontGoldUserTicketCount(
-      String uid, UserTicketWallet userTicketWallet, int count) async {
+  Future<UserTicketWallet> updateAugmontGoldUserTicketCount(String uid,
+      UserTicketWallet userTicketWallet, int count) async {
     if (userTicketWallet == null) return null;
     int currentValue = userTicketWallet.augGold99Tck ?? 0;
     try {
@@ -969,8 +1019,8 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<UserTicketWallet> updateICICIUserTicketCount(
-      String uid, UserTicketWallet userTicketWallet, int count) async {
+  Future<UserTicketWallet> updateICICIUserTicketCount(String uid,
+      UserTicketWallet userTicketWallet, int count) async {
     if (userTicketWallet == null) return null;
     int currentValue = userTicketWallet.icici1565Tck ?? 0;
     try {
@@ -1007,7 +1057,9 @@ class DBModel extends ChangeNotifier {
         for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
           if (documentSnapshot != null &&
               documentSnapshot.exists &&
-              documentSnapshot.data().length > 0)
+              documentSnapshot
+                  .data()
+                  .length > 0)
             _cards.add(FeedCard.fromMap(documentSnapshot.data()));
         }
       }

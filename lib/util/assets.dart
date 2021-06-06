@@ -1,9 +1,9 @@
-import 'package:felloapp/base_util.dart';
 
 import 'constants.dart';
 
 class Assets {
   static final String logoMaxSize = 'images/fello_logo.png';
+  static final String logoShortform = 'images/fello-short-logo.png';
   static final String referGraphic = 'images/transfer.png';
   static final String iciciGraphic = 'images/icici.png';
   static final String augmontGraphic = 'images/augmont.png';
@@ -62,7 +62,7 @@ class Assets {
 
   static final List<String> getStartedDesc = [
     'Save or invest ₹100 and get 1 game ticket every Monday',
-    'Use the tickets to participate in exciting weekly contests',
+    'Use the tickets to participate in exciting weekly games',
     'Your money keeps growing with great returns while you play fun games and win prizes!',
   ];
 
@@ -78,58 +78,45 @@ class Assets {
 
   static final List<String> faqHeaders = [
     'What is Fello?',
-    'How much returns do I get by saving and investing through Fello listed assets?',
-    'Do I need to transfer money to Fello’s bank accounts or UPI?',
-    'Is Fello safe?',
     'How does Fello work?',
-    'Will I lose my money while I am playing Tambola on Fello?',
-    'Is there any holding period for the money invested in the funds?',
-    'How will the rewards be distributed?',
-    'How do I get more tambola tickets?',
-    'Do I need to invest everytime to participate in the weekly Tambola?',
+    'For how long are these gaming tickets valid?',
+    'What can I do with these gaming tickets?',
+    'Why do I need to submit and verify my KYC details?',
+    'What do I need to do to verify my KYC?',
+    'Are my funds safe?',
+    'How to play the tambola game?',
   ];
 
   static final List<String> faqAnswers = [
-    'Fello is a game based savings and investment platform for users to save, invest and grow their money '
-        'through SEBI/RBI regulated financial assets and earn more than their savings bank account returns. '
-        'For every ₹100 invested through Fello, users get one tambola ticket using which they can participate '
-        'in weekly Tambola draws and win amazing cash rewards and prizes.',
-    'Fello aims at listing only those financial investment products which have the potential to give returns more'
-        ' than your traditional savings bank account returns which lie between 3-4%. For example, we are planning '
-        'to list our first asset as an ICICI prudential liquid fund which gives returns within the range of 6-7% '
-        'per annum.',
-    'Absolutely not! Fello never asks you to deposit money into our bank accounts or UPI addresses. All the money '
-        'invested and saved through Fello will be directly transferred into respective fund bank accounts and UPI '
-        'ID’s by you at the time of saving and investing. For example, if a user invests in an ICICI prudential mutual '
-        'fund, then the user receives a UPI id of ICICI bank mutual fund to which he/she needs to transfer the money '
-        'directly.',
-    '100% my Fello friend! All the money invested and saved through Fello is directly invested into the respective '
-        'financial asset without our intervention. So the money is absolutely safe and sound lying in the respective '
-        'bank account of the relevant fund. Also, we want to take utmost care of all our Fello customers, so we have '
-        'also made sure to have world class 256 bit encryption. Also, we are an ISO 27001 certified platform and '
-        'will be a SEBI registered Mutual Fund Distributor.',
-    'It’s very simple. Step 1: Save and invest in the mutual fund listed on the platform. Step 2: For every ₹100'
-        ' invested on the platform, you get a tambola ticket. Step 3: Participate in the weekly Tambola and you get '
-        'to win amazing rewards and cash prizes.Step 4: Continue holding your investment and savings for the next '
-        'week to get more tamobla tickets or . The longer you save and hold, the more you earn, the more tambola tickets'
-        ' you get and the more chances you get at winning the weekly tambola.',
-    'Absolutely not! The money saved and invested in the mutual fund is always in the safe hands of the respective '
-        'mutual fund and that will never be effected for playing tambola or other future games on the platform.'
-        ' But on the other hand, the more you save and invest, the more chances you get to win the tambola! :D',
-    'There is no holding period currently for the funds which are getting listed on Fello. The funds are liquid '
-        'funds and can be withdrawn anytime as per your convenience and the money will be deposited back into your '
-        'account instantly or t+1 days.',
-    'We want our users to save and grow more. So all the cash rewards will be awarded in the form of mutual funds.'
-        ' If the user wants to redeem them, then the mutual funds can be sold and the amount will be deposited into '
-        'their bank accounts instantly or in t+1 days.',
-    'I see that you want to win more! So to increase your chances of winning, you need to save and invest more in the'
-        ' listed mutual fund. For every ₹100 invested you get 1 ticket, so if you invest and save ₹1000, you get '
-        '10 tickets. Second, by referring it to your friends, the more you refer, the more tambola tickets you earn '
-        'thus increasing the chances of you winning the draw!',
-    'You don’t need to! If you invested on week 1 and if you are continuing to hold the investment for the coming week '
-        'you get fresh tambola tickets equivalent to the amount invested. For example: If you have invested ₹1000 on '
-        'week 1, you get 10 tickets. If you continue holding the ₹1000 for week 2, you get another 10 tickets and '
-        'so on! Isn’t that amazing?! :D',
+    'Fello is a game based savings and investment application for you to save, play and '
+        'get returns more than a traditional savings bank account. We are making savings fun '
+        'and easy through fun,exciting and rewarding games.',
+    'You can start saving and investing in the funds or financial assets listed on Fello.'
+        ' For every Rs.100 saved or invested through Fello, you receive a gaming ticket which '
+        'can be used to play games listed on the application. For example: If you save Rs.500 in gold,'
+        ' you get 5 gaming tickets which can be used to play the tambola game which is listed on the app.',
+    'Let’s take a scenario. If you save Rs.500, you get 5 gaming tickets. These gaming tickets will be '
+        'refreshed every week. That means, even if you use these gaming tickets in a week, your 5 gaming '
+        'tickets will be refreshed for the next week. If you save more, you get more gaming tickets which '
+        'will be refreshed every week.',
+    'You can play fun and exciting games! Play these games and get a chance to win amazing rewards and prizes.'
+        ' The current game which we have on the app is Tambola and we will be coming up with many more exciting '
+        'games! Now savings is not boring, it\'s fun and exciting!',
+    'As per the RBI and SEBI guidelines, it is mandatory for users to verify their KYC before saving and '
+        'investing. But don’t worry, your information is absolutely safe and confidential with us.',
+    'If you are saving and investing in Augmont digital gold, all you have to do is just enter your PAN details.'
+        '\nIf you are saving and investing in mutual funds, if you are an existing mutual fund investor on any '
+        'other platform, you just need to enter your PAN details if not, you need to go through a quick 3-5 minute '
+        'KYC verification process which includes PAN, aadhar and video KYC verification.',
+    'Absolutely, your savings and investments are directly made into Augmont Digital Gold and ICICI Prudential '
+        'Mutual Funds. While you save/invest, the respective banking details and payment gateways are directly '
+        'linked to these financial institutions where your money is invested safely and securely without the '
+        'intervention of Fello. Also we are a registered Mutual Fund Distributor with AMFI Licence number: 176484',
+    'Very simple. For the current version of the application, for every Rs.100 saved you get one tambola ticket '
+        'which is directly generated in the tambola game. Each ticket has 15 numbers from 1-90. Every day 5 '
+        'numbers will be drawn and over a period of one week from Monday to Sunday 35 numbers are drawn. If you '
+        'the drawn numbers matches your ticket numbers, you get to win prizes as per the rewards mentioned in the '
+        'game which are in the form of corners, top row, middle row, bottom row and full house.',
   ];
 
   static final List<String> mfFaqHeaders = [

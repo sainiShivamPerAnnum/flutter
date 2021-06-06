@@ -5,7 +5,6 @@ import 'package:felloapp/core/model/FeedCard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
-import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +49,7 @@ class _HomePageState extends State<HomePage> {
       return "Good Morning,";
     } else if (hour > 12 && hour <= 17) {
       return "Good Afternoon,";
-    } else if (hour >= 18 && hour <= 22) {
+    } else if (hour > 17 && hour <= 22) {
       return "Good Evening,";
     } else
       return "Hello,";

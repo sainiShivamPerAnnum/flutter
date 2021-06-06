@@ -1,15 +1,10 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
-class WeekWinner {
-  final String name;
-  final int prize;
-  WeekWinner({this.name, this.prize});
-}
 
 class WeekWinnerBoard extends StatefulWidget {
   @override
@@ -21,10 +16,12 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
   DBModel dbProvider;
   BaseUtil baseProvider;
   ScrollController _controller;
-
+  List<WeekWinner> _weekPrizeWinnersList;
+  
   @override
   void initState() {
     _controller = ScrollController();
+    _weekPrizeWinnersList = [];
     super.initState();
   }
 
@@ -54,23 +51,26 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
 
   @override
   Widget build(BuildContext context) {
-    List<WeekWinner> _displayList;
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     if (!baseProvider.isWeekWinnersFetched) {
       isLoading = true;
-      dbProvider.getWeeklyWinners().then((vList) {
-        if(vList != null)baseProvider.currentWeekWinners = vList;
+      dbProvider.getWeeklyWinners().then((TambolaWinnersDetail vObj) {
+        if (vObj != null && vObj.isWinnerListAvailable) {
+          baseProvider.tambolaWinnersDetail = vObj;
+          _weekPrizeWinnersList = vObj.winnerList;
+        }
         baseProvider.isWeekWinnersFetched = true;
-        if(isLoading) {
+        if (isLoading) {
           isLoading = false;
           setState(() {});
         }
       });
     }
-    baseProvider.currentWeekWinners
+    _weekPrizeWinnersList
         .sort((a, b) => (a.prize).compareTo(b.prize));
-    _displayList = baseProvider.currentWeekWinners.reversed.toList();
+    _weekPrizeWinnersList =
+        _weekPrizeWinnersList.reversed.toList();
     return Expanded(
       child: Container(
         margin: EdgeInsets.symmetric(
@@ -113,7 +113,8 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
             ),
             SizedBox(height: 10),
             Text(
-              "Tambola Winners for week: ${getWeek()[0]} to ${getWeek()[1]}", //TODO CHANGE BASED ON WEEK
+              "Tambola Winners for week: ${getWeek()[0]} to ${getWeek()[1]}",
+              //TODO CHANGE BASED ON WEEK
               style: GoogleFonts.montserrat(
                   color: Colors.white, fontSize: SizeConfig.smallTextSize),
             ),
@@ -140,7 +141,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
-                    : (baseProvider.currentWeekWinners.length != 0
+                    : (_weekPrizeWinnersList.length != 0
                         ? Scrollbar(
                             thickness: 20,
                             radius: Radius.circular(100),
@@ -151,7 +152,8 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                             child: ListView.builder(
                               controller: _controller,
                               physics: BouncingScrollPhysics(),
-                              itemCount: baseProvider.currentWeekWinners.length,
+                              itemCount: baseProvider
+                                  .tambolaWinnersDetail.winnerList.length,
                               itemBuilder: (ctx, i) {
                                 return ListTile(
                                   contentPadding: EdgeInsets.symmetric(
@@ -177,14 +179,14 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                                   //   child: Image.asset("images/profile.png"),
                                   // ),
                                   title: Text(
-                                    "${baseProvider.currentWeekWinners[i].name[0].toUpperCase()}${baseProvider.currentWeekWinners[i].name.substring(1).toLowerCase()}",
+                                    "${_weekPrizeWinnersList[i].name[0].toUpperCase()}${_weekPrizeWinnersList[i].name.substring(1).toLowerCase()}",
                                     style: GoogleFonts.montserrat(
                                       color: Colors.white,
                                       fontSize: SizeConfig.mediumTextSize,
                                     ),
                                   ),
                                   trailing: Text(
-                                    "₹ ${baseProvider.currentWeekWinners[i].prize.toString()}",
+                                    "₹ ${_weekPrizeWinnersList[i].prize.toString()}",
                                     style: GoogleFonts.montserrat(
                                       color: Colors.white,
                                       fontSize: SizeConfig.largeTextSize,

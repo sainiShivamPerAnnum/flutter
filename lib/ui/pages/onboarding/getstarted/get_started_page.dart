@@ -227,17 +227,17 @@ class _GetStartedPageState extends State<GetStartedPage> {
         isVisible[0] = true;
       });
     });
-    Timer(const Duration(milliseconds: 2600), () {
+    Timer(const Duration(milliseconds: 800), () {
       setState(() {
         isVisible[1] = true;
       });
     });
-    Timer(const Duration(milliseconds: 4800), () {
+    Timer(const Duration(milliseconds: 1200), () {
       setState(() {
         isVisible[2] = true;
       });
     });
-    Timer(const Duration(milliseconds: 6000), () {
+    Timer(const Duration(milliseconds: 2000), () {
       setState(() {
         isVisible[3] = true;
       });
