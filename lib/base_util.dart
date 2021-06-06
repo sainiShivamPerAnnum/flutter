@@ -70,7 +70,7 @@ class BaseUtil extends ChangeNotifier {
   List<UserTransaction> userMiniTxnList;
   List<ReferralDetail> userReferralsList;
   ReferralDetail myReferralInfo;
-  static String version;
+  static PackageInfo packageInfo;
 
   DateTime _userCreationTimestamp;
   int isOtpResendCount = 0;
@@ -118,9 +118,7 @@ class BaseUtil extends ChangeNotifier {
     if (firebaseUser != null) {
       _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
     }
-
-    PackageInfo _packageInfo = await PackageInfo.fromPlatform();
-    version = '${_packageInfo.version}+${_packageInfo.buildNumber}';
+    packageInfo = await PackageInfo.fromPlatform();
 
     isUserOnboarded =
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);

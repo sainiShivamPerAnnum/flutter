@@ -83,14 +83,14 @@ class LocalDBModel extends ChangeNotifier {
   Future<int> get isHomeTutorialComplete async {
     try {
       final file = await _api.homeTutorialFile;
-      if(file == null) return 0;
+      if(file == null) return 1;
       String contents = await file.readAsString();
-      if(contents == null || contents.isEmpty) return 0;
+      if(contents == null || contents.isEmpty) return 1;  //default to true
 
       return int.parse(contents);
     } catch (e) {
-      log.error("Didnt find fresh home tutorial flag. Defaulting to 0.");
-      return 0;
+      log.error("Didnt find fresh home tutorial flag. Defaulting to 1.");
+      return 1;
     }
   }
 

@@ -4,13 +4,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/tabs/profile/edit_profile_page.dart';
-import 'package:felloapp/ui/pages/tabs/profile/transactions.dart';
 import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
+import 'package:felloapp/ui/pages/tabs/profile/transactions.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
@@ -25,8 +24,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -295,6 +294,20 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(
               height: 50,
             ),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  'v${BaseUtil.packageInfo.version}',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: SizeConfig.smallTextSize,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.black38
+                  ),
+                ),
+              ),
+            ),
             _termsRow()
           ],
         ),
@@ -531,9 +544,10 @@ class _ShareOptionsState extends State<ShareOptions> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   RazorpayModel rProvider;
-  String referral_bonus = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
-  String referral_ticket_bonus =
-      BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_TICKET_BONUS);
+  String referral_bonus =
+      BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
+  String referral_ticket_bonus = BaseRemoteConfig.remoteConfig
+      .getString(BaseRemoteConfig.REFERRAL_TICKET_BONUS);
   String _shareMsg;
 
   _init() {

@@ -788,7 +788,7 @@ class DBModel extends ChangeNotifier {
       dMap['user_id'] = userId;
       dMap['fail_type'] = failType.value();
       dMap['manually_resolved'] = false;
-      dMap['app_version'] = BaseUtil.version ?? '';
+      dMap['app_version'] = '${BaseUtil.packageInfo.version}+${BaseUtil.packageInfo.buildNumber}';
       dMap['timestamp'] = Timestamp.now();
       await _api.addFailedReportDocument(dMap);
       return true;
