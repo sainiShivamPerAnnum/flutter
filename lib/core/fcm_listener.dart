@@ -106,7 +106,7 @@ class FcmListener extends ChangeNotifier {
     }
 
     if(BaseUtil.packageInfo != null) {
-      String cde = (BaseUtil.packageInfo.version??'NA') + (BaseUtil.packageInfo.buildNumber??'NA');
+      String cde = BaseUtil.packageInfo.version??'NA';
       cde = cde.replaceAll('.', '');
       addSubscription(FcmTopic.VERSION, suffix: cde);
     }
