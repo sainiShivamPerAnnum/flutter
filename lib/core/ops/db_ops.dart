@@ -288,7 +288,7 @@ class DBModel extends ChangeNotifier {
       DateTime date = new DateTime.now();
       int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
 
-      QuerySnapshot querySnapshot = await _api.getWinnersByWeekCde(888888);
+      QuerySnapshot querySnapshot = await _api.getWinnersByWeekCde(weekCde);
       //there should only be one document for a week
       if (querySnapshot != null && querySnapshot.docs.length == 1) {
         DocumentSnapshot snapshot = querySnapshot.docs[0];
