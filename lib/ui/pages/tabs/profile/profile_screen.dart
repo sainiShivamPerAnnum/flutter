@@ -131,22 +131,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: double.infinity,
                   child: Column(
                     children: [
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.end,
-                      //   children: [
-                      //     IconButton(
-                      //       icon: Icon(
-                      //         Icons.edit,
-                      //         color: Colors.white,
-                      //       ),
-                      //       onPressed: () {},
-                      //     )
-                      //   ],
-                      // ),
                       SizedBox(
                         height: SizeConfig.screenHeight * 0.02,
                       ),
-
                       Expanded(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -201,7 +188,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           ],
                         ),
                       ),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
