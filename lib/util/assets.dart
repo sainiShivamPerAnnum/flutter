@@ -3,6 +3,7 @@ import 'constants.dart';
 
 class Assets {
   static final String logoMaxSize = 'images/fello_logo.png';
+  static final String logoShortform = 'images/fello-short-logo.png';
   static final String referGraphic = 'images/transfer.png';
   static final String iciciGraphic = 'images/icici.png';
   static final String augmontGraphic = 'images/augmont.png';

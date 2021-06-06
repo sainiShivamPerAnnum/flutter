@@ -294,23 +294,40 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(
               height: 50,
             ),
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Text(
-                  'v${BaseUtil.packageInfo.version}',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: SizeConfig.smallTextSize,
-                    fontWeight: FontWeight.w300,
-                    color: Colors.black38
-                  ),
-                ),
-              ),
-            ),
+            _appVersionRow(),
             _termsRow()
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _appVersionRow() {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            child: Image(
+              image: AssetImage(Assets.logoShortform),
+              fit: BoxFit.contain,
+            ),
+            width: 10,
+            height: 20,
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+            child: Text(
+              'v${BaseUtil.packageInfo.version}(${BaseUtil.packageInfo.buildNumber})',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: SizeConfig.mediumTextSize,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.black38),
+            ),
+          ),
+        ],
       ),
     );
   }
