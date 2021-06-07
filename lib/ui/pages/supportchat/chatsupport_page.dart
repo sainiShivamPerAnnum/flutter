@@ -40,6 +40,7 @@ class _ChatSupportState extends State<ChatSupport> {
     );
   }
   Future<void> _setupNotifications() async {
+    print('device token : ${_baseUtil.myUser.client_token}');
     Freshchat.setPushRegistrationToken(_baseUtil.myUser.client_token);
   }
   Future<void> _setUser() async {

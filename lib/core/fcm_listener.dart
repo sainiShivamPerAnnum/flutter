@@ -54,9 +54,10 @@ class FcmListener extends ChangeNotifier {
       AndroidNotification android = message.notification?.android;
       if(await Freshchat.isFreshchatNotification(message.data)) {
         print('freshchat notification received');
+        _handler.handleNotification('Support', message.data['body']);
         Freshchat.handlePushNotification(message.data);
       }
-      if (message.data != null && message.data.isNotEmpty) {
+      else if (message.data != null && message.data.isNotEmpty) {
         _handler.handleMessage(message.data);
       } else if (notification != null) {
         _handler.handleNotification(notification.title, notification.body);
