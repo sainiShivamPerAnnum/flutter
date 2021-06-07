@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/dialogs/Fold-Card/fold-card.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -35,10 +36,16 @@ class _TicketState extends State<FCard> {
   claim claimtype;
   BaseUtil baseProvider;
 
+  LinearGradient cardGradient = const LinearGradient(
+      colors: [Color(0xff7F00FF), Color(0xffE100FF)],
+      //colors: [Color(0xfffbc7d4), Color(0xff9796f0)],
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight);
+
   Widget get backCard => Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4.0),
-          color: Color(0xfffeddbe),
+          color: Color(0xff493240),
         ),
       );
 
@@ -62,8 +69,8 @@ class _TicketState extends State<FCard> {
 
   List<FoldEntry> _getEntries() {
     return [
-      FoldEntry(height: 250.0, front: topCard),
-      FoldEntry(height: 250.0, front: middleCard, back: frontCard),
+      FoldEntry(height: 230.0, front: topCard),
+      FoldEntry(height: 230.0, front: middleCard, back: frontCard),
       FoldEntry(height: 80.0, front: bottomCard, back: backCard)
     ];
   }
@@ -83,7 +90,7 @@ class _TicketState extends State<FCard> {
       width: double.infinity,
       padding: const EdgeInsets.only(top: 10.0, left: 20, right: 10),
       decoration: BoxDecoration(
-        color: Color(0xfffcecdd),
+        gradient: cardGradient,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(15),
           topRight: Radius.circular(15),
@@ -100,7 +107,7 @@ class _TicketState extends State<FCard> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.all(10),
                   child: Lottie.asset(
                     "images/lottie/clap.json",
                     height: 100,
@@ -109,11 +116,17 @@ class _TicketState extends State<FCard> {
                 Text(
                   "Congratulations",
                   style: GoogleFonts.megrim(
-                    color: Color(0xff4a1c40),
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 2,
-                    fontSize: 32,
-                  ),
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          offset: Offset(2, 2),
+                          color: Colors.white,
+                          blurRadius: 5,
+                        )
+                      ],
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 2,
+                      fontSize: SizeConfig.cardTitleTextSize),
                 ),
               ],
             ),
@@ -139,7 +152,7 @@ class _TicketState extends State<FCard> {
                       },
                       icon: Icon(
                         Icons.clear_rounded,
-                        color: Colors.black,
+                        color: Colors.white,
                         size: 30,
                       ),
                     ),
@@ -158,7 +171,7 @@ class _TicketState extends State<FCard> {
       height: double.infinity,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Color(0xfffcecdd),
+        gradient: cardGradient,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(15),
           topRight: Radius.circular(15),
@@ -171,12 +184,13 @@ class _TicketState extends State<FCard> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Spacer(),
           Text(
             "You Won \$50",
             style: GoogleFonts.montserrat(
-              color: UiConstants.primaryColor,
+              color: Colors.white,
               fontWeight: FontWeight.w500,
-              fontSize: 35,
+              fontSize: SizeConfig.largeTextSize,
             ),
           ),
           SizedBox(
@@ -185,26 +199,40 @@ class _TicketState extends State<FCard> {
           Text(
             "How would you like to redeem it?",
             style: GoogleFonts.montserrat(
-              color: UiConstants.primaryColor,
-              fontSize: 20,
+              color: Colors.white,
+              fontSize: SizeConfig.mediumTextSize,
             ),
           ),
+          Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Lottie.asset("images/lottie/amazon.json",
-                  height: 100, width: 100),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Lottie.asset(
+                    "images/lottie/amazon.json",
+                  ),
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
                   "OR",
-                  style: TextStyle(color: Colors.black),
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
-              Lottie.asset("images/lottie/gold-prize.json",
-                  height: 150, width: 150),
+              Expanded(
+                child: Lottie.asset(
+                  "images/lottie/gold-prize.json",
+                ),
+              ),
             ],
           ),
+          Spacer()
         ],
       ),
     );
@@ -215,7 +243,7 @@ class _TicketState extends State<FCard> {
       height: double.infinity,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Color(0xfffcecdd),
+        gradient: cardGradient,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(15),
           bottomRight: Radius.circular(15),
@@ -236,12 +264,13 @@ class _TicketState extends State<FCard> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.black),
               ),
-              child: Text(
-                "Amazon Gift Card ",
-                style: GoogleFonts.montserrat(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
+              child: FittedBox(
+                child: Text(
+                  "Amazon Gift Card ",
+                  style: GoogleFonts.montserrat(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),
@@ -262,12 +291,14 @@ class _TicketState extends State<FCard> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.amber),
               ),
-              child: Text(
-                "Augmont Gold ",
-                style: GoogleFonts.montserrat(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
+              child: FittedBox(
+                child: Text(
+                  "Augmont Gold ",
+                  style: GoogleFonts.montserrat(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  ),
                 ),
               ),
             ),
@@ -292,7 +323,13 @@ class CloseCard extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.only(top: 10.0, left: 20, right: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.black,
+
+              // gradient: new LinearGradient(colors: [
+              //   Color(0xffFEAC5E),
+              //   Color(0xffC779D0),
+              //   Color(0xff4BC0C8),
+              // ], begin: Alignment.topLeft, end: Alignment.bottomRight),
               borderRadius: BorderRadius.circular(15),
             ),
             child: Stack(
@@ -304,10 +341,11 @@ class CloseCard extends StatelessWidget {
                   children: [
                     Text(
                       "Reward Claimed",
+                      textAlign: TextAlign.center,
                       style: GoogleFonts.montserrat(
-                        color: UiConstants.primaryColor,
+                        color: Colors.white,
                         fontWeight: FontWeight.w700,
-                        fontSize: 50,
+                        fontSize: 32,
                       ),
                     ),
                     SizedBox(
@@ -318,7 +356,7 @@ class CloseCard extends StatelessWidget {
                           ? "You claimed for amazon gift card"
                           : "You claimed for augmont gold",
                       style: GoogleFonts.montserrat(
-                        color: UiConstants.primaryColor,
+                        color: Colors.white,
                       ),
                     ),
                   ],
@@ -327,18 +365,21 @@ class CloseCard extends StatelessWidget {
                   children: [
                     Spacer(),
                     IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          // Future.delayed(Duration(milliseconds: 800))
-                          //     .then((value) => Navigator.pop(context));
-                        },
-                        icon: Icon(
-                          Icons.clear_rounded,
-                          color: Colors.black,
-                          size: 30,
-                        )),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        // Future.delayed(Duration(milliseconds: 800))
+                        //     .then((value) => Navigator.pop(context));
+                      },
+                      icon: Icon(
+                        Icons.clear_rounded,
+                        color: Colors.white,
+                      ),
+                    ),
                   ],
                 ),
+                //   Row(children: [
+                //  claimtype == claim.amazon ? Padding(padding: EdgeInsets.all(20),child: Lottie.asset("images/"),)
+                //   ],)
               ],
             ),
           )
@@ -354,45 +395,36 @@ class CloseCard extends StatelessWidget {
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 20,
+                    horizontal: 10,
                   ),
                   child: Row(
                     children: [
                       Expanded(
-                        flex: 3,
-                        child: Stack(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Positioned(
-                              bottom: 45,
-                              left: 5,
-                              child: Container(
-                                height: 90,
-                                width: 90,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: UiConstants.primaryColor,
-                                    width: 3,
-                                  ),
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      image: baseProvider.myUserDpUrl != null
-                                          ? NetworkImage(
-                                              baseProvider.myUserDpUrl)
-                                          : AssetImage("images/profile.png")),
-                                ),
+                            Transform.rotate(
+                              angle: -0.2,
+                              child: Lottie.asset(
+                                "images/lottie/winner-crown.json",
+                                height: 80,
                               ),
                             ),
-                            Positioned(
-                              top: 20,
-                              left: -5,
-                              child: Transform.rotate(
-                                angle: -0.2,
-                                child: Lottie.asset(
-                                  "images/lottie/winner-crown.json",
-                                  height: 80,
+                            Container(
+                              height: 80,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: UiConstants.primaryColor,
+                                  width: 3,
                                 ),
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    image: baseProvider.myUserDpUrl != null
+                                        ? NetworkImage(baseProvider.myUserDpUrl)
+                                        : AssetImage("images/profile.png")),
                               ),
                             ),
+                            SizedBox(height: 40)
                           ],
                         ),
                       ),
@@ -400,7 +432,7 @@ class CloseCard extends StatelessWidget {
                         width: 20,
                       ),
                       Expanded(
-                        flex: 6,
+                        flex: 2,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -431,11 +463,13 @@ class CloseCard extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10)),
                               padding: EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 10),
-                              child: Text(
-                                "Claim you prize",
-                                style: GoogleFonts.montserrat(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
+                              child: FittedBox(
+                                child: Text(
+                                  "Claim you prize",
+                                  style: GoogleFonts.montserrat(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
                             )

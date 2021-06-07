@@ -56,7 +56,7 @@ class _FoldingTicketState extends State<FoldingCard>
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(FoldingCard.padding * 2),
+      margin: EdgeInsets.all(FoldingCard.padding),
       padding: EdgeInsets.all(FoldingCard.padding),
       height: closedHeight +
           (openHeight - closedHeight) * Curves.easeOut.transform(_ratio),
