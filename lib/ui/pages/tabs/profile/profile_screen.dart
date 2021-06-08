@@ -4,13 +4,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/tabs/profile/edit_profile_page.dart';
-import 'package:felloapp/ui/pages/tabs/profile/transactions.dart';
 import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
+import 'package:felloapp/ui/pages/tabs/profile/transactions.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
@@ -25,8 +24,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -132,22 +131,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: double.infinity,
                   child: Column(
                     children: [
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.end,
-                      //   children: [
-                      //     IconButton(
-                      //       icon: Icon(
-                      //         Icons.edit,
-                      //         color: Colors.white,
-                      //       ),
-                      //       onPressed: () {},
-                      //     )
-                      //   ],
-                      // ),
                       SizedBox(
                         height: SizeConfig.screenHeight * 0.02,
                       ),
-
                       Expanded(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -202,7 +188,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           ],
                         ),
                       ),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -295,9 +280,40 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(
               height: 50,
             ),
+            _appVersionRow(),
             _termsRow()
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _appVersionRow() {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            child: Image(
+              image: AssetImage(Assets.logoShortform),
+              fit: BoxFit.contain,
+            ),
+            width: 10,
+            height: 20,
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+            child: Text(
+              'v${BaseUtil.packageInfo.version}(${BaseUtil.packageInfo.buildNumber})',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: SizeConfig.mediumTextSize,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.black38),
+            ),
+          ),
+        ],
       ),
     );
   }

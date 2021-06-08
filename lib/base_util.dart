@@ -9,22 +9,21 @@ import 'package:felloapp/core/model/FeedCard.dart';
 import 'package:felloapp/core/model/PrizeLeader.dart';
 import 'package:felloapp/core/model/ReferralDetail.dart';
 import 'package:felloapp/core/model/ReferralLeader.dart';
+import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
+import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTicketWallet.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
-import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
-import 'package:felloapp/ui/elements/week-winners.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -64,14 +63,14 @@ class BaseUtil extends ChangeNotifier {
 
   ///KYC global object
   UserKycDetail _kycDetail;
-  List<WeekWinner> currentWeekWinners = [];
+  TambolaWinnersDetail tambolaWinnersDetail;
   List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
   String myUserDpUrl;
   List<UserTransaction> userMiniTxnList;
   List<ReferralDetail> userReferralsList;
   ReferralDetail myReferralInfo;
-  static String version;
+  static PackageInfo packageInfo;
 
   DateTime _userCreationTimestamp;
   int isOtpResendCount = 0;
@@ -119,9 +118,7 @@ class BaseUtil extends ChangeNotifier {
     if (firebaseUser != null) {
       _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
     }
-
-    PackageInfo _packageInfo = await PackageInfo.fromPlatform();
-    version = '${_packageInfo.version}+${_packageInfo.buildNumber}';
+    packageInfo = await PackageInfo.fromPlatform();
 
     isUserOnboarded =
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
@@ -358,7 +355,7 @@ class BaseUtil extends ChangeNotifier {
       _augmontDetail = null;
       _currentAugmontTxn = null;
       _kycDetail = null;
-      currentWeekWinners = null;
+      tambolaWinnersDetail = null;
       prizeLeaders = null;
       referralLeaders = null;
       myUserDpUrl = null;

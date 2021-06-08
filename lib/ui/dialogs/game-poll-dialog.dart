@@ -64,8 +64,9 @@ class _GamePollState extends State<GamePoll> {
       print('Index parsing failed');
     }
     dbProvider.addUserPollResponse(baseProvider.myUser.uid, index).then((flag) {
-      if(!flag) {
-        baseProvider.showNegativeAlert('Couldn\'t save response', 'Please try again in some time', context);
+      if (!flag) {
+        baseProvider.showNegativeAlert('Couldn\'t save response',
+            'Please try again in some time', context);
       }
       setState(() {
         isVoted = flag;
@@ -74,12 +75,10 @@ class _GamePollState extends State<GamePoll> {
   }
 
   Future<void> getPollResponse() async {
-    dbProvider
-        .getUserPollResponse(baseProvider.myUser.uid)
-        .then((response) {
+    dbProvider.getUserPollResponse(baseProvider.myUser.uid).then((response) {
       setState(() {
         userVote = response;
-        if(response != null && response != -1)isVoted = true;
+        if (response != null && response != -1) isVoted = true;
       });
     });
   }
@@ -87,11 +86,12 @@ class _GamePollState extends State<GamePoll> {
   List<GameTile> createPollTiles() {
     List<GameTile> pollList = [];
     for (int i = 0; i < pollDetails.length; i++) {
-      PollItem _item = PollItem.build(pollItems[i], getPollPercentage(pollItems[i]));
+      PollItem _item =
+          PollItem.build(pollItems[i], getPollPercentage(pollItems[i]));
       pollList.add(GameTile(
         isVoted: isVoted,
         ontap: () {
-          if(!isVoted) {
+          if (!isVoted) {
             HapticFeedback.vibrate();
             addPollVote(_item.id);
           }
@@ -189,9 +189,8 @@ class _GamePollState extends State<GamePoll> {
       ),
     );
   }
-  
-  String _getPollItemName(int i) => PollItem.getName('op_$i');
 
+  String _getPollItemName(int i) => PollItem.getName('op_$i');
 }
 
 class GameTile extends StatefulWidget {
@@ -211,7 +210,7 @@ class _GameTileState extends State<GameTile> {
     return GestureDetector(
       onTap: widget.ontap,
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 600),
         curve: Curves.easeInSine,
         height: SizeConfig.screenHeight * 0.05,
         margin: EdgeInsets.symmetric(

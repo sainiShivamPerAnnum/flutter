@@ -5,6 +5,7 @@ import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
@@ -38,6 +39,7 @@ class _LoginControllerState extends State<LoginController> {
   static BaseUtil baseProvider;
   static DBModel dbProvider;
   static FcmListener fcmProvider;
+  static LocalDBModel lclDbProvider;
 
   String userMobile;
   String _verificationId;
@@ -137,6 +139,7 @@ class _LoginControllerState extends State<LoginController> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     fcmProvider = Provider.of<FcmListener>(context, listen: false);
     return Scaffold(
       // appBar: BaseUtil.getAppBar(),
@@ -363,7 +366,7 @@ class _LoginControllerState extends State<LoginController> {
   }
 
   String formatMobileNumber(String pNumber) {
-    if (pNumber != null && !pNumber.isEmpty) {
+    if (pNumber != null && pNumber.isNotEmpty) {
       if (RegExp("^[0-9+]*\$").hasMatch(pNumber)) {
         if (pNumber.length == 13 && pNumber.startsWith("+91")) {
           pNumber = pNumber.substring(3);
@@ -408,7 +411,8 @@ class _LoginControllerState extends State<LoginController> {
       baseProvider.myUser = user ??
           BaseUser.newUser(baseProvider.firebaseUser.uid, this.userMobile);
       //Move to name input page
-      //_currentPage = NameInputScreen.index;
+      //set 'tutorial shown' flag to false to ensure tutorial gets shown to the user
+      lclDbProvider.saveHomeTutorialComplete = false;
       _controller.animateToPage(NameInputScreen.index,
           duration: Duration(milliseconds: 300), curve: Curves.easeIn);
     } else {

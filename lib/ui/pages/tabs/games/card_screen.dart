@@ -28,7 +28,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcase.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 class TambolaHome extends StatefulWidget {
@@ -94,8 +93,10 @@ class _TambolaGameScreen extends State<TambolaHome> {
     // } else {
     //   dailyPickHeaderText = 'Today\'s picks';
     // }
-    String remoteStr1 = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_HEADER_FIRST);
-    String remoteStr2 = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_HEADER_SECOND);
+    String remoteStr1 = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.TAMBOLA_HEADER_FIRST);
+    String remoteStr2 = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.TAMBOLA_HEADER_SECOND);
 
     dailyPickTextList.add(remoteStr1);
     dailyPickTextList.add(remoteStr2);
@@ -801,12 +802,18 @@ class _TambolaGameScreen extends State<TambolaHome> {
   }
 
   Widget _buildPrizeTabView() {
-    String win_corner = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_CORNER);
-    String win_top = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_TOP);
-    String win_middle = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_MIDDLE);
-    String win_bottom = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_BOTTOM);
-    String win_full = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_FULL);
-    String referral_bonus = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
+    String win_corner = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.TAMBOLA_WIN_CORNER);
+    String win_top = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.TAMBOLA_WIN_TOP);
+    String win_middle = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.TAMBOLA_WIN_MIDDLE);
+    String win_bottom = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.TAMBOLA_WIN_BOTTOM);
+    String win_full = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.TAMBOLA_WIN_FULL);
+    String referral_bonus = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.REFERRAL_BONUS);
     return Padding(
       padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
       child: Column(

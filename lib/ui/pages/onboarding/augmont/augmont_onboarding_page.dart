@@ -483,7 +483,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
       String aName = kObj[GetKycStatus.resName];
       if(aName.toUpperCase().trim() != aPanName.trim()) {
         _flag = false;
-        _reason = 'The entered name does not match with the name on your PAN Card';
+        _reason = 'The name on your PAN card does not match. Please enter your legal name.';
       }
     }
     if (!_flag) {
