@@ -267,17 +267,18 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
       return Text(
         ' = ₹ ${_goldAmt.toStringAsFixed(2)}',
         textAlign: TextAlign.start,
-        style: TextStyle(color: (_isValid)?Colors.red:Colors.black87,
-            fontSize: SizeConfig.mediumTextSize*1.2, fontWeight: FontWeight.bold),
+        style: TextStyle(
+            color: (_isValid) ? Colors.red : Colors.black87,
+            fontSize: SizeConfig.mediumTextSize * 1.2,
+            fontWeight: FontWeight.bold),
       );
     }
   }
 
   double _getTotalGoldAvailable() {
-    if (widget.sellRate != null &&
-        widget.withdrawableGoldQnty != null) {
-      double _net =
-          BaseUtil.digitPrecision(widget.sellRate * widget.withdrawableGoldQnty);
+    if (widget.sellRate != null && widget.withdrawableGoldQnty != null) {
+      double _net = BaseUtil.digitPrecision(
+          widget.sellRate * widget.withdrawableGoldQnty);
       return _net;
     }
     return 0;
@@ -453,7 +454,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                 ),
                 title: new Text(title),
                 content: Text(
-                    'All gold deposits are available for withdrawal after ${Constants.AUG_GOLD_WITHDRAW_OFFSET*24} hours. The ${_rem_gold.toStringAsFixed(4)} grams can be withdrawn tomorrow.'),
+                    'All gold deposits are available for withdrawal after ${Constants.AUG_GOLD_WITHDRAW_OFFSET * 24} hours. The ${_rem_gold.toStringAsFixed(4)} grams can be withdrawn tomorrow.'),
                 actions: <Widget>[
                   new TextButton(
                     onPressed: () {
@@ -486,11 +487,16 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
       if (!amRegex.hasMatch(value)) {
         return 'Please enter a valid amount';
       }
+      List<String> fractionalPart = value.split('.');
       double amount = double.parse(value);
-      if (amount > widget.withdrawableGoldQnty) return 'Insufficient balance';
-      if (amount < 0.0001)
+      if (amount > widget.withdrawableGoldQnty)
+        return 'Insufficient balance';
+      else if (amount < 0.0001)
         return 'Please enter a greater amount';
-      if(BaseUtil.digitPrecision(amount,4,false) < amount)
+      else if (fractionalPart != null &&
+          fractionalPart.length > 1 &&
+          fractionalPart[1] != null &&
+          fractionalPart[1].length > 4)
         return 'Upto 4 decimals allowed';
       else
         return null;

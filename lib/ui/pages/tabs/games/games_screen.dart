@@ -12,18 +12,15 @@ import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'package:felloapp/ui/elements/Parallax-card/game_card_list.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
 import 'package:felloapp/ui/elements/week-winners.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-elements/submit_button.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
-import 'package:felloapp/ui/dialogs/Fold-Card/card.dart';
 
 class GamePage extends StatefulWidget {
   final ValueChanged<int> tabChange;
@@ -193,50 +190,23 @@ class _GamePageState extends State<GamePage> {
                                   title: "Want more tickets?",
                                   action: [
                                     GameOfferCardButton(
-                                      // onPressed: () => widget.tabChange(2),
-                                      onPressed: () => showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (ctx) {
-                                          // _confeticontroller.play();
-                                          return Center(
-                                            child: Material(
-                                              color: Colors.transparent,
-                                              child: Stack(
-                                                children: [
-                                                  // IF CLAIMED THE SHOW CONFETTI
-                                                  // Center(
-                                                  //   child: Container(
-                                                  //     height: 100,
-                                                  //     width: 100,
-                                                  //     child: ConfettiWidget(
-                                                  //       blastDirectionality:
-                                                  //           BlastDirectionality
-                                                  //               .explosive,
-                                                  //       confettiController:
-                                                  //           _confeticontroller,
-                                                  //       particleDrag: 0.05,
-                                                  //       emissionFrequency: 0.05,
-                                                  //       numberOfParticles: 25,
-                                                  //       gravity: 0.05,
-                                                  //       shouldLoop: false,
-                                                  //       colors: [
-                                                  //         UiConstants
-                                                  //             .primaryColor,
-                                                  //         Color(0xfff7ff00),
-                                                  //         Color(0xffFC5C7D),
-                                                  //         Color(0xff2B32B2),
-                                                  //       ],
-                                                  //     ),
-                                                  //   ),
-                                                  // ),
-                                                  Center(child: FCard()),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
+                                      onPressed: () => widget.tabChange(2),
+                                      // onPressed: () => showDialog(
+                                      //   context: context,
+                                      //   barrierDismissible: false,
+                                      //   builder: (ctx) {
+                                      //     return Center(
+                                      //       child: Material(
+                                      //         color: Colors.transparent,
+                                      //         child: Stack(
+                                      //           children: [
+                                      //             Center(child: FCard()),
+                                      //           ],
+                                      //         ),
+                                      //       ),
+                                      //     );
+                                      //   },
+                                      // ),
                                       title: "Invest",
                                     ),
                                     SizedBox(

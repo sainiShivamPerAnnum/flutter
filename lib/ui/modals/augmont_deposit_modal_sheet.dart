@@ -149,8 +149,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                   int amount = int.parse(value);
                   if (amount < 10)
                     return 'Minimum deposit amount is ₹10 per transaction';
-                  else if (amount > 10000)
-                    return 'We are currently only accepting a max deposit of ₹10000 per transaction';
+                  else if (amount > 20000)
+                    return 'Max deposit of ₹20000 allowed per transaction';
                   else
                     return null;
                 },
@@ -160,7 +160,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
               ),
             ),
             _buildPurchaseDescriptionCard(
-                _getCurrentAmount(_amtController.text)),
+                _getDouble(_amtController.text)),
             Wrap(
               spacing: 20,
               children: [
@@ -219,7 +219,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                           _isDepositInProgress = true;
                           setState(() {});
                           widget.onDepositConfirmed(
-                              _getCurrentAmount(_amtController.text));
+                              _getTaxIncludedAmount(_amtController.text));
                         }
                       },
                       alignLabel: Alignment.center,
@@ -272,7 +272,20 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     );
   }
 
-  double _getCurrentAmount(String amt) {
+  double _getTaxIncludedAmount(String amt) {
+    if (amt == null || amt.isEmpty) return null;
+    double t = 0;
+    try {
+      t = double.parse(amt);
+      double netTax =
+          widget.currentRates.sgstPercent + widget.currentRates.cgstPercent;
+      return t + augmontProvider.getTaxOnAmount(t, netTax);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  double _getDouble(String amt) {
     if (amt == null || amt.isEmpty) return null;
     double t = 0;
     try {
@@ -360,23 +373,27 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     if (amt == null || amt < 5) {
       return Container();
     }
-    double taxDeducted = augmontProvider.getAmountPostTax(amt, netTax);
-    double grams = augmontProvider.getGoldQuantityFromAmount(amt, rate, netTax);
+    double taxIncluded = amt + augmontProvider.getTaxOnAmount(amt, netTax);
+    // double taxDeducted = augmontProvider.getAmountPostTax(amt, netTax);
+    double grams = augmontProvider.getGoldQuantityFromTaxedAmount(amt, rate);
 
     return Padding(
-      padding: EdgeInsets.all(5),
+      padding: EdgeInsets.fromLTRB(5,0,5,5),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Investment after Tax: ₹${taxDeducted.toStringAsFixed(2)}',
-            style: TextStyle(fontSize: SizeConfig.mediumTextSize),
+            '+ GST = ₹${taxIncluded.toStringAsFixed(2)}',
+            style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),
+          ),
+          SizedBox(
+            height: 3,
           ),
           Text(
             'Gold amount: ${grams.toStringAsFixed(4)} grams',
-            style: TextStyle(fontSize: SizeConfig.mediumTextSize),
+            style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),
           )
         ],
       ),
