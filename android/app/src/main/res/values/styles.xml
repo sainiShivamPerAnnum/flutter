@@ -15,4 +15,11 @@
     <style name="NormalTheme" parent="@android:style/Theme.Black.NoTitleBar">
         <item name="android:windowBackground">@android:color/white</item>
     </style>
+    <style name="Theme.Freshchat.SelectedTheme" parent="FreshchatCustomTheme">
+    </style>
+    <style name="FreshchatCustomTheme" parent="@style/Theme.Freshchat.Light">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/statusBar</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+    </style>
 </resources>

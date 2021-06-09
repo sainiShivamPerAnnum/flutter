@@ -20,8 +20,8 @@ class _ChatSupportState extends State<ChatSupport> {
   void initState() { 
     super.initState();
     Freshchat.init('745692b3-598d-44f0-a74d-1869e44d5549', '2835c3bd-78d6-4863-93d0-400786f23936', 'msdk.in.freshchat.com',
-    gallerySelectionEnabled: true);
-    _userid = _baseUtil.myUser.email;
+    gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
+    _userid = _baseUtil.myUser.uid;
     Freshchat.identifyUser(externalId: _userid);
   }
   @override
@@ -49,7 +49,7 @@ class _ChatSupportState extends State<ChatSupport> {
     Freshchat.identifyUser(externalId: _userid, restoreId: _restore);
     print('user id $_userid');
     print('restore id $_restore');
-    user.setFirstName('Nimit Test - 2');
+    user.setFirstName('Nimit Test - 3');
     user.setEmail(_baseUtil.myUser.email);
     user.setPhone('+91', _baseUtil.myUser.mobile);
     Freshchat.setUser(user);
