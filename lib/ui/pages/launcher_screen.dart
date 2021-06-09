@@ -7,12 +7,14 @@ import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/ui/elements/breathing_text_widget.dart';
 import 'package:felloapp/ui/elements/logo_canvas.dart';
 import 'package:felloapp/ui/elements/logo_container.dart';
+import 'package:felloapp/util/app_state.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:provider/provider.dart';
 import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/core/router/pages.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -46,19 +48,23 @@ class LogoFadeIn extends State<SplashScreen> {
   }
 
   initialize() async {
-    final baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    final fcmProvider = Provider.of<FcmListener>(context,listen:false);
+    final baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    final fcmProvider = Provider.of<FcmListener>(context, listen: false);
+    final appStateProvider = Provider.of<AppState>(context, listen: false);
     await baseProvider.init();
     await fcmProvider.setupFcm();
     _timer3.cancel();
     if (!baseProvider.isUserOnboarded) {
       log.debug("New user. Moving to Onboarding..");
       // Navigator.of(context).pop();
-      Navigator.of(context).pushReplacementNamed('/onboarding');
+      //Navigator.of(context).pushReplacementNamed('/onboarding');
+      appStateProvider.currentAction =
+          PageAction(state: PageState.replaceAll, page: OnboardPageConfig);
     } else {
       log.debug("Existing User. Moving to Home..");
       // Navigator.of(context).pop();
-      Navigator.of(context).pushReplacementNamed('/approot');
+      appStateProvider.currentAction =
+          PageAction(state: PageState.replaceAll, page: RootPageConfig);
     }
   }
 
@@ -67,8 +73,8 @@ class LogoFadeIn extends State<SplashScreen> {
     //if(!_timer.isActive)initialize();
     SizeConfig().init(context);
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
           body: Stack(
         children: <Widget>[
           (logo != null)

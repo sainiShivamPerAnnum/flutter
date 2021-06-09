@@ -11,6 +11,7 @@ import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
+import 'package:felloapp/util/app_state.dart';
 import 'package:get_it/get_it.dart';
 
 GetIt locator = GetIt.instance;
@@ -29,6 +30,6 @@ void setupLocator() {
   locator.registerLazySingleton(() => FcmListener());
   locator.registerLazySingleton(() => FcmHandler());
   locator.registerLazySingleton(() => PaymentService());
-
+  locator.registerLazySingleton(() => AppState());
   //....
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/fcm_listener.dart';
@@ -8,6 +10,9 @@ import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/kyc_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/core/router/back_dispatcher.dart';
+import 'package:felloapp/core/router/fello_parser.dart';
+import 'package:felloapp/core/router/router_delegate.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
@@ -22,12 +27,13 @@ import 'package:felloapp/ui/pages/root.dart';
 import 'package:felloapp/ui/pages/tabs/profile/edit_profile_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/route_legend.dart';
+import 'package:felloapp/util/app_state.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:felloapp/core/router/pages.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 void main() async {
@@ -37,7 +43,46 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final appState = AppState();
+
+  FelloRouterDelegate delegate;
+  final parser = FelloParser();
+  FelloBackButtonDispatcher backButtonDispatcher;
+  StreamSubscription _linkSubscription;
+
+  // TODO Add Subscription
+
+  _MyAppState() {
+    delegate = FelloRouterDelegate(appState);
+    delegate.setNewRoutePath(SplashPageConfig);
+    backButtonDispatcher = FelloBackButtonDispatcher(delegate);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initPlatformState();
+  }
+
+  @override
+  void dispose() {
+    _linkSubscription?.cancel();
+    super.dispose();
+  }
+
+  Future<void> initPlatformState() async {
+    if (!mounted) return;
+    setState(() {
+      delegate.parseRoute(Uri.parse('/splash'));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -53,8 +98,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => locator<FcmListener>()),
         ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
         ChangeNotifierProvider(create: (_) => locator<PaymentService>()),
+        ChangeNotifierProvider(create: (_) => locator<AppState>()),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         title: Constants.APP_NAME,
         theme: ThemeData(
             primaryColor: UiConstants.primaryColor,
@@ -62,21 +108,24 @@ class MyApp extends StatelessWidget {
             visualDensity: VisualDensity.adaptivePlatformDensity,
             textTheme: GoogleFonts.montserratTextTheme()),
         debugShowCheckedModeBanner: false,
-        home: SplashScreen(),
+        backButtonDispatcher: backButtonDispatcher,
+        routerDelegate: delegate,
+        routeInformationParser: parser,
+        // home: SplashScreen(),
         //onGenerateRoute: generateRoute,
-        routes: <String, WidgetBuilder>{
-          '/launcher': (BuildContext context) => SplashScreen(),
-          '/approot': (BuildContext context) => Root(),
-          '/onboarding': (BuildContext context) => GetStartedPage(),
-          '/login': (BuildContext context) => LoginController(),
-          '/faq': (BuildContext context) => FAQPage(),
-          '/tnc': (BuildContext context) => TnC(),
-          '/refpolicy': (BuildContext context) => ReferralPolicy(),
-          '/verifykyc': (BuildContext context) => KycOnboardInterface(),
-          '/onboardicici': (BuildContext context) => IciciOnboardController(),
-          '/initkyc': (BuildContext context) => KYCInvalid(),
-          '/editProf': (BuildContext context) => EditProfile()
-        },
+        // routes: <String, WidgetBuilder>{
+        //   '/launcher': (BuildContext context) => SplashScreen(),
+        //   '/approot': (BuildContext context) => Root(),
+        //   '/onboarding': (BuildContext context) => GetStartedPage(),
+        //   '/login': (BuildContext context) => LoginController(),
+        //   '/faq': (BuildContext context) => FAQPage(),
+        //   '/tnc': (BuildContext context) => TnC(),
+        //   '/refpolicy': (BuildContext context) => ReferralPolicy(),
+        //   '/verifykyc': (BuildContext context) => KycOnboardInterface(),
+        //   '/onboardicici': (BuildContext context) => IciciOnboardController(),
+        //   '/initkyc': (BuildContext context) => KYCInvalid(),
+        //   '/editProf': (BuildContext context) => EditProfile()
+        // },
       ),
     );
   }

@@ -18,6 +18,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:felloapp/util/app_state.dart';
+import 'package:felloapp/core/router/pages.dart';
 
 class LoginController extends StatefulWidget {
   final int initPage;
@@ -40,6 +42,7 @@ class _LoginControllerState extends State<LoginController> {
   static DBModel dbProvider;
   static FcmListener fcmProvider;
   static LocalDBModel lclDbProvider;
+  static AppState appStateProvider;
 
   String userMobile;
   String _verificationId;
@@ -141,6 +144,7 @@ class _LoginControllerState extends State<LoginController> {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     fcmProvider = Provider.of<FcmListener>(context, listen: false);
+    appStateProvider = Provider.of<AppState>(context, listen: false);
     return Scaffold(
       // appBar: BaseUtil.getAppBar(),
       backgroundColor: Color(0xfff1f1f1),
@@ -444,7 +448,9 @@ class _LoginControllerState extends State<LoginController> {
 
     await baseProvider.init();
     await fcmProvider.setupFcm();
-    Navigator.of(context).pushReplacementNamed('/approot');
+    // Navigator.of(context).pushReplacementNamed('/approot');
+    appStateProvider.currentAction =
+        PageAction(state: PageState.replaceAll, page: RootPageConfig);
     baseProvider.showPositiveAlert(
         'Sign In Complete',
         'Welcome to ${Constants.APP_NAME}, ${baseProvider.myUser.name}',
