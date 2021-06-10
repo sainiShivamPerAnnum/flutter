@@ -12,18 +12,15 @@ import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'package:felloapp/ui/elements/Parallax-card/game_card_list.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
 import 'package:felloapp/ui/elements/week-winners.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-elements/submit_button.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
-import 'package:felloapp/ui/dialogs/Fold-Card/card.dart';
 
 class GamePage extends StatefulWidget {
   final ValueChanged<int> tabChange;

@@ -26,6 +26,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
@@ -57,6 +58,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
   List<String> dailyPickTextList = [];
 
   // List<String> prizeEmoji = ['🥇', '🏆', ' 🎊', ' 🎉'];
+  List<bool> detStatus = [false, false, false, false];
 
   GlobalKey _showcaseOne = GlobalKey();
   GlobalKey _showcaseTwo = GlobalKey();
@@ -267,7 +269,9 @@ class _TambolaGameScreen extends State<TambolaHome> {
               ),
             ),
             SafeArea(
-                child: SingleChildScrollView(child: _buildCardCanvas(context))),
+                child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: _buildCardCanvas(context))),
             Positioned(
               top: 5,
               child: SafeArea(
@@ -458,11 +462,191 @@ class _TambolaGameScreen extends State<TambolaHome> {
                 endIndent: SizeConfig.blockSizeHorizontal * 10,
                 indent: SizeConfig.blockSizeHorizontal * 10,
               ),
-              _buildPrizeTabView(),
+              //_buildPrizeTabView(),
+              _buildPrizePodium()
             ],
           ),
         )
       ],
+    );
+  }
+
+  _buildPrizePodium() {
+    return Container(
+      width: SizeConfig.screenWidth,
+      child: Column(
+        children: [
+          SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: _podiumItem(
+                "images/Tambola/fullhouse.png", "₹ 1000", "Full House"),
+          ),
+          Row(
+            children: [
+              Expanded(
+                flex: 6,
+                child: _podiumItem("images/Tambola/rows.png", "₹ 500",
+                    "First/Second/Third Row"),
+              ),
+              Expanded(
+                flex: 4,
+                child: _podiumItem(
+                    "images/Tambola/corners.png", "₹ 100", "Corners"),
+              )
+            ],
+          ),
+          SizedBox(height: 20),
+          ExpansionPanelList(
+            animationDuration: Duration(milliseconds: 600),
+            expandedHeaderPadding: EdgeInsets.all(0),
+            dividerColor: Colors.grey.withOpacity(0.3),
+            elevation: 0,
+            children: [
+              ExpansionPanel(
+                headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
+                    "images/svgs/howitworks.svg", "How the prizing works ?"),
+                isExpanded: detStatus[0],
+                body: Container(
+                  child: Column(
+                    children: [
+                      Text(
+                        "- Every day you recive 6 random generated picks\n\n-Check what numbers are matching on your tambola tickets\n\n- If any of your card satisfies any of the 3 criteria, congrats you are a winner.",
+                        style: TextStyle(
+                          height: 1.5,
+                          fontSize: SizeConfig.mediumTextSize,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              ExpansionPanel(
+                headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
+                    "images/svgs/cash-distribution.svg",
+                    "How cash is distributed ?"),
+                isExpanded: detStatus[1],
+                body: Container(
+                  padding: EdgeInsets.only(right: 25),
+                  child: Column(
+                    children: [
+                      Text(
+                        "- Every Sunday, winners are announced and the cash prize is distributed  between the winners of equal win status.\n\n-Eg: if 10 people claim to have a Tambola ticket with Full house then ₹1000 will be distributed among those 10 people i,e. each one will get ₹100.\n\n-easy peasy",
+                        style: TextStyle(
+                          height: 1.5,
+                          fontSize: SizeConfig.mediumTextSize,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              ExpansionPanel(
+                headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
+                    "images/svgs/redeem.svg",
+                    "How can you redeem your prize ?"),
+                body: Container(
+                  padding: EdgeInsets.only(right: 25),
+                  child: Column(
+                    children: [
+                      Text(
+                        "If you win, then we will:\n\n-Send you a notification for the same and you can claim by clicking on that.\n\n-Show you a prize dialog in the game section for claiming your reward\n\nAlso, you can check the Winnerboard. If your name exists,click on it to claim your reward.",
+                        style: TextStyle(
+                          height: 1.5,
+                          fontSize: SizeConfig.mediumTextSize,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                isExpanded: detStatus[2],
+              ),
+              ExpansionPanel(
+                headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
+                    "images/svgs/winmore.svg",
+                    "How you can maximize your winnings ?"),
+                body: Container(
+                  padding: EdgeInsets.only(right: 25),
+                  child: Column(
+                    children: [
+                      Text(
+                        "-So by now you got the idea, how to win\n\n-Now to maximize your winning, you have to maxmimize your chances of matching tambola tickets\n\n-So get more and more tambola tickets to maximize you chances of winning.\n\n-How to get more tambola tickets? Invest in the funds available.\n\n-For every ₹100 you invest/save, you get new tambola ticket.\n\n!!Start investing now!!\n",
+                        style: TextStyle(
+                          height: 1.5,
+                          fontSize: SizeConfig.mediumTextSize,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                isExpanded: detStatus[3],
+              )
+            ],
+            expansionCallback: (i, isOpen) {
+              print("$i th item is $isOpen");
+              setState(() {
+                detStatus[i] = !isOpen;
+              });
+              print(detStatus[i]);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  _prizeFAQHeader(String asset, String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          SvgPicture.asset(asset, height: 20, width: 20),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: SizeConfig.mediumTextSize,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _podiumItem(String imagePath, String title, String subtitle) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            imagePath,
+          ),
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: UiConstants.primaryColor,
+              fontSize: SizeConfig.largeTextSize,
+            ),
+          ),
+          SizedBox(height: 10),
+          Text(
+            subtitle,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: SizeConfig.mediumTextSize,
+            ),
+          )
+        ],
+      ),
     );
   }
 
