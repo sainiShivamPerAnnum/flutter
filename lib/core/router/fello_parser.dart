@@ -5,16 +5,13 @@ class FelloParser extends RouteInformationParser<PageConfiguration> {
   @override
   Future<PageConfiguration> parseRouteInformation(
       RouteInformation routeInformation) async {
-    // 1
     final uri = Uri.parse(routeInformation.location);
-    // 2
+
     if (uri.pathSegments.isEmpty) {
       return SplashPageConfig;
     }
-
-    // 3
     final path = uri.pathSegments[0];
-    // 4
+
     switch (path) {
       case SplashPath:
         return SplashPageConfig;

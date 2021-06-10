@@ -28,6 +28,7 @@ class LogoFadeIn extends State<SplashScreen> {
   Timer _timer3;
   LogoStyle _logoStyle = LogoStyle.markOnly;
   ui.Image logo;
+  AppState appStateProvider;
 
   LogoFadeIn() {
     _loadImageAsset(Assets.logoMaxSize);
@@ -50,7 +51,7 @@ class LogoFadeIn extends State<SplashScreen> {
   initialize() async {
     final baseProvider = Provider.of<BaseUtil>(context, listen: false);
     final fcmProvider = Provider.of<FcmListener>(context, listen: false);
-    final appStateProvider = Provider.of<AppState>(context, listen: false);
+    appStateProvider = Provider.of<AppState>(context, listen: false);
     await baseProvider.init();
     await fcmProvider.setupFcm();
     _timer3.cancel();
@@ -58,11 +59,13 @@ class LogoFadeIn extends State<SplashScreen> {
       log.debug("New user. Moving to Onboarding..");
       // Navigator.of(context).pop();
       //Navigator.of(context).pushReplacementNamed('/onboarding');
+
       appStateProvider.currentAction =
           PageAction(state: PageState.replaceAll, page: OnboardPageConfig);
     } else {
       log.debug("Existing User. Moving to Home..");
       // Navigator.of(context).pop();
+      //Navigator.of(context).pushReplacementNamed('/approot');
       appStateProvider.currentAction =
           PageAction(state: PageState.replaceAll, page: RootPageConfig);
     }

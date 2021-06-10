@@ -1,8 +1,6 @@
 import 'package:felloapp/core/router/pages.dart';
 import 'package:flutter/material.dart';
 
-const String LoggedInKey = 'LoggedIn';
-
 enum PageState {
   none,
   addPage,

@@ -7,18 +7,25 @@ const String OnboardPath = '/onboarding';
 const String LoginPath = '/login';
 const String EditProfilePath = '/editProf';
 
-enum Pages { Splash, Root, Onboard, Login, EditProfile }
+enum Pages {
+  Splash,
+  Root,
+  Onboard,
+  Login,
+  EditProfile,
+}
 
 class PageConfiguration {
   final String key;
   final String path;
   final Pages uiPage;
   PageAction currentPageAction;
-  PageConfiguration(
-      {@required this.key,
-      @required this.path,
-      @required this.uiPage,
-      this.currentPageAction});
+  PageConfiguration({
+    @required this.key,
+    @required this.path,
+    @required this.uiPage,
+    this.currentPageAction,
+  });
 }
 
 PageConfiguration SplashPageConfig = PageConfiguration(

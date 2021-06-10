@@ -54,33 +54,11 @@ class _MyAppState extends State<MyApp> {
   FelloRouterDelegate delegate;
   final parser = FelloParser();
   FelloBackButtonDispatcher backButtonDispatcher;
-  StreamSubscription _linkSubscription;
-
-  // TODO Add Subscription
 
   _MyAppState() {
     delegate = FelloRouterDelegate(appState);
     delegate.setNewRoutePath(SplashPageConfig);
     backButtonDispatcher = FelloBackButtonDispatcher(delegate);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    initPlatformState();
-  }
-
-  @override
-  void dispose() {
-    _linkSubscription?.cancel();
-    super.dispose();
-  }
-
-  Future<void> initPlatformState() async {
-    if (!mounted) return;
-    setState(() {
-      delegate.parseRoute(Uri.parse('/splash'));
-    });
   }
 
   @override
@@ -111,6 +89,7 @@ class _MyAppState extends State<MyApp> {
         backButtonDispatcher: backButtonDispatcher,
         routerDelegate: delegate,
         routeInformationParser: parser,
+
         // home: SplashScreen(),
         //onGenerateRoute: generateRoute,
         // routes: <String, WidgetBuilder>{
