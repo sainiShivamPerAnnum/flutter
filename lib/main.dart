@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
             primaryColor: UiConstants.primaryColor,
             primarySwatch: Colors.green,
             visualDensity: VisualDensity.adaptivePlatformDensity,
-            textTheme: GoogleFonts.montserratTextTheme()),
+            textTheme: GoogleFonts.rubikTextTheme()),
         debugShowCheckedModeBanner: false,
         home: SplashScreen(),
         routes: <String, WidgetBuilder>{
