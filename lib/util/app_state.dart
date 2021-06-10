@@ -26,6 +26,7 @@ class AppState extends ChangeNotifier {
   set currentAction(PageAction action) {
     _currentAction = action;
     notifyListeners();
+    print("notified -----------------> " + _currentAction.page.key);
   }
 
   void resetCurrentAction() {

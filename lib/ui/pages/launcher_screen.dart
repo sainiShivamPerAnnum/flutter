@@ -4,6 +4,7 @@ import 'dart:ui' as ui show Image, instantiateImageCodec;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_listener.dart';
+import 'package:felloapp/core/router/router_delegate.dart';
 import 'package:felloapp/ui/elements/breathing_text_widget.dart';
 import 'package:felloapp/ui/elements/logo_canvas.dart';
 import 'package:felloapp/ui/elements/logo_container.dart';
@@ -28,7 +29,7 @@ class LogoFadeIn extends State<SplashScreen> {
   Timer _timer3;
   LogoStyle _logoStyle = LogoStyle.markOnly;
   ui.Image logo;
-  AppState appStateProvider;
+  AppState stateProvider;
 
   LogoFadeIn() {
     _loadImageAsset(Assets.logoMaxSize);
@@ -51,7 +52,7 @@ class LogoFadeIn extends State<SplashScreen> {
   initialize() async {
     final baseProvider = Provider.of<BaseUtil>(context, listen: false);
     final fcmProvider = Provider.of<FcmListener>(context, listen: false);
-    appStateProvider = Provider.of<AppState>(context, listen: false);
+    stateProvider = Provider.of<AppState>(context, listen: false);
     await baseProvider.init();
     await fcmProvider.setupFcm();
     _timer3.cancel();
@@ -60,13 +61,13 @@ class LogoFadeIn extends State<SplashScreen> {
       // Navigator.of(context).pop();
       //Navigator.of(context).pushReplacementNamed('/onboarding');
 
-      appStateProvider.currentAction =
+      stateProvider.currentAction =
           PageAction(state: PageState.replaceAll, page: OnboardPageConfig);
     } else {
       log.debug("Existing User. Moving to Home..");
       // Navigator.of(context).pop();
       //Navigator.of(context).pushReplacementNamed('/approot');
-      appStateProvider.currentAction =
+      stateProvider.currentAction =
           PageAction(state: PageState.replaceAll, page: RootPageConfig);
     }
   }

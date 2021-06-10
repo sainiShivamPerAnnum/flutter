@@ -50,7 +50,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final appState = AppState();
-
   FelloRouterDelegate delegate;
   final parser = FelloParser();
   FelloBackButtonDispatcher backButtonDispatcher;
@@ -77,6 +76,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
         ChangeNotifierProvider(create: (_) => locator<PaymentService>()),
         ChangeNotifierProvider(create: (_) => locator<AppState>()),
+        ChangeNotifierProvider(create: (_) => locator<FelloRouterDelegate>())
       ],
       child: MaterialApp.router(
         title: Constants.APP_NAME,
