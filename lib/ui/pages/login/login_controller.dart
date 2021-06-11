@@ -6,6 +6,7 @@ import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
@@ -18,8 +19,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-import 'package:felloapp/util/app_state.dart';
-import 'package:felloapp/core/router/pages.dart';
 
 class LoginController extends StatefulWidget {
   final int initPage;
@@ -449,8 +448,8 @@ class _LoginControllerState extends State<LoginController> {
     await baseProvider.init();
     await fcmProvider.setupFcm();
     // Navigator.of(context).pushReplacementNamed('/approot');
-    appStateProvider.currentAction =
-        PageAction(state: PageState.replaceAll, page: RootPageConfig);
+    // appStateProvider.currentAction =
+    //     PageAction(state: PageState.replaceAll, page: RootPageConfig);
     baseProvider.showPositiveAlert(
         'Sign In Complete',
         'Welcome to ${Constants.APP_NAME}, ${baseProvider.myUser.name}',

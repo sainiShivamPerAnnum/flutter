@@ -23,7 +23,7 @@ class _KycOnboardControllerState extends State<KycOnboardController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BaseUtil.getAppBar(),
+      appBar: BaseUtil.getAppBar(context),
       body: Container(
         child: Center(
           child: Column(

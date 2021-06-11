@@ -1,12 +1,14 @@
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/elements/Parallax-card/card_renderer.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
-import 'package:felloapp/ui/pages/tabs/games/card_screen.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola-home.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
-
 
 import 'rotation_3d.dart';
 
@@ -24,6 +26,7 @@ class GameCardList extends StatefulWidget {
 class GameCardListState extends State<GameCardList>
     with SingleTickerProviderStateMixin {
   final double _maxRotation = 20;
+  AppState appState;
 
   PageController _pageController;
 
@@ -41,11 +44,16 @@ class GameCardListState extends State<GameCardList>
 
   @override
   Widget build(BuildContext context) {
+    appState = Provider.of<AppState>(context, listen: false);
     gameRoutes = [
       () => Navigator.push(
-          context, MaterialPageRoute(builder: (ctx) => ShowCaseWidget(
-        builder: Builder(builder: (context) => TambolaHome()),
-      ))),
+          context,
+          MaterialPageRoute(
+              builder: (ctx) => ShowCaseWidget(
+                    builder: Builder(builder: (context) => TambolaHome()),
+                  ))),
+      // () => appState.currentAction =
+      //     PageAction(state: PageState.addPage, page: TambolaHomePageConfig),
       () {
         HapticFeedback.vibrate();
         showDialog(

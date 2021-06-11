@@ -55,7 +55,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
       _isInit = true;
     }
     return Scaffold(
-      appBar: BaseUtil.getAppBar(),
+      appBar: BaseUtil.getAppBar(context),
       body: SafeArea(child: _bodyContent(context)),
     );
   }
@@ -475,15 +475,18 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     if (kObj == null ||
         kObj[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
         kObj[GetKycStatus.resStatus] == null ||
-        kObj[GetKycStatus.resName] == null || kObj[GetKycStatus.resName] == '') {
+        kObj[GetKycStatus.resName] == null ||
+        kObj[GetKycStatus.resName] == '') {
       log.error('Couldnt fetch an appropriate response');
+
       ///set name test to true as we couldnt find it in the cams database
       _flag = true;
-    }else {
+    } else {
       String aName = kObj[GetKycStatus.resName];
-      if(aName.toUpperCase().trim() != aPanName.trim()) {
+      if (aName.toUpperCase().trim() != aPanName.trim()) {
         _flag = false;
-        _reason = 'The name on your PAN card does not match. Please enter your legal name.';
+        _reason =
+            'The name on your PAN card does not match. Please enter your legal name.';
       }
     }
     if (!_flag) {

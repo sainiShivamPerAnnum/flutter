@@ -1,5 +1,5 @@
-import 'package:felloapp/core/router/pages.dart';
 import 'package:flutter/material.dart';
+import 'ui_pages.dart';
 
 class FelloParser extends RouteInformationParser<PageConfiguration> {
   @override
@@ -10,6 +10,7 @@ class FelloParser extends RouteInformationParser<PageConfiguration> {
     if (uri.pathSegments.isEmpty) {
       return SplashPageConfig;
     }
+
     final path = uri.pathSegments[0];
 
     switch (path) {
@@ -17,14 +18,12 @@ class FelloParser extends RouteInformationParser<PageConfiguration> {
         return SplashPageConfig;
       case LoginPath:
         return LoginPageConfig;
-      case OnboardPath:
-        return OnboardPageConfig;
       case RootPath:
         return RootPageConfig;
-      case LoginPath:
-        return LoginPageConfig;
+      case OnboardPath:
+        return OnboardPageConfig;
       case EditProfilePath:
-        return EditProfilePageConfig;
+        return EditProfileConfig;
       default:
         return SplashPageConfig;
     }
@@ -37,14 +36,12 @@ class FelloParser extends RouteInformationParser<PageConfiguration> {
         return const RouteInformation(location: SplashPath);
       case Pages.Login:
         return const RouteInformation(location: LoginPath);
-      case Pages.Onboard:
-        return const RouteInformation(location: OnboardPath);
       case Pages.Root:
         return const RouteInformation(location: RootPath);
+      case Pages.Onboard:
+        return const RouteInformation(location: OnboardPath);
       case Pages.EditProfile:
-        return const RouteInformation(
-          location: EditProfilePath,
-        );
+        return const RouteInformation(location: EditProfilePath);
       default:
         return const RouteInformation(location: SplashPath);
     }

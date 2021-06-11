@@ -6,6 +6,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
 import 'package:felloapp/ui/dialogs/ticket_details_dialog.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
@@ -23,9 +24,9 @@ import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 class GamePage extends StatefulWidget {
-  final ValueChanged<int> tabChange;
+  // final ValueChanged<int> tabChange;
 
-  GamePage({this.tabChange});
+  // GamePage({this.tabChange});
 
   @override
   _GamePageState createState() => _GamePageState();
@@ -38,7 +39,9 @@ class _GamePageState extends State<GamePage> {
   LocalDBModel lclDbProvider;
   BaseUtil baseProvider;
   DBModel dbProvider;
+  AppState appState;
   int currentPage;
+
   GlobalKey _showcaseHeader = GlobalKey();
   GlobalKey _showcaseFooter = GlobalKey();
 
@@ -95,6 +98,7 @@ class _GamePageState extends State<GamePage> {
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    appState = Provider.of<AppState>(context, listen: false);
     if (baseProvider.show_game_tutorial) {
       Timer(const Duration(milliseconds: 2100), () {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -190,7 +194,8 @@ class _GamePageState extends State<GamePage> {
                                   title: "Want more tickets?",
                                   action: [
                                     GameOfferCardButton(
-                                      onPressed: () => widget.tabChange(2),
+                                      onPressed: () =>
+                                          appState.setCurrentTabIndex = 2,
                                       // onPressed: () => showDialog(
                                       //   context: context,
                                       //   barrierDismissible: false,
@@ -213,7 +218,8 @@ class _GamePageState extends State<GamePage> {
                                       width: 10,
                                     ),
                                     GameOfferCardButton(
-                                      onPressed: () => widget.tabChange(3),
+                                      onPressed: () =>
+                                          appState.setCurrentTabIndex = 2,
                                       title: "Share",
                                     ),
                                   ],

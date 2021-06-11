@@ -24,8 +24,6 @@ import 'package:provider/provider.dart';
 import '../../root.dart';
 
 class EditProfile extends StatefulWidget {
-  final String prevImage;
-  EditProfile({this.prevImage});
   @override
   _EditProfileState createState() => _EditProfileState();
 }
@@ -190,11 +188,12 @@ class _EditProfileState extends State<EditProfile> {
             ),
           ));
         }
+
         return true;
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: BaseUtil.getAppBar(),
+        appBar: BaseUtil.getAppBar(context),
         body: Padding(
           padding: EdgeInsets.symmetric(
               horizontal: SizeConfig.blockSizeHorizontal * 5),
@@ -227,7 +226,7 @@ class _EditProfileState extends State<EditProfile> {
                                         width: SizeConfig.screenHeight * 0.2,
                                         fit: BoxFit.cover,
                                       )
-                                    : (widget.prevImage == null
+                                    : (baseProvider.myUserDpUrl == null
                                         ? Image.asset(
                                             "images/profile.png",
                                             height:
@@ -237,7 +236,7 @@ class _EditProfileState extends State<EditProfile> {
                                             fit: BoxFit.cover,
                                           )
                                         : CachedNetworkImage(
-                                            imageUrl: widget.prevImage,
+                                            imageUrl: baseProvider.myUserDpUrl,
                                             height:
                                                 SizeConfig.screenHeight * 0.2,
                                             width:

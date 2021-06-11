@@ -1,3 +1,5 @@
+import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +27,8 @@ class FcmHandler extends ChangeNotifier {
     } else {
       url = "";
     }
+    print("------------------->" + url);
+    delegate.parseRoute(Uri.parse(url));
     return true;
   }
 

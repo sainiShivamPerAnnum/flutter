@@ -3,6 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/model/FeedCard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -14,9 +15,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  final ValueChanged<int> tabChange;
+  // final ValueChanged<int> tabChange;
 
-  HomePage({this.tabChange});
+  // HomePage({this.tabChange});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -26,6 +27,7 @@ class _HomePageState extends State<HomePage> {
   bool isImageLoading = false;
   BaseUtil baseProvider;
   DBModel dbProvider;
+  AppState appState;
   bool _isInit = false;
 
   Future<void> getProfilePicUrl() async {
@@ -77,6 +79,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    appState = Provider.of<AppState>(context, listen: false);
     if (baseProvider.myUserDpUrl == null) {
       isImageLoading = true;
       getProfilePicUrl();
@@ -142,7 +145,7 @@ class _HomePageState extends State<HomePage> {
         };
       case 120:
         return () {
-          widget.tabChange(3);
+          appState.setCurrentTabIndex = 3;
         };
       case 140:
         return () {

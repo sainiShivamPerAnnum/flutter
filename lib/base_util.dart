@@ -164,11 +164,19 @@ class BaseUtil extends ChangeNotifier {
   }
 
   cancelIncomingNotifications() {
-    if(_payService != null)_payService.addPaymentStatusListener(null);
+    if (_payService != null) _payService.addPaymentStatusListener(null);
   }
 
-  static Widget getAppBar() {
+  static Widget getAppBar(BuildContext context) {
     return AppBar(
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back_rounded,
+          color: Colors.white,
+        ),
+        onPressed: () => Navigator.pop(context),
+      ),
+
       elevation: 1.0,
       backgroundColor: UiConstants.primaryColor,
       iconTheme: IconThemeData(
@@ -465,7 +473,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   bool isOldCustomer() {
-     //all users before april 2021 are marked old
+    //all users before april 2021 are marked old
     if (userCreationTimestamp == null) return false;
     return (userCreationTimestamp.isBefore(Constants.VERSION_2_RELEASE_DATE));
   }

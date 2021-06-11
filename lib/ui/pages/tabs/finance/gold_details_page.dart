@@ -33,12 +33,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class GoldDetailsPage extends StatefulWidget {
+class AugmontDetailsPage extends StatefulWidget {
   static const int STATUS_UNAVAILABLE = 0;
   static const int STATUS_REGISTER = 1;
   static const int STATUS_OPEN = 2;
   @override
-  _GoldDetailsPageState createState() => _GoldDetailsPageState();
+  _AugmontDetailsPageState createState() => _AugmontDetailsPageState();
 
   static int checkAugmontStatus(BaseUser baseUser) {
     //check who is allowed to deposit
@@ -75,7 +75,7 @@ class GoldDetailsPage extends StatefulWidget {
   }
 }
 
-class _GoldDetailsPageState extends State<GoldDetailsPage> {
+class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
   Log log = new Log('GoldDetails');
   BaseUtil baseProvider;
   DBModel dbProvider;
@@ -101,7 +101,7 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
         return true;
       },
       child: Scaffold(
-        appBar: BaseUtil.getAppBar(),
+        appBar: BaseUtil.getAppBar(context),
         body: Column(
           children: [
             Expanded(
@@ -230,10 +230,10 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
   }
 
   String _getActionButtonText() {
-    int _status = GoldDetailsPage.checkAugmontStatus(baseProvider.myUser);
-    if (_status == GoldDetailsPage.STATUS_UNAVAILABLE)
+    int _status = AugmontDetailsPage.checkAugmontStatus(baseProvider.myUser);
+    if (_status == AugmontDetailsPage.STATUS_UNAVAILABLE)
       return 'UNAVAILABLE';
-    else if (_status == GoldDetailsPage.STATUS_REGISTER)
+    else if (_status == AugmontDetailsPage.STATUS_REGISTER)
       return 'REGISTER';
     else
       return 'DEPOSIT';
@@ -243,15 +243,15 @@ class _GoldDetailsPageState extends State<GoldDetailsPage> {
     baseProvider.augmontDetail = (baseProvider.augmontDetail == null)
         ? (await dbProvider.getUserAugmontDetails(baseProvider.myUser.uid))
         : baseProvider.augmontDetail;
-    int _status = GoldDetailsPage.checkAugmontStatus(baseProvider.myUser);
-    if (_status == GoldDetailsPage.STATUS_UNAVAILABLE) {
+    int _status = AugmontDetailsPage.checkAugmontStatus(baseProvider.myUser);
+    if (_status == AugmontDetailsPage.STATUS_UNAVAILABLE) {
       baseProvider.isAugDepositRouteLogicInProgress = false;
       showDialog(
           context: context,
           builder: (BuildContext context) => AugmontDisabled());
       setState(() {});
       return true;
-    } else if (_status == GoldDetailsPage.STATUS_REGISTER) {
+    } else if (_status == AugmontDetailsPage.STATUS_REGISTER) {
       await Navigator.push(
           context,
           MaterialPageRoute(

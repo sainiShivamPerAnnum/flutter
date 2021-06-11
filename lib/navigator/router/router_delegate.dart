@@ -1,13 +1,18 @@
-import 'package:felloapp/core/router/pages.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/ui/pages/root.dart';
+import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
+import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola-home.dart';
 import 'package:felloapp/ui/pages/tabs/profile/edit_profile_page.dart';
-import 'package:felloapp/util/app_state.dart';
+import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
+import 'package:felloapp/ui/pages/tabs/profile/transactions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../app_state.dart';
+import 'ui_pages.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
@@ -111,23 +116,37 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Login:
           _addPageData(LoginController(), LoginPageConfig);
           break;
+        case Pages.Root:
+          _addPageData(Root(), LoginPageConfig);
+          break;
         case Pages.Onboard:
           _addPageData(GetStartedPage(), OnboardPageConfig);
           break;
-        case Pages.Root:
-          _addPageData(Root(), RootPageConfig);
-          break;
         case Pages.EditProfile:
-          _addPageData(EditProfile(), EditProfilePageConfig);
+          _addPageData(EditProfile(), EditProfileConfig);
           break;
-        // case
-        //   break;
+        case Pages.MfDetails:
+          _addPageData(MFDetailsPage(), MfDetailsPageConfig);
+          break;
+        case Pages.AugDetails:
+          _addPageData(AugmontDetailsPage(), EditProfileConfig);
+          break;
+        case Pages.Transaction:
+          _addPageData(Transactions(), MfDetailsPageConfig);
+          break;
+        case Pages.Referral:
+          _addPageData(ReferralsPage(), EditProfileConfig);
+          break;
+        case Pages.TambolaHome:
+          _addPageData(TambolaHome(), EditProfileConfig);
+          break;
         default:
           break;
       }
     }
   }
 
+// 1
   void replace(PageConfiguration newRoute) {
     if (_pages.isNotEmpty) {
       _pages.removeLast();
@@ -135,23 +154,29 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     addPage(newRoute);
   }
 
+// 2
   void setPath(List<MaterialPage> path) {
     _pages.clear();
     _pages.addAll(path);
+    notifyListeners();
   }
 
+// 3
   void replaceAll(PageConfiguration newRoute) {
     setNewRoutePath(newRoute);
   }
 
+// 4
   void push(PageConfiguration newRoute) {
     addPage(newRoute);
   }
 
+// 5
   void pushWidget(Widget child, PageConfiguration newRoute) {
     _addPageData(child, newRoute);
   }
 
+// 6
   void addAll(List<PageConfiguration> routes) {
     _pages.clear();
     routes.forEach((route) {
@@ -185,6 +210,25 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.Root:
         RootPageConfig.currentPageAction = action;
         break;
+      case Pages.EditProfile:
+        EditProfileConfig.currentPageAction = action;
+        break;
+      case Pages.MfDetails:
+        MfDetailsPageConfig.currentPageAction = action;
+        break;
+      case Pages.AugDetails:
+        AugDetailsPageConfig.currentPageAction = action;
+        break;
+      case Pages.Transaction:
+        TransactionPageConfig.currentPageAction = action;
+        break;
+      case Pages.Referral:
+        ReferralPageConfig.currentPageAction = action;
+        break;
+      case Pages.TambolaHome:
+        TambolaHomePageConfig.currentPageAction = action;
+        break;
+
       default:
         break;
     }
@@ -192,43 +236,60 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   List<Page> buildPages() {
     switch (appState.currentAction.state) {
+      // 3
       case PageState.none:
         break;
       case PageState.addPage:
+        // 4
         _setPageAction(appState.currentAction);
         addPage(appState.currentAction.page);
         break;
       case PageState.pop:
+        // 5
         pop();
         break;
       case PageState.replace:
+        // 6
         _setPageAction(appState.currentAction);
         replace(appState.currentAction.page);
         break;
       case PageState.replaceAll:
+        // 7
         _setPageAction(appState.currentAction);
         replaceAll(appState.currentAction.page);
         break;
       case PageState.addWidget:
+        // 8
         _setPageAction(appState.currentAction);
         pushWidget(appState.currentAction.widget, appState.currentAction.page);
         break;
       case PageState.addAll:
+        // 9
         addAll(appState.currentAction.pages);
         break;
     }
-
+    // 10
     appState.resetCurrentAction();
     return List.of(_pages);
   }
 
   void parseRoute(Uri uri) {
+// 1
     if (uri.pathSegments.isEmpty) {
       setNewRoutePath(SplashPageConfig);
       return;
-    } else if (uri.pathSegments.length == 1) {
-      final path = uri.pathSegments[0];
+    }
 
+// // 2
+//     // Handle navapp://deeplinks/details/#
+//     if (uri.pathSegments.length == 2) {
+//       if (uri.pathSegments[0] == 'details') {
+// // 3
+//         pushWidget(Details(int.parse(uri.pathSegments[1])), DetailsPageConfig);
+//       }
+//     }
+    else if (uri.pathSegments.length == 1) {
+      final path = uri.pathSegments[0];
       switch (path) {
         case 'splash':
           replaceAll(SplashPageConfig);
@@ -236,15 +297,77 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case 'login':
           replaceAll(LoginPageConfig);
           break;
-        case 'editProf':
-          push(EditProfilePageConfig);
-          break;
         case 'onboard':
           replaceAll(OnboardPageConfig);
           break;
-        case 'approot':
+        case 'root':
           replaceAll(RootPageConfig);
           break;
+        case 'editProfile':
+          setPath([
+            _createPage(Root(), RootPageConfig),
+            _createPage(EditProfile(), EditProfileConfig),
+          ]);
+          break;
+        case 'mfDetails':
+          setPath([
+            _createPage(Root(), RootPageConfig),
+            _createPage(MFDetailsPage(), EditProfileConfig),
+          ]);
+          break;
+        case 'augDetails':
+          setPath([
+            _createPage(Root(), RootPageConfig),
+            _createPage(AugmontDetailsPage(), EditProfileConfig),
+          ]);
+          break;
+        case 'tran':
+          setPath([
+            _createPage(Root(), RootPageConfig),
+            _createPage(Transactions(), EditProfileConfig),
+          ]);
+          break;
+        case 'referral':
+          setPath([
+            _createPage(Root(), RootPageConfig),
+            _createPage(ReferralsPage(), EditProfileConfig),
+          ]);
+          break;
+        case 'tambolaHome':
+          setPath([
+            _createPage(Root(), RootPageConfig),
+            _createPage(TambolaHome(), EditProfileConfig),
+          ]);
+          break;
+//         case 'createAccount':
+
+// // 5
+        // setPath([
+        //   _createPage(Login(), LoginPageConfig),
+        //   _createPage(CreateAccount(), CreateAccountPageConfig)
+        // ]);
+//           break;
+//         case 'listItems':
+//           replaceAll(ListItemsPageConfig);
+//           break;
+//         case 'cart':
+//           setPath([
+//             _createPage(ListItems(), ListItemsPageConfig),
+//             _createPage(Cart(), CartPageConfig)
+//           ]);
+//           break;
+//         case 'checkout':
+//           setPath([
+//             _createPage(ListItems(), ListItemsPageConfig),
+//             _createPage(Checkout(), CheckoutPageConfig)
+//           ]);
+//           break;
+//         case 'settings':
+//           setPath([
+//             _createPage(ListItems(), ListItemsPageConfig),
+//             _createPage(Settings(), SettingsPageConfig)
+//           ]);
+//           break;
       }
     }
   }

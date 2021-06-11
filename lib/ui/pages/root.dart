@@ -5,6 +5,7 @@ import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/pages/hamburger/hamburger_screen.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
@@ -12,6 +13,7 @@ import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
 import 'package:felloapp/ui/pages/tabs/profile/profile_screen.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
@@ -27,12 +29,12 @@ class Root extends StatefulWidget {
 class _RootState extends State<Root> {
   Log log = new Log("Root");
   List<NavBarItemData> _navBarItems;
-  static int selectedNavIndex = 0;
   BaseUtil baseProvider;
   HttpModel httpModel;
   DBModel dbProvider;
   FcmHandler fcmProvider;
   LocalDBModel lclDbProvider;
+  AppState appState;
   List<Widget> _viewsByIndex;
   List<bool> _showFocuses = List.filled(4, false);
   bool _isInitialized = false;
@@ -54,22 +56,10 @@ class _RootState extends State<Root> {
 
     //Create the views which will be mapped to the indices for our nav btns
     _viewsByIndex = <Widget>[
-      HomePage(
-        tabChange: (int i) {
-          setState(() {
-            selectedNavIndex = i;
-          });
-        },
-      ),
+      HomePage(),
       ShowCaseWidget(
         builder: Builder(
-          builder: (context) => GamePage(
-            tabChange: (int i) {
-              setState(() {
-                selectedNavIndex = i;
-              });
-            },
-          ),
+          builder: (context) => GamePage(),
         ),
         onFinish: () {
           baseProvider.show_game_tutorial = false;
@@ -103,7 +93,7 @@ class _RootState extends State<Root> {
   }
 
   Color getBurgerBorder() {
-    if (selectedNavIndex == 0 || selectedNavIndex == 1) {
+    if (appState.getCurrentTabIndex == 0 || appState.getCurrentTabIndex == 1) {
       return Colors.white;
     } else {
       return Colors.black;
@@ -111,7 +101,7 @@ class _RootState extends State<Root> {
   }
 
   String getBurgerImage() {
-    if (selectedNavIndex == 0 || selectedNavIndex == 1) {
+    if (appState.getCurrentTabIndex == 0 || appState.getCurrentTabIndex == 1) {
       return "images/menu-white.png";
     } else {
       return "images/menu.png";
@@ -152,6 +142,7 @@ class _RootState extends State<Root> {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     fcmProvider = Provider.of<FcmHandler>(context, listen: false);
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
+    appState = Provider.of<AppState>(context, listen: false);
     _initialize(context);
     var accentColor = UiConstants.primaryColor;
 
@@ -159,19 +150,16 @@ class _RootState extends State<Root> {
     var navBar = NavBar(
       items: _navBarItems,
       itemTapped: _handleNavBtnTapped,
-      currentIndex: selectedNavIndex,
+      currentIndex: appState.getCurrentTabIndex,
     );
     //Display the correct child view for the current index
-    var contentView =
-        _viewsByIndex[min(selectedNavIndex, _viewsByIndex.length - 1)];
+    var contentView = _viewsByIndex[min(
+        context.watch<AppState>().getCurrentTabIndex,
+        _viewsByIndex.length - 1)];
     //Wrap our custom navbar + contentView with the app Scaffold
-    final GlobalKey<ScaffoldState> _scaffoldKey =
-        new GlobalKey<ScaffoldState>();
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-
+    // final GlobalKey<ScaffoldState> _scaffoldKey =
+    //     new GlobalKey<ScaffoldState>();
     return Scaffold(
-      key: _scaffoldKey,
       backgroundColor: UiConstants.bottomNavBarColor,
       body: Stack(
         children: [
@@ -190,7 +178,7 @@ class _RootState extends State<Root> {
           Positioned(
             child: SafeArea(
               child: Container(
-                width: width,
+                width: SizeConfig.screenWidth,
                 child: Row(
                   children: [
                     GestureDetector(
@@ -203,11 +191,11 @@ class _RootState extends State<Root> {
                         );
                       },
                       child: Container(
-                        height: height * 0.05,
-                        width: height * 0.05,
+                        height: SizeConfig.screenHeight * 0.05,
+                        width: SizeConfig.screenHeight * 0.05,
                         margin: EdgeInsets.only(
-                          left: height * 0.016,
-                          top: height * 0.016,
+                          left: SizeConfig.screenHeight * 0.016,
+                          top: SizeConfig.screenHeight * 0.016,
                         ),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
@@ -216,7 +204,7 @@ class _RootState extends State<Root> {
                         ),
                         child: Container(
                           padding: EdgeInsets.all(
-                            height * 0.011,
+                            SizeConfig.screenHeight * 0.011,
                           ),
                           child: Image.asset(
                             getBurgerImage(),
@@ -237,10 +225,9 @@ class _RootState extends State<Root> {
 
   void _handleNavBtnTapped(int index) {
     //Save the new index and trigger a rebuild
-    setState(() {
-      //This will be passed into the NavBar and change it's selected state, also controls the active content page
-      selectedNavIndex = index;
-    });
+
+    //This will be passed into the NavBar and change it's selected state, also controls the active content page
+    appState.setCurrentTabIndex = index;
   }
 
   Future<dynamic> _initDynamicLinks() async {
