@@ -25,15 +25,23 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  FirebaseMessaging.onBackgroundMessage(_backgroundMessageHandler);
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   setupLocator();
   runApp(MyApp());
+}
+
+Future<void> _backgroundMessageHandler(RemoteMessage message) async {
+    await Firebase.initializeApp();
+    print('handling background message');
 }
 
 class MyApp extends StatelessWidget {

@@ -19,7 +19,7 @@ import android.content.ContentResolver;
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "fello.in/dev/notifications/channel/tambola"
-
+    private val CHANNEL_FRESHCHAT = "fello.in/dev/notifications/channel/support"
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
@@ -39,7 +39,13 @@ class MainActivity: FlutterActivity() {
                 result.notImplemented()
             }
         }
+        // MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL_FRESHCHAT).setMethodCallHandler {
+        //     call, result -> 
 
+        //     if (call.method == 'createFreshchatNotificationHandler') {
+                
+        //     }
+        // }
     }
 
     private fun createNotificationChannel(mapData: HashMap<String,String>): Boolean {

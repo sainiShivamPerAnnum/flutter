@@ -36,19 +36,16 @@ class FcmListener extends ChangeNotifier {
 
   Future<FirebaseMessaging> setupFcm() async {
     _fcm = FirebaseMessaging.instance;
-
     _fcm.getInitialMessage().then((RemoteMessage message) {
       log.debug("onMessage recieved: " + message.toString());
       if(message != null && message.data != null) {
         _handler.handleMessage(message.data);
       }
     });
-
     // await flutterLocalNotificationsPlugin
     //     .resolvePlatformSpecificImplementation<
     //         AndroidFlutterLocalNotificationsPlugin>()
     //     ?.createNotificationChannel(_androidChannel);
-
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
@@ -63,6 +60,8 @@ class FcmListener extends ChangeNotifier {
         _handler.handleNotification(notification.title, notification.body);
       }
     });
+
+
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('A new onMessageOpenedApp event was published!');

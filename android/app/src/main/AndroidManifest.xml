@@ -16,7 +16,7 @@
         android:icon="@mipmap/ic_fello">
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.demoapp.provider"
+            android:authorities="in.fello.felloapp"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
