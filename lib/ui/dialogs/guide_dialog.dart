@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/contact_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
@@ -19,6 +20,7 @@ class GuideDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    AppState().setDialogOpenStatus = true;
     return Dialog(
       insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
       shape: RoundedRectangleBorder(
@@ -54,8 +56,8 @@ class GuideDialog extends StatelessWidget {
                           color: UiConstants.primaryColor),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left:10, right: 10),
-                      child:Text(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Text(
                         'Fello makes saving fun, and investing a lot more simple!',
                         textAlign: TextAlign.justify,
                         style: TextStyle(
@@ -80,8 +82,8 @@ class GuideDialog extends StatelessWidget {
                       height: 5,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left:10, right: 10),
-                      child:Text(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Text(
                         'First you simply register for a fund in a few easy steps. If you\'re a first time investor, you will be guided through an official KYC process.',
                         textAlign: TextAlign.justify,
                         style: TextStyle(
@@ -106,8 +108,8 @@ class GuideDialog extends StatelessWidget {
                       height: 10,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left:10, right: 10),
-                      child:Text(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Text(
                         'For every ₹100 you save, you will receive a weekly game ticket which can be redeemed to play fun, rewarding games. The more you save, the better your odds at winning.',
                         textAlign: TextAlign.justify,
                         style: TextStyle(
@@ -129,8 +131,8 @@ class GuideDialog extends StatelessWidget {
                       height: 90,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left:10, right: 10),
-                      child:Text(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Text(
                         'Your money grows faster than a traditional bank and you retain the option to withdraw your funds whenever required.',
                         textAlign: TextAlign.justify,
                         style: TextStyle(

@@ -28,6 +28,7 @@ class FcmHandler extends ChangeNotifier {
       url = "";
     }
     print("------------------->" + url);
+
     delegate.parseRoute(Uri.parse(url));
     return true;
   }

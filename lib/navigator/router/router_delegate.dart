@@ -75,8 +75,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   Future<bool> popRoute() {
     if (canPop()) {
       _removePage(_pages.last);
+      notifyListeners();
       return Future.value(true);
     }
+    notifyListeners();
     return Future.value(false);
   }
 
@@ -274,13 +276,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   void parseRoute(Uri uri) {
-// 1
     if (uri.pathSegments.isEmpty) {
       setNewRoutePath(SplashPageConfig);
       return;
     }
-
-// // 2
 //     // Handle navapp://deeplinks/details/#
 //     if (uri.pathSegments.length == 2) {
 //       if (uri.pathSegments[0] == 'details') {
@@ -339,35 +338,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
             _createPage(TambolaHome(), EditProfileConfig),
           ]);
           break;
-//         case 'createAccount':
-
-// // 5
-        // setPath([
-        //   _createPage(Login(), LoginPageConfig),
-        //   _createPage(CreateAccount(), CreateAccountPageConfig)
-        // ]);
-//           break;
-//         case 'listItems':
-//           replaceAll(ListItemsPageConfig);
-//           break;
-//         case 'cart':
-//           setPath([
-//             _createPage(ListItems(), ListItemsPageConfig),
-//             _createPage(Cart(), CartPageConfig)
-//           ]);
-//           break;
-//         case 'checkout':
-//           setPath([
-//             _createPage(ListItems(), ListItemsPageConfig),
-//             _createPage(Checkout(), CheckoutPageConfig)
-//           ]);
-//           break;
-//         case 'settings':
-//           setPath([
-//             _createPage(ListItems(), ListItemsPageConfig),
-//             _createPage(Settings(), SettingsPageConfig)
-//           ]);
-//           break;
       }
     }
   }

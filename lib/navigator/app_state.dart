@@ -22,7 +22,13 @@ class PageAction {
 
 class AppState extends ChangeNotifier {
   int _selectedNavIndex = 0;
+  static bool _dialogOpen = false;
   PageAction _currentAction = PageAction();
+
+  bool get getDialogOpenStatus => _dialogOpen;
+  set setDialogOpenStatus(bool val) {
+    _dialogOpen = val;
+  }
 
   int get getCurrentTabIndex => _selectedNavIndex;
   set setCurrentTabIndex(int index) {

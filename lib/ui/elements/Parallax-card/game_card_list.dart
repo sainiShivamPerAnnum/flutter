@@ -47,11 +47,13 @@ class GameCardListState extends State<GameCardList>
     appState = Provider.of<AppState>(context, listen: false);
     gameRoutes = [
       () => Navigator.push(
-          context,
-          MaterialPageRoute(
+            context,
+            MaterialPageRoute(
               builder: (ctx) => ShowCaseWidget(
-                    builder: Builder(builder: (context) => TambolaHome()),
-                  ))),
+                builder: Builder(builder: (context) => TambolaHome()),
+              ),
+            ),
+          ),
       // () => appState.currentAction =
       //     PageAction(state: PageState.addPage, page: TambolaHomePageConfig),
       () {
