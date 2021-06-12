@@ -1,12 +1,15 @@
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 class FcmHandler extends ChangeNotifier {
   Log log = new Log("FcmHandler");
   ValueChanged<Map> notifListener;
   String url;
+  int tab;
 
   Future<bool> handleMessage(Map data) async {
     log.debug(data.toString());
@@ -22,14 +25,13 @@ class FcmHandler extends ChangeNotifier {
         if (this.notifListener != null) this.notifListener(_map);
       }
     }
-    if (data["deep_uri"] != null) {
-      url = data["deep_uri"];
-    } else {
-      url = "";
-    }
-    print("------------------->" + url);
+    url = data["deep_uri"] ?? '';
+    tab = int.tryParse(data["misc_data"]) ?? 0;
 
-    delegate.parseRoute(Uri.parse(url));
+    print("------------------->" + url);
+    delegate.appState.setCurrentTabIndex = tab;
+    print("tab set to ${data["misc"]}");
+    AppState().setFcmData = url;
     return true;
   }
 

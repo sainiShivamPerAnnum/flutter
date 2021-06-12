@@ -7,6 +7,7 @@ import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
@@ -448,8 +449,8 @@ class _LoginControllerState extends State<LoginController> {
     await baseProvider.init();
     await fcmProvider.setupFcm();
     // Navigator.of(context).pushReplacementNamed('/approot');
-    // appStateProvider.currentAction =
-    //     PageAction(state: PageState.replaceAll, page: RootPageConfig);
+    appStateProvider.currentAction =
+        PageAction(state: PageState.replaceAll, page: RootPageConfig);
     baseProvider.showPositiveAlert(
         'Sign In Complete',
         'Welcome to ${Constants.APP_NAME}, ${baseProvider.myUser.name}',

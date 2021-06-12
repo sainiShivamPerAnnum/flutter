@@ -1,3 +1,5 @@
+import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
+import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
@@ -142,6 +144,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.TambolaHome:
           _addPageData(TambolaHome(), EditProfileConfig);
           break;
+        case Pages.Tnc:
+          _addPageData(TnC(), TncPageConfig);
+          break;
+        case Pages.Faq:
+          _addPageData(FAQPage(), FaqPageConfig);
+          break;
         default:
           break;
       }
@@ -229,6 +237,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.TambolaHome:
         TambolaHomePageConfig.currentPageAction = action;
+        break;
+      case Pages.Tnc:
+        TncPageConfig.currentPageAction = action;
+        break;
+      case Pages.Faq:
+        FaqPageConfig.currentPageAction = action;
         break;
 
       default:
@@ -336,6 +350,18 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           setPath([
             _createPage(Root(), RootPageConfig),
             _createPage(TambolaHome(), EditProfileConfig),
+          ]);
+          break;
+        case 'tnc':
+          setPath([
+            _createPage(Root(), RootPageConfig),
+            _createPage(TnC(), TncPageConfig),
+          ]);
+          break;
+        case 'faq':
+          setPath([
+            _createPage(Root(), RootPageConfig),
+            _createPage(FAQPage(), FaqPageConfig),
           ]);
           break;
       }

@@ -33,6 +33,57 @@ class FcmListener extends ChangeNotifier {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  Future<FirebaseMessaging> setupFcm() async {
+    _fcm = FirebaseMessaging.instance;
+
+    _fcm.getInitialMessage().then((RemoteMessage message) {
+      log.debug("onMessage recieved: " + message.toString());
+      if (message != null && message.data != null) {
+        _handler.handleMessage(message.data);
+      }
+    });
+
+    // await flutterLocalNotificationsPlugin
+    //     .resolvePlatformSpecificImplementation<
+    //         AndroidFlutterLocalNotificationsPlugin>()
+    //     ?.createNotificationChannel(_androidChannel);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+      if (message.data != null && message.data.isNotEmpty) {
+        _handler.handleMessage(message.data);
+      } else if (notification != null) {
+        _handler.handleNotification(notification.title, notification.body);
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      if (message.data != null) {
+        _handler.handleMessage(message.data);
+      }
+    });
+
+    _fcm.setForegroundNotificationPresentationOptions(
+        alert: true, badge: true, sound: true);
+    _fcm.requestPermission();
+
+    ///add subscriptions to relevant topics
+    await _manageInitSubscriptions();
+
+    ///setup android notification channels
+    if (Platform.isAndroid) {
+      _androidNativeSetup();
+    }
+
+    ///update fcm user token if required
+    if (_baseUtil.myUser != null && _baseUtil.myUser.mobile != null)
+      await _saveDeviceToken();
+
+    return _fcm;
+  }
+
   Future addSubscription(FcmTopic subId, {String suffix = ''}) async {
     await _fcm.subscribeToTopic(
         (suffix.isEmpty) ? subId.value() : '${subId.value()}$suffix');

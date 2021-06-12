@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
+import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
@@ -41,6 +42,9 @@ class _RootState extends State<Root> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AppState().setRootLoadValue = true;
+    });
     _initDynamicLinks();
     //Declare some buttons for our tab bar
     _navBarItems = [

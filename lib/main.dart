@@ -34,7 +34,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
+// final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 FelloRouterDelegate delegate;
 
 void main() async {

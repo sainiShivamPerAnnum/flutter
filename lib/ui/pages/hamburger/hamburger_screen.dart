@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/aboutus_dialog.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
@@ -17,11 +19,13 @@ class HamburgerMenu extends StatelessWidget {
   static List<OptionDetail> _optionsList;
   BaseUtil baseProvider;
   DBModel reqProvider;
+  AppState appstate;
 
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     reqProvider = Provider.of<DBModel>(context, listen: false);
+    appstate = Provider.of<AppState>(context, listen: false);
     _optionsList = _loadOptionsList();
 
     return BackdropFilter(
@@ -125,13 +129,17 @@ class HamburgerMenu extends StatelessWidget {
       case 'faq':
         {
           HapticFeedback.vibrate();
-          Navigator.of(context).pushNamed('/faq');
+          //Navigator.of(context).pushNamed('/faq');
+          appstate.currentAction =
+              PageAction(state: PageState.addPage, page: FaqPageConfig);
           break;
         }
       case 'tnc':
         {
           HapticFeedback.vibrate();
-          Navigator.of(context).pushNamed('/tnc');
+          //Navigator.of(context).pushNamed('/tnc');
+          appstate.currentAction =
+              PageAction(state: PageState.addPage, page: TncPageConfig);
           break;
         }
       case 'contUs':
@@ -196,8 +204,9 @@ class HamburgerMenu extends StatelessWidget {
 
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
-                          Navigator.of(context)
-                              .pushReplacementNamed('/launcher');
+                          appstate.currentAction = PageAction(
+                              state: PageState.replaceAll,
+                              page: SplashPageConfig);
                           baseProvider.showPositiveAlert(
                               'Signed out', 'Hope to see you soon', context);
                         } else {

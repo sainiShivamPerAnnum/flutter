@@ -1,3 +1,4 @@
+import 'package:felloapp/main.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,7 +24,26 @@ class PageAction {
 class AppState extends ChangeNotifier {
   int _selectedNavIndex = 0;
   static bool _dialogOpen = false;
+  static String _fcmData;
+  static bool isRootLoaded = false;
+
   PageAction _currentAction = PageAction();
+
+  set setFcmData(String data) {
+    _fcmData = data;
+    routeDeepLink();
+  }
+
+  set setRootLoadValue(bool value) {
+    isRootLoaded = value;
+    routeDeepLink();
+  }
+
+  routeDeepLink() {
+    if (isRootLoaded && _fcmData != null) {
+      delegate.parseRoute(Uri.parse(_fcmData));
+    }
+  }
 
   bool get getDialogOpenStatus => _dialogOpen;
   set setDialogOpenStatus(bool val) {

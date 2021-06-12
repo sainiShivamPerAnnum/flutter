@@ -11,6 +11,8 @@ const String AugDetailsPath = '/augDetails';
 const String TransactionPath = '/tran';
 const String ReferralPath = '/referral';
 const String TambolaHomePath = '/tambolaHome';
+const String TncPath = '/tnc';
+const String FaqPath = '/faq';
 
 enum Pages {
   Splash,
@@ -22,7 +24,9 @@ enum Pages {
   AugDetails,
   Transaction,
   Referral,
-  TambolaHome
+  TambolaHome,
+  Tnc,
+  Faq
 }
 
 class PageConfiguration {
@@ -83,7 +87,17 @@ PageConfiguration ReferralPageConfig = PageConfiguration(
   uiPage: Pages.Referral,
 );
 PageConfiguration TambolaHomePageConfig = PageConfiguration(
-  key: 'tambolaHome',
+  key: 'TambolaHome',
   path: TambolaHomePath,
   uiPage: Pages.TambolaHome,
+);
+PageConfiguration TncPageConfig = PageConfiguration(
+  key: 'Tnc',
+  path: TncPath,
+  uiPage: Pages.Tnc,
+);
+PageConfiguration FaqPageConfig = PageConfiguration(
+  key: 'Faq',
+  path: FaqPath,
+  uiPage: Pages.Faq,
 );

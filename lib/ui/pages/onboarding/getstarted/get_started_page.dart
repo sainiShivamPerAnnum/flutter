@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/circles_with_image.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -7,6 +9,7 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:provider/provider.dart';
 
 class GetStartedPage extends StatefulWidget {
   @override
@@ -15,9 +18,11 @@ class GetStartedPage extends StatefulWidget {
 
 class _GetStartedPageState extends State<GetStartedPage> {
   List<bool> isVisible = List<bool>.filled(4, false);
+  AppState appState;
   static const Duration animDuration = Duration(milliseconds: 190);
   @override
   Widget build(BuildContext context) {
+    appState = Provider.of<AppState>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -27,40 +32,41 @@ class _GetStartedPageState extends State<GetStartedPage> {
             Align(
               alignment: Alignment.topCenter,
               child: Padding(
-                padding: EdgeInsets.only(top: SizeConfig.screenHeight*0.05),
+                padding: EdgeInsets.only(top: SizeConfig.screenHeight * 0.05),
                 child: Text(
                   'Game based Savings \n & Investments🎉',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontWeight: FontWeight.w800,
-                      fontSize: SizeConfig.largeTextSize*1.1),
+                      fontSize: SizeConfig.largeTextSize * 1.1),
                 ),
               ),
             ),
             Center(
               child: Padding(
-                padding: EdgeInsets.only(top:15, bottom: 15),
+                padding: EdgeInsets.only(top: 15, bottom: 15),
                 child: Container(
                     child: StaggeredGridView.countBuilder(
-                      shrinkWrap: true,
-                      primary: false,
-                      padding: const EdgeInsets.all(12.0),
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 5,
-                      crossAxisSpacing: 2,
-                      itemCount: 8,
-                      itemBuilder: (BuildContext context, int index) {
-                        return _buildTile(index);
-                      },
-                      staggeredTileBuilder: (int index) =>
-                          StaggeredTile.fit(_fitSize(index)),
-                    )),
+                  shrinkWrap: true,
+                  primary: false,
+                  padding: const EdgeInsets.all(12.0),
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 5,
+                  crossAxisSpacing: 2,
+                  itemCount: 8,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _buildTile(index);
+                  },
+                  staggeredTileBuilder: (int index) =>
+                      StaggeredTile.fit(_fitSize(index)),
+                )),
               ),
             ),
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: EdgeInsets.only(bottom: SizeConfig.screenHeight*0.05),
+                padding:
+                    EdgeInsets.only(bottom: SizeConfig.screenHeight * 0.05),
                 child: _buildBtn(),
               ),
             )
@@ -81,16 +87,13 @@ class _GetStartedPageState extends State<GetStartedPage> {
   Widget _buildBtn() {
     return AnimatedContainer(
       duration: animDuration,
-      width: (isVisible[3])?SizeConfig.screenWidth - 50:0,
+      width: (isVisible[3]) ? SizeConfig.screenWidth - 50 : 0,
       height: 50.0,
       decoration: BoxDecoration(
-        gradient: new LinearGradient(
-            colors: [
-              UiConstants.primaryColor,
-              UiConstants.primaryColor.withBlue(190),
-            ],
-            begin: Alignment(0.5, -1.0),
-            end: Alignment(0.5, 1.0)),
+        gradient: new LinearGradient(colors: [
+          UiConstants.primaryColor,
+          UiConstants.primaryColor.withBlue(190),
+        ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
         borderRadius: new BorderRadius.circular(10.0),
       ),
       child: new Material(
@@ -104,8 +107,8 @@ class _GetStartedPageState extends State<GetStartedPage> {
           ),
           onPressed: () {
             HapticFeedback.vibrate();
-            Navigator.of(context)
-                .pushReplacementNamed('/login');
+            appState.currentAction =
+                PageAction(state: PageState.replaceAll, page: LoginPageConfig);
           },
           highlightColor: Colors.orange.withOpacity(0.5),
           splashColor: Colors.orange.withOpacity(0.5),
@@ -121,26 +124,24 @@ class _GetStartedPageState extends State<GetStartedPage> {
       case 0:
         {
           return AnimatedContainer(
-              height: (isVisible[0])?SizeConfig.screenHeight * 0.15:0,
+              height: (isVisible[0]) ? SizeConfig.screenHeight * 0.15 : 0,
               duration: animDuration,
               child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Center(
-                  child: Text(
-                    Assets.getStartedDesc[0],
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: SizeConfig.mediumTextSize),
-                  ),
-                )
-              )
-          );
+                  padding: EdgeInsets.all(20),
+                  child: Center(
+                    child: Text(
+                      Assets.getStartedDesc[0],
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: SizeConfig.mediumTextSize),
+                    ),
+                  )));
         }
       case 1:
         {
           return AnimatedContainer(
-            height: (isVisible[0])?SizeConfig.screenHeight * 0.15:0,
+            height: (isVisible[0]) ? SizeConfig.screenHeight * 0.15 : 0,
             duration: animDuration,
             child: Image(
               image: AssetImage('images/gs01.png'),
@@ -151,7 +152,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
       case 3:
         {
           return AnimatedContainer(
-            height: (isVisible[1])?SizeConfig.screenHeight * 0.15:0,
+            height: (isVisible[1]) ? SizeConfig.screenHeight * 0.15 : 0,
             duration: animDuration,
             child: Image(
               image: AssetImage('images/gs02.png'),
@@ -162,7 +163,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
       case 4:
         {
           return AnimatedContainer(
-              height: (isVisible[1])?SizeConfig.screenHeight * 0.15:0,
+              height: (isVisible[1]) ? SizeConfig.screenHeight * 0.15 : 0,
               duration: animDuration,
               child: Padding(
                   padding: EdgeInsets.all(20),
@@ -174,14 +175,12 @@ class _GetStartedPageState extends State<GetStartedPage> {
                           fontWeight: FontWeight.bold,
                           fontSize: SizeConfig.mediumTextSize),
                     ),
-                  )
-              )
-          );
+                  )));
         }
       case 6:
         {
           return AnimatedContainer(
-            height: (isVisible[2])?SizeConfig.screenHeight * 0.15:0,
+            height: (isVisible[2]) ? SizeConfig.screenHeight * 0.15 : 0,
             duration: animDuration,
             child: Image(
               image: AssetImage('images/gs03.png'),
@@ -192,7 +191,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
       case 7:
         {
           return AnimatedContainer(
-              height: (isVisible[2])?SizeConfig.screenHeight * 0.06:0,
+              height: (isVisible[2]) ? SizeConfig.screenHeight * 0.06 : 0,
               duration: animDuration,
               child: Padding(
                   padding: EdgeInsets.only(left: 20, right: 20),
@@ -204,13 +203,11 @@ class _GetStartedPageState extends State<GetStartedPage> {
                           fontWeight: FontWeight.bold,
                           fontSize: SizeConfig.mediumTextSize),
                     ),
-                  )
-              )
-          );
+                  )));
         }
       default:
         return SizedBox(
-          height: SizeConfig.screenHeight*0.03,
+          height: SizeConfig.screenHeight * 0.03,
         );
     }
   }
