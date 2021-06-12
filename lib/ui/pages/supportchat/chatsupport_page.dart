@@ -34,42 +34,42 @@ class _ChatSupportState extends State<ChatSupport> {
           future: _setupFreshchat(),
           builder: (context,snapshot) {
             if(snapshot.connectionState==ConnectionState.done) {
-              Navigator.pop(context);
               Freshchat.showConversations();
+              Navigator.pop(context);
             }
             return LottieBuilder.asset('images/lottie/phone_loading.json', height: SizeConfig.screenHeight*0.2,);
           },)
         // TextButton(
-        //   child: Text('Contact'), 
-        //   onPressed: () async {
-        //     await _setUser();
-        //     await _setupNotifications();
-        //     Freshchat.showConversations();
-        //   },
-        // ),
+        //  onPressed: () async {
+        //    await _setUser().then((value) {
+        //      Freshchat.showConversations();
+        //    });
+        //  },
+        //   child: Text('contact'),
+        // )
       ),
     );
   }
 
   Future<bool> _setupFreshchat() async {
-    await _setupNotifications();
-    await _setUser();
-    return true;
+    bool res = await _setUser();
+    return res;
   }
 
-  Future<void> _setupNotifications() async {
+  Future<bool> _setUser() async {
     print('device token : ${_baseUtil.myUser.client_token}');
     Freshchat.setPushRegistrationToken(_baseUtil.myUser.client_token);
-  }
-  Future<void> _setUser() async {
     FreshchatUser user = await Freshchat.getUser;
+    print('user : ${user.toString()}');
     var _restore = user.getRestoreId();
-    Freshchat.identifyUser(externalId: _userid, restoreId: _restore);
+    Freshchat.identifyUser(externalId: _userid, restoreId: 'c39d6427-0d6e-47e4-9279-e4520c991ccd');
     print('user id $_userid');
     print('restore id $_restore');
-    user.setFirstName('Nimit Test - 3');
+    // user id - NaQ56t18oxVpJ4aJtUBpLaaUHF22 restoreid - c39d6427-0d6e-47e4-9279-e4520c991ccd
+    user.setFirstName('Nimit Test - 4');
     user.setEmail(_baseUtil.myUser.email);
     user.setPhone('+91', _baseUtil.myUser.mobile);
     Freshchat.setUser(user);
+    return true;
   }
 }

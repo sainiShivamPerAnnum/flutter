@@ -50,6 +50,7 @@ class FcmListener extends ChangeNotifier {
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
       if(await Freshchat.isFreshchatNotification(message.data)) {
+        Freshchat.setNotificationConfig(largeIcon: "ic_fello_notif", smallIcon: "ic_fello_notif");
         print('freshchat notification received');
         _handler.handleNotification('Support', message.data['body']);
         Freshchat.handlePushNotification(message.data);
@@ -60,7 +61,6 @@ class FcmListener extends ChangeNotifier {
         _handler.handleNotification(notification.title, notification.body);
       }
     });
-
 
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {

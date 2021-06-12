@@ -32,16 +32,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  FirebaseMessaging.onBackgroundMessage(_backgroundMessageHandler);
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
   setupLocator();
   runApp(MyApp());
 }
 
-Future<void> _backgroundMessageHandler(RemoteMessage message) async {
+Future<void> backgroundMessageHandler(RemoteMessage message) async {
     await Firebase.initializeApp();
-    print('handling background message');
+    if(await Freshchat.isFreshchatNotification(message.data)) {
+      Freshchat.setNotificationConfig(largeIcon: "ic_fello_notif", smallIcon: "ic_fello_notif");
+      Freshchat.handlePushNotification(message.data);
+    }
 }
 
 class MyApp extends StatelessWidget {
