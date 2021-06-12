@@ -1,9 +1,11 @@
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:freshchat_sdk/freshchat_user.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../base_util.dart';
 
@@ -28,17 +30,33 @@ class _ChatSupportState extends State<ChatSupport> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(child: 
-        TextButton(
-          child: Text('Contact'), 
-          onPressed: () async {
-            await _setUser();
-            await _setupNotifications();
-            Freshchat.showConversations();
-          },
-        ),
+        FutureBuilder(
+          future: _setupFreshchat(),
+          builder: (context,snapshot) {
+            if(snapshot.connectionState==ConnectionState.done) {
+              Navigator.pop(context);
+              Freshchat.showConversations();
+            }
+            return LottieBuilder.asset('images/lottie/phone_loading.json', height: SizeConfig.screenHeight*0.2,);
+          },)
+        // TextButton(
+        //   child: Text('Contact'), 
+        //   onPressed: () async {
+        //     await _setUser();
+        //     await _setupNotifications();
+        //     Freshchat.showConversations();
+        //   },
+        // ),
       ),
     );
   }
+
+  Future<bool> _setupFreshchat() async {
+    await _setupNotifications();
+    await _setUser();
+    return true;
+  }
+
   Future<void> _setupNotifications() async {
     print('device token : ${_baseUtil.myUser.client_token}');
     Freshchat.setPushRegistrationToken(_baseUtil.myUser.client_token);
