@@ -6,6 +6,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/ui/dialogs/Fold-Card/card.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
 import 'package:felloapp/ui/dialogs/ticket_details_dialog.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
@@ -190,23 +191,23 @@ class _GamePageState extends State<GamePage> {
                                   title: "Want more tickets?",
                                   action: [
                                     GameOfferCardButton(
-                                      onPressed: () => widget.tabChange(2),
-                                      // onPressed: () => showDialog(
-                                      //   context: context,
-                                      //   barrierDismissible: false,
-                                      //   builder: (ctx) {
-                                      //     return Center(
-                                      //       child: Material(
-                                      //         color: Colors.transparent,
-                                      //         child: Stack(
-                                      //           children: [
-                                      //             Center(child: FCard()),
-                                      //           ],
-                                      //         ),
-                                      //       ),
-                                      //     );
-                                      //   },
-                                      // ),
+                                      // onPressed: () => widget.tabChange(2),
+                                      onPressed: () => showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (ctx) {
+                                          return Center(
+                                            child: Material(
+                                              color: Colors.transparent,
+                                              child: Stack(
+                                                children: [
+                                                  Center(child: FCard()),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
                                       title: "Invest",
                                     ),
                                     SizedBox(

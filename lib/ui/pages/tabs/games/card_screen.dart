@@ -12,7 +12,7 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/tambola_generation_service.dart';
 import 'package:felloapp/ui/dialogs/tambola_dialog.dart';
 import 'package:felloapp/ui/dialogs/weekly_draw_dialog.dart';
-import 'package:felloapp/ui/dialogs/winnings_dialog.dart';
+import 'package:felloapp/ui/dialogs/tambola_user_results_dialog.dart';
 import 'package:felloapp/ui/elements/board_selector.dart';
 import 'package:felloapp/ui/elements/roulette.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
@@ -727,6 +727,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
   }
 
   ///check if any of the tickets aced any of the categories.
+  ///also check if the user is eligible for a prize
   ///if any did, add it to a list and submit the list as a win claim
   _examineTicketsForWins() {
     if (baseProvider.userWeeklyBoards == null ||
@@ -781,14 +782,20 @@ class _TambolaGameScreen extends State<TambolaHome> {
       }
     });
 
+    double totalInvestedPrinciple =
+        baseProvider.userFundWallet.augGoldPrinciple +
+            baseProvider.userFundWallet.iciciPrinciple;
+    bool _isEligible = (totalInvestedPrinciple >= BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
+
     log.debug('Resultant wins: ${ticketCodeWinIndex.toString()}');
 
     if (!_winnerDialogCalled)
-      new Timer(const Duration(seconds: 3), () {
+      new Timer(const Duration(milliseconds: 2500), () {
         showDialog(
             context: context,
-            builder: (BuildContext context) => WinningsDialog(
+            builder: (BuildContext context) => TambolaResultsDialog(
                   winningsMap: ticketCodeWinIndex,
+                  isEligible: _isEligible,
                 ));
       });
     _winnerDialogCalled = true;
@@ -800,10 +807,11 @@ class _TambolaGameScreen extends State<TambolaHome> {
               baseProvider.myUser.name,
               baseProvider.myUser.mobile,
               baseProvider.userTicketWallet.getActiveTickets(),
+              _isEligible,
               ticketCodeWinIndex)
           .then((flag) {
         baseProvider.showPositiveAlert('Congratulations 🎉',
-            'Your ticket results have been submitted for approval!', context);
+            'Your tickets have been submitted for processing your prizes!', context);
       });
     }
   }
