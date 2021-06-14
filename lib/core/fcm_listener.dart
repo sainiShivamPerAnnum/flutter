@@ -42,6 +42,7 @@ class FcmListener extends ChangeNotifier {
         _handler.handleMessage(message.data);
       }
     });
+    Freshchat.setPushRegistrationToken(_baseUtil.myUser.client_token);
     // await flutterLocalNotificationsPlugin
     //     .resolvePlatformSpecificImplementation<
     //         AndroidFlutterLocalNotificationsPlugin>()
@@ -52,7 +53,7 @@ class FcmListener extends ChangeNotifier {
       if(await Freshchat.isFreshchatNotification(message.data)) {
         Freshchat.setNotificationConfig(largeIcon: "ic_fello_notif", smallIcon: "ic_fello_notif");
         print('freshchat notification received');
-        _handler.handleNotification('Support', message.data['body']);
+        // _handler.handleNotification('Support', message.data['body']);
         Freshchat.handlePushNotification(message.data);
       }
       else if (message.data != null && message.data.isNotEmpty) {
@@ -167,6 +168,7 @@ class FcmListener extends ChangeNotifier {
                 _baseUtil.myUser.client_token != fcmToken))) {
       log.debug("Updating FCM token to local and server db");
       _baseUtil.myUser.client_token = fcmToken;
+      Freshchat.setPushRegistrationToken(fcmToken);
       flag = await _dbModel.updateClientToken(_baseUtil.myUser, fcmToken);
       // if (flag)
       //   await _lModel.saveUser(

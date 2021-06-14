@@ -34,18 +34,21 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  Freshchat.setNotificationConfig(largeIcon: "ic_fello_notif", smallIcon: "ic_fello_notif", priority: Priority.PRIORITY_HIGH);
   FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
   setupLocator();
   runApp(MyApp());
 }
 
-Future<void> backgroundMessageHandler(RemoteMessage message) async {
-    await Firebase.initializeApp();
+Future<dynamic> backgroundMessageHandler(RemoteMessage message) async {
+  print('background notif');
     if(await Freshchat.isFreshchatNotification(message.data)) {
-      Freshchat.setNotificationConfig(largeIcon: "ic_fello_notif", smallIcon: "ic_fello_notif");
+      print('background freshchat notif ${message.data}');
+      Freshchat.setNotificationConfig(largeIcon: "ic_fello_notif", smallIcon: "ic_fello_notif", priority: Priority.PRIORITY_HIGH);
       Freshchat.handlePushNotification(message.data);
     }
-}
+    return Future<void>.value();
+  }
 
 class MyApp extends StatelessWidget {
   @override

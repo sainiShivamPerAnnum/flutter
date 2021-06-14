@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:freshchat_sdk/freshchat_user.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../base_util.dart';
 
@@ -18,6 +19,8 @@ class ChatSupport extends StatefulWidget {
 class _ChatSupportState extends State<ChatSupport> {
   BaseUtil _baseUtil = locator<BaseUtil>();
   var _userid;
+  var _restoreStream;
+  var _restoreStreamSubscription;
   @override
   void initState() { 
     super.initState();
@@ -52,23 +55,52 @@ class _ChatSupportState extends State<ChatSupport> {
   }
 
   Future<bool> _setupFreshchat() async {
-    bool res = await _setUser();
-    return res;
+    bool _res = await _setUser();
+    return _res;
   }
 
   Future<bool> _setUser() async {
-    print('device token : ${_baseUtil.myUser.client_token}');
     Freshchat.setPushRegistrationToken(_baseUtil.myUser.client_token);
-    FreshchatUser user = await Freshchat.getUser;
-    var _restore = user.getRestoreId();
-    Freshchat.identifyUser(externalId: _userid, restoreId: 'c39d6427-0d6e-47e4-9279-e4520c991ccd');
+    FreshchatUser _user = await Freshchat.getUser;
+    storeRestoreId();
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    var _restore;
+    if(_prefs.getString('FRESHCHAT_RESTORE_ID')==null) {
+      print('using default user restore id');
+      _restore = _user.getRestoreId();
+    }
+    else {
+      print('using stored restore id');
+      _restore = _prefs.getString('FRESHCHAT_RESTORE_ID');
+    }
+    Freshchat.identifyUser(externalId: _userid, restoreId: _restore);
     print('user id $_userid');
     print('restore id $_restore');
     // user id - NaQ56t18oxVpJ4aJtUBpLaaUHF22 restoreid - c39d6427-0d6e-47e4-9279-e4520c991ccd
-    user.setFirstName('Nimit Test - 11');
-    user.setEmail(_baseUtil.myUser.email);
-    user.setPhone('+91', _baseUtil.myUser.mobile);
-    Freshchat.setUser(user);
+    _user.setFirstName('Nimit Test - 11');
+    _user.setEmail(_baseUtil.myUser.email);
+    _user.setPhone('+91', _baseUtil.myUser.mobile);
+    Freshchat.setUser(_user);
     return true;
   }
+
+  void storeRestoreId() {
+    _restoreStream = Freshchat.onRestoreIdGenerated;
+    _restoreStreamSubscription = _restoreStream.listen((event) async  {
+      print('storing restore id');
+      FreshchatUser _user = await Freshchat.getUser;
+      var _restoreID = _user.getRestoreId();
+      SharedPreferences _prefs = await SharedPreferences.getInstance();
+      if(_prefs.getString("FRESHCHAT_RESTORE_ID")==null || _prefs.getString("FRESHCHAT_RESTORE_ID")!=_restoreID) {
+        _prefs.setString("FRESHCHAT_RESTORE_ID", _restoreID);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // _restoreStreamSubscription.cancel();
+    super.dispose();
+  }
+
 }
