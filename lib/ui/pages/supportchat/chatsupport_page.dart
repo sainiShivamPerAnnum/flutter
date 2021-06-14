@@ -60,13 +60,12 @@ class _ChatSupportState extends State<ChatSupport> {
     print('device token : ${_baseUtil.myUser.client_token}');
     Freshchat.setPushRegistrationToken(_baseUtil.myUser.client_token);
     FreshchatUser user = await Freshchat.getUser;
-    print('user : ${user.toString()}');
     var _restore = user.getRestoreId();
     Freshchat.identifyUser(externalId: _userid, restoreId: 'c39d6427-0d6e-47e4-9279-e4520c991ccd');
     print('user id $_userid');
     print('restore id $_restore');
     // user id - NaQ56t18oxVpJ4aJtUBpLaaUHF22 restoreid - c39d6427-0d6e-47e4-9279-e4520c991ccd
-    user.setFirstName('Nimit Test - 4');
+    user.setFirstName('Nimit Test - 11');
     user.setEmail(_baseUtil.myUser.email);
     user.setPhone('+91', _baseUtil.myUser.mobile);
     Freshchat.setUser(user);
