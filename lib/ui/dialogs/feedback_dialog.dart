@@ -27,7 +27,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
   final fdbkController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    AppState().setDialogOpenStatus = true;
+    AppState.dialogOpenCount++;
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(UiConstants.padding),

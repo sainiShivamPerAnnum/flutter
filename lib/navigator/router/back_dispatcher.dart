@@ -13,9 +13,10 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   // 3
   @override
   Future<bool> didPopRoute() {
-    if (AppState().getDialogOpenStatus == true) {
+    if (AppState.dialogOpenCount > 0) {
       Navigator.pop(_routerDelegate.navigatorKey.currentContext);
-      AppState().setDialogOpenStatus = false;
+      AppState.dialogOpenCount--;
+      print("Dialog open remaining are: ${AppState.dialogOpenCount}");
       return Future.value(true);
     }
     return _routerDelegate.popRoute();

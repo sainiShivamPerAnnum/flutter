@@ -1,3 +1,4 @@
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
@@ -29,6 +30,12 @@ class _ContactUsState extends State<ContactUsDialog> {
   final _formKey = GlobalKey<FormState>();
   final fdbkController = TextEditingController();
   static bool _isCallbackInitiated = false;
+
+  @override
+  void initState() {
+    AppState.dialogOpenCount++;
+    super.initState();
+  }
 
   @override
   void dispose() {

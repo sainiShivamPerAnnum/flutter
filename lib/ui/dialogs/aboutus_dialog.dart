@@ -1,4 +1,5 @@
 import 'package:felloapp/core/model/DailyPick.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -11,8 +12,9 @@ class AboutUsDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppState.dialogOpenCount++;
     return Dialog(
-      insetPadding: EdgeInsets.only(left:20, top:50, bottom: 80, right:20),
+      insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
@@ -30,7 +32,8 @@ class AboutUsDialog extends StatelessWidget {
           SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Padding(
-                padding: EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
+                padding:
+                    EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -44,13 +47,13 @@ class AboutUsDialog extends StatelessWidget {
                       width: 120,
                       height: 120,
                     ),
-                    Text('ABOUT US',
+                    Text(
+                      'ABOUT US',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        color: UiConstants.primaryColor
-                      ),
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          color: UiConstants.primaryColor),
                     ),
                     SizedBox(
                       height: 20,
@@ -62,15 +65,11 @@ class AboutUsDialog extends StatelessWidget {
                           fontSize: 18,
                           height: 1.5,
                           fontWeight: FontWeight.w400,
-                          color: UiConstants.accentColor
-                      ),
+                          color: UiConstants.accentColor),
                     ),
-
                   ],
-                )
-            ),
+                )),
           )
-          ]
-    );
+        ]);
   }
 }

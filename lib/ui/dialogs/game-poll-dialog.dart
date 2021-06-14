@@ -108,7 +108,7 @@ class _GamePollState extends State<GamePoll> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    AppState().setDialogOpenStatus = true;
+    AppState.dialogOpenCount++;
     if (pollDetails == null) {
       getPollDetails();
       getPollResponse();

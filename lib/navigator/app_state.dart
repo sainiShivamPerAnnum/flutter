@@ -23,7 +23,7 @@ class PageAction {
 
 class AppState extends ChangeNotifier {
   int _selectedNavIndex = 0;
-  static bool _dialogOpen = false;
+  static int dialogOpenCount = 0;
   static String _fcmData;
   static bool isRootLoaded = false;
 
@@ -43,11 +43,6 @@ class AppState extends ChangeNotifier {
     if (isRootLoaded && _fcmData != null) {
       delegate.parseRoute(Uri.parse(_fcmData));
     }
-  }
-
-  bool get getDialogOpenStatus => _dialogOpen;
-  set setDialogOpenStatus(bool val) {
-    _dialogOpen = val;
   }
 
   int get getCurrentTabIndex => _selectedNavIndex;

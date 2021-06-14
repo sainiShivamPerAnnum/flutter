@@ -45,6 +45,7 @@ class _RootState extends State<Root> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       AppState().setRootLoadValue = true;
     });
+    AppState.dialogOpenCount = 0;
     _initDynamicLinks();
     //Declare some buttons for our tab bar
     _navBarItems = [

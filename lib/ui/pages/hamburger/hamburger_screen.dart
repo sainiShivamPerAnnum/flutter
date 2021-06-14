@@ -27,7 +27,7 @@ class HamburgerMenu extends StatelessWidget {
     reqProvider = Provider.of<DBModel>(context, listen: false);
     appstate = Provider.of<AppState>(context, listen: false);
     _optionsList = _loadOptionsList();
-
+    AppState.dialogOpenCount++;
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
       child: Dialog(
@@ -80,7 +80,10 @@ class HamburgerMenu extends StatelessWidget {
                     color: Colors.white,
                   )),
               child: IconButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  AppState.dialogOpenCount--;
+                  Navigator.pop(context);
+                },
                 icon: Icon(
                   Icons.cancel_rounded,
                   color: Colors.white,
@@ -164,6 +167,8 @@ class HamburgerMenu extends StatelessWidget {
                                 baseProvider.myUser.mobile)
                             .then((flag) {
                           if (flag) {
+                            AppState.dialogOpenCount--;
+                            print("${AppState.dialogOpenCount} left");
                             Navigator.of(context).pop();
                             baseProvider.showPositiveAlert(
                                 'Callback placed!',
@@ -191,37 +196,37 @@ class HamburgerMenu extends StatelessWidget {
       case 'signOut':
         {
           showDialog(
-              context: context,
-              builder: (BuildContext dialogContext) => ConfirmActionDialog(
-                    title: 'Confirm',
-                    description: 'Are you sure you want to sign out?',
-                    buttonText: 'Yes',
-                    confirmAction: () {
-                      HapticFeedback.vibrate();
-                      baseProvider.signOut().then((flag) {
-                        if (flag) {
-                          //log.debug('Sign out process complete');
+            context: context,
+            builder: (BuildContext dialogContext) => ConfirmActionDialog(
+              title: 'Confirm',
+              description: 'Are you sure you want to sign out?',
+              buttonText: 'Yes',
+              confirmAction: () {
+                HapticFeedback.vibrate();
+                baseProvider.signOut().then((flag) {
+                  if (flag) {
+                    //log.debug('Sign out process complete');
 
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                          appstate.currentAction = PageAction(
-                              state: PageState.replaceAll,
-                              page: SplashPageConfig);
-                          baseProvider.showPositiveAlert(
-                              'Signed out', 'Hope to see you soon', context);
-                        } else {
-                          Navigator.of(context).pop();
-                          baseProvider.showNegativeAlert('Sign out failed',
-                              'Couldn\'t signout. Please try again', context);
-                          //log.error('Sign out process failed');
-                        }
-                      });
-                    },
-                    cancelAction: () {
-                      HapticFeedback.vibrate();
-                      Navigator.of(context).pop();
-                    },
-                  ));
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                    appstate.currentAction = PageAction(
+                        state: PageState.replaceAll, page: SplashPageConfig);
+                    baseProvider.showPositiveAlert(
+                        'Signed out', 'Hope to see you soon', context);
+                  } else {
+                    Navigator.of(context).pop();
+                    baseProvider.showNegativeAlert('Sign out failed',
+                        'Couldn\'t signout. Please try again', context);
+                    //log.error('Sign out process failed');
+                  }
+                });
+              },
+              cancelAction: () {
+                HapticFeedback.vibrate();
+                Navigator.of(context).pop();
+              },
+            ),
+          );
           break;
         }
       case 'fdbk':
