@@ -1,3 +1,5 @@
+import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
+import 'package:felloapp/ui/dialogs/guide_dialog.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
 import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
@@ -188,7 +190,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
 // 6
   void addAll(List<PageConfiguration> routes) {
-    _pages.clear();
     routes.forEach((route) {
       addPage(route);
     });
@@ -293,19 +294,71 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     if (uri.pathSegments.isEmpty) {
       setNewRoutePath(SplashPageConfig);
       return;
-    }
-//     // Handle navapp://deeplinks/details/#
-//     if (uri.pathSegments.length == 2) {
-//       if (uri.pathSegments[0] == 'details') {
-// // 3
-//         pushWidget(Details(int.parse(uri.pathSegments[1])), DetailsPageConfig);
-//       }
-//     }
-    else if (uri.pathSegments.length == 1) {
+    } else if (uri.pathSegments.length > 1) {
+      if (num.tryParse(uri.pathSegments[0]) != null) {
+        appState.setCurrentTabIndex = num.tryParse(uri.pathSegments[0]);
+      }
+      for (int i = 1; i < uri.pathSegments.length; i++) {
+        final segment = uri.pathSegments[i];
+        if (segment.startsWith('d-', 0)) {
+          String dialogName = segment.split('-').last;
+          Widget dialogWidget = null;
+          switch (dialogName) {
+            case 'guide':
+              dialogWidget = GuideDialog();
+              break;
+            case 'gamePoll':
+              dialogWidget = GamePoll();
+          }
+          if (dialogWidget != null) {
+            showDialog(
+              context: navigatorKey.currentContext,
+              builder: (ctx) => WillPopScope(
+                  onWillPop: () {
+                    AppState.dialogOpenCount--;
+                    print("open dialog count ${AppState.dialogOpenCount}");
+                    return Future.value(true);
+                  },
+                  child: dialogWidget),
+            );
+          }
+        } else {
+          switch (segment) {
+            case 'editProfile':
+              addPage(EditProfileConfig);
+              break;
+            case 'mfDetails':
+              addPage(MfDetailsPageConfig);
+              break;
+            case 'augDetails':
+              addPage(AugDetailsPageConfig);
+              break;
+            case 'tran':
+              addPage(TransactionPageConfig);
+              break;
+            case 'referral':
+              addPage(ReferralPageConfig);
+              break;
+            case 'tambolaHome':
+              addPage(TambolaHomePageConfig);
+              break;
+            case 'tnc':
+              addPage(TncPageConfig);
+              break;
+            case 'faq':
+              addPage(FaqPageConfig);
+              break;
+          }
+        }
+      }
+    } else if (uri.pathSegments.length == 1) {
       final path = uri.pathSegments[0];
       switch (path) {
         case 'splash':
           replaceAll(SplashPageConfig);
+          showDialog(
+              context: navigatorKey.currentContext,
+              builder: (ctx) => GuideDialog());
           break;
         case 'login':
           replaceAll(LoginPageConfig);
@@ -368,3 +421,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     }
   }
 }
+
+
+        // pushWidget(Details(int.parse(uri.pathSegments[1])), DetailsPageConfig);

@@ -4,6 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/login/screens/Field-Container.dart';
@@ -36,6 +39,7 @@ class _EditProfileState extends State<EditProfile> {
   bool _isInitialized = false;
   static DBModel dbProvider;
   static BaseUtil baseProvider;
+  AppState appState;
   File profilePic;
   int gender = 1;
   bool isPlayer = false;
@@ -136,6 +140,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+    appState = Provider.of<AppState>(context, listen: false);
     if (!_isInitialized) {
       _isInitialized = true;
       baseProvider = Provider.of<BaseUtil>(context, listen: false);
@@ -171,25 +176,10 @@ class _EditProfileState extends State<EditProfile> {
         if (profilePic != null) noChanges = false;
 
         if (!noChanges) {
-          return (await showDialog(
-            context: context,
-            builder: (ctx) => ConfirmActionDialog(
-              title: "You changes are unsaved",
-              description: "Are you sure you want to go back?",
-              buttonText: "Yes",
-              cancelBtnText: 'Cancel',
-              confirmAction: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-              cancelAction: () {
-                Navigator.pop(context);
-              },
-            ),
-          ));
+          AppState.unsavedChanges = true;
+          print("Hello");
         }
-
-        return true;
+        return false;
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -466,6 +456,7 @@ class _EditProfileState extends State<EditProfile> {
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
                             // baseProvider.firebaseUser = await FirebaseAuth.instance.currentUser();
+                            FocusScope.of(context).unfocus();
                             var pName = _nameFieldController.text;
                             var pEmail = _emailFieldController.text;
                             var pAge = _ageFieldController.text;
@@ -514,14 +505,19 @@ class _EditProfileState extends State<EditProfile> {
                                   .updateUser(baseProvider.myUser)
                                   .then((flag) {
                                 if (flag) {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (ctx) => Root()));
-                                  baseProvider.showPositiveAlert(
-                                      'Complete',
-                                      'Your details have been updated',
-                                      context);
+                                  // Navigator.pushReplacement(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (ctx) => Root(),
+                                  //   ),
+                                  // );
+                                  // baseProvider.showPositiveAlert(
+                                  //     'Complete',
+                                  //     'Your details have been updated',
+                                  //     context);
+                                  appState.currentAction = PageAction(
+                                    state: PageState.pop,
+                                  );
                                 } else {
                                   baseProvider.showNegativeAlert(
                                       'Failed',

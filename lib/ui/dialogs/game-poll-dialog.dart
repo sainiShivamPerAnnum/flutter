@@ -33,6 +33,12 @@ class _GamePollState extends State<GamePoll> {
     });
   }
 
+  @override
+  initState() {
+    AppState.dialogOpenCount++;
+    super.initState();
+  }
+
   getPollDetails() async {
     // isLoading = true;
     if (baseProvider != null && dbProvider != null && isLoading == true) {
@@ -108,7 +114,6 @@ class _GamePollState extends State<GamePoll> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    AppState.dialogOpenCount++;
     if (pollDetails == null) {
       getPollDetails();
       getPollResponse();

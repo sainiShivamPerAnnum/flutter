@@ -29,8 +29,8 @@ class FcmHandler extends ChangeNotifier {
     tab = int.tryParse(data["misc_data"]) ?? 0;
 
     print("------------------->" + url);
-    delegate.appState.setCurrentTabIndex = tab;
-    print("tab set to ${data["misc"]}");
+    //delegate.appState.setCurrentTabIndex = tab;
+    // print("tab set to ${data["misc"]}");
     AppState().setFcmData = url;
     return true;
   }

@@ -3,6 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/model/FeedCard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
@@ -136,12 +137,6 @@ class _HomePageState extends State<HomePage> {
             context: context,
             builder: (BuildContext context) => GuideDialog(),
           );
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (ctx) => GetStartedPage(),
-          //   ),
-          // );
         };
       case 120:
         return () {
@@ -196,8 +191,7 @@ class _HomePageState extends State<HomePage> {
         buttonText: card.btnText,
         onPressed: () async {
           HapticFeedback.vibrate();
-          var _f = getFixedAction(card.id);
-          _f();
+          delegate.parseRoute(Uri.parse("1/d-gamePoll"));
         },
         gradient: [
           Color(card.clrCodeA),

@@ -26,6 +26,7 @@ class AppState extends ChangeNotifier {
   static int dialogOpenCount = 0;
   static String _fcmData;
   static bool isRootLoaded = false;
+  static bool unsavedChanges = false;
 
   PageAction _currentAction = PageAction();
 

@@ -206,11 +206,11 @@ class HamburgerMenu extends StatelessWidget {
                 baseProvider.signOut().then((flag) {
                   if (flag) {
                     //log.debug('Sign out process complete');
-
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
+                    AppState.dialogOpenCount = 0;
                     appstate.currentAction = PageAction(
-                        state: PageState.replaceAll, page: SplashPageConfig);
+                        state: PageState.replaceAll, page: LoginPageConfig);
                     baseProvider.showPositiveAlert(
                         'Signed out', 'Hope to see you soon', context);
                   } else {
