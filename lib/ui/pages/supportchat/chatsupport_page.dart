@@ -77,7 +77,7 @@ class _ChatSupportState extends State<ChatSupport> {
     print('user id $_userid');
     print('restore id $_restore');
     // user id - NaQ56t18oxVpJ4aJtUBpLaaUHF22 restoreid - c39d6427-0d6e-47e4-9279-e4520c991ccd
-    _user.setFirstName('Nimit Test - 11');
+    _user.setFirstName(_baseUtil.myUser.name);
     _user.setEmail(_baseUtil.myUser.email);
     _user.setPhone('+91', _baseUtil.myUser.mobile);
     Freshchat.setUser(_user);
@@ -99,7 +99,7 @@ class _ChatSupportState extends State<ChatSupport> {
 
   @override
   void dispose() {
-    // _restoreStreamSubscription.cancel();
+    _restoreStreamSubscription.cancel();
     super.dispose();
   }
 
