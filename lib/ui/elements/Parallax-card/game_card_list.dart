@@ -1,3 +1,4 @@
+import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
@@ -58,10 +59,7 @@ class GameCardListState extends State<GameCardList>
       //     PageAction(state: PageState.addPage, page: TambolaHomePageConfig),
       () {
         HapticFeedback.vibrate();
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => GamePoll(),
-        );
+        delegate.parseRoute(Uri.parse("d-gamePoll"));
       },
     ];
     //Size size = MediaQuery.of(context).size;

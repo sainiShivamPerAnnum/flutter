@@ -6,6 +6,7 @@ import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/pages/hamburger/hamburger_screen.dart';
@@ -45,7 +46,6 @@ class _RootState extends State<Root> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       AppState().setRootLoadValue = true;
     });
-    AppState.dialogOpenCount = 0;
     _initDynamicLinks();
     //Declare some buttons for our tab bar
     _navBarItems = [
@@ -189,11 +189,7 @@ class _RootState extends State<Root> {
                     GestureDetector(
                       onTap: () {
                         HapticFeedback.vibrate();
-                        showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (BuildContext context) => HamburgerMenu(),
-                        );
+                        delegate.parseRoute(Uri.parse("d-ham"));
                       },
                       child: Container(
                         height: SizeConfig.screenHeight * 0.05,

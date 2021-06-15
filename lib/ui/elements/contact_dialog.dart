@@ -32,12 +32,6 @@ class _ContactUsState extends State<ContactUsDialog> {
   static bool _isCallbackInitiated = false;
 
   @override
-  void initState() {
-    AppState.dialogOpenCount++;
-    super.initState();
-  }
-
-  @override
   void dispose() {
     _isCallbackInitiated = false;
     super.dispose();

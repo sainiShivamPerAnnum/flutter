@@ -61,6 +61,8 @@ dependencies:
   scratcher: ^1.4.0
   video_player: ^1.0.1
   webview_flutter: ^1.0.7
+  screenshot: ^1.2.1
+
 
   flutter:
     sdk: flutter

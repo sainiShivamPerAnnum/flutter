@@ -33,12 +33,6 @@ class _GamePollState extends State<GamePoll> {
     });
   }
 
-  @override
-  initState() {
-    AppState.dialogOpenCount++;
-    super.initState();
-  }
-
   getPollDetails() async {
     // isLoading = true;
     if (baseProvider != null && dbProvider != null && isLoading == true) {

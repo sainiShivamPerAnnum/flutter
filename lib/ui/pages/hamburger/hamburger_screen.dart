@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/aboutus_dialog.dart';
@@ -27,7 +28,6 @@ class HamburgerMenu extends StatelessWidget {
     reqProvider = Provider.of<DBModel>(context, listen: false);
     appstate = Provider.of<AppState>(context, listen: false);
     _optionsList = _loadOptionsList();
-    AppState.dialogOpenCount++;
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
       child: Dialog(
@@ -48,15 +48,6 @@ class HamburgerMenu extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Text(
-            //   "Menu",
-            //   style: GoogleFonts.montserrat(
-            //     color: Colors.black,
-            //     fontWeight: FontWeight.w700,
-            //     fontSize: SizeConfig.largeTextSize,
-            //   ),
-            // ),
-            // Divider(),
             Container(
               child: ListView.builder(
                 shrinkWrap: true,
@@ -81,7 +72,7 @@ class HamburgerMenu extends StatelessWidget {
                   )),
               child: IconButton(
                 onPressed: () {
-                  AppState.dialogOpenCount--;
+                  AppState.screenStack.removeLast();
                   Navigator.pop(context);
                 },
                 icon: Icon(
@@ -124,9 +115,7 @@ class HamburgerMenu extends StatelessWidget {
         }
       case 'abUs':
         {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) => AboutUsDialog());
+          delegate.parseRoute(Uri.parse("d-aboutus"));
           break;
         }
       case 'faq':
@@ -147,40 +136,48 @@ class HamburgerMenu extends StatelessWidget {
         }
       case 'contUs':
         {
+          AppState.screenStack.add(ScreenItem.dialog);
           showDialog(
               context: context,
-              builder: (BuildContext dialogContext) => ContactUsDialog(
-                    isResident: (baseProvider.isSignedIn() &&
-                        baseProvider.isActiveUser()),
-                    isUnavailable: BaseUtil.isDeviceOffline,
-                    onClick: () {
-                      if (BaseUtil.isDeviceOffline) {
-                        baseProvider.showNoInternetAlert(context);
-                        return;
-                      }
-                      if (baseProvider.isSignedIn() &&
-                          baseProvider.isActiveUser()) {
-                        reqProvider
-                            .addCallbackRequest(
-                                baseProvider.firebaseUser.uid,
-                                baseProvider.myUser.name,
-                                baseProvider.myUser.mobile)
-                            .then((flag) {
-                          if (flag) {
-                            AppState.dialogOpenCount--;
-                            print("${AppState.dialogOpenCount} left");
-                            Navigator.of(context).pop();
-                            baseProvider.showPositiveAlert(
-                                'Callback placed!',
-                                'We\'ll contact you soon on your registered mobile',
-                                context);
-                          }
-                        });
-                      } else {
-                        baseProvider.showNegativeAlert('Unavailable',
-                            'Callbacks are reserved for active users', context);
-                      }
+              builder: (BuildContext dialogContext) => WillPopScope(
+                    onWillPop: () {
+                      AppState.screenStack.removeLast();
+                      return Future.value(true);
                     },
+                    child: ContactUsDialog(
+                      isResident: (baseProvider.isSignedIn() &&
+                          baseProvider.isActiveUser()),
+                      isUnavailable: BaseUtil.isDeviceOffline,
+                      onClick: () {
+                        if (BaseUtil.isDeviceOffline) {
+                          baseProvider.showNoInternetAlert(context);
+                          return;
+                        }
+                        if (baseProvider.isSignedIn() &&
+                            baseProvider.isActiveUser()) {
+                          reqProvider
+                              .addCallbackRequest(
+                                  baseProvider.firebaseUser.uid,
+                                  baseProvider.myUser.name,
+                                  baseProvider.myUser.mobile)
+                              .then((flag) {
+                            if (flag) {
+                              Navigator.of(context).pop();
+                              AppState.screenStack.removeLast();
+                              baseProvider.showPositiveAlert(
+                                  'Callback placed!',
+                                  'We\'ll contact you soon on your registered mobile',
+                                  context);
+                            }
+                          });
+                        } else {
+                          baseProvider.showNegativeAlert(
+                              'Unavailable',
+                              'Callbacks are reserved for active users',
+                              context);
+                        }
+                      },
+                    ),
                   ));
           break;
         }
@@ -195,42 +192,54 @@ class HamburgerMenu extends StatelessWidget {
       //   }
       case 'signOut':
         {
+          AppState.screenStack.add(ScreenItem.dialog);
           showDialog(
             context: context,
-            builder: (BuildContext dialogContext) => ConfirmActionDialog(
-              title: 'Confirm',
-              description: 'Are you sure you want to sign out?',
-              buttonText: 'Yes',
-              confirmAction: () {
-                HapticFeedback.vibrate();
-                baseProvider.signOut().then((flag) {
-                  if (flag) {
-                    //log.debug('Sign out process complete');
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                    AppState.dialogOpenCount = 0;
-                    appstate.currentAction = PageAction(
-                        state: PageState.replaceAll, page: LoginPageConfig);
-                    baseProvider.showPositiveAlert(
-                        'Signed out', 'Hope to see you soon', context);
-                  } else {
-                    Navigator.of(context).pop();
-                    baseProvider.showNegativeAlert('Sign out failed',
-                        'Couldn\'t signout. Please try again', context);
-                    //log.error('Sign out process failed');
-                  }
-                });
+            builder: (BuildContext dialogContext) => WillPopScope(
+              onWillPop: () {
+                AppState.screenStack.removeLast();
+                return Future.value(true);
               },
-              cancelAction: () {
-                HapticFeedback.vibrate();
-                Navigator.of(context).pop();
-              },
+              child: ConfirmActionDialog(
+                title: 'Confirm',
+                description: 'Are you sure you want to sign out?',
+                buttonText: 'Yes',
+                confirmAction: () {
+                  HapticFeedback.vibrate();
+                  baseProvider.signOut().then((flag) {
+                    if (flag) {
+                      //log.debug('Sign out process complete');
+                      AppState.screenStack.removeLast();
+                      AppState.screenStack.removeLast();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+
+                      appstate.currentAction = PageAction(
+                          state: PageState.replaceAll, page: SplashPageConfig);
+                      baseProvider.showPositiveAlert(
+                          'Signed out', 'Hope to see you soon', context);
+                    } else {
+                      AppState.screenStack.removeLast();
+                      Navigator.of(context).pop();
+                      baseProvider.showNegativeAlert('Sign out failed',
+                          'Couldn\'t signout. Please try again', context);
+                      //log.error('Sign out process failed');
+                    }
+                  });
+                },
+                cancelAction: () {
+                  HapticFeedback.vibrate();
+                  AppState.screenStack.removeLast();
+                  Navigator.of(context).pop();
+                },
+              ),
             ),
           );
           break;
         }
       case 'fdbk':
         {
+          AppState.screenStack.add(ScreenItem.dialog);
           showDialog(
             context: context,
             builder: (BuildContext context) => FeedbackDialog(

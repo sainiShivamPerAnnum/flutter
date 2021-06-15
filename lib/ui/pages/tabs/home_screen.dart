@@ -245,7 +245,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               Text(
                 getGreeting().toUpperCase(),
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.manrope(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
                     fontSize: SizeConfig.largeTextSize),
@@ -253,7 +253,7 @@ class _HomePageState extends State<HomePage> {
               Text(
                 baseProvider.myUser.name,
                 textAlign: TextAlign.start,
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.manrope(
                     color: Colors.white, fontSize: SizeConfig.largeTextSize),
               ),
             ],
@@ -328,7 +328,7 @@ class HomeCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.manrope(
                       color: Colors.white,
                       shadows: [
                         Shadow(
@@ -345,7 +345,7 @@ class HomeCard extends StatelessWidget {
                 ),
                 Text(
                   subtitle,
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.manrope(
                       color: Colors.white,
                       fontSize: SizeConfig.mediumTextSize * 1.2,
                       fontWeight: FontWeight.w400),
@@ -374,7 +374,7 @@ class HomeCard extends StatelessWidget {
                     ),
                     child: Text(
                       buttonText,
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.manrope(
                           color: Colors.white, fontSize: width * 0.035),
                     ),
                   ),

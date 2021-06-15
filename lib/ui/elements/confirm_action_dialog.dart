@@ -28,12 +28,6 @@ class _FormDialogState extends State<ConfirmActionDialog> {
   final fdbkController = TextEditingController();
 
   @override
-  void initState() {
-    AppState.dialogOpenCount++;
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -97,7 +91,6 @@ class _FormDialogState extends State<ConfirmActionDialog> {
                       onPressed: () {
                         HapticFeedback.vibrate();
                         log.debug('DialogAction cancelled');
-                        AppState.dialogOpenCount--;
                         return widget.cancelAction();
                       },
                       child: Text(widget.cancelBtnText),
@@ -109,7 +102,6 @@ class _FormDialogState extends State<ConfirmActionDialog> {
                       onPressed: () {
                         HapticFeedback.vibrate();
                         log.debug('DialogAction clicked');
-                        AppState.dialogOpenCount--;
                         return widget.confirmAction();
                       },
                       child: Text(widget.buttonText),

@@ -6,7 +6,9 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/dialogs/Fold-Card/card.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
 import 'package:felloapp/ui/dialogs/ticket_details_dialog.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
@@ -194,24 +196,24 @@ class _GamePageState extends State<GamePage> {
                                   title: "Want more tickets?",
                                   action: [
                                     GameOfferCardButton(
-                                      onPressed: () =>
-                                          appState.setCurrentTabIndex = 2,
-                                      // onPressed: () => showDialog(
-                                      //   context: context,
-                                      //   barrierDismissible: false,
-                                      //   builder: (ctx) {
-                                      //     return Center(
-                                      //       child: Material(
-                                      //         color: Colors.transparent,
-                                      //         child: Stack(
-                                      //           children: [
-                                      //             Center(child: FCard()),
-                                      //           ],
-                                      //         ),
-                                      //       ),
-                                      //     );
-                                      //   },
-                                      // ),
+                                      // onPressed: () =>
+                                      //     delegate.parseRoute(Uri.parse("2")),
+                                      onPressed: () => showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (ctx) {
+                                          return Center(
+                                            child: Material(
+                                              color: Colors.transparent,
+                                              child: Stack(
+                                                children: [
+                                                  Center(child: FCard()),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
                                       title: "Invest",
                                     ),
                                     SizedBox(
@@ -219,7 +221,7 @@ class _GamePageState extends State<GamePage> {
                                     ),
                                     GameOfferCardButton(
                                       onPressed: () =>
-                                          appState.setCurrentTabIndex = 2,
+                                          delegate.parseRoute(Uri.parse("3")),
                                       title: "Share",
                                     ),
                                   ],
@@ -233,6 +235,8 @@ class _GamePageState extends State<GamePage> {
                                   action: [
                                     GameOfferCardButton(
                                       onPressed: () {
+                                        AppState.screenStack
+                                            .add(ScreenItem.dialog);
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) =>

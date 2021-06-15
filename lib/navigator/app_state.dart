@@ -7,6 +7,7 @@ import 'router/ui_pages.dart';
 const String LoggedInKey = 'LoggedIn';
 
 enum PageState { none, addPage, addAll, addWidget, pop, replace, replaceAll }
+enum ScreenItem { page, dialog }
 
 class PageAction {
   PageState state;
@@ -23,10 +24,11 @@ class PageAction {
 
 class AppState extends ChangeNotifier {
   int _selectedNavIndex = 0;
-  static int dialogOpenCount = 0;
+  // static int dialogOpenCount = 0;
   static String _fcmData;
   static bool isRootLoaded = false;
   static bool unsavedChanges = false;
+  static List<ScreenItem> screenStack = [];
 
   PageAction _currentAction = PageAction();
 

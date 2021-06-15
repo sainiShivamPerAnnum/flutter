@@ -18,6 +18,8 @@ import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
+import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -174,7 +176,10 @@ class BaseUtil extends ChangeNotifier {
           Icons.arrow_back_rounded,
           color: Colors.white,
         ),
-        onPressed: () => Navigator.pop(context),
+        onPressed: () {
+          AppState.screenStack.removeLast();
+          delegate.popRoute();
+        },
       ),
 
       elevation: 1.0,

@@ -1,6 +1,8 @@
+import 'package:felloapp/ui/dialogs/aboutus_dialog.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
+import 'package:felloapp/ui/pages/hamburger/hamburger_screen.dart';
 import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
@@ -79,6 +81,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   Future<bool> popRoute() {
     if (canPop()) {
       _removePage(_pages.last);
+      print("Popped a page");
       notifyListeners();
       return Future.value(true);
     }
@@ -101,22 +104,21 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   void _addPageData(Widget child, PageConfiguration pageConfig) {
+    AppState.screenStack.add(ScreenItem.page);
+    print("Added a page ${pageConfig.key}");
     _pages.add(
       _createPage(child, pageConfig),
     );
   }
 
   void addPage(PageConfiguration pageConfig) {
-    // 1
     final shouldAddPage = _pages.isEmpty ||
         (_pages.last.arguments as PageConfiguration).uiPage !=
             pageConfig.uiPage;
 
     if (shouldAddPage) {
-      // 2
       switch (pageConfig.uiPage) {
         case Pages.Splash:
-          // 3
           _addPageData(SplashScreen(), SplashPageConfig);
           break;
         case Pages.Login:
@@ -169,6 +171,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 // 2
   void setPath(List<MaterialPage> path) {
     _pages.clear();
+    AppState.screenStack.clear();
     _pages.addAll(path);
     notifyListeners();
   }
@@ -202,6 +205,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
             configuration.uiPage;
     if (shouldAddPage) {
       _pages.clear();
+      AppState.screenStack.clear();
       addPage(configuration);
     }
     return SynchronousFuture(null);
@@ -294,133 +298,162 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     if (uri.pathSegments.isEmpty) {
       setNewRoutePath(SplashPageConfig);
       return;
-    } else if (uri.pathSegments.length > 1) {
+    } else {
       if (num.tryParse(uri.pathSegments[0]) != null) {
         appState.setCurrentTabIndex = num.tryParse(uri.pathSegments[0]);
       }
-      for (int i = 1; i < uri.pathSegments.length; i++) {
+      for (int i = 0; i < uri.pathSegments.length; i++) {
         final segment = uri.pathSegments[i];
         if (segment.startsWith('d-', 0)) {
-          String dialogName = segment.split('-').last;
-          Widget dialogWidget = null;
-          switch (dialogName) {
-            case 'guide':
-              dialogWidget = GuideDialog();
-              break;
-            case 'gamePoll':
-              dialogWidget = GamePoll();
-          }
-          if (dialogWidget != null) {
-            showDialog(
-              context: navigatorKey.currentContext,
-              builder: (ctx) => WillPopScope(
-                  onWillPop: () {
-                    AppState.dialogOpenCount--;
-                    print("open dialog count ${AppState.dialogOpenCount}");
-                    return Future.value(true);
-                  },
-                  child: dialogWidget),
-            );
-          }
+          dialogCheck(segment.split('-').last);
         } else {
-          switch (segment) {
-            case 'editProfile':
-              addPage(EditProfileConfig);
-              break;
-            case 'mfDetails':
-              addPage(MfDetailsPageConfig);
-              break;
-            case 'augDetails':
-              addPage(AugDetailsPageConfig);
-              break;
-            case 'tran':
-              addPage(TransactionPageConfig);
-              break;
-            case 'referral':
-              addPage(ReferralPageConfig);
-              break;
-            case 'tambolaHome':
-              addPage(TambolaHomePageConfig);
-              break;
-            case 'tnc':
-              addPage(TncPageConfig);
-              break;
-            case 'faq':
-              addPage(FaqPageConfig);
-              break;
-          }
+          screenCheck(segment);
         }
       }
-    } else if (uri.pathSegments.length == 1) {
-      final path = uri.pathSegments[0];
-      switch (path) {
-        case 'splash':
-          replaceAll(SplashPageConfig);
-          showDialog(
-              context: navigatorKey.currentContext,
-              builder: (ctx) => GuideDialog());
-          break;
-        case 'login':
-          replaceAll(LoginPageConfig);
-          break;
-        case 'onboard':
-          replaceAll(OnboardPageConfig);
-          break;
-        case 'root':
-          replaceAll(RootPageConfig);
-          break;
-        case 'editProfile':
-          setPath([
-            _createPage(Root(), RootPageConfig),
-            _createPage(EditProfile(), EditProfileConfig),
-          ]);
-          break;
-        case 'mfDetails':
-          setPath([
-            _createPage(Root(), RootPageConfig),
-            _createPage(MFDetailsPage(), EditProfileConfig),
-          ]);
-          break;
-        case 'augDetails':
-          setPath([
-            _createPage(Root(), RootPageConfig),
-            _createPage(AugmontDetailsPage(), EditProfileConfig),
-          ]);
-          break;
-        case 'tran':
-          setPath([
-            _createPage(Root(), RootPageConfig),
-            _createPage(Transactions(), EditProfileConfig),
-          ]);
-          break;
-        case 'referral':
-          setPath([
-            _createPage(Root(), RootPageConfig),
-            _createPage(ReferralsPage(), EditProfileConfig),
-          ]);
-          break;
-        case 'tambolaHome':
-          setPath([
-            _createPage(Root(), RootPageConfig),
-            _createPage(TambolaHome(), EditProfileConfig),
-          ]);
-          break;
-        case 'tnc':
-          setPath([
-            _createPage(Root(), RootPageConfig),
-            _createPage(TnC(), TncPageConfig),
-          ]);
-          break;
-        case 'faq':
-          setPath([
-            _createPage(Root(), RootPageConfig),
-            _createPage(FAQPage(), FaqPageConfig),
-          ]);
-          break;
-      }
+    }
+    // for one segement [bottom]
+  }
+
+  void dialogCheck(String dialogKey) {
+    Widget dialogWidget = null;
+    bool barrierDismissable = true;
+    switch (dialogKey) {
+      case 'guide':
+        dialogWidget = GuideDialog();
+        break;
+      case 'gamePoll':
+        dialogWidget = GamePoll();
+        break;
+      case "aboutus":
+        dialogWidget = AboutUsDialog();
+        break;
+
+      case "ham":
+        dialogWidget = HamburgerMenu();
+        barrierDismissable = false;
+    }
+    if (dialogWidget != null) {
+      AppState.screenStack.add(ScreenItem.dialog);
+      showDialog(
+          context: navigatorKey.currentContext,
+          barrierDismissible: barrierDismissable,
+          builder: (ctx) {
+            return WillPopScope(
+                onWillPop: () {
+                  //if (AppState.screenStack.last == ScreenItem.dialog) {
+                  AppState.screenStack.removeLast();
+                  //}
+                  return Future.value(true);
+                },
+                child: dialogWidget);
+          });
+    }
+  }
+
+  void screenCheck(String screenKey) {
+    PageConfiguration pageConfiguration = null;
+    switch (screenKey) {
+      case 'editProfile':
+        pageConfiguration = EditProfileConfig;
+        addPage(EditProfileConfig);
+        break;
+      case 'mfDetails':
+        pageConfiguration = MfDetailsPageConfig;
+        break;
+      case 'augDetails':
+        pageConfiguration = AugDetailsPageConfig;
+        break;
+      case 'tran':
+        pageConfiguration = TransactionPageConfig;
+        break;
+      case 'referral':
+        pageConfiguration = ReferralPageConfig;
+        break;
+      case 'tambolaHome':
+        pageConfiguration = TambolaHomePageConfig;
+        break;
+      case 'tnc':
+        pageConfiguration = TncPageConfig;
+        break;
+      case 'faq':
+        pageConfiguration = FaqPageConfig;
+        break;
+    }
+    if (pageConfiguration != null) {
+      addPage(pageConfiguration);
     }
   }
 }
 
+// Push screen with data
+// pushWidget(Details(int.parse(uri.pathSegments[1])), DetailsPageConfig);
 
-        // pushWidget(Details(int.parse(uri.pathSegments[1])), DetailsPageConfig);
+
+ //  else if (uri.pathSegments.length == 1) {
+    //   final path = uri.pathSegments[0];
+    //   switch (path) {
+    //     case 'splash':
+    //       replaceAll(SplashPageConfig);
+    //       showDialog(
+    //           context: navigatorKey.currentContext,
+    //           builder: (ctx) => GuideDialog());
+    //       break;
+    //     case 'login':
+    //       replaceAll(LoginPageConfig);
+    //       break;
+    //     case 'onboard':
+    //       replaceAll(OnboardPageConfig);
+    //       break;
+    //     case 'root':
+    //       replaceAll(RootPageConfig);
+    //       break;
+    //     case 'editProfile':
+    //       setPath([
+    //         _createPage(Root(), RootPageConfig),
+    //         _createPage(EditProfile(), EditProfileConfig),
+    //       ]);
+    //       break;
+    //     case 'mfDetails':
+    //       setPath([
+    //         _createPage(Root(), RootPageConfig),
+    //         _createPage(MFDetailsPage(), EditProfileConfig),
+    //       ]);
+    //       break;
+    //     case 'augDetails':
+    //       setPath([
+    //         _createPage(Root(), RootPageConfig),
+    //         _createPage(AugmontDetailsPage(), EditProfileConfig),
+    //       ]);
+    //       break;
+    //     case 'tran':
+    //       setPath([
+    //         _createPage(Root(), RootPageConfig),
+    //         _createPage(Transactions(), EditProfileConfig),
+    //       ]);
+    //       break;
+    //     case 'referral':
+    //       setPath([
+    //         _createPage(Root(), RootPageConfig),
+    //         _createPage(ReferralsPage(), EditProfileConfig),
+    //       ]);
+    //       break;
+    //     case 'tambolaHome':
+    //       setPath([
+    //         _createPage(Root(), RootPageConfig),
+    //         _createPage(TambolaHome(), EditProfileConfig),
+    //       ]);
+    //       break;
+    //     case 'tnc':
+    //       setPath([
+    //         _createPage(Root(), RootPageConfig),
+    //         _createPage(TnC(), TncPageConfig),
+    //       ]);
+    //       break;
+    //     case 'faq':
+    //       setPath([
+    //         _createPage(Root(), RootPageConfig),
+    //         _createPage(FAQPage(), FaqPageConfig),
+    //       ]);
+    //       break;
+    //   }
+    // }

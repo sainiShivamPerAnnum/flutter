@@ -12,7 +12,6 @@ class AboutUsDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppState.dialogOpenCount++;
     return Dialog(
       insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
       shape: RoundedRectangleBorder(
@@ -26,50 +25,51 @@ class AboutUsDialog extends StatelessWidget {
 
   dialogContent(BuildContext context) {
     return Stack(
-        overflow: Overflow.visible,
-        alignment: Alignment.topCenter,
-        children: <Widget>[
-          SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Padding(
-                padding:
-                    EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      child: Image(
-                        image: AssetImage(Assets.logoMaxSize),
-                        fit: BoxFit.contain,
-                      ),
-                      width: 120,
-                      height: 120,
+      overflow: Overflow.visible,
+      alignment: Alignment.topCenter,
+      children: <Widget>[
+        SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Padding(
+              padding:
+                  EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    child: Image(
+                      image: AssetImage(Assets.logoMaxSize),
+                      fit: BoxFit.contain,
                     ),
-                    Text(
-                      'ABOUT US',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                          color: UiConstants.primaryColor),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      Assets.aboutUsDesc,
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                          fontSize: 18,
-                          height: 1.5,
-                          fontWeight: FontWeight.w400,
-                          color: UiConstants.accentColor),
-                    ),
-                  ],
-                )),
-          )
-        ]);
+                    width: 120,
+                    height: 120,
+                  ),
+                  Text(
+                    'ABOUT US',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: UiConstants.primaryColor),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    Assets.aboutUsDesc,
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(
+                        fontSize: 18,
+                        height: 1.5,
+                        fontWeight: FontWeight.w400,
+                        color: UiConstants.accentColor),
+                  ),
+                ],
+              )),
+        )
+      ],
+    );
   }
 }

@@ -11,32 +11,34 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
-    if (AppState.dialogOpenCount > 0) {
+    print("Current: ${AppState.screenStack}");
+    if (AppState.screenStack.last == ScreenItem.dialog) {
+      AppState.screenStack.removeLast();
       Navigator.pop(_routerDelegate.navigatorKey.currentContext);
-      AppState.dialogOpenCount--;
-      print("Dialog open remaining are: ${AppState.dialogOpenCount}");
       return Future.value(true);
+    } else {
+      AppState.screenStack.removeLast();
+      return _routerDelegate.popRoute();
     }
-    if (AppState.unsavedChanges) {
-      showDialog(
-        context: _routerDelegate.navigatorKey.currentContext,
-        builder: (ctx) => ConfirmActionDialog(
-          title: "You changes are unsaved",
-          description: "Are you sure you want to go back?",
-          buttonText: "Yes",
-          cancelBtnText: 'Cancel',
-          confirmAction: () {
-            AppState.dialogOpenCount--;
-            Navigator.pop(_routerDelegate.navigatorKey.currentContext);
-            Navigator.pop(_routerDelegate.navigatorKey.currentContext);
-          },
-          cancelAction: () {
-            AppState.dialogOpenCount--;
-            Navigator.pop(_routerDelegate.navigatorKey.currentContext);
-          },
-        ),
-      );
-    }
-    return _routerDelegate.popRoute();
   }
 }
+ // if (AppState.unsavedChanges) {
+    //   showDialog(
+    //     context: _routerDelegate.navigatorKey.currentContext,
+    //     builder: (ctx) => ConfirmActionDialog(
+    //       title: "You changes are unsaved",
+    //       description: "Are you sure you want to go back?",
+    //       buttonText: "Yes",
+    //       cancelBtnText: 'Cancel',
+    //       confirmAction: () {
+    //         AppState.dialogOpenCount--;
+    //         Navigator.pop(_routerDelegate.navigatorKey.currentContext);
+    //         Navigator.pop(_routerDelegate.navigatorKey.currentContext);
+    //       },
+    //       cancelAction: () {
+    //         AppState.dialogOpenCount--;
+    //         Navigator.pop(_routerDelegate.navigatorKey.currentContext);
+    //       },
+    //     ),
+    //   );
+    // }
