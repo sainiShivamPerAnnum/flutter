@@ -191,12 +191,16 @@ class _HomePageState extends State<HomePage> {
         buttonText: card.btnText,
         onPressed: () async {
           HapticFeedback.vibrate();
-          delegate.parseRoute(Uri.parse("1/d-gamePoll"));
+          delegate.parseRoute(Uri.parse(card.actionUri));
         },
         gradient: [
           Color(card.clrCodeA),
           Color(card.clrCodeB),
         ],
+        // "0/d-guide"
+        //   "3"
+        //   "1/d-gamePoll"
+        //   "2/augDetails/editProfile/d-aboutus"
       ));
     }
 
