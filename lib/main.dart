@@ -28,27 +28,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
+import 'package:felloapp/core/fcm_listener.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  Freshchat.setNotificationConfig(largeIcon: "ic_fello_notif", smallIcon: "ic_fello_notif", priority: Priority.PRIORITY_HIGH);
-  FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
+  FirebaseMessaging.onBackgroundMessage(FcmListener.backgroundMessageHandler);
   setupLocator();
   runApp(MyApp());
 }
-
-Future<dynamic> backgroundMessageHandler(RemoteMessage message) async {
-  print('background notif');
-    if(await Freshchat.isFreshchatNotification(message.data)) {
-      print('background freshchat notif ${message.data}');
-      Freshchat.setNotificationConfig(largeIcon: "ic_fello_notif", smallIcon: "ic_fello_notif", priority: Priority.PRIORITY_HIGH);
-      Freshchat.handlePushNotification(message.data);
-    }
-    return Future<void>.value();
-  }
 
 class MyApp extends StatelessWidget {
   @override

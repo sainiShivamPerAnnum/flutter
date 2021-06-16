@@ -42,7 +42,6 @@ class FcmListener extends ChangeNotifier {
         _handler.handleMessage(message.data);
       }
     });
-    Freshchat.setPushRegistrationToken(_baseUtil.myUser.client_token);
     // await flutterLocalNotificationsPlugin
     //     .resolvePlatformSpecificImplementation<
     //         AndroidFlutterLocalNotificationsPlugin>()
@@ -88,6 +87,16 @@ class FcmListener extends ChangeNotifier {
       await _saveDeviceToken();
 
     return _fcm;
+  }
+
+  static Future<dynamic> backgroundMessageHandler(RemoteMessage message) async {
+    print('background notif');
+    if(await Freshchat.isFreshchatNotification(message.data)) {
+      print('background freshchat notif ${message.data}');
+      Freshchat.setNotificationConfig(largeIcon: "ic_fello_notif", smallIcon: "ic_fello_notif");
+      Freshchat.handlePushNotification(message.data);
+    }
+    return Future<void>.value();
   }
 
   Future addSubscription(FcmTopic subId, {String suffix=''}) async {
