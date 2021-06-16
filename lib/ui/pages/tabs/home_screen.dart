@@ -117,6 +117,7 @@ class _HomePageState extends State<HomePage> {
                 child: Padding(
                   padding: EdgeInsets.only(left: SizeConfig.screenWidth * 0.05),
                   child: ListView(
+                    controller: AppState.homeCardListController,
                     physics: BouncingScrollPhysics(),
                     children: (!baseProvider.isHomeCardsFetched)
                         ? _buildLoadingFeed()
@@ -191,7 +192,39 @@ class _HomePageState extends State<HomePage> {
         buttonText: card.btnText,
         onPressed: () async {
           HapticFeedback.vibrate();
-          delegate.parseRoute(Uri.parse("1/d-gamePoll"));
+          delegate.parseRoute(Uri.parse("finance/augDetails"));
+        },
+        gradient: [
+          Color(card.clrCodeA),
+          Color(card.clrCodeB),
+        ],
+      ));
+    }
+    for (FeedCard card in cards) {
+      _widget.add(HomeCard(
+        title: card.title,
+        asset: card.assetLocalLink,
+        subtitle: card.subtitle,
+        buttonText: card.btnText,
+        onPressed: () async {
+          HapticFeedback.vibrate();
+          delegate.parseRoute(Uri.parse("finance/augDetails"));
+        },
+        gradient: [
+          Color(card.clrCodeA),
+          Color(card.clrCodeB),
+        ],
+      ));
+    }
+    for (FeedCard card in cards) {
+      _widget.add(HomeCard(
+        title: card.title,
+        asset: card.assetLocalLink,
+        subtitle: card.subtitle,
+        buttonText: card.btnText,
+        onPressed: () async {
+          HapticFeedback.vibrate();
+          delegate.parseRoute(Uri.parse("finance/augDetails"));
         },
         gradient: [
           Color(card.clrCodeA),

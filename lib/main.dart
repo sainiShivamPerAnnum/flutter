@@ -36,6 +36,7 @@ import 'package:provider/provider.dart';
 
 // final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 FelloRouterDelegate delegate;
+FelloBackButtonDispatcher backButtonDispatcher;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,7 +53,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final appState = AppState();
   final parser = FelloParser();
-  FelloBackButtonDispatcher backButtonDispatcher;
 
   _MyAppState() {
     delegate = FelloRouterDelegate(appState);

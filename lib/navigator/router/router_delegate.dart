@@ -6,8 +6,10 @@ import 'package:felloapp/ui/pages/hamburger/hamburger_screen.dart';
 import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
+import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/ui/pages/root.dart';
+import 'package:felloapp/ui/pages/tabs/finance/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola-home.dart';
@@ -91,6 +93,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   void _removePage(MaterialPage page) {
     if (page != null) {
+      AppState.screenStack.removeLast();
       _pages.remove(page);
     }
   }
@@ -125,7 +128,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(LoginController(), LoginPageConfig);
           break;
         case Pages.Root:
-          _addPageData(Root(), LoginPageConfig);
+          _addPageData(Root(), RootPageConfig);
           break;
         case Pages.Onboard:
           _addPageData(GetStartedPage(), OnboardPageConfig);
@@ -137,16 +140,16 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(MFDetailsPage(), MfDetailsPageConfig);
           break;
         case Pages.AugDetails:
-          _addPageData(AugmontDetailsPage(), EditProfileConfig);
+          _addPageData(AugmontDetailsPage(), AugDetailsPageConfig);
           break;
         case Pages.Transaction:
           _addPageData(Transactions(), MfDetailsPageConfig);
           break;
         case Pages.Referral:
-          _addPageData(ReferralsPage(), EditProfileConfig);
+          _addPageData(ReferralsPage(), ReferralPageConfig);
           break;
         case Pages.TambolaHome:
-          _addPageData(TambolaHome(), EditProfileConfig);
+          _addPageData(TambolaHome(), TambolaHomePageConfig);
           break;
         case Pages.Tnc:
           _addPageData(TnC(), TncPageConfig);
@@ -154,6 +157,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Faq:
           _addPageData(FAQPage(), FaqPageConfig);
           break;
+        case Pages.EditAugBankDetails:
+          _addPageData(EditAugmontBankDetail(), EditAugBankDetailsPageConfig);
+          break;
+
         default:
           break;
       }
@@ -249,6 +256,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.Faq:
         FaqPageConfig.currentPageAction = action;
         break;
+      case Pages.AugOnboard:
+        AugOnboardPageConfig.currentPageAction = action;
+        break;
+      case Pages.AugWithdrawal:
+        AugWithdrawalPageConfig.currentPageAction = action;
+        break;
+      case Pages.EditAugBankDetails:
+        EditAugBankDetailsPageConfig.currentPageAction = action;
+        break;
 
       default:
         break;
@@ -299,13 +315,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       setNewRoutePath(SplashPageConfig);
       return;
     } else {
-      if (num.tryParse(uri.pathSegments[0]) != null) {
-        appState.setCurrentTabIndex = num.tryParse(uri.pathSegments[0]);
-      }
       for (int i = 0; i < uri.pathSegments.length; i++) {
         final segment = uri.pathSegments[i];
         if (segment.startsWith('d-', 0)) {
           dialogCheck(segment.split('-').last);
+        } else if (segment.startsWith('c-', 0)) {
+          appState.scrollHome(num.tryParse(segment.split('-').last));
         } else {
           screenCheck(segment);
         }
@@ -324,7 +339,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'gamePoll':
         dialogWidget = GamePoll();
         break;
-      case "aboutus":
+      case "aboutUs":
         dialogWidget = AboutUsDialog();
         break;
 
@@ -353,9 +368,24 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   void screenCheck(String screenKey) {
     PageConfiguration pageConfiguration = null;
     switch (screenKey) {
+      case 'dashboard':
+        appState.setCurrentTabIndex = 0;
+        break;
+      case 'games':
+        appState.setCurrentTabIndex = 1;
+        break;
+      case 'scoreboard':
+        appState.setCurrentTabIndex = 1;
+        appState.setCurrentGameTabIndex = 1;
+        break;
+      case 'finance':
+        appState.setCurrentTabIndex = 2;
+        break;
+      case 'profile':
+        appState.setCurrentTabIndex = 3;
+        break;
       case 'editProfile':
         pageConfiguration = EditProfileConfig;
-        addPage(EditProfileConfig);
         break;
       case 'mfDetails':
         pageConfiguration = MfDetailsPageConfig;
@@ -377,6 +407,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'faq':
         pageConfiguration = FaqPageConfig;
+        break;
+      case 'editAugBankDetails':
+        pageConfiguration = EditAugBankDetailsPageConfig;
         break;
     }
     if (pageConfiguration != null) {

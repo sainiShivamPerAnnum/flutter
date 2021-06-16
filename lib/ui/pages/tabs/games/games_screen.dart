@@ -42,14 +42,11 @@ class _GamePageState extends State<GamePage> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   AppState appState;
-  int currentPage;
 
   GlobalKey _showcaseHeader = GlobalKey();
   GlobalKey _showcaseFooter = GlobalKey();
 
-  PageController _controller = new PageController(
-    initialPage: 0,
-  );
+  PageController _controller;
 
   @override
   void initState() {
@@ -59,15 +56,22 @@ class _GamePageState extends State<GamePage> {
     var data = DemoData();
     _gameList = data.getCities();
     _currentPage = _gameList[1];
-    currentPage = 0;
     // if (SizeConfig.isGamefirstTime != true) {
     _confeticontroller = new ConfettiController(
       duration: new Duration(seconds: 2),
     );
+    _controller = new PageController(
+      initialPage: AppState().getCurrentGameIndex,
+    );
     // }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.animateToPage(appState.getCurrentGameTabIndex,
+          duration: Duration(milliseconds: 600), curve: Curves.decelerate);
+    });
   }
 
-  void _handleCityChange(Game game) {
+  void _handleGameChange(Game game) {
     setState(() {
       this._currentPage = game;
     });
@@ -137,12 +141,11 @@ class _GamePageState extends State<GamePage> {
               scrollDirection: Axis.vertical,
               controller: _controller,
               onPageChanged: (int page) {
-                setState(() {
-                  currentPage = page;
-                  if (currentPage == 1 && SizeConfig.isGamefirstTime == true) {
-                    checkConfetti();
-                  }
-                });
+                appState.setCurrentGameTabIndex = page;
+                // if (appState.getCurrentGameTabIndex == 1 &&
+                //     SizeConfig.isGamefirstTime == true) {
+                //   checkConfetti();
+                // }
               },
               children: [
                 ClipRRect(
@@ -177,7 +180,7 @@ class _GamePageState extends State<GamePage> {
                               'Use the tickets to play exciting weekly games and win fun prizes!',
                               GameCardList(
                                 games: _gameList,
-                                onGameChange: _handleCityChange,
+                                onGameChange: _handleGameChange,
                               )),
                         ),
                         Expanded(
@@ -318,7 +321,7 @@ class _GamePageState extends State<GamePage> {
                 ],
               ),
             ),
-            currentPage == 0
+            appState.getCurrentGameTabIndex == 0
                 ? Positioned(
                     bottom: 10,
                     child: Container(
@@ -341,110 +344,6 @@ class _GamePageState extends State<GamePage> {
                     ),
                   )
                 : SizedBox(),
-            // Expanded(
-            //   child: Container(
-            //     child: BackdropFilter(
-            //       filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-            //       child: Center(
-            //         child: Card(
-            //           margin: EdgeInsets.symmetric(horizontal: 40),
-            //           shape: RoundedRectangleBorder(
-            //               borderRadius: BorderRadius.circular(20)),
-            //           child: Wrap(
-            //             children: [
-            //               Container(
-            //                 padding: EdgeInsets.all(20),
-            //                 child: Column(
-            //                   crossAxisAlignment: CrossAxisAlignment.center,
-            //                   children: [
-            //                     LottieBuilder.asset(
-            //                       "images/lottie/winner.json",
-            //                       width: SizeConfig.screenWidth * 0.4,
-            //                       height: SizeConfig.screenWidth * 0.4,
-            //                     ),
-            //                     SizedBox(
-            //                       height: 20,
-            //                     ),
-            //                     Text(
-            //                       "Hurray, You are a Winner",
-            //                       style: Theme.of(context).textTheme.headline5,
-            //                     ),
-            //                     Text("For week 4 June to 11 June"),
-            //                     // Padding(
-            //                     //   padding: const EdgeInsets.all(8.0),
-            //                     //   child: Text(
-            //                     //     "Winning amount: \$20",
-            //                     //     style: Theme.of(context)
-            //                     //         .textTheme
-            //                     //         .headline4
-            //                     //         .copyWith(
-            //                     //             color: UiConstants.primaryColor),
-            //                     //   ),
-            //                     // ),
-            //                     // Container(
-            //                     //   decoration: BoxDecoration(
-            //                     //     borderRadius: BorderRadius.circular(15),
-            //                     //     border: Border.all(
-            //                     //       width: 2,
-            //                     //       color: UiConstants.primaryColor,
-            //                     //     ),
-            //                     //   ),
-            //                     //   padding: EdgeInsets.symmetric(
-            //                     //       horizontal: 20, vertical: 10),
-            //                     //   margin: EdgeInsets.all(10),
-            //                     //   child: Row(
-            //                     //     mainAxisAlignment: MainAxisAlignment.center,
-            //                     //     children: [
-            //                     //       SvgPicture.asset(
-            //                     //           "images/svgs/amazon-gift-voucher.svg",
-            //                     //           height: 20,
-            //                     //           width: 20),
-            //                     //       SizedBox(
-            //                     //         width: 10,
-            //                     //       ),
-            //                     //       Text(
-            //                     //           "Reedem it with Amazon gift voucher"),
-            //                     //     ],
-            //                     //   ),
-            //                     // ),
-            //                     // Text("Or"),
-            //                     // Container(
-            //                     //   decoration: BoxDecoration(
-            //                     //     borderRadius: BorderRadius.circular(15),
-            //                     //     border: Border.all(
-            //                     //       width: 2,
-            //                     //       color: UiConstants.primaryColor,
-            //                     //     ),
-            //                     //   ),
-            //                     //   padding: EdgeInsets.symmetric(
-            //                     //       horizontal: 20, vertical: 10),
-            //                     //   margin: EdgeInsets.all(10),
-            //                     //   child: Row(
-            //                     //     mainAxisAlignment: MainAxisAlignment.center,
-            //                     //     children: [
-            //                     //       SvgPicture.asset("images/svgs/gold.svg",
-            //                     //           height: 20, width: 20),
-            //                     //       SizedBox(
-            //                     //         width: 10,
-            //                     //       ),
-            //                     //       Text("Reedem it Augmont Gold"),
-            //                     //     ],
-            //                     //   ),
-            //                     // ),
-            //                     SubmitButton(
-            //                         action: () {},
-            //                         title: "Claim your prize now",
-            //                         isDisabled: false)
-            //                   ],
-            //                 ),
-            //               )
-            //             ],
-            //           ),
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // )
           ],
         ),
       ),

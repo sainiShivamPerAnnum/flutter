@@ -8,6 +8,8 @@ import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
@@ -82,6 +84,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
   AugmontModel augmontProvider;
   FcmListener fcmProvider;
   ICICIModel iProvider;
+  AppState appState;
   GlobalKey<AugmontDepositModalSheetState> _modalKey2 = GlobalKey();
   GlobalKey<AugmontOnboardingState> _onboardingKey = GlobalKey();
   GlobalKey<AugmontWithdrawScreenState> _withdrawalDialogKey2 = GlobalKey();
@@ -95,6 +98,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     iProvider = Provider.of<ICICIModel>(context, listen: false);
     fcmProvider = Provider.of<FcmListener>(context, listen: false);
+    appState = Provider.of<AppState>(context, listen: false);
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context, true);
@@ -252,12 +256,19 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
       setState(() {});
       return true;
     } else if (_status == AugmontDetailsPage.STATUS_REGISTER) {
-      await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => AugmontOnboarding(
-                    key: _onboardingKey,
-                  )));
+      // await Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (context) => AugmontOnboarding(
+      //               key: _onboardingKey,
+      //             )));
+      appState.currentAction = PageAction(
+          state: PageState.addWidget,
+          widget: AugmontOnboarding(
+            key: _onboardingKey,
+          ),
+          page: AugOnboardPageConfig);
+
       baseProvider.isAugDepositRouteLogicInProgress = false;
       setState(() {});
       return true;
@@ -273,6 +284,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
         showModalBottomSheet(
             isDismissible: false,
             // backgroundColor: Colors.transparent,
+
             context: context,
             isScrollControlled: true,
             builder: (context) {
@@ -449,22 +461,38 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
       } else {
         baseProvider.isAugWithdrawRouteLogicInProgress = false;
         setState(() {});
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (ctx) => AugmontWithdrawScreen(
-                key: _withdrawalDialogKey2,
-                passbookBalance: _liveGoldQuantityBalance,
-                withdrawableGoldQnty: _withdrawableGoldQnty,
-                sellRate: baseProvider.augmontGoldRates.goldSellPrice,
-                onAmountConfirmed: (Map<String, double> amountDetails) {
-                  _onInitiateWithdrawal(amountDetails['withdrawal_quantity']);
-                },
-                bankHolderName: baseProvider.augmontDetail.bankHolderName,
-                bankAccNo: baseProvider.augmontDetail.bankAccNo,
-                bankIfsc: baseProvider.augmontDetail.ifsc,
-              ),
-            ));
+        appState.currentAction = PageAction(
+          state: PageState.addWidget,
+          page: AugWithdrawalPageConfig,
+          widget: AugmontWithdrawScreen(
+            key: _withdrawalDialogKey2,
+            passbookBalance: _liveGoldQuantityBalance,
+            withdrawableGoldQnty: _withdrawableGoldQnty,
+            sellRate: baseProvider.augmontGoldRates.goldSellPrice,
+            onAmountConfirmed: (Map<String, double> amountDetails) {
+              _onInitiateWithdrawal(amountDetails['withdrawal_quantity']);
+            },
+            bankHolderName: baseProvider.augmontDetail.bankHolderName,
+            bankAccNo: baseProvider.augmontDetail.bankAccNo,
+            bankIfsc: baseProvider.augmontDetail.ifsc,
+          ),
+        );
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (ctx) => AugmontWithdrawScreen(
+        //         key: _withdrawalDialogKey2,
+        //         passbookBalance: _liveGoldQuantityBalance,
+        //         withdrawableGoldQnty: _withdrawableGoldQnty,
+        //         sellRate: baseProvider.augmontGoldRates.goldSellPrice,
+        //         onAmountConfirmed: (Map<String, double> amountDetails) {
+        //           _onInitiateWithdrawal(amountDetails['withdrawal_quantity']);
+        //         },
+        //         bankHolderName: baseProvider.augmontDetail.bankHolderName,
+        //         bankAccNo: baseProvider.augmontDetail.bankAccNo,
+        //         bankIfsc: baseProvider.augmontDetail.ifsc,
+        //       ),
+        //     ));
       }
     }
   }

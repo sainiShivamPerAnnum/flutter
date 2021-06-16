@@ -115,7 +115,7 @@ class HamburgerMenu extends StatelessWidget {
         }
       case 'abUs':
         {
-          delegate.parseRoute(Uri.parse("d-aboutus"));
+          delegate.parseRoute(Uri.parse("d-aboutUs"));
           break;
         }
       case 'faq':

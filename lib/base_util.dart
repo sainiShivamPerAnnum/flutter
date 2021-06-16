@@ -177,8 +177,7 @@ class BaseUtil extends ChangeNotifier {
           color: Colors.white,
         ),
         onPressed: () {
-          AppState.screenStack.removeLast();
-          delegate.popRoute();
+          backButtonDispatcher.didPopRoute();
         },
       ),
 
@@ -219,58 +218,62 @@ class BaseUtil extends ChangeNotifier {
 
   showPositiveAlert(String title, String message, BuildContext context,
       {int seconds}) {
-    Flushbar(
-      flushbarPosition: FlushbarPosition.BOTTOM,
-      flushbarStyle: FlushbarStyle.FLOATING,
-      icon: Icon(
-        Icons.flag,
-        size: 28.0,
-        color: Colors.white,
-      ),
-      margin: EdgeInsets.all(10),
-      borderRadius: 8,
-      title: title,
-      message: message,
-      duration: Duration(seconds: 3),
-      backgroundGradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Colors.lightBlueAccent, UiConstants.primaryColor]),
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Flushbar(
+        flushbarPosition: FlushbarPosition.BOTTOM,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        icon: Icon(
+          Icons.flag,
+          size: 28.0,
+          color: Colors.white,
+        ),
+        margin: EdgeInsets.all(10),
+        borderRadius: 8,
+        title: title,
+        message: message,
+        duration: Duration(seconds: 3),
+        backgroundGradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [Colors.lightBlueAccent, UiConstants.primaryColor]),
 //      backgroundColor: Colors.lightBlueAccent,
-      boxShadows: [
-        BoxShadow(
-          color: UiConstants.positiveAlertColor,
-          offset: Offset(0.0, 2.0),
-          blurRadius: 3.0,
-        )
-      ],
-    )..show(context);
+        boxShadows: [
+          BoxShadow(
+            color: UiConstants.positiveAlertColor,
+            offset: Offset(0.0, 2.0),
+            blurRadius: 3.0,
+          )
+        ],
+      )..show(delegate.navigatorKey.currentContext);
+    });
   }
 
   showNegativeAlert(String title, String message, BuildContext context,
       {int seconds}) {
-    Flushbar(
-      flushbarPosition: FlushbarPosition.BOTTOM,
-      flushbarStyle: FlushbarStyle.FLOATING,
-      icon: Icon(
-        Icons.assignment_late,
-        size: 28.0,
-        color: Colors.white,
-      ),
-      margin: EdgeInsets.all(10),
-      borderRadius: 8,
-      title: title,
-      message: message,
-      duration: Duration(seconds: seconds ?? 3),
-      backgroundColor: UiConstants.negativeAlertColor,
-      boxShadows: [
-        BoxShadow(
-          color: UiConstants.negativeAlertColor,
-          offset: Offset(0.0, 2.0),
-          blurRadius: 3.0,
-        )
-      ],
-    )..show(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Flushbar(
+        flushbarPosition: FlushbarPosition.BOTTOM,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        icon: Icon(
+          Icons.assignment_late,
+          size: 28.0,
+          color: Colors.white,
+        ),
+        margin: EdgeInsets.all(10),
+        borderRadius: 8,
+        title: title,
+        message: message,
+        duration: Duration(seconds: seconds ?? 3),
+        backgroundColor: UiConstants.negativeAlertColor,
+        boxShadows: [
+          BoxShadow(
+            color: UiConstants.negativeAlertColor,
+            offset: Offset(0.0, 2.0),
+            blurRadius: 3.0,
+          )
+        ],
+      )..show(delegate.navigatorKey.currentContext);
+    });
   }
 
   showNoInternetAlert(BuildContext context) {

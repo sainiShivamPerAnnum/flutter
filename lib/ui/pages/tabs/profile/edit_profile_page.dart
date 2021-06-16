@@ -61,6 +61,7 @@ class _EditProfileState extends State<EditProfile> {
 
     setState(() {
       profilePic = File(temp.path);
+      AppState.unsavedChanges = true;
     });
   }
 
@@ -161,6 +162,7 @@ class _EditProfileState extends State<EditProfile> {
 
     return WillPopScope(
       onWillPop: () async {
+        print("Hello frandsssss");
         var pName = _nameFieldController.text;
         var pEmail = _emailFieldController.text;
         var pAge = _ageFieldController.text;
@@ -175,10 +177,7 @@ class _EditProfileState extends State<EditProfile> {
         if (curAge == null || pAge != curAge) noChanges = false;
         if (profilePic != null) noChanges = false;
 
-        if (!noChanges) {
-          AppState.unsavedChanges = true;
-          print("Hello");
-        }
+        if (!noChanges) {}
         return false;
       },
       child: Scaffold(
@@ -283,6 +282,9 @@ class _EditProfileState extends State<EditProfile> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
+                    onChanged: (val) {
+                      AppState.unsavedChanges = true;
+                    },
                     validator: (value) {
                       return value.isEmpty ? 'Please enter your name' : null;
                     },
@@ -307,6 +309,9 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                       prefixIcon: Icon(Icons.email),
                     ),
+                    onChanged: (val) {
+                      AppState.unsavedChanges = true;
+                    },
                     validator: (value) {
                       print(value);
                       return (value != null &&
@@ -511,10 +516,12 @@ class _EditProfileState extends State<EditProfile> {
                                   //     builder: (ctx) => Root(),
                                   //   ),
                                   // );
-                                  // baseProvider.showPositiveAlert(
-                                  //     'Complete',
-                                  //     'Your details have been updated',
-                                  //     context);
+
+                                  baseProvider.showPositiveAlert(
+                                      'Complete',
+                                      'Your details have been updated',
+                                      context);
+
                                   appState.currentAction = PageAction(
                                     state: PageState.pop,
                                   );

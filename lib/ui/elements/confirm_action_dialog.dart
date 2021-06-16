@@ -1,3 +1,4 @@
+import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -26,6 +27,12 @@ class _FormDialogState extends State<ConfirmActionDialog> {
   Log log = new Log('ConfirmActionDialog');
   final _formKey = GlobalKey<FormState>();
   final fdbkController = TextEditingController();
+
+  @override
+  void initState() {
+    AppState.screenStack.add(ScreenItem.dialog);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +98,7 @@ class _FormDialogState extends State<ConfirmActionDialog> {
                       onPressed: () {
                         HapticFeedback.vibrate();
                         log.debug('DialogAction cancelled');
+
                         return widget.cancelAction();
                       },
                       child: Text(widget.cancelBtnText),
