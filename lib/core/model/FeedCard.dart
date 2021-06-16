@@ -11,13 +11,14 @@ class FeedCard {
   final String _assetLocalLink;
   final int _clrCodeA;
   final int _clrCodeB;
+  final String _actionUri;
 
   FeedCard(this._id, this._title, this._subtitle, this._btnText,
-      this._assetLocalLink, this._clrCodeA, this._clrCodeB);
+      this._assetLocalLink, this._actionUri, this._clrCodeA, this._clrCodeB);
 
   FeedCard.fromMap(Map<String, dynamic> cMap)
       : this(cMap['id'], cMap['title'], cMap['subtitle'], cMap['btnText'],
-            cMap['assetLocalLink'], cMap['clrCodeA'], cMap['clrCodeB']);
+            cMap['assetLocalLink'], cMap['actionUri'], cMap['clrCodeA'], cMap['clrCodeB']);
 
   String get subtitle => _subtitle;
 
@@ -33,4 +34,5 @@ class FeedCard {
 
   int get id => _id;
 
+  String get actionUri => _actionUri;
 }
