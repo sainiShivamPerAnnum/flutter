@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:freshchat_sdk/freshchat_user.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../base_util.dart';
@@ -15,28 +16,29 @@ class ChatSupport extends StatefulWidget {
   @override
   _ChatSupportState createState() => _ChatSupportState();
   static Future<int> getUnreadMessagesCount() async {
-    Freshchat.init('745692b3-598d-44f0-a74d-1869e44d5549', '2835c3bd-78d6-4863-93d0-400786f23936', 'msdk.in.freshchat.com',
-    gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
     var unreadCount = await Freshchat.getUnreadCountAsync;
     return unreadCount['count'];
   }
 }
 
 class _ChatSupportState extends State<ChatSupport> {
-  BaseUtil _baseUtil = locator<BaseUtil>();
+  BaseUtil baseProvider;
   var _userid;
   var _restoreStream;
   var _restoreStreamSubscription;
+  bool isInit = false;
+
   @override
   void initState() { 
     super.initState();
-    Freshchat.init('745692b3-598d-44f0-a74d-1869e44d5549', '2835c3bd-78d6-4863-93d0-400786f23936', 'msdk.in.freshchat.com',
-    gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
-    _userid = _baseUtil.myUser.uid;
-    Freshchat.identifyUser(externalId: _userid);
   }
   @override
   Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    if(!isInit) {
+      isInit = true;
+      Freshchat.identifyUser(externalId: baseProvider.myUser.uid);
+    }
     return Container(
       color: Colors.white,
       child: Center(child: 

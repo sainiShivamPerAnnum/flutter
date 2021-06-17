@@ -132,16 +132,6 @@ class _RootState extends State<Root> {
     }
   }
 
-  _showUnreadSupportMessages() {
-    if(fcmProvider != null && baseProvider !=null) {
-      ChatSupport.getUnreadMessagesCount().then((value) {
-        if(value>0) {
-          baseProvider.showPositiveAlert('Support', 'You have unread messages', context, seconds: 5);
-        }
-      });
-    }
-  }
-
   _initialize(BuildContext context) {
     if (!_isInitialized) {
       _isInitialized = true;
@@ -154,7 +144,6 @@ class _RootState extends State<Root> {
         }
       });
       _initAdhocNotifications();
-      _showUnreadSupportMessages();
     }
   }
 

@@ -57,6 +57,7 @@ class Constants {
   static final DateTime VERSION_2_RELEASE_DATE = DateTime(2021, 4, 1);
   ///STAGES - IMPORTANT
   static const AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;
+  static const FreshchatStage activeFreshchatStage = FreshchatStage.DEV;
   static const AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.PROD;
   static const SignzyStage activeSignzyStage = SignzyStage.PROD;
   static const RazorpayStage activeRazorpayStage = RazorpayStage.PROD;

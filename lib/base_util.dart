@@ -26,6 +26,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
 import 'package:showcaseview/showcase.dart';
@@ -33,6 +34,7 @@ import 'package:showcaseview/showcase.dart';
 import 'core/base_remote_config.dart';
 import 'core/model/TambolaBoard.dart';
 import 'core/model/UserAugmontDetail.dart';
+import 'ui/pages/supportchat/chatsupport_page.dart';
 import 'util/size_config.dart';
 
 class BaseUtil extends ChangeNotifier {
@@ -71,6 +73,7 @@ class BaseUtil extends ChangeNotifier {
   List<ReferralDetail> userReferralsList;
   ReferralDetail myReferralInfo;
   static PackageInfo packageInfo;
+  Map<String, dynamic> freshchatKeys;
 
   DateTime _userCreationTimestamp;
   int isOtpResendCount = 0;
@@ -141,6 +144,14 @@ class BaseUtil extends ChangeNotifier {
 
       //TODO not required for now
       // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
+
+      ///Freshchat utils
+      freshchatKeys = await _dbModel.getActiveFreshchatKey();
+      if(freshchatKeys != null && freshchatKeys.isNotEmpty) {
+        Freshchat.init(freshchatKeys['app_id'], freshchatKeys['app_key'],
+            freshchatKeys['app_domain'],
+            gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
+      }
     }
   }
 
@@ -164,7 +175,12 @@ class BaseUtil extends ChangeNotifier {
   }
 
   cancelIncomingNotifications() {
-    if(_payService != null)_payService.addPaymentStatusListener(null);
+    if (_payService != null) _payService.addPaymentStatusListener(null);
+  }
+
+  Future<bool> showUnreadFreshchatSupportMessages() async {
+    int bal = await ChatSupport.getUnreadMessagesCount();
+    return (bal > 0);
   }
 
   static Widget getAppBar() {
@@ -465,7 +481,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   bool isOldCustomer() {
-     //all users before april 2021 are marked old
+    //all users before april 2021 are marked old
     if (userCreationTimestamp == null) return false;
     return (userCreationTimestamp.isBefore(Constants.VERSION_2_RELEASE_DATE));
   }

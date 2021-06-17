@@ -414,6 +414,26 @@ class DBModel extends ChangeNotifier {
     return null;
   }
 
+  Future<Map<String, String>> getActiveFreshchatKey() async {
+    int keyIndex = 1;
+    QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
+        'freshchat', Constants.activeFreshchatStage.value(), keyIndex);
+    if (querySnapshot != null && querySnapshot.docs.length == 1) {
+      DocumentSnapshot snapshot = querySnapshot.docs[0];
+      if (snapshot.exists) {
+        Map<String, dynamic> fKeys = snapshot.data();
+        log.debug(fKeys.toString());
+        return {
+          'app_id': fKeys['appId'],
+          'app_key': fKeys['appKey'],
+          'app_domain': fKeys['domain'],
+        };
+      }
+    }
+
+    return null;
+  }
+
   Future<bool> addCallbackRequest(String uid, String name,
       String mobile) async {
     try {

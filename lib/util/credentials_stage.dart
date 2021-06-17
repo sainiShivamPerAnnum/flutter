@@ -41,3 +41,15 @@ extension ParseRazorpayToString on RazorpayStage {
     return this.toString().split('.').last.toLowerCase();
   }
 }
+
+
+enum FreshchatStage{
+  DEV,
+  PROD
+}
+
+extension ParseFreshchatToString on FreshchatStage {
+  String value() {
+    return this.toString().split('.').last.toLowerCase();
+  }
+}
