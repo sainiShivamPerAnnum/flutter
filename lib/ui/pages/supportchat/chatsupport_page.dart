@@ -53,7 +53,7 @@ class _ChatSupportState extends State<ChatSupport> {
               else {
                 Future.delayed(Duration(seconds: 5),(){Navigator.pop(context);});
                 Future((){
-                  _baseUtil.showNegativeAlert('Error', 'Something went wrong, please try again!', context, seconds: 3);
+                  baseProvider.showNegativeAlert('Error', 'Something went wrong, please try again!', context, seconds: 3);
                 });
                 return LottieBuilder.asset('images/lottie/phone_loading.json', height: SizeConfig.screenHeight*0.2,repeat: true,);
               }
@@ -80,8 +80,8 @@ class _ChatSupportState extends State<ChatSupport> {
   Future<bool> _setUser() async {
     FreshchatUser _user = await Freshchat.getUser;
     SharedPreferences _prefs = await SharedPreferences.getInstance();
-    if(_user!=null && _prefs!=null && _baseUtil!=null && _baseUtil.myUser!=null) {
-      Freshchat.setPushRegistrationToken(_baseUtil.myUser.client_token);
+    if(_user!=null && _prefs!=null && baseProvider!=null && baseProvider.myUser!=null) {
+      Freshchat.setPushRegistrationToken(baseProvider.myUser.client_token);
       storeRestoreId();
       var _restore;
       if(_prefs.getString('FRESHCHAT_RESTORE_ID')==null) {
@@ -96,9 +96,9 @@ class _ChatSupportState extends State<ChatSupport> {
       print('user id $_userid');
       print('restore id $_restore');
       // user id - NaQ56t18oxVpJ4aJtUBpLaaUHF22 restoreid - c39d6427-0d6e-47e4-9279-e4520c991ccd
-      _user.setFirstName(_baseUtil.myUser.name);
-      _user.setEmail(_baseUtil.myUser.email);
-      _user.setPhone('+91', _baseUtil.myUser.mobile);
+      _user.setFirstName(baseProvider.myUser.name);
+      _user.setEmail(baseProvider.myUser.email);
+      _user.setPhone('+91', baseProvider.myUser.mobile);
       Freshchat.setUser(_user);
       return true;
     }
