@@ -352,6 +352,8 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                         if (veriDetails != null &&
                             veriDetails['flag'] != null &&
                             veriDetails['flag']) {
+                          AppState.screenStack.add(ScreenItem.dialog);
+
                           ///show confirmation dialog to user
                           showDialog(
                             context: context,

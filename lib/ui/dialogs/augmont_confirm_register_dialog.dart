@@ -51,19 +51,13 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
       TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
 
   @override
-  void initState() {
-    AppState.screenStack.add(ScreenItem.dialog);
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     _width = MediaQuery.of(context).size.width;
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     return WillPopScope(
         onWillPop: () async {
           print("I am here----------->");
-          AppState.screenStack.removeLast();
+          backButtonDispatcher.didPopRoute();
           baseProvider.isAugmontRegnInProgress = false;
           print(AppState.screenStack);
           return false;
