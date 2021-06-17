@@ -10,6 +10,7 @@ import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/ui/pages/root.dart';
+import 'package:felloapp/ui/pages/supportchat/chatsupport_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
@@ -168,6 +169,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.RefPolicy:
           _addPageData(ReferralPolicy(), RefPolicyPageConfig);
           break;
+        case Pages.ChatSupport:
+          _addPageData(ChatSupport(), ChatSupportPageConfig);
+          break;
 
         default:
           break;
@@ -278,6 +282,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.RefPolicy:
         RefPolicyPageConfig.currentPageAction = action;
+        break;
+      case Pages.ChatSupport:
+        ChatSupportPageConfig.currentPageAction = action;
         break;
 
       default:
@@ -426,6 +433,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'editAugBankDetails':
         pageConfiguration = EditAugBankDetailsPageConfig;
         break;
+      case 'chatSupport':
+        pageConfiguration = ChatSupportPageConfig;
       // case 'tambolaTickets':
       //   pageConfiguration = TambolaTicketsPageConfig;
       //   break;

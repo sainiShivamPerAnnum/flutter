@@ -9,6 +9,7 @@ import 'package:felloapp/ui/dialogs/aboutus_dialog.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/contact_dialog.dart';
+import 'package:felloapp/ui/pages/supportchat/chatsupport_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
@@ -136,6 +137,10 @@ class HamburgerMenu extends StatelessWidget {
         }
       case 'contUs':
         {
+          // Navigator.push(
+          //     context, MaterialPageRoute(builder: (ctx) => ChatSupport()));
+          appstate.currentAction =
+              PageAction(state: PageState.addPage, page: ChatSupportPageConfig);
           //TODO Navigator.of(context).pushNamed('/support');
           // showDialog(
           //     context: context,
@@ -171,48 +176,48 @@ class HamburgerMenu extends StatelessWidget {
           //           },
           //         ));
           //TODO AppState.screenStack.add(ScreenItem.dialog);
-          showDialog(
-              context: context,
-              builder: (BuildContext dialogContext) => WillPopScope(
-                    onWillPop: () {
-                      AppState.screenStack.removeLast();
-                      return Future.value(true);
-                    },
-                    child: ContactUsDialog(
-                      isResident: (baseProvider.isSignedIn() &&
-                          baseProvider.isActiveUser()),
-                      isUnavailable: BaseUtil.isDeviceOffline,
-                      onClick: () {
-                        if (BaseUtil.isDeviceOffline) {
-                          baseProvider.showNoInternetAlert(context);
-                          return;
-                        }
-                        if (baseProvider.isSignedIn() &&
-                            baseProvider.isActiveUser()) {
-                          reqProvider
-                              .addCallbackRequest(
-                                  baseProvider.firebaseUser.uid,
-                                  baseProvider.myUser.name,
-                                  baseProvider.myUser.mobile)
-                              .then((flag) {
-                            if (flag) {
-                              Navigator.of(context).pop();
-                              AppState.screenStack.removeLast();
-                              baseProvider.showPositiveAlert(
-                                  'Callback placed!',
-                                  'We\'ll contact you soon on your registered mobile',
-                                  context);
-                            }
-                          });
-                        } else {
-                          baseProvider.showNegativeAlert(
-                              'Unavailable',
-                              'Callbacks are reserved for active users',
-                              context);
-                        }
-                      },
-                    ),
-                  ));
+          // showDialog(
+          //     context: context,
+          //     builder: (BuildContext dialogContext) => WillPopScope(
+          //           onWillPop: () {
+          //             AppState.screenStack.removeLast();
+          //             return Future.value(true);
+          //           },
+          //           child: ContactUsDialog(
+          //             isResident: (baseProvider.isSignedIn() &&
+          //                 baseProvider.isActiveUser()),
+          //             isUnavailable: BaseUtil.isDeviceOffline,
+          //             onClick: () {
+          //               if (BaseUtil.isDeviceOffline) {
+          //                 baseProvider.showNoInternetAlert(context);
+          //                 return;
+          //               }
+          //               if (baseProvider.isSignedIn() &&
+          //                   baseProvider.isActiveUser()) {
+          //                 reqProvider
+          //                     .addCallbackRequest(
+          //                         baseProvider.firebaseUser.uid,
+          //                         baseProvider.myUser.name,
+          //                         baseProvider.myUser.mobile)
+          //                     .then((flag) {
+          //                   if (flag) {
+          //                     Navigator.of(context).pop();
+          //                     AppState.screenStack.removeLast();
+          //                     baseProvider.showPositiveAlert(
+          //                         'Callback placed!',
+          //                         'We\'ll contact you soon on your registered mobile',
+          //                         context);
+          //                   }
+          //                 });
+          //               } else {
+          //                 baseProvider.showNegativeAlert(
+          //                     'Unavailable',
+          //                     'Callbacks are reserved for active users',
+          //                     context);
+          //               }
+          //             },
+          //           ),
+          //         ));
           break;
         }
       // case 'kyc':

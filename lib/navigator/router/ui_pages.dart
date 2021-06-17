@@ -18,6 +18,7 @@ const String AugWithdrawalPath = '/augWithdrawal';
 const String EditAugBankDetailsPath = '/editAugBankDetails';
 const String TambolaTicketsPath = '/tambolaTickets';
 const String ReferralPolicyPath = '/refPolicy';
+const String ChatSupportPath = '/chatSupport';
 
 enum Pages {
   Splash,
@@ -36,7 +37,8 @@ enum Pages {
   AugWithdrawal,
   EditAugBankDetails,
   TambolaTickets,
-  RefPolicy
+  RefPolicy,
+  ChatSupport
 }
 
 class PageConfiguration {
@@ -139,4 +141,9 @@ PageConfiguration RefPolicyPageConfig = PageConfiguration(
   key: 'RefPolicy',
   path: ReferralPolicyPath,
   uiPage: Pages.RefPolicy,
+);
+PageConfiguration ChatSupportPageConfig = PageConfiguration(
+  key: 'ChatSupport',
+  path: ChatSupportPath,
+  uiPage: Pages.ChatSupport,
 );
