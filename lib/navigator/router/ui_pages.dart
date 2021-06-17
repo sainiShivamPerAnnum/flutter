@@ -16,6 +16,8 @@ const String FaqPath = '/faq';
 const String AugOnboardingPath = '/augOnboard';
 const String AugWithdrawalPath = '/augWithdrawal';
 const String EditAugBankDetailsPath = '/editAugBankDetails';
+const String TambolaTicketsPath = '/tambolaTickets';
+const String ReferralPolicyPath = '/refPolicy';
 
 enum Pages {
   Splash,
@@ -32,7 +34,9 @@ enum Pages {
   Faq,
   AugOnboard,
   AugWithdrawal,
-  EditAugBankDetails
+  EditAugBankDetails,
+  TambolaTickets,
+  RefPolicy
 }
 
 class PageConfiguration {
@@ -97,6 +101,12 @@ PageConfiguration TambolaHomePageConfig = PageConfiguration(
   path: TambolaHomePath,
   uiPage: Pages.TambolaHome,
 );
+PageConfiguration TambolaTicketsPageConfig = PageConfiguration(
+  key: 'TambolaTickets',
+  path: TambolaTicketsPath,
+  uiPage: Pages.TambolaTickets,
+);
+
 PageConfiguration TncPageConfig = PageConfiguration(
   key: 'Tnc',
   path: TncPath,
@@ -123,4 +133,10 @@ PageConfiguration EditAugBankDetailsPageConfig = PageConfiguration(
   key: 'EditAugBankDetails',
   path: EditAugBankDetailsPath,
   uiPage: Pages.EditAugBankDetails,
+);
+
+PageConfiguration RefPolicyPageConfig = PageConfiguration(
+  key: 'RefPolicy',
+  path: ReferralPolicyPath,
+  uiPage: Pages.RefPolicy,
 );

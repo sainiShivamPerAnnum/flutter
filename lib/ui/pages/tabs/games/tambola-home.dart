@@ -10,6 +10,9 @@ import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/tambola_generation_service.dart';
+import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/tambola_dialog.dart';
 import 'package:felloapp/ui/dialogs/weekly_draw_dialog.dart';
 import 'package:felloapp/ui/dialogs/winnings_dialog.dart';
@@ -51,6 +54,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
   DBModel dbProvider;
   FcmHandler fcmProvider;
   LocalDBModel localDBModel;
+  AppState appState;
 
   bool ticketsBeingGenerated = true;
   bool dailyPickHeaderWithTimings = false;
@@ -231,6 +235,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     fcmProvider = Provider.of<FcmHandler>(context, listen: false);
     localDBModel = Provider.of<LocalDBModel>(context, listen: false);
+    appState = Provider.of<AppState>(context, listen: false);
     _init();
     _checkSundayResultsProcessing();
     if (_showTutorial) _startTutorial();
@@ -287,7 +292,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
                         icon: Icon(Icons.arrow_back),
                         onPressed: () {
                           HapticFeedback.vibrate();
-                          Navigator.of(context).pop();
+                          backButtonDispatcher.didPopRoute();
                         },
                       ),
                       Text('Tambola',
@@ -389,31 +394,37 @@ class _TambolaGameScreen extends State<TambolaHome> {
                           ),
                         )
                       : Container(),
-                  _activeTambolaCardCount > 10
-                      ? GestureDetector(
-                          child: Text(
-                            "Show All Tickets   ",
-                            style: GoogleFonts.montserrat(
-                              color: UiConstants.primaryColor.withGreen(600),
-                            ),
-                          ),
-                          onTap: () {
-                            _tambolaBoardViews = [];
-                            baseProvider.userWeeklyBoards.forEach((board) {
-                              _tambolaBoardViews.add(_buildBoardView(
-                                  board, baseProvider.weeklyDigits));
-                            });
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (ctx) => TambolaCardsList(
-                                  tambolaBoardView: _tambolaBoardViews,
-                                ),
-                              ),
-                            );
-                          },
-                        )
-                      : SizedBox(),
+                  // _activeTambolaCardCount > 10 ?
+                  GestureDetector(
+                    child: Text(
+                      "Show All Tickets   ",
+                      style: GoogleFonts.montserrat(
+                        color: UiConstants.primaryColor.withGreen(600),
+                      ),
+                    ),
+                    onTap: () {
+                      _tambolaBoardViews = [];
+                      baseProvider.userWeeklyBoards.forEach((board) {
+                        _tambolaBoardViews.add(
+                            _buildBoardView(board, baseProvider.weeklyDigits));
+                      });
+                      appState.currentAction = PageAction(
+                        state: PageState.addWidget,
+                        page: TambolaTicketsPageConfig,
+                        widget: TambolaCardsList(
+                          tambolaBoardView: _tambolaBoardViews,
+                        ),
+                      );
+                      // Navigator.push(
+                      //   context,
+                      //   CupertinoPageRoute(
+                      //     builder: (ctx) => TambolaCardsList(
+                      //       tambolaBoardView: _tambolaBoardViews,
+                      //     ),
+                      //   ),
+                      // );
+                    },
+                  ),
                 ],
               ),
               SizedBox(

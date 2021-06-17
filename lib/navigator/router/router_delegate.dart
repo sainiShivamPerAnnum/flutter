@@ -3,6 +3,7 @@ import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
 import 'package:felloapp/ui/pages/hamburger/hamburger_screen.dart';
+import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
@@ -12,6 +13,7 @@ import 'package:felloapp/ui/pages/root.dart';
 import 'package:felloapp/ui/pages/tabs/finance/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola-cards.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola-home.dart';
 import 'package:felloapp/ui/pages/tabs/profile/edit_profile_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
@@ -160,6 +162,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.EditAugBankDetails:
           _addPageData(EditAugmontBankDetail(), EditAugBankDetailsPageConfig);
           break;
+        case Pages.TambolaTickets:
+          _addPageData(TambolaCardsList(), TambolaTicketsPageConfig);
+          break;
+        case Pages.RefPolicy:
+          _addPageData(ReferralPolicy(), RefPolicyPageConfig);
+          break;
 
         default:
           break;
@@ -265,6 +273,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.EditAugBankDetails:
         EditAugBankDetailsPageConfig.currentPageAction = action;
         break;
+      case Pages.TambolaTickets:
+        TambolaTicketsPageConfig.currentPageAction = action;
+        break;
+      case Pages.RefPolicy:
+        RefPolicyPageConfig.currentPageAction = action;
+        break;
 
       default:
         break;
@@ -358,6 +372,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
                   //if (AppState.screenStack.last == ScreenItem.dialog) {
                   AppState.screenStack.removeLast();
                   //}
+                  print("Popped the dialog");
                   return Future.value(true);
                 },
                 child: dialogWidget);
@@ -411,6 +426,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'editAugBankDetails':
         pageConfiguration = EditAugBankDetailsPageConfig;
         break;
+      // case 'tambolaTickets':
+      //   pageConfiguration = TambolaTicketsPageConfig;
+      //   break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);

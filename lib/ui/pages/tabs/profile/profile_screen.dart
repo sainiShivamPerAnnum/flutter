@@ -244,12 +244,21 @@ class _ProfilePageState extends State<ProfilePage> {
                         isPanFieldHidden = !isPanFieldHidden;
                         setState(() {});
                       } else {
+                        AppState.screenStack.add(ScreenItem.dialog);
                         showDialog(
-                            context: context,
-                            builder: (BuildContext context) => MoreInfoDialog(
-                                  text: Assets.infoWhyPan,
-                                  title: 'Where is my PAN Number used?',
-                                ));
+                          context: context,
+                          builder: (BuildContext context) => WillPopScope(
+                            onWillPop: () {
+                              AppState.screenStack.removeLast();
+                              print("Popped a dialog");
+                              return Future.value(true);
+                            },
+                            child: MoreInfoDialog(
+                              text: Assets.infoWhyPan,
+                              title: 'Where is my PAN Number used?',
+                            ),
+                          ),
+                        );
                       }
                     },
                   ),
@@ -278,7 +287,10 @@ class _ProfilePageState extends State<ProfilePage> {
               height: 50,
             ),
             _appVersionRow(),
-            _termsRow()
+            _termsRow(),
+            SizedBox(
+              height: 20,
+            )
           ],
         ),
       ),
@@ -329,7 +341,8 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             onTap: () {
               HapticFeedback.vibrate();
-              Navigator.of(context).pushNamed('/tnc');
+              appState.currentAction =
+                  PageAction(state: PageState.addPage, page: TncPageConfig);
             },
           ),
         ),
@@ -347,12 +360,14 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             onTap: () {
               HapticFeedback.vibrate();
-              Navigator.of(context).pushNamed('/faq').then(
-                    (value) => Navigator.pushNamed(
-                      context,
-                      ('/refpolicy'),
-                    ),
-                  );
+              // Navigator.of(context).pushNamed('/faq').then(
+              //       (value) => Navigator.pushNamed(
+              //         context,
+              //         ('/refpolicy'),
+              //       ),
+              //     );
+              appState.currentAction = PageAction(
+                  state: PageState.addPage, page: RefPolicyPageConfig);
             },
           ),
         )
