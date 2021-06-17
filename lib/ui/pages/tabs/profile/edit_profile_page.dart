@@ -516,7 +516,7 @@ class _EditProfileState extends State<EditProfile> {
                                   //     builder: (ctx) => Root(),
                                   //   ),
                                   // );
-
+                                  AppState.unsavedChanges = false;
                                   baseProvider.showPositiveAlert(
                                       'Complete',
                                       'Your details have been updated',
