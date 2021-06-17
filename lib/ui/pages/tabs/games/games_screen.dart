@@ -201,6 +201,7 @@ class _GamePageState extends State<GamePage> {
                                     GameOfferCardButton(
                                       // onPressed: () =>
                                       //     delegate.parseRoute(Uri.parse("2")),
+                                      ///TODO remove post testing
                                       onPressed: () => showDialog(
                                         context: context,
                                         barrierDismissible: false,

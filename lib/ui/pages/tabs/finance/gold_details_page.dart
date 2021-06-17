@@ -382,7 +382,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
 
         ///check if referral bonuses need to be unlocked
         if (baseProvider.userFundWallet.augGoldPrinciple >=
-            Constants.UNLOCK_REFERRAL_AMT) {
+            BaseRemoteConfig.UNLOCK_REFERRAL_AMT) {
           bool _isUnlocked =
               await dbProvider.unlockReferralTickets(baseProvider.myUser.uid);
           if (_isUnlocked) {

@@ -25,12 +25,16 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_c
 import 'package:felloapp/ui/pages/onboarding/icici/kyc_invalid.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/interface/kyc_onboarding_interface.dart';
 import 'package:felloapp/ui/pages/root.dart';
+import 'package:felloapp/ui/pages/supportchat/chatsupport_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/edit_profile_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:freshchat_sdk/freshchat_sdk.dart';
+import 'package:felloapp/core/fcm_listener.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -41,6 +45,7 @@ FelloBackButtonDispatcher backButtonDispatcher;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(FcmListener.backgroundMessageHandler);
   setupLocator();
   runApp(MyApp());
 }
@@ -88,22 +93,6 @@ class _MyAppState extends State<MyApp> {
         backButtonDispatcher: backButtonDispatcher,
         routerDelegate: delegate,
         routeInformationParser: parser,
-
-        // home: SplashScreen(),
-        //onGenerateRoute: generateRoute,
-        // routes: <String, WidgetBuilder>{
-        //   '/launcher': (BuildContext context) => SplashScreen(),
-        //   '/approot': (BuildContext context) => Root(),
-        //   '/onboarding': (BuildContext context) => GetStartedPage(),
-        //   '/login': (BuildContext context) => LoginController(),
-        //   '/faq': (BuildContext context) => FAQPage(),
-        //   '/tnc': (BuildContext context) => TnC(),
-        //   '/refpolicy': (BuildContext context) => ReferralPolicy(),
-        //   '/verifykyc': (BuildContext context) => KycOnboardInterface(),
-        //   '/onboardicici': (BuildContext context) => IciciOnboardController(),
-        //   '/initkyc': (BuildContext context) => KYCInvalid(),
-        //   '/editProf': (BuildContext context) => EditProfile()
-        // },
       ),
     );
   }

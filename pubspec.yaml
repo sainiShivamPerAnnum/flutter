@@ -23,6 +23,7 @@ dependencies:
   encrypt: ^4.1.0
   flutter_local_notifications: ^4.0.1+2
   flutter_html_to_pdf: ^0.6.0
+  freshchat_sdk: ^0.6.0
   path: ^1.8.0
   path_provider: ^1.6.27
   provider: ^5.0.0

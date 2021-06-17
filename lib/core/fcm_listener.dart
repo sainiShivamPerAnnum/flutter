@@ -11,6 +11,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:freshchat_sdk/freshchat_sdk.dart';
 
 class FcmListener extends ChangeNotifier {
   Log log = new Log("FcmListener");
@@ -33,29 +34,51 @@ class FcmListener extends ChangeNotifier {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+
+  static Future<dynamic> backgroundMessageHandler(RemoteMessage message) async {
+    print('background notif');
+
+    Freshchat.isFreshchatNotification(message.data).then((flag) {
+      if(flag) {
+        _handleFreshchatNotif(message.data);
+      }else{
+        //TODO Background message that is not Freshchat
+      }
+    });
+    return Future<void>.value();
+  }
+
+  static _handleFreshchatNotif(Map<String, dynamic> freshChatData) {
+    print('background freshchat notif $freshChatData');
+    Freshchat.setNotificationConfig(largeIcon: "ic_fello_notif", smallIcon: "ic_fello_notif");
+    Freshchat.handlePushNotification(freshChatData);
+  }
+
   Future<FirebaseMessaging> setupFcm() async {
     _fcm = FirebaseMessaging.instance;
-
     _fcm.getInitialMessage().then((RemoteMessage message) {
       log.debug("onMessage recieved: " + message.toString());
-      if (message != null && message.data != null) {
+      if(message != null && message.data != null) {
         _handler.handleMessage(message.data);
       }
     });
-
     // await flutterLocalNotificationsPlugin
     //     .resolvePlatformSpecificImplementation<
     //         AndroidFlutterLocalNotificationsPlugin>()
     //     ?.createNotificationChannel(_androidChannel);
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
-      if (message.data != null && message.data.isNotEmpty) {
-        _handler.handleMessage(message.data);
-      } else if (notification != null) {
-        _handler.handleNotification(notification.title, notification.body);
-      }
+      Freshchat.isFreshchatNotification(message.data).then((flag) {
+        if(flag) {
+          _handleFreshchatNotif(message.data);
+        }else if (message.data != null && message.data.isNotEmpty) {
+          _handler.handleMessage(message.data);
+        } else if (notification != null) {
+          _handler.handleNotification(notification.title, notification.body);
+        }
+      });
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -166,6 +189,7 @@ class FcmListener extends ChangeNotifier {
                 _baseUtil.myUser.client_token != fcmToken))) {
       log.debug("Updating FCM token to local and server db");
       _baseUtil.myUser.client_token = fcmToken;
+      Freshchat.setPushRegistrationToken(fcmToken);
       flag = await _dbModel.updateClientToken(_baseUtil.myUser, fcmToken);
       // if (flag)
       //   await _lModel.saveUser(

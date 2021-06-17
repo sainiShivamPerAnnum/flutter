@@ -15,4 +15,36 @@
     <style name="NormalTheme" parent="@android:style/Theme.Black.NoTitleBar">
         <item name="android:windowBackground">@android:color/white</item>
     </style>
+    <style name="Theme.Freshchat.SelectedTheme" parent="FreshchatCustomTheme">
+    </style>
+    <style name="FreshchatCustomTheme" parent="@style/Theme.Freshchat.Light">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/statusBar</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="freshchatChatResolutionPromptTextStyle">@style/CustomFreshchatTextTheme</item>
+        <item name="freshchatChatResolutionPromptViewStyle">@style/CustomFreshchatResolutionViewTheme</item>
+        <item name="freshchatChatResolutionPositiveButtonStyle">@style/CustomFreshchatResolutionPositiveButtonTheme</item>
+        <item name="freshchatChatResolutionNegativeButtonStyle">@style/CustomFreshchatResolutionNegativeButtonTheme</item>
+        <item name="freshchatCustomerSurveyQuestionTextStyle">@style/CustomFreshchatSurveyQuestionTextStyle</item>
+        <item name="freshchatCustomerSurveyDialog">@style/CustomFreshchatSurveyDialog</item>
+    </style>
+    <style name="CustomFreshchatTextTheme" parent="Widget.Freshchat.ChatResolutionPromptText">
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
+    <style name="CustomFreshchatResolutionViewTheme" parent="Widget.Freshchat.ChatResolutionPromptView">
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+    <style name="CustomFreshchatResolutionPositiveButtonTheme" parent="Widget.Freshchat.ChatResolutionPositiveButton">
+        <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
+    <style name="CustomFreshchatResolutionNegativeButtonTheme" parent="Widget.Freshchat.ChatResolutionNegativeButton">
+        <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
+    <style name="CustomFreshchatSurveyQuestionTextStyle" parent="Widget.Freshchat.CustomerSurveyQuestionStyle">
+        <item name="android:textColor">@color/accentColor</item>
+    </style>
+    <style name="CustomFreshchatSurveyDialog" parent="Widget.Freshchat.CustomerSurveyDialog">
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:windowBackground">@color/textColorPrimary</item>
+    </style>
 </resources>

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -324,7 +325,7 @@ class FundChartView extends StatelessWidget {
                             context: context,
                             builder: (BuildContext context) => MoreInfoDialog(
                                   text:
-                                      'Referral rewards could be locked due to either of the reasons: \n\n• You were referred by your friend but you haven\'t saved at least ₹${Constants.UNLOCK_REFERRAL_AMT} yet. \n\n• You referred your friends but they haven\'t saved at least ₹${Constants.UNLOCK_REFERRAL_AMT} yet.',
+                                      'Referral rewards could be locked due to either of the reasons: \n\n• You were referred by your friend but you haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet. \n\n• You referred your friends but they haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet.',
                                   title: 'Locked Balance',
                                 ));
                       },
