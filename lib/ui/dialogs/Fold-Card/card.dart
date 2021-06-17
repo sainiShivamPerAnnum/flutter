@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
@@ -9,7 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share/share.dart';
 
 class FCard extends StatefulWidget {
   static const double nominalOpenHeight = 400;
@@ -35,7 +40,8 @@ class _TicketState extends State<FCard> {
   BaseUtil baseProvider;
 
   LinearGradient cardGradient = const LinearGradient(
-      colors: [Color(0xff7F00FF), Color(0xffE100FF)],
+      //colors: [Color(0xff7F00FF), Color(0xffE100FF)],
+      colors: [Color(0xff01937C), Color(0xffB6C867)],
       //colors: [Color(0xfffbc7d4), Color(0xff9796f0)],
       begin: Alignment.centerLeft,
       end: Alignment.centerRight);
@@ -43,7 +49,7 @@ class _TicketState extends State<FCard> {
   Widget get backCard => Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4.0),
-          color: Color(0xff493240),
+          color: Color(0xff01937C),
         ),
       );
 
@@ -67,8 +73,8 @@ class _TicketState extends State<FCard> {
 
   List<FoldEntry> _getEntries() {
     return [
-      FoldEntry(height: 230.0, front: topCard),
-      FoldEntry(height: 230.0, front: middleCard, back: frontCard),
+      FoldEntry(height: 250.0, front: topCard),
+      FoldEntry(height: 250.0, front: middleCard, back: frontCard),
       FoldEntry(height: 80.0, front: bottomCard, back: backCard)
     ];
   }
@@ -201,13 +207,12 @@ class _TicketState extends State<FCard> {
               fontSize: SizeConfig.mediumTextSize,
             ),
           ),
-          Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(40.0),
                   child: Lottie.asset(
                     "images/lottie/amazon.json",
                   ),
@@ -307,78 +312,161 @@ class _TicketState extends State<FCard> {
   }
 }
 
-class CloseCard extends StatelessWidget {
+class CloseCard extends StatefulWidget {
   final PrizeClaimChoice claimtype;
-  BaseUtil baseProvider;
+
   CloseCard({this.claimtype});
+
+  @override
+  _CloseCardState createState() => _CloseCardState();
+}
+
+class _CloseCardState extends State<CloseCard> {
+  BaseUtil baseProvider;
+  int _counter = 0;
+  Uint8List _imageFile;
+  //Create an instance of ScreenshotController
+  ScreenshotController screenshotController = ScreenshotController();
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    print(claimtype);
-    return claimtype != PrizeClaimChoice.NA
-        ? Container(
-            height: double.infinity,
-            width: double.infinity,
-            padding: const EdgeInsets.only(top: 10.0, left: 20, right: 10),
-            decoration: BoxDecoration(
-              color: Colors.black,
+    print(widget.claimtype);
+    return widget.claimtype != PrizeClaimChoice.NA
+        ? Screenshot(
+            controller: screenshotController,
+            child: Container(
+              height: double.infinity,
+              width: double.infinity,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.only(top: 10.0, left: 20, right: 10),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                // gradient: new LinearGradient(colors: [
+                //   Color(0xffFEAC5E),
+                //   Color(0xffC779D0),
+                //   Color(0xff4BC0C8),
+                // ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Stack(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                          child: Lottie.asset(
+                              "images/lottie/reward-claimed.json")),
+                      Expanded(
+                          child: Lottie.asset(
+                              "images/lottie/reward-claimed.json")),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Reward Claimed",
+                        style: GoogleFonts.montserrat(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 32,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        widget.claimtype == PrizeClaimChoice.AMZ_VOUCHER
+                            ? "You claimed for amazon gift card"
+                            : "You claimed for augmont gold",
+                        style: GoogleFonts.montserrat(
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          screenshotController
+                              .capture(
+                            delay: Duration(milliseconds: 10),
+                            pixelRatio: MediaQuery.of(context).devicePixelRatio,
+                          )
+                              .then((Uint8List image) async {
+                            //Capture Done
 
-              // gradient: new LinearGradient(colors: [
-              //   Color(0xffFEAC5E),
-              //   Color(0xffC779D0),
-              //   Color(0xff4BC0C8),
-              // ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Stack(
-              children: [
-                Lottie.asset("images/lottie/reward-claimed.json"),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Reward Claimed",
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 32,
+                            setState(() {
+                              _imageFile = image;
+                            });
+
+                            final directory =
+                                (await getExternalStorageDirectory()).path;
+                            // ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+                            // Uint8List pngBytes = byteData.buffer.asUint8List();
+                            File imgFile =
+                                new File('$directory/screenshot.png');
+                            imgFile.writeAsBytes(image);
+                            final RenderBox box = context.findRenderObject();
+                            Share.shareFiles(['$directory/screenshot.png'],
+                                subject: 'Share ScreenShot',
+                                text: 'Hello, check your share files!',
+                                sharePositionOrigin:
+                                    box.localToGlobal(Offset.zero) & box.size);
+                          }).catchError((onError) {
+                            print(onError);
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 3),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: Wrap(
+                            children: [
+                              Text(
+                                "Share with friends",
+                                style: GoogleFonts.montserrat(
+                                    color: Colors.white, height: 1.3),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(
+                                Icons.share_rounded,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      claimtype == PrizeClaimChoice.AMZ_VOUCHER
-                          ? "You claimed for amazon gift card"
-                          : "You claimed for augmont gold",
-                      style: GoogleFonts.montserrat(
-                        color: Colors.white,
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Spacer(),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          // Future.delayed(Duration(milliseconds: 800))
+                          //     .then((value) => Navigator.pop(context));
+                        },
+                        icon: Icon(
+                          Icons.clear_rounded,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Spacer(),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        // Future.delayed(Duration(milliseconds: 800))
-                        //     .then((value) => Navigator.pop(context));
-                      },
-                      icon: Icon(
-                        Icons.clear_rounded,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-                //   Row(children: [
-                //  claimtype == claim.amazon ? Padding(padding: EdgeInsets.all(20),child: Lottie.asset("images/"),)
-                //   ],)
-              ],
+                    ],
+                  ),
+                  //   Row(children: [
+                  //  claimtype == claim.amazon ? Padding(padding: EdgeInsets.all(20),child: Lottie.asset("images/"),)
+                  //   ],)
+                ],
+              ),
             ),
           )
         : Container(
@@ -397,38 +485,34 @@ class CloseCard extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Transform.rotate(
-                              angle: -0.2,
-                              child: Lottie.asset(
-                                "images/lottie/winner-crown.json",
-                                height: 80,
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Lottie.asset(
+                            "images/lottie/winner-crown.json",
+                            height: 80,
+                          ),
+                          Container(
+                            height: 80,
+                            width: 80,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: UiConstants.primaryColor,
+                                width: 3,
+                              ),
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: baseProvider.myUserDpUrl != null
+                                    ? NetworkImage(baseProvider.myUserDpUrl)
+                                    : AssetImage("images/profile.png"),
+                                fit: BoxFit.cover,
                               ),
                             ),
-                            Container(
-                              height: 80,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: UiConstants.primaryColor,
-                                  width: 3,
-                                ),
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                    image: baseProvider.myUserDpUrl != null
-                                        ? NetworkImage(baseProvider.myUserDpUrl)
-                                        : AssetImage("images/profile.png")),
-                              ),
-                            ),
-                            SizedBox(height: 40)
-                          ],
-                        ),
+                          ),
+                          SizedBox(height: 40)
+                        ],
                       ),
-                      SizedBox(
-                        width: 20,
-                      ),
+                      SizedBox(width: SizeConfig.blockSizeHorizontal * 5),
                       Expanded(
                         flex: 2,
                         child: Column(

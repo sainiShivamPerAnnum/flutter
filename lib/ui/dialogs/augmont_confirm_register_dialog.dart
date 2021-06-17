@@ -1,4 +1,6 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -52,15 +54,24 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
   Widget build(BuildContext context) {
     _width = MediaQuery.of(context).size.width;
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    return Dialog(
-      insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      elevation: 0.0,
-      backgroundColor: Colors.white,
-      child: dialogContent(context),
-    );
+    return WillPopScope(
+        onWillPop: () async {
+          print("I am here----------->");
+          backButtonDispatcher.didPopRoute();
+          baseProvider.isAugmontRegnInProgress = false;
+          print(AppState.screenStack);
+          return false;
+        },
+        child: Dialog(
+          insetPadding:
+              EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          elevation: 0.0,
+          backgroundColor: Colors.white,
+          child: dialogContent(context),
+        ));
   }
 
   dialogContent(BuildContext context) {
@@ -128,13 +139,13 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                       children: [
                         TextButton(
                             onPressed: () {
-                              Navigator.of(context).pop();
+                              backButtonDispatcher.didPopRoute();
                               widget.onReject();
                             },
                             child: Text('CANCEL')),
                         TextButton(
                             onPressed: () {
-                              Navigator.of(context).pop();
+                              backButtonDispatcher.didPopRoute();
                               widget.onAccept();
                             },
                             child: Text('CONFIRM')),

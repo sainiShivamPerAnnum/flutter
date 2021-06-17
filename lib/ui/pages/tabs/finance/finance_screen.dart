@@ -5,6 +5,8 @@ import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
@@ -30,6 +32,7 @@ class _FinancePageState extends State<FinancePage> {
   BaseUtil baseProvider;
   AugmontModel augmontProvider;
   DBModel dbProvider;
+  AppState appState;
   Map<String, double> chartData;
   GlobalKey _showcaseHeader = GlobalKey();
   GlobalKey _showcaseFooter = GlobalKey();
@@ -87,6 +90,7 @@ class _FinancePageState extends State<FinancePage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
+    appState = Provider.of<AppState>(context, listen: false);
     if (!baseProvider.isAugmontRealTimeBalanceFetched) {
       _updateAugmontBalance();
       baseProvider.isAugmontRealTimeBalanceFetched = true;
@@ -184,20 +188,24 @@ class _FinancePageState extends State<FinancePage> {
                           'Choose any of the assets to deposit in. Fello lists strong proven assets with great historical returns.',
                           FundWidget(
                             fund: fundList[1],
-                            isAvailable: (GoldDetailsPage.checkAugmontStatus(
+                            isAvailable: (AugmontDetailsPage.checkAugmontStatus(
                                     baseProvider.myUser) !=
-                                GoldDetailsPage.STATUS_UNAVAILABLE),
-                            onPressed: () async {
-                              bool res = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (ctx) => GoldDetailsPage(),
-                                ),
-                              );
-                              if (res) {
-                                setState(() {});
-                              }
-                            },
+                                AugmontDetailsPage.STATUS_UNAVAILABLE),
+                            // onPressed: () async {
+                            //   bool res = await Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (ctx) => AugmontDetailsPage(),
+                            //     ),
+                            //   );
+                            //   if (res) {
+                            //     setState(() {});
+                            //   }
+                            // },
+                            onPressed: () => appState.currentAction =
+                                PageAction(
+                                    state: PageState.addPage,
+                                    page: AugDetailsPageConfig),
                           ),
                         ),
                         FundWidget(
@@ -206,16 +214,20 @@ class _FinancePageState extends State<FinancePage> {
                                 (MFDetailsPage.checkICICIDespositStatus(
                                         baseProvider.myUser) !=
                                     MFDetailsPage.STATUS_UNAVAILABLE),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (ctx) => MFDetailsPage(),
-                                ),
-                              );
-                              //baseProvider.showNegativeAlert('Locked', 'Feature currently locked', context);
-                              setState(() {});
-                            }),
+                            // onPressed: () {
+                            //   Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (ctx) => MFDetailsPage(),
+                            //     ),
+                            //   );
+                            //   //baseProvider.showNegativeAlert('Locked', 'Feature currently locked', context);
+                            //   setState(() {});
+                            // }),
+                            onPressed: () => appState.currentAction =
+                                PageAction(
+                                    state: PageState.addPage,
+                                    page: MfDetailsPageConfig)),
                       ],
                     ),
                   ),

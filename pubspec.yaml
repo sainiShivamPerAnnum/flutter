@@ -23,6 +23,7 @@ dependencies:
   encrypt: ^4.1.0
   flutter_local_notifications: ^4.0.1+2
   flutter_html_to_pdf: ^0.6.0
+  freshchat_sdk: ^0.6.0
   path: ^1.8.0
   path_provider: ^1.6.27
   provider: ^5.0.0
@@ -36,7 +37,6 @@ dependencies:
   share: ^0.6.5+4
   synchronized: ^3.0.0
   url_launcher: ^5.7.0
-  freshchat_sdk : ^0.6.0
   #ui packages
   camera: ^0.7.0+2
   cached_network_image: ^2.0.0
@@ -62,6 +62,8 @@ dependencies:
   scratcher: ^1.4.0
   video_player: ^1.0.1
   webview_flutter: ^1.0.7
+  screenshot: ^1.2.1
+
 
   flutter:
     sdk: flutter

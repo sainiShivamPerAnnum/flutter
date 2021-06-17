@@ -6,6 +6,8 @@ import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/tabs/profile/edit_profile_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
@@ -35,6 +37,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   BaseUtil baseProvider;
   DBModel dbProvider;
+  AppState appState;
   bool isImageLoading = false;
   bool isPanFieldHidden = true;
 
@@ -62,6 +65,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    appState = Provider.of<AppState>(context, listen: false);
     if (baseProvider.myUserDpUrl == null) {
       isImageLoading = true;
       getProfilePicUrl();
@@ -106,13 +110,15 @@ class _ProfilePageState extends State<ProfilePage> {
             GestureDetector(
               onTap: () {
                 HapticFeedback.vibrate();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => EditProfile(
-                            prevImage: baseProvider.myUserDpUrl,
-                          )),
-                );
+                appState.currentAction = PageAction(
+                    state: PageState.addPage, page: EditProfileConfig);
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //       builder: (context) => EditProfile(
+                //             prevImage: baseProvider.myUserDpUrl,
+                //           ),),
+                // );
               },
               child: Container(
                 height: SizeConfig.screenHeight * 0.24,
@@ -248,27 +254,18 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                   ),
                   ProfileTabTile(
-                    logo: "images/transaction.png",
-                    title: "Transactions",
-                    value: "See All",
-                    onPress: () {
-                      Navigator.push(context,
-                          CupertinoPageRoute(builder: (ctx) => Transactions()));
-                    },
-                  ),
+                      logo: "images/transaction.png",
+                      title: "Transactions",
+                      value: "See All",
+                      onPress: () => appState.currentAction = PageAction(
+                          state: PageState.addPage,
+                          page: TransactionPageConfig)),
                   ProfileTabTile(
-                    logo: "images/referrals.png",
-                    title: "Referrals",
-                    value: _myReferralCount.toString(),
-                    onPress: () {
-                      HapticFeedback.vibrate();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ReferralsPage()),
-                      );
-                    },
-                  ),
+                      logo: "images/referrals.png",
+                      title: "Referrals",
+                      value: _myReferralCount.toString(),
+                      onPress: () => appState.currentAction = PageAction(
+                          state: PageState.addPage, page: ReferralPageConfig)),
                 ],
               ),
             ),
@@ -350,7 +347,12 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             onTap: () {
               HapticFeedback.vibrate();
-              Navigator.of(context).pushNamed('/refpolicy');
+              Navigator.of(context).pushNamed('/faq').then(
+                    (value) => Navigator.pushNamed(
+                      context,
+                      ('/refpolicy'),
+                    ),
+                  );
             },
           ),
         )

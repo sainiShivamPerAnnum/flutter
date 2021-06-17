@@ -4,6 +4,8 @@ import 'dart:ui' as ui show Image, instantiateImageCodec;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_listener.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/breathing_text_widget.dart';
 import 'package:felloapp/ui/elements/logo_canvas.dart';
 import 'package:felloapp/ui/elements/logo_container.dart';
@@ -26,6 +28,7 @@ class LogoFadeIn extends State<SplashScreen> {
   Timer _timer3;
   LogoStyle _logoStyle = LogoStyle.markOnly;
   ui.Image logo;
+  AppState stateProvider;
 
   LogoFadeIn() {
     _loadImageAsset(Assets.logoMaxSize);
@@ -46,19 +49,25 @@ class LogoFadeIn extends State<SplashScreen> {
   }
 
   initialize() async {
-    final baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    final fcmProvider = Provider.of<FcmListener>(context,listen:false);
+    final baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    final fcmProvider = Provider.of<FcmListener>(context, listen: false);
+    stateProvider = Provider.of<AppState>(context, listen: false);
     await baseProvider.init();
     await fcmProvider.setupFcm();
     _timer3.cancel();
     if (!baseProvider.isUserOnboarded) {
       log.debug("New user. Moving to Onboarding..");
       // Navigator.of(context).pop();
-      Navigator.of(context).pushReplacementNamed('/onboarding');
+      //Navigator.of(context).pushReplacementNamed('/onboarding');
+
+      stateProvider.currentAction =
+          PageAction(state: PageState.replaceAll, page: OnboardPageConfig);
     } else {
       log.debug("Existing User. Moving to Home..");
       // Navigator.of(context).pop();
-      Navigator.of(context).pushReplacementNamed('/approot');
+      //Navigator.of(context).pushReplacementNamed('/approot');
+      stateProvider.currentAction =
+          PageAction(state: PageState.replaceAll, page: RootPageConfig);
     }
   }
 
@@ -67,8 +76,8 @@ class LogoFadeIn extends State<SplashScreen> {
     //if(!_timer.isActive)initialize();
     SizeConfig().init(context);
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
           body: Stack(
         children: <Widget>[
           (logo != null)

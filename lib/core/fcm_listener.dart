@@ -96,7 +96,7 @@ class FcmListener extends ChangeNotifier {
     await _manageInitSubscriptions();
 
     ///setup android notification channels
-    if(Platform.isAndroid) {
+    if (Platform.isAndroid) {
       _androidNativeSetup();
     }
 
@@ -107,8 +107,9 @@ class FcmListener extends ChangeNotifier {
     return _fcm;
   }
 
-  Future addSubscription(FcmTopic subId, {String suffix=''}) async {
-    await _fcm.subscribeToTopic((suffix.isEmpty)?subId.value():'${subId.value()}$suffix');
+  Future addSubscription(FcmTopic subId, {String suffix = ''}) async {
+    await _fcm.subscribeToTopic(
+        (suffix.isEmpty) ? subId.value() : '${subId.value()}$suffix');
   }
 
   _manageInitSubscriptions() async {
@@ -128,8 +129,8 @@ class FcmListener extends ChangeNotifier {
       addSubscription(FcmTopic.TAMBOLAPLAYER);
     }
 
-    if(BaseUtil.packageInfo != null) {
-      String cde = BaseUtil.packageInfo.version??'NA';
+    if (BaseUtil.packageInfo != null) {
+      String cde = BaseUtil.packageInfo.version ?? 'NA';
       cde = cde.replaceAll('.', '');
       addSubscription(FcmTopic.VERSION, suffix: cde);
     }
@@ -138,14 +139,17 @@ class FcmListener extends ChangeNotifier {
   }
 
   _androidNativeSetup() async {
-    const MethodChannel _channel = MethodChannel('fello.in/dev/notifications/channel/tambola');
+    const MethodChannel _channel =
+        MethodChannel('fello.in/dev/notifications/channel/tambola');
     Map<String, String> tambolaChannelMap = {
       "id": "TAMBOLA_PICK_NOTIF",
       "name": "Tambola Daily Picks",
       "description": "Tambola notifications",
     };
 
-    _channel.invokeMethod('createNotificationChannel', tambolaChannelMap).then((value) {
+    _channel
+        .invokeMethod('createNotificationChannel', tambolaChannelMap)
+        .then((value) {
       log.debug('Tambola Notification channel created successfully');
     }).catchError((e) {
       log.error('Tambola notification channel setup failed');

@@ -1,3 +1,5 @@
+import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,25 +10,29 @@ class ConfirmActionDialog extends StatefulWidget {
   final String title, description, buttonText, cancelBtnText;
   final Function confirmAction, cancelAction;
   final Image image;
-  ConfirmActionDialog({
-    @required this.title,
-    @required this.description,
-    @required this.buttonText,
-    @required this.confirmAction,
-    @required this.cancelAction,
-    this.image,
-    this.cancelBtnText = 'Cancel'
-  });
+  ConfirmActionDialog(
+      {@required this.title,
+      @required this.description,
+      @required this.buttonText,
+      @required this.confirmAction,
+      @required this.cancelAction,
+      this.image,
+      this.cancelBtnText = 'Cancel'});
 
   @override
   State createState() => _FormDialogState();
 }
 
-
 class _FormDialogState extends State<ConfirmActionDialog> {
   Log log = new Log('ConfirmActionDialog');
   final _formKey = GlobalKey<FormState>();
   final fdbkController = TextEditingController();
+
+  @override
+  void initState() {
+    AppState.screenStack.add(ScreenItem.dialog);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +52,7 @@ class _FormDialogState extends State<ConfirmActionDialog> {
         //...bottom card part,
         Container(
           padding: EdgeInsets.only(
-            top: 5+UiConstants.padding,
+            top: 5 + UiConstants.padding,
             bottom: UiConstants.padding,
             left: UiConstants.padding,
             right: UiConstants.padding,
@@ -92,6 +98,7 @@ class _FormDialogState extends State<ConfirmActionDialog> {
                       onPressed: () {
                         HapticFeedback.vibrate();
                         log.debug('DialogAction cancelled');
+
                         return widget.cancelAction();
                       },
                       child: Text(widget.cancelBtnText),

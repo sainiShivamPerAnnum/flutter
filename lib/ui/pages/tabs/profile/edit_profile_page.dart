@@ -4,6 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/login/screens/Field-Container.dart';
@@ -24,8 +27,6 @@ import 'package:provider/provider.dart';
 import '../../root.dart';
 
 class EditProfile extends StatefulWidget {
-  final String prevImage;
-  EditProfile({this.prevImage});
   @override
   _EditProfileState createState() => _EditProfileState();
 }
@@ -38,6 +39,7 @@ class _EditProfileState extends State<EditProfile> {
   bool _isInitialized = false;
   static DBModel dbProvider;
   static BaseUtil baseProvider;
+  AppState appState;
   File profilePic;
   int gender = 1;
   bool isPlayer = false;
@@ -59,6 +61,7 @@ class _EditProfileState extends State<EditProfile> {
 
     setState(() {
       profilePic = File(temp.path);
+      AppState.unsavedChanges = true;
     });
   }
 
@@ -138,6 +141,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+    appState = Provider.of<AppState>(context, listen: false);
     if (!_isInitialized) {
       _isInitialized = true;
       baseProvider = Provider.of<BaseUtil>(context, listen: false);
@@ -158,6 +162,7 @@ class _EditProfileState extends State<EditProfile> {
 
     return WillPopScope(
       onWillPop: () async {
+        print("Hello frandsssss");
         var pName = _nameFieldController.text;
         var pEmail = _emailFieldController.text;
         var pAge = _ageFieldController.text;
@@ -172,29 +177,12 @@ class _EditProfileState extends State<EditProfile> {
         if (curAge == null || pAge != curAge) noChanges = false;
         if (profilePic != null) noChanges = false;
 
-        if (!noChanges) {
-          return (await showDialog(
-            context: context,
-            builder: (ctx) => ConfirmActionDialog(
-              title: "You changes are unsaved",
-              description: "Are you sure you want to go back?",
-              buttonText: "Yes",
-              cancelBtnText: 'Cancel',
-              confirmAction: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-              cancelAction: () {
-                Navigator.pop(context);
-              },
-            ),
-          ));
-        }
-        return true;
+        if (!noChanges) {}
+        return false;
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: BaseUtil.getAppBar(),
+        appBar: BaseUtil.getAppBar(context),
         body: Padding(
           padding: EdgeInsets.symmetric(
               horizontal: SizeConfig.blockSizeHorizontal * 5),
@@ -227,7 +215,7 @@ class _EditProfileState extends State<EditProfile> {
                                         width: SizeConfig.screenHeight * 0.2,
                                         fit: BoxFit.cover,
                                       )
-                                    : (widget.prevImage == null
+                                    : (baseProvider.myUserDpUrl == null
                                         ? Image.asset(
                                             "images/profile.png",
                                             height:
@@ -237,7 +225,7 @@ class _EditProfileState extends State<EditProfile> {
                                             fit: BoxFit.cover,
                                           )
                                         : CachedNetworkImage(
-                                            imageUrl: widget.prevImage,
+                                            imageUrl: baseProvider.myUserDpUrl,
                                             height:
                                                 SizeConfig.screenHeight * 0.2,
                                             width:
@@ -294,6 +282,9 @@ class _EditProfileState extends State<EditProfile> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
+                    onChanged: (val) {
+                      AppState.unsavedChanges = true;
+                    },
                     validator: (value) {
                       return value.isEmpty ? 'Please enter your name' : null;
                     },
@@ -318,6 +309,9 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                       prefixIcon: Icon(Icons.email),
                     ),
+                    onChanged: (val) {
+                      AppState.unsavedChanges = true;
+                    },
                     validator: (value) {
                       print(value);
                       return (value != null &&
@@ -467,6 +461,7 @@ class _EditProfileState extends State<EditProfile> {
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
                             // baseProvider.firebaseUser = await FirebaseAuth.instance.currentUser();
+                            FocusScope.of(context).unfocus();
                             var pName = _nameFieldController.text;
                             var pEmail = _emailFieldController.text;
                             var pAge = _ageFieldController.text;
@@ -515,14 +510,21 @@ class _EditProfileState extends State<EditProfile> {
                                   .updateUser(baseProvider.myUser)
                                   .then((flag) {
                                 if (flag) {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (ctx) => Root()));
+                                  // Navigator.pushReplacement(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (ctx) => Root(),
+                                  //   ),
+                                  // );
+
                                   baseProvider.showPositiveAlert(
                                       'Complete',
                                       'Your details have been updated',
                                       context);
+
+                                  appState.currentAction = PageAction(
+                                    state: PageState.pop,
+                                  );
                                 } else {
                                   baseProvider.showNegativeAlert(
                                       'Failed',

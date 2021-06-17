@@ -2,6 +2,9 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/aboutus_dialog.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
@@ -17,13 +20,14 @@ class HamburgerMenu extends StatelessWidget {
   static List<OptionDetail> _optionsList;
   BaseUtil baseProvider;
   DBModel reqProvider;
+  AppState appstate;
 
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     reqProvider = Provider.of<DBModel>(context, listen: false);
+    appstate = Provider.of<AppState>(context, listen: false);
     _optionsList = _loadOptionsList();
-
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
       child: Dialog(
@@ -44,15 +48,6 @@ class HamburgerMenu extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Text(
-            //   "Menu",
-            //   style: GoogleFonts.montserrat(
-            //     color: Colors.black,
-            //     fontWeight: FontWeight.w700,
-            //     fontSize: SizeConfig.largeTextSize,
-            //   ),
-            // ),
-            // Divider(),
             Container(
               child: ListView.builder(
                 shrinkWrap: true,
@@ -76,7 +71,10 @@ class HamburgerMenu extends StatelessWidget {
                     color: Colors.white,
                   )),
               child: IconButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  AppState.screenStack.removeLast();
+                  Navigator.pop(context);
+                },
                 icon: Icon(
                   Icons.cancel_rounded,
                   color: Colors.white,
@@ -117,27 +115,28 @@ class HamburgerMenu extends StatelessWidget {
         }
       case 'abUs':
         {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) => AboutUsDialog());
+          delegate.parseRoute(Uri.parse("d-aboutUs"));
           break;
         }
       case 'faq':
         {
           HapticFeedback.vibrate();
-          Navigator.of(context).pushNamed('/faq');
+          //Navigator.of(context).pushNamed('/faq');
+          appstate.currentAction =
+              PageAction(state: PageState.addPage, page: FaqPageConfig);
           break;
         }
       case 'tnc':
         {
           HapticFeedback.vibrate();
-          Navigator.of(context).pushNamed('/tnc');
+          //Navigator.of(context).pushNamed('/tnc');
+          appstate.currentAction =
+              PageAction(state: PageState.addPage, page: TncPageConfig);
           break;
         }
       case 'contUs':
         {
-          HapticFeedback.vibrate();
-          Navigator.of(context).pushNamed('/support');
+          //TODO Navigator.of(context).pushNamed('/support');
           // showDialog(
           //     context: context,
           //     builder: (BuildContext dialogContext) => ContactUsDialog(
@@ -171,6 +170,49 @@ class HamburgerMenu extends StatelessWidget {
           //             }
           //           },
           //         ));
+          //TODO AppState.screenStack.add(ScreenItem.dialog);
+          showDialog(
+              context: context,
+              builder: (BuildContext dialogContext) => WillPopScope(
+                    onWillPop: () {
+                      AppState.screenStack.removeLast();
+                      return Future.value(true);
+                    },
+                    child: ContactUsDialog(
+                      isResident: (baseProvider.isSignedIn() &&
+                          baseProvider.isActiveUser()),
+                      isUnavailable: BaseUtil.isDeviceOffline,
+                      onClick: () {
+                        if (BaseUtil.isDeviceOffline) {
+                          baseProvider.showNoInternetAlert(context);
+                          return;
+                        }
+                        if (baseProvider.isSignedIn() &&
+                            baseProvider.isActiveUser()) {
+                          reqProvider
+                              .addCallbackRequest(
+                                  baseProvider.firebaseUser.uid,
+                                  baseProvider.myUser.name,
+                                  baseProvider.myUser.mobile)
+                              .then((flag) {
+                            if (flag) {
+                              Navigator.of(context).pop();
+                              AppState.screenStack.removeLast();
+                              baseProvider.showPositiveAlert(
+                                  'Callback placed!',
+                                  'We\'ll contact you soon on your registered mobile',
+                                  context);
+                            }
+                          });
+                        } else {
+                          baseProvider.showNegativeAlert(
+                              'Unavailable',
+                              'Callbacks are reserved for active users',
+                              context);
+                        }
+                      },
+                    ),
+                  ));
           break;
         }
       // case 'kyc':
@@ -184,41 +226,54 @@ class HamburgerMenu extends StatelessWidget {
       //   }
       case 'signOut':
         {
+          AppState.screenStack.add(ScreenItem.dialog);
           showDialog(
-              context: context,
-              builder: (BuildContext dialogContext) => ConfirmActionDialog(
-                    title: 'Confirm',
-                    description: 'Are you sure you want to sign out?',
-                    buttonText: 'Yes',
-                    confirmAction: () {
-                      HapticFeedback.vibrate();
-                      baseProvider.signOut().then((flag) {
-                        if (flag) {
-                          //log.debug('Sign out process complete');
-
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                          Navigator.of(context)
-                              .pushReplacementNamed('/launcher');
-                          baseProvider.showPositiveAlert(
-                              'Signed out', 'Hope to see you soon', context);
-                        } else {
-                          Navigator.of(context).pop();
-                          baseProvider.showNegativeAlert('Sign out failed',
-                              'Couldn\'t signout. Please try again', context);
-                          //log.error('Sign out process failed');
-                        }
-                      });
-                    },
-                    cancelAction: () {
-                      HapticFeedback.vibrate();
+            context: context,
+            builder: (BuildContext dialogContext) => WillPopScope(
+              onWillPop: () {
+                AppState.screenStack.removeLast();
+                return Future.value(true);
+              },
+              child: ConfirmActionDialog(
+                title: 'Confirm',
+                description: 'Are you sure you want to sign out?',
+                buttonText: 'Yes',
+                confirmAction: () {
+                  HapticFeedback.vibrate();
+                  baseProvider.signOut().then((flag) {
+                    if (flag) {
+                      //log.debug('Sign out process complete');
+                      AppState.screenStack.removeLast();
+                      AppState.screenStack.removeLast();
                       Navigator.of(context).pop();
-                    },
-                  ));
+                      Navigator.of(context).pop();
+
+                      appstate.currentAction = PageAction(
+                          state: PageState.replaceAll, page: SplashPageConfig);
+                      baseProvider.showPositiveAlert(
+                          'Signed out', 'Hope to see you soon', context);
+                    } else {
+                      AppState.screenStack.removeLast();
+                      Navigator.of(context).pop();
+                      baseProvider.showNegativeAlert('Sign out failed',
+                          'Couldn\'t signout. Please try again', context);
+                      //log.error('Sign out process failed');
+                    }
+                  });
+                },
+                cancelAction: () {
+                  HapticFeedback.vibrate();
+                  AppState.screenStack.removeLast();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          );
           break;
         }
       case 'fdbk':
         {
+          AppState.screenStack.add(ScreenItem.dialog);
           showDialog(
             context: context,
             builder: (BuildContext context) => FeedbackDialog(

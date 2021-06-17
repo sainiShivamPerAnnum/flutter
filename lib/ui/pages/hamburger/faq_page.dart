@@ -29,9 +29,9 @@ class _FAQList extends State<FAQPage> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
     return new Scaffold(
-        appBar: BaseUtil.getAppBar(),
+        appBar: BaseUtil.getAppBar(context),
         body: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,

@@ -54,7 +54,9 @@ class Constants {
   static const int KYC_VALID = 2;
   static const int INVESTMENT_AMOUNT_FOR_TICKET = 100;
   static const int AUG_GOLD_WITHDRAW_OFFSET = 1; //no of days to wait before withdrawal
+  static const int UNLOCK_REFERRAL_AMT = 300;
   static final DateTime VERSION_2_RELEASE_DATE = DateTime(2021, 4, 1);
+
   ///STAGES - IMPORTANT
   static const AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;
   static const FreshchatStage activeFreshchatStage = FreshchatStage.DEV;
