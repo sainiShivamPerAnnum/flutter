@@ -2,11 +2,13 @@ import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
+import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/pages/hamburger/hamburger_screen.dart';
+import 'package:felloapp/ui/pages/supportchat/chatsupport_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
@@ -130,6 +132,16 @@ class _RootState extends State<Root> {
     }
   }
 
+  _showUnreadSupportMessages() {
+    if(fcmProvider != null && baseProvider !=null) {
+      ChatSupport.getUnreadMessagesCount().then((value) {
+        if(value>0) {
+          baseProvider.showPositiveAlert('Support', 'You have unread messages', context, seconds: 5);
+        }
+      });
+    }
+  }
+
   _initialize(BuildContext context) {
     if (!_isInitialized) {
       _isInitialized = true;
@@ -142,6 +154,7 @@ class _RootState extends State<Root> {
         }
       });
       _initAdhocNotifications();
+      _showUnreadSupportMessages();
     }
   }
 
