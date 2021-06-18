@@ -61,7 +61,6 @@ class _TambolaGameScreen extends State<TambolaHome> {
   String dailyPickHeaderText = 'Today\'s picks';
   List<String> dailyPickTextList = [];
 
-  // List<String> prizeEmoji = ['🥇', '🏆', ' 🎊', ' 🎉'];
   List<bool> detStatus = [false, false, false, false];
 
   GlobalKey _showcaseOne = GlobalKey();

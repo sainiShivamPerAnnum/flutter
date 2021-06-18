@@ -1,9 +1,5 @@
-import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/main.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/size_config.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:freshchat_sdk/freshchat_user.dart';
@@ -17,10 +13,6 @@ class ChatSupport extends StatefulWidget {
   ChatSupport({Key key}) : super(key: key);
   @override
   _ChatSupportState createState() => _ChatSupportState();
-  static Future<int> getUnreadMessagesCount() async {
-    var unreadCount = await Freshchat.getUnreadCountAsync;
-    return unreadCount['count'];
-  }
 }
 
 class _ChatSupportState extends State<ChatSupport> {
@@ -134,7 +126,6 @@ class _ChatSupportState extends State<ChatSupport> {
       Freshchat.identifyUser(externalId: _userid, restoreId: _restore);
       print('user id $_userid');
       print('restore id $_restore');
-      // user id - NaQ56t18oxVpJ4aJtUBpLaaUHF22 restoreid - c39d6427-0d6e-47e4-9279-e4520c991ccd
       _user.setFirstName(baseProvider.myUser.name);
       _user.setEmail(baseProvider.myUser.email);
       _user.setPhone('+91', baseProvider.myUser.mobile);

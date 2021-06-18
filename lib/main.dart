@@ -1,4 +1,4 @@
-import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/fcm_listener.dart';
@@ -12,8 +12,8 @@ import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
-import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/route_parser.dart';
+import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
@@ -21,8 +21,6 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:freshchat_sdk/freshchat_sdk.dart';
-import 'package:felloapp/core/fcm_listener.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 

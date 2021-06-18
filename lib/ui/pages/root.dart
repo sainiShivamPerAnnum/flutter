@@ -10,7 +10,7 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/pages/hamburger/hamburger_screen.dart';
-import 'package:felloapp/ui/pages/supportchat/chatsupport_page.dart';
+import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/pages/hamburger/chatsupport_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
@@ -138,6 +138,11 @@ class _RootState extends State<Root> {
         }
       });
       _initAdhocNotifications();
+      baseProvider.isUnreadFreshchatSupportMessages().then((flag) {
+        if(flag) {
+          baseProvider.showPositiveAlert('You have unread support messages', 'Go to the Contact Us section to view', context, seconds: 4);
+        }
+      });
     }
   }
 

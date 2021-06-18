@@ -19,7 +19,6 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/main.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -36,7 +35,7 @@ import 'package:showcaseview/showcase.dart';
 import 'core/base_remote_config.dart';
 import 'core/model/TambolaBoard.dart';
 import 'core/model/UserAugmontDetail.dart';
-import 'ui/pages/supportchat/chatsupport_page.dart';
+import 'ui/pages/hamburger/chatsupport_page.dart';
 import 'util/size_config.dart';
 
 class BaseUtil extends ChangeNotifier {
@@ -180,9 +179,14 @@ class BaseUtil extends ChangeNotifier {
     if (_payService != null) _payService.addPaymentStatusListener(null);
   }
 
-  Future<bool> showUnreadFreshchatSupportMessages() async {
-    int bal = await ChatSupport.getUnreadMessagesCount();
-    return (bal > 0);
+  Future<bool> isUnreadFreshchatSupportMessages() async {
+    try {
+      var unreadCount = await Freshchat.getUnreadCountAsync;
+      return (unreadCount['count'] > 0);
+    }catch(e) {
+      log.error('Error reading unread count variable: $e');
+      return false;
+    }
   }
 
   static Widget getAppBar(BuildContext context) {

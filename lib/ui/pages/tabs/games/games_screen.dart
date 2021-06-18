@@ -199,25 +199,25 @@ class _GamePageState extends State<GamePage> {
                                   title: "Want more tickets?",
                                   action: [
                                     GameOfferCardButton(
-                                      // onPressed: () =>
-                                      //     delegate.parseRoute(Uri.parse("2")),
+                                      onPressed: () =>
+                                          delegate.parseRoute(Uri.parse("finance")),
                                       ///TODO remove post testing
-                                      onPressed: () => showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (ctx) {
-                                          return Center(
-                                            child: Material(
-                                              color: Colors.transparent,
-                                              child: Stack(
-                                                children: [
-                                                  Center(child: FCard()),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
+                                      // onPressed: () => showDialog(
+                                      //   context: context,
+                                      //   barrierDismissible: false,
+                                      //   builder: (ctx) {
+                                      //     return Center(
+                                      //       child: Material(
+                                      //         color: Colors.transparent,
+                                      //         child: Stack(
+                                      //           children: [
+                                      //             Center(child: FCard()),
+                                      //           ],
+                                      //         ),
+                                      //       ),
+                                      //     );
+                                      //   },
+                                      // ),
                                       title: "Invest",
                                     ),
                                     SizedBox(
