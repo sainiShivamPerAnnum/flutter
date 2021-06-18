@@ -13,6 +13,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   FelloBackButtonDispatcher(this._routerDelegate) : super();
 
   Future<bool> _confirmExit() {
+    AppState.screenStack.add(ScreenItem.dialog);
     return showDialog<bool>(
       barrierDismissible: false,
       context: _routerDelegate.navigatorKey.currentContext,
@@ -23,13 +24,11 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         confirmAction: () {
           print(AppState.screenStack);
           AppState.unsavedChanges = false;
-          AppState.screenStack.removeLast();
-          Navigator.pop(_routerDelegate.navigatorKey.currentContext);
+          didPopRoute();
           return _routerDelegate.popRoute();
         },
         cancelAction: () {
-          AppState.screenStack.removeLast();
-          Navigator.pop(_routerDelegate.navigatorKey.currentContext);
+          didPopRoute();
         },
       ),
     );
@@ -37,16 +36,18 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
-    print("Previous: ${AppState.screenStack}");
     if (AppState.screenStack.last == ScreenItem.dialog) {
-      AppState.screenStack.removeLast();
       Navigator.pop(_routerDelegate.navigatorKey.currentContext);
+      AppState.screenStack.removeLast();
+      print("Current Stack: ${AppState.screenStack}");
+
       return Future.value(true);
     } else {
       if (AppState.unsavedChanges == true) {
         return _confirmExit();
-      } else
+      } else {
         return _routerDelegate.popRoute();
+      }
     }
   }
 }

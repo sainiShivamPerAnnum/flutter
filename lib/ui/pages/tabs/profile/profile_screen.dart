@@ -6,6 +6,7 @@ import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
@@ -244,12 +245,22 @@ class _ProfilePageState extends State<ProfilePage> {
                         isPanFieldHidden = !isPanFieldHidden;
                         setState(() {});
                       } else {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) => MoreInfoDialog(
-                                  text: Assets.infoWhyPan,
-                                  title: 'Where is my PAN Number used?',
-                                ));
+                        // AppState.screenStack.add(ScreenItem.dialog);
+                        // showDialog(
+                        //   context: context,
+                        //   builder: (BuildContext context) => WillPopScope(
+                        //     onWillPop: () {
+                        //       AppState.screenStack.removeLast();
+                        //       print("Popped a dialog");
+                        //       return Future.value(true);
+                        //     },
+                        //     child: MoreInfoDialog(
+                        //       text: Assets.infoWhyPan,
+                        //       title: 'Where is my PAN Number used?',
+                        //     ),
+                        //   ),
+                        // );
+                        delegate.parseRoute(Uri.parse("d-panInfo"));
                       }
                     },
                   ),
@@ -278,7 +289,10 @@ class _ProfilePageState extends State<ProfilePage> {
               height: 50,
             ),
             _appVersionRow(),
-            _termsRow()
+            _termsRow(),
+            SizedBox(
+              height: 20,
+            )
           ],
         ),
       ),
@@ -329,7 +343,8 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             onTap: () {
               HapticFeedback.vibrate();
-              Navigator.of(context).pushNamed('/tnc');
+              appState.currentAction =
+                  PageAction(state: PageState.addPage, page: TncPageConfig);
             },
           ),
         ),
@@ -347,12 +362,14 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             onTap: () {
               HapticFeedback.vibrate();
-              Navigator.of(context).pushNamed('/faq').then(
-                    (value) => Navigator.pushNamed(
-                      context,
-                      ('/refpolicy'),
-                    ),
-                  );
+              // Navigator.of(context).pushNamed('/faq').then(
+              //       (value) => Navigator.pushNamed(
+              //         context,
+              //         ('/refpolicy'),
+              //       ),
+              //     );
+              appState.currentAction = PageAction(
+                  state: PageState.addPage, page: RefPolicyPageConfig);
             },
           ),
         )

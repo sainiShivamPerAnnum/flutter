@@ -1,21 +1,27 @@
+import 'package:felloapp/main.dart';
 import 'package:felloapp/ui/dialogs/aboutus_dialog.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
 import 'package:felloapp/ui/pages/hamburger/hamburger_screen.dart';
+import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/ui/pages/root.dart';
+import 'package:felloapp/ui/pages/supportchat/chatsupport_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola-cards.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola-home.dart';
 import 'package:felloapp/ui/pages/tabs/profile/edit_profile_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -83,7 +89,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   Future<bool> popRoute() {
     if (canPop()) {
       _removePage(_pages.last);
-      print("Popped a page");
+      print("Current Stack: ${AppState.screenStack}");
       notifyListeners();
       return Future.value(true);
     }
@@ -159,6 +165,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.EditAugBankDetails:
           _addPageData(EditAugmontBankDetail(), EditAugBankDetailsPageConfig);
+          break;
+        case Pages.TambolaTickets:
+          _addPageData(TambolaCardsList(), TambolaTicketsPageConfig);
+          break;
+        case Pages.RefPolicy:
+          _addPageData(ReferralPolicy(), RefPolicyPageConfig);
+          break;
+        case Pages.ChatSupport:
+          _addPageData(ChatSupport(), ChatSupportPageConfig);
           break;
 
         default:
@@ -265,6 +280,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.EditAugBankDetails:
         EditAugBankDetailsPageConfig.currentPageAction = action;
         break;
+      case Pages.TambolaTickets:
+        TambolaTicketsPageConfig.currentPageAction = action;
+        break;
+      case Pages.RefPolicy:
+        RefPolicyPageConfig.currentPageAction = action;
+        break;
+      case Pages.ChatSupport:
+        ChatSupportPageConfig.currentPageAction = action;
+        break;
 
       default:
         break;
@@ -346,6 +370,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case "ham":
         dialogWidget = HamburgerMenu();
         barrierDismissable = false;
+        break;
+      case "panInfo":
+        dialogWidget = MoreInfoDialog(
+          text: Assets.infoWhyPan,
+          title: 'Where is my PAN Number used?',
+        );
+        break;
     }
     if (dialogWidget != null) {
       AppState.screenStack.add(ScreenItem.dialog);
@@ -355,9 +386,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           builder: (ctx) {
             return WillPopScope(
                 onWillPop: () {
-                  //if (AppState.screenStack.last == ScreenItem.dialog) {
-                  AppState.screenStack.removeLast();
-                  //}
+                  backButtonDispatcher.didPopRoute();
+                  print("Popped the dialog");
                   return Future.value(true);
                 },
                 child: dialogWidget);
@@ -411,6 +441,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'editAugBankDetails':
         pageConfiguration = EditAugBankDetailsPageConfig;
         break;
+      case 'chatSupport':
+        pageConfiguration = ChatSupportPageConfig;
+      // case 'tambolaTickets':
+      //   pageConfiguration = TambolaTicketsPageConfig;
+      //   break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);

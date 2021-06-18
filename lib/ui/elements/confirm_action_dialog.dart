@@ -29,12 +29,6 @@ class _FormDialogState extends State<ConfirmActionDialog> {
   final fdbkController = TextEditingController();
 
   @override
-  void initState() {
-    AppState.screenStack.add(ScreenItem.dialog);
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(

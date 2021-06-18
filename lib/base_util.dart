@@ -149,7 +149,7 @@ class BaseUtil extends ChangeNotifier {
 
       ///Freshchat utils
       freshchatKeys = await _dbModel.getActiveFreshchatKey();
-      if(freshchatKeys != null && freshchatKeys.isNotEmpty) {
+      if (freshchatKeys != null && freshchatKeys.isNotEmpty) {
         Freshchat.init(freshchatKeys['app_id'], freshchatKeys['app_key'],
             freshchatKeys['app_domain'],
             gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
