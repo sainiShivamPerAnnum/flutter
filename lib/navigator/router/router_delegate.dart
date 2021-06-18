@@ -89,7 +89,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   Future<bool> popRoute() {
     if (canPop()) {
       _removePage(_pages.last);
-      print("Popped a page");
+      print("Current Stack: ${AppState.screenStack}");
       notifyListeners();
       return Future.value(true);
     }
