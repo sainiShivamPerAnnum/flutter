@@ -494,19 +494,19 @@ class _TambolaGameScreen extends State<TambolaHome> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: _podiumItem(
-                "images/Tambola/fullhouse.png", "₹ 1000", "Full House"),
+                "images/Tambola/fullhouse.png", '₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_FULL)}', "Full House"),
           ),
           Row(
             children: [
               Expanded(
                 flex: 6,
-                child: _podiumItem("images/Tambola/rows.png", "₹ 500",
+                child: _podiumItem("images/Tambola/rows.png", "₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_TOP)}",
                     "First/Second/Third Row"),
               ),
               Expanded(
                 flex: 4,
                 child: _podiumItem(
-                    "images/Tambola/corners.png", "₹ 100", "Corners"),
+                    "images/Tambola/corners.png", "₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_CORNER)}", "Corners"),
               )
             ],
           ),
@@ -519,13 +519,13 @@ class _TambolaGameScreen extends State<TambolaHome> {
             children: [
               ExpansionPanel(
                 headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
-                    "images/svgs/howitworks.svg", "How the prizing works ?"),
+                    "images/svgs/howitworks.svg", Assets.tambolaFaqList[0].keys.first),
                 isExpanded: detStatus[0],
                 body: Container(
                   child: Column(
                     children: [
                       Text(
-                        "- Every day you recive 6 random generated picks\n\n-Check what numbers are matching on your tambola tickets\n\n- If any of your card satisfies any of the 3 criteria, congrats you are a winner.",
+                        Assets.tambolaFaqList[0].values.first,
                         style: TextStyle(
                           height: 1.5,
                           fontSize: SizeConfig.mediumTextSize,
@@ -538,14 +538,14 @@ class _TambolaGameScreen extends State<TambolaHome> {
               ExpansionPanel(
                 headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
                     "images/svgs/cash-distribution.svg",
-                    "How cash is distributed ?"),
+                    Assets.tambolaFaqList[1].keys.first),
                 isExpanded: detStatus[1],
                 body: Container(
                   padding: EdgeInsets.only(right: 25),
                   child: Column(
                     children: [
                       Text(
-                        "- Every Sunday, winners are announced and the cash prize is distributed  between the winners of equal win status.\n\n-Eg: if 10 people claim to have a Tambola ticket with Full house then ₹1000 will be distributed among those 10 people i,e. each one will get ₹100.\n\n-easy peasy",
+                        Assets.tambolaFaqList[1].values.first,
                         style: TextStyle(
                           height: 1.5,
                           fontSize: SizeConfig.mediumTextSize,
@@ -558,13 +558,13 @@ class _TambolaGameScreen extends State<TambolaHome> {
               ExpansionPanel(
                 headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
                     "images/svgs/redeem.svg",
-                    "How can you redeem your prize ?"),
+                    Assets.tambolaFaqList[2].keys.first),
                 body: Container(
                   padding: EdgeInsets.only(right: 25),
                   child: Column(
                     children: [
                       Text(
-                        "If you win, then we will:\n\n-Send you a notification for the same and you can claim by clicking on that.\n\n-Show you a prize dialog in the game section for claiming your reward\n\nAlso, you can check the Winnerboard. If your name exists,click on it to claim your reward.",
+                        Assets.tambolaFaqList[2].values.first,
                         style: TextStyle(
                           height: 1.5,
                           fontSize: SizeConfig.mediumTextSize,
@@ -578,13 +578,13 @@ class _TambolaGameScreen extends State<TambolaHome> {
               ExpansionPanel(
                 headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
                     "images/svgs/winmore.svg",
-                    "How you can maximize your winnings ?"),
+                    Assets.tambolaFaqList[3].keys.first),
                 body: Container(
                   padding: EdgeInsets.only(right: 25),
                   child: Column(
                     children: [
                       Text(
-                        "-So by now you got the idea, how to win\n\n-Now to maximize your winning, you have to maxmimize your chances of matching tambola tickets\n\n-So get more and more tambola tickets to maximize you chances of winning.\n\n-How to get more tambola tickets? Invest in the funds available.\n\n-For every ₹100 you invest/save, you get new tambola ticket.\n\n!!Start investing now!!\n",
+                        Assets.tambolaFaqList[3].values.first,
                         style: TextStyle(
                           height: 1.5,
                           fontSize: SizeConfig.mediumTextSize,
