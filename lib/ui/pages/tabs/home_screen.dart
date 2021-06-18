@@ -192,7 +192,7 @@ class _HomePageState extends State<HomePage> {
         buttonText: card.btnText,
         onPressed: () async {
           HapticFeedback.vibrate();
-          delegate.parseRoute(Uri.parse("dashboard/c-3/d-guide"));
+          delegate.parseRoute(Uri.parse(card.actionUri));
         },
         gradient: [
           Color(card.clrCodeA),

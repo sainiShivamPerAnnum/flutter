@@ -1,6 +1,8 @@
+import 'package:felloapp/main.dart';
 import 'package:felloapp/ui/dialogs/aboutus_dialog.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
 import 'package:felloapp/ui/pages/hamburger/hamburger_screen.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
@@ -19,6 +21,7 @@ import 'package:felloapp/ui/pages/tabs/games/tambola-home.dart';
 import 'package:felloapp/ui/pages/tabs/profile/edit_profile_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -367,6 +370,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case "ham":
         dialogWidget = HamburgerMenu();
         barrierDismissable = false;
+        break;
+      case "panInfo":
+        dialogWidget = MoreInfoDialog(
+          text: Assets.infoWhyPan,
+          title: 'Where is my PAN Number used?',
+        );
+        break;
     }
     if (dialogWidget != null) {
       AppState.screenStack.add(ScreenItem.dialog);
@@ -376,9 +386,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           builder: (ctx) {
             return WillPopScope(
                 onWillPop: () {
-                  //if (AppState.screenStack.last == ScreenItem.dialog) {
-                  AppState.screenStack.removeLast();
-                  //}
+                  backButtonDispatcher.didPopRoute();
                   print("Popped the dialog");
                   return Future.value(true);
                 },

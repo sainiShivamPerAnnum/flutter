@@ -73,8 +73,7 @@ class HamburgerMenu extends StatelessWidget {
                   )),
               child: IconButton(
                 onPressed: () {
-                  AppState.screenStack.removeLast();
-                  Navigator.pop(context);
+                  backButtonDispatcher.didPopRoute();
                 },
                 icon: Icon(
                   Icons.cancel_rounded,
@@ -141,6 +140,201 @@ class HamburgerMenu extends StatelessWidget {
           //     context, MaterialPageRoute(builder: (ctx) => ChatSupport()));
           appstate.currentAction =
               PageAction(state: PageState.addPage, page: ChatSupportPageConfig);
+
+          break;
+        }
+      // case 'kyc':
+      //   {
+      //     HapticFeedback.vibrate();
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => KycOnboardController()),
+      //     );
+      //     break;
+      //   }
+      case 'signOut':
+        {
+          AppState.screenStack.add(ScreenItem.dialog);
+          showDialog(
+            context: context,
+            builder: (BuildContext dialogContext) => WillPopScope(
+              onWillPop: () {
+                backButtonDispatcher.didPopRoute();
+                return Future.value(true);
+              },
+              child: ConfirmActionDialog(
+                title: 'Confirm',
+                description: 'Are you sure you want to sign out?',
+                buttonText: 'Yes',
+                confirmAction: () {
+                  HapticFeedback.vibrate();
+                  baseProvider.signOut().then((flag) {
+                    if (flag) {
+                      //log.debug('Sign out process complete');
+                      backButtonDispatcher.didPopRoute();
+                      backButtonDispatcher.didPopRoute();
+                      appstate.currentAction = PageAction(
+                          state: PageState.replaceAll, page: SplashPageConfig);
+                      baseProvider.showPositiveAlert(
+                          'Signed out', 'Hope to see you soon', context);
+                    } else {
+                      backButtonDispatcher.didPopRoute();
+                      baseProvider.showNegativeAlert('Sign out failed',
+                          'Couldn\'t signout. Please try again', context);
+                      //log.error('Sign out process failed');
+                    }
+                  });
+                },
+                cancelAction: () {
+                  HapticFeedback.vibrate();
+                  backButtonDispatcher.didPopRoute();
+                },
+              ),
+            ),
+          );
+          break;
+        }
+      case 'fdbk':
+        {
+          AppState.screenStack.add(ScreenItem.dialog);
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => WillPopScope(
+              onWillPop: () {
+                backButtonDispatcher.didPopRoute();
+                return Future.value(true);
+              },
+              child: FeedbackDialog(
+                title: "Tell us what you think",
+                description: "We'd love to hear from you",
+                buttonText: "Submit",
+                dialogAction: (String fdbk) {
+                  if (fdbk != null && fdbk.isNotEmpty) {
+                    //feedback submission allowed even if user not signed in
+                    reqProvider
+                        .submitFeedback(
+                            (baseProvider.firebaseUser == null ||
+                                    baseProvider.firebaseUser.uid == null)
+                                ? 'UNKNOWN'
+                                : baseProvider.firebaseUser.uid,
+                            fdbk)
+                        .then((flag) {
+                      Navigator.of(context).pop();
+                      if (flag) {
+                        baseProvider.showPositiveAlert('Thank You',
+                            'We appreciate your feedback!', context);
+                      }
+                    });
+                  }
+                },
+              ),
+            ),
+          );
+        }
+    }
+  }
+
+  List<OptionDetail> _loadOptionsList() {
+    return [
+      new OptionDetail(
+          key: 'abUs', value: 'About ${Constants.APP_NAME}', isEnabled: true),
+      new OptionDetail(key: 'fdbk', value: 'Feedback', isEnabled: true),
+      new OptionDetail(key: 'faq', value: 'FAQs', isEnabled: true),
+      new OptionDetail(key: 'contUs', value: 'Contact Us', isEnabled: true),
+      new OptionDetail(
+          key: 'signOut',
+          value: 'Sign Out',
+          isEnabled: (baseProvider.isSignedIn())),
+      // new OptionDetail(key: 'tnc', value: 'Terms of Service', isEnabled: true),
+      // new OptionDetail(key: 'refpolicy', value: 'Referral Policy', isEnabled: true),
+    ];
+  }
+}
+
+class OptionDetail {
+  final String key;
+  final String value;
+  final bool isEnabled;
+  OptionDetail({this.key, this.value, this.isEnabled});
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// OLD CONTACT US SYSTEM---------------------------------------------------------------------------------------------------
+
           //TODO Navigator.of(context).pushNamed('/support');
           // showDialog(
           //     context: context,
@@ -218,118 +412,4 @@ class HamburgerMenu extends StatelessWidget {
           //             },
           //           ),
           //         ));
-          break;
-        }
-      // case 'kyc':
-      //   {
-      //     HapticFeedback.vibrate();
-      //     Navigator.push(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => KycOnboardController()),
-      //     );
-      //     break;
-      //   }
-      case 'signOut':
-        {
-          AppState.screenStack.add(ScreenItem.dialog);
-          showDialog(
-            context: context,
-            builder: (BuildContext dialogContext) => WillPopScope(
-              onWillPop: () {
-                AppState.screenStack.removeLast();
-                return Future.value(true);
-              },
-              child: ConfirmActionDialog(
-                title: 'Confirm',
-                description: 'Are you sure you want to sign out?',
-                buttonText: 'Yes',
-                confirmAction: () {
-                  HapticFeedback.vibrate();
-                  baseProvider.signOut().then((flag) {
-                    if (flag) {
-                      //log.debug('Sign out process complete');
-                      AppState.screenStack.removeLast();
-                      AppState.screenStack.removeLast();
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-
-                      appstate.currentAction = PageAction(
-                          state: PageState.replaceAll, page: SplashPageConfig);
-                      baseProvider.showPositiveAlert(
-                          'Signed out', 'Hope to see you soon', context);
-                    } else {
-                      AppState.screenStack.removeLast();
-                      Navigator.of(context).pop();
-                      baseProvider.showNegativeAlert('Sign out failed',
-                          'Couldn\'t signout. Please try again', context);
-                      //log.error('Sign out process failed');
-                    }
-                  });
-                },
-                cancelAction: () {
-                  HapticFeedback.vibrate();
-                  AppState.screenStack.removeLast();
-                  Navigator.of(context).pop();
-                },
-              ),
-            ),
-          );
-          break;
-        }
-      case 'fdbk':
-        {
-          AppState.screenStack.add(ScreenItem.dialog);
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => FeedbackDialog(
-              title: "Tell us what you think",
-              description: "We'd love to hear from you",
-              buttonText: "Submit",
-              dialogAction: (String fdbk) {
-                if (fdbk != null && fdbk.isNotEmpty) {
-                  //feedback submission allowed even if user not signed in
-                  reqProvider
-                      .submitFeedback(
-                          (baseProvider.firebaseUser == null ||
-                                  baseProvider.firebaseUser.uid == null)
-                              ? 'UNKNOWN'
-                              : baseProvider.firebaseUser.uid,
-                          fdbk)
-                      .then((flag) {
-                    Navigator.of(context).pop();
-                    if (flag) {
-                      baseProvider.showPositiveAlert(
-                          'Thank You', 'We appreciate your feedback!', context);
-                    }
-                  });
-                }
-              },
-            ),
-          );
-        }
-    }
-  }
-
-  List<OptionDetail> _loadOptionsList() {
-    return [
-      new OptionDetail(
-          key: 'abUs', value: 'About ${Constants.APP_NAME}', isEnabled: true),
-      new OptionDetail(key: 'fdbk', value: 'Feedback', isEnabled: true),
-      new OptionDetail(key: 'faq', value: 'FAQs', isEnabled: true),
-      new OptionDetail(key: 'contUs', value: 'Contact Us', isEnabled: true),
-      new OptionDetail(
-          key: 'signOut',
-          value: 'Sign Out',
-          isEnabled: (baseProvider.isSignedIn())),
-      // new OptionDetail(key: 'tnc', value: 'Terms of Service', isEnabled: true),
-      // new OptionDetail(key: 'refpolicy', value: 'Referral Policy', isEnabled: true),
-    ];
-  }
-}
-
-class OptionDetail {
-  final String key;
-  final String value;
-  final bool isEnabled;
-  OptionDetail({this.key, this.value, this.isEnabled});
-}
+//--------------------------------------------------------------------------------------------------------------------------------

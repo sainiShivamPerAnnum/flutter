@@ -167,6 +167,7 @@ class _RootState extends State<Root> {
     //     new GlobalKey<ScaffoldState>();
     return Scaffold(
       backgroundColor: UiConstants.bottomNavBarColor,
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Container(

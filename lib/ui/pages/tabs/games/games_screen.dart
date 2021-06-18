@@ -224,8 +224,8 @@ class _GamePageState extends State<GamePage> {
                                       width: 10,
                                     ),
                                     GameOfferCardButton(
-                                      onPressed: () =>
-                                          delegate.parseRoute(Uri.parse("3")),
+                                      onPressed: () => delegate
+                                          .parseRoute(Uri.parse("profile")),
                                       title: "Share",
                                     ),
                                   ],
@@ -244,41 +244,89 @@ class _GamePageState extends State<GamePage> {
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) =>
-                                              FeedbackDialog(
-                                            title: "Tell us what you think",
-                                            description:
-                                                "We'd love to hear from you",
-                                            buttonText: "Submit",
-                                            dialogAction: (String fdbk) {
-                                              if (fdbk != null &&
-                                                  fdbk.isNotEmpty) {
-                                                //feedback submission allowed even if user not signed in
-                                                dbProvider
-                                                    .submitFeedback(
-                                                        (baseProvider.firebaseUser ==
-                                                                    null ||
-                                                                baseProvider
-                                                                        .firebaseUser
-                                                                        .uid ==
-                                                                    null)
-                                                            ? 'UNKNOWN'
-                                                            : baseProvider
-                                                                .firebaseUser
-                                                                .uid,
-                                                        fdbk)
-                                                    .then((flag) {
-                                                  Navigator.of(context).pop();
-                                                  if (flag) {
-                                                    baseProvider.showPositiveAlert(
-                                                        'Thank You',
-                                                        'We appreciate your feedback!',
-                                                        context);
-                                                  }
-                                                });
-                                              }
+                                              WillPopScope(
+                                            onWillPop: () {
+                                              backButtonDispatcher
+                                                  .didPopRoute();
+                                              return Future.value(true);
                                             },
+                                            child: FeedbackDialog(
+                                              title: "Tell us what you think",
+                                              description:
+                                                  "We'd love to hear from you",
+                                              buttonText: "Submit",
+                                              dialogAction: (String fdbk) {
+                                                if (fdbk != null &&
+                                                    fdbk.isNotEmpty) {
+                                                  //feedback submission allowed even if user not signed in
+                                                  dbProvider
+                                                      .submitFeedback(
+                                                          (baseProvider.firebaseUser ==
+                                                                      null ||
+                                                                  baseProvider
+                                                                          .firebaseUser
+                                                                          .uid ==
+                                                                      null)
+                                                              ? 'UNKNOWN'
+                                                              : baseProvider
+                                                                  .firebaseUser
+                                                                  .uid,
+                                                          fdbk)
+                                                      .then((flag) {
+                                                    Navigator.of(context).pop();
+                                                    if (flag) {
+                                                      baseProvider
+                                                          .showPositiveAlert(
+                                                              'Thank You',
+                                                              'We appreciate your feedback!',
+                                                              context);
+                                                    }
+                                                  });
+                                                }
+                                              },
+                                            ),
                                           ),
                                         );
+                                        // AppState.screenStack
+                                        //     .add(ScreenItem.dialog);
+                                        // showDialog(
+                                        //   context: context,
+                                        //   builder: (BuildContext context) =>
+                                        //       FeedbackDialog(
+                                        //     title: "Tell us what you think",
+                                        //     description:
+                                        //         "We'd love to hear from you",
+                                        //     buttonText: "Submit",
+                                        //     dialogAction: (String fdbk) {
+                                        //       if (fdbk != null &&
+                                        //           fdbk.isNotEmpty) {
+                                        //         //feedback submission allowed even if user not signed in
+                                        //         dbProvider
+                                        //             .submitFeedback(
+                                        //                 (baseProvider.firebaseUser ==
+                                        //                             null ||
+                                        //                         baseProvider
+                                        //                                 .firebaseUser
+                                        //                                 .uid ==
+                                        //                             null)
+                                        //                     ? 'UNKNOWN'
+                                        //                     : baseProvider
+                                        //                         .firebaseUser
+                                        //                         .uid,
+                                        //                 fdbk)
+                                        //             .then((flag) {
+                                        //           Navigator.of(context).pop();
+                                        //           if (flag) {
+                                        //             baseProvider.showPositiveAlert(
+                                        //                 'Thank You',
+                                        //                 'We appreciate your feedback!',
+                                        //                 context);
+                                        //           }
+                                        //         });
+                                        //       }
+                                        //     },
+                                        //   ),
+                                        // );
                                       },
                                       title: "Feedback",
                                     ),

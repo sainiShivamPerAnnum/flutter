@@ -6,6 +6,7 @@ import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
@@ -244,21 +245,22 @@ class _ProfilePageState extends State<ProfilePage> {
                         isPanFieldHidden = !isPanFieldHidden;
                         setState(() {});
                       } else {
-                        AppState.screenStack.add(ScreenItem.dialog);
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) => WillPopScope(
-                            onWillPop: () {
-                              AppState.screenStack.removeLast();
-                              print("Popped a dialog");
-                              return Future.value(true);
-                            },
-                            child: MoreInfoDialog(
-                              text: Assets.infoWhyPan,
-                              title: 'Where is my PAN Number used?',
-                            ),
-                          ),
-                        );
+                        // AppState.screenStack.add(ScreenItem.dialog);
+                        // showDialog(
+                        //   context: context,
+                        //   builder: (BuildContext context) => WillPopScope(
+                        //     onWillPop: () {
+                        //       AppState.screenStack.removeLast();
+                        //       print("Popped a dialog");
+                        //       return Future.value(true);
+                        //     },
+                        //     child: MoreInfoDialog(
+                        //       text: Assets.infoWhyPan,
+                        //       title: 'Where is my PAN Number used?',
+                        //     ),
+                        //   ),
+                        // );
+                        delegate.parseRoute(Uri.parse("d-panInfo"));
                       }
                     },
                   ),
