@@ -189,13 +189,13 @@ class _TambolaGameScreen extends State<TambolaHome> {
     setState(() {});
   }
 
-  bool _startTutorial() {
+  bool _startTutorial(BuildContext c) {
     if (baseProvider.weeklyDrawFetched &&
         baseProvider.weeklyTicksFetched &&
         _activeTambolaCardCount > 0) {
       //Start showcase view after current widget frames are drawn.
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ShowCaseWidget.of(context).startShowCase(
+        ShowCaseWidget.of(c).startShowCase(
             [_showcaseOne, _showcaseTwo, _showcaseThree, _showcaseFour]);
       });
       _showTutorial = false;
@@ -230,7 +230,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
   );
 
   @override
-  Widget build(BuildContext c) {
+  Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     fcmProvider = Provider.of<FcmHandler>(context, listen: false);
@@ -238,88 +238,90 @@ class _TambolaGameScreen extends State<TambolaHome> {
     appState = Provider.of<AppState>(context, listen: false);
     _init();
     _checkSundayResultsProcessing();
-    if (_showTutorial) _startTutorial();
+    if (_showTutorial) _startTutorial(context);
     return Scaffold(
         //debugShowCheckedModeBanner: false,
         backgroundColor: Color(0xfff1f1f1),
-        body: Stack(
-          children: [
-            Container(
-              height: SizeConfig.screenHeight * 0.2,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  stops: [0.1, 0.6],
-                  colors: [
-                    UiConstants.primaryColor.withGreen(190),
-                    UiConstants.primaryColor,
-                  ],
-                ),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.elliptical(
-                      MediaQuery.of(context).size.width * 0.50, 18),
-                  bottomRight: Radius.elliptical(
-                      MediaQuery.of(context).size.width * 0.50, 18),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Spacer(),
-                  _buildTicketCount(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                ],
-              ),
-            ),
-            SafeArea(
-                child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    child: _buildCardCanvas(context))),
-            Positioned(
-              top: 5,
-              child: SafeArea(
-                child: Container(
-                  width: SizeConfig.screenWidth,
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.blockSizeHorizontal * 3),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        color: Colors.white,
-                        icon: Icon(Icons.arrow_back),
-                        onPressed: () {
-                          HapticFeedback.vibrate();
-                          backButtonDispatcher.didPopRoute();
-                        },
-                      ),
-                      Text('Tambola',
-                          style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: SizeConfig.largeTextSize)),
-                      IconButton(
-                        color: Colors.white,
-                        icon: Icon(Icons.help_outline),
-                        onPressed: () {
-                          HapticFeedback.vibrate();
-                          _showTutorial = true;
-                          if (!_startTutorial()) {
-                            //baseProvider.showNegativeAlert('Try soon', message, context)
-                          }
-                        },
-                      ),
+        body: ShowCaseWidget(
+          builder: Builder(builder: (context) => Stack(
+            children: [
+              Container(
+                height: SizeConfig.screenHeight * 0.2,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    stops: [0.1, 0.6],
+                    colors: [
+                      UiConstants.primaryColor.withGreen(190),
+                      UiConstants.primaryColor,
                     ],
                   ),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.elliptical(
+                        MediaQuery.of(context).size.width * 0.50, 18),
+                    bottomRight: Radius.elliptical(
+                        MediaQuery.of(context).size.width * 0.50, 18),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Spacer(),
+                    _buildTicketCount(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                  ],
                 ),
               ),
-            ),
-            // SafeArea(
-            //     child: Align(
-            //         alignment: Alignment.bottomCenter, child: _buildPrizeButton()))
-          ],
+              SafeArea(
+                  child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: _buildCardCanvas(context))),
+              Positioned(
+                top: 5,
+                child: SafeArea(
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.blockSizeHorizontal * 3),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          color: Colors.white,
+                          icon: Icon(Icons.arrow_back),
+                          onPressed: () {
+                            HapticFeedback.vibrate();
+                            backButtonDispatcher.didPopRoute();
+                          },
+                        ),
+                        Text('Tambola',
+                            style: GoogleFonts.montserrat(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: SizeConfig.largeTextSize)),
+                        IconButton(
+                          color: Colors.white,
+                          icon: Icon(Icons.help_outline),
+                          onPressed: () {
+                            HapticFeedback.vibrate();
+                            _showTutorial = true;
+                            if (!_startTutorial(context)) {
+                              //baseProvider.showNegativeAlert('Try soon', message, context)
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              // SafeArea(
+              //     child: Align(
+              //         alignment: Alignment.bottomCenter, child: _buildPrizeButton()))
+            ],
+          )),
         )
         //),
         );

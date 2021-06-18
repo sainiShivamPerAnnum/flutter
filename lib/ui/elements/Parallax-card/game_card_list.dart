@@ -47,16 +47,14 @@ class GameCardListState extends State<GameCardList>
   Widget build(BuildContext context) {
     appState = Provider.of<AppState>(context, listen: false);
     gameRoutes = [
-      () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (ctx) => ShowCaseWidget(
-                builder: Builder(builder: (context) => TambolaHome()),
-              ),
-            ),
-          ),
-      // () => appState.currentAction =
-      //     PageAction(state: PageState.addPage, page: TambolaHomePageConfig),
+      // () => Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (ctx) => TambolaHome(),
+      //       ),
+      //     ),
+      () => appState.currentAction =
+          PageAction(state: PageState.addPage, page: TambolaHomePageConfig),
       () {
         HapticFeedback.vibrate();
         delegate.parseRoute(Uri.parse("d-gamePoll"));
