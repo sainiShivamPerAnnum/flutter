@@ -1,7 +1,9 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/contact_dialog.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
@@ -13,6 +15,7 @@ class GuideDialog extends StatelessWidget {
   final Log log = new Log('GuideDialog');
   BaseUtil baseProvider;
   DBModel dbProvider;
+  AppState appState;
 
   GuideDialog();
 
@@ -20,6 +23,7 @@ class GuideDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    appState = Provider.of<AppState>(context, listen: false);
     return Dialog(
       insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
       shape: RoundedRectangleBorder(
@@ -179,43 +183,47 @@ class GuideDialog extends StatelessWidget {
                                 .copyWith(color: Colors.white),
                           ),
                           onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext dialogContext) =>
-                                    ContactUsDialog(
-                                      isResident: (baseProvider.isSignedIn() &&
-                                          baseProvider.isActiveUser()),
-                                      isUnavailable: BaseUtil.isDeviceOffline,
-                                      onClick: () {
-                                        if (BaseUtil.isDeviceOffline) {
-                                          baseProvider
-                                              .showNoInternetAlert(context);
-                                          return;
-                                        }
-                                        if (baseProvider.isSignedIn() &&
-                                            baseProvider.isActiveUser()) {
-                                          dbProvider
-                                              .addCallbackRequest(
-                                                  baseProvider.firebaseUser.uid,
-                                                  baseProvider.myUser.name,
-                                                  baseProvider.myUser.mobile)
-                                              .then((flag) {
-                                            if (flag) {
-                                              Navigator.of(context).pop();
-                                              baseProvider.showPositiveAlert(
-                                                  'Callback placed!',
-                                                  'We\'ll contact you soon on your registered mobile',
-                                                  context);
-                                            }
-                                          });
-                                        } else {
-                                          baseProvider.showNegativeAlert(
-                                              'Unavailable',
-                                              'Callbacks are reserved for active users',
-                                              context);
-                                        }
-                                      },
-                                    ));
+                            backButtonDispatcher.didPopRoute();
+                            appState.currentAction = PageAction(
+                                state: PageState.addPage,
+                                page: ChatSupportPageConfig);
+                            // showDialog(
+                            //     context: context,
+                            //     builder: (BuildContext dialogContext) =>
+                            //         ContactUsDialog(
+                            //           isResident: (baseProvider.isSignedIn() &&
+                            //               baseProvider.isActiveUser()),
+                            //           isUnavailable: BaseUtil.isDeviceOffline,
+                            //           onClick: () {
+                            //             if (BaseUtil.isDeviceOffline) {
+                            //               baseProvider
+                            //                   .showNoInternetAlert(context);
+                            //               return;
+                            //             }
+                            //             if (baseProvider.isSignedIn() &&
+                            //                 baseProvider.isActiveUser()) {
+                            //               dbProvider
+                            //                   .addCallbackRequest(
+                            //                       baseProvider.firebaseUser.uid,
+                            //                       baseProvider.myUser.name,
+                            //                       baseProvider.myUser.mobile)
+                            //                   .then((flag) {
+                            //                 if (flag) {
+                            //                   Navigator.of(context).pop();
+                            //                   baseProvider.showPositiveAlert(
+                            //                       'Callback placed!',
+                            //                       'We\'ll contact you soon on your registered mobile',
+                            //                       context);
+                            //                 }
+                            //               });
+                            //             } else {
+                            //               baseProvider.showNegativeAlert(
+                            //                   'Unavailable',
+                            //                   'Callbacks are reserved for active users',
+                            //                   context);
+                            //             }
+                            //           },
+                            //         ));
                           },
                           highlightColor: Colors.white30,
                           splashColor: Colors.white30,
