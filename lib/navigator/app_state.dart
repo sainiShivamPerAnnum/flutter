@@ -10,6 +10,7 @@ const String LoggedInKey = 'LoggedIn';
 enum PageState { none, addPage, addAll, addWidget, pop, replace, replaceAll }
 enum ScreenItem { page, dialog }
 enum Homeviews { dashboard, games, finance, profile }
+var scr = new GlobalKey();
 
 class PageAction {
   PageState state;
