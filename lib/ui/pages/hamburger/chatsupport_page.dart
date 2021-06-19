@@ -1,6 +1,8 @@
 import 'package:felloapp/main.dart';
 import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:freshchat_sdk/freshchat_user.dart';
 import 'package:lottie/lottie.dart';
@@ -11,6 +13,7 @@ import '../../../base_util.dart';
 
 class ChatSupport extends StatefulWidget {
   ChatSupport({Key key}) : super(key: key);
+
   @override
   _ChatSupportState createState() => _ChatSupportState();
 }
@@ -45,12 +48,7 @@ class _ChatSupportState extends State<ChatSupport> {
     super.initState();
     _setUser().then((value) {
       setState(() {
-        if(value == true) {
-        isFreshchatLoaded = "done";
-        }
-        else {
-          isFreshchatLoaded = "error";
-        }
+        isFreshchatLoaded = (value) ? 'done' : 'error';
       });
     });
   }
@@ -62,25 +60,27 @@ class _ChatSupportState extends State<ChatSupport> {
       isInit = true;
       Freshchat.identifyUser(externalId: baseProvider.myUser.uid);
     }
-    if(isFreshchatLoaded=="done") {
+    if (isFreshchatLoaded == "done") {
       Freshchat.showConversations();
       Navigator.pop(context);
-    }
-    else if(isFreshchatLoaded=="error") {
+    } else if (isFreshchatLoaded == "error") {
       Navigator.of(context).pop();
       baseProvider.showNegativeAlert(
-      'Error', 'Something went wrong, please try again!', context,
-                    seconds: 3);
+          'Error', 'Something went wrong, please try again!', context,
+          seconds: 3);
     }
     return Container(
-      color: Colors.white,
-      child: Center(
-              child: LottieBuilder.asset(
-            'images/lottie/phone_loading.json',
-            height: SizeConfig.screenHeight * 0.2,
-            repeat: true,
-          )
-      ));
+        color: Colors.white24,
+        child: Center(
+            child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(40)),
+                child: Padding(
+                  padding: EdgeInsets.all(5),
+                  child: SpinKitFadingCircle(
+                    size: SizeConfig.screenWidth*0.2,
+                    color: UiConstants.primaryColor,
+                  ),
+                ))));
   }
 
   Future<bool> _setUser() async {
