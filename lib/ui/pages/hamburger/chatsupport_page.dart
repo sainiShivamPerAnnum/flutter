@@ -72,9 +72,9 @@ class _ChatSupportState extends State<ChatSupport> {
       'Error', 'Something went wrong, please try again!', context,
                     seconds: 3);
     }
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
+    return Container(
+      color: Colors.white,
+      child: Center(
               child: LottieBuilder.asset(
             'images/lottie/phone_loading.json',
             height: SizeConfig.screenHeight * 0.2,
