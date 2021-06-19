@@ -18,6 +18,9 @@ class UserFundWallet {
   double _lockedPrizeBalance;
   double _prizeLifetimeWin;
 
+  //on hold
+  double _processingRedemptionBalance;
+
   static final String fldAugmontGoldPrinciple = 'wAugPrinciple';
   static final String fldAugmontGoldBalance = 'wAugBalance';
   static final String fldAugmontGoldQuantity = 'wAugQuantity';
@@ -26,6 +29,7 @@ class UserFundWallet {
   static final String fldPrizeBalance = 'wPriBalance';
   static final String fldPrizeLockedBalance = 'wPriLockBalance';
   static final String fldPrizeLifetimeWin = 'wLifeTimeWin';
+  static final String fldProcessingRedemption = 'wRedemptionProcessing';
 
   UserFundWallet(
       this._augGoldPrinciple,
@@ -35,9 +39,10 @@ class UserFundWallet {
       this._iciciBalance,
       this._prizeBalance,
       this._lockedPrizeBalance,
-      this._prizeLifetimeWin);
+      this._prizeLifetimeWin,
+      this._processingRedemptionBalance);
 
-  UserFundWallet.newWallet() : this(0, 0, 0, 0, 0, 0, 0, 0);
+  UserFundWallet.newWallet() : this(0, 0, 0, 0, 0, 0, 0, 0, 0);
 
   UserFundWallet.fromMap(Map<String, dynamic> data)
       : this(
@@ -49,6 +54,7 @@ class UserFundWallet {
           BaseUtil.toDouble(data[fldPrizeBalance]),
           BaseUtil.toDouble(data[fldPrizeLockedBalance]),
           BaseUtil.toDouble(data[fldPrizeLifetimeWin]),
+          BaseUtil.toDouble(data[fldProcessingRedemption]),
         );
 
   Map<String, dynamic> cloneMap() => {
@@ -60,6 +66,7 @@ class UserFundWallet {
         fldPrizeBalance: _prizeBalance,
         fldPrizeLockedBalance: _lockedPrizeBalance,
         fldPrizeLifetimeWin: _prizeLifetimeWin,
+        fldProcessingRedemption: _processingRedemptionBalance
       };
 
 
@@ -117,5 +124,19 @@ class UserFundWallet {
 
   set lockedPrizeBalance(double value) {
     _lockedPrizeBalance = value;
+  }
+
+  double get processingRedemptionBalance => _processingRedemptionBalance;
+
+  bool isPrizeBalanceUnclaimed() {
+    double _a = _prizeBalance??0.0;
+    double _b = _processingRedemptionBalance??0.0;
+    return (_a - _b > 0);
+  }
+
+  double get unclaimedBalance {
+    double _a = _prizeBalance??0.0;
+    double _b = _processingRedemptionBalance??0.0;
+    return (_a - _b);
   }
 }

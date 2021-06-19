@@ -1,4 +1,3 @@
-
 import 'constants.dart';
 
 class Assets {
@@ -165,6 +164,25 @@ class Assets {
     'Welcome to Fello! We have added 5 game tickets to your account to get you started.',
     'Save your money in diverse and stable funds. We have onboarded ICICI Prudential Liquid Fund as our first partner.',
     'For every ₹100 you save, you receive a game ticket that refreshes every week. Our first listed game is Tambola! '
+  ];
+
+  static final List<Map<String, String>> tambolaFaqList = [
+    {
+      'How do I win at Tambola?':
+          '- Every day you recive 6 random generated picks\n\n-Check what numbers are matching on your tambola tickets\n\n- If any of your card satisfies any of the 3 criteria, congrats you are a winner.'
+    },
+    {
+      'How are the prizes given?':
+          '- Every Sunday, winners are announced and the cash prize is distributed  between the winners of equal win status.\n\n-Eg: if 10 people claim to have a Tambola ticket with Full house then ₹1000 will be distributed among those 10 people i,e. each one will get ₹100.\n\n-easy peasy'
+    },
+    {
+      'How can I redeem prize?':
+          'If you win, then we will:\n\n-Send you a notification for the same and you can claim by clicking on that.\n\n-Show you a prize dialog in the game section for claiming your reward\n\nAlso, you can check the Winnerboard. If your name exists,click on it to claim your reward.'
+    },
+    {
+      'How you can maximize your winnings ?':
+          '-So by now you got the idea, how to win\n\n-Now to maximize your winning, you have to maxmimize your chances of matching tambola tickets\n\n-So get more and more tambola tickets to maximize you chances of winning.\n\n-How to get more tambola tickets? Invest in the funds available.\n\n-For every ₹100 you invest/save, you get new tambola ticket.\n\n!!Start investing now!!\n'
+    },
   ];
 
   static final String transactionProcess =
