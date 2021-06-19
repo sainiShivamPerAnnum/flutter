@@ -12,7 +12,7 @@ import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/ui/pages/root.dart';
-import 'file:///C:/Users/shour/StudioProjects/felloapp/lib/ui/pages/hamburger/chatsupport_page.dart';
+import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
