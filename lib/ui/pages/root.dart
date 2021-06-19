@@ -140,8 +140,10 @@ class _RootState extends State<Root> {
       });
       _initAdhocNotifications();
       baseProvider.isUnreadFreshchatSupportMessages().then((flag) {
-        if(flag) {
-          baseProvider.showPositiveAlert('You have unread support messages', 'Go to the Contact Us section to view', context, seconds: 4);
+        if (flag) {
+          baseProvider.showPositiveAlert('You have unread support messages',
+              'Go to the Contact Us section to view', context,
+              seconds: 4);
         }
       });
     }

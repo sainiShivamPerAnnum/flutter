@@ -1,4 +1,3 @@
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/fcm_listener.dart';
@@ -75,7 +74,7 @@ class _MyAppState extends State<MyApp> {
             primarySwatch: Colors.green,
             visualDensity: VisualDensity.adaptivePlatformDensity,
             textTheme: GoogleFonts.montserratTextTheme()),
-        debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: true,
         backButtonDispatcher: backButtonDispatcher,
         routerDelegate: delegate,
         routeInformationParser: parser,
