@@ -50,7 +50,7 @@ class FcmListener extends ChangeNotifier {
 
   static _handleFreshchatNotif(Map<String, dynamic> freshChatData) {
     print('background freshchat notif $freshChatData');
-    Freshchat.setNotificationConfig(largeIcon: "ic_fello_notif", smallIcon: "ic_fello_notif");
+    Freshchat.setNotificationConfig(largeIcon: "ic_chat_support", smallIcon: "ic_fello_notif");
     Freshchat.handlePushNotification(freshChatData);
   }
 

@@ -340,10 +340,10 @@ class _TicketState extends State<FCard> {
 
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
-    // bool flag = await httpProvider.registerPrizeClaim(
-    //     baseProvider.myUser.uid, widget.unclaimedPrize, choice);
     bool flag = await httpProvider.registerPrizeClaim(
-       'dummy', widget.unclaimedPrize, choice);
+        baseProvider.myUser.uid, widget.unclaimedPrize, choice);
+    // bool flag = await httpProvider.registerPrizeClaim(
+    //    'dummy', widget.unclaimedPrize, choice);
     print('Claim choice saved: $flag');
     return flag;
   }
