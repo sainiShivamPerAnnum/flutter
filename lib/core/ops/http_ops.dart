@@ -118,7 +118,7 @@ class HttpModel extends ChangeNotifier {
   }
 
   Future<bool> registerPrizeClaim(
-      String userId, UserFundWallet fundWallet, double amount, PrizeClaimChoice claimChoice) async{
+      String userId, double amount, PrizeClaimChoice claimChoice) async{
     if (userId == null || amount == null || claimChoice == null) return null;
     String _uri =
         '$_userTxnOpsUri/api/registerPrizeClaim?userId=$userId&amount=$amount&redeemType=${claimChoice.value()}';
@@ -129,15 +129,15 @@ class HttpModel extends ChangeNotifier {
     log.debug('Fetched user IDToken: ' + idToken);
 
     try {
-      http.Response response = await http.get(_uri,
+      http.Response response = await http.post(_uri,
           headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
       log.debug(response.body);
       Map<String, dynamic> parsed = jsonDecode(response.body);
+      log.debug(parsed.toString());
       if(response.statusCode == 200 && parsed['flag'] != null && parsed['flag'] == true) {
         log.debug('Action successful');
         return true;
       }
-      //log.debug(parsed);
       return false;
     } catch (e) {
       log.error('Http post failed: ' + e.toString());

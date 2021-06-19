@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
+import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/ui/dialogs/Fold-Card/fold-card.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -19,13 +20,15 @@ import 'package:share/share.dart';
 class FCard extends StatefulWidget {
   static const double nominalOpenHeight = 400;
   static const double nominalClosedHeight = 160;
-  // final Function onClick;
+  final bool isClaimed;
+  final double unclaimedPrize;
 
   const FCard({
     Key key,
-    // @required this.boardingPass,
-    // @required this.onClick
+    this.isClaimed,
+    this.unclaimedPrize,
   }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _TicketState();
 }
@@ -38,6 +41,7 @@ class _TicketState extends State<FCard> {
   bool _isOpen;
   PrizeClaimChoice claimtype;
   BaseUtil baseProvider;
+  HttpModel httpProvider;
 
   LinearGradient cardGradient = const LinearGradient(
       //colors: [Color(0xff7F00FF), Color(0xffE100FF)],
@@ -59,6 +63,7 @@ class _TicketState extends State<FCard> {
     _isOpen = false;
     claimtype = PrizeClaimChoice.NA;
     frontCard = CloseCard(
+      unclaimedPrize: widget.unclaimedPrize,
       claimtype: claimtype,
     );
     middleCard = buildMiddleCard();
@@ -67,6 +72,8 @@ class _TicketState extends State<FCard> {
 
   @override
   Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context);
+    httpProvider = Provider.of<HttpModel>(context);
     return FoldingCard(
         entries: _getEntries(), isOpen: _isOpen, onClick: _handleOnTap);
   }
@@ -117,21 +124,23 @@ class _TicketState extends State<FCard> {
                     height: 100,
                   ),
                 ),
-                Text(
-                  "Congratulations",
-                  style: GoogleFonts.megrim(
-                      color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          offset: Offset(2, 2),
+                FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text(
+                      "Congratulations",
+                      style: GoogleFonts.megrim(
                           color: Colors.white,
-                          blurRadius: 5,
-                        )
-                      ],
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 2,
-                      fontSize: SizeConfig.cardTitleTextSize),
-                ),
+                          shadows: [
+                            Shadow(
+                              offset: Offset(2, 2),
+                              color: Colors.white,
+                              blurRadius: 5,
+                            )
+                          ],
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 2,
+                          fontSize: SizeConfig.cardTitleTextSize),
+                    )),
               ],
             ),
           ),
@@ -190,7 +199,7 @@ class _TicketState extends State<FCard> {
         children: [
           Spacer(),
           Text(
-            "You Won \$50",
+            "You Won र${widget.unclaimedPrize}",
             style: GoogleFonts.montserrat(
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -258,10 +267,19 @@ class _TicketState extends State<FCard> {
           Expanded(
             child: ElevatedButton(
               onPressed: () {
-                setState(() {
-                  claimtype = PrizeClaimChoice.AMZ_VOUCHER;
-                  frontCard = CloseCard(claimtype: claimtype);
-                  _isOpen = false;
+                _registerClaimChoice(PrizeClaimChoice.AMZ_VOUCHER).then((flag) {
+                  if (flag) {
+                    setState(() {
+                      claimtype = PrizeClaimChoice.AMZ_VOUCHER;
+                      frontCard = CloseCard(
+                        claimtype: claimtype,
+                        unclaimedPrize: widget.unclaimedPrize,
+                      );
+                      _isOpen = false;
+                    });
+                  } else {
+                    //TODO
+                  }
                 });
               },
               style: ButtonStyle(
@@ -284,11 +302,20 @@ class _TicketState extends State<FCard> {
           Expanded(
             child: ElevatedButton(
               onPressed: () {
-                setState(() {
-                  claimtype = PrizeClaimChoice.GOLD_CREDIT;
-                  frontCard = CloseCard(claimtype: claimtype);
+                _registerClaimChoice(PrizeClaimChoice.GOLD_CREDIT).then((flag) {
+                  if (flag) {
+                    setState(() {
+                      claimtype = PrizeClaimChoice.GOLD_CREDIT;
+                      frontCard = CloseCard(
+                        claimtype: claimtype,
+                        unclaimedPrize: widget.unclaimedPrize,
+                      );
 
-                  _isOpen = false;
+                      _isOpen = false;
+                    });
+                  } else {
+                    //TODO
+                  }
                 });
               },
               style: ButtonStyle(
@@ -310,12 +337,23 @@ class _TicketState extends State<FCard> {
       ),
     );
   }
+
+  Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
+    if (choice == PrizeClaimChoice.NA) return false;
+    // bool flag = await httpProvider.registerPrizeClaim(
+    //     baseProvider.myUser.uid, widget.unclaimedPrize, choice);
+    bool flag = await httpProvider.registerPrizeClaim(
+       'dummy', widget.unclaimedPrize, choice);
+    print('Claim choice saved: $flag');
+    return flag;
+  }
 }
 
 class CloseCard extends StatefulWidget {
   final PrizeClaimChoice claimtype;
+  final double unclaimedPrize;
 
-  CloseCard({this.claimtype});
+  CloseCard({this.claimtype, this.unclaimedPrize});
 
   @override
   _CloseCardState createState() => _CloseCardState();
@@ -325,8 +363,10 @@ class _CloseCardState extends State<CloseCard> {
   BaseUtil baseProvider;
   int _counter = 0;
   Uint8List _imageFile;
+
   //Create an instance of ScreenshotController
   ScreenshotController screenshotController = ScreenshotController();
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
@@ -378,8 +418,8 @@ class _CloseCardState extends State<CloseCard> {
                       ),
                       Text(
                         widget.claimtype == PrizeClaimChoice.AMZ_VOUCHER
-                            ? "You claimed for amazon gift card"
-                            : "You claimed for augmont gold",
+                            ? "Your amazon gift card shall be sent to your registered email and mobile shortly!"
+                            : "Your digital gold shall be credited to your Fello wallet shortly!",
                         style: GoogleFonts.montserrat(
                           color: Colors.white,
                         ),
@@ -519,38 +559,43 @@ class _CloseCardState extends State<CloseCard> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Congratulations 🎉",
-                              style: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xff194350),
-                                fontSize: 30,
-                              ),
-                            ),
+                            FittedBox(
+                                fit: BoxFit.contain,
+                                child: Text(
+                                  "Congratulations 🎉",
+                                  style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xff194350),
+                                    fontSize: SizeConfig.cardTitleTextSize,
+                                  ),
+                                )),
                             SizedBox(height: 10),
                             Text(
-                              "You were one of the tambola winners last week!",
+                              " You have र${widget.unclaimedPrize} worth of unclaimed rewards from your past referrals and tambola winnings!",
+                              textAlign: TextAlign.center,
                               style: GoogleFonts.montserrat(
                                 color: Colors.black,
                               ),
                             ),
                             SizedBox(
-                              height: 10,
+                              height: 20,
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: UiConstants.primaryColor,
-                                      width: 2),
-                                  borderRadius: BorderRadius.circular(10)),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              child: FittedBox(
-                                child: Text(
-                                  "Claim you prize",
-                                  style: GoogleFonts.montserrat(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
+                            Center(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: UiConstants.primaryColor,
+                                        width: 2),
+                                    borderRadius: BorderRadius.circular(10)),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                child: FittedBox(
+                                  child: Text(
+                                    "Claim",
+                                    style: GoogleFonts.montserrat(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
                               ),
