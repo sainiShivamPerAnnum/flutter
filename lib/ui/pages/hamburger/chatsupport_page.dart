@@ -1,6 +1,8 @@
 import 'package:felloapp/main.dart';
 import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:freshchat_sdk/freshchat_user.dart';
 import 'package:lottie/lottie.dart';
@@ -11,6 +13,7 @@ import '../../../base_util.dart';
 
 class ChatSupport extends StatefulWidget {
   ChatSupport({Key key}) : super(key: key);
+
   @override
   _ChatSupportState createState() => _ChatSupportState();
 }
@@ -21,23 +24,33 @@ class _ChatSupportState extends State<ChatSupport> {
   var _restoreStream;
   var _restoreStreamSubscription;
   bool isInit = false;
+  String isFreshchatLoaded = "waiting";
 
+  // @override
+  // void didChangeDependencies() {
+  //   _setupFreshchat().then((value) {
+  //     if (value) {
+  //       backButtonDispatcher.didPopRoute();
+  //       Freshchat.showConversations();
+  //     } else {
+  //       backButtonDispatcher.didPopRoute();
+  //       baseProvider.showNegativeAlert(
+  //         'Error',
+  //         'Something went wrong, please try again!',
+  //         context,
+  //       );
+  //     }
+  //   });
+  //   super.didChangeDependencies();
+  // }
   @override
-  void didChangeDependencies() {
-    _setupFreshchat().then((value) {
-      if (value) {
-        backButtonDispatcher.didPopRoute();
-        Freshchat.showConversations();
-      } else {
-        backButtonDispatcher.didPopRoute();
-        baseProvider.showNegativeAlert(
-          'Error',
-          'Something went wrong, please try again!',
-          context,
-        );
-      }
+  void initState() {
+    super.initState();
+    _setUser().then((value) {
+      setState(() {
+        isFreshchatLoaded = (value) ? 'done' : 'error';
+      });
     });
-    super.didChangeDependencies();
   }
 
   @override
@@ -47,63 +60,27 @@ class _ChatSupportState extends State<ChatSupport> {
       isInit = true;
       Freshchat.identifyUser(externalId: baseProvider.myUser.uid);
     }
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-          child: LottieBuilder.asset(
-        'images/lottie/phone_loading.json',
-        height: SizeConfig.screenHeight * 0.2,
-        repeat: true,
-      )
-          //     FutureBuilder(
-          //   future: _setupFreshchat(),
-          //   builder: (context, snapshot) {
-          //     print(AppState.screenStack);
-          //     if (snapshot.connectionState == ConnectionState.done) {
-          //       if (snapshot.data == true) {
-          //         Freshchat.showConversations();
-          //         Navigator.pop(context);
-          //       } else {
-          //         // Future.delayed(Duration(seconds: 1), () {
-          //         Navigator.pop(context);
-          //         // backButtonDispatcher.didPopRoute();
-          //         // });
-          //         // Future(() {
-          // baseProvider.showNegativeAlert(
-          //     'Error', 'Something went wrong, please try again!', context,
-          //     seconds: 3);
-
-          //         // });
-          //         // return LottieBuilder.asset(
-          //         //   'images/lottie/phone_loading.json',
-          //         //   height: SizeConfig.screenHeight * 0.2,
-          //         //   repeat: true,
-          //         // );
-          //       }
-          //     }
-          // return LottieBuilder.asset(
-          //   'images/lottie/phone_loading.json',
-          //   height: SizeConfig.screenHeight * 0.2,
-          //   repeat: true,
-          // );
-          //   },
-          // )
-          // TextButton(
-          //  onPressed: () async {
-          //    await _setUser().then((value) {
-          //      Freshchat.showConversations();
-          //    });
-          //  },
-          //   child: Text('contact'),
-          // )
-          ),
-    );
-  }
-
-  Future<bool> _setupFreshchat() async {
-    bool _res = await _setUser();
-
-    return _res;
+    if (isFreshchatLoaded == "done") {
+      Freshchat.showConversations();
+      Navigator.pop(context);
+    } else if (isFreshchatLoaded == "error") {
+      Navigator.of(context).pop();
+      baseProvider.showNegativeAlert(
+          'Error', 'Something went wrong, please try again!', context,
+          seconds: 3);
+    }
+    return Container(
+        color: Colors.white24,
+        child: Center(
+            child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(40)),
+                child: Padding(
+                  padding: EdgeInsets.all(5),
+                  child: SpinKitFadingCircle(
+                    size: SizeConfig.screenWidth*0.2,
+                    color: UiConstants.primaryColor,
+                  ),
+                ))));
   }
 
   Future<bool> _setUser() async {

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
@@ -10,6 +11,7 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/pages/hamburger/hamburger_screen.dart';
+import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
@@ -125,7 +127,7 @@ class _RootState extends State<Root> {
     }
   }
 
-  _initialize(BuildContext context) {
+  _initialize() {
     if (!_isInitialized) {
       _isInitialized = true;
       lclDbProvider.isHomeTutorialComplete.then((value) {
@@ -155,7 +157,7 @@ class _RootState extends State<Root> {
     fcmProvider = Provider.of<FcmHandler>(context, listen: false);
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
-    _initialize(context);
+    _initialize();
     var accentColor = UiConstants.primaryColor;
 
     //Create custom navBar, pass in a list of buttons, and listen for tap event

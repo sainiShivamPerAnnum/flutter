@@ -9,6 +9,7 @@ import 'package:felloapp/ui/dialogs/aboutus_dialog.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/contact_dialog.dart';
+import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
