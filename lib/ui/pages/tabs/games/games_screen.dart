@@ -142,10 +142,10 @@ class _GamePageState extends State<GamePage> {
               controller: _controller,
               onPageChanged: (int page) {
                 appState.setCurrentGameTabIndex = page;
-                // if (appState.getCurrentGameTabIndex == 1 &&
-                //     SizeConfig.isGamefirstTime == true) {
-                //   checkConfetti();
-                // }
+                if (appState.getCurrentGameTabIndex == 1 &&
+                    SizeConfig.isGamefirstTime == true) {
+                  checkConfetti();
+                }
               },
               children: [
                 ClipRRect(
