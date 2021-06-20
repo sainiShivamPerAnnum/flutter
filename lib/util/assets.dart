@@ -168,20 +168,20 @@ class Assets {
 
   static final List<Map<String, String>> tambolaFaqList = [
     {
-      'How do I win at Tambola?':
-          '- Every day you recive 6 random generated picks\n\n-Check what numbers are matching on your tambola tickets\n\n- If any of your card satisfies any of the 3 criteria, congrats you are a winner.'
+      'How does one participate in Tambola?':
+          '- Everyday, 6 random numbers are picked.\n\n- The matching numbers on your tickets get automatically crossed, starting from the day they were generated.\n\n- On Sunday, your tickets are processed to see if they matched a category.'
     },
     {
-      'How are the prizes given?':
-          '- Every Sunday, winners are announced and the cash prize is distributed  between the winners of equal win status.\n\n-Eg: if 10 people claim to have a Tambola ticket with Full house then ₹1000 will be distributed among those 10 people i,e. each one will get ₹100.\n\n-easy peasy'
+      'How does one win the game?':
+          '- Every Sunday, your winning tickets get processed, and the winnings for that week are shared with you in the next few days. \n\n- If there are more than 1 winners for a category, the prize amount gets equally distributed amongst all the category winners.'
     },
     {
-      'How can I redeem prize?':
-          'If you win, then we will:\n\n-Send you a notification for the same and you can claim by clicking on that.\n\n-Show you a prize dialog in the game section for claiming your reward\n\nAlso, you can check the Winnerboard. If your name exists,click on it to claim your reward.'
+      'How can I redeem my winnings?':
+          '- If you\'re a tambola winner, your reward gets credited to your Fello wallet in a few days. \n\n- Once credited, you can choose how you would like to redeem it. It could be as digital gold or as Amazon pay balance.'
     },
     {
-      'How you can maximize your winnings ?':
-          '-So by now you got the idea, how to win\n\n-Now to maximize your winning, you have to maxmimize your chances of matching tambola tickets\n\n-So get more and more tambola tickets to maximize you chances of winning.\n\n-How to get more tambola tickets? Invest in the funds available.\n\n-For every ₹100 you invest/save, you get new tambola ticket.\n\n!!Start investing now!!\n'
+      'How can I maximize my winnings ?':
+          'As traditional tambola goes, the more tickets you have, the better your odds of stealing a category! 💪\n'
     },
   ];
 

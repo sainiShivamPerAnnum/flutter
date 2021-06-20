@@ -50,9 +50,8 @@ class _TicketState extends State<FCard> {
   PrizeClaimChoice claimtype;
   BaseUtil baseProvider;
   HttpModel httpProvider;
-  bool _isAugmontPrizeProcessing = false;
-  bool _isAmazonPrizeProcessing = false;
   bool _isPrizeProcessing = false;
+  bool _tChoice;
 
   LinearGradient cardGradient = const LinearGradient(
       //colors: [Color(0xff7F00FF), Color(0xffE100FF)],
@@ -72,6 +71,7 @@ class _TicketState extends State<FCard> {
   void initState() {
     super.initState();
     _isOpen = false;
+    _tChoice = widget.isClaimed;
     claimtype = PrizeClaimChoice.NA;
     frontCard = CloseCard(
       unclaimedPrize: widget.unclaimedPrize,
@@ -105,11 +105,11 @@ class _TicketState extends State<FCard> {
 
   void _handleOnTap() {
     //widget.onClick();
-    // if (claimtype == PrizeClaimChoice.NA)
-    //   setState(() {
-    //     _isOpen = true;
-    //     topCard = buildTopCard();
-    //   });
+    if (!_tChoice)
+      setState(() {
+        _isOpen = true;
+        topCard = buildTopCard();
+      });
   }
 
   Widget buildTopCard() {
@@ -145,8 +145,8 @@ class _TicketState extends State<FCard> {
                         shadows: [
                           Shadow(
                             offset: Offset(2, 2),
-                            color: Colors.white,
-                            blurRadius: 5,
+                            color: Colors.white24,
+                            blurRadius: 2,
                           )
                         ],
                         fontWeight: FontWeight.w700,
@@ -156,7 +156,7 @@ class _TicketState extends State<FCard> {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  "Your Prize balance is",
+                  "Your current prize balance is:",
                   style: GoogleFonts.montserrat(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -177,7 +177,7 @@ class _TicketState extends State<FCard> {
                   children: [
                     Image.asset(
                       "images/fello_logo.png",
-                      width: 40,
+                      width: SizeConfig.screenWidth*0.12,
                     ),
                     Spacer(),
                     IconButton(
@@ -185,8 +185,6 @@ class _TicketState extends State<FCard> {
                         setState(() {
                           _isOpen = false;
                         });
-                        // Future.delayed(Duration(milliseconds: 800))
-                        //     .then((value) => Navigator.pop(context));
                       },
                       icon: Icon(
                         Icons.clear_rounded,
@@ -229,7 +227,7 @@ class _TicketState extends State<FCard> {
               children: [
                 Center(
                   child: Opacity(
-                    opacity: 0.6,
+                    opacity: 0.3,
                     child: Image.asset(
                       "images/prize-confetti-share.png",
                       fit: BoxFit.fitHeight,
@@ -239,13 +237,13 @@ class _TicketState extends State<FCard> {
                 Center(
                   child: Text(
                     "र ${widget.unclaimedPrize}",
-                    style: GoogleFonts.josefinSans(
+                    style: GoogleFonts.manrope(
                       color: Colors.white,
                       height: 1.3,
                       shadows: [
                         Shadow(
                           offset: Offset(2, 2),
-                          color: Colors.white.withOpacity(0.5),
+                          color: Colors.white30,
                           blurRadius: 5,
                         )
                       ],
@@ -331,6 +329,7 @@ class _TicketState extends State<FCard> {
                       _registerClaimChoice(PrizeClaimChoice.AMZ_VOUCHER)
                           .then((flag) {
                         if (flag) {
+                          _tChoice = true;
                           setState(() {
                             _isPrizeProcessing = false;
                             claimtype = PrizeClaimChoice.AMZ_VOUCHER;
@@ -376,6 +375,7 @@ class _TicketState extends State<FCard> {
                       });
                       _registerClaimChoice(PrizeClaimChoice.GOLD_CREDIT)
                           .then((flag) {
+                        _tChoice = true;
                         if (flag) {
                           setState(() {
                             _isPrizeProcessing = false;
@@ -403,7 +403,7 @@ class _TicketState extends State<FCard> {
                     ),
                     child: FittedBox(
                       child: Text(
-                        "Augmont Gold ",
+                        "Digital Gold ",
                         style: GoogleFonts.montserrat(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,
@@ -479,11 +479,11 @@ class _CloseCardState extends State<CloseCard> {
                   children: [
                     Lottie.asset(
                       "images/lottie/winner-crown.json",
-                      height: 80,
+                      height: SizeConfig.screenWidth*0.2,
                     ),
                     Container(
-                      height: 80,
-                      width: 80,
+                      height: SizeConfig.screenWidth*0.2,
+                      width: SizeConfig.screenWidth*0.2,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: UiConstants.primaryColor,
@@ -498,7 +498,7 @@ class _CloseCardState extends State<CloseCard> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 40)
+                    SizedBox(height: SizeConfig.screenWidth*0.05)
                   ],
                 ),
                 SizedBox(width: SizeConfig.blockSizeHorizontal * 5),
@@ -522,7 +522,7 @@ class _CloseCardState extends State<CloseCard> {
                       SizedBox(height: 10),
                       Text(
                         "You have र${widget.unclaimedPrize} worth of unclaimed rewards from your past referrals and tambola winnings!",
-                        textAlign: TextAlign.start,
+                        textAlign: TextAlign.center,
                         style: GoogleFonts.montserrat(
                           color: Colors.black,
                         ),
@@ -531,12 +531,13 @@ class _CloseCardState extends State<CloseCard> {
                         height: 20,
                       ),
                       Container(
+                        alignment: Alignment.center,
                         decoration: BoxDecoration(
                             border: Border.all(
                                 color: UiConstants.primaryColor, width: 2),
                             borderRadius: BorderRadius.circular(10)),
                         padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            EdgeInsets.symmetric(horizontal: 26, vertical: 10),
                         child: FittedBox(
                           child: Text(
                             "Claim",
@@ -603,7 +604,7 @@ class _CloseCardState extends State<CloseCard> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Reward Claimed",
+                  "Reward Claimed!",
                   style: GoogleFonts.montserrat(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
@@ -716,7 +717,7 @@ class _CloseCardState extends State<CloseCard> {
         .captureFromWidget(ShareCard(
       dpUrl: baseProvider.myUserDpUrl,
       claimChoice: widget.claimtype,
-      prizeAmount: widget.unclaimedPrize,
+      prizeAmount: baseProvider.userFundWallet.processingRedemptionBalance,
       username: baseProvider.myUser.name,
     ));
     ////////////////////////////////////////////
@@ -725,7 +726,7 @@ class _CloseCardState extends State<CloseCard> {
       ShareCard(
         dpUrl: baseProvider.myUserDpUrl,
         claimChoice: widget.claimtype,
-        prizeAmount: widget.unclaimedPrize,
+        prizeAmount: baseProvider.userFundWallet.processingRedemptionBalance,
         username: baseProvider.myUser.name,
       ),delay: const Duration(seconds: 1)
     )
@@ -735,12 +736,12 @@ class _CloseCardState extends State<CloseCard> {
       });
       final directory = (await getExternalStorageDirectory()).path;
       String dt = DateTime.now().toString();
-      File imgg = new File('$directory/fello-reward.png');
+      File imgg = new File('$directory/fello-reward-$dt.png');
       imgg.writeAsBytesSync(image);
       Share.shareFiles(
-        ['$directory/fello-reward.png'],
+        ['$directory/fello-reward-$dt.png'],
         subject: 'Fello Rewards',
-        text: 'Hello, check your share files!',
+        text: 'Fello really is a very rewarding way to invest in assets and play games! You should try it out too: https://fello.in/download/android',
       );
     }).catchError((onError) {
       print(onError);

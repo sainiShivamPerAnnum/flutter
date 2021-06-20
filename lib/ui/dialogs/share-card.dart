@@ -1,5 +1,4 @@
 import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,6 +9,7 @@ class ShareCard extends StatelessWidget {
   final PrizeClaimChoice claimChoice;
 
   ShareCard({this.claimChoice, this.dpUrl, this.prizeAmount, this.username});
+
   @override
   Widget build(BuildContext context) {
     return Wrap(
@@ -41,8 +41,8 @@ class ShareCard extends StatelessWidget {
                     shadows: [
                       Shadow(
                         offset: Offset(2, 2),
-                        color: Colors.white,
-                        blurRadius: 5,
+                        color: Colors.white24,
+                        blurRadius: 2,
                       )
                     ],
                     fontWeight: FontWeight.w700,
@@ -52,7 +52,7 @@ class ShareCard extends StatelessWidget {
               SizedBox(height: 10),
               Text(
                 "${username.split(' ').first}!",
-                style: GoogleFonts.josefinSans(
+                style: GoogleFonts.montserrat(
                   color: Colors.white,
                   height: 1.3,
                   fontWeight: FontWeight.w700,
@@ -80,7 +80,7 @@ class ShareCard extends StatelessWidget {
                   children: [
                     Center(
                       child: Opacity(
-                        opacity: 0.8,
+                        opacity: 0.3,
                         child: Image.asset(
                           "images/prize-confetti-share.png",
                           fit: BoxFit.fitHeight,
@@ -90,13 +90,13 @@ class ShareCard extends StatelessWidget {
                     Center(
                       child: Text(
                         "र $prizeAmount",
-                        style: GoogleFonts.josefinSans(
+                        style: GoogleFonts.manrope(
                           color: Colors.white,
                           height: 1.3,
                           shadows: [
                             Shadow(
                               offset: Offset(2, 2),
-                              color: Colors.white.withOpacity(0.5),
+                              color: Colors.white30,
                               blurRadius: 5,
                             )
                           ],
@@ -111,7 +111,7 @@ class ShareCard extends StatelessWidget {
               SizedBox(height: 10),
               Text(
                 "rewarded as",
-                style: GoogleFonts.josefinSans(
+                style: GoogleFonts.montserrat(
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
                   fontSize: SizeConfig.largeTextSize,
@@ -130,7 +130,7 @@ class ShareCard extends StatelessWidget {
                 claimChoice == PrizeClaimChoice.AMZ_VOUCHER
                     ? "Amazon Gift Voucher"
                     : "Augmont Digital Gold",
-                style: GoogleFonts.josefinSans(
+                style: GoogleFonts.montserrat(
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
                   fontSize: SizeConfig.largeTextSize,
