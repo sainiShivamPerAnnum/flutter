@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -13,6 +14,7 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -103,11 +105,11 @@ class _TicketState extends State<FCard> {
 
   void _handleOnTap() {
     //widget.onClick();
-    if (claimtype == PrizeClaimChoice.NA)
-      setState(() {
-        _isOpen = true;
-        topCard = buildTopCard();
-      });
+    // if (claimtype == PrizeClaimChoice.NA)
+    //   setState(() {
+    //     _isOpen = true;
+    //     topCard = buildTopCard();
+    //   });
   }
 
   Widget buildTopCard() {
@@ -641,89 +643,25 @@ class _CloseCardState extends State<CloseCard> {
                                 setState(() {
                                   isCapturing = true;
                                 });
-                                // await showDialog(
-                                //   context: context,
-                                //   builder: (ctx) => Container(
-                                //     alignment: Alignment.center,
-                                //     padding: EdgeInsets.all(20),
-                                //     child: RepaintBoundary(
-                                //       key: scr,
-                                //       child: ShareCard(
-                                //         dpUrl: baseProvider.myUserDpUrl,
-                                //         claimChoice: widget.claimtype,
-                                //         prizeAmount:
-                                //             widget.unclaimedPrize,
-                                //         username:
-                                //             baseProvider.myUser.name,
-                                //       ),
-                                //     ),
-                                //   ),
-                                // );
-                                // convertWidgetToImage()
-                                //     .then((Uint8List image) async {
-                                //   setState(() {
-                                //     isCapturing = false;
-                                //   });
-                                //   Navigator.pop(context);
-                                //   final directory =
-                                //       (await getExternalStorageDirectory())
-                                //           .path;
-                                //   File imgFile = new File(
-                                //       '$directory/screenshot.png');
-                                //   imgFile.writeAsBytes(image);
-
-                                //   Share.shareFiles(
-                                //     ['$directory/screenshot.png'],
-                                //     subject: 'Share ScreenShot',
-                                //     text:
-                                //         'Hello, check your share files!',
-                                //   );
-                                // });
-
-                                screenshotController
-                                    .captureFromWidget(
-                                  ShareCard(
-                                    dpUrl: baseProvider.myUserDpUrl,
-                                    claimChoice: widget.claimtype,
-                                    prizeAmount: widget.unclaimedPrize,
-                                    username: baseProvider.myUser.name,
-                                  ),
-                                )
-                                    .then((Uint8List image) async {
-                                  setState(() {
-                                    isCapturing = false;
-                                  });
-                                  final directory =
-                                      (await getExternalStorageDirectory())
-                                          .path;
-                                  File imgFile =
-                                      new File('$directory/screenshot.png');
-                                  imgFile.writeAsBytes(image);
-
-                                  Share.shareFiles(
-                                    ['$directory/screenshot.png'],
-                                    subject: 'Share ScreenShot',
-                                    text: 'Hello, check your share files!',
-                                  );
-                                }).catchError((onError) {
-                                  print(onError);
-                                });
+                                _buildShareCard();
                               },
                               child: Wrap(
                                 children: [
                                   Text(
-                                    "Share with friends",
+                                    "Brag  📢",
                                     style: GoogleFonts.montserrat(
-                                        color: Colors.white, height: 1.3),
+                                        fontSize: SizeConfig.mediumTextSize,
+                                        color: Colors.white,
+                                        height: 1.3),
                                   ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Icon(
-                                    Icons.share_rounded,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
+                                  // SizedBox(
+                                  //   width: 10,
+                                  // ),
+                                  // Icon(
+                                  //   Icons.share_rounded,
+                                  //   color: Colors.white,
+                                  //   size: 20,
+                                  // ),
                                 ],
                               ),
                             ),
@@ -770,5 +708,42 @@ class _CloseCardState extends State<CloseCard> {
       return 'Your digital gold shall be credited to your Fello wallet shortly!';
     else
       return 'Your prize shall be credited to you soon!';
+  }
+
+  _buildShareCard() async{
+    //////ADDING A PRE_CALL DUE TO SCREENSHOT PACKAGE BUG
+    await screenshotController
+        .captureFromWidget(ShareCard(
+      dpUrl: baseProvider.myUserDpUrl,
+      claimChoice: widget.claimtype,
+      prizeAmount: widget.unclaimedPrize,
+      username: baseProvider.myUser.name,
+    ));
+    ////////////////////////////////////////////
+    screenshotController
+        .captureFromWidget(
+      ShareCard(
+        dpUrl: baseProvider.myUserDpUrl,
+        claimChoice: widget.claimtype,
+        prizeAmount: widget.unclaimedPrize,
+        username: baseProvider.myUser.name,
+      ),delay: const Duration(seconds: 1)
+    )
+        .then((Uint8List image) async {
+      setState(() {
+        isCapturing = false;
+      });
+      final directory = (await getExternalStorageDirectory()).path;
+      String dt = DateTime.now().toString();
+      File imgg = new File('$directory/fello-reward.png');
+      imgg.writeAsBytesSync(image);
+      Share.shareFiles(
+        ['$directory/fello-reward.png'],
+        subject: 'Fello Rewards',
+        text: 'Hello, check your share files!',
+      );
+    }).catchError((onError) {
+      print(onError);
+    });
   }
 }
