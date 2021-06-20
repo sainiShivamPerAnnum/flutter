@@ -74,7 +74,7 @@ class _MyAppState extends State<MyApp> {
             primarySwatch: Colors.green,
             visualDensity: VisualDensity.adaptivePlatformDensity,
             textTheme: GoogleFonts.montserratTextTheme()),
-        debugShowCheckedModeBanner: true,
+        debugShowCheckedModeBanner: false,
         backButtonDispatcher: backButtonDispatcher,
         routerDelegate: delegate,
         routeInformationParser: parser,
