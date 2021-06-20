@@ -41,7 +41,8 @@ class MFDetailsPage extends StatefulWidget {
 
   static int checkICICIDespositStatus(BaseUser baseUser) {
     //check who is allowed to deposit
-    String _perm = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.ICICI_DEPOSIT_PERMISSION);
+    String _perm = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.ICICI_DEPOSIT_PERMISSION);
     int _isGeneralUserAllowed = 1;
     bool _isAllowed = false;
     if (_perm != null && _perm.isNotEmpty) {
@@ -53,8 +54,7 @@ class MFDetailsPage extends StatefulWidget {
     }
     if (_isGeneralUserAllowed == 0) {
       //General permission is denied. Check if specific user permission granted
-      if (baseUser.isIciciEnabled != null &&
-          baseUser.isIciciEnabled) {
+      if (baseUser.isIciciEnabled != null && baseUser.isIciciEnabled) {
         //this specific user is allowed to use Augmont
         _isAllowed = true;
       } else {
@@ -66,10 +66,8 @@ class MFDetailsPage extends StatefulWidget {
 
     if (!_isAllowed) return STATUS_UNAVAILABLE;
     if (baseUser.isKycVerified != null &&
-        baseUser.isKycVerified == Constants.KYC_INVALID)
-      return STATUS_KYC_REQD;
-    if (baseUser.isIciciOnboarded == null ||
-        baseUser.isIciciOnboarded == false)
+        baseUser.isKycVerified == Constants.KYC_INVALID) return STATUS_KYC_REQD;
+    if (baseUser.isIciciOnboarded == null || baseUser.isIciciOnboarded == false)
       return STATUS_REGISTER;
     else
       return STATUS_OPEN;
@@ -94,7 +92,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     payService = Provider.of<PaymentService>(context, listen: false);
 
     return Scaffold(
-      appBar: BaseUtil.getAppBar(),
+      appBar: BaseUtil.getAppBar(context),
       body: Column(
         children: [
           Expanded(
@@ -206,8 +204,6 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       ),
     );
   }
-
-
 
   String _getActionButtonText() {
     int _status = MFDetailsPage.checkICICIDespositStatus(baseProvider.myUser);

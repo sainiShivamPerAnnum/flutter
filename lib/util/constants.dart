@@ -3,7 +3,6 @@ import 'package:felloapp/util/credentials_stage.dart';
 class Constants {
   static const String APP_NAME = "Fello";
   static const String PAN_AES_KEY = 'felloisquitefun!';
-  // static final String DEBUG_TAG = "DEBUG_KANTA::";
 
   //Collections
   static final String COLN_USERS = "users";
@@ -56,8 +55,10 @@ class Constants {
   static const int AUG_GOLD_WITHDRAW_OFFSET = 1; //no of days to wait before withdrawal
   static const int UNLOCK_REFERRAL_AMT = 300;
   static final DateTime VERSION_2_RELEASE_DATE = DateTime(2021, 4, 1);
+
   ///STAGES - IMPORTANT
   static const AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;
+  static const FreshchatStage activeFreshchatStage = FreshchatStage.DEV;
   static const AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.PROD;
   static const SignzyStage activeSignzyStage = SignzyStage.PROD;
   static const RazorpayStage activeRazorpayStage = RazorpayStage.PROD;

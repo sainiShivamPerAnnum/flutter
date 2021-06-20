@@ -18,6 +18,7 @@ import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -26,6 +27,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
 import 'package:showcaseview/showcase.dart';
@@ -33,6 +35,7 @@ import 'package:showcaseview/showcase.dart';
 import 'core/base_remote_config.dart';
 import 'core/model/TambolaBoard.dart';
 import 'core/model/UserAugmontDetail.dart';
+import 'ui/pages/hamburger/chatsupport_page.dart';
 import 'util/size_config.dart';
 
 class BaseUtil extends ChangeNotifier {
@@ -71,6 +74,7 @@ class BaseUtil extends ChangeNotifier {
   List<ReferralDetail> userReferralsList;
   ReferralDetail myReferralInfo;
   static PackageInfo packageInfo;
+  Map<String, dynamic> freshchatKeys;
 
   DateTime _userCreationTimestamp;
   int isOtpResendCount = 0;
@@ -141,6 +145,14 @@ class BaseUtil extends ChangeNotifier {
 
       //TODO not required for now
       // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
+
+      ///Freshchat utils
+      freshchatKeys = await _dbModel.getActiveFreshchatKey();
+      if (freshchatKeys != null && freshchatKeys.isNotEmpty) {
+        Freshchat.init(freshchatKeys['app_id'], freshchatKeys['app_key'],
+            freshchatKeys['app_domain'],
+            gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
+      }
     }
   }
 
@@ -164,11 +176,31 @@ class BaseUtil extends ChangeNotifier {
   }
 
   cancelIncomingNotifications() {
-    if(_payService != null)_payService.addPaymentStatusListener(null);
+    if (_payService != null) _payService.addPaymentStatusListener(null);
   }
 
-  static Widget getAppBar() {
+  Future<bool> isUnreadFreshchatSupportMessages() async {
+    try {
+      var unreadCount = await Freshchat.getUnreadCountAsync;
+      return (unreadCount['count'] > 0);
+    }catch(e) {
+      log.error('Error reading unread count variable: $e');
+      return false;
+    }
+  }
+
+  static Widget getAppBar(BuildContext context) {
     return AppBar(
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back_rounded,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          backButtonDispatcher.didPopRoute();
+        },
+      ),
+
       elevation: 1.0,
       backgroundColor: UiConstants.primaryColor,
       iconTheme: IconThemeData(
@@ -206,58 +238,62 @@ class BaseUtil extends ChangeNotifier {
 
   showPositiveAlert(String title, String message, BuildContext context,
       {int seconds}) {
-    Flushbar(
-      flushbarPosition: FlushbarPosition.BOTTOM,
-      flushbarStyle: FlushbarStyle.FLOATING,
-      icon: Icon(
-        Icons.flag,
-        size: 28.0,
-        color: Colors.white,
-      ),
-      margin: EdgeInsets.all(10),
-      borderRadius: 8,
-      title: title,
-      message: message,
-      duration: Duration(seconds: 3),
-      backgroundGradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Colors.lightBlueAccent, UiConstants.primaryColor]),
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Flushbar(
+        flushbarPosition: FlushbarPosition.BOTTOM,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        icon: Icon(
+          Icons.flag,
+          size: 28.0,
+          color: Colors.white,
+        ),
+        margin: EdgeInsets.all(10),
+        borderRadius: 8,
+        title: title,
+        message: message,
+        duration: Duration(seconds: 3),
+        backgroundGradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [Colors.lightBlueAccent, UiConstants.primaryColor]),
 //      backgroundColor: Colors.lightBlueAccent,
-      boxShadows: [
-        BoxShadow(
-          color: UiConstants.positiveAlertColor,
-          offset: Offset(0.0, 2.0),
-          blurRadius: 3.0,
-        )
-      ],
-    )..show(context);
+        boxShadows: [
+          BoxShadow(
+            color: UiConstants.positiveAlertColor,
+            offset: Offset(0.0, 2.0),
+            blurRadius: 3.0,
+          )
+        ],
+      )..show(delegate.navigatorKey.currentContext);
+    });
   }
 
   showNegativeAlert(String title, String message, BuildContext context,
       {int seconds}) {
-    Flushbar(
-      flushbarPosition: FlushbarPosition.BOTTOM,
-      flushbarStyle: FlushbarStyle.FLOATING,
-      icon: Icon(
-        Icons.assignment_late,
-        size: 28.0,
-        color: Colors.white,
-      ),
-      margin: EdgeInsets.all(10),
-      borderRadius: 8,
-      title: title,
-      message: message,
-      duration: Duration(seconds: seconds ?? 3),
-      backgroundColor: UiConstants.negativeAlertColor,
-      boxShadows: [
-        BoxShadow(
-          color: UiConstants.negativeAlertColor,
-          offset: Offset(0.0, 2.0),
-          blurRadius: 3.0,
-        )
-      ],
-    )..show(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Flushbar(
+        flushbarPosition: FlushbarPosition.BOTTOM,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        icon: Icon(
+          Icons.assignment_late,
+          size: 28.0,
+          color: Colors.white,
+        ),
+        margin: EdgeInsets.all(10),
+        borderRadius: 8,
+        title: title,
+        message: message,
+        duration: Duration(seconds: seconds ?? 3),
+        backgroundColor: UiConstants.negativeAlertColor,
+        boxShadows: [
+          BoxShadow(
+            color: UiConstants.negativeAlertColor,
+            offset: Offset(0.0, 2.0),
+            blurRadius: 3.0,
+          )
+        ],
+      )..show(delegate.navigatorKey.currentContext);
+    });
   }
 
   showNoInternetAlert(BuildContext context) {
@@ -465,7 +501,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   bool isOldCustomer() {
-     //all users before april 2021 are marked old
+    //all users before april 2021 are marked old
     if (userCreationTimestamp == null) return false;
     return (userCreationTimestamp.isBefore(Constants.VERSION_2_RELEASE_DATE));
   }

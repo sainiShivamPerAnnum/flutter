@@ -11,6 +11,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:freshchat_sdk/freshchat_sdk.dart';
 
 class FcmListener extends ChangeNotifier {
   Log log = new Log("FcmListener");
@@ -33,29 +34,51 @@ class FcmListener extends ChangeNotifier {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+
+  static Future<dynamic> backgroundMessageHandler(RemoteMessage message) async {
+    print('background notif');
+
+    Freshchat.isFreshchatNotification(message.data).then((flag) {
+      if(flag) {
+        _handleFreshchatNotif(message.data);
+      }else{
+        //TODO Background message that is not Freshchat
+      }
+    });
+    return Future<void>.value();
+  }
+
+  static _handleFreshchatNotif(Map<String, dynamic> freshChatData) {
+    print('background freshchat notif $freshChatData');
+    Freshchat.setNotificationConfig(largeIcon: "ic_chat_support", smallIcon: "ic_fello_notif");
+    Freshchat.handlePushNotification(freshChatData);
+  }
+
   Future<FirebaseMessaging> setupFcm() async {
     _fcm = FirebaseMessaging.instance;
-
     _fcm.getInitialMessage().then((RemoteMessage message) {
       log.debug("onMessage recieved: " + message.toString());
-      if (message != null && message.data != null) {
+      if(message != null && message.data != null) {
         _handler.handleMessage(message.data);
       }
     });
-
     // await flutterLocalNotificationsPlugin
     //     .resolvePlatformSpecificImplementation<
     //         AndroidFlutterLocalNotificationsPlugin>()
     //     ?.createNotificationChannel(_androidChannel);
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
-      if (message.data != null && message.data.isNotEmpty) {
-        _handler.handleMessage(message.data);
-      } else if (notification != null) {
-        _handler.handleNotification(notification.title, notification.body);
-      }
+      Freshchat.isFreshchatNotification(message.data).then((flag) {
+        if(flag) {
+          _handleFreshchatNotif(message.data);
+        }else if (message.data != null && message.data.isNotEmpty) {
+          _handler.handleMessage(message.data);
+        } else if (notification != null) {
+          _handler.handleNotification(notification.title, notification.body);
+        }
+      });
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -73,7 +96,7 @@ class FcmListener extends ChangeNotifier {
     await _manageInitSubscriptions();
 
     ///setup android notification channels
-    if(Platform.isAndroid) {
+    if (Platform.isAndroid) {
       _androidNativeSetup();
     }
 
@@ -84,8 +107,9 @@ class FcmListener extends ChangeNotifier {
     return _fcm;
   }
 
-  Future addSubscription(FcmTopic subId, {String suffix=''}) async {
-    await _fcm.subscribeToTopic((suffix.isEmpty)?subId.value():'${subId.value()}$suffix');
+  Future addSubscription(FcmTopic subId, {String suffix = ''}) async {
+    await _fcm.subscribeToTopic(
+        (suffix.isEmpty) ? subId.value() : '${subId.value()}$suffix');
   }
 
   _manageInitSubscriptions() async {
@@ -105,8 +129,8 @@ class FcmListener extends ChangeNotifier {
       addSubscription(FcmTopic.TAMBOLAPLAYER);
     }
 
-    if(BaseUtil.packageInfo != null) {
-      String cde = BaseUtil.packageInfo.version??'NA';
+    if (BaseUtil.packageInfo != null) {
+      String cde = BaseUtil.packageInfo.version ?? 'NA';
       cde = cde.replaceAll('.', '');
       addSubscription(FcmTopic.VERSION, suffix: cde);
     }
@@ -115,14 +139,17 @@ class FcmListener extends ChangeNotifier {
   }
 
   _androidNativeSetup() async {
-    const MethodChannel _channel = MethodChannel('fello.in/dev/notifications/channel/tambola');
+    const MethodChannel _channel =
+        MethodChannel('fello.in/dev/notifications/channel/tambola');
     Map<String, String> tambolaChannelMap = {
       "id": "TAMBOLA_PICK_NOTIF",
       "name": "Tambola Daily Picks",
       "description": "Tambola notifications",
     };
 
-    _channel.invokeMethod('createNotificationChannel', tambolaChannelMap).then((value) {
+    _channel
+        .invokeMethod('createNotificationChannel', tambolaChannelMap)
+        .then((value) {
       log.debug('Tambola Notification channel created successfully');
     }).catchError((e) {
       log.error('Tambola notification channel setup failed');
@@ -162,6 +189,7 @@ class FcmListener extends ChangeNotifier {
                 _baseUtil.myUser.client_token != fcmToken))) {
       log.debug("Updating FCM token to local and server db");
       _baseUtil.myUser.client_token = fcmToken;
+      Freshchat.setPushRegistrationToken(fcmToken);
       flag = await _dbModel.updateClientToken(_baseUtil.myUser, fcmToken);
       // if (flag)
       //   await _lModel.saveUser(

@@ -6,6 +6,7 @@ import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -66,7 +67,7 @@ class _TransactionsState extends State<Transactions> {
       return "Augmont Gold";
     } else if (type == UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN) {
       return "Tambola Win";
-    }else if(type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
+    } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
       return "Referral Bonus";
     }
     return "Fund Name";
@@ -341,10 +342,13 @@ class _TransactionsState extends State<Transactions> {
     for (int index = 0; index < filteredList.length; index++) {
       _tiles.add(ListTile(
         onTap: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) =>
-                  TransactionDetailsDialog(filteredList[index]));
+          HapticFeedback.vibrate();
+          if (filteredList[index].tranStatus !=
+              UserTransaction.TRAN_STATUS_CANCELLED)
+            showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    TransactionDetailsDialog(filteredList[index]));
         },
         dense: true,
         leading: Container(

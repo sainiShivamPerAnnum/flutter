@@ -1,10 +1,15 @@
+import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
-class FcmHandler extends ChangeNotifier
-{
+class FcmHandler extends ChangeNotifier {
   Log log = new Log("FcmHandler");
   ValueChanged<Map> notifListener;
+  String url;
+  int tab;
 
   Future<bool> handleMessage(Map data) async {
     log.debug(data.toString());
@@ -17,17 +22,22 @@ class FcmHandler extends ChangeNotifier
           body.isNotEmpty) {
         log.debug('Recevied message from server: $title $body');
         Map<String, String> _map = {'title': title, 'body': body};
-        if (this.notifListener != null)
-          this.notifListener(_map);
+        if (this.notifListener != null) this.notifListener(_map);
       }
     }
+    url = data["deep_uri"] ?? '';
+    tab = int.tryParse(data["misc_data"]) ?? 0;
+
+    print("------------------->" + url);
+    //delegate.appState.setCurrentTabIndex = tab;
+    // print("tab set to ${data["misc"]}");
+    AppState().setFcmData = url;
     return true;
   }
 
-  Future<bool> handleNotification(String title, String body) async{
+  Future<bool> handleNotification(String title, String body) async {
     Map<String, String> _map = {'title': title, 'body': body};
-    if (this.notifListener != null)
-      this.notifListener(_map);
+    if (this.notifListener != null) this.notifListener(_map);
 
     return true;
   }
@@ -35,6 +45,4 @@ class FcmHandler extends ChangeNotifier
   addIncomingMessageListener(ValueChanged<Map> listener) {
     this.notifListener = listener;
   }
-
 }
-

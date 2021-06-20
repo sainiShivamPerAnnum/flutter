@@ -1,7 +1,9 @@
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class FeedbackDialog extends StatefulWidget {
   final String title, description, buttonText;
@@ -19,11 +21,11 @@ class FeedbackDialog extends StatefulWidget {
   State createState() => _FeedbackDialogState();
 }
 
-
 class _FeedbackDialogState extends State<FeedbackDialog> {
   Log log = new Log('FeedbackDialog');
   final _formKey = GlobalKey<FormState>();
   final fdbkController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -89,17 +91,18 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
                     maxLines: 6,
                     controller: fdbkController,
                     validator: (value) {
-                      return (value == null || value.isEmpty)?'Please add some feedback':null;
+                      return (value == null || value.isEmpty)
+                          ? 'Please add some feedback'
+                          : null;
                     },
                     decoration: new InputDecoration(
                       labelText: "Feedback",
                       //fillColor: Colors.white,
                       border: new OutlineInputBorder(
                         borderRadius: new BorderRadius.circular(25.0),
-                        borderSide: new BorderSide(
-                        ),
-                      ),)
-                ),
+                        borderSide: new BorderSide(),
+                      ),
+                    )),
               ),
               SizedBox(height: 16.0),
               Align(
@@ -108,7 +111,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
                   onPressed: () {
                     HapticFeedback.vibrate();
                     log.debug('DialogAction clicked');
-                    if(_formKey.currentState.validate()) {
+                    if (_formKey.currentState.validate()) {
                       widget.dialogAction(fdbkController.text);
                     }
                   },
