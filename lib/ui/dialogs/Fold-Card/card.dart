@@ -26,11 +26,13 @@ class FCard extends StatefulWidget {
   static const double nominalClosedHeight = 160;
   final bool isClaimed;
   final double unclaimedPrize;
+  final Function onComplete;
 
   const FCard({
     Key key,
     this.isClaimed,
     this.unclaimedPrize,
+    this.onComplete,
   }) : super(key: key);
 
   @override
@@ -73,6 +75,7 @@ class _TicketState extends State<FCard> {
       unclaimedPrize: widget.unclaimedPrize,
       claimtype: claimtype,
       isClaimed: widget.isClaimed,
+      onClose: widget.onComplete,
     );
   }
 
@@ -333,6 +336,7 @@ class _TicketState extends State<FCard> {
                               claimtype: claimtype,
                               unclaimedPrize: widget.unclaimedPrize,
                               isClaimed: true,
+                              onClose: widget.onComplete,
                             );
                             _isOpen = false;
                           });
@@ -374,6 +378,7 @@ class _TicketState extends State<FCard> {
                               claimtype: claimtype,
                               unclaimedPrize: widget.unclaimedPrize,
                               isClaimed: true,
+                              onClose: widget.onComplete,
                             );
 
                             _isOpen = false;
@@ -416,8 +421,9 @@ class CloseCard extends StatefulWidget {
   final PrizeClaimChoice claimtype;
   final double unclaimedPrize;
   final bool isClaimed;
+  final Function onClose;
 
-  CloseCard({this.claimtype, this.unclaimedPrize, this.isClaimed});
+  CloseCard({this.claimtype, this.unclaimedPrize, this.isClaimed, this.onClose});
 
   @override
   _CloseCardState createState() => _CloseCardState();
@@ -733,6 +739,7 @@ class _CloseCardState extends State<CloseCard> {
                     IconButton(
                       onPressed: () {
                         Navigator.pop(context);
+                        widget.onClose();
                       },
                       icon: Icon(
                         Icons.clear_rounded,
