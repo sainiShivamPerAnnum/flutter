@@ -69,13 +69,11 @@ class UserFundWallet {
         fldProcessingRedemption: _processingRedemptionBalance
       };
 
-
   double getEstTotalWealth() {
-    return
-      BaseUtil.digitPrecision(BaseUtil.toDouble(_iciciBalance) +
-          BaseUtil.toDouble(_augGoldBalance) +
-          BaseUtil.toDouble(_prizeBalance) + 
-          BaseUtil.toDouble(_lockedPrizeBalance));
+    return BaseUtil.digitPrecision(BaseUtil.toDouble(_iciciBalance) +
+        BaseUtil.toDouble(_augGoldBalance) +
+        BaseUtil.toDouble(_prizeBalance) +
+        BaseUtil.toDouble(_lockedPrizeBalance));
   }
 
   double get prizeLifetimeWin => _prizeLifetimeWin;
@@ -129,14 +127,14 @@ class UserFundWallet {
   double get processingRedemptionBalance => _processingRedemptionBalance;
 
   bool isPrizeBalanceUnclaimed() {
-    double _a = _prizeBalance??0.0;
-    double _b = _processingRedemptionBalance??0.0;
+    double _a = _prizeBalance ?? 0.0;
+    double _b = _processingRedemptionBalance ?? 0.0;
     return (_a - _b > 0);
   }
 
   double get unclaimedBalance {
-    double _a = _prizeBalance??0.0;
-    double _b = _processingRedemptionBalance??0.0;
+    double _a = _prizeBalance ?? 0.0;
+    double _b = _processingRedemptionBalance ?? 0.0;
     return (_a - _b);
   }
 }

@@ -341,7 +341,11 @@ class _TicketState extends State<FCard> {
                             _isOpen = false;
                           });
                         } else {
-                          //TODO
+                          baseProvider.showNegativeAlert('Failed to send claim',
+                              'Please try again in some time', context);
+                          setState(() {
+                            _isPrizeProcessing = false;
+                          });
                         }
                       });
                     },
@@ -384,7 +388,11 @@ class _TicketState extends State<FCard> {
                             _isOpen = false;
                           });
                         } else {
-                          //TODO
+                          baseProvider.showNegativeAlert('Failed to send claim',
+                              'Please try again in some time', context);
+                          setState(() {
+                            _isPrizeProcessing = false;
+                          });
                         }
                       });
                     },
@@ -411,7 +419,7 @@ class _TicketState extends State<FCard> {
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
     bool flag = await httpProvider.registerPrizeClaim(
-        'dummy', widget.unclaimedPrize, choice);
+        baseProvider.myUser.uid, widget.unclaimedPrize, choice);
     print('Claim choice saved: $flag');
     return flag;
   }
@@ -423,7 +431,8 @@ class CloseCard extends StatefulWidget {
   final bool isClaimed;
   final Function onClose;
 
-  CloseCard({this.claimtype, this.unclaimedPrize, this.isClaimed, this.onClose});
+  CloseCard(
+      {this.claimtype, this.unclaimedPrize, this.isClaimed, this.onClose});
 
   @override
   _CloseCardState createState() => _CloseCardState();
@@ -446,311 +455,320 @@ class _CloseCardState extends State<CloseCard> {
     return uint8list;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    print(widget.claimtype);
-    return widget.isClaimed
-        ? Container(
-            padding: const EdgeInsets.only(top: 10.0, left: 20, right: 10),
-            decoration: BoxDecoration(
-              color: Colors.black,
-              // gradient: new LinearGradient(colors: [
-              //   Color(0xffFEAC5E),
-              //   Color(0xffC779D0),
-              //   Color(0xff4BC0C8),
-              // ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-              borderRadius: BorderRadius.circular(15),
+  Widget _buildBeginCard(BuildContext context) {
+    return Container(
+      height: double.infinity,
+      width: double.infinity,
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        color: Color(0xfff9f3f3),
+      ),
+      child: Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 10,
             ),
-            child: Stack(
+            child: Row(
               children: [
-                Row(
+                Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                        child: Lottie.asset(
-                      "images/lottie/reward-claimed.json",
-                      repeat: false,
-                    )),
-                  ],
-                ),
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Reward Claimed",
-                        style: GoogleFonts.montserrat(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 32,
+                    Lottie.asset(
+                      "images/lottie/winner-crown.json",
+                      height: 80,
+                    ),
+                    Container(
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: UiConstants.primaryColor,
+                          width: 3,
+                        ),
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: baseProvider.myUserDpUrl != null
+                              ? NetworkImage(baseProvider.myUserDpUrl)
+                              : AssetImage("images/profile.png"),
+                          fit: BoxFit.cover,
                         ),
                       ),
-                      SizedBox(
-                        height: 10,
+                    ),
+                    SizedBox(height: 40)
+                  ],
+                ),
+                SizedBox(width: SizeConfig.blockSizeHorizontal * 5),
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(
+                          "Congratulations 🎉",
+                          style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xff194350),
+                            fontSize: SizeConfig.cardTitleTextSize,
+                          ),
+                        ),
                       ),
+                      SizedBox(height: 10),
                       Text(
-                        widget.claimtype == PrizeClaimChoice.AMZ_VOUCHER
-                            ? "Your amazon gift card shall be sent to your registered email and mobile shortly!"
-                            : "Your digital gold shall be credited to your Fello wallet shortly!",
-                        textAlign: TextAlign.center,
+                        "You have र${widget.unclaimedPrize} worth of unclaimed rewards from your past referrals and tambola winnings!",
+                        textAlign: TextAlign.start,
                         style: GoogleFonts.montserrat(
-                          color: Colors.white,
+                          color: Colors.black,
                         ),
                       ),
                       SizedBox(
                         height: 20,
                       ),
-                      Wrap(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 30),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white, width: 3),
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            child: isCapturing
-                                ? SpinKitThreeBounce(
-                                    color: UiConstants.spinnerColor2,
-                                    size: 18.0,
-                                  )
-                                : InkWell(
-                                    onTap: () async {
-                                      setState(() {
-                                        isCapturing = true;
-                                      });
-                                      // await showDialog(
-                                      //   context: context,
-                                      //   builder: (ctx) => Container(
-                                      //     alignment: Alignment.center,
-                                      //     padding: EdgeInsets.all(20),
-                                      //     child: RepaintBoundary(
-                                      //       key: scr,
-                                      //       child: ShareCard(
-                                      //         dpUrl: baseProvider.myUserDpUrl,
-                                      //         claimChoice: widget.claimtype,
-                                      //         prizeAmount:
-                                      //             widget.unclaimedPrize,
-                                      //         username:
-                                      //             baseProvider.myUser.name,
-                                      //       ),
-                                      //     ),
-                                      //   ),
-                                      // );
-                                      // convertWidgetToImage()
-                                      //     .then((Uint8List image) async {
-                                      //   setState(() {
-                                      //     isCapturing = false;
-                                      //   });
-                                      //   Navigator.pop(context);
-                                      //   final directory =
-                                      //       (await getExternalStorageDirectory())
-                                      //           .path;
-                                      //   File imgFile = new File(
-                                      //       '$directory/screenshot.png');
-                                      //   imgFile.writeAsBytes(image);
-
-                                      //   Share.shareFiles(
-                                      //     ['$directory/screenshot.png'],
-                                      //     subject: 'Share ScreenShot',
-                                      //     text:
-                                      //         'Hello, check your share files!',
-                                      //   );
-                                      // });
-
-                                      screenshotController
-                                          .captureFromWidget(
-                                        ShareCard(
-                                          dpUrl: baseProvider.myUserDpUrl,
-                                          claimChoice: widget.claimtype,
-                                          prizeAmount: widget.unclaimedPrize,
-                                          username: baseProvider.myUser.name,
-                                        ),
-                                      )
-                                          .then((Uint8List image) async {
-                                        setState(() {
-                                          isCapturing = false;
-                                        });
-                                        final directory =
-                                            (await getExternalStorageDirectory())
-                                                .path;
-                                        File imgFile = new File(
-                                            '$directory/screenshot.png');
-                                        imgFile.writeAsBytes(image);
-
-                                        Share.shareFiles(
-                                          ['$directory/screenshot.png'],
-                                          subject: 'Share ScreenShot',
-                                          text:
-                                              'Hello, check your share files!',
-                                        );
-                                      }).catchError((onError) {
-                                        print(onError);
-                                      });
-                                    },
-                                    child: Wrap(
-                                      children: [
-                                        Text(
-                                          "Share with friends",
-                                          style: GoogleFonts.montserrat(
-                                              color: Colors.white, height: 1.3),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Icon(
-                                          Icons.share_rounded,
-                                          color: Colors.white,
-                                          size: 20,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Row(
-                  children: [
-                    Spacer(),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        // Future.delayed(Duration(milliseconds: 800))
-                        //     .then((value) => Navigator.pop(context));
-                      },
-                      icon: Icon(
-                        Icons.clear_rounded,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-                //   Row(children: [
-                //  claimtype == claim.amazon ? Padding(padding: EdgeInsets.all(20),child: Lottie.asset("images/"),)
-                //   ],)
-              ],
-            ),
-          )
-        : Container(
-            height: double.infinity,
-            width: double.infinity,
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: Color(0xfff9f3f3),
-            ),
-            child: Stack(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10,
-                  ),
-                  child: Row(
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Lottie.asset(
-                            "images/lottie/winner-crown.json",
-                            height: 80,
-                          ),
-                          Container(
-                            height: 80,
-                            width: 80,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: UiConstants.primaryColor,
-                                width: 3,
-                              ),
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: baseProvider.myUserDpUrl != null
-                                    ? NetworkImage(baseProvider.myUserDpUrl)
-                                    : AssetImage("images/profile.png"),
-                                fit: BoxFit.cover,
-                              ),
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: UiConstants.primaryColor, width: 2),
+                            borderRadius: BorderRadius.circular(10)),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        child: FittedBox(
+                          child: Text(
+                            "Claim",
+                            style: GoogleFonts.montserrat(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                          SizedBox(height: 40)
-                        ],
-                      ),
-                      SizedBox(width: SizeConfig.blockSizeHorizontal * 5),
-                      Expanded(
-                        flex: 2,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            FittedBox(
-                              fit: BoxFit.contain,
-                              child: Text(
-                                "Congratulations 🎉",
-                                style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xff194350),
-                                  fontSize: SizeConfig.cardTitleTextSize,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Text(
-                              "You have र${widget.unclaimedPrize} worth of unclaimed rewards from your past referrals and tambola winnings!",
-                              textAlign: TextAlign.start,
-                              style: GoogleFonts.montserrat(
-                                color: Colors.black,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: UiConstants.primaryColor,
-                                      width: 2),
-                                  borderRadius: BorderRadius.circular(10)),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              child: FittedBox(
-                                child: Text(
-                                  "Claim",
-                                  style: GoogleFonts.montserrat(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
                         ),
-                      ),
-                      SizedBox(width: 20)
+                      )
                     ],
                   ),
                 ),
-                Row(
+                SizedBox(width: 20)
+              ],
+            ),
+          ),
+          Row(
+            children: [
+              Spacer(),
+              IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(
+                  Icons.clear_rounded,
+                  color: Colors.black,
+                  size: 30,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEndCard(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(top: 10.0, left: 20, right: 10),
+      decoration: BoxDecoration(
+        color: Colors.black,
+        // gradient: new LinearGradient(colors: [
+        //   Color(0xffFEAC5E),
+        //   Color(0xffC779D0),
+        //   Color(0xff4BC0C8),
+        // ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Stack(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                  child: Lottie.asset(
+                "images/lottie/reward-claimed.json",
+                repeat: false,
+              )),
+            ],
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Reward Claimed",
+                  style: GoogleFonts.montserrat(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 32,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  _getEndCardTitleText(widget.claimtype),
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.montserrat(
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Wrap(
                   children: [
-                    Spacer(),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        widget.onClose();
-                      },
-                      icon: Icon(
-                        Icons.clear_rounded,
-                        color: Colors.black,
-                        size: 30,
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 30),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 3),
+                        borderRadius: BorderRadius.circular(100),
                       ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      child: isCapturing
+                          ? SpinKitThreeBounce(
+                              color: UiConstants.spinnerColor2,
+                              size: 18.0,
+                            )
+                          : InkWell(
+                              onTap: () async {
+                                setState(() {
+                                  isCapturing = true;
+                                });
+                                // await showDialog(
+                                //   context: context,
+                                //   builder: (ctx) => Container(
+                                //     alignment: Alignment.center,
+                                //     padding: EdgeInsets.all(20),
+                                //     child: RepaintBoundary(
+                                //       key: scr,
+                                //       child: ShareCard(
+                                //         dpUrl: baseProvider.myUserDpUrl,
+                                //         claimChoice: widget.claimtype,
+                                //         prizeAmount:
+                                //             widget.unclaimedPrize,
+                                //         username:
+                                //             baseProvider.myUser.name,
+                                //       ),
+                                //     ),
+                                //   ),
+                                // );
+                                // convertWidgetToImage()
+                                //     .then((Uint8List image) async {
+                                //   setState(() {
+                                //     isCapturing = false;
+                                //   });
+                                //   Navigator.pop(context);
+                                //   final directory =
+                                //       (await getExternalStorageDirectory())
+                                //           .path;
+                                //   File imgFile = new File(
+                                //       '$directory/screenshot.png');
+                                //   imgFile.writeAsBytes(image);
+
+                                //   Share.shareFiles(
+                                //     ['$directory/screenshot.png'],
+                                //     subject: 'Share ScreenShot',
+                                //     text:
+                                //         'Hello, check your share files!',
+                                //   );
+                                // });
+
+                                screenshotController
+                                    .captureFromWidget(
+                                  ShareCard(
+                                    dpUrl: baseProvider.myUserDpUrl,
+                                    claimChoice: widget.claimtype,
+                                    prizeAmount: widget.unclaimedPrize,
+                                    username: baseProvider.myUser.name,
+                                  ),
+                                )
+                                    .then((Uint8List image) async {
+                                  setState(() {
+                                    isCapturing = false;
+                                  });
+                                  final directory =
+                                      (await getExternalStorageDirectory())
+                                          .path;
+                                  File imgFile =
+                                      new File('$directory/screenshot.png');
+                                  imgFile.writeAsBytes(image);
+
+                                  Share.shareFiles(
+                                    ['$directory/screenshot.png'],
+                                    subject: 'Share ScreenShot',
+                                    text: 'Hello, check your share files!',
+                                  );
+                                }).catchError((onError) {
+                                  print(onError);
+                                });
+                              },
+                              child: Wrap(
+                                children: [
+                                  Text(
+                                    "Share with friends",
+                                    style: GoogleFonts.montserrat(
+                                        color: Colors.white, height: 1.3),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Icon(
+                                    Icons.share_rounded,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
+                                ],
+                              ),
+                            ),
                     ),
                   ],
                 ),
               ],
             ),
-          );
+          ),
+          Row(
+            children: [
+              Spacer(),
+              IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  widget.onClose();
+                },
+                icon: Icon(
+                  Icons.clear_rounded,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          //   Row(children: [
+          //  claimtype == claim.amazon ? Padding(padding: EdgeInsets.all(20),child: Lottie.asset("images/"),)
+          //   ],)
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    print(widget.claimtype);
+    return widget.isClaimed ? _buildEndCard(context) : _buildBeginCard(context);
+  }
+
+  String _getEndCardTitleText(PrizeClaimChoice choice) {
+    if (choice == PrizeClaimChoice.AMZ_VOUCHER)
+      return 'Your amazon gift card shall be sent to your registered email and mobile shortly!';
+    else if (choice == PrizeClaimChoice.GOLD_CREDIT)
+      return 'Your digital gold shall be credited to your Fello wallet shortly!';
+    else
+      return 'Your prize shall be credited to you soon!';
   }
 }
