@@ -31,7 +31,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           GestureDetector(
-            onTap: () => Navigator.pop(context),
+            // onTap: () => Navigator.pop(context),
             child: Container(
               margin: EdgeInsets.only(top: 30, bottom: 16),
               child: CircleAvatar(
