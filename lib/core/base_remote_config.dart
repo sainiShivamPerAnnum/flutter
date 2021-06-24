@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -58,6 +59,9 @@ class BaseRemoteConfig {
   static const Map<String, String> _KYC_COMPLETION_PRIZE = {
     'kyc_completion_prize': 'You have won ₹50 and 10 Tambola tickets!'
   };
+  static const Map<String, String> _UNLOCK_REFERRAL_AMT = {
+    'min_principle_for_prize': '100'
+  };
 
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,
@@ -78,7 +82,8 @@ class BaseRemoteConfig {
     ..._ICICI_DEPOSIT_PERMISSION,
     ..._AUGMONT_DEPOSITS_ENABLED,
     ..._AUGMONT_DEPOSIT_PERMISSION,
-    ..._KYC_COMPLETION_PRIZE
+    ..._KYC_COMPLETION_PRIZE,
+    ..._UNLOCK_REFERRAL_AMT
   };
 
 
@@ -146,4 +151,13 @@ class BaseRemoteConfig {
   static String get TAMBOLA_HEADER_SECOND => _TAMBOLA_HEADER_SECOND.keys.first;
 
   static String get TAMBOLA_HEADER_FIRST => _TAMBOLA_HEADER_FIRST.keys.first;
+
+  static int get UNLOCK_REFERRAL_AMT {
+    String _val = _UNLOCK_REFERRAL_AMT.keys.first;
+    if(_val != null || _val.isNotEmpty) {
+      int iVal = BaseUtil.toInt(_val);
+      return (iVal>0)?iVal:100;
+    }
+    return 100;
+  }
 }

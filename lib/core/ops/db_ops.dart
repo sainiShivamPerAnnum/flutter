@@ -414,6 +414,26 @@ class DBModel extends ChangeNotifier {
     return null;
   }
 
+  Future<Map<String, String>> getActiveFreshchatKey() async {
+    int keyIndex = 1;
+    QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
+        'freshchat', Constants.activeFreshchatStage.value(), keyIndex);
+    if (querySnapshot != null && querySnapshot.docs.length == 1) {
+      DocumentSnapshot snapshot = querySnapshot.docs[0];
+      if (snapshot.exists) {
+        Map<String, dynamic> fKeys = snapshot.data();
+        log.debug(fKeys.toString());
+        return {
+          'app_id': fKeys['appId'],
+          'app_key': fKeys['appKey'],
+          'app_domain': fKeys['domain'],
+        };
+      }
+    }
+
+    return null;
+  }
+
   Future<bool> addCallbackRequest(String uid, String name,
       String mobile) async {
     try {
@@ -456,7 +476,7 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<bool> addWinClaim(String uid, String name, String mobile,
-      int currentTickCount, Map<String, int> resMap) async {
+      int currentTickCount, bool isEligible, Map<String, int> resMap) async {
     try {
       DateTime date = new DateTime.now();
       int weekCde = date.year * 100 + BaseUtil.getWeekNumber();
@@ -468,6 +488,7 @@ class DBModel extends ChangeNotifier {
       data['tck_count'] = currentTickCount;
       data['week_code'] = weekCde;
       data['ticket_cat_map'] = resMap;
+      data['is_eligible'] = isEligible;
       data['timestamp'] = Timestamp.now();
 
       await _api.addClaimDocument(data);

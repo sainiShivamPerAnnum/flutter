@@ -4,6 +4,8 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
+import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
@@ -29,6 +31,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
   BaseUtil baseProvider;
   AugmontModel augmontProvider;
   ICICIModel iProvider;
+  AppState appState;
   double _width;
   static TextEditingController _panInput = new TextEditingController();
   static TextEditingController _panHolderNameInput =
@@ -49,13 +52,13 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     iProvider = Provider.of<ICICIModel>(context, listen: false);
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
-
+    appState = Provider.of<AppState>(context, listen: false);
     if (!_isInit) {
       _panInput.text = baseProvider.myUser.pan ?? '';
       _isInit = true;
     }
     return Scaffold(
-      appBar: BaseUtil.getAppBar(),
+      appBar: BaseUtil.getAppBar(context),
       body: SafeArea(child: _bodyContent(context)),
     );
   }
@@ -349,54 +352,55 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                         if (veriDetails != null &&
                             veriDetails['flag'] != null &&
                             veriDetails['flag']) {
+                          AppState.screenStack.add(ScreenItem.dialog);
+
                           ///show confirmation dialog to user
                           showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (BuildContext context) =>
-                                  AugmontConfirmRegnDialog(
-                                    panNumber: _panInput.text,
-                                    panName: _panHolderNameInput.text,
-                                    bankHolderName: _bankHolderNameInput.text,
-                                    bankBranchName: veriDetails['bank_branch'],
-                                    bankAccNo: _bankAccountNumberInput.text,
-                                    bankIfsc: _bankIfscInput.text,
-                                    bankName: veriDetails['bank_name'],
-                                    onAccept: () async {
-                                      ///finally now register the augmont user
-                                      UserAugmontDetail detail =
-                                          await augmontProvider.createUser(
-                                              baseProvider.myUser.mobile,
-                                              _panInput.text,
-                                              stateChosenValue,
-                                              _bankHolderNameInput.text,
-                                              _bankAccountNumberInput.text,
-                                              _bankIfscInput.text);
-                                      if (detail == null) {
-                                        baseProvider.showNegativeAlert(
-                                            'Registration Failed',
-                                            'Failed to regsiter at the moment. Please try again.',
-                                            context);
-                                        baseProvider.isAugmontRegnInProgress =
-                                            false;
-                                        setState(() {});
-                                        return;
-                                      } else {
-                                        ///show completion animation
-                                        _regnComplete();
-                                      }
-                                    },
-                                    onReject: () {
-                                      baseProvider.showNegativeAlert(
-                                          'Registration Cancelled',
-                                          'Please try again',
-                                          context);
-                                      baseProvider.isAugmontRegnInProgress =
-                                          false;
-                                      setState(() {});
-                                      return;
-                                    },
-                                  ));
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) =>
+                                AugmontConfirmRegnDialog(
+                              panNumber: _panInput.text,
+                              panName: _panHolderNameInput.text,
+                              bankHolderName: _bankHolderNameInput.text,
+                              bankBranchName: veriDetails['bank_branch'],
+                              bankAccNo: _bankAccountNumberInput.text,
+                              bankIfsc: _bankIfscInput.text,
+                              bankName: veriDetails['bank_name'],
+                              onAccept: () async {
+                                ///finally now register the augmont user
+                                UserAugmontDetail detail =
+                                    await augmontProvider.createUser(
+                                        baseProvider.myUser.mobile,
+                                        _panInput.text,
+                                        stateChosenValue,
+                                        _bankHolderNameInput.text,
+                                        _bankAccountNumberInput.text,
+                                        _bankIfscInput.text);
+                                if (detail == null) {
+                                  baseProvider.showNegativeAlert(
+                                      'Registration Failed',
+                                      'Failed to regsiter at the moment. Please try again.',
+                                      context);
+                                  baseProvider.isAugmontRegnInProgress = false;
+                                  setState(() {});
+                                  return;
+                                } else {
+                                  ///show completion animation
+                                  _regnComplete();
+                                }
+                              },
+                              onReject: () {
+                                baseProvider.showNegativeAlert(
+                                    'Registration Cancelled',
+                                    'Please try again',
+                                    context);
+                                baseProvider.isAugmontRegnInProgress = false;
+                                setState(() {});
+                                return;
+                              },
+                            ),
+                          );
                         } else {
                           baseProvider.showNegativeAlert(
                               'Invalid Details',
@@ -475,15 +479,18 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     if (kObj == null ||
         kObj[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
         kObj[GetKycStatus.resStatus] == null ||
-        kObj[GetKycStatus.resName] == null || kObj[GetKycStatus.resName] == '') {
+        kObj[GetKycStatus.resName] == null ||
+        kObj[GetKycStatus.resName] == '') {
       log.error('Couldnt fetch an appropriate response');
+
       ///set name test to true as we couldnt find it in the cams database
       _flag = true;
-    }else {
+    } else {
       String aName = kObj[GetKycStatus.resName];
-      if(aName.toUpperCase().trim() != aPanName.trim()) {
+      if (aName.toUpperCase().trim() != aPanName.trim()) {
         _flag = false;
-        _reason = 'The name on your PAN card does not match. Please enter your legal name.';
+        _reason =
+            'The name on your PAN card does not match. Please enter your legal name.';
       }
     }
     if (!_flag) {
@@ -518,7 +525,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     new Timer(const Duration(milliseconds: 1000), () {
       baseProvider.isAugmontRegnCompleteAnimateInProgress = false;
       setState(() {});
-      Navigator.of(context).pop();
+      backButtonDispatcher.didPopRoute();
       baseProvider.showPositiveAlert(
           'Registration Successful', 'You can now make a deposit!', context);
     });

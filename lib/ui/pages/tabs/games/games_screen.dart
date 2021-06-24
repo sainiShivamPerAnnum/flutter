@@ -6,6 +6,9 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/dialogs/Fold-Card/card.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
 import 'package:felloapp/ui/dialogs/ticket_details_dialog.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
@@ -23,9 +26,9 @@ import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 class GamePage extends StatefulWidget {
-  final ValueChanged<int> tabChange;
+  // final ValueChanged<int> tabChange;
 
-  GamePage({this.tabChange});
+  // GamePage({this.tabChange});
 
   @override
   _GamePageState createState() => _GamePageState();
@@ -38,13 +41,12 @@ class _GamePageState extends State<GamePage> {
   LocalDBModel lclDbProvider;
   BaseUtil baseProvider;
   DBModel dbProvider;
-  int currentPage;
+  AppState appState;
+
   GlobalKey _showcaseHeader = GlobalKey();
   GlobalKey _showcaseFooter = GlobalKey();
 
-  PageController _controller = new PageController(
-    initialPage: 0,
-  );
+  PageController _controller;
 
   @override
   void initState() {
@@ -54,15 +56,22 @@ class _GamePageState extends State<GamePage> {
     var data = DemoData();
     _gameList = data.getCities();
     _currentPage = _gameList[1];
-    currentPage = 0;
     // if (SizeConfig.isGamefirstTime != true) {
     _confeticontroller = new ConfettiController(
       duration: new Duration(seconds: 2),
     );
+    _controller = new PageController(
+      initialPage: AppState().getCurrentGameIndex,
+    );
     // }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.animateToPage(appState.getCurrentGameTabIndex,
+          duration: Duration(milliseconds: 600), curve: Curves.decelerate);
+    });
   }
 
-  void _handleCityChange(Game game) {
+  void _handleGameChange(Game game) {
     setState(() {
       this._currentPage = game;
     });
@@ -95,6 +104,7 @@ class _GamePageState extends State<GamePage> {
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    appState = Provider.of<AppState>(context, listen: false);
     if (baseProvider.show_game_tutorial) {
       Timer(const Duration(milliseconds: 2100), () {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -131,12 +141,11 @@ class _GamePageState extends State<GamePage> {
               scrollDirection: Axis.vertical,
               controller: _controller,
               onPageChanged: (int page) {
-                setState(() {
-                  currentPage = page;
-                  if (currentPage == 1 && SizeConfig.isGamefirstTime == true) {
-                    checkConfetti();
-                  }
-                });
+                appState.setCurrentGameTabIndex = page;
+                if (appState.getCurrentGameTabIndex == 1 &&
+                    SizeConfig.isGamefirstTime == true) {
+                  checkConfetti();
+                }
               },
               children: [
                 ClipRRect(
@@ -171,7 +180,7 @@ class _GamePageState extends State<GamePage> {
                               'Use the tickets to play exciting weekly games and win fun prizes!',
                               GameCardList(
                                 games: _gameList,
-                                onGameChange: _handleCityChange,
+                                onGameChange: _handleGameChange,
                               )),
                         ),
                         Expanded(
@@ -190,7 +199,9 @@ class _GamePageState extends State<GamePage> {
                                   title: "Want more tickets?",
                                   action: [
                                     GameOfferCardButton(
-                                      onPressed: () => widget.tabChange(2),
+                                      onPressed: () =>
+                                          delegate.parseRoute(Uri.parse("finance")),
+                                      ///TODO remove post testing
                                       // onPressed: () => showDialog(
                                       //   context: context,
                                       //   barrierDismissible: false,
@@ -213,7 +224,8 @@ class _GamePageState extends State<GamePage> {
                                       width: 10,
                                     ),
                                     GameOfferCardButton(
-                                      onPressed: () => widget.tabChange(3),
+                                      onPressed: () => delegate
+                                          .parseRoute(Uri.parse("profile")),
                                       title: "Share",
                                     ),
                                   ],
@@ -227,44 +239,94 @@ class _GamePageState extends State<GamePage> {
                                   action: [
                                     GameOfferCardButton(
                                       onPressed: () {
+                                        AppState.screenStack
+                                            .add(ScreenItem.dialog);
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) =>
-                                              FeedbackDialog(
-                                            title: "Tell us what you think",
-                                            description:
-                                                "We'd love to hear from you",
-                                            buttonText: "Submit",
-                                            dialogAction: (String fdbk) {
-                                              if (fdbk != null &&
-                                                  fdbk.isNotEmpty) {
-                                                //feedback submission allowed even if user not signed in
-                                                dbProvider
-                                                    .submitFeedback(
-                                                        (baseProvider.firebaseUser ==
-                                                                    null ||
-                                                                baseProvider
-                                                                        .firebaseUser
-                                                                        .uid ==
-                                                                    null)
-                                                            ? 'UNKNOWN'
-                                                            : baseProvider
-                                                                .firebaseUser
-                                                                .uid,
-                                                        fdbk)
-                                                    .then((flag) {
-                                                  Navigator.of(context).pop();
-                                                  if (flag) {
-                                                    baseProvider.showPositiveAlert(
-                                                        'Thank You',
-                                                        'We appreciate your feedback!',
-                                                        context);
-                                                  }
-                                                });
-                                              }
+                                              WillPopScope(
+                                            onWillPop: () {
+                                              backButtonDispatcher
+                                                  .didPopRoute();
+                                              return Future.value(true);
                                             },
+                                            child: FeedbackDialog(
+                                              title: "Tell us what you think",
+                                              description:
+                                                  "We'd love to hear from you",
+                                              buttonText: "Submit",
+                                              dialogAction: (String fdbk) {
+                                                if (fdbk != null &&
+                                                    fdbk.isNotEmpty) {
+                                                  //feedback submission allowed even if user not signed in
+                                                  dbProvider
+                                                      .submitFeedback(
+                                                          (baseProvider.firebaseUser ==
+                                                                      null ||
+                                                                  baseProvider
+                                                                          .firebaseUser
+                                                                          .uid ==
+                                                                      null)
+                                                              ? 'UNKNOWN'
+                                                              : baseProvider
+                                                                  .firebaseUser
+                                                                  .uid,
+                                                          fdbk)
+                                                      .then((flag) {
+                                                    Navigator.of(context).pop();
+                                                    if (flag) {
+                                                      baseProvider
+                                                          .showPositiveAlert(
+                                                              'Thank You',
+                                                              'We appreciate your feedback!',
+                                                              context);
+                                                    }
+                                                  });
+                                                }
+                                              },
+                                            ),
                                           ),
                                         );
+                                        // AppState.screenStack
+                                        //     .add(ScreenItem.dialog);
+                                        // showDialog(
+                                        //   context: context,
+                                        //   builder: (BuildContext context) =>
+                                        //       FeedbackDialog(
+                                        //     title: "Tell us what you think",
+                                        //     description:
+                                        //         "We'd love to hear from you",
+                                        //     buttonText: "Submit",
+                                        //     dialogAction: (String fdbk) {
+                                        //       if (fdbk != null &&
+                                        //           fdbk.isNotEmpty) {
+                                        //         //feedback submission allowed even if user not signed in
+                                        //         dbProvider
+                                        //             .submitFeedback(
+                                        //                 (baseProvider.firebaseUser ==
+                                        //                             null ||
+                                        //                         baseProvider
+                                        //                                 .firebaseUser
+                                        //                                 .uid ==
+                                        //                             null)
+                                        //                     ? 'UNKNOWN'
+                                        //                     : baseProvider
+                                        //                         .firebaseUser
+                                        //                         .uid,
+                                        //                 fdbk)
+                                        //             .then((flag) {
+                                        //           Navigator.of(context).pop();
+                                        //           if (flag) {
+                                        //             baseProvider.showPositiveAlert(
+                                        //                 'Thank You',
+                                        //                 'We appreciate your feedback!',
+                                        //                 context);
+                                        //           }
+                                        //         });
+                                        //       }
+                                        //     },
+                                        //   ),
+                                        // );
                                       },
                                       title: "Feedback",
                                     ),
@@ -308,7 +370,7 @@ class _GamePageState extends State<GamePage> {
                 ],
               ),
             ),
-            currentPage == 0
+            appState.getCurrentGameTabIndex == 0
                 ? Positioned(
                     bottom: 10,
                     child: Container(
@@ -331,110 +393,6 @@ class _GamePageState extends State<GamePage> {
                     ),
                   )
                 : SizedBox(),
-            // Expanded(
-            //   child: Container(
-            //     child: BackdropFilter(
-            //       filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-            //       child: Center(
-            //         child: Card(
-            //           margin: EdgeInsets.symmetric(horizontal: 40),
-            //           shape: RoundedRectangleBorder(
-            //               borderRadius: BorderRadius.circular(20)),
-            //           child: Wrap(
-            //             children: [
-            //               Container(
-            //                 padding: EdgeInsets.all(20),
-            //                 child: Column(
-            //                   crossAxisAlignment: CrossAxisAlignment.center,
-            //                   children: [
-            //                     LottieBuilder.asset(
-            //                       "images/lottie/winner.json",
-            //                       width: SizeConfig.screenWidth * 0.4,
-            //                       height: SizeConfig.screenWidth * 0.4,
-            //                     ),
-            //                     SizedBox(
-            //                       height: 20,
-            //                     ),
-            //                     Text(
-            //                       "Hurray, You are a Winner",
-            //                       style: Theme.of(context).textTheme.headline5,
-            //                     ),
-            //                     Text("For week 4 June to 11 June"),
-            //                     // Padding(
-            //                     //   padding: const EdgeInsets.all(8.0),
-            //                     //   child: Text(
-            //                     //     "Winning amount: \$20",
-            //                     //     style: Theme.of(context)
-            //                     //         .textTheme
-            //                     //         .headline4
-            //                     //         .copyWith(
-            //                     //             color: UiConstants.primaryColor),
-            //                     //   ),
-            //                     // ),
-            //                     // Container(
-            //                     //   decoration: BoxDecoration(
-            //                     //     borderRadius: BorderRadius.circular(15),
-            //                     //     border: Border.all(
-            //                     //       width: 2,
-            //                     //       color: UiConstants.primaryColor,
-            //                     //     ),
-            //                     //   ),
-            //                     //   padding: EdgeInsets.symmetric(
-            //                     //       horizontal: 20, vertical: 10),
-            //                     //   margin: EdgeInsets.all(10),
-            //                     //   child: Row(
-            //                     //     mainAxisAlignment: MainAxisAlignment.center,
-            //                     //     children: [
-            //                     //       SvgPicture.asset(
-            //                     //           "images/svgs/amazon-gift-voucher.svg",
-            //                     //           height: 20,
-            //                     //           width: 20),
-            //                     //       SizedBox(
-            //                     //         width: 10,
-            //                     //       ),
-            //                     //       Text(
-            //                     //           "Reedem it with Amazon gift voucher"),
-            //                     //     ],
-            //                     //   ),
-            //                     // ),
-            //                     // Text("Or"),
-            //                     // Container(
-            //                     //   decoration: BoxDecoration(
-            //                     //     borderRadius: BorderRadius.circular(15),
-            //                     //     border: Border.all(
-            //                     //       width: 2,
-            //                     //       color: UiConstants.primaryColor,
-            //                     //     ),
-            //                     //   ),
-            //                     //   padding: EdgeInsets.symmetric(
-            //                     //       horizontal: 20, vertical: 10),
-            //                     //   margin: EdgeInsets.all(10),
-            //                     //   child: Row(
-            //                     //     mainAxisAlignment: MainAxisAlignment.center,
-            //                     //     children: [
-            //                     //       SvgPicture.asset("images/svgs/gold.svg",
-            //                     //           height: 20, width: 20),
-            //                     //       SizedBox(
-            //                     //         width: 10,
-            //                     //       ),
-            //                     //       Text("Reedem it Augmont Gold"),
-            //                     //     ],
-            //                     //   ),
-            //                     // ),
-            //                     SubmitButton(
-            //                         action: () {},
-            //                         title: "Claim your prize now",
-            //                         isDisabled: false)
-            //                   ],
-            //                 ),
-            //               )
-            //             ],
-            //           ),
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // )
           ],
         ),
       ),

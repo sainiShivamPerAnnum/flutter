@@ -109,7 +109,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: BaseUtil.getAppBar(),
+        appBar: BaseUtil.getAppBar(context),
         body: Padding(
           padding: EdgeInsets.symmetric(
               horizontal: SizeConfig.blockSizeHorizontal * 5, vertical: 20),
@@ -123,7 +123,9 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     padding: EdgeInsets.all(8),
                     child: Text(
                       'Update your bank account details',
-                      style: TextStyle(fontSize: SizeConfig.largeTextSize, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                          fontSize: SizeConfig.largeTextSize,
+                          fontWeight: FontWeight.w600),
                     ),
                   ),
                   Padding(
@@ -131,7 +133,9 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     child: Text(
                       'This is where the amount received from selling your gold shall be credited.',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: SizeConfig.mediumTextSize, fontWeight: FontWeight.w400),
+                      style: TextStyle(
+                          fontSize: SizeConfig.mediumTextSize,
+                          fontWeight: FontWeight.w400),
                     ),
                   ),
                   SizedBox(
@@ -255,6 +259,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
   _onUpdateClicked() async {
     baseProvider.isEditAugmontBankDetailInProgress = true;
     setState(() {});
+
     ///CHECK FOR CHANGES
     var pBankHolderName = _bankHolderNameController.text;
     var pBankAccNo = _bankAccNoController.text;
@@ -278,7 +283,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
     }
 
     ///NOW CHECK IF IFSC IS VALID
-    if(!iProvider.isInit())await iProvider.init();
+    if (!iProvider.isInit()) await iProvider.init();
     var bankDetail =
         await iProvider.getBankInfo(baseProvider.myUser.pan, pBankIfsc);
     if (bankDetail == null ||
@@ -302,7 +307,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
               bankIfsc: pBankIfsc,
               bankName: bankDetail[GetBankDetail.resBankName],
               bankBranchName: bankDetail[GetBankDetail.resBranchName],
-              onAccept: () async{
+              onAccept: () async {
                 ///FINALLY NOW UPDATE THE BANK DETAILS
                 baseProvider.augmontDetail.bankHolderName = pBankHolderName;
                 baseProvider.augmontDetail.bankAccNo = pBankAccNo;

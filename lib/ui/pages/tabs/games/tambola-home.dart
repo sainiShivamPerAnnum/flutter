@@ -10,9 +10,12 @@ import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/tambola_generation_service.dart';
+import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/tambola_dialog.dart';
 import 'package:felloapp/ui/dialogs/weekly_draw_dialog.dart';
-import 'package:felloapp/ui/dialogs/winnings_dialog.dart';
+import 'package:felloapp/ui/dialogs/tambola_user_results_dialog.dart';
 import 'package:felloapp/ui/elements/board_selector.dart';
 import 'package:felloapp/ui/elements/roulette.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
@@ -51,13 +54,13 @@ class _TambolaGameScreen extends State<TambolaHome> {
   DBModel dbProvider;
   FcmHandler fcmProvider;
   LocalDBModel localDBModel;
+  AppState appState;
 
   bool ticketsBeingGenerated = true;
   bool dailyPickHeaderWithTimings = false;
   String dailyPickHeaderText = 'Today\'s picks';
   List<String> dailyPickTextList = [];
 
-  // List<String> prizeEmoji = ['🥇', '🏆', ' 🎊', ' 🎉'];
   List<bool> detStatus = [false, false, false, false];
 
   GlobalKey _showcaseOne = GlobalKey();
@@ -185,13 +188,13 @@ class _TambolaGameScreen extends State<TambolaHome> {
     setState(() {});
   }
 
-  bool _startTutorial() {
+  bool _startTutorial(BuildContext c) {
     if (baseProvider.weeklyDrawFetched &&
         baseProvider.weeklyTicksFetched &&
         _activeTambolaCardCount > 0) {
       //Start showcase view after current widget frames are drawn.
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ShowCaseWidget.of(context).startShowCase(
+        ShowCaseWidget.of(c).startShowCase(
             [_showcaseOne, _showcaseTwo, _showcaseThree, _showcaseFour]);
       });
       _showTutorial = false;
@@ -226,95 +229,98 @@ class _TambolaGameScreen extends State<TambolaHome> {
   );
 
   @override
-  Widget build(BuildContext c) {
+  Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     fcmProvider = Provider.of<FcmHandler>(context, listen: false);
     localDBModel = Provider.of<LocalDBModel>(context, listen: false);
+    appState = Provider.of<AppState>(context, listen: false);
     _init();
     _checkSundayResultsProcessing();
-    if (_showTutorial) _startTutorial();
+    if (_showTutorial) _startTutorial(context);
     return Scaffold(
         //debugShowCheckedModeBanner: false,
         backgroundColor: Color(0xfff1f1f1),
-        body: Stack(
-          children: [
-            Container(
-              height: SizeConfig.screenHeight * 0.2,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  stops: [0.1, 0.6],
-                  colors: [
-                    UiConstants.primaryColor.withGreen(190),
-                    UiConstants.primaryColor,
-                  ],
-                ),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.elliptical(
-                      MediaQuery.of(context).size.width * 0.50, 18),
-                  bottomRight: Radius.elliptical(
-                      MediaQuery.of(context).size.width * 0.50, 18),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Spacer(),
-                  _buildTicketCount(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                ],
-              ),
-            ),
-            SafeArea(
-                child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    child: _buildCardCanvas(context))),
-            Positioned(
-              top: 5,
-              child: SafeArea(
-                child: Container(
-                  width: SizeConfig.screenWidth,
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.blockSizeHorizontal * 3),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        color: Colors.white,
-                        icon: Icon(Icons.arrow_back),
-                        onPressed: () {
-                          HapticFeedback.vibrate();
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      Text('Tambola',
-                          style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: SizeConfig.largeTextSize)),
-                      IconButton(
-                        color: Colors.white,
-                        icon: Icon(Icons.help_outline),
-                        onPressed: () {
-                          HapticFeedback.vibrate();
-                          _showTutorial = true;
-                          if (!_startTutorial()) {
-                            //baseProvider.showNegativeAlert('Try soon', message, context)
-                          }
-                        },
-                      ),
+        body: ShowCaseWidget(
+          builder: Builder(builder: (context) => Stack(
+            children: [
+              Container(
+                height: SizeConfig.screenHeight * 0.2,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    stops: [0.1, 0.6],
+                    colors: [
+                      UiConstants.primaryColor.withGreen(190),
+                      UiConstants.primaryColor,
                     ],
                   ),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.elliptical(
+                        MediaQuery.of(context).size.width * 0.50, 18),
+                    bottomRight: Radius.elliptical(
+                        MediaQuery.of(context).size.width * 0.50, 18),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Spacer(),
+                    _buildTicketCount(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                  ],
                 ),
               ),
-            ),
-            // SafeArea(
-            //     child: Align(
-            //         alignment: Alignment.bottomCenter, child: _buildPrizeButton()))
-          ],
+              SafeArea(
+                  child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: _buildCardCanvas(context))),
+              Positioned(
+                top: 5,
+                child: SafeArea(
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.blockSizeHorizontal * 3),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          color: Colors.white,
+                          icon: Icon(Icons.arrow_back),
+                          onPressed: () {
+                            HapticFeedback.vibrate();
+                            backButtonDispatcher.didPopRoute();
+                          },
+                        ),
+                        Text('Tambola',
+                            style: GoogleFonts.montserrat(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: SizeConfig.largeTextSize)),
+                        IconButton(
+                          color: Colors.white,
+                          icon: Icon(Icons.help_outline),
+                          onPressed: () {
+                            HapticFeedback.vibrate();
+                            _showTutorial = true;
+                            if (!_startTutorial(context)) {
+                              //baseProvider.showNegativeAlert('Try soon', message, context)
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              // SafeArea(
+              //     child: Align(
+              //         alignment: Alignment.bottomCenter, child: _buildPrizeButton()))
+            ],
+          )),
         )
         //),
         );
@@ -389,31 +395,37 @@ class _TambolaGameScreen extends State<TambolaHome> {
                           ),
                         )
                       : Container(),
-                  _activeTambolaCardCount > 10
-                      ? GestureDetector(
-                          child: Text(
-                            "Show All Tickets   ",
-                            style: GoogleFonts.montserrat(
-                              color: UiConstants.primaryColor.withGreen(600),
-                            ),
-                          ),
-                          onTap: () {
-                            _tambolaBoardViews = [];
-                            baseProvider.userWeeklyBoards.forEach((board) {
-                              _tambolaBoardViews.add(_buildBoardView(
-                                  board, baseProvider.weeklyDigits));
-                            });
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (ctx) => TambolaCardsList(
-                                  tambolaBoardView: _tambolaBoardViews,
-                                ),
-                              ),
-                            );
-                          },
-                        )
-                      : SizedBox(),
+                  // _activeTambolaCardCount > 10 ?
+                  GestureDetector(
+                    child: Text(
+                      "Show All Tickets   ",
+                      style: GoogleFonts.montserrat(
+                        color: UiConstants.primaryColor.withGreen(600),
+                      ),
+                    ),
+                    onTap: () {
+                      _tambolaBoardViews = [];
+                      baseProvider.userWeeklyBoards.forEach((board) {
+                        _tambolaBoardViews.add(
+                            _buildBoardView(board, baseProvider.weeklyDigits));
+                      });
+                      appState.currentAction = PageAction(
+                        state: PageState.addWidget,
+                        page: TambolaTicketsPageConfig,
+                        widget: TambolaCardsList(
+                          tambolaBoardView: _tambolaBoardViews,
+                        ),
+                      );
+                      // Navigator.push(
+                      //   context,
+                      //   CupertinoPageRoute(
+                      //     builder: (ctx) => TambolaCardsList(
+                      //       tambolaBoardView: _tambolaBoardViews,
+                      //     ),
+                      //   ),
+                      // );
+                    },
+                  ),
                 ],
               ),
               SizedBox(
@@ -482,19 +494,19 @@ class _TambolaGameScreen extends State<TambolaHome> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: _podiumItem(
-                "images/Tambola/fullhouse.png", "₹ 1000", "Full House"),
+                "images/Tambola/fullhouse.png", '₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_FULL)}', "Full House"),
           ),
           Row(
             children: [
               Expanded(
                 flex: 6,
-                child: _podiumItem("images/Tambola/rows.png", "₹ 500",
+                child: _podiumItem("images/Tambola/rows.png", "₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_TOP)}",
                     "First/Second/Third Row"),
               ),
               Expanded(
                 flex: 4,
                 child: _podiumItem(
-                    "images/Tambola/corners.png", "₹ 100", "Corners"),
+                    "images/Tambola/corners.png", "₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_CORNER)}", "Corners"),
               )
             ],
           ),
@@ -507,13 +519,13 @@ class _TambolaGameScreen extends State<TambolaHome> {
             children: [
               ExpansionPanel(
                 headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
-                    "images/svgs/howitworks.svg", "How the prizing works ?"),
+                    "images/svgs/howitworks.svg", Assets.tambolaFaqList[0].keys.first),
                 isExpanded: detStatus[0],
                 body: Container(
                   child: Column(
                     children: [
                       Text(
-                        "- Every day you recive 6 random generated picks\n\n-Check what numbers are matching on your tambola tickets\n\n- If any of your card satisfies any of the 3 criteria, congrats you are a winner.",
+                        Assets.tambolaFaqList[0].values.first,
                         style: TextStyle(
                           height: 1.5,
                           fontSize: SizeConfig.mediumTextSize,
@@ -526,14 +538,14 @@ class _TambolaGameScreen extends State<TambolaHome> {
               ExpansionPanel(
                 headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
                     "images/svgs/cash-distribution.svg",
-                    "How cash is distributed ?"),
+                    Assets.tambolaFaqList[1].keys.first),
                 isExpanded: detStatus[1],
                 body: Container(
                   padding: EdgeInsets.only(right: 25),
                   child: Column(
                     children: [
                       Text(
-                        "- Every Sunday, winners are announced and the cash prize is distributed  between the winners of equal win status.\n\n-Eg: if 10 people claim to have a Tambola ticket with Full house then ₹1000 will be distributed among those 10 people i,e. each one will get ₹100.\n\n-easy peasy",
+                        Assets.tambolaFaqList[1].values.first,
                         style: TextStyle(
                           height: 1.5,
                           fontSize: SizeConfig.mediumTextSize,
@@ -546,13 +558,13 @@ class _TambolaGameScreen extends State<TambolaHome> {
               ExpansionPanel(
                 headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
                     "images/svgs/redeem.svg",
-                    "How can you redeem your prize ?"),
+                    Assets.tambolaFaqList[2].keys.first),
                 body: Container(
                   padding: EdgeInsets.only(right: 25),
                   child: Column(
                     children: [
                       Text(
-                        "If you win, then we will:\n\n-Send you a notification for the same and you can claim by clicking on that.\n\n-Show you a prize dialog in the game section for claiming your reward\n\nAlso, you can check the Winnerboard. If your name exists,click on it to claim your reward.",
+                        Assets.tambolaFaqList[2].values.first,
                         style: TextStyle(
                           height: 1.5,
                           fontSize: SizeConfig.mediumTextSize,
@@ -566,13 +578,13 @@ class _TambolaGameScreen extends State<TambolaHome> {
               ExpansionPanel(
                 headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
                     "images/svgs/winmore.svg",
-                    "How you can maximize your winnings ?"),
+                    Assets.tambolaFaqList[3].keys.first),
                 body: Container(
                   padding: EdgeInsets.only(right: 25),
                   child: Column(
                     children: [
                       Text(
-                        "-So by now you got the idea, how to win\n\n-Now to maximize your winning, you have to maxmimize your chances of matching tambola tickets\n\n-So get more and more tambola tickets to maximize you chances of winning.\n\n-How to get more tambola tickets? Invest in the funds available.\n\n-For every ₹100 you invest/save, you get new tambola ticket.\n\n!!Start investing now!!\n",
+                        Assets.tambolaFaqList[3].values.first,
                         style: TextStyle(
                           height: 1.5,
                           fontSize: SizeConfig.mediumTextSize,
@@ -727,6 +739,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
   }
 
   ///check if any of the tickets aced any of the categories.
+  ///also check if the user is eligible for a prize
   ///if any did, add it to a list and submit the list as a win claim
   _examineTicketsForWins() {
     if (baseProvider.userWeeklyBoards == null ||
@@ -781,14 +794,20 @@ class _TambolaGameScreen extends State<TambolaHome> {
       }
     });
 
+    double totalInvestedPrinciple =
+        baseProvider.userFundWallet.augGoldPrinciple +
+            baseProvider.userFundWallet.iciciPrinciple;
+    bool _isEligible = (totalInvestedPrinciple >= BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
+
     log.debug('Resultant wins: ${ticketCodeWinIndex.toString()}');
 
     if (!_winnerDialogCalled)
-      new Timer(const Duration(seconds: 3), () {
+      new Timer(const Duration(milliseconds: 2500), () {
         showDialog(
             context: context,
-            builder: (BuildContext context) => WinningsDialog(
+            builder: (BuildContext context) => TambolaResultsDialog(
                   winningsMap: ticketCodeWinIndex,
+                  isEligible: _isEligible,
                 ));
       });
     _winnerDialogCalled = true;
@@ -800,10 +819,11 @@ class _TambolaGameScreen extends State<TambolaHome> {
               baseProvider.myUser.name,
               baseProvider.myUser.mobile,
               baseProvider.userTicketWallet.getActiveTickets(),
+              _isEligible,
               ticketCodeWinIndex)
           .then((flag) {
         baseProvider.showPositiveAlert('Congratulations 🎉',
-            'Your ticket results have been submitted for approval!', context);
+            'Your tickets have been submitted for processing your prizes!', context);
       });
     }
   }

@@ -1,4 +1,6 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/tabs/finance/edit_augmont_bank_details.dart';
 import 'package:felloapp/util/assets.dart';
@@ -42,6 +44,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
   final Log log = new Log('AugmontWithdrawScreen');
   TextEditingController _quantityController = TextEditingController();
   BaseUtil baseProvider;
+  AppState appState;
   String _amountError;
   String _errorMessage;
   bool _isLoading = false;
@@ -55,6 +58,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
   Widget build(BuildContext context) {
     _width = MediaQuery.of(context).size.width;
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    appState = Provider.of<AppState>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -101,12 +105,15 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (ctx) => EditAugmontBankDetail(),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (ctx) => EditAugmontBankDetail(),
+                      //   ),
+                      // );
+                      appState.currentAction = PageAction(
+                          state: PageState.addPage,
+                          page: EditAugBankDetailsPageConfig);
                     },
                   ),
                 ),

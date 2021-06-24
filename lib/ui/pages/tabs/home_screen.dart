@@ -3,6 +3,8 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/model/FeedCard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -14,9 +16,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  final ValueChanged<int> tabChange;
+  // final ValueChanged<int> tabChange;
 
-  HomePage({this.tabChange});
+  // HomePage({this.tabChange});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -26,6 +28,7 @@ class _HomePageState extends State<HomePage> {
   bool isImageLoading = false;
   BaseUtil baseProvider;
   DBModel dbProvider;
+  AppState appState;
   bool _isInit = false;
 
   Future<void> getProfilePicUrl() async {
@@ -77,6 +80,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    appState = Provider.of<AppState>(context, listen: false);
     if (baseProvider.myUserDpUrl == null) {
       isImageLoading = true;
       getProfilePicUrl();
@@ -113,6 +117,7 @@ class _HomePageState extends State<HomePage> {
                 child: Padding(
                   padding: EdgeInsets.only(left: SizeConfig.screenWidth * 0.05),
                   child: ListView(
+                    controller: AppState.homeCardListController,
                     physics: BouncingScrollPhysics(),
                     children: (!baseProvider.isHomeCardsFetched)
                         ? _buildLoadingFeed()
@@ -133,16 +138,10 @@ class _HomePageState extends State<HomePage> {
             context: context,
             builder: (BuildContext context) => GuideDialog(),
           );
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (ctx) => GetStartedPage(),
-          //   ),
-          // );
         };
       case 120:
         return () {
-          widget.tabChange(3);
+          appState.setCurrentTabIndex = 3;
         };
       case 140:
         return () {
@@ -193,13 +192,16 @@ class _HomePageState extends State<HomePage> {
         buttonText: card.btnText,
         onPressed: () async {
           HapticFeedback.vibrate();
-          var _f = getFixedAction(card.id);
-          _f();
+          delegate.parseRoute(Uri.parse(card.actionUri));
         },
         gradient: [
           Color(card.clrCodeA),
           Color(card.clrCodeB),
         ],
+        // "0/d-guide"
+        //   "3"
+        //   "1/d-gamePoll"
+        //   "2/augDetails/editProfile/d-aboutus"
       ));
     }
 
@@ -248,7 +250,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               Text(
                 getGreeting().toUpperCase(),
-                style: TextStyle(
+                style: GoogleFonts.manrope(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
                     fontSize: SizeConfig.largeTextSize),
@@ -256,7 +258,7 @@ class _HomePageState extends State<HomePage> {
               Text(
                 baseProvider.myUser.name,
                 textAlign: TextAlign.start,
-                style: TextStyle(
+                style: GoogleFonts.manrope(
                     color: Colors.white, fontSize: SizeConfig.largeTextSize),
               ),
             ],
@@ -331,7 +333,7 @@ class HomeCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
+                  style: GoogleFonts.manrope(
                       color: Colors.white,
                       shadows: [
                         Shadow(
@@ -348,7 +350,7 @@ class HomeCard extends StatelessWidget {
                 ),
                 Text(
                   subtitle,
-                  style: TextStyle(
+                  style: GoogleFonts.manrope(
                       color: Colors.white,
                       fontSize: SizeConfig.mediumTextSize * 1.2,
                       fontWeight: FontWeight.w400),
@@ -377,7 +379,7 @@ class HomeCard extends StatelessWidget {
                     ),
                     child: Text(
                       buttonText,
-                      style: TextStyle(
+                      style: GoogleFonts.manrope(
                           color: Colors.white, fontSize: width * 0.035),
                     ),
                   ),
