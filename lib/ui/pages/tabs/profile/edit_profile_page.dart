@@ -17,7 +17,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -66,22 +65,22 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Future<File> testCompressAndGetFile(File file, String targetPath) async {
-    int quality = 50;
-    double filesize = file.lengthSync() / (1024 * 1024);
-    if (filesize < 1) {
-      quality = 75;
-    }
-    var result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path,
-      targetPath,
-      quality: quality,
-      rotate: 0,
-    );
+    // int quality = 50;
+    // double filesize = file.lengthSync() / (1024 * 1024);
+    // if (filesize < 1) {
+    //   quality = 75;
+    // }
+    // var result = await FlutterImageCompress.compressAndGetFile(
+    //   file.absolute.path,
+    //   targetPath,
+    //   quality: quality,
+    //   rotate: 0,
+    // );
 
-    print(file.lengthSync());
-    print(result.lengthSync());
+    // print(file.lengthSync());
+    // print(result.lengthSync());
 
-    return result;
+    return file;
   }
 
   Future<bool> updatePicture(BuildContext context) async {

@@ -41,22 +41,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
   }
 
   Future<File> testCompressAndGetFile(File file, String targetPath) async {
-    int quality = 50;
-    double filesize = file.lengthSync() / (1024 * 1024);
-    if (filesize < 1) {
-      quality = 75;
-    }
-    var result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path,
-      targetPath,
-      quality: quality,
-      rotate: 0,
-    );
-
-    print(file.lengthSync());
-    print(result.lengthSync());
-
-    return result;
+    return file;
   }
 
   Future<void> updatePicture(BuildContext context) async {
