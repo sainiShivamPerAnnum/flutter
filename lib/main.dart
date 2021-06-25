@@ -50,6 +50,22 @@ class _MyAppState extends State<MyApp> {
     backButtonDispatcher = FelloBackButtonDispatcher(delegate);
   }
 
+  static const MaterialColor kPrimaryColor = MaterialColor(
+    0xff2EB19F,
+    const <int, Color>{
+      50: const Color(0xff2EB19F),
+      100: const Color(0xff2EB19F),
+      200: const Color(0xff2EB19F),
+      300: const Color(0xff2EB19F),
+      400: const Color(0xff2EB19F),
+      500: const Color(0xff2EB19F),
+      600: const Color(0xff2EB19F),
+      700: const Color(0xff2EB19F),
+      800: const Color(0xff2EB19F),
+      900: const Color(0xff2EB19F),
+    },
+  );
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -71,7 +87,7 @@ class _MyAppState extends State<MyApp> {
         title: Constants.APP_NAME,
         theme: ThemeData(
           primaryColor: UiConstants.primaryColor,
-          primarySwatch: Colors.green,
+          primarySwatch: kPrimaryColor,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           textTheme: GoogleFonts.montserratTextTheme(),
         ),

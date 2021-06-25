@@ -149,196 +149,163 @@ class _GamePageState extends State<GamePage> {
               },
               children: [
                 ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(50),
-                      bottomRight: Radius.circular(50),
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: AppBar().preferredSize.height * 2,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(50),
+                    bottomRight: Radius.circular(50),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Spacer(
+                        flex: 2,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          HapticFeedback.vibrate();
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                TicketDetailsDialog(
+                                    baseProvider.userTicketWallet),
+                          );
+                        },
+                        child: BaseUtil.buildShowcaseWrapper(
+                          _showcaseHeader,
+                          'Your game tickets appear here. You receive 1 game ticket for every ₹${Constants.INVESTMENT_AMOUNT_FOR_TICKET} you save. You can also click here to see a further breakdown.',
+                          TicketCount(
+                              baseProvider.userTicketWallet.getActiveTickets()),
                         ),
-                        InkWell(
-                            onTap: () {
-                              HapticFeedback.vibrate();
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    TicketDetailsDialog(
-                                        baseProvider.userTicketWallet),
-                              );
-                            },
-                            child: BaseUtil.buildShowcaseWrapper(
-                                _showcaseHeader,
-                                'Your game tickets appear here. You receive 1 game ticket for every ₹${Constants.INVESTMENT_AMOUNT_FOR_TICKET} you save. You can also click here to see a further breakdown.',
-                                TicketCount(baseProvider.userTicketWallet
-                                    .getActiveTickets()))),
-                        Expanded(
-                          flex: 4,
-                          child: BaseUtil.buildShowcaseWrapper(
-                              _showcaseFooter,
-                              'Use the tickets to play exciting weekly games and win fun prizes!',
-                              GameCardList(
-                                games: _gameList,
-                                onGameChange: _handleGameChange,
-                              )),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Container(
-                            width: SizeConfig.screenWidth,
-                            child: ListView(
-                              scrollDirection: Axis.horizontal,
-                              physics: BouncingScrollPhysics(),
-                              children: [
-                                GameCard(
-                                  gradient: [
-                                    Color(0xffACB6E5),
-                                    Color(0xff74EBD5),
-                                  ],
-                                  title: "Want more tickets?",
-                                  action: [
-                                    GameOfferCardButton(
-                                      onPressed: () => delegate
-                                          .parseRoute(Uri.parse("finance")),
+                      ),
+                      Spacer(
+                        flex: 1,
+                      ),
+                      BaseUtil.buildShowcaseWrapper(
+                          _showcaseFooter,
+                          'Use the tickets to play exciting weekly games and win fun prizes!',
+                          GameCardList(
+                            games: _gameList,
+                            onGameChange: _handleGameChange,
+                          )),
+                      Spacer(
+                        flex: 1,
+                      ),
+                      Container(
+                        height: SizeConfig.screenHeight * 0.16,
+                        width: SizeConfig.screenWidth,
+                        child: ListView(
+                          shrinkWrap: true,
+                          itemExtent: SizeConfig.screenWidth * 0.8,
+                          scrollDirection: Axis.horizontal,
+                          physics: BouncingScrollPhysics(),
+                          children: [
+                            GameCard(
+                              gradient: [
+                                Color(0xffACB6E5),
+                                Color(0xff74EBD5),
+                              ],
+                              title: "Want more tickets?",
+                              action: [
+                                GameOfferCardButton(
+                                  onPressed: () =>
+                                      delegate.parseRoute(Uri.parse("finance")),
 
-                                      ///TODO remove post testing
-                                      // onPressed: () => showDialog(
-                                      //   context: context,
-                                      //   barrierDismissible: false,
-                                      //   builder: (ctx) {
-                                      //     return Center(
-                                      //       child: Material(
-                                      //         color: Colors.transparent,
-                                      //         child: Stack(
-                                      //           children: [
-                                      //             Center(child: FCard()),
-                                      //           ],
-                                      //         ),
-                                      //       ),
-                                      //     );
-                                      //   },
-                                      // ),
-                                      title: "Invest",
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    GameOfferCardButton(
-                                      onPressed: () => delegate
-                                          .parseRoute(Uri.parse("profile")),
-                                      title: "Share",
-                                    ),
-                                  ],
+                                  ///TODO remove post testing
+                                  // onPressed: () => showDialog(
+                                  //   context: context,
+                                  //   barrierDismissible: false,
+                                  //   builder: (ctx) {
+                                  //     return Center(
+                                  //       child: Material(
+                                  //         color: Colors.transparent,
+                                  //         child: Stack(
+                                  //           children: [
+                                  //             Center(child: FCard()),
+                                  //           ],
+                                  //         ),
+                                  //       ),
+                                  //     );
+                                  //   },
+                                  // ),
+                                  title: "Invest",
                                 ),
-                                GameCard(
-                                  gradient: [
-                                    Color(0xffD4AC5B),
-                                    Color(0xffDECBA4),
-                                  ],
-                                  title: "Share your thoughts with us",
-                                  action: [
-                                    GameOfferCardButton(
-                                      onPressed: () {
-                                        AppState.screenStack
-                                            .add(ScreenItem.dialog);
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              WillPopScope(
-                                            onWillPop: () {
-                                              backButtonDispatcher
-                                                  .didPopRoute();
-                                              return Future.value(true);
-                                            },
-                                            child: FeedbackDialog(
-                                              title: "Tell us what you think",
-                                              description:
-                                                  "We'd love to hear from you",
-                                              buttonText: "Submit",
-                                              dialogAction: (String fdbk) {
-                                                if (fdbk != null &&
-                                                    fdbk.isNotEmpty) {
-                                                  //feedback submission allowed even if user not signed in
-                                                  dbProvider
-                                                      .submitFeedback(
-                                                          (baseProvider.firebaseUser ==
-                                                                      null ||
-                                                                  baseProvider
-                                                                          .firebaseUser
-                                                                          .uid ==
-                                                                      null)
-                                                              ? 'UNKNOWN'
-                                                              : baseProvider
-                                                                  .firebaseUser
-                                                                  .uid,
-                                                          fdbk)
-                                                      .then((flag) {
-                                                    Navigator.of(context).pop();
-                                                    if (flag) {
-                                                      baseProvider
-                                                          .showPositiveAlert(
-                                                              'Thank You',
-                                                              'We appreciate your feedback!',
-                                                              context);
-                                                    }
-                                                  });
-                                                }
-                                              },
-                                            ),
-                                          ),
-                                        );
-                                        // AppState.screenStack
-                                        //     .add(ScreenItem.dialog);
-                                        // showDialog(
-                                        //   context: context,
-                                        //   builder: (BuildContext context) =>
-                                        //       FeedbackDialog(
-                                        //     title: "Tell us what you think",
-                                        //     description:
-                                        //         "We'd love to hear from you",
-                                        //     buttonText: "Submit",
-                                        //     dialogAction: (String fdbk) {
-                                        //       if (fdbk != null &&
-                                        //           fdbk.isNotEmpty) {
-                                        //         //feedback submission allowed even if user not signed in
-                                        //         dbProvider
-                                        //             .submitFeedback(
-                                        //                 (baseProvider.firebaseUser ==
-                                        //                             null ||
-                                        //                         baseProvider
-                                        //                                 .firebaseUser
-                                        //                                 .uid ==
-                                        //                             null)
-                                        //                     ? 'UNKNOWN'
-                                        //                     : baseProvider
-                                        //                         .firebaseUser
-                                        //                         .uid,
-                                        //                 fdbk)
-                                        //             .then((flag) {
-                                        //           Navigator.of(context).pop();
-                                        //           if (flag) {
-                                        //             baseProvider.showPositiveAlert(
-                                        //                 'Thank You',
-                                        //                 'We appreciate your feedback!',
-                                        //                 context);
-                                        //           }
-                                        //         });
-                                        //       }
-                                        //     },
-                                        //   ),
-                                        // );
-                                      },
-                                      title: "Feedback",
-                                    ),
-                                  ],
-                                )
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                GameOfferCardButton(
+                                  onPressed: () =>
+                                      delegate.parseRoute(Uri.parse("profile")),
+                                  title: "Share",
+                                ),
                               ],
                             ),
-                          ),
+                            GameCard(
+                              gradient: [
+                                Color(0xffD4AC5B),
+                                Color(0xffDECBA4),
+                              ],
+                              title: "Share your thoughts with us",
+                              action: [
+                                GameOfferCardButton(
+                                  onPressed: () {
+                                    AppState.screenStack.add(ScreenItem.dialog);
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          WillPopScope(
+                                        onWillPop: () {
+                                          backButtonDispatcher.didPopRoute();
+                                          return Future.value(true);
+                                        },
+                                        child: FeedbackDialog(
+                                          title: "Tell us what you think",
+                                          description:
+                                              "We'd love to hear from you",
+                                          buttonText: "Submit",
+                                          dialogAction: (String fdbk) {
+                                            if (fdbk != null &&
+                                                fdbk.isNotEmpty) {
+                                              //feedback submission allowed even if user not signed in
+                                              dbProvider
+                                                  .submitFeedback(
+                                                      (baseProvider.firebaseUser ==
+                                                                  null ||
+                                                              baseProvider
+                                                                      .firebaseUser
+                                                                      .uid ==
+                                                                  null)
+                                                          ? 'UNKNOWN'
+                                                          : baseProvider
+                                                              .firebaseUser.uid,
+                                                      fdbk)
+                                                  .then((flag) {
+                                                backButtonDispatcher
+                                                    .didPopRoute();
+                                                if (flag) {
+                                                  baseProvider.showPositiveAlert(
+                                                      'Thank You',
+                                                      'We appreciate your feedback!',
+                                                      context);
+                                                }
+                                              });
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  title: "Feedback",
+                                ),
+                              ],
+                            )
+                          ],
                         ),
-                      ],
-                    )),
+                      ),
+                      Spacer(
+                        flex: 1,
+                      )
+                    ],
+                  ),
+                ),
                 Container(
                   child: Column(
                     children: [
@@ -485,75 +452,60 @@ class GameCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    return Container(
-      margin: EdgeInsets.only(
-        bottom: SizeConfig.screenHeight * 0.05,
-        left: width * 0.05,
-      ),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          gradient: new LinearGradient(
-            colors: gradient,
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
+    return Wrap(
+      children: [
+        Container(
+          margin: EdgeInsets.only(
+            left: SizeConfig.blockSizeHorizontal * 5,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: gradient[0].withOpacity(0.3),
-              offset: Offset(5, 5),
-              blurRadius: 10,
-            ),
-            BoxShadow(
-              color: gradient[1].withOpacity(0.3),
-              offset: Offset(5, 5),
-              blurRadius: 10,
-            ),
-          ]),
-      width: width * 0.8,
-      child: Stack(
-        children: [
-          // Positioned(
-          //   right: 10,
-          //   bottom: 0,
-          //   child: Opacity(
-          //     opacity: 0.3,
-          //     child: Image.asset(
-          //       asset,
-          //       height: height * 0.25,
-          //       width: width * 0.5,
-          //     ),
-          //   ),
-          // ),
-          Container(
-            width: width * 0.8,
-            padding: EdgeInsets.all(width * 0.05),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                      color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          offset: Offset(5, 5),
-                          color: Colors.black26,
-                          blurRadius: 10,
-                        )
-                      ],
-                      fontWeight: FontWeight.w700,
-                      fontSize: width * 0.06),
+          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              gradient: new LinearGradient(
+                colors: gradient,
+                begin: Alignment.bottomLeft,
+                end: Alignment.topRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: gradient[0].withOpacity(0.3),
+                  offset: Offset(5, 5),
+                  blurRadius: 10,
                 ),
-                Row(
-                  children: action,
-                )
-              ],
-            ),
-          )
-        ],
-      ),
+                BoxShadow(
+                  color: gradient[1].withOpacity(0.3),
+                  offset: Offset(5, 5),
+                  blurRadius: 10,
+                ),
+              ]),
+          width: SizeConfig.screenWidth * 0.8,
+          height: SizeConfig.screenHeight * 0.16,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        offset: Offset(5, 5),
+                        color: Colors.black26,
+                        blurRadius: 10,
+                      )
+                    ],
+                    fontWeight: FontWeight.w700,
+                    fontSize: SizeConfig.screenWidth * 0.06),
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: action,
+              )
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -567,32 +519,33 @@ class GameOfferCardButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          border: Border.all(
-            width: 2,
-            color: Colors.white,
+      child: GestureDetector(
+        onTap: onPressed,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+            border: Border.all(
+              width: 2,
+              color: Colors.white,
+            ),
+            color: Colors.transparent,
+            // boxShadow: [
+            //   BoxShadow(
+            //       color: gradient[0].withOpacity(0.2),
+            //       blurRadius: 20,
+            //       offset: Offset(5, 5),
+            //       spreadRadius: 10),
+            // ],
+            borderRadius: BorderRadius.circular(100),
           ),
-          color: Colors.transparent,
-          // boxShadow: [
-          //   BoxShadow(
-          //       color: gradient[0].withOpacity(0.2),
-          //       blurRadius: 20,
-          //       offset: Offset(5, 5),
-          //       spreadRadius: 10),
-          // ],
-          borderRadius: BorderRadius.circular(100),
-        ),
-        child: Text(
-          title,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+          ),
         ),
       ),
-    ));
+    );
   }
 }

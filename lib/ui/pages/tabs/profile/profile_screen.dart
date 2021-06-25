@@ -277,13 +277,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             ShareCard(),
-            SizedBox(
-              height: 50,
-            ),
             Social(),
-            SizedBox(
-              height: 50,
-            ),
             _appVersionRow(),
             _termsRow(),
             SizedBox(
@@ -411,6 +405,7 @@ class Social extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        margin: EdgeInsets.symmetric(vertical: 50),
         width: SizeConfig.screenWidth,
         child: Column(children: [
           Text(
@@ -593,7 +588,7 @@ class _ShareOptionsState extends State<ShareOptions> {
     rProvider = Provider.of<RazorpayModel>(context, listen: false);
     _init();
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
           decoration: BoxDecoration(
@@ -611,8 +606,8 @@ class _ShareOptionsState extends State<ShareOptions> {
                     children: [
                       Text(
                         'SHARE',
-                        style: TextStyle(
-                          fontSize: SizeConfig.mediumTextSize * 0.8,
+                        style: GoogleFonts.montserrat(
+                          fontSize: SizeConfig.mediumTextSize * 0.9,
                           color: Colors.white,
                         ),
                       ),
@@ -657,7 +652,7 @@ class _ShareOptionsState extends State<ShareOptions> {
             splashColor: Colors.orange.withOpacity(0.5),
           ),
         ),
-        Spacer(),
+        SizedBox(width: 10),
         (Platform.isIOS)
             ? Text('')
             : Container(
@@ -674,11 +669,13 @@ class _ShareOptionsState extends State<ShareOptions> {
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text('SHARE ON WHATSAPP',
-                                style: TextStyle(
-                                  fontSize: SizeConfig.mediumTextSize * 0.8,
-                                  color: Colors.white,
-                                )),
+                            Text(
+                              'SHARE ON WHATSAPP',
+                              style: GoogleFonts.montserrat(
+                                fontSize: SizeConfig.mediumTextSize * 0.9,
+                                color: Colors.white,
+                              ),
+                            ),
                             SizedBox(
                               width: 5,
                             ),
@@ -840,9 +837,8 @@ class ProfileTabTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: width * 0.02),
+      padding: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal),
       child: Column(
         children: [
           ListTile(
@@ -853,14 +849,11 @@ class ProfileTabTile extends StatelessWidget {
             ),
             title: Text(
               title,
-              style: TextStyle(
-                color: UiConstants.textColor,
-                fontSize: SizeConfig.mediumTextSize,
-              ),
+              style: GoogleFonts.montserrat(),
             ),
             trailing: Text(
               value,
-              style: TextStyle(
+              style: GoogleFonts.montserrat(
                 color: UiConstants.primaryColor,
                 fontSize: SizeConfig.mediumTextSize,
               ),
@@ -868,8 +861,8 @@ class ProfileTabTile extends StatelessWidget {
             onTap: onPress,
           ),
           Divider(
-            endIndent: width * 0.1,
-            indent: width * 0.1,
+            endIndent: SizeConfig.blockSizeHorizontal,
+            indent: SizeConfig.blockSizeHorizontal,
           ),
         ],
       ),
@@ -893,71 +886,71 @@ class ProfileTabTilePan extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: width * 0.02),
+      padding: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal),
       child: Column(
         children: [
           ListTile(
-              leading: Image.asset(
-                logo,
-                height: SizeConfig.screenHeight * 0.02,
-                width: SizeConfig.screenHeight * 0.02,
+            leading: Image.asset(
+              logo,
+              height: SizeConfig.screenHeight * 0.02,
+              width: SizeConfig.screenHeight * 0.02,
+            ),
+            title: Text(
+              title,
+              style: GoogleFonts.montserrat(
+                color: UiConstants.textColor,
+                fontSize: SizeConfig.mediumTextSize,
               ),
-              title: Text(
-                title,
-                style: TextStyle(
-                  color: UiConstants.textColor,
-                  fontSize: SizeConfig.mediumTextSize,
-                ),
-              ),
-              trailing: isAvailable
-                  ? Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          isHidden ? '**********' : value,
-                          style: TextStyle(
-                            color: UiConstants.primaryColor,
-                            fontSize: SizeConfig.mediumTextSize,
-                          ),
+            ),
+            trailing: isAvailable
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        isHidden ? '**********' : value,
+                        style: GoogleFonts.montserrat(
+                          color: UiConstants.primaryColor,
+                          fontSize: SizeConfig.mediumTextSize,
                         ),
-                        InkWell(
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
-                              child: Icon(
-                                Icons.remove_red_eye_outlined,
-                                color: UiConstants.primaryColor,
-                              )),
-                          onTap: onPress,
-                        )
-                      ],
-                    )
-                  : Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          ' - ',
-                          style: TextStyle(
-                            color: UiConstants.primaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: SizeConfig.mediumTextSize,
-                          ),
+                      ),
+                      InkWell(
+                        child: Padding(
+                            padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
+                            child: Icon(
+                              Icons.remove_red_eye_outlined,
+                              color: UiConstants.primaryColor,
+                            )),
+                        onTap: onPress,
+                      )
+                    ],
+                  )
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        ' - ',
+                        style: GoogleFonts.montserrat(
+                          color: UiConstants.primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: SizeConfig.mediumTextSize,
                         ),
-                        InkWell(
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
-                              child: Icon(
-                                Icons.info_outline,
-                                color: UiConstants.primaryColor,
-                              )),
-                          onTap: onPress,
-                        )
-                      ],
-                    )),
+                      ),
+                      InkWell(
+                        child: Padding(
+                            padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
+                            child: Icon(
+                              Icons.info_outline,
+                              color: UiConstants.primaryColor,
+                            )),
+                        onTap: onPress,
+                      )
+                    ],
+                  ),
+          ),
           Divider(
-            endIndent: width * 0.1,
-            indent: width * 0.1,
+            endIndent: 20,
+            indent: 20,
           ),
         ],
       ),

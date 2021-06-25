@@ -278,8 +278,10 @@ class FundWidget extends StatelessWidget {
                     fund.title,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: height * 0.024,
-                      fontWeight: FontWeight.w500,
+                      height: 1.4,
+                      letterSpacing: 1.5,
+                      fontSize: SizeConfig.largeTextSize,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
