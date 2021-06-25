@@ -717,7 +717,7 @@ class FundInfo extends StatelessWidget {
               child: Text(
                 "Augmont Digital Gold",
                 textAlign: TextAlign.left,
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: SizeConfig.largeTextSize),
               ),

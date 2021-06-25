@@ -39,7 +39,6 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           isImageLoading = false;
         });
-        print("got the image");
       } catch (e) {
         print('HomeScreen: SetState called after dispose');
       }
@@ -250,7 +249,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               Text(
                 getGreeting().toUpperCase(),
-                style: GoogleFonts.manrope(
+                style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
                     fontSize: SizeConfig.largeTextSize),
@@ -258,7 +257,7 @@ class _HomePageState extends State<HomePage> {
               Text(
                 baseProvider.myUser.name,
                 textAlign: TextAlign.start,
-                style: GoogleFonts.manrope(
+                style: TextStyle(
                     color: Colors.white, fontSize: SizeConfig.largeTextSize),
               ),
             ],
@@ -333,7 +332,7 @@ class HomeCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.manrope(
+                  style: TextStyle(
                       color: Colors.white,
                       shadows: [
                         Shadow(
@@ -350,7 +349,7 @@ class HomeCard extends StatelessWidget {
                 ),
                 Text(
                   subtitle,
-                  style: GoogleFonts.manrope(
+                  style: TextStyle(
                       color: Colors.white,
                       fontSize: SizeConfig.mediumTextSize * 1.2,
                       fontWeight: FontWeight.w400),
@@ -379,7 +378,7 @@ class HomeCard extends StatelessWidget {
                     ),
                     child: Text(
                       buttonText,
-                      style: GoogleFonts.manrope(
+                      style: TextStyle(
                           color: Colors.white, fontSize: width * 0.035),
                     ),
                   ),

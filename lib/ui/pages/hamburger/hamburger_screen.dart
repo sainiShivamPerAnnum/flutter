@@ -92,7 +92,7 @@ class HamburgerMenu extends StatelessWidget {
         title: Text(option.value,
             textAlign: TextAlign.center,
             style: (option.isEnabled)
-                ? GoogleFonts.montserrat(
+                ? TextStyle(
                     fontSize: 24.0,
                     color: Colors.white,
                     fontWeight: FontWeight.w500)

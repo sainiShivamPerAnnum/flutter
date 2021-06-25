@@ -67,7 +67,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                 ),
                 Text(
                   "Code Sent",
-                  style: GoogleFonts.montserrat(
+                  style: TextStyle(
                     fontSize: SizeConfig.mediumTextSize,
                     fontWeight: FontWeight.w500,
                   ),
@@ -84,8 +84,8 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                           solidColor: UiConstants.primaryColor.withOpacity(0.1),
                           strokeColor: UiConstants.primaryColor,
                           strokeWidth: 2,
-                          textStyle: GoogleFonts.montserrat(
-                              fontSize: 20, color: Colors.black)),
+                          textStyle:
+                              TextStyle(fontSize: 20, color: Colors.black)),
                       controller: _pinEditingController,
                       onChanged: (value) {
                         if (value.length == 6) {
@@ -157,12 +157,13 @@ class OtpInputScreenState extends State<OtpInputScreen> {
       _loaderMessage = 'OTP has been successfully resent';
       _autoDetectingOtp = true;
       setState(() {});
-    }else{
+    } else {
       //otp tries exceeded
       _isResendClicked = true;
       _otpFieldEnabled = true;
       _autoDetectingOtp = false;
-      _loaderMessage = 'OTP requests exceeded. Please try again in sometime or contact us';
+      _loaderMessage =
+          'OTP requests exceeded. Please try again in sometime or contact us';
       setState(() {});
     }
   }

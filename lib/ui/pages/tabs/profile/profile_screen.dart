@@ -169,7 +169,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   width: SizeConfig.screenWidth * 0.5,
                                   child: Text(
                                     baseProvider.myUser.name,
-                                    style: GoogleFonts.montserrat(
+                                    style: TextStyle(
                                       color: Colors.white,
                                       fontSize: SizeConfig.cardTitleTextSize,
                                       fontWeight: FontWeight.w500,
@@ -181,7 +181,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 Text(
                                   'Member since ${_getUserMembershipDate()}',
-                                  style: GoogleFonts.montserrat(
+                                  style: TextStyle(
                                     color: Colors.black,
                                     fontSize: SizeConfig.smallTextSize,
                                   ),
@@ -204,7 +204,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           Text(
                             "Tap to edit details",
-                            style: GoogleFonts.montserrat(
+                            style: TextStyle(
                               color: Colors.white,
                             ),
                           )
@@ -415,7 +415,7 @@ class Social extends StatelessWidget {
         child: Column(children: [
           Text(
             "Connect With Us",
-            style: GoogleFonts.montserrat(
+            style: TextStyle(
               color: UiConstants.textColor,
               fontSize: SizeConfig.screenHeight * 0.02,
             ),
@@ -521,7 +521,7 @@ class ShareCard extends StatelessWidget {
               children: [
                 Text(
                   "Both get ₹ 25 on every referral",
-                  style: GoogleFonts.montserrat(
+                  style: TextStyle(
                       color: Colors.white,
                       shadows: [
                         Shadow(
@@ -538,7 +538,7 @@ class ShareCard extends StatelessWidget {
                 ),
                 Text(
                   "You and your friend also receive 10 game tickets that week!",
-                  style: GoogleFonts.montserrat(
+                  style: TextStyle(
                       color: Colors.white, fontSize: SizeConfig.mediumTextSize),
                 ),
                 SizedBox(height: 20),
@@ -611,7 +611,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                     children: [
                       Text(
                         'SHARE',
-                        style: GoogleFonts.montserrat(
+                        style: TextStyle(
                           fontSize: SizeConfig.mediumTextSize * 0.8,
                           color: Colors.white,
                         ),
@@ -675,7 +675,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text('SHARE ON WHATSAPP',
-                                style: GoogleFonts.montserrat(
+                                style: TextStyle(
                                   fontSize: SizeConfig.mediumTextSize * 0.8,
                                   color: Colors.white,
                                 )),
@@ -814,7 +814,7 @@ class CardButton extends StatelessWidget {
           children: [
             Text(
               text,
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                   color: Colors.white,
                   fontSize: SizeConfig.screenWidth * 0.035),
             ),
@@ -853,14 +853,14 @@ class ProfileTabTile extends StatelessWidget {
             ),
             title: Text(
               title,
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 color: UiConstants.textColor,
                 fontSize: SizeConfig.mediumTextSize,
               ),
             ),
             trailing: Text(
               value,
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 color: UiConstants.primaryColor,
                 fontSize: SizeConfig.mediumTextSize,
               ),
@@ -906,7 +906,7 @@ class ProfileTabTilePan extends StatelessWidget {
               ),
               title: Text(
                 title,
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                   color: UiConstants.textColor,
                   fontSize: SizeConfig.mediumTextSize,
                 ),
@@ -917,7 +917,7 @@ class ProfileTabTilePan extends StatelessWidget {
                       children: [
                         Text(
                           isHidden ? '**********' : value,
-                          style: GoogleFonts.montserrat(
+                          style: TextStyle(
                             color: UiConstants.primaryColor,
                             fontSize: SizeConfig.mediumTextSize,
                           ),
@@ -938,7 +938,7 @@ class ProfileTabTilePan extends StatelessWidget {
                       children: [
                         Text(
                           ' - ',
-                          style: GoogleFonts.montserrat(
+                          style: TextStyle(
                             color: UiConstants.primaryColor,
                             fontWeight: FontWeight.bold,
                             fontSize: SizeConfig.mediumTextSize,

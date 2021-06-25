@@ -138,7 +138,7 @@ class _FinancePageState extends State<FinancePage> {
                     Text(
                       "Available Funds",
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 24,
                         color: UiConstants.textColor,
@@ -235,7 +235,7 @@ class ZeroBalView extends StatelessWidget {
             child: Text(
               "Your savings and prize balance is currently zero.",
               textAlign: TextAlign.center,
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: SizeConfig.mediumTextSize,
               ),
@@ -276,7 +276,7 @@ class FundWidget extends StatelessWidget {
                 Center(
                   child: Text(
                     fund.title,
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: height * 0.024,
                       fontWeight: FontWeight.w500,
@@ -290,7 +290,7 @@ class FundWidget extends StatelessWidget {
                           padding: EdgeInsets.only(bottom: height * 0.022),
                           child: Text(
                             'Coming Soon',
-                            style: GoogleFonts.montserrat(
+                            style: TextStyle(
                               color: Colors.white,
                               fontSize: height * 0.020,
                               fontWeight: FontWeight.w400,

@@ -500,7 +500,7 @@ class FundInfo extends StatelessWidget {
               child: Text(
                 "ICICI Prudential Mutual Fund",
                 textAlign: TextAlign.left,
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: SizeConfig.largeTextSize),
               ),

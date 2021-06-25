@@ -199,8 +199,9 @@ class _GamePageState extends State<GamePage> {
                                   title: "Want more tickets?",
                                   action: [
                                     GameOfferCardButton(
-                                      onPressed: () =>
-                                          delegate.parseRoute(Uri.parse("finance")),
+                                      onPressed: () => delegate
+                                          .parseRoute(Uri.parse("finance")),
+
                                       ///TODO remove post testing
                                       // onPressed: () => showDialog(
                                       //   context: context,
@@ -384,7 +385,7 @@ class _GamePageState extends State<GamePage> {
                           ),
                           Text(
                             "Swipe up to see prizes and leaderboards",
-                            style: GoogleFonts.montserrat(
+                            style: TextStyle(
                               fontSize: 8,
                             ),
                           ),
@@ -458,7 +459,7 @@ class _TicketCountState extends State<TicketCount>
             _animation != null
                 ? _animation.value.round().toString()
                 : "${widget.totalCount}",
-            style: GoogleFonts.montserrat(
+            style: TextStyle(
               color: Colors.white,
               fontSize: SizeConfig.screenHeight * 0.08,
               fontWeight: FontWeight.w700,
@@ -466,7 +467,7 @@ class _TicketCountState extends State<TicketCount>
           ),
           Text(
             "Tickets",
-            style: GoogleFonts.montserrat(
+            style: TextStyle(
                 color: Colors.white, fontSize: SizeConfig.mediumTextSize),
           ),
         ],
@@ -533,7 +534,7 @@ class GameCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.montserrat(
+                  style: TextStyle(
                       color: Colors.white,
                       shadows: [
                         Shadow(
@@ -588,7 +589,7 @@ class GameOfferCardButton extends StatelessWidget {
         child: Text(
           title,
           textAlign: TextAlign.center,
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
               color: Colors.white, fontSize: SizeConfig.mediumTextSize),
         ),
       ),

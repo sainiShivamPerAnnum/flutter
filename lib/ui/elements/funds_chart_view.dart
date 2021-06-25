@@ -163,7 +163,7 @@ class _FundsChartViewState extends State<FundsChartView> {
               legendPosition: LegendPosition.left,
               showLegends: false,
               legendShape: BoxShape.circle,
-              legendTextStyle: GoogleFonts.montserrat(
+              legendTextStyle: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -171,7 +171,7 @@ class _FundsChartViewState extends State<FundsChartView> {
               showChartValueBackground: true,
               showChartValues: false,
               chartValueBackgroundColor: UiConstants.backgroundColor,
-              chartValueStyle: GoogleFonts.montserrat(
+              chartValueStyle: TextStyle(
                 fontSize: 40,
                 color: UiConstants.textColor,
               ),
@@ -243,7 +243,7 @@ class Legend extends StatelessWidget {
                 children: [
                   Text(
                     amount,
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       fontSize: SizeConfig.mediumTextSize,
                       fontWeight: FontWeight.w500,
                       color: UiConstants.textColor,
@@ -253,7 +253,7 @@ class Legend extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Text(
                       title,
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                         fontSize: SizeConfig.smallTextSize * 1.2,
                         color: UiConstants.textColor,
                       ),

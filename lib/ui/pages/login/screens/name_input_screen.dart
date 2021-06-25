@@ -40,8 +40,7 @@ class NameInputScreenState extends State<NameInputScreen> {
   List<bool> _selections = [false, true];
   final _formKey = GlobalKey<FormState>();
   DateTime selectedDate = null;
-  TextEditingController _dateController = new TextEditingController(
-      text: '');
+  TextEditingController _dateController = new TextEditingController(text: '');
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -106,7 +105,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                         style: TextStyle(color: UiConstants.primaryColor),
                       ),
                       onPressed: () {
-                        if(selectedDate != null)initialDate = selectedDate;
+                        if (selectedDate != null) initialDate = selectedDate;
                         Navigator.of(ctx).pop();
                         FocusScope.of(context).unfocus();
                       })
@@ -155,14 +154,13 @@ class NameInputScreenState extends State<NameInputScreen> {
               ),
               Text(
                 "Tell us a little about yourself",
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                     fontSize: SizeConfig.largeTextSize,
                     fontWeight: FontWeight.w700),
               ),
               SizedBox(
                 height: 20,
               ),
-
               TextFormField(
                 controller: _nameFieldController,
                 keyboardType: TextInputType.text,
@@ -287,7 +285,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                               DropdownMenuItem(
                                   child: Text(
                                     "Rather Not Say",
-                                    style: GoogleFonts.montserrat(),
+                                    style: TextStyle(),
                                   ),
                                   value: -1),
                             ],
@@ -320,7 +318,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         RaisedButton(
-                          color: (_isInvested??false)
+                          color: (_isInvested ?? false)
                               ? UiConstants.primaryColor
                               : Color(0xffe9e9ea),
                           onPressed: () {
@@ -331,15 +329,16 @@ class NameInputScreenState extends State<NameInputScreen> {
                           child: Text(
                             " YES ",
                             style: TextStyle(
-                                color:
-                                (_isInvested??false) ? Colors.white : Colors.grey),
+                                color: (_isInvested ?? false)
+                                    ? Colors.white
+                                    : Colors.grey),
                           ),
                         ),
                         SizedBox(
                           width: 20,
                         ),
                         RaisedButton(
-                          color: (_isInvested??true)
+                          color: (_isInvested ?? true)
                               ? Color(0xffe9e9ea)
                               : UiConstants.primaryColor,
                           onPressed: () {
@@ -350,7 +349,9 @@ class NameInputScreenState extends State<NameInputScreen> {
                           child: Text(
                             " NO ",
                             style: TextStyle(
-                                color: (isInvested??true) ? Colors.grey : Colors.white),
+                                color: (isInvested ?? true)
+                                    ? Colors.grey
+                                    : Colors.white),
                           ),
                         ),
                       ],
@@ -369,7 +370,6 @@ class NameInputScreenState extends State<NameInputScreen> {
           ),
     );
   }
-
 
   setError() {
     setState(() {

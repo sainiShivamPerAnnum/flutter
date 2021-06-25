@@ -448,7 +448,6 @@ class _LoginControllerState extends State<LoginController> {
 
     await baseProvider.init();
     await fcmProvider.setupFcm();
-    // Navigator.of(context).pushReplacementNamed('/approot');
     appStateProvider.currentAction =
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
     baseProvider.showPositiveAlert(

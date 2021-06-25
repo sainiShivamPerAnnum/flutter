@@ -78,7 +78,7 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
                   pinned: true,
                   title: Text(
                     "  KYC Verification",
-                    style: GoogleFonts.quicksand(
+                    style: TextStyle(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -91,7 +91,7 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
                     //     width: double.infinity,
                     //     child: Text(
                     //       "KYC Verification",
-                    //       style: GoogleFonts.quicksand(
+                    //       style: TextStyle(
                     //         fontWeight: FontWeight.w500,
                     //       ),
                     //     ),
@@ -129,7 +129,7 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
                                   children: [
                                     Text(
                                       "Get Your KYC Done",
-                                      style: GoogleFonts.poppins(
+                                      style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         color: Color(0xff00587a),
                                         fontSize: _width * 0.09,
@@ -141,7 +141,7 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface> {
                                     Text(
                                       "Complete your KYC once and invest anywhere afterwards.",
                                       textAlign: TextAlign.center,
-                                      style: GoogleFonts.poppins(
+                                      style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         color: Color(0xff00587a),
                                         fontSize: 16,

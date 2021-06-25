@@ -70,10 +70,11 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp.router(
         title: Constants.APP_NAME,
         theme: ThemeData(
-            primaryColor: UiConstants.primaryColor,
-            primarySwatch: Colors.green,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            textTheme: GoogleFonts.rubikTextTheme()),
+          primaryColor: UiConstants.primaryColor,
+          primarySwatch: Colors.green,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          textTheme: GoogleFonts.montserratTextTheme(),
+        ),
         debugShowCheckedModeBanner: false,
         backButtonDispatcher: backButtonDispatcher,
         routerDelegate: delegate,

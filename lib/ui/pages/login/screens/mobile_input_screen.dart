@@ -51,7 +51,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
 
           //   text:
           //     "Welcome to Fello,",
-          //     style: GoogleFonts.montserrat(
+          //     style: TextStyle(
           // fontSize: SizeConfig.largeTextSize * 1.2,
           // fontWeight: FontWeight.w500,
           //     ),
@@ -60,21 +60,21 @@ class MobileInputScreenState extends State<MobileInputScreen> {
           RichText(
             text: TextSpan(
                 text: 'Welcome to ',
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                     fontSize: SizeConfig.largeTextSize * 1.2,
                     fontWeight: FontWeight.w500,
                     color: Colors.black),
                 children: <TextSpan>[
                   TextSpan(
                     text: 'Fe',
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                         fontSize: SizeConfig.largeTextSize * 1.2,
                         fontWeight: FontWeight.w700,
                         color: Colors.black),
                   ),
                   TextSpan(
                     text: 'll',
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       color: UiConstants.primaryColor,
                       fontWeight: FontWeight.w700,
                       fontSize: SizeConfig.largeTextSize * 1.2,
@@ -82,7 +82,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                   ),
                   TextSpan(
                     text: 'o',
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                         fontSize: SizeConfig.largeTextSize * 1.2,
                         fontWeight: FontWeight.w700,
                         color: Colors.black),
@@ -94,7 +94,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
           ),
           Text(
             "Enter your phone number to continue",
-            style: GoogleFonts.montserrat(
+            style: TextStyle(
               fontSize: SizeConfig.mediumTextSize,
             ),
           ),

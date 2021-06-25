@@ -249,7 +249,7 @@ class _EditProfileState extends State<EditProfile> {
                                       child: Text(
                                         "Edit",
                                         textAlign: TextAlign.center,
-                                        style: GoogleFonts.montserrat(
+                                        style: TextStyle(
                                           color: Colors.white,
                                           fontSize: SizeConfig.mediumTextSize,
                                         ),
@@ -387,21 +387,21 @@ class _EditProfileState extends State<EditProfile> {
                   //           DropdownMenuItem(
                   //             child: Text(
                   //               "Male",
-                  //               style: GoogleFonts.montserrat(),
+                  //               style: TextStyle(),
                   //             ),
                   //             value: 1,
                   //           ),
                   //           DropdownMenuItem(
                   //             child: Text(
                   //               "Female",
-                  //               style: GoogleFonts.montserrat(),
+                  //               style: TextStyle(),
                   //             ),
                   //             value: 2,
                   //           ),
                   //           DropdownMenuItem(
                   //               child: Text(
                   //                 "Rather Not Say",
-                  //                 style: GoogleFonts.montserrat(),
+                  //                 style: TextStyle(),
                   //               ),
                   //               value: 3),
                   //         ],

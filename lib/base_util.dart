@@ -183,7 +183,7 @@ class BaseUtil extends ChangeNotifier {
     try {
       var unreadCount = await Freshchat.getUnreadCountAsync;
       return (unreadCount['count'] > 0);
-    }catch(e) {
+    } catch (e) {
       log.error('Error reading unread count variable: $e');
       return false;
     }
@@ -207,7 +207,7 @@ class BaseUtil extends ChangeNotifier {
         color: UiConstants.accentColor, //change your color here
       ),
       title: Text('${Constants.APP_NAME}',
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w500,
               fontSize: SizeConfig.largeTextSize)),

@@ -149,7 +149,7 @@ class _GamePollState extends State<GamePoll> {
             child: Text(
               "Which game would you like to play on Fello next?",
               textAlign: TextAlign.center,
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: SizeConfig.largeTextSize,
                 color: Colors.white,
@@ -180,7 +180,7 @@ class _GamePollState extends State<GamePoll> {
                     : ((userVote != null && userVote != -1)
                         ? "You voted for ${_getPollItemName(userVote)}"
                         : "Your vote has been recorded thank you"),
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: SizeConfig.smallTextSize,
                 ),
@@ -244,7 +244,7 @@ class _GameTileState extends State<GameTile> {
                   children: [
                     Text(
                       widget.pollItem.name,
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: SizeConfig.mediumTextSize,
                       ),
@@ -253,7 +253,7 @@ class _GameTileState extends State<GameTile> {
                     widget.isVoted
                         ? Text(
                             "${(widget.pollItem.votes * 100).round().toString()}%",
-                            style: GoogleFonts.montserrat(
+                            style: TextStyle(
                               color: Colors.white,
                               fontSize: SizeConfig.mediumTextSize,
                             ),

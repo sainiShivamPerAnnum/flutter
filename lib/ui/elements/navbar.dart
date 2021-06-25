@@ -121,7 +121,6 @@ class _NavbarButtonState extends State<NavbarButton>
           widget.data.title,
           style: TextStyle(
             color: Colors.white,
-            fontFamily: "Montserrat",
           ),
         ),
       ],

@@ -161,7 +161,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
                       )
                     : Text(
                         "Change Profile Picture",
-                        style: GoogleFonts.montserrat(
+                        style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
                             fontSize: SizeConfig.mediumTextSize),
@@ -186,7 +186,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
               child: Center(
                 child: Text(
                   "Cancel",
-                  style: GoogleFonts.montserrat(
+                  style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
                       fontSize: SizeConfig.mediumTextSize),

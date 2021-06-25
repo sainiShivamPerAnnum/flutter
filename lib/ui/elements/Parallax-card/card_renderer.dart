@@ -83,25 +83,23 @@ class TravelCardRenderer extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: Text(game.title,
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                   color: Color(0xff272768),
                   fontWeight: FontWeight.w700,
-                  fontSize: cardWidth * 0.08),
+                  fontSize: cardWidth * 0.07),
               textAlign: TextAlign.center),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
           child: Text(game.description,
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 color: Color(0xff272768),
               ),
               textAlign: TextAlign.center),
         ),
 
         TextButton(
-          style: ButtonStyle(
-
-          ),
+          style: ButtonStyle(),
           // disabledColor: Colors.transparent,
           // color: Colors.transparent,
           child: Text('Tap to Play'.toUpperCase(), style: Styles.cardAction),
