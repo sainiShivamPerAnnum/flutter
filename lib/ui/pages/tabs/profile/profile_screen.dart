@@ -144,7 +144,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             SizedBox(
                               width: 20,
                             ),
-                            isImageLoading
+                            Consumer<BaseUtil>(
+                              builder: (context, baseUtil, child) {
+                                return isImageLoading
                                 ? Image.asset(
                                     "images/profile.png",
                                     height: SizeConfig.screenWidth * 0.25,
@@ -157,7 +159,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                       width: SizeConfig.screenWidth * 0.25,
                                       fit: BoxFit.cover,
                                     ),
-                                  ),
+                                  );
+                              },
+                            ),
                             SizedBox(
                               width: SizeConfig.screenWidth * 0.05,
                             ),

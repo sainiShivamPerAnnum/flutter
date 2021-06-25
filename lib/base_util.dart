@@ -615,6 +615,11 @@ class BaseUtil extends ChangeNotifier {
     return (_userTicketWallet.initTck != _t);
   }
 
+  void setDisplayPictureUrl(String url) {
+    myUserDpUrl = url;
+    notifyListeners();
+  }
+
   static String getMonthName(int monthNum) {
     switch (monthNum) {
       case 1:
