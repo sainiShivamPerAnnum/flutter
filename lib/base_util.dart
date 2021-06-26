@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
@@ -75,6 +76,10 @@ class BaseUtil extends ChangeNotifier {
   ReferralDetail myReferralInfo;
   static PackageInfo packageInfo;
   Map<String, dynamic> freshchatKeys;
+
+  // Objects for Transaction list Pagination
+  DocumentSnapshot lastTransactionListDocument;
+  bool hasMoreTransactionListDocuments = true;
 
   DateTime _userCreationTimestamp;
   int isOtpResendCount = 0;
