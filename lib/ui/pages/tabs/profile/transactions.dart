@@ -187,11 +187,7 @@ class _TransactionsState extends State<Transactions> {
       _scrollController.addListener(() async {
         if (_scrollController.offset >= _scrollController.position.maxScrollExtent && !_scrollController.position.outOfRange) {
           if(baseProvider.hasMoreTransactionListDocuments && !isLoading) {
-            print('getting docs');
             getTransactions();
-          }
-          else {
-            print('currently loading');
           }
         }
       });
