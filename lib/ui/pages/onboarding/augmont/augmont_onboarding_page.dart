@@ -36,13 +36,13 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
   static TextEditingController _panInput = new TextEditingController();
   static TextEditingController _panHolderNameInput =
       new TextEditingController();
-  static TextEditingController _bankHolderNameInput =
-      new TextEditingController();
-  static TextEditingController _bankAccountNumberInput =
-      new TextEditingController();
-  static TextEditingController _reenterbankAccountNumberInput =
-      new TextEditingController();
-  static TextEditingController _bankIfscInput = new TextEditingController();
+  // static TextEditingController _bankHolderNameInput =
+  //     new TextEditingController();
+  // static TextEditingController _bankAccountNumberInput =
+  //     new TextEditingController();
+  // static TextEditingController _reenterbankAccountNumberInput =
+  //     new TextEditingController();
+  // static TextEditingController _bankIfscInput = new TextEditingController();
   bool _isInit = false;
   static String stateChosenValue;
 
@@ -347,7 +347,8 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                         ///next get all details required for registration
                         Map<String, dynamic> veriDetails =
                             await _getVerifiedDetails(_panInput.text,
-                                _panHolderNameInput.text, _bankIfscInput.text);
+                                _panHolderNameInput.text);
+                                //  _bankIfscInput.text);
 
                         if (veriDetails != null &&
                             veriDetails['flag'] != null &&
@@ -362,21 +363,18 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                                 AugmontConfirmRegnDialog(
                               panNumber: _panInput.text,
                               panName: _panHolderNameInput.text,
-                              bankHolderName: _bankHolderNameInput.text,
-                              bankBranchName: veriDetails['bank_branch'],
-                              bankAccNo: _bankAccountNumberInput.text,
-                              bankIfsc: _bankIfscInput.text,
-                              bankName: veriDetails['bank_name'],
+                              bankHolderName: "",
+                              bankBranchName: "",
+                              bankAccNo: "",
+                              bankIfsc: "",
+                              bankName: "",
                               onAccept: () async {
                                 ///finally now register the augmont user
                                 UserAugmontDetail detail =
                                     await augmontProvider.createUser(
                                         baseProvider.myUser.mobile,
                                         _panInput.text,
-                                        stateChosenValue,
-                                        _bankHolderNameInput.text,
-                                        _bankAccountNumberInput.text,
-                                        _bankIfscInput.text);
+                                        stateChosenValue,"","","");
                                 if (detail == null) {
                                   baseProvider.showNegativeAlert(
                                       'Registration Failed',
@@ -402,6 +400,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                             ),
                           );
                         } else {
+                          print('inside failed name');
                           baseProvider.showNegativeAlert(
                               'Invalid Details',
                               veriDetails['reason'] ?? 'Please try again',
@@ -444,30 +443,31 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
       baseProvider.showNegativeAlert('State missing',
           'Kindly enter your current residential state', context);
       return false;
-    } else if (_bankHolderNameInput.text.isEmpty) {
-      baseProvider.showNegativeAlert(
-          'Name missing', 'Kindly enter your name as per your bank', context);
-      return false;
-    } else if (_bankAccountNumberInput.text.isEmpty) {
-      baseProvider.showNegativeAlert(
-          'Account missing', 'Kindly enter your bank account number', context);
-      return false;
-    } else if (_bankAccountNumberInput.text !=
-        _reenterbankAccountNumberInput.text) {
-      baseProvider.showNegativeAlert('Account number mismatch',
-          'The bank account numbers did not match', context);
-      return false;
-    } else if (_bankIfscInput.text.isEmpty) {
-      baseProvider.showNegativeAlert(
-          'Name missing', 'Kindly enter your bank IFSC code', context);
-      return false;
-    }
+    } 
+    // else if (_bankHolderNameInput.text.isEmpty) {
+    //   baseProvider.showNegativeAlert(
+    //       'Name missing', 'Kindly enter your name as per your bank', context);
+    //   return false;
+    // } else if (_bankAccountNumberInput.text.isEmpty) {
+    //   baseProvider.showNegativeAlert(
+    //       'Account missing', 'Kindly enter your bank account number', context);
+    //   return false;
+    // } else if (_bankAccountNumberInput.text !=
+    //     _reenterbankAccountNumberInput.text) {
+    //   baseProvider.showNegativeAlert('Account number mismatch',
+    //       'The bank account numbers did not match', context);
+    //   return false;
+    // } else if (_bankIfscInput.text.isEmpty) {
+    //   baseProvider.showNegativeAlert(
+    //       'Name missing', 'Kindly enter your bank IFSC code', context);
+    //   return false;
+    // }
     return true;
   }
 
   Future<Map<String, dynamic>> _getVerifiedDetails(
-      String aPan, String aPanName, String aIfsc) async {
-    if (aPan == null || aPan.isEmpty || aIfsc == null || aIfsc.isEmpty)
+      String aPan, String aPanName) async {
+    if (aPan == null || aPan.isEmpty)
       return {'flag': false, 'reason': 'Invalid Details'};
     Map<String, dynamic> resMap = {};
     bool _flag = true;
@@ -493,27 +493,28 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
       }
     }
     if (!_flag) {
+      print('returning false flag');
       return {'flag': _flag, 'reason': _reason};
     }
 
     ///test ifsc code using icici api
-    var bankDetail = await iProvider.getBankInfo(aPan, aIfsc);
-    if (bankDetail == null ||
-        bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
-        bankDetail[GetBankDetail.resBankName] == null) {
-      log.error('Couldnt fetch an appropriate response');
-      _flag = false;
-      _reason = 'Invalid IFSC Code';
-    }
-    if (!_flag) {
-      return {'flag': _flag, 'reason': _reason};
-    }
+    // var bankDetail = await iProvider.getBankInfo(aPan, aIfsc);
+    // if (bankDetail == null ||
+    //     bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
+    //     bankDetail[GetBankDetail.resBankName] == null) {
+    //   log.error('Couldnt fetch an appropriate response');
+    //   _flag = false;
+    //   _reason = 'Invalid IFSC Code';
+    // }
+    // if (!_flag) {
+    //   return {'flag': _flag, 'reason': _reason};
+    // }
 
     return {
       'flag': true,
       'pan_name': kObj[GetKycStatus.resName],
-      'bank_name': bankDetail[GetBankDetail.resBankName],
-      'bank_branch': bankDetail[GetBankDetail.resBranchName]
+      // 'bank_name': bankDetail[GetBankDetail.resBankName],
+      // 'bank_branch': bankDetail[GetBankDetail.resBranchName]
     };
   }
 

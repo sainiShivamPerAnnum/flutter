@@ -339,45 +339,55 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
           ),
           onPressed: () async {
             HapticFeedback.vibrate();
-            if (widget.withdrawableGoldQnty == 0.0) {
-              return;
+            if(baseProvider.augmontDetail.bankAccNo.isEmpty || baseProvider.augmontDetail.bankAccNo==null ||
+            baseProvider.augmontDetail.bankHolderName.isEmpty || baseProvider.augmontDetail.bankHolderName==null ||
+            baseProvider.augmontDetail.ifsc.isEmpty || baseProvider.augmontDetail.ifsc==null) {
+              baseProvider.showNegativeAlert('Bank Details Missing', 'Please enter your bank details', context);
+              appState.currentAction = PageAction(
+                          state: PageState.addPage,
+                          page: EditAugBankDetailsPageConfig);
             }
-            final amtErr = _validateAmount(_quantityController.text);
-            if (amtErr != null) {
+            else {
+              if (widget.withdrawableGoldQnty == 0.0) {
+                return;
+              }
+              final amtErr = _validateAmount(_quantityController.text);
+              if (amtErr != null) {
+                setState(() {
+                  _amountError = amtErr;
+                });
+                return;
+              }
               setState(() {
-                _amountError = amtErr;
+                _amountError = null;
               });
-              return;
-            }
-            setState(() {
-              _amountError = null;
-            });
-            if (_amountError == null) {
-              double qnt = double.parse(_quantityController.text);
-              String _confirmMsg =
-                  "Are you sure you want to continue? $qnt grams of digital gold shall be processed.";
-              showDialog(
-                context: context,
-                builder: (ctx) => ConfirmActionDialog(
-                  title: "Please confirm your action",
-                  description: _confirmMsg,
-                  buttonText: "Withdraw",
-                  cancelBtnText: 'Cancel',
-                  confirmAction: () {
-                    Navigator.of(context).pop();
-                    _isLoading = true;
-                    setState(() {});
-                    widget.onAmountConfirmed({
-                      'withdrawal_quantity': qnt,
-                    });
-                    return true;
-                  },
-                  cancelAction: () {
-                    Navigator.of(context).pop();
-                    return false;
-                  },
-                ),
-              );
+              if (_amountError == null) {
+                double qnt = double.parse(_quantityController.text);
+                String _confirmMsg =
+                    "Are you sure you want to continue? $qnt grams of digital gold shall be processed.";
+                showDialog(
+                  context: context,
+                  builder: (ctx) => ConfirmActionDialog(
+                    title: "Please confirm your action",
+                    description: _confirmMsg,
+                    buttonText: "Withdraw",
+                    cancelBtnText: 'Cancel',
+                    confirmAction: () {
+                      Navigator.of(context).pop();
+                      _isLoading = true;
+                      setState(() {});
+                      widget.onAmountConfirmed({
+                        'withdrawal_quantity': qnt,
+                      });
+                      return true;
+                    },
+                    cancelAction: () {
+                      Navigator.of(context).pop();
+                      return false;
+                    },
+                  ),
+                );
+              }
             }
           },
           highlightColor: Colors.orange.withOpacity(0.5),
