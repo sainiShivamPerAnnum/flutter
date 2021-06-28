@@ -5,6 +5,7 @@ import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:firebase_database/firebase_database.dart' as rdb;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -13,6 +14,8 @@ class Api {
   Log log = new Log("Api");
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  final rdb.FirebaseDatabase _realtimeDatabase = rdb.FirebaseDatabase.instance;
+
   String path;
   CollectionReference ref;
 
@@ -145,7 +148,7 @@ class Api {
   }
 
   //set the mentioned fields to true
-  Future<bool> setReferralDocBonusField(String uid) async{
+  Future<bool> setReferralDocBonusField(String uid) async {
     DocumentReference _rRef = _db.collection(Constants.COLN_REFERRALS).doc(uid);
     return _db
         .runTransaction((transaction) async {
@@ -157,21 +160,21 @@ class Api {
               snapshot.data()[ReferralDetail.fldUsrBonusFlag] == null ||
               snapshot.data()[ReferralDetail.fldRefereeBonusFlag] == null) {
             throw Exception('Empty/invalid data');
-          }else {
+          } else {
             bool _uFlag, _rFlag;
-            try{
+            try {
               _uFlag = snapshot.data()[ReferralDetail.fldUsrBonusFlag];
               _rFlag = snapshot.data()[ReferralDetail.fldRefereeBonusFlag];
-            }catch(e) {
+            } catch (e) {
               throw Exception('Failed to create bool flags');
             }
-            if(_uFlag == null || _rFlag == null) {
+            if (_uFlag == null || _rFlag == null) {
               throw Exception('Failed to create bool flags');
             }
-            if(_uFlag == true && _rFlag == true) {
+            if (_uFlag == true && _rFlag == true) {
               //referral bonus already unlocked
               throw Exception('Referral bonus already unlocked');
-            }else{
+            } else {
               Map<String, dynamic> rMap = {};
               rMap[ReferralDetail.fldUsrBonusFlag] = true;
               rMap[ReferralDetail.fldRefereeBonusFlag] = true;
@@ -185,7 +188,10 @@ class Api {
   }
 
   Future<void> updateReferralDocument(String docId, Map data) {
-    return _db.collection(Constants.COLN_REFERRALS).doc(docId).set(data, SetOptions(merge: true));
+    return _db
+        .collection(Constants.COLN_REFERRALS)
+        .doc(docId)
+        .set(data, SetOptions(merge: true));
   }
 
   Future<void> addFeedbackDocument(Map data) {
@@ -199,7 +205,8 @@ class Api {
   Future<QuerySnapshot> getWinnersByWeekCde(int weekCde) async {
     Query query = _db
         .collection(Constants.COLN_WINNERS)
-        .where('week_code', isEqualTo: weekCde).where('win_type', isEqualTo: 'tambola');
+        .where('week_code', isEqualTo: weekCde)
+        .where('win_type', isEqualTo: 'tambola');
     final response = await query.get();
     return response;
   }
@@ -507,6 +514,36 @@ class Api {
         return false;
       }
     } else {
+      return false;
+    }
+  }
+
+  //---------------------------------------REALTIME DATABASE-------------------------------------------//
+
+  Future<bool> checkUserNameAvailability(String username) async {
+    try {
+      rdb.DataSnapshot data = await _realtimeDatabase
+          .reference()
+          .child("usernames")
+          .child(username)
+          .once();
+      print(data.key.toString() + "  " + data.value.toString());
+      if (data.value != null) return false;
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> setUserName(String username, String userId) async {
+    try {
+      await _realtimeDatabase
+          .reference()
+          .child("usernames")
+          .child(username)
+          .set(userId);
+      return true;
+    } catch (e) {
       return false;
     }
   }

@@ -10,8 +10,10 @@ import 'package:pin_input_text_field/pin_input_text_field.dart';
 class OtpInputScreen extends StatefulWidget {
   final VoidCallback otpEntered;
   final VoidCallback resendOtp;
+  final VoidCallback changeNumber;
   static const int index = 1; //pager index
-  OtpInputScreen({Key key, this.otpEntered, this.resendOtp}) : super(key: key);
+  OtpInputScreen({Key key, this.otpEntered, this.resendOtp, this.changeNumber})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => OtpInputScreenState();
@@ -26,13 +28,12 @@ class OtpInputScreenState extends State<OtpInputScreen> {
   bool _isResendClicked = false;
   final _pinEditingController = new TextEditingController();
   FocusNode focusNode;
-
+  String mobileNo;
   @override
   void initState() {
     focusNode = new FocusNode();
     focusNode.addListener(
         () => print('focusNode updated: hasFocus: ${focusNode.hasFocus}'));
-
     super.initState();
   }
 
@@ -49,89 +50,170 @@ class OtpInputScreenState extends State<OtpInputScreen> {
     }
 
     return Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Container(
-            margin: EdgeInsets.symmetric(
-                horizontal: SizeConfig.blockSizeHorizontal * 5),
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: SizeConfig.screenHeight * 0.04,
+      backgroundColor: Colors.transparent,
+      body: Container(
+        margin: EdgeInsets.symmetric(
+            horizontal: SizeConfig.blockSizeHorizontal * 5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              height: kToolbarHeight * 1.5,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 24, bottom: 16),
+              child: Text(
+                "Verify OTP",
+                style: GoogleFonts.manrope(
+                  fontWeight: FontWeight.w800,
+                  fontSize: SizeConfig.screenWidth * 0.06,
                 ),
-                Image.asset(
-                  "images/otp.png",
-                  height: SizeConfig.screenHeight * 0.16,
+              ),
+            ),
+            Text("We have sent you an OTP to your mobile number ******0005"),
+            SizedBox(
+              height: 16,
+            ),
+            InkWell(
+              child: Text(
+                "Change Number ?",
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontWeight: FontWeight.w700,
                 ),
-                SizedBox(
-                  height: 10,
+              ),
+              onTap: () {
+                widget.changeNumber();
+              },
+            ),
+            SizedBox(
+              height: 24,
+            ),
+
+            // Text(
+            //   "Code Sent",
+            //   style: TextStyle(
+            //     fontSize: SizeConfig.mediumTextSize,
+            //     fontWeight: FontWeight.w500,
+            //   ),
+            // ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 18.0, 0, 18.0),
+              child: PinInputTextField(
+                enabled: _otpFieldEnabled,
+                autoFocus: true,
+                focusNode: focusNode,
+                pinLength: 6,
+                decoration: BoxLooseDecoration(
+                  enteredColor: UiConstants.primaryColor,
+                  solidColor: UiConstants.primaryColor.withOpacity(0.04),
+                  strokeColor: UiConstants.primaryColor,
+                  strokeWidth: 1,
+                  textStyle:
+                      GoogleFonts.montserrat(fontSize: 20, color: Colors.black),
                 ),
-                Text(
-                  "Code Sent",
-                  style: TextStyle(
-                    fontSize: SizeConfig.mediumTextSize,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 18.0, 0, 18.0),
-                    child: PinInputTextField(
-                      enabled: _otpFieldEnabled,
-                      autoFocus: true,
-                      focusNode: focusNode,
-                      pinLength: 6,
-                      decoration: BoxLooseDecoration(
-                          enteredColor: UiConstants.primaryColor,
-                          solidColor: UiConstants.primaryColor.withOpacity(0.1),
-                          strokeColor: UiConstants.primaryColor,
-                          strokeWidth: 2,
-                          textStyle:
-                              TextStyle(fontSize: 20, color: Colors.black)),
-                      controller: _pinEditingController,
-                      onChanged: (value) {
-                        if (value.length == 6) {
-                          if (widget.otpEntered != null) widget.otpEntered();
-                        }
-                      },
-                      onSubmit: (pin) {
-                        log.debug("Pressed submit for pin: " +
-                            pin.toString() +
-                            "\n  No action taken.");
-                      },
-                    )),
-                SizedBox(height: 16.0),
-                (_autoDetectingOtp)
-                    ? Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(25.0, 25.0, 25.0, 25.0),
-                        child: SpinKitDoubleBounce(
-                          color: UiConstants.spinnerColor,
-                          //controller: AnimationController(vsync: this, duration: const Duration(milliseconds: 1200)),
+                controller: _pinEditingController,
+                onChanged: (value) {
+                  if (value.length == 6) {
+                    if (widget.otpEntered != null) widget.otpEntered();
+                  }
+                },
+                onSubmit: (pin) {
+                  log.debug("Pressed submit for pin: " +
+                      pin.toString() +
+                      "\n  No action taken.");
+                },
+              ),
+            ),
+            SizedBox(height: 16.0),
+
+            Text("OTP might takes up to one minute to arrive"),
+            SizedBox(
+              height: 16,
+            ),
+            (!_autoDetectingOtp)
+                ? Row(
+                    children: [
+                      Text(
+                        "Didn't get the OTP? ",
+                        style: TextStyle(
+                          color: Colors.black45,
+                          fontWeight: FontWeight.w500,
                         ),
-                      )
-                    : Container(),
-                (_autoDetectingOtp) ? SizedBox(height: 5.0) : Container(),
-                Text(
-                  _loaderMessage,
-                  style: Theme.of(context)
-                      .textTheme
-                      .body1
-                      .copyWith(color: Colors.grey[800]),
-                  textAlign: TextAlign.center,
-                ),
-                (!_autoDetectingOtp)
-                    ? TextButton(
-                        child: Text('Resend'),
-                        onPressed: () {
+                      ),
+                      InkWell(
+                        child: Text(
+                          "Resend OTP",
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        onTap: () {
                           log.debug("Resend action triggered");
                           if (!_isResendClicked) {
                             //ensure that button isnt clicked multiple times
                             if (widget.resendOtp != null) widget.resendOtp();
                           }
                         },
+                      ),
+                    ],
+                  )
+                : SizedBox(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                (_autoDetectingOtp)
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                25.0, 25.0, 25.0, 25.0),
+                            child: SpinKitDoubleBounce(
+                              color: UiConstants.spinnerColor,
+                              //controller: AnimationController(vsync: this, duration: const Duration(milliseconds: 1200)),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text("Detecting OTP")
+                        ],
                       )
-                    : Container()
+                    : Container(),
               ],
-            )));
+            ),
+
+            //(_autoDetectingOtp) ? SizedBox(height: 5.0) : Container(),
+            // Text(
+            //   _loaderMessage,
+            //   style: Theme.of(context)
+            //       .textTheme
+            //       .body1
+            //       .copyWith(color: Colors.grey[800]),
+            //   textAlign: TextAlign.center,
+            // ),
+            // (!_autoDetectingOtp)
+            //     ? TextButton(
+            //         child: Text('Resend'),
+            //         onPressed: () {
+            //           log.debug("Resend action triggered");
+            //           if (!_isResendClicked) {
+            //             //ensure that button isnt clicked multiple times
+            //             if (widget.resendOtp != null) widget.resendOtp();
+            //           }
+            //         },
+            //       )
+            //     : Container()
+          ],
+        ),
+      ),
+    );
+  }
+
+  set setMobileNo(String mobile) {
+    mobileNo = mobile;
   }
 
   onOtpReceived() {

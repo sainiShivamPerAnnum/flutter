@@ -90,6 +90,35 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: kPrimaryColor,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           textTheme: GoogleFonts.montserratTextTheme(),
+          inputDecorationTheme: InputDecorationTheme(
+            //labelStyle: TextStyle(color: UiConstants.primaryColor),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: UiConstants.primaryColor.withOpacity(0.3), width: 1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: UiConstants.primaryColor,
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.red.withOpacity(0.3),
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.red.withOpacity(0.3),
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
         ),
         debugShowCheckedModeBanner: false,
         backButtonDispatcher: backButtonDispatcher,

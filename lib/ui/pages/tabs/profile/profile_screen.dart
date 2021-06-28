@@ -227,6 +227,11 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               child: Column(
                 children: [
+                  ProfileTabTile(
+                      logo: "images/contact-book.png",
+                      title: "Username",
+                      value: baseProvider.myUser.username ?? "Claim now!",
+                      onPress: () {}),
                   ProfileTabTilePan(
                     logo: "images/contact-book.png",
                     title: "PAN Number",
@@ -241,21 +246,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         isPanFieldHidden = !isPanFieldHidden;
                         setState(() {});
                       } else {
-                        // AppState.screenStack.add(ScreenItem.dialog);
-                        // showDialog(
-                        //   context: context,
-                        //   builder: (BuildContext context) => WillPopScope(
-                        //     onWillPop: () {
-                        //       AppState.screenStack.removeLast();
-                        //       print("Popped a dialog");
-                        //       return Future.value(true);
-                        //     },
-                        //     child: MoreInfoDialog(
-                        //       text: Assets.infoWhyPan,
-                        //       title: 'Where is my PAN Number used?',
-                        //     ),
-                        //   ),
-                        // );
                         delegate.parseRoute(Uri.parse("d-panInfo"));
                       }
                     },

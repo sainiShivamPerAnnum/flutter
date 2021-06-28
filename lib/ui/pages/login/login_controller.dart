@@ -24,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginController extends StatefulWidget {
   final int initPage;
@@ -68,11 +69,12 @@ class _LoginControllerState extends State<LoginController> {
     _pages = [
       MobileInputScreen(key: _mobileScreenKey),
       OtpInputScreen(
-          key: _otpScreenKey,
-          otpEntered: _onOtpFilled,
-          resendOtp: _onOtpResendRequested),
+        key: _otpScreenKey,
+        otpEntered: _onOtpFilled,
+        resendOtp: _onOtpResendRequested,
+        changeNumber: _onChangeNumberRequest,
+      ),
       NameInputScreen(key: _nameScreenKey),
-      VerifyEmail(key: _emailVerifyKey),
       Username(key: _usernameKey)
       // AddressInputScreen(key: _addressScreenKey),
     ];
@@ -92,7 +94,7 @@ class _LoginControllerState extends State<LoginController> {
         ///this is the first time that the otp was requested
         baseProvider.isLoginNextInProgress = false;
         _controller.animateToPage(OtpInputScreen.index,
-            duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+            duration: Duration(seconds: 2), curve: Curves.easeIn);
         setState(() {});
       } else {
         ///the otp was requested to be resent
@@ -168,6 +170,7 @@ class _LoginControllerState extends State<LoginController> {
           ),
           new PageView.builder(
             physics: new NeverScrollableScrollPhysics(),
+            scrollDirection: Axis.vertical,
             controller: _controller,
             itemCount: _pages.length,
             itemBuilder: (BuildContext context, int index) {
@@ -369,7 +372,7 @@ class _LoginControllerState extends State<LoginController> {
             // _onSignUpComplete();
             baseProvider.isLoginNextInProgress = false;
             setState(() {});
-            _controller.animateToPage(VerifyEmail.index,
+            _controller.animateToPage(Username.index,
                 duration: Duration(milliseconds: 300), curve: Curves.easeIn);
 
             // } else {
@@ -381,61 +384,62 @@ class _LoginControllerState extends State<LoginController> {
           }
           break;
         }
-      case VerifyEmail.index:
-        {
-          baseProvider.isLoginNextInProgress = true;
-          setState(() {});
-          String email = _emailVerifyKey.currentState.email.text.trim();
-          if (_emailVerifyKey.currentState.formKey.currentState.validate()) {
-            await baseProvider.firebaseUser.updateEmail(email);
-            await baseProvider.firebaseUser.sendEmailVerification();
-            _emailVerifyKey.currentState.timer =
-                Timer.periodic(Duration(seconds: 5), (timer) {
-              baseProvider.firebaseUser.reload().then((_) {
-                print("Waiting for response");
-                if (baseProvider.firebaseUser.emailVerified) {
-                  _emailVerifyKey.currentState.timer.cancel();
-                  print("Email verified successfully");
-                  baseProvider.myUser.email = email;
-                  baseProvider.myUser.isEmailVerified = true;
-                  baseProvider.isLoginNextInProgress = false;
-                  setState(() {});
-                  _controller.animateToPage(Username.index,
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeIn);
-                }
-              });
-            });
-          }
+      // case VerifyEmail.index:
+      //   {
+      //     baseProvider.isLoginNextInProgress = true;
+      //     setState(() {});
+      //     String email = _emailVerifyKey.currentState.email.text.trim();
+      //     if (_emailVerifyKey.currentState.formKey.currentState.validate()) {
+      //       await baseProvider.firebaseUser.updateEmail(email);
+      //       await baseProvider.firebaseUser.sendEmailVerification();
+      //       _emailVerifyKey.currentState.timer =
+      //           Timer.periodic(Duration(seconds: 5), (timer) {
+      //         baseProvider.firebaseUser.reload().then((_) {
+      //           print("Waiting for response");
+      //           if (baseProvider.firebaseUser.emailVerified) {
+      //             _emailVerifyKey.currentState.timer.cancel();
+      //             print("Email verified successfully");
+      //             baseProvider.myUser.email = email;
+      //             baseProvider.myUser.isEmailVerified = true;
+      //             baseProvider.isLoginNextInProgress = false;
+      //             setState(() {});
+      //             _controller.animateToPage(Username.index,
+      //                 duration: Duration(milliseconds: 300),
+      //                 curve: Curves.easeIn);
+      //           }
+      //         });
+      //       });
+      //     }
 
-          break;
-        }
+      //     break;
+      //   }
       case Username.index:
         {
           baseProvider.isLoginNextInProgress = true;
           setState(() {});
           String username =
               _usernameKey.currentState.email.text.replaceAll('.', '@');
-          final DatabaseReference _database =
-              FirebaseDatabase.instance.reference();
-          await _database
-              .reference()
-              .child("usernames")
-              .child(username)
-              .set(baseProvider.firebaseUser.uid);
-          baseProvider.myUser.username = username;
-          bool flag = await dbProvider.updateUser(baseProvider.myUser);
-          if (flag) {
-            log.debug("User object saved successfully");
-            _onSignUpComplete();
-            // _controller.animateToPage(VerifyEmail.index,
-            //     duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+          bool res = await dbProvider.setUsername(
+              username, baseProvider.firebaseUser.uid);
+          if (res) {
+            baseProvider.myUser.username = username;
+            bool flag = await dbProvider.updateUser(baseProvider.myUser);
+            if (flag) {
+              log.debug("User object saved successfully");
+              _onSignUpComplete();
+              // _controller.animateToPage(VerifyEmail.index,
+              //     duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+            } else {
+              baseProvider.showNegativeAlert(
+                  'Update failed', 'Please try again in sometime', context);
+              baseProvider.isLoginNextInProgress = true;
+              setState(() {});
+            }
           } else {
-            baseProvider.showNegativeAlert(
-                'Update failed', 'Please try again in sometime', context);
-            baseProvider.isLoginNextInProgress = true;
-            setState(() {});
+            baseProvider.showNegativeAlert('Oops! we ran into trouble!',
+                'Please try again in sometime', context);
           }
+
           break;
         }
     }
@@ -491,6 +495,7 @@ class _LoginControllerState extends State<LoginController> {
       lclDbProvider.saveHomeTutorialComplete = false;
       _controller.animateToPage(NameInputScreen.index,
           duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+      //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user
       await BaseAnalytics.analytics.logLogin(loginMethod: 'phonenumber');
@@ -510,6 +515,14 @@ class _LoginControllerState extends State<LoginController> {
       _verifyPhone();
     } else {
       _otpScreenKey.currentState.onOtpResendConfirmed(false);
+    }
+  }
+
+  _onChangeNumberRequest() {
+    if (!baseProvider.isLoginNextInProgress) {
+      baseProvider.isOtpResendCount = 0;
+      _controller.animateToPage(MobileInputScreen.index,
+          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
     }
   }
 

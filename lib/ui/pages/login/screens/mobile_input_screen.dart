@@ -30,134 +30,54 @@ class MobileInputScreenState extends State<MobileInputScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              margin: EdgeInsets.only(top: 30, bottom: 16),
-              child: CircleAvatar(
-                radius: SizeConfig.screenWidth * 0.04,
-                backgroundColor: Colors.grey.withOpacity(0.5),
-                child: Center(
-                  child: Icon(
-                    Icons.arrow_back_ios_rounded,
-                    color: Colors.white,
-                    size: SizeConfig.screenWidth * 0.04,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          // RichText(
-
-          //   text:
-          //     "Welcome to Fello,",
-          //     style: TextStyle(
-          // fontSize: SizeConfig.largeTextSize * 1.2,
-          // fontWeight: FontWeight.w500,
-          //     ),
-
-          // ),
-          RichText(
-            text: TextSpan(
-                text: 'Welcome to ',
-                style: TextStyle(
-                    fontSize: SizeConfig.largeTextSize * 1.2,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black),
-                children: <TextSpan>[
-                  TextSpan(
-                    text: 'Fe',
-                    style: TextStyle(
-                        fontSize: SizeConfig.largeTextSize * 1.2,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black),
-                  ),
-                  TextSpan(
-                    text: 'll',
-                    style: TextStyle(
-                      color: UiConstants.primaryColor,
-                      fontWeight: FontWeight.w700,
-                      fontSize: SizeConfig.largeTextSize * 1.2,
-                    ),
-                  ),
-                  TextSpan(
-                    text: 'o',
-                    style: TextStyle(
-                        fontSize: SizeConfig.largeTextSize * 1.2,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black),
-                  )
-                ]),
-          ),
           SizedBox(
-            height: 10,
+            height: kToolbarHeight * 1.5,
           ),
           Text(
-            "Enter your phone number to continue",
+            "Let's quickly onboard you",
             style: TextStyle(
               fontSize: SizeConfig.mediumTextSize,
             ),
           ),
-
-          Center(
-            child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 28.0, 0, 18.0),
-                child: Form(
-                  key: _formKey,
-                  child: TextFormField(
-                    key: _phoneFieldKey,
-                    autofocus: true,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: "Mobile",
-                      prefixIcon: Icon(Icons.phone),
-                      focusColor: UiConstants.primaryColor,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    controller: _mobileController,
-                    validator: (value) => _validateMobile(value),
-                    onFieldSubmitted: (v) {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                    },
-                  ),
-                )),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 24,
+            ),
+            child: Text(
+              "Let's start with your mobile number",
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                fontSize: SizeConfig.screenWidth * 0.06,
+              ),
+            ),
           ),
-          // SizedBox(
-          //   height: 20,
-          // ),
-          // Container(
-          //   width: 230.0,
-          //   height: 60.0,
-          //   padding: const EdgeInsets.all(8),
-          //   decoration: BoxDecoration(
-          //     borderRadius: new BorderRadius.circular(30.0),
-          //     border: Border.all(color: UiConstants.primaryColor, width: 1.5),
-          //     color: Colors.transparent,
-          //   ),
-          //   child:Tooltip(
-          //   message:'Check here',
-          //   child: new Material(
-          //     child: MaterialButton(
-          //       child: Text(
-          //         'We are currently servicing only select societies',
-          //         textAlign: TextAlign.center,
-          //         style: Theme.of(context).textTheme.button.copyWith(color: UiConstants.primaryColor),
-          //       ),
-          //       onPressed: (){
-          //         showDialog(context: context,
-          //             builder: (BuildContext context) => LocationAvailabilityDialog()
-          //         );
-          //       },
-          //       highlightColor: Colors.white30,
-          //       splashColor: Colors.white30,
-          //     ),
-          //     color: Colors.transparent,
-          //     borderRadius: new BorderRadius.circular(30.0),
-          //   ),
-          //   ),
-          // ),
+          Padding(
+            padding: const EdgeInsets.only(top: 24),
+            child: Form(
+              key: _formKey,
+              child: TextFormField(
+                key: _phoneFieldKey,
+                autofocus: true,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: "Mobile",
+                  prefixIcon: Icon(Icons.phone),
+                  focusColor: UiConstants.primaryColor,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                controller: _mobileController,
+                validator: (value) => _validateMobile(value),
+                onFieldSubmitted: (v) {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                },
+              ),
+            ),
+          ),
+          SizedBox(height: 24),
+          Text(
+              "We'll send you an OTP on this number to help secure your account"),
         ],
         //)
       ),

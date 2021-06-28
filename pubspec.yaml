@@ -19,6 +19,7 @@ dependencies:
   firebase_in_app_messaging: ^0.3.0+1
   firebase_messaging: ^8.0.0-dev.14
   firebase_database:
+  google_sign_in: 
   #core packages
   connectivity: ^0.4.6+2
   encrypt: ^4.1.0
