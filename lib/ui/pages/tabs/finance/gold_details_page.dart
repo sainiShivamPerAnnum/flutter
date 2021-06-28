@@ -17,6 +17,7 @@ import 'package:felloapp/ui/elements/gold_profit_calculator.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/augmont_withdraw_screen.dart';
+import 'package:felloapp/ui/pages/tabs/finance/create_augmont_bank_details.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -217,6 +218,17 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                   size: 18.0,
                 ),
           onPressed: () async {
+            if(!baseProvider.isAugWithdrawRouteLogicInProgress && baseProvider.augmontDetail==null) {
+              print('inside deposit bank details 1');
+            }
+            else if(!baseProvider.isAugWithdrawRouteLogicInProgress && baseProvider.augmontDetail!=null) {
+              if(baseProvider.augmontDetail.bankAccNo.isEmpty || baseProvider.augmontDetail.bankAccNo==null) {
+                print('inside deposit bank details 2');
+              }
+              else {
+                print('inside withdrawal');
+              }
+            }
             if (!baseProvider.isAugWithdrawRouteLogicInProgress) {
               HapticFeedback.vibrate();
               _onWithdrawalClicked();

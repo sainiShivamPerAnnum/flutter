@@ -234,83 +234,83 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                       .toList(),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 10, left: 10),
-                child: Text(
-                  "Bank Details",
-                  style: TextStyle(color: Colors.blueGrey[600]),
-                ),
-              ),
-              Divider(
-                indent: 10,
-                endIndent: 10,
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10, left: 10),
-                child: Text("Account Holder Name"),
-              ),
-              InputField(
-                child: TextFormField(
-                  decoration:
-                      inputFieldDecoration('Your name as per your bank'),
-                  controller: _bankHolderNameInput,
-                  keyboardType: TextInputType.name,
-                  textCapitalization: TextCapitalization.characters,
-                  enabled: true,
-                  autofocus: false,
-                  validator: (value) {
-                    return null;
-                  },
-                ),
-              ),
-              SizedBox(height: 10),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text("Bank Account Number"),
-              ),
-              InputField(
-                child: TextFormField(
-                  decoration: inputFieldDecoration('Your bank account number'),
-                  controller: _bankAccountNumberInput,
-                  autofocus: false,
-                  keyboardType: TextInputType.number,
-                  enabled: true,
-                  validator: (value) => null,
-                ),
-              ),
-              SizedBox(height: 10),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text("Confirm Bank Account Number"),
-              ),
-              InputField(
-                child: TextFormField(
-                  decoration:
-                      inputFieldDecoration('Re-enter bank account number'),
-                  controller: _reenterbankAccountNumberInput,
-                  autofocus: false,
-                  obscureText: true,
-                  keyboardType: TextInputType.number,
-                  enabled: true,
-                  validator: (value) => null,
-                ),
-              ),
-              SizedBox(height: 10),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text("Bank IFSC"),
-              ),
-              InputField(
-                child: TextFormField(
-                  decoration: inputFieldDecoration('Your bank\'s IFSC code'),
-                  controller: _bankIfscInput,
-                  autofocus: false,
-                  keyboardType: TextInputType.streetAddress,
-                  textCapitalization: TextCapitalization.characters,
-                  enabled: true,
-                  validator: (value) => null,
-                ),
-              ),
+              // Padding(
+              //   padding: EdgeInsets.only(top: 10, left: 10),
+              //   child: Text(
+              //     "Bank Details",
+              //     style: TextStyle(color: Colors.blueGrey[600]),
+              //   ),
+              // ),
+              // Divider(
+              //   indent: 10,
+              //   endIndent: 10,
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.only(top: 10, left: 10),
+              //   child: Text("Account Holder Name"),
+              // ),
+              // InputField(
+              //   child: TextFormField(
+              //     decoration:
+              //         inputFieldDecoration('Your name as per your bank'),
+              //     controller: _bankHolderNameInput,
+              //     keyboardType: TextInputType.name,
+              //     textCapitalization: TextCapitalization.characters,
+              //     enabled: true,
+              //     autofocus: false,
+              //     validator: (value) {
+              //       return null;
+              //     },
+              //   ),
+              // ),
+              // SizedBox(height: 10),
+              // Padding(
+              //   padding: EdgeInsets.only(left: 10),
+              //   child: Text("Bank Account Number"),
+              // ),
+              // InputField(
+              //   child: TextFormField(
+              //     decoration: inputFieldDecoration('Your bank account number'),
+              //     controller: _bankAccountNumberInput,
+              //     autofocus: false,
+              //     keyboardType: TextInputType.number,
+              //     enabled: true,
+              //     validator: (value) => null,
+              //   ),
+              // ),
+              // SizedBox(height: 10),
+              // Padding(
+              //   padding: EdgeInsets.only(left: 10),
+              //   child: Text("Confirm Bank Account Number"),
+              // ),
+              // InputField(
+              //   child: TextFormField(
+              //     decoration:
+              //         inputFieldDecoration('Re-enter bank account number'),
+              //     controller: _reenterbankAccountNumberInput,
+              //     autofocus: false,
+              //     obscureText: true,
+              //     keyboardType: TextInputType.number,
+              //     enabled: true,
+              //     validator: (value) => null,
+              //   ),
+              // ),
+              // SizedBox(height: 10),
+              // Padding(
+              //   padding: EdgeInsets.only(left: 10),
+              //   child: Text("Bank IFSC"),
+              // ),
+              // InputField(
+              //   child: TextFormField(
+              //     decoration: inputFieldDecoration('Your bank\'s IFSC code'),
+              //     controller: _bankIfscInput,
+              //     autofocus: false,
+              //     keyboardType: TextInputType.streetAddress,
+              //     textCapitalization: TextCapitalization.characters,
+              //     enabled: true,
+              //     validator: (value) => null,
+              //   ),
+              // ),
               SizedBox(height: 10),
               Container(
                 width: MediaQuery.of(context).size.width - 50,
@@ -473,7 +473,6 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     bool _flag = true;
     String _reason = '';
     if (!iProvider.isInit()) await iProvider.init();
-
     ///test pan number using icici api and verify if the name entered by user matches name fetched
     var kObj = await iProvider.getKycStatus(aPan);
     if (kObj == null ||
