@@ -13,18 +13,15 @@ import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/username.dart';
-import 'package:felloapp/ui/pages/login/screens/verify_email.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginController extends StatefulWidget {
   final int initPage;
@@ -58,7 +55,6 @@ class _LoginControllerState extends State<LoginController> {
   final _otpScreenKey = new GlobalKey<OtpInputScreenState>();
   final _nameScreenKey = new GlobalKey<NameInputScreenState>();
   final _usernameKey = new GlobalKey<UsernameState>();
-  final _emailVerifyKey = new GlobalKey<VerifyEmailState>();
 
   @override
   void initState() {
