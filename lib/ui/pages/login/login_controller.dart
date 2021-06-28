@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
@@ -11,10 +12,13 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
+import 'package:felloapp/ui/pages/login/screens/username.dart';
+import 'package:felloapp/ui/pages/login/screens/verify_email.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -52,6 +56,8 @@ class _LoginControllerState extends State<LoginController> {
   final _mobileScreenKey = new GlobalKey<MobileInputScreenState>();
   final _otpScreenKey = new GlobalKey<OtpInputScreenState>();
   final _nameScreenKey = new GlobalKey<NameInputScreenState>();
+  final _usernameKey = new GlobalKey<UsernameState>();
+  final _emailVerifyKey = new GlobalKey<VerifyEmailState>();
 
   @override
   void initState() {
@@ -66,6 +72,8 @@ class _LoginControllerState extends State<LoginController> {
           otpEntered: _onOtpFilled,
           resendOtp: _onOtpResendRequested),
       NameInputScreen(key: _nameScreenKey),
+      VerifyEmail(key: _emailVerifyKey),
+      Username(key: _usernameKey)
       // AddressInputScreen(key: _addressScreenKey),
     ];
   }
@@ -152,10 +160,12 @@ class _LoginControllerState extends State<LoginController> {
           child: Stack(
         children: <Widget>[
           LinearProgressIndicator(
-              value: _formProgress,
-              backgroundColor: Colors.transparent,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                  UiConstants.primaryColor.withBlue(150))),
+            value: _formProgress,
+            backgroundColor: Colors.transparent,
+            valueColor: AlwaysStoppedAnimation<Color>(
+              UiConstants.primaryColor.withBlue(150),
+            ),
+          ),
           new PageView.builder(
             physics: new NeverScrollableScrollPhysics(),
             controller: _controller,
@@ -353,16 +363,78 @@ class _LoginControllerState extends State<LoginController> {
             bool isInv = _nameScreenKey.currentState.isInvested;
             if (isInv != null) baseProvider.myUser.isInvested = isInv;
             //currentPage = AddressInputScreen.index;
-            bool flag = await dbProvider.updateUser(baseProvider.myUser);
-            if (flag) {
-              log.debug("User object saved successfully");
-              _onSignUpComplete();
-            } else {
-              baseProvider.showNegativeAlert(
-                  'Update failed', 'Please try again in sometime', context);
-            }
+            // bool flag = await dbProvider.updateUser(baseProvider.myUser);
+            // if (flag) {
+            //   log.debug("User object saved successfully");
+            // _onSignUpComplete();
+            baseProvider.isLoginNextInProgress = false;
+            setState(() {});
+            _controller.animateToPage(VerifyEmail.index,
+                duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+
+            // } else {
+            //   baseProvider.showNegativeAlert(
+            //       'Update failed', 'Please try again in sometime', context);
+            // }
             // _controller.animateToPage(AddressInputScreen.index,
             //     duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+          }
+          break;
+        }
+      case VerifyEmail.index:
+        {
+          baseProvider.isLoginNextInProgress = true;
+          setState(() {});
+          String email = _emailVerifyKey.currentState.email.text.trim();
+          if (_emailVerifyKey.currentState.formKey.currentState.validate()) {
+            await baseProvider.firebaseUser.updateEmail(email);
+            await baseProvider.firebaseUser.sendEmailVerification();
+            _emailVerifyKey.currentState.timer =
+                Timer.periodic(Duration(seconds: 5), (timer) {
+              baseProvider.firebaseUser.reload().then((_) {
+                print("Waiting for response");
+                if (baseProvider.firebaseUser.emailVerified) {
+                  _emailVerifyKey.currentState.timer.cancel();
+                  print("Email verified successfully");
+                  baseProvider.myUser.email = email;
+                  baseProvider.myUser.isEmailVerified = true;
+                  baseProvider.isLoginNextInProgress = false;
+                  setState(() {});
+                  _controller.animateToPage(Username.index,
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeIn);
+                }
+              });
+            });
+          }
+
+          break;
+        }
+      case Username.index:
+        {
+          baseProvider.isLoginNextInProgress = true;
+          setState(() {});
+          String username =
+              _usernameKey.currentState.email.text.replaceAll('.', '@');
+          final DatabaseReference _database =
+              FirebaseDatabase.instance.reference();
+          await _database
+              .reference()
+              .child("usernames")
+              .child(username)
+              .set(baseProvider.firebaseUser.uid);
+          baseProvider.myUser.username = username;
+          bool flag = await dbProvider.updateUser(baseProvider.myUser);
+          if (flag) {
+            log.debug("User object saved successfully");
+            _onSignUpComplete();
+            // _controller.animateToPage(VerifyEmail.index,
+            //     duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+          } else {
+            baseProvider.showNegativeAlert(
+                'Update failed', 'Please try again in sometime', context);
+            baseProvider.isLoginNextInProgress = true;
+            setState(() {});
           }
           break;
         }

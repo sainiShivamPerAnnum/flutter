@@ -83,7 +83,7 @@ class TravelCardRenderer extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: Text(game.title,
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                   color: Color(0xff272768),
                   fontWeight: FontWeight.w700,
                   fontSize: cardWidth * 0.07),
