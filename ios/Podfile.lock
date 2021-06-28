@@ -286,7 +286,7 @@ PODS:
     - Firebase/Storage (= 7.3.0)
     - firebase_core
     - Flutter
-  - FirebaseABTesting (7.8.0):
+  - FirebaseABTesting (7.11.0):
     - FirebaseCore (~> 7.0)
   - FirebaseAnalytics (7.3.0):
     - FirebaseCore (~> 7.0)
@@ -331,12 +331,12 @@ PODS:
     - FirebaseInstallations (~> 7.0)
     - GoogleUtilities/Environment (~> 7.0)
     - nanopb (~> 2.30906.0)
-  - FirebaseInstallations (7.8.0):
+  - FirebaseInstallations (7.11.0):
     - FirebaseCore (~> 7.0)
     - GoogleUtilities/Environment (~> 7.0)
     - GoogleUtilities/UserDefaults (~> 7.0)
     - PromisesObjC (~> 1.2)
-  - FirebaseInstanceID (7.8.0):
+  - FirebaseInstanceID (7.11.0):
     - FirebaseCore (~> 7.0)
     - FirebaseInstallations (~> 7.0)
     - GoogleUtilities/Environment (~> 7.0)
@@ -358,10 +358,6 @@ PODS:
     - FirebaseCore (~> 7.0)
     - GTMSessionFetcher/Core (~> 1.4)
   - Flutter (1.0.0)
-  - flutter_image_compress (0.0.1):
-    - Flutter
-    - Mantle
-    - SDWebImageWebPCoder
   - flutter_local_notifications (0.0.1):
     - Flutter
   - flutter_share_me (0.0.1):
@@ -369,6 +365,10 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
+  - freshchat_sdk (0.0.1):
+    - Flutter
+    - FreshchatSDK (= 4.1.6)
+  - FreshchatSDK (4.1.6)
   - geolocator (6.1.9):
     - Flutter
   - GoogleAppMeasurement (7.3.0):
@@ -379,24 +379,24 @@ PODS:
     - nanopb (~> 2.30906.0)
   - GoogleDataTransport (8.1.0):
     - nanopb (~> 2.30906.0)
-  - GoogleUtilities/AppDelegateSwizzler (7.3.0):
+  - GoogleUtilities/AppDelegateSwizzler (7.4.3):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (7.3.0):
+  - GoogleUtilities/Environment (7.4.3):
     - PromisesObjC (~> 1.2)
-  - GoogleUtilities/Logger (7.3.0):
+  - GoogleUtilities/Logger (7.4.3):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (7.3.0):
+  - GoogleUtilities/MethodSwizzler (7.4.3):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (7.3.0):
+  - GoogleUtilities/Network (7.4.3):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (7.3.0)"
-  - GoogleUtilities/Reachability (7.3.0):
+  - "GoogleUtilities/NSData+zlib (7.4.3)"
+  - GoogleUtilities/Reachability (7.4.3):
     - GoogleUtilities/Logger
-  - GoogleUtilities/UserDefaults (7.3.0):
+  - GoogleUtilities/UserDefaults (7.4.3):
     - GoogleUtilities/Logger
   - "gRPC-C++ (1.28.2)":
     - "gRPC-C++/Implementation (= 1.28.2)"
@@ -422,22 +422,10 @@ PODS:
     - BoringSSL-GRPC (= 0.0.7)
     - gRPC-Core/Interface (= 1.28.2)
   - gRPC-Core/Interface (1.28.2)
-  - GTMSessionFetcher/Core (1.5.0)
+  - GTMSessionFetcher/Core (1.6.1)
   - image_picker (0.0.1):
     - Flutter
   - leveldb-library (1.22.1)
-  - libwebp (1.2.0):
-    - libwebp/demux (= 1.2.0)
-    - libwebp/mux (= 1.2.0)
-    - libwebp/webp (= 1.2.0)
-  - libwebp/demux (1.2.0):
-    - libwebp/webp
-  - libwebp/mux (1.2.0):
-    - libwebp/demux
-  - libwebp/webp (1.2.0)
-  - Mantle (2.1.6):
-    - Mantle/extobjc (= 2.1.6)
-  - Mantle/extobjc (2.1.6)
   - nanopb (2.30906.0):
     - nanopb/decode (= 2.30906.0)
     - nanopb/encode (= 2.30906.0)
@@ -445,18 +433,16 @@ PODS:
   - nanopb/encode (2.30906.0)
   - open_file (0.0.1):
     - Flutter
+  - package_info (0.0.1):
+    - Flutter
   - path_provider (0.0.1):
     - Flutter
   - PromisesObjC (1.2.12)
-  - razorpay-pod (1.1.12)
+  - razorpay-pod (1.1.14)
   - razorpay_flutter (1.1.10):
     - Flutter
     - razorpay-pod
   - Reachability (3.2)
-  - SDWebImage/Core (5.10.4)
-  - SDWebImageWebPCoder (0.8.3):
-    - libwebp (~> 1.0)
-    - SDWebImage/Core (~> 5.10)
   - share (0.0.1):
     - Flutter
   - shared_preferences (0.0.1):
@@ -488,12 +474,13 @@ DEPENDENCIES:
   - firebase_remote_config (from `.symlinks/plugins/firebase_remote_config/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
-  - flutter_image_compress (from `.symlinks/plugins/flutter_image_compress/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_share_me (from `.symlinks/plugins/flutter_share_me/ios`)
+  - freshchat_sdk (from `.symlinks/plugins/freshchat_sdk/ios`)
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - open_file (from `.symlinks/plugins/open_file/ios`)
+  - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - razorpay_flutter (from `.symlinks/plugins/razorpay_flutter/ios`)
   - share (from `.symlinks/plugins/share/ios`)
@@ -524,6 +511,7 @@ SPEC REPOS:
     - FirebaseRemoteConfig
     - FirebaseStorage
     - FMDB
+    - FreshchatSDK
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUtilities
@@ -531,14 +519,10 @@ SPEC REPOS:
     - gRPC-Core
     - GTMSessionFetcher
     - leveldb-library
-    - libwebp
-    - Mantle
     - nanopb
     - PromisesObjC
     - razorpay-pod
     - Reachability
-    - SDWebImage
-    - SDWebImageWebPCoder
 
 EXTERNAL SOURCES:
   camera:
@@ -565,18 +549,20 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
     :path: Flutter
-  flutter_image_compress:
-    :path: ".symlinks/plugins/flutter_image_compress/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_share_me:
     :path: ".symlinks/plugins/flutter_share_me/ios"
+  freshchat_sdk:
+    :path: ".symlinks/plugins/freshchat_sdk/ios"
   geolocator:
     :path: ".symlinks/plugins/geolocator/ios"
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
   open_file:
     :path: ".symlinks/plugins/open_file/ios"
+  package_info:
+    :path: ".symlinks/plugins/package_info/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   razorpay_flutter:
@@ -613,7 +599,7 @@ SPEC CHECKSUMS:
   firebase_messaging: caf0273c76e54f0a10dfe5048ac47b89e75bb78a
   firebase_remote_config: 1c56b7b8caa840aa2e9432e66bf606d10f492fc9
   firebase_storage: 554b8ce9192bfe0bd35f63da42d0d1f6ae819ccc
-  FirebaseABTesting: 44acbfc9db915bca8f111ebae342da6fd4f1cc55
+  FirebaseABTesting: e66f1f80747792630d9b292966de206d5df9853b
   FirebaseAnalytics: 2580c2d62535ae7b644143d48941fcc239ea897a
   FirebaseAuth: c224a0cf1afa0949bd5c7bfcf154b4f5ce8ddef2
   FirebaseCore: 4d3c72622ce0e2106aaa07bb4b2935ba2c370972
@@ -621,36 +607,34 @@ SPEC CHECKSUMS:
   FirebaseDynamicLinks: a6df95d6dbc746c2bbf7d511343cda1344e2cf70
   FirebaseFirestore: 1906bf163afdb7c432d2e3b5c40ceb9dd2df5820
   FirebaseInAppMessaging: 9436b16bbd1fd02bcb50c25ed485150b3269d611
-  FirebaseInstallations: 7f7ed0e7e27fb51f57291e1876e2ddb1524126c1
-  FirebaseInstanceID: aaecc93b4528bbcafea12c477e26827719ca1183
+  FirebaseInstallations: a58d4f72ec5861840b84df489f2668d970df558a
+  FirebaseInstanceID: ad5135045a498d7775903efd39762d2cdfa1be27
   FirebaseMessaging: 68d1bcb14880189558a8ae57167abe0b7e417232
   FirebaseRemoteConfig: 826fad8bec5ce1912ef97a124d6ec0ce4dcf6ec1
   FirebaseStorage: 5002b1895bfe74a5ce92ad54f966e6162d0da2e5
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
-  flutter_image_compress: 082f8daaf6c1b0c9fe798251c750ef0ecd98d7ae
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_share_me: dd04bcb65a595f76bd2fa0537df08fffc5a04903
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  freshchat_sdk: 64b6d039afffaeaa84700164c37fd7e57c1f9fda
+  FreshchatSDK: bc6561c7f5d1ee8c9911b1f1e6ada643c98547a3
   geolocator: 057a0c63a43e9c5296d8ad845a3ac8e6df23d899
   GoogleAppMeasurement: 8d3c0aeede16ab7764144b5a4ca8e1d4323841b7
   GoogleDataTransport: 116c84c4bdeb76be2a7a46de51244368f9794eab
-  GoogleUtilities: abda45f519bc4073aa1171d2f8742108def46017
+  GoogleUtilities: 45dbb24a7f351d69d0a601482b39ad6c32e30dab
   "gRPC-C++": 13d8ccef97d5c3c441b7e3c529ef28ebee86fad2
   gRPC-Core: 4afa11bfbedf7cdecd04de535a9e046893404ed5
-  GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
+  GTMSessionFetcher: 36689134877faeb055b27dfa4ccc9ceaa42e029e
   image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
-  libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
-  Mantle: 4c0ed6ce47c96eccc4dc3bb071deb3def0e2c3be
   nanopb: 1bf24dd71191072e120b83dd02d08f3da0d65e53
   open_file: 02eb5cb6b21264bd3a696876f5afbfb7ca4f4b7d
+  package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
-  razorpay-pod: e2e8cf25aea59eef51c6851716f188df71adab86
+  razorpay-pod: 7991bc0823d0f4b2934b4ea87967d54d2e284e2c
   razorpay_flutter: 84b3bfd206ae9c9c2a9ba585524a1b3d8102b6c1
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
-  SDWebImage: c666b97e1fa9c64b4909816a903322018f0a9c84
-  SDWebImageWebPCoder: bbf46e29fb8d1980a78ad3d5e9b4123c77f10ebc
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
