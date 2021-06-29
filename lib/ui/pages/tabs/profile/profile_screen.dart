@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
@@ -9,6 +8,8 @@ import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/elements/marquee_widget.dart';
+import 'package:felloapp/ui/pages/tabs/profile/verify_email.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
@@ -227,11 +228,67 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               child: Column(
                 children: [
+                  baseProvider.myUser.isEmailVerified == null ||
+                          baseProvider.myUser.isEmailVerified == false
+                      ? Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.only(bottom: 24),
+                          width: SizeConfig.screenWidth -
+                              SizeConfig.blockSizeHorizontal * 10,
+                          child: MarqueeWidget(
+                            direction: Axis.horizontal,
+                            child: InkWell(
+                              onTap: () {
+                                appState.currentAction = PageAction(
+                                    state: PageState.addPage,
+                                    page: VerifyEmailPageConfig);
+                              },
+                              child: Text(
+                                "Your email is not verified yet. Tap here to verify it now",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.red[300],
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
                   ProfileTabTile(
-                      logo: "images/contact-book.png",
-                      title: "Username",
-                      value: "@${baseProvider.myUser.username}" ?? "Claim now!",
-                      onPress: () {}),
+                    leadWidget: Icon(
+                      Icons.account_circle_outlined,
+                      color: UiConstants.primaryColor,
+                    ),
+                    title: "Username",
+                    trailWidget: baseProvider.myUser.username != null
+                        ? Text(
+                            "@${baseProvider.myUser.username.replaceAll('@', '.')}",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.montserrat(
+                              color: UiConstants.primaryColor,
+                              fontSize: SizeConfig.mediumTextSize,
+                            ),
+                          )
+                        : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: UiConstants.primaryColor,
+                              shadowColor:
+                                  UiConstants.primaryColor.withOpacity(0.3),
+                            ),
+                            onPressed: () {
+                              appState.currentAction = PageAction(
+                                  state: PageState.addPage,
+                                  page: ClaimUsernamePageConfig);
+                            },
+                            child: Text(
+                              "Claim now!",
+                              style: GoogleFonts.montserrat(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                  ),
                   ProfileTabTilePan(
                     logo: "images/contact-book.png",
                     title: "PAN Number",
@@ -251,16 +308,36 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                   ),
                   ProfileTabTile(
-                      logo: "images/transaction.png",
+                      leadWidget: Image.asset(
+                        "images/transaction.png",
+                        height: SizeConfig.screenHeight * 0.02,
+                        width: SizeConfig.screenHeight * 0.02,
+                      ),
                       title: "Transactions",
-                      value: "See All",
+                      trailWidget: Text(
+                        "See All",
+                        style: GoogleFonts.montserrat(
+                          color: UiConstants.primaryColor,
+                          fontSize: SizeConfig.mediumTextSize,
+                        ),
+                      ),
                       onPress: () => appState.currentAction = PageAction(
                           state: PageState.addPage,
                           page: TransactionPageConfig)),
                   ProfileTabTile(
-                      logo: "images/referrals.png",
+                      leadWidget: Image.asset(
+                        "images/referrals.png",
+                        height: SizeConfig.screenHeight * 0.02,
+                        width: SizeConfig.screenHeight * 0.02,
+                      ),
                       title: "Referrals",
-                      value: _myReferralCount.toString(),
+                      trailWidget: Text(
+                        _myReferralCount.toString(),
+                        style: GoogleFonts.montserrat(
+                          color: UiConstants.primaryColor,
+                          fontSize: SizeConfig.mediumTextSize,
+                        ),
+                      ),
                       onPress: () => appState.currentAction = PageAction(
                           state: PageState.addPage, page: ReferralPageConfig)),
                 ],
@@ -820,10 +897,11 @@ class CardButton extends StatelessWidget {
 }
 
 class ProfileTabTile extends StatelessWidget {
-  final String logo, title, value;
+  final String title;
+  final Widget leadWidget, trailWidget;
   final Function onPress;
 
-  ProfileTabTile({this.logo, this.onPress, this.title, this.value});
+  ProfileTabTile({this.leadWidget, this.onPress, this.title, this.trailWidget});
 
   @override
   Widget build(BuildContext context) {
@@ -832,24 +910,17 @@ class ProfileTabTile extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            leading: Image.asset(
-              logo,
-              height: SizeConfig.screenHeight * 0.02,
-              width: SizeConfig.screenHeight * 0.02,
-            ),
+            leading: leadWidget,
             title: Text(
               title,
               style: GoogleFonts.montserrat(
                 fontSize: SizeConfig.mediumTextSize,
               ),
             ),
-            trailing: Text(
-              value,
-              style: GoogleFonts.montserrat(
-                color: UiConstants.primaryColor,
-                fontSize: SizeConfig.mediumTextSize,
-              ),
-            ),
+            trailing: Container(
+                alignment: Alignment.centerRight,
+                width: SizeConfig.screenWidth / 2,
+                child: trailWidget),
             onTap: onPress,
           ),
           Divider(

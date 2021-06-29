@@ -5,7 +5,6 @@ import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 class Username extends StatefulWidget {
   static const int index = 3;
@@ -17,7 +16,7 @@ class Username extends StatefulWidget {
 }
 
 class UsernameState extends State<Username> {
-  TextEditingController email = TextEditingController();
+  TextEditingController username = TextEditingController();
   BaseUtil baseProvider;
   DBModel dbProvider;
 
@@ -60,11 +59,11 @@ class UsernameState extends State<Username> {
         ),
       );
     } else if (isValid == true)
-      return Text("${email.text} is available",
+      return Text("${username.text} is available",
           style: TextStyle(
               color: UiConstants.primaryColor, fontWeight: FontWeight.w500));
     else if (isValid == false)
-      return Text("${email.text} is not available",
+      return Text("${username.text} is not available",
           style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500));
     return SizedBox(
       height: 16,
@@ -76,9 +75,6 @@ class UsernameState extends State<Username> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     return Container(
-      margin: EdgeInsets.only(
-          left: SizeConfig.blockSizeHorizontal * 14,
-          right: SizeConfig.blockSizeHorizontal * 5),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,7 +98,7 @@ class UsernameState extends State<Username> {
             ),
             Container(
               child: TextFormField(
-                controller: email,
+                controller: username,
                 autofocus: true,
                 cursorColor: Colors.black,
                 keyboardType: TextInputType.text,
@@ -164,7 +160,7 @@ class UsernameState extends State<Username> {
             // String userId =
             //     context.read<AuthenticaitonService>().currentUser.uid;
             // FDatabase()
-            //     .setUsername(email.text.replaceAll('.', '@'), userId)
+            //     .setUsername(username.text.replaceAll('.', '@'), userId)
             //     .then((value) {
             //   setState(() {
             //     isUpdating = false;

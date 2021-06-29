@@ -97,6 +97,11 @@ class _MyAppState extends State<MyApp> {
                   color: UiConstants.primaryColor.withOpacity(0.3), width: 1),
               borderRadius: BorderRadius.circular(10),
             ),
+            disabledBorder: OutlineInputBorder(
+              borderSide:
+                  BorderSide(color: Colors.grey.withOpacity(0.3), width: 1),
+              borderRadius: BorderRadius.circular(10),
+            ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 color: UiConstants.primaryColor,

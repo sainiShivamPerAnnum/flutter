@@ -19,9 +19,11 @@ import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola-cards.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola-home.dart';
+import 'package:felloapp/ui/pages/tabs/profile/claim_username.dart';
 import 'package:felloapp/ui/pages/tabs/profile/edit_profile_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions.dart';
+import 'package:felloapp/ui/pages/tabs/profile/verify_email.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -176,6 +178,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.ChatSupport:
           _addPageData(ChatSupport(), ChatSupportPageConfig);
           break;
+        case Pages.ClaimUsername:
+          _addPageData(ClaimUsername(), ClaimUsernamePageConfig);
+          break;
+        case Pages.VerifyEmail:
+          _addPageData(VerifyEmail(), VerifyEmailPageConfig);
+          break;
 
         default:
           break;
@@ -289,6 +297,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.ChatSupport:
         ChatSupportPageConfig.currentPageAction = action;
+        break;
+      case Pages.ClaimUsername:
+        ClaimUsernamePageConfig.currentPageAction = action;
+        break;
+      case Pages.VerifyEmail:
+        VerifyEmailPageConfig.currentPageAction = action;
         break;
 
       default:
@@ -444,6 +458,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case 'chatSupport':
         pageConfiguration = ChatSupportPageConfig;
+        break;
+      case 'claimUsername':
+        pageConfiguration = ClaimUsernamePageConfig;
+        break;
+      case 'verifyEmail':
+        pageConfiguration = VerifyEmailPageConfig;
+        break;
       // case 'tambolaTickets':
       //   pageConfiguration = TambolaTicketsPageConfig;
       //   break;

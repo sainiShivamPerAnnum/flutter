@@ -39,6 +39,8 @@ dependencies:
   share: ^0.6.5+4
   synchronized: ^3.0.0
   url_launcher: ^5.7.0
+  sms_autofill: 
+
   #ui packages
   camera: ^0.7.0+2
   cached_network_image: ^2.0.0

@@ -58,9 +58,6 @@ class OtpInputScreenState extends State<OtpInputScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        margin: EdgeInsets.only(
-            left: SizeConfig.blockSizeHorizontal * 14,
-            right: SizeConfig.blockSizeHorizontal * 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
