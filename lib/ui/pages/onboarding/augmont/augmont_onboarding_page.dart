@@ -466,16 +466,15 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
   }
 
   Future<Map<String, dynamic>> _getVerifiedDetails(
-      String aPan, String aPanName, String aIfsc) async {
-    if (aPan == null || aPan.isEmpty || aIfsc == null || aIfsc.isEmpty)
+      String enteredPan, String enteredPanName, String enteredIfsc) async {
+    if (enteredPan == null || enteredPan.isEmpty || enteredIfsc == null || enteredIfsc.isEmpty)
       return {'flag': false, 'reason': 'Invalid Details'};
-    Map<String, dynamic> resMap = {};
     bool _flag = true;
     String _reason = '';
     if (!iProvider.isInit()) await iProvider.init();
 
     ///test pan number using icici api and verify if the name entered by user matches name fetched
-    var kObj = await iProvider.getKycStatus(aPan);
+    var kObj = await iProvider.getKycStatus(enteredPan);
     if (kObj == null ||
         kObj[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
         kObj[GetKycStatus.resStatus] == null ||
@@ -486,8 +485,11 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
       ///set name test to true as we couldnt find it in the cams database
       _flag = true;
     } else {
-      String aName = kObj[GetKycStatus.resName];
-      if (aName.toUpperCase().trim() != aPanName.trim()) {
+      ///remove all whitespaces before comparing as icici apis returns poorly spaced name values
+      String recvdPanName = kObj[GetKycStatus.resName];
+      String _r = recvdPanName.replaceAll(new RegExp(r"\s"), "");
+      String _e = enteredPanName.replaceAll(new RegExp(r"\s"), "");
+      if (_r.toUpperCase() != _e.toUpperCase()) {
         _flag = false;
         _reason =
             'The name on your PAN card does not match. Please enter your legal name.';
@@ -498,7 +500,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     }
 
     ///test ifsc code using icici api
-    var bankDetail = await iProvider.getBankInfo(aPan, aIfsc);
+    var bankDetail = await iProvider.getBankInfo(enteredPanName, enteredIfsc);
     if (bankDetail == null ||
         bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
         bankDetail[GetBankDetail.resBankName] == null) {
