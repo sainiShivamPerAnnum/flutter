@@ -15,12 +15,14 @@ import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/username.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class LoginController extends StatefulWidget {
@@ -49,6 +51,7 @@ class _LoginControllerState extends State<LoginController> {
   String userMobile;
   String _verificationId;
   String _augmentedVerificationId;
+  ValueNotifier<double> _pageNotifier;
   static List<Widget> _pages;
   int _currentPage;
   final _mobileScreenKey = new GlobalKey<MobileInputScreenState>();
@@ -62,6 +65,8 @@ class _LoginControllerState extends State<LoginController> {
     _currentPage = (initPage != null) ? initPage : MobileInputScreen.index;
     _formProgress = 0.2 * (_currentPage + 1);
     _controller = new PageController(initialPage: _currentPage);
+    _controller.addListener(_pageListener);
+    _pageNotifier = ValueNotifier(0.0);
     _pages = [
       MobileInputScreen(key: _mobileScreenKey),
       OtpInputScreen(
@@ -74,6 +79,17 @@ class _LoginControllerState extends State<LoginController> {
       Username(key: _usernameKey)
       // AddressInputScreen(key: _addressScreenKey),
     ];
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_pageListener);
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _pageListener() {
+    _pageNotifier.value = _controller.page;
   }
 
   Future<void> _verifyPhone() async {
@@ -90,7 +106,8 @@ class _LoginControllerState extends State<LoginController> {
         ///this is the first time that the otp was requested
         baseProvider.isLoginNextInProgress = false;
         _controller.animateToPage(OtpInputScreen.index,
-            duration: Duration(seconds: 2), curve: Curves.easeIn);
+            duration: Duration(seconds: 2),
+            curve: Curves.fastLinearToSlowEaseIn);
         setState(() {});
       } else {
         ///the otp was requested to be resent
@@ -153,24 +170,33 @@ class _LoginControllerState extends State<LoginController> {
     appStateProvider = Provider.of<AppState>(context, listen: false);
     return Scaffold(
       // appBar: BaseUtil.getAppBar(),
-      backgroundColor: Color(0xfff1f1f1),
+
       body: SafeArea(
           child: Stack(
         children: <Widget>[
-          LinearProgressIndicator(
-            value: _formProgress,
-            backgroundColor: Colors.transparent,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              UiConstants.primaryColor.withBlue(150),
-            ),
-          ),
+          // LinearProgressIndicator(
+          //   value: _formProgress,
+          //   backgroundColor: Colors.transparent,
+          //   valueColor: AlwaysStoppedAnimation<Color>(
+          //     UiConstants.primaryColor.withBlue(150),
+          //   ),
+          // ),
+
           new PageView.builder(
             physics: new NeverScrollableScrollPhysics(),
             scrollDirection: Axis.vertical,
             controller: _controller,
             itemCount: _pages.length,
             itemBuilder: (BuildContext context, int index) {
-              return _pages[index % _pages.length];
+              //print(index - _controller.page);
+              return ValueListenableBuilder(
+                  valueListenable: _pageNotifier,
+                  builder: (ctx, value, _) {
+                    final factorChange = value - index;
+                    return Opacity(
+                        opacity: (1 - factorChange.abs()).clamp(0.0, 1.0),
+                        child: _pages[index % _pages.length]);
+                  });
             },
             onPageChanged: (int index) {
               setState(() {
@@ -179,6 +205,39 @@ class _LoginControllerState extends State<LoginController> {
               });
             },
           ),
+          ValueListenableBuilder(
+              valueListenable: _pageNotifier,
+              builder: (ctx, value, child) {
+                return Stack(
+                  children: [
+                    Positioned(
+                      left: SizeConfig.blockSizeHorizontal * 5 + 11.5,
+                      top: kToolbarHeight * 1.7 +
+                          ((SizeConfig.screenHeight - kToolbarHeight * 2) / 4) *
+                              value,
+                      bottom: 0,
+                      width: 1,
+                      child: Container(
+                        color: UiConstants.primaryColor.withOpacity(0.2),
+                      ),
+                    ),
+                    Positioned(
+                      left: SizeConfig.blockSizeHorizontal * 5,
+                      top: kToolbarHeight * 1.6 +
+                          ((SizeConfig.screenHeight - kToolbarHeight * 2) / 4) *
+                              value,
+                      child: RotatedBox(
+                        quarterTurns: 2,
+                        child: Icon(
+                          Icons.airplanemode_active_rounded,
+                          color: UiConstants.primaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }),
+
           Align(
             alignment: Alignment.bottomCenter,
             child: Column(
@@ -192,12 +251,15 @@ class _LoginControllerState extends State<LoginController> {
                             children: [
                               new TextSpan(
                                 text: 'By continuing, you agree to our ',
-                                style: new TextStyle(color: Colors.black45),
+                                style: GoogleFonts.montserrat(
+                                    fontSize: SizeConfig.smallTextSize,
+                                    color: Colors.black45),
                               ),
                               new TextSpan(
                                 text: 'Terms of Service',
-                                style: new TextStyle(
+                                style: GoogleFonts.montserrat(
                                     color: Colors.black45,
+                                    fontSize: SizeConfig.smallTextSize,
                                     decoration: TextDecoration.underline),
                                 recognizer: new TapGestureRecognizer()
                                   ..onTap = () {
@@ -215,8 +277,10 @@ class _LoginControllerState extends State<LoginController> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
+                      Spacer(),
                       new Container(
-                        width: MediaQuery.of(context).size.width - 50,
+                        width: SizeConfig.screenWidth -
+                            SizeConfig.blockSizeHorizontal * 20,
                         height: 50.0,
                         decoration: BoxDecoration(
                           gradient: new LinearGradient(
@@ -369,14 +433,15 @@ class _LoginControllerState extends State<LoginController> {
             baseProvider.isLoginNextInProgress = false;
             setState(() {});
             _controller.animateToPage(Username.index,
-                duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+                duration: Duration(seconds: 2),
+                curve: Curves.fastLinearToSlowEaseIn);
 
             // } else {
             //   baseProvider.showNegativeAlert(
             //       'Update failed', 'Please try again in sometime', context);
             // }
             // _controller.animateToPage(AddressInputScreen.index,
-            //     duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+            //     duration: Duration(milliseconds: 300), curve:Curves.fastLinearToSlowEaseIn);
           }
           break;
         }
@@ -401,7 +466,7 @@ class _LoginControllerState extends State<LoginController> {
       //             setState(() {});
       //             _controller.animateToPage(Username.index,
       //                 duration: Duration(milliseconds: 300),
-      //                 curve: Curves.easeIn);
+      //                 curve:Curves.fastLinearToSlowEaseIn);
       //           }
       //         });
       //       });
@@ -424,7 +489,7 @@ class _LoginControllerState extends State<LoginController> {
               log.debug("User object saved successfully");
               _onSignUpComplete();
               // _controller.animateToPage(VerifyEmail.index,
-              //     duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+              //     duration: Duration(milliseconds: 300), curve:Curves.fastLinearToSlowEaseIn);
             } else {
               baseProvider.showNegativeAlert(
                   'Update failed', 'Please try again in sometime', context);
@@ -490,7 +555,7 @@ class _LoginControllerState extends State<LoginController> {
       //set 'tutorial shown' flag to false to ensure tutorial gets shown to the user
       lclDbProvider.saveHomeTutorialComplete = false;
       _controller.animateToPage(NameInputScreen.index,
-          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+          duration: Duration(seconds: 2), curve: Curves.fastLinearToSlowEaseIn);
       //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user
@@ -518,7 +583,8 @@ class _LoginControllerState extends State<LoginController> {
     if (!baseProvider.isLoginNextInProgress) {
       baseProvider.isOtpResendCount = 0;
       _controller.animateToPage(MobileInputScreen.index,
-          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+          duration: Duration(milliseconds: 300),
+          curve: Curves.fastLinearToSlowEaseIn);
     }
   }
 

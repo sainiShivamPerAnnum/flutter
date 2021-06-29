@@ -230,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ProfileTabTile(
                       logo: "images/contact-book.png",
                       title: "Username",
-                      value: baseProvider.myUser.username ?? "Claim now!",
+                      value: "@${baseProvider.myUser.username}" ?? "Claim now!",
                       onPress: () {}),
                   ProfileTabTilePan(
                     logo: "images/contact-book.png",
@@ -839,7 +839,9 @@ class ProfileTabTile extends StatelessWidget {
             ),
             title: Text(
               title,
-              style: GoogleFonts.montserrat(),
+              style: GoogleFonts.montserrat(
+                fontSize: SizeConfig.mediumTextSize,
+              ),
             ),
             trailing: Text(
               value,
@@ -931,6 +933,7 @@ class ProfileTabTilePan extends StatelessWidget {
                             padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
                             child: Icon(
                               Icons.info_outline,
+                              size: SizeConfig.largeTextSize,
                               color: UiConstants.primaryColor,
                             )),
                         onTap: onPress,

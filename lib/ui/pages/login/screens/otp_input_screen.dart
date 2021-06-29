@@ -44,16 +44,23 @@ class OtpInputScreenState extends State<OtpInputScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void didChangeDependencies() {
     if (mounted) {
-      FocusScope.of(context).requestFocus(focusNode);
+      Future.delayed(Duration(seconds: 2), () {
+        FocusScope.of(context).requestFocus(focusNode);
+      });
     }
+    super.didChangeDependencies();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        margin: EdgeInsets.symmetric(
-            horizontal: SizeConfig.blockSizeHorizontal * 5),
+        margin: EdgeInsets.only(
+            left: SizeConfig.blockSizeHorizontal * 14,
+            right: SizeConfig.blockSizeHorizontal * 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[

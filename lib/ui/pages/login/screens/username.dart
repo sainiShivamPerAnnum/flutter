@@ -75,10 +75,11 @@ class UsernameState extends State<Username> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    return Scaffold(
-      body: Container(
-        margin: EdgeInsets.symmetric(
-            horizontal: SizeConfig.blockSizeHorizontal * 5),
+    return Container(
+      margin: EdgeInsets.only(
+          left: SizeConfig.blockSizeHorizontal * 14,
+          right: SizeConfig.blockSizeHorizontal * 5),
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -123,7 +124,7 @@ class UsernameState extends State<Username> {
               height: 40,
               child: showResult(),
             ),
-            SizedBox(height: SizeConfig.screenHeight * .16),
+            SizedBox(height: SizeConfig.screenHeight * .1),
             Text(
               "Rules for a valid username",
               style: TextStyle(

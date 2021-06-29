@@ -25,61 +25,65 @@ class MobileInputScreenState extends State<MobileInputScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:
-          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(
-            height: kToolbarHeight * 1.5,
-          ),
-          Text(
-            "Let's quickly onboard you",
-            style: TextStyle(
-              fontSize: SizeConfig.mediumTextSize,
+      padding: EdgeInsets.only(
+          left: SizeConfig.blockSizeHorizontal * 14,
+          right: SizeConfig.blockSizeHorizontal * 5),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(
+              height: kToolbarHeight * 1.5,
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 24,
-            ),
-            child: Text(
-              "Let's start with your mobile number",
+            Text(
+              "Let's quickly onboard you",
               style: TextStyle(
-                fontWeight: FontWeight.w800,
-                fontSize: SizeConfig.screenWidth * 0.06,
+                fontSize: SizeConfig.mediumTextSize,
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 24),
-            child: Form(
-              key: _formKey,
-              child: TextFormField(
-                key: _phoneFieldKey,
-                autofocus: true,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: "Mobile",
-                  prefixIcon: Icon(Icons.phone),
-                  focusColor: UiConstants.primaryColor,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 24,
+              ),
+              child: Text(
+                "Let's start with your mobile number",
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: SizeConfig.screenWidth * 0.06,
                 ),
-                controller: _mobileController,
-                validator: (value) => _validateMobile(value),
-                onFieldSubmitted: (v) {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                },
               ),
             ),
-          ),
-          SizedBox(height: 24),
-          Text(
-              "We'll send you an OTP on this number to help secure your account"),
-        ],
-        //)
+            Padding(
+              padding: const EdgeInsets.only(top: 24),
+              child: Form(
+                key: _formKey,
+                child: TextFormField(
+                  key: _phoneFieldKey,
+                  autofocus: true,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: "Mobile",
+                    prefixIcon: Icon(Icons.phone),
+                    focusColor: UiConstants.primaryColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  controller: _mobileController,
+                  validator: (value) => _validateMobile(value),
+                  onFieldSubmitted: (v) {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
+                ),
+              ),
+            ),
+            SizedBox(height: 24),
+            Text(
+                "We'll send you an OTP on this number to help secure your account"),
+          ],
+          //)
+        ),
       ),
     );
   }
