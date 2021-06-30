@@ -97,7 +97,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                     child: Container(
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                        child: Text('Edit Bank Info'),
+                        child: _checkBankInfoMissing?Text('Add Bank Info'):Text('Edit Bank Info')
                       ),
                       decoration: BoxDecoration(
                         border: Border.all(color: UiConstants.primaryColor),
@@ -339,13 +339,8 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
           ),
           onPressed: () async {
             HapticFeedback.vibrate();
-            if(baseProvider.augmontDetail.bankAccNo.isEmpty || baseProvider.augmontDetail.bankAccNo==null ||
-            baseProvider.augmontDetail.bankHolderName.isEmpty || baseProvider.augmontDetail.bankHolderName==null ||
-            baseProvider.augmontDetail.ifsc.isEmpty || baseProvider.augmontDetail.ifsc==null) {
+            if(_checkBankInfoMissing) {
               baseProvider.showNegativeAlert('Bank Details Missing', 'Please enter your bank details', context);
-              appState.currentAction = PageAction(
-                          state: PageState.addPage,
-                          page: EditAugBankDetailsPageConfig);
             }
             else {
               if (widget.withdrawableGoldQnty == 0.0) {
@@ -398,6 +393,10 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
       ),
     );
   }
+
+  bool get _checkBankInfoMissing => (baseProvider.augmontDetail.bankAccNo.isEmpty || baseProvider.augmontDetail.bankAccNo==null ||
+            baseProvider.augmontDetail.bankHolderName.isEmpty || baseProvider.augmontDetail.bankHolderName==null ||
+            baseProvider.augmontDetail.ifsc.isEmpty || baseProvider.augmontDetail.ifsc==null);
 
   _buildRow(String title, String value) {
     return ListTile(

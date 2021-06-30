@@ -129,7 +129,7 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                         ? Padding(
                             padding: EdgeInsets.all(10),
                             child: Text(
-                              'Your PAN information cant be changed later',
+                              'This information cant be changed later',
                               style: TextStyle(
                                   fontStyle: FontStyle.italic,
                                   fontSize: SizeConfig.smallTextSize),
