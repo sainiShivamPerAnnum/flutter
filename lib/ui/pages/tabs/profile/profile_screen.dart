@@ -48,7 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
         });
         print("got the image");
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
   @override
