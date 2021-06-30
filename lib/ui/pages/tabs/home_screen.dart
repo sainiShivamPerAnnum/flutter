@@ -90,10 +90,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
         decoration: BoxDecoration(
           color: UiConstants.backgroundColor,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(50),
-            bottomRight: Radius.circular(50),
-          ),
+          borderRadius: SizeConfig.homeViewBorder,
         ),
         child: Stack(
           children: [
@@ -109,12 +106,10 @@ class _HomePageState extends State<HomePage> {
             ),
             SafeArea(
               child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(50),
-                  bottomRight: Radius.circular(50),
-                ),
+                borderRadius: SizeConfig.homeViewBorder,
                 child: Padding(
-                  padding: EdgeInsets.only(left: SizeConfig.screenWidth * 0.05),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.blockSizeHorizontal * 5),
                   child: ListView(
                     controller: AppState.homeCardListController,
                     physics: BouncingScrollPhysics(),
@@ -165,21 +160,22 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _buildLoadingFeed() {
     return [
       Container(
-        height: AppBar().preferredSize.height,
+        height: kToolbarHeight,
       ),
       _buildProfileRow(),
       Padding(
-          padding: EdgeInsets.all(30),
-          child: SpinKitWave(
-            color: UiConstants.primaryColor,
-          ))
+        padding: EdgeInsets.symmetric(vertical: 30),
+        child: SpinKitWave(
+          color: UiConstants.primaryColor,
+        ),
+      )
     ];
   }
 
   List<Widget> _buildHomeFeed(List<FeedCard> cards) {
     List<Widget> _widget = [
       Container(
-        height: AppBar().preferredSize.height,
+        height: kToolbarHeight,
       ),
       _buildProfileRow(),
     ];
@@ -283,11 +279,9 @@ class HomeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return Container(
       margin: EdgeInsets.only(
         bottom: 30,
-        right: width * 0.05,
       ),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -319,13 +313,13 @@ class HomeCard extends StatelessWidget {
               child: Image.asset(
                 asset,
                 //height: height * 0.25,
-                width: width * 0.5,
+                width: SizeConfig.screenWidth * 0.5,
               ),
             ),
           ),
           Container(
             width: double.infinity,
-            padding: EdgeInsets.all(width * 0.05),
+            padding: EdgeInsets.all(SizeConfig.screenWidth * 0.05),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -360,7 +354,7 @@ class HomeCard extends StatelessWidget {
                 GestureDetector(
                   onTap: onPressed,
                   child: Container(
-                    padding: EdgeInsets.all(15),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
                       border: Border.all(
                         width: 2,
@@ -379,7 +373,8 @@ class HomeCard extends StatelessWidget {
                     child: Text(
                       buttonText,
                       style: TextStyle(
-                          color: Colors.white, fontSize: width * 0.035),
+                          color: Colors.white,
+                          fontSize: SizeConfig.mediumTextSize),
                     ),
                   ),
                 )

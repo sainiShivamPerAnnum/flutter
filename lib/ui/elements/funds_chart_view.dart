@@ -171,8 +171,13 @@ class _FundsChartViewState extends State<FundsChartView> {
               showChartValueBackground: true,
               showChartValues: false,
               chartValueBackgroundColor: UiConstants.backgroundColor,
-              chartValueStyle: TextStyle(
-                fontSize: 40,
+              chartValueStyle: GoogleFonts.montserrat(
+                fontSize: SizeConfig.screenWidth /
+                    (widget.userFundWallet
+                            .getEstTotalWealth()
+                            .toStringAsFixed(2)
+                            .length *
+                        2),
                 color: UiConstants.textColor,
               ),
               showChartValuesInPercentage: false,

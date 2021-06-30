@@ -107,13 +107,13 @@ class _RootState extends State<Root> {
     }
   }
 
-  String getBurgerImage() {
-    if (appState.getCurrentTabIndex == 0 || appState.getCurrentTabIndex == 1) {
-      return "images/menu-white.png";
-    } else {
-      return "images/menu.png";
-    }
-  }
+  // String getBurgerImage() {
+  //   if (appState.getCurrentTabIndex == 0 || appState.getCurrentTabIndex == 1) {
+  //     return "images/menu-white.png";
+  //   } else {
+  //     return "images/menu.png";
+  //   }
+  // }
 
   _initAdhocNotifications() {
     if (fcmProvider != null && baseProvider != null) {
@@ -190,40 +190,34 @@ class _RootState extends State<Root> {
               ),
             ),
           ),
-          Positioned(
-            child: SafeArea(
+          SafeArea(
+            child: GestureDetector(
+              onTap: () {
+                HapticFeedback.vibrate();
+                delegate.parseRoute(Uri.parse("d-ham"));
+              },
               child: Container(
-                width: SizeConfig.screenWidth,
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        HapticFeedback.vibrate();
-                        delegate.parseRoute(Uri.parse("d-ham"));
-                      },
-                      child: Container(
-                        height: SizeConfig.screenHeight * 0.05,
-                        width: SizeConfig.screenHeight * 0.05,
-                        margin: EdgeInsets.only(
-                          left: SizeConfig.screenHeight * 0.016,
-                          top: SizeConfig.screenHeight * 0.016,
-                        ),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border:
-                              Border.all(color: getBurgerBorder(), width: 3),
-                        ),
-                        child: Container(
-                          padding: EdgeInsets.all(
-                            SizeConfig.screenHeight * 0.011,
-                          ),
-                          child: Image.asset(
-                            getBurgerImage(),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
+                height: kToolbarHeight * 0.8,
+                width: SizeConfig.screenHeight * 0.05,
+                margin: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.blockSizeHorizontal * 5,
+                  vertical: kToolbarHeight * 0.1,
+                ),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: getBurgerBorder(), width: 2),
+                ),
+                child: Container(
+                  padding: EdgeInsets.all(
+                    SizeConfig.screenHeight * 0.011,
+                  ),
+                  child: Image.asset(
+                    "images/menu.png",
+                    color: (appState.getCurrentTabIndex == 0 ||
+                            appState.getCurrentTabIndex == 1)
+                        ? Colors.white
+                        : Colors.black,
+                  ),
                 ),
               ),
             ),

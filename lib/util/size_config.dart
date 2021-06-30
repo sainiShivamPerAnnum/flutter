@@ -12,6 +12,8 @@ class SizeConfig {
   static double largeTextSize;
   static double cardTitleTextSize;
 
+  static BorderRadius homeViewBorder;
+
   static bool isGamefirstTime;
 
   void init(BuildContext context) {
@@ -25,5 +27,10 @@ class SizeConfig {
     largeTextSize = blockSizeHorizontal * 5;
     cardTitleTextSize = blockSizeHorizontal * 7;
     isGamefirstTime = true;
+
+    homeViewBorder = BorderRadius.only(
+      bottomLeft: Radius.circular(SizeConfig.blockSizeHorizontal * 10),
+      bottomRight: Radius.circular(SizeConfig.blockSizeHorizontal * 10),
+    );
   }
 }

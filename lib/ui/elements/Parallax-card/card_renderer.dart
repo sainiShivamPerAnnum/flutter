@@ -1,3 +1,4 @@
+import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
@@ -94,6 +95,7 @@ class TravelCardRenderer extends StatelessWidget {
           child: Text(game.description,
               style: TextStyle(
                 color: Color(0xff272768),
+                fontSize: SizeConfig.mediumTextSize,
               ),
               textAlign: TextAlign.center),
         ),

@@ -52,9 +52,6 @@ class MobileInputScreenState extends State<MobileInputScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(
-              height: kToolbarHeight * 1.5,
-            ),
             Text(
               "Let's quickly onboard you",
               style: TextStyle(

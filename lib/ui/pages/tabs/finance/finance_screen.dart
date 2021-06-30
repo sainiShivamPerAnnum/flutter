@@ -95,17 +95,11 @@ class _FinancePageState extends State<FinancePage> {
         height: SizeConfig.screenHeight,
         decoration: BoxDecoration(
           color: UiConstants.backgroundColor,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(50),
-            bottomRight: Radius.circular(50),
-          ),
+          borderRadius: SizeConfig.homeViewBorder,
         ),
         child: SafeArea(
           child: ClipRRect(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(50),
-              bottomRight: Radius.circular(50),
-            ),
+            borderRadius: SizeConfig.homeViewBorder,
             child: Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.screenHeight * 0.016),
@@ -140,7 +134,7 @@ class _FinancePageState extends State<FinancePage> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 24,
+                        fontSize: SizeConfig.largeTextSize,
                         color: UiConstants.textColor,
                       ),
                     ),

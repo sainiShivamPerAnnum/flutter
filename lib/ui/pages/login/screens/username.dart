@@ -79,11 +79,8 @@ class UsernameState extends State<Username> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: kToolbarHeight,
-            ),
             Padding(
-              padding: const EdgeInsets.only(top: 24.0, bottom: 16),
+              padding: const EdgeInsets.only(bottom: 16),
               child: Text(
                 "Choose a cool username",
                 style: TextStyle(
@@ -131,7 +128,6 @@ class UsernameState extends State<Username> {
             SizedBox(
               height: 8,
             ),
-
             RuleTile(rule: "• must be more than 4 and less than 20 letters"),
             RuleTile(
                 rule:
@@ -142,40 +138,9 @@ class UsernameState extends State<Username> {
             RuleTile(
                 rule:
                     "• dot(.) are not allowed at the beginning and at the end example: .abc , abcd. are invalid usernames "),
-
-            // ElevatedButton(
-            //   style: TextButton.styleFrom(
-            //       backgroundColor: Theme.of(context).primaryColor),
-            //   child: Text(
-            //     "Set username",
-            //     style: Theme.of(context).textTheme.headline5.copyWith(
-            //           color: Colors.white,
-            //         ),
-            //   ),
-            //   onPressed: () {
-            // setState(() {
-            //   isUpdating = true;
-            // });
-            // print("All good");
-            // String userId =
-            //     context.read<AuthenticaitonService>().currentUser.uid;
-            // FDatabase()
-            //     .setUsername(username.text.replaceAll('.', '@'), userId)
-            //     .then((value) {
-            //   setState(() {
-            //     isUpdating = false;
-            //     isUpdated = true;
-            //     print(value);
-            //   });
-            // });
-            //   },
-            // ),
             SizedBox(
-              height: 24,
-            ),
-            // _isVerified
-            //     ? Icon(Icons.verified, color: Colors.green)
-            //     : SizedBox(),
+              height: kToolbarHeight * 2,
+            )
           ],
         ),
       ),

@@ -36,7 +36,8 @@ class LoginController extends StatefulWidget {
   State<StatefulWidget> createState() => _LoginControllerState(initPage);
 }
 
-class _LoginControllerState extends State<LoginController> {
+class _LoginControllerState extends State<LoginController>
+    with TickerProviderStateMixin {
   final Log log = new Log("LoginController");
   final int initPage;
   double _formProgress = 0.2;
@@ -49,6 +50,7 @@ class _LoginControllerState extends State<LoginController> {
   static FcmListener fcmProvider;
   static LocalDBModel lclDbProvider;
   static AppState appStateProvider;
+  AnimationController animationController;
 
   String userMobile;
   String _verificationId;
@@ -81,12 +83,19 @@ class _LoginControllerState extends State<LoginController> {
       Username(key: _usernameKey)
       // AddressInputScreen(key: _addressScreenKey),
     ];
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
+    )
+      ..forward()
+      ..repeat(reverse: true);
   }
 
   @override
   void dispose() {
     _controller.removeListener(_pageListener);
     _controller.dispose();
+    animationController.dispose();
     super.dispose();
   }
 
@@ -183,7 +192,7 @@ class _LoginControllerState extends State<LoginController> {
           //   ),
           // ),
           Positioned(
-            top: kToolbarHeight / 2,
+            top: kToolbarHeight / 3,
             child: Container(
               alignment: Alignment.center,
               width: SizeConfig.screenWidth,
@@ -203,7 +212,8 @@ class _LoginControllerState extends State<LoginController> {
                     final factorChange = value - index;
                     return Padding(
                       padding: EdgeInsets.only(
-                          left: SizeConfig.blockSizeHorizontal * 14,
+                          top: kToolbarHeight * 1.5,
+                          left: SizeConfig.blockSizeHorizontal * 16,
                           right: SizeConfig.blockSizeHorizontal * 5),
                       child: Opacity(
                           opacity: (1 - factorChange.abs()).clamp(0.0, 1.0),
@@ -224,8 +234,8 @@ class _LoginControllerState extends State<LoginController> {
                 return Stack(
                   children: [
                     Positioned(
-                      left: SizeConfig.blockSizeHorizontal * 5 + 15,
-                      top: kToolbarHeight * 2,
+                      left: SizeConfig.blockSizeHorizontal * 4 + 15,
+                      top: kToolbarHeight * 2 + 8,
                       // bottom: (SizeConfig.screenHeight - kToolbarHeight * 1.7) -
                       //     ((SizeConfig.screenHeight - kToolbarHeight * 2) / 4) *
                       //         value,
@@ -248,22 +258,29 @@ class _LoginControllerState extends State<LoginController> {
                         index: 3,
                         icon: Icons.account_circle_rounded),
                     Positioned(
-                      left: SizeConfig.blockSizeHorizontal * 5,
+                      left: SizeConfig.blockSizeHorizontal * 4,
                       top: kToolbarHeight * 1.6 +
                           ((SizeConfig.screenHeight - kToolbarHeight * 2) / 4) *
                               value,
                       child:
                           // value - value.toInt() == 0
-                          //     ? Transform(
-                          //         transform: Matrix4.identity()
-                          //           ..rotateZ(45)
-
-                          //         child: Icon(
-                          //           Icons.airP,
-                          //           size: 30,
-                          //           color: Colors.red,
-                          //         ),
-                          //       )
+                          //     ? AnimatedBuilder(
+                          //         animation: animationController,
+                          //         builder: (ctx, _) {
+                          //           return Container(
+                          //             width: 30,
+                          //             height: 30,
+                          //             alignment: Alignment.center,
+                          //             child: RotatedBox(
+                          //               quarterTurns: 2,
+                          //               child: Icon(
+                          //                 Icons.airplanemode_on_rounded,
+                          //                 size: 30 * animationController.value,
+                          //                 color: UiConstants.primaryColor,
+                          //               ),
+                          //             ),
+                          //           );
+                          //         })
                           //     :
                           RotatedBox(
                         quarterTurns: 2,
@@ -311,8 +328,9 @@ class _LoginControllerState extends State<LoginController> {
                           ),
                         ))
                     : Container(),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20, 10, 20, 20.0),
+                Container(
+                  width: SizeConfig.screenWidth,
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -662,7 +680,7 @@ class ProgressBarItem extends StatelessWidget {
         5 +
         ((SizeConfig.screenHeight - kToolbarHeight * 2) / 4) * index;
     return Positioned(
-      left: SizeConfig.blockSizeHorizontal * 5.5,
+      left: SizeConfig.blockSizeHorizontal * 5,
       top: topPos,
       child: Container(
         height: 25,

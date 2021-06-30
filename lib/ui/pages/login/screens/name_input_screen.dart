@@ -203,311 +203,299 @@ class NameInputScreenState extends State<NameInputScreen> {
               ? new TextEditingController(text: authProvider.myUser.age)
               : new TextEditingController();
     }
-    return Wrap(
-      children: [
-        Container(
-          child: SingleChildScrollView(
+    return Container(
+      child: ListView(
+        //crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Text(
+              "Tell us a bit about yourself",
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                fontSize: SizeConfig.screenWidth * 0.06,
+              ),
+            ),
+          ),
+          Text("Please make sure all details are correct"),
+          SizedBox(
+            height: 24,
+          ),
+          Form(
+            key: _formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: kToolbarHeight * 1.5,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: Text(
-                    "Tell us a bit about yourself",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: SizeConfig.screenWidth * 0.06,
-                    ),
-                  ),
-                ),
-                Text("Please make sure all details are correct"),
+              children: <Widget>[
+                // SizedBox(
+                //   height: 30,
+                // ),
+                // Align(
+                //   child: Image.asset(
+                //     Assets.logoMaxSize,
+                //     height: SizeConfig.screenHeight * 0.05,
+                //   ),
+                // ),
+                // SizedBox(
+                //   height: 30,
+                // ),
+                // Text(
+                //   "Tell us a little about yourself",
+                //   style: TextStyle(
+                //       fontSize: SizeConfig.largeTextSize,
+                //       fontWeight: FontWeight.w700),
+                // ),
+                // SizedBox(
+                //   height: 20,
+                // ),
+                _emailEnabled
+                    ? TextFormField(
+                        controller: _emailFieldController,
+                        keyboardType: TextInputType.emailAddress,
+                        autofocus: true,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          prefixIcon: Icon(Icons.email),
+                          focusColor: UiConstants.primaryColor,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        validator: (value) {
+                          return (value != null &&
+                                  value.isNotEmpty &&
+                                  _emailRegex.hasMatch(value))
+                              ? null
+                              : 'Please enter a valid email';
+                        },
+                      )
+                    : InkWell(
+                        onTap: showEmailOptions,
+                        child: Container(
+                          height: 60,
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: UiConstants.primaryColor.withOpacity(0.3),
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            children: [
+                              Icon(Icons.email,
+                                  color: _isContinuedWithGoogle
+                                      ? UiConstants.primaryColor
+                                      : Colors.grey),
+                              SizedBox(width: 12),
+                              Text(
+                                emailText,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Spacer(),
+                              emailText != "Email"
+                                  ? Icon(
+                                      Icons.verified,
+                                      color: UiConstants.primaryColor,
+                                    )
+                                  : SizedBox()
+                            ],
+                          ),
+                        ),
+                      ),
+
                 SizedBox(
                   height: 24,
                 ),
-                Form(
-                  key: _formKey,
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: <Widget>[
-                      // SizedBox(
-                      //   height: 30,
-                      // ),
-                      // Align(
-                      //   child: Image.asset(
-                      //     Assets.logoMaxSize,
-                      //     height: SizeConfig.screenHeight * 0.05,
-                      //   ),
-                      // ),
-                      // SizedBox(
-                      //   height: 30,
-                      // ),
-                      // Text(
-                      //   "Tell us a little about yourself",
-                      //   style: TextStyle(
-                      //       fontSize: SizeConfig.largeTextSize,
-                      //       fontWeight: FontWeight.w700),
-                      // ),
-                      // SizedBox(
-                      //   height: 20,
-                      // ),
-                      _emailEnabled
-                          ? TextFormField(
-                              controller: _emailFieldController,
-                              keyboardType: TextInputType.emailAddress,
-                              autofocus: true,
-                              decoration: InputDecoration(
-                                labelText: 'Email',
-                                prefixIcon: Icon(Icons.email),
-                                focusColor: UiConstants.primaryColor,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              validator: (value) {
-                                return (value != null &&
-                                        value.isNotEmpty &&
-                                        _emailRegex.hasMatch(value))
-                                    ? null
-                                    : 'Please enter a valid email';
-                              },
-                            )
-                          : InkWell(
-                              onTap: showEmailOptions,
-                              child: Container(
-                                height: 60,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 16),
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: UiConstants.primaryColor
-                                        .withOpacity(0.3),
+                TextFormField(
+                  controller: _nameFieldController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    labelText: 'Name',
+                    prefixIcon: Icon(
+                      Icons.person,
+                    ),
+                  ),
+                  autofocus: false,
+                  validator: (value) {
+                    return (value != null && value.isNotEmpty)
+                        ? null
+                        : 'Please enter your name';
+                  },
+                ),
+
+                SizedBox(
+                  height: 20,
+                ),
+                InkWell(
+                  onTap: () {
+                    // _selectDate(context);
+                    _showAndoroidDatePicker();
+                    FocusScope.of(context).unfocus();
+                  },
+                  child: TextFormField(
+                    textAlign: TextAlign.start,
+                    enabled: false,
+                    keyboardType: TextInputType.datetime,
+                    validator: (value) {
+                      return null;
+                    },
+                    autofocus: false,
+                    controller: _dateController,
+                    decoration: InputDecoration(
+                      focusColor: UiConstants.primaryColor,
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: UiConstants.primaryColor.withOpacity(0.3),
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      labelText: 'Date of Birth',
+                      hintText: 'Choose a date',
+                      prefixIcon: Icon(
+                        Icons.calendar_today,
+                        color: _dateController.text == ""
+                            ? Colors.grey
+                            : UiConstants.primaryColor,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  margin: EdgeInsets.only(
+                    bottom: 20,
+                    top: 5,
+                  ),
+                  padding: EdgeInsets.all(5),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: UiConstants.primaryColor.withOpacity(0.3),
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 10,
+                      ),
+                      SvgPicture.asset(
+                        'images/svgs/gender.svg',
+                        height: SizeConfig.blockSizeVertical * 2,
+                        color: gen == null
+                            ? Colors.grey
+                            : UiConstants.primaryColor,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                              iconEnabledColor: UiConstants.primaryColor,
+                              value: gen,
+                              hint: Text('Gender'),
+                              items: [
+                                DropdownMenuItem(
+                                  child: Text(
+                                    "Male",
                                   ),
-                                  borderRadius: BorderRadius.circular(10),
+                                  value: 1,
                                 ),
-                                alignment: Alignment.centerLeft,
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.email,
-                                        color: _isContinuedWithGoogle
-                                            ? UiConstants.primaryColor
-                                            : Colors.grey),
-                                    SizedBox(width: 12),
-                                    Text(
-                                      emailText,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                      ),
+                                DropdownMenuItem(
+                                  child: Text(
+                                    "Female",
+                                  ),
+                                  value: 0,
+                                ),
+                                DropdownMenuItem(
+                                    child: Text(
+                                      "Rather Not Say",
+                                      style: TextStyle(),
                                     ),
-                                    Spacer(),
-                                    emailText != "Email"
-                                        ? Icon(
-                                            Icons.verified,
-                                            color: UiConstants.primaryColor,
-                                          )
-                                        : SizedBox()
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                      SizedBox(
-                        height: 24,
-                      ),
-                      TextFormField(
-                        controller: _nameFieldController,
-                        keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
-                          labelText: 'Name',
-                          prefixIcon: Icon(
-                            Icons.person,
-                          ),
+                                    value: -1),
+                              ],
+                              onChanged: (value) {
+                                gen = value;
+                                //   isLoading = true;
+                                setState(() {});
+                                //   filterTransactions();
+                              }),
                         ),
-                        autofocus: false,
-                        validator: (value) {
-                          return (value != null && value.isNotEmpty)
-                              ? null
-                              : 'Please enter your name';
-                        },
-                      ),
-
-                      SizedBox(
-                        height: 20,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          // _selectDate(context);
-                          _showAndoroidDatePicker();
-                          FocusScope.of(context).unfocus();
-                        },
-                        child: TextFormField(
-                          textAlign: TextAlign.start,
-                          enabled: false,
-                          keyboardType: TextInputType.datetime,
-                          validator: (value) {
-                            return null;
-                          },
-                          autofocus: false,
-                          controller: _dateController,
-                          decoration: InputDecoration(
-                            focusColor: UiConstants.primaryColor,
-                            disabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color:
-                                    UiConstants.primaryColor.withOpacity(0.3),
-                              ),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            labelText: 'Date of Birth',
-                            hintText: 'Choose a date',
-                            prefixIcon: Icon(
-                              Icons.calendar_today,
-                              color: _dateController.text == ""
-                                  ? Colors.grey
-                                  : UiConstants.primaryColor,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                          bottom: 20,
-                          top: 5,
-                        ),
-                        padding: EdgeInsets.all(5),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: UiConstants.primaryColor.withOpacity(0.4),
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 10,
-                            ),
-                            SvgPicture.asset(
-                              'images/svgs/gender.svg',
-                              height: SizeConfig.blockSizeVertical * 2,
-                              color: gen == null
-                                  ? Colors.grey
-                                  : UiConstants.primaryColor,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton(
-                                    iconEnabledColor: UiConstants.primaryColor,
-                                    value: gen,
-                                    hint: Text('Gender'),
-                                    items: [
-                                      DropdownMenuItem(
-                                        child: Text(
-                                          "Male",
-                                        ),
-                                        value: 1,
-                                      ),
-                                      DropdownMenuItem(
-                                        child: Text(
-                                          "Female",
-                                        ),
-                                        value: 0,
-                                      ),
-                                      DropdownMenuItem(
-                                          child: Text(
-                                            "Rather Not Say",
-                                            style: TextStyle(),
-                                          ),
-                                          value: -1),
-                                    ],
-                                    onChanged: (value) {
-                                      gen = value;
-                                      //   isLoading = true;
-                                      setState(() {});
-                                      //   filterTransactions();
-                                    }),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Text("Have you ever invested in Mutual Funds?",
-                          style: TextStyle(
-                              color: Colors.grey[600],
-                              fontStyle: FontStyle.italic)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          ElevatedButton(
-                            // color: (_isInvested ?? false)
-                            //     ? UiConstants.primaryColor
-                            //     : Color(0xffe9e9ea),
-                            style: ElevatedButton.styleFrom(
-                              primary: (_isInvested ?? false)
-                                  ? UiConstants.primaryColor
-                                  : Color(0xffe9e9ea),
-                              shadowColor:
-                                  UiConstants.primaryColor.withOpacity(0.3),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _isInvested = true;
-                              });
-                            },
-                            child: Text(
-                              " YES ",
-                              style: TextStyle(
-                                  color: (_isInvested ?? false)
-                                      ? Colors.white
-                                      : Colors.grey),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              primary: (_isInvested ?? true)
-                                  ? Color(0xffe9e9ea)
-                                  : UiConstants.primaryColor,
-                              shadowColor:
-                                  UiConstants.primaryColor.withOpacity(0.3),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _isInvested = false;
-                              });
-                            },
-                            child: Text(
-                              " NO ",
-                              style: TextStyle(
-                                  color: (isInvested ?? true)
-                                      ? Colors.grey
-                                      : Colors.white),
-                            ),
-                          ),
-                        ],
                       ),
                     ],
                   ),
                 ),
+                Text("Have you ever invested in Mutual Funds?",
+                    style: TextStyle(
+                        color: Colors.grey[600], fontStyle: FontStyle.italic)),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    ElevatedButton(
+                      // color: (_isInvested ?? false)
+                      //     ? UiConstants.primaryColor
+                      //     : Color(0xffe9e9ea),
+                      style: ElevatedButton.styleFrom(
+                        primary: (_isInvested ?? false)
+                            ? UiConstants.primaryColor
+                            : Color(0xffe9e9ea),
+                        shadowColor: UiConstants.primaryColor.withOpacity(0.3),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isInvested = true;
+                        });
+                      },
+                      child: Text(
+                        " YES ",
+                        style: TextStyle(
+                            color: (_isInvested ?? false)
+                                ? Colors.white
+                                : Colors.grey),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: (_isInvested ?? true)
+                            ? Color(0xffe9e9ea)
+                            : UiConstants.primaryColor,
+                        shadowColor: UiConstants.primaryColor.withOpacity(0.3),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isInvested = false;
+                        });
+                      },
+                      child: Text(
+                        " NO ",
+                        style: TextStyle(
+                            color: (isInvested ?? true)
+                                ? Colors.grey
+                                : Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
-        ),
-      ],
+          SizedBox(
+            height: kToolbarHeight * 2,
+          )
+        ],
+      ),
     );
   }
 

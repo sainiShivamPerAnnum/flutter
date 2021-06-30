@@ -129,8 +129,12 @@ class VerifyEmailState extends State<VerifyEmail> {
   }
 
   verifyEmail() async {
+    String emailAddress;
     if (formKey.currentState.validate() && _isVerifying != true) {
-      String emailAddress = email.text.trim();
+      if (email.text == null || email.text.isEmpty)
+        emailAddress = baseProvider.myUser.email;
+      else
+        emailAddress = email.text.trim();
       await baseProvider.firebaseUser.updateEmail(emailAddress);
       await baseProvider.firebaseUser.sendEmailVerification();
       setState(() {
@@ -191,9 +195,11 @@ class VerifyEmailState extends State<VerifyEmail> {
                       cursorColor: Colors.black,
                       keyboardType: TextInputType.text,
                       validator: (val) {
-                        if (val == null) {
+                        if (val == "")
+                          return null;
+                        else if (val == null)
                           return "Please enter an email";
-                        } else if (!RegExp(
+                        else if (!RegExp(
                                 r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
                             .hasMatch(val)) {
                           return "Enter a valid email";

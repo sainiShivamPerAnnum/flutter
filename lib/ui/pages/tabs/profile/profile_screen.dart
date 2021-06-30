@@ -9,7 +9,6 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/marquee_widget.dart';
-import 'package:felloapp/ui/pages/tabs/profile/verify_email.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
@@ -86,136 +85,121 @@ class _ProfilePageState extends State<ProfilePage> {
     //   });
     // }
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.02),
       decoration: BoxDecoration(
         color: UiConstants.backgroundColor,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(50),
-          bottomRight: Radius.circular(50),
-        ),
+        borderRadius: SizeConfig.homeViewBorder,
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(50),
-          bottomRight: Radius.circular(50),
-        ),
+        borderRadius: SizeConfig.homeViewBorder,
         child: ListView(
           physics: BouncingScrollPhysics(),
           children: [
             Container(
-              height: AppBar().preferredSize.height * 1.6,
+              height: kToolbarHeight,
             ),
-            GestureDetector(
+            InkWell(
               onTap: () {
                 HapticFeedback.vibrate();
                 appState.currentAction = PageAction(
                     state: PageState.addPage, page: EditProfileConfig);
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //       builder: (context) => EditProfile(
-                //             prevImage: baseProvider.myUserDpUrl,
-                //           ),),
-                // );
               },
               child: Container(
-                height: SizeConfig.screenHeight * 0.24,
-                margin: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.blockSizeHorizontal * 2),
+                width: SizeConfig.screenWidth,
+                height: SizeConfig.screenHeight * 0.26,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage(
                       "images/profile-card.png",
                     ),
-                    fit: BoxFit.contain,
+                    fit: BoxFit.fill,
                   ),
                 ),
-                child: Container(
-                  padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
-                  width: double.infinity,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: SizeConfig.screenHeight * 0.02,
-                      ),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 20,
-                            ),
-                            isImageLoading
-                                ? Image.asset(
-                                    "images/profile.png",
-                                    height: SizeConfig.screenWidth * 0.25,
-                                    fit: BoxFit.cover,
-                                  )
-                                : ClipOval(
-                                    child: CachedNetworkImage(
-                                      imageUrl: baseProvider.myUserDpUrl,
-                                      height: SizeConfig.screenWidth * 0.25,
-                                      width: SizeConfig.screenWidth * 0.25,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                            SizedBox(
-                              width: SizeConfig.screenWidth * 0.05,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: SizeConfig.screenWidth * 0.5,
-                                  child: Text(
-                                    baseProvider.myUser.name,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: SizeConfig.cardTitleTextSize,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  'Member since ${_getUserMembershipDate()}',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: SizeConfig.smallTextSize,
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      Row(
+                margin: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.blockSizeHorizontal * 4,
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: SizeConfig.screenHeight * 0.02,
+                    ),
+                    Expanded(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                            size: SizeConfig.blockSizeHorizontal * 4,
-                          ),
                           SizedBox(
-                            width: 8,
+                            width: SizeConfig.blockSizeHorizontal * 5,
                           ),
-                          Text(
-                            "Tap to edit details",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
+                          isImageLoading
+                              ? Image.asset(
+                                  "images/profile.png",
+                                  height: SizeConfig.screenWidth * 0.24,
+                                  width: SizeConfig.screenWidth * 0.24,
+                                  fit: BoxFit.cover,
+                                )
+                              : ClipOval(
+                                  child: CachedNetworkImage(
+                                    imageUrl: baseProvider.myUserDpUrl,
+                                    height: SizeConfig.screenWidth * 0.24,
+                                    width: SizeConfig.screenWidth * 0.24,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                          SizedBox(
+                            width: SizeConfig.blockSizeHorizontal * 5,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: SizeConfig.screenWidth * 0.5,
+                                child: Text(
+                                  baseProvider.myUser.name,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: SizeConfig.cardTitleTextSize,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                'Member since ${_getUserMembershipDate()}',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: SizeConfig.smallTextSize,
+                                ),
+                              ),
+                            ],
                           )
                         ],
                       ),
-                      SizedBox(
-                        height: 10,
-                      )
-                    ],
-                  ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                          size: SizeConfig.mediumTextSize,
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          "Tap to edit details",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: SizeConfig.mediumTextSize),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    )
+                  ],
                 ),
               ),
             ),
@@ -223,9 +207,6 @@ class _ProfilePageState extends State<ProfilePage> {
               height: 20,
             ),
             Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.blockSizeHorizontal * 2,
-              ),
               child: Column(
                 children: [
                   baseProvider.myUser.isEmailVerified == null ||
@@ -234,7 +215,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           alignment: Alignment.center,
                           margin: EdgeInsets.only(bottom: 24),
                           width: SizeConfig.screenWidth -
-                              SizeConfig.blockSizeHorizontal * 10,
+                              SizeConfig.blockSizeHorizontal * 16,
                           child: MarqueeWidget(
                             direction: Axis.horizontal,
                             child: InkWell(
@@ -248,6 +229,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   color: Colors.red[300],
+                                  fontSize: SizeConfig.mediumTextSize,
                                 ),
                               ),
                             ),
@@ -257,9 +239,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   ProfileTabTile(
                     leadWidget: Icon(
                       Icons.account_circle_outlined,
+                      size: SizeConfig.blockSizeHorizontal * 5,
                       color: UiConstants.primaryColor,
                     ),
                     title: "Username",
+                    onPress: () {},
                     trailWidget: baseProvider.myUser.username != null
                         ? Text(
                             "@${baseProvider.myUser.username.replaceAll('@', '.')}",
@@ -310,8 +294,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ProfileTabTile(
                       leadWidget: Image.asset(
                         "images/transaction.png",
-                        height: SizeConfig.screenHeight * 0.02,
-                        width: SizeConfig.screenHeight * 0.02,
+                        height: SizeConfig.blockSizeHorizontal * 5,
                       ),
                       title: "Transactions",
                       trailWidget: Text(
@@ -327,8 +310,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ProfileTabTile(
                       leadWidget: Image.asset(
                         "images/referrals.png",
-                        height: SizeConfig.screenHeight * 0.02,
-                        width: SizeConfig.screenHeight * 0.02,
+                        height: SizeConfig.blockSizeHorizontal * 5,
                       ),
                       title: "Referrals",
                       trailWidget: Text(
@@ -658,6 +640,7 @@ class _ShareOptionsState extends State<ShareOptions> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
             border: Border.all(
               width: 2,
@@ -666,7 +649,7 @@ class _ShareOptionsState extends State<ShareOptions> {
             color: Colors.transparent,
             borderRadius: BorderRadius.circular(100),
           ),
-          child: MaterialButton(
+          child: InkWell(
             child: (!baseProvider.isReferralLinkBuildInProgressOther)
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -692,7 +675,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                     color: UiConstants.spinnerColor2,
                     size: 18.0,
                   ),
-            onPressed: () async {
+            onTap: () async {
               BaseAnalytics.analytics.logShare(
                   contentType: 'referral',
                   itemId: baseProvider.myUser.uid,
@@ -723,6 +706,7 @@ class _ShareOptionsState extends State<ShareOptions> {
         (Platform.isIOS)
             ? Text('')
             : Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
                   border: Border.all(
                     width: 2,
@@ -731,7 +715,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                   color: Colors.transparent,
                   borderRadius: BorderRadius.circular(100),
                 ),
-                child: MaterialButton(
+                child: InkWell(
                   child: (!baseProvider.isReferralLinkBuildInProgressWhatsapp)
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -757,7 +741,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                           color: UiConstants.spinnerColor2,
                           size: 18.0,
                         ),
-                  onPressed: () async {
+                  onTap: () async {
                     ////////////////////////////////
                     BaseAnalytics.analytics.logShare(
                         contentType: 'referral',
@@ -905,29 +889,32 @@ class ProfileTabTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal),
-      child: Column(
-        children: [
-          ListTile(
-            leading: leadWidget,
-            title: Text(
-              title,
-              style: GoogleFonts.montserrat(
-                fontSize: SizeConfig.mediumTextSize,
-              ),
+    return InkWell(
+      onTap: onPress,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.blockSizeHorizontal * 5),
+        child: Column(
+          children: [
+            SizedBox(height: SizeConfig.blockSizeHorizontal * 4),
+            Row(
+              children: [
+                leadWidget,
+                SizedBox(width: SizeConfig.blockSizeHorizontal * 5),
+                Text(
+                  title,
+                  style: GoogleFonts.montserrat(
+                    fontSize: SizeConfig.mediumTextSize,
+                  ),
+                ),
+                Spacer(),
+                trailWidget,
+              ],
             ),
-            trailing: Container(
-                alignment: Alignment.centerRight,
-                width: SizeConfig.screenWidth / 2,
-                child: trailWidget),
-            onTap: onPress,
-          ),
-          Divider(
-            endIndent: SizeConfig.blockSizeHorizontal,
-            indent: SizeConfig.blockSizeHorizontal,
-          ),
-        ],
+            SizedBox(height: SizeConfig.blockSizeHorizontal * 4),
+            Divider()
+          ],
+        ),
       ),
     );
   }
@@ -950,72 +937,79 @@ class ProfileTabTilePan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal),
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.blockSizeHorizontal * 5,
+      ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ListTile(
-            leading: Image.asset(
-              logo,
-              height: SizeConfig.screenHeight * 0.02,
-              width: SizeConfig.screenHeight * 0.02,
-            ),
-            title: Text(
-              title,
-              style: GoogleFonts.montserrat(
-                color: UiConstants.textColor,
-                fontSize: SizeConfig.mediumTextSize,
+          SizedBox(height: SizeConfig.blockSizeHorizontal * 4),
+          Row(
+            children: [
+              Image.asset(
+                logo,
+                height: SizeConfig.blockSizeHorizontal * 5,
               ),
-            ),
-            trailing: isAvailable
-                ? Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        isHidden ? '**********' : value,
-                        style: GoogleFonts.montserrat(
-                          color: UiConstants.primaryColor,
-                          fontSize: SizeConfig.mediumTextSize,
+              SizedBox(
+                width: SizeConfig.blockSizeHorizontal * 5,
+              ),
+              Text(
+                title,
+                style: GoogleFonts.montserrat(
+                  color: UiConstants.textColor,
+                  fontSize: SizeConfig.mediumTextSize,
+                ),
+              ),
+              Spacer(),
+              isAvailable
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          isHidden ? '**********' : value,
+                          style: GoogleFonts.montserrat(
+                            color: UiConstants.primaryColor,
+                            fontSize: SizeConfig.mediumTextSize,
+                          ),
                         ),
-                      ),
-                      InkWell(
-                        child: Padding(
-                            padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
-                            child: Icon(
-                              Icons.remove_red_eye_outlined,
-                              color: UiConstants.primaryColor,
-                            )),
-                        onTap: onPress,
-                      )
-                    ],
-                  )
-                : Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        ' - ',
-                        style: GoogleFonts.montserrat(
-                          color: UiConstants.primaryColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: SizeConfig.mediumTextSize,
+                        InkWell(
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
+                              child: Icon(
+                                Icons.remove_red_eye_outlined,
+                                color: UiConstants.primaryColor,
+                              )),
+                          onTap: onPress,
+                        )
+                      ],
+                    )
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          ' - ',
+                          style: GoogleFonts.montserrat(
+                            color: UiConstants.primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: SizeConfig.mediumTextSize,
+                          ),
                         ),
-                      ),
-                      InkWell(
-                        child: Padding(
-                            padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
-                            child: Icon(
-                              Icons.info_outline,
-                              size: SizeConfig.largeTextSize,
-                              color: UiConstants.primaryColor,
-                            )),
-                        onTap: onPress,
-                      )
-                    ],
-                  ),
+                        InkWell(
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
+                              child: Icon(
+                                Icons.info_outline,
+                                size: SizeConfig.largeTextSize,
+                                color: UiConstants.primaryColor,
+                              )),
+                          onTap: onPress,
+                        )
+                      ],
+                    ),
+            ],
           ),
-          Divider(
-            endIndent: 20,
-            indent: 20,
-          ),
+          SizedBox(height: SizeConfig.blockSizeHorizontal * 4),
+          Divider()
         ],
       ),
     );

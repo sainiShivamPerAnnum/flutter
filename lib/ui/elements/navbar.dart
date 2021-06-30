@@ -1,4 +1,5 @@
 import 'package:felloapp/ui/pages/root.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -43,8 +44,9 @@ class NavBar extends StatelessWidget {
         //   BoxShadow(blurRadius: 24, color: Colors.black12),
         // ],
       ),
-      alignment: Alignment.center,
-      height: 80,
+      height: kToolbarHeight,
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
       //Clip the row of widgets, to suppress any overflow errors that might occur during animation
       child: SizedBox(
         child: Row(
@@ -111,16 +113,16 @@ class _NavbarButtonState extends State<NavbarButton>
             rotationY: 180 * _iconAnimController.value,
             child: SvgPicture.asset(
               widget.data.iconImage,
-              height: 24,
+              height: kToolbarHeight / 2,
               color: widget.isSelected ? Colors.white : Color(0xffcccccc),
             )),
         //Add some hz spacing
-        SizedBox(width: 12),
+        SizedBox(width: SizeConfig.blockSizeHorizontal),
         //Label
-        Text(
-          widget.data.title,
-          style: TextStyle(
-            color: Colors.white,
+        FittedBox(
+          child: Text(
+            widget.data.title,
+            style: TextStyle(color: Colors.white),
           ),
         ),
       ],
@@ -148,7 +150,9 @@ class _NavbarButtonState extends State<NavbarButton>
       //Wrap in a bit of extra padding to make it easier to tap
       child: Container(
         color: UiConstants.bottomNavBarColor,
-        padding: EdgeInsets.only(top: 16, bottom: 16, right: 8, left: 8),
+        padding: EdgeInsets.symmetric(
+          vertical: kToolbarHeight * 0.16,
+        ),
         //Wrap in an animated container, so changes to width & color automatically animate into place
         child: AnimatedContainer(
           alignment: Alignment.center,

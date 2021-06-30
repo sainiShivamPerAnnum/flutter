@@ -58,159 +58,158 @@ class OtpInputScreenState extends State<OtpInputScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(
-              height: kToolbarHeight * 1.5,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 24, bottom: 16),
-              child: Text(
-                "Verify OTP",
-                style: GoogleFonts.manrope(
-                  fontWeight: FontWeight.w800,
-                  fontSize: SizeConfig.screenWidth * 0.06,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Text(
+                  "Verify OTP",
+                  style: GoogleFonts.manrope(
+                    fontWeight: FontWeight.w800,
+                    fontSize: SizeConfig.screenWidth * 0.06,
+                  ),
                 ),
               ),
-            ),
-            Text("We have sent you an OTP to your mobile number ******0005"),
-            SizedBox(
-              height: 16,
-            ),
-            InkWell(
-              child: Text(
-                "Change Number ?",
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.w700,
-                ),
+              Text("We have sent you an OTP to your mobile number ******0005"),
+              SizedBox(
+                height: 16,
               ),
-              onTap: () {
-                widget.changeNumber();
-              },
-            ),
-            SizedBox(
-              height: 24,
-            ),
-
-            // Text(
-            //   "Code Sent",
-            //   style: TextStyle(
-            //     fontSize: SizeConfig.mediumTextSize,
-            //     fontWeight: FontWeight.w500,
-            //   ),
-            // ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 18.0, 0, 18.0),
-              child: PinInputTextField(
-                enabled: _otpFieldEnabled,
-                autoFocus: true,
-                focusNode: focusNode,
-                pinLength: 6,
-                decoration: BoxLooseDecoration(
-                  enteredColor: UiConstants.primaryColor,
-                  solidColor: UiConstants.primaryColor.withOpacity(0.04),
-                  strokeColor: UiConstants.primaryColor,
-                  strokeWidth: 1,
-                  textStyle:
-                      GoogleFonts.montserrat(fontSize: 20, color: Colors.black),
+              InkWell(
+                child: Text(
+                  "Change Number ?",
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-                controller: _pinEditingController,
-                onChanged: (value) {
-                  if (value.length == 6) {
-                    if (widget.otpEntered != null) widget.otpEntered();
-                  }
-                },
-                onSubmit: (pin) {
-                  log.debug("Pressed submit for pin: " +
-                      pin.toString() +
-                      "\n  No action taken.");
+                onTap: () {
+                  widget.changeNumber();
                 },
               ),
-            ),
-            SizedBox(height: 16.0),
+              SizedBox(
+                height: 24,
+              ),
 
-            Text("OTP might takes up to one minute to arrive"),
-            SizedBox(
-              height: 16,
-            ),
-            (!_autoDetectingOtp)
-                ? Row(
-                    children: [
-                      Text(
-                        "Didn't get the OTP? ",
-                        style: TextStyle(
-                          color: Colors.black45,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      InkWell(
-                        child: Text(
-                          "Resend OTP",
+              // Text(
+              //   "Code Sent",
+              //   style: TextStyle(
+              //     fontSize: SizeConfig.mediumTextSize,
+              //     fontWeight: FontWeight.w500,
+              //   ),
+              // ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 18.0, 0, 18.0),
+                child: PinInputTextField(
+                  enabled: _otpFieldEnabled,
+                  autoFocus: true,
+                  focusNode: focusNode,
+                  pinLength: 6,
+                  decoration: BoxLooseDecoration(
+                    enteredColor: UiConstants.primaryColor,
+                    solidColor: UiConstants.primaryColor.withOpacity(0.04),
+                    strokeColor: UiConstants.primaryColor,
+                    strokeWidth: 1,
+                    textStyle: GoogleFonts.montserrat(
+                        fontSize: 20, color: Colors.black),
+                  ),
+                  controller: _pinEditingController,
+                  onChanged: (value) {
+                    if (value.length == 6) {
+                      if (widget.otpEntered != null) widget.otpEntered();
+                    }
+                  },
+                  onSubmit: (pin) {
+                    log.debug("Pressed submit for pin: " +
+                        pin.toString() +
+                        "\n  No action taken.");
+                  },
+                ),
+              ),
+              SizedBox(height: 16.0),
+
+              Text("OTP might takes up to one minute to arrive"),
+              SizedBox(
+                height: 16,
+              ),
+              (!_autoDetectingOtp)
+                  ? Row(
+                      children: [
+                        Text(
+                          "Didn't get the OTP? ",
                           style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.w700,
+                            color: Colors.black45,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                        onTap: () {
-                          log.debug("Resend action triggered");
-                          if (!_isResendClicked) {
-                            //ensure that button isnt clicked multiple times
-                            if (widget.resendOtp != null) widget.resendOtp();
-                          }
-                        },
-                      ),
-                    ],
-                  )
-                : SizedBox(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                (_autoDetectingOtp)
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                                25.0, 25.0, 25.0, 25.0),
-                            child: SpinKitDoubleBounce(
-                              color: UiConstants.spinnerColor,
-                              //controller: AnimationController(vsync: this, duration: const Duration(milliseconds: 1200)),
+                        InkWell(
+                          child: Text(
+                            "Resend OTP",
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text("Detecting OTP")
-                        ],
-                      )
-                    : Container(),
-              ],
-            ),
+                          onTap: () {
+                            log.debug("Resend action triggered");
+                            if (!_isResendClicked) {
+                              //ensure that button isnt clicked multiple times
+                              if (widget.resendOtp != null) widget.resendOtp();
+                            }
+                          },
+                        ),
+                      ],
+                    )
+                  : SizedBox(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  (_autoDetectingOtp)
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  25.0, 25.0, 25.0, 25.0),
+                              child: SpinKitDoubleBounce(
+                                color: UiConstants.spinnerColor,
+                                //controller: AnimationController(vsync: this, duration: const Duration(milliseconds: 1200)),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Text("Detecting OTP")
+                          ],
+                        )
+                      : Container(),
+                ],
+              ),
 
-            //(_autoDetectingOtp) ? SizedBox(height: 5.0) : Container(),
-            // Text(
-            //   _loaderMessage,
-            //   style: Theme.of(context)
-            //       .textTheme
-            //       .body1
-            //       .copyWith(color: Colors.grey[800]),
-            //   textAlign: TextAlign.center,
-            // ),
-            // (!_autoDetectingOtp)
-            //     ? TextButton(
-            //         child: Text('Resend'),
-            //         onPressed: () {
-            //           log.debug("Resend action triggered");
-            //           if (!_isResendClicked) {
-            //             //ensure that button isnt clicked multiple times
-            //             if (widget.resendOtp != null) widget.resendOtp();
-            //           }
-            //         },
-            //       )
-            //     : Container()
-          ],
+              //(_autoDetectingOtp) ? SizedBox(height: 5.0) : Container(),
+              // Text(
+              //   _loaderMessage,
+              //   style: Theme.of(context)
+              //       .textTheme
+              //       .body1
+              //       .copyWith(color: Colors.grey[800]),
+              //   textAlign: TextAlign.center,
+              // ),
+              // (!_autoDetectingOtp)
+              //     ? TextButton(
+              //         child: Text('Resend'),
+              //         onPressed: () {
+              //           log.debug("Resend action triggered");
+              //           if (!_isResendClicked) {
+              //             //ensure that button isnt clicked multiple times
+              //             if (widget.resendOtp != null) widget.resendOtp();
+              //           }
+              //         },
+              //       )
+              //     : Container()
+            ],
+          ),
         ),
       ),
     );

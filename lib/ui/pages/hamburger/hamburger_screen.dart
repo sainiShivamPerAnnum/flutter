@@ -63,7 +63,7 @@ class HamburgerMenu extends StatelessWidget {
               ),
             ),
             Container(
-              width: SizeConfig.screenHeight * 0.1,
+              width: SizeConfig.screenHeight * 0.08,
               padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -76,7 +76,7 @@ class HamburgerMenu extends StatelessWidget {
                   backButtonDispatcher.didPopRoute();
                 },
                 icon: Icon(
-                  Icons.cancel_rounded,
+                  Icons.close,
                   color: Colors.white,
                 ),
               ),
@@ -93,7 +93,7 @@ class HamburgerMenu extends StatelessWidget {
             textAlign: TextAlign.center,
             style: (option.isEnabled)
                 ? TextStyle(
-                    fontSize: 24.0,
+                    fontSize: SizeConfig.largeTextSize,
                     color: Colors.white,
                     fontWeight: FontWeight.w500)
                 : TextStyle(fontSize: 18.0, color: Colors.grey[400])),
