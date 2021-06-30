@@ -140,3 +140,14 @@ class GetInvoice{
   static const PDF_KEY_PRETAX_SUBTOTAL = 'PRETAX';
   static const PDF_KEY_AMOUNT = 'AMT';
 }
+
+class GetRateChart {
+  static final String path = 'api/v1/rates/history';
+
+  static final String fldFromTime = 'from';
+  static final String fldToTime = 'to';
+
+  static final String resRate = 'rRate';
+  static final String resTimestamp = 'rTimestamp';
+  static final String resType = 'rType';
+}
