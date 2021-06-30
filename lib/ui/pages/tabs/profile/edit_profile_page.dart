@@ -485,7 +485,8 @@ class _EditProfileState extends State<EditProfile> {
 
                               return;
                             } else {
-                              baseProvider.myUser.name = pName;
+                              // baseProvider.myUser.name = pName;
+                              baseProvider.setUserName(pName);
                               baseProvider.myUser.email = pEmail;
                               baseProvider.myUser.age = pAge;
                               BaseAnalytics.logUserProfile(baseProvider.myUser);

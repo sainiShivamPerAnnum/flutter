@@ -119,18 +119,22 @@ class _FinancePageState extends State<FinancePage> {
                     BaseUtil.buildShowcaseWrapper(
                       _showcaseHeader,
                       'Your savings and investments will show up here. The balances are based on live market rates.',
-                      Container(
-                        child:
-                            baseProvider.userFundWallet.getEstTotalWealth() > 0
-                                ? FundsChartView(
-                                    userFundWallet: baseProvider.userFundWallet,
-                                    goldMoreInfo: goldMoreInfoStr,
-                                    doRefresh: () {
-                                      _onFundsRefresh();
-                                    },
-                                  )
-                                : ZeroBalView(),
-                      ),
+                      Consumer<BaseUtil>(
+                        builder: (context, baseUtil, child) {
+                          return Container(
+                            child:
+                                baseProvider.userFundWallet.getEstTotalWealth() > 0
+                                    ? FundsChartView(
+                                        userFundWallet: baseProvider.userFundWallet,
+                                        goldMoreInfo: goldMoreInfoStr,
+                                        doRefresh: () {
+                                          _onFundsRefresh();
+                                        },
+                                      )
+                                    : ZeroBalView(),
+                          );
+                        },
+                      )
                     ),
                     Divider(
                       color: Colors.black38,

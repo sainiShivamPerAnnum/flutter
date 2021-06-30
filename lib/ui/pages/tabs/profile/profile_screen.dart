@@ -169,16 +169,20 @@ class _ProfilePageState extends State<ProfilePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Container(
-                                  width: SizeConfig.screenWidth * 0.5,
-                                  child: Text(
-                                    baseProvider.myUser.name,
-                                    style: GoogleFonts.montserrat(
-                                      color: Colors.white,
-                                      fontSize: SizeConfig.cardTitleTextSize,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
+                                Consumer<BaseUtil>(
+                                  builder: (context, baseUtil, child) {
+                                    return Container(
+                                      width: SizeConfig.screenWidth * 0.5,
+                                      child: Text(
+                                        baseProvider.myUser.name,
+                                        style: GoogleFonts.montserrat(
+                                          color: Colors.white,
+                                          fontSize: SizeConfig.cardTitleTextSize,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
                                 SizedBox(
                                   height: 8,
