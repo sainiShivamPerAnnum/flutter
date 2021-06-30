@@ -165,6 +165,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Spacer(),
                   (_autoDetectingOtp)
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -184,6 +185,8 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                           ],
                         )
                       : Container(),
+                  SizedBox(width: SizeConfig.blockSizeHorizontal * 5 + 30),
+                  Spacer()
                 ],
               ),
 

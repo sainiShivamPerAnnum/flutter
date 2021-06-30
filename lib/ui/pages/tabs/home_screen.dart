@@ -222,7 +222,7 @@ class _HomePageState extends State<HomePage> {
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: Colors.white,
-                  width: 5,
+                  width: 3,
                 )),
             child: isImageLoading
                 ? Image.asset(

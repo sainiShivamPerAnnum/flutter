@@ -5,6 +5,8 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -135,8 +137,15 @@ class VerifyEmailState extends State<VerifyEmail> {
         emailAddress = baseProvider.myUser.email;
       else
         emailAddress = email.text.trim();
+      // print(baseProvider.firebaseUser.emailVerified.toString());
+      // await baseProvider.firebaseUser
+      //     .verifyBeforeUpdateEmail("donewithfinger@gmail.com");
+      // print("done.........");
+      // print(baseProvider.firebaseUser.emailVerified.toString());
+      await baseProvider.firebaseUser.reload();
       await baseProvider.firebaseUser.updateEmail(emailAddress);
       await baseProvider.firebaseUser.sendEmailVerification();
+
       setState(() {
         _isVerifying = true;
       });

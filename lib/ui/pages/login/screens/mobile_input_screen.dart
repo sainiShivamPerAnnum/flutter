@@ -27,7 +27,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
 
   @override
   void initState() {
-    showAvailablePhoneNumbers();
+    Future.delayed(Duration(seconds: 2), showAvailablePhoneNumbers);
     super.initState();
   }
 

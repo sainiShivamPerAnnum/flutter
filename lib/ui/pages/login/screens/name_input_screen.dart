@@ -128,12 +128,12 @@ class NameInputScreenState extends State<NameInputScreen> {
 
   void _showAndoroidDatePicker() async {
     var res = await showDatePicker(
-      context: context,
-      initialDate: DateTime(2000, 1, 1),
-      firstDate: DateTime(1950, 1, 1),
-      lastDate: DateTime(2002, 1, 1),
-      initialDatePickerMode: DatePickerMode.year,
-    );
+        context: context,
+        initialDate: DateTime(2000, 1, 1),
+        firstDate: DateTime(1950, 1, 1),
+        lastDate: DateTime(2002, 1, 1),
+        // initialDatePickerMode: DatePickerMode.,
+        initialEntryMode: DatePickerEntryMode.input);
     // if (selectedDate != null)
     setState(() {
       selectedDate = res;

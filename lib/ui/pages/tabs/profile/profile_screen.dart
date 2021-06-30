@@ -37,6 +37,7 @@ class _ProfilePageState extends State<ProfilePage> {
   AppState appState;
   bool isImageLoading = false;
   bool isPanFieldHidden = true;
+  double picSize = SizeConfig.screenWidth * 0.24;
 
   Future<void> getProfilePicUrl() async {
     try {
@@ -99,13 +100,100 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             InkWell(
               onTap: () {
-                HapticFeedback.vibrate();
                 appState.currentAction = PageAction(
                     state: PageState.addPage, page: EditProfileConfig);
+                // showDialog(
+                //     context: context,
+                //     builder: (ctx) {
+                //       return Dialog(
+                //         child: Container(
+                //           decoration: BoxDecoration(
+                //             color: Colors.white,
+                //             borderRadius: BorderRadius.circular(30),
+                //           ),
+                //           child: Wrap(
+                //             children: [
+                //               Column(
+                //                 children: [
+                //                   Container(
+                //                     width: double.infinity,
+                //                     padding: EdgeInsets.symmetric(
+                //                         vertical: 16,
+                //                         horizontal:
+                //                             SizeConfig.blockSizeHorizontal * 5),
+                //                     decoration: BoxDecoration(
+                //                         color: UiConstants.primaryColor),
+                //                     child: Text(
+                //                       "Edit Name",
+                //                       style: GoogleFonts.montserrat(
+                //                         fontSize: SizeConfig.cardTitleTextSize,
+                //                         fontWeight: FontWeight.w500,
+                //                         color: Colors.white,
+                //                       ),
+                //                     ),
+                //                   ),
+                //                   SizedBox(
+                //                     height: 24,
+                //                   ),
+                //                   Text(
+                //                     "Name",
+                //                     style: TextStyle(color: Colors.grey),
+                //                   ),
+                //                   TextFormField(
+                //                     //controller: _nameFieldController,
+                //                     keyboardType: TextInputType.text,
+                //                     style: TextStyle(
+                //                       fontSize: SizeConfig.largeTextSize,
+                //                       fontWeight: FontWeight.w700,
+                //                     ),
+                //                     decoration: InputDecoration(
+                //                       enabledBorder: UnderlineInputBorder(
+                //                         borderSide: BorderSide(
+                //                             color: UiConstants.primaryColor),
+                //                       ),
+                //                       focusedBorder: UnderlineInputBorder(
+                //                         borderSide: BorderSide(
+                //                             color: UiConstants.primaryColor),
+                //                       ),
+                //                       focusedErrorBorder: UnderlineInputBorder(
+                //                         borderSide:
+                //                             BorderSide(color: Colors.red),
+                //                       ),
+                //                       errorBorder: UnderlineInputBorder(
+                //                         borderSide:
+                //                             BorderSide(color: Colors.red),
+                //                       ),
+                //                       border: UnderlineInputBorder(
+                //                         borderSide: BorderSide(
+                //                             color: UiConstants.primaryColor),
+                //                       ),
+                //                     ),
+                //                     onChanged: (val) {
+                //                       AppState.unsavedChanges = true;
+                //                     },
+                //                     validator: (value) {
+                //                       return value.isEmpty
+                //                           ? 'Please enter your name'
+                //                           : null;
+                //                     },
+                //                     onFieldSubmitted: (v) {
+                //                       FocusScope.of(context).nextFocus();
+                //                     },
+                //                   ),
+                //                   SizedBox(
+                //                     height: 20,
+                //                   ),
+                //                 ],
+                //               ),
+                //             ],
+                //           ),
+                //         ),
+                //       );
+                //     });
               },
               child: Container(
                 width: SizeConfig.screenWidth,
-                height: SizeConfig.screenHeight * 0.26,
+                height: SizeConfig.screenHeight * 0.24,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage(
@@ -129,21 +217,46 @@ class _ProfilePageState extends State<ProfilePage> {
                           SizedBox(
                             width: SizeConfig.blockSizeHorizontal * 5,
                           ),
-                          isImageLoading
-                              ? Image.asset(
-                                  "images/profile.png",
-                                  height: SizeConfig.screenWidth * 0.24,
-                                  width: SizeConfig.screenWidth * 0.24,
-                                  fit: BoxFit.cover,
-                                )
-                              : ClipOval(
-                                  child: CachedNetworkImage(
-                                    imageUrl: baseProvider.myUserDpUrl,
-                                    height: SizeConfig.screenWidth * 0.24,
-                                    width: SizeConfig.screenWidth * 0.24,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
+                          Container(
+                            height: picSize,
+                            width: picSize,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 2),
+                            ),
+                            child: Stack(
+                              children: [
+                                isImageLoading
+                                    ? Image.asset(
+                                        "images/profile.png",
+                                        height: picSize,
+                                        width: picSize,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : ClipOval(
+                                        child: CachedNetworkImage(
+                                          imageUrl: baseProvider.myUserDpUrl,
+                                          height: picSize,
+                                          width: picSize,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                // Positioned(
+                                //   bottom: 0,
+                                //   right: 0,
+                                //   child: CircleAvatar(
+                                //     backgroundColor: Colors.white,
+                                //     radius: SizeConfig.blockSizeHorizontal * 4,
+                                //     child: Icon(
+                                //       Icons.camera_alt_rounded,
+                                //       color: UiConstants.primaryColor,
+                                //       size: SizeConfig.blockSizeHorizontal * 4,
+                                //     ),
+                                //   ),
+                                // ),
+                              ],
+                            ),
+                          ),
                           SizedBox(
                             width: SizeConfig.blockSizeHorizontal * 5,
                           ),
@@ -189,7 +302,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           width: 8,
                         ),
                         Text(
-                          "Tap to edit details",
+                          "Tap to edit name",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: SizeConfig.mediumTextSize),
@@ -217,6 +330,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           width: SizeConfig.screenWidth -
                               SizeConfig.blockSizeHorizontal * 16,
                           child: MarqueeWidget(
+                            pauseDuration: Duration(seconds: 2),
+                            animationDuration: Duration(seconds: 3),
+                            backDuration: Duration(seconds: 3),
                             direction: Axis.horizontal,
                             child: InkWell(
                               onTap: () {
@@ -225,7 +341,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     page: VerifyEmailPageConfig);
                               },
                               child: Text(
-                                "Your email is not verified yet. Tap here to verify it now",
+                                "Your email is not verified yet. Tap here to verify it now else you won't be able to use any of the services",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   color: Colors.red[300],
@@ -254,21 +370,32 @@ class _ProfilePageState extends State<ProfilePage> {
                               fontSize: SizeConfig.mediumTextSize,
                             ),
                           )
-                        : ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              primary: UiConstants.primaryColor,
-                              shadowColor:
-                                  UiConstants.primaryColor.withOpacity(0.3),
+                        : Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              border:
+                                  Border.all(color: Colors.orange, width: 2),
                             ),
-                            onPressed: () {
-                              appState.currentAction = PageAction(
-                                  state: PageState.addPage,
-                                  page: ClaimUsernamePageConfig);
-                            },
-                            child: Text(
-                              "Claim now!",
-                              style: GoogleFonts.montserrat(
-                                color: Colors.white,
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            alignment: Alignment.center,
+                            child: GestureDetector(
+                              // style: ElevatedButton.styleFrom(
+                              //   primary: UiConstants.primaryColor,
+                              //   shadowColor:
+                              //       UiConstants.primaryColor.withOpacity(0.3),
+                              // ),
+                              onTap: () {
+                                appState.currentAction = PageAction(
+                                    state: PageState.addPage,
+                                    page: ClaimUsernamePageConfig);
+                              },
+                              child: Text(
+                                "Claim!",
+                                style: GoogleFonts.montserrat(
+                                    color: Colors.orange,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: SizeConfig.mediumTextSize),
                               ),
                             ),
                           ),

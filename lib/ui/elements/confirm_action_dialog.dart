@@ -1,6 +1,7 @@
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,14 +10,14 @@ import 'package:flutter/services.dart';
 class ConfirmActionDialog extends StatefulWidget {
   final String title, description, buttonText, cancelBtnText;
   final Function confirmAction, cancelAction;
-  final Image image;
+  final Widget asset;
   ConfirmActionDialog(
       {@required this.title,
       @required this.description,
       @required this.buttonText,
       @required this.confirmAction,
       @required this.cancelAction,
-      this.image,
+      this.asset,
       this.cancelBtnText = 'Cancel'});
 
   @override
@@ -75,11 +76,12 @@ class _FormDialogState extends State<ConfirmActionDialog> {
                 ),
               ),
               SizedBox(height: 16.0),
+              widget.asset ?? SizedBox(),
               Text(
                 widget.description,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 16.0,
+                  fontSize: SizeConfig.mediumTextSize,
                 ),
               ),
               SizedBox(height: 16.0),

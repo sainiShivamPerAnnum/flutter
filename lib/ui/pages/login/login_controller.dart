@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
@@ -85,10 +86,10 @@ class _LoginControllerState extends State<LoginController>
     ];
     animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: Duration(seconds: 3),
     )
       ..forward()
-      ..repeat(reverse: true);
+      ..repeat(reverse: false);
   }
 
   @override
@@ -234,7 +235,7 @@ class _LoginControllerState extends State<LoginController>
                 return Stack(
                   children: [
                     Positioned(
-                      left: SizeConfig.blockSizeHorizontal * 4 + 15,
+                      left: SizeConfig.blockSizeHorizontal * 4 + 14,
                       top: kToolbarHeight * 2 + 8,
                       // bottom: (SizeConfig.screenHeight - kToolbarHeight * 1.7) -
                       //     ((SizeConfig.screenHeight - kToolbarHeight * 2) / 4) *
@@ -262,34 +263,39 @@ class _LoginControllerState extends State<LoginController>
                       top: kToolbarHeight * 1.6 +
                           ((SizeConfig.screenHeight - kToolbarHeight * 2) / 4) *
                               value,
-                      child:
-                          // value - value.toInt() == 0
-                          //     ? AnimatedBuilder(
-                          //         animation: animationController,
-                          //         builder: (ctx, _) {
-                          //           return Container(
-                          //             width: 30,
-                          //             height: 30,
-                          //             alignment: Alignment.center,
-                          //             child: RotatedBox(
-                          //               quarterTurns: 2,
-                          //               child: Icon(
-                          //                 Icons.airplanemode_on_rounded,
-                          //                 size: 30 * animationController.value,
-                          //                 color: UiConstants.primaryColor,
-                          //               ),
-                          //             ),
-                          //           );
-                          //         })
-                          //     :
-                          RotatedBox(
-                        quarterTurns: 2,
-                        child: Icon(
-                          Icons.airplanemode_on_rounded,
-                          size: 30,
-                          color: UiConstants.primaryColor,
-                        ),
-                      ),
+                      child: value - value.toInt() == 0
+                          ? AnimatedBuilder(
+                              animation: animationController,
+                              builder: (ctx, _) {
+                                return Transform.translate(
+                                  offset: Offset(
+                                    0,
+                                    -8 * (1 - animationController.value),
+                                  ),
+                                  child: Container(
+                                    width: 30,
+                                    height: 30,
+                                    alignment: Alignment.bottomCenter,
+                                    child: RotatedBox(
+                                      quarterTurns: 2,
+                                      child: Icon(
+                                        Icons.airplanemode_on_rounded,
+                                        size: 30 *
+                                            (1 - animationController.value),
+                                        color: UiConstants.primaryColor,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              })
+                          : RotatedBox(
+                              quarterTurns: 2,
+                              child: Icon(
+                                Icons.airplanemode_on_rounded,
+                                size: 30,
+                                color: UiConstants.primaryColor,
+                              ),
+                            ),
                     ),
                   ],
                 );
@@ -680,7 +686,7 @@ class ProgressBarItem extends StatelessWidget {
         5 +
         ((SizeConfig.screenHeight - kToolbarHeight * 2) / 4) * index;
     return Positioned(
-      left: SizeConfig.blockSizeHorizontal * 5,
+      left: SizeConfig.blockSizeHorizontal * 4.5,
       top: topPos,
       child: Container(
         height: 25,
