@@ -37,6 +37,11 @@ class NameInputScreenState extends State<NameInputScreen> {
   TextEditingController _nameFieldController;
   TextEditingController _emailFieldController;
   TextEditingController _ageFieldController;
+  TextEditingController _dateFieldController;
+  TextEditingController _monthFieldController;
+  TextEditingController _yearFieldController;
+  String dateInputError = "";
+
   static BaseUtil authProvider;
   DateTime initialDate = DateTime(1997, 1, 1, 0, 0);
   List<bool> _selections = [false, true];
@@ -128,61 +133,64 @@ class NameInputScreenState extends State<NameInputScreen> {
 
   void _showAndoroidDatePicker() async {
     var res = await showDatePicker(
-        context: context,
-        initialDate: DateTime(2000, 1, 1),
-        firstDate: DateTime(1950, 1, 1),
-        lastDate: DateTime(2002, 1, 1),
-        // initialDatePickerMode: DatePickerMode.,
-        initialEntryMode: DatePickerEntryMode.input);
-    // if (selectedDate != null)
-    setState(() {
-      selectedDate = res;
-      _dateController.text = "${res.toLocal()}".split(' ')[0];
-    });
+      context: context,
+      initialDate: DateTime(2000, 1, 1),
+      firstDate: DateTime(1950, 1, 1),
+      lastDate: DateTime(2002, 1, 1),
+    );
+    if (res != null)
+      setState(() {
+        print(res);
+        selectedDate = res;
+        _dateController.text = "${res.toLocal()}".split(' ')[0];
+        _dateFieldController.text = res.day.toString().padLeft(2, '0');
+        _monthFieldController.text = res.month.toString().padLeft(2, '0');
+        _yearFieldController.text = res.year.toString();
+      });
   }
 
   // Show the modal that contains the CupertinoDatePicker
-  void _showDatePicker(ctx) {
-    // showCupertinoModalPopup is a built-in function of the cupertino library
-    showCupertinoModalPopup(
-        context: ctx,
-        builder: (_) => Container(
-              height: 500,
-              color: Colors.white,
-              child: Column(
-                children: [
-                  Container(
-                    height: 400,
-                    child: CupertinoDatePicker(
-                        backgroundColor: Colors.white70,
-                        mode: CupertinoDatePickerMode.date,
-                        minimumDate: DateTime(1950, 1, 1, 0, 0),
-                        maximumDate: DateTime(2008, 1, 1, 0, 0),
-                        initialDateTime: initialDate,
-                        onDateTimeChanged: (val) {
-                          setState(() {
-                            selectedDate = val;
-                            _dateController.text =
-                                "${val.toLocal()}".split(' ')[0];
-                          });
-                        }),
-                  ),
+  // void _showDatePicker(ctx) {
+  //   // showCupertinoModalPopup is a built-in function of the cupertino library
+  //   showCupertinoModalPopup(
+  //       context: ctx,
+  //       builder: (_) => Container(
+  //             height: 500,
+  //             color: Colors.white,
+  //             child: Column(
+  //               children: [
+  //                 Container(
+  //                   height: 400,
+  //                   child: CupertinoDatePicker(
+  //                       backgroundColor: Colors.white70,
+  //                       mode: CupertinoDatePickerMode.date,
+  //                       minimumDate: DateTime(1950, 1, 1, 0, 0),
+  //                       maximumDate: DateTime(2008, 1, 1, 0, 0),
+  //                       initialDateTime: initialDate,
+  //                       onDateTimeChanged: (val) {
+  //                         setState(() {
+  //                           selectedDate = val;
+  //                           _dateController.text =
+  //                               "${val.toLocal()}".split(' ')[0];
+  //                         });
+  //                       }),
+  //                 ),
 
-                  // Close the modal
-                  CupertinoButton(
-                      child: Text(
-                        'OK',
-                        style: TextStyle(color: UiConstants.primaryColor),
-                      ),
-                      onPressed: () {
-                        if (selectedDate != null) initialDate = selectedDate;
-                        Navigator.of(ctx).pop();
-                        FocusScope.of(context).unfocus();
-                      })
-                ],
-              ),
-            ));
-  }
+  //                 // Close the modal
+  //                 CupertinoButton(
+  //                     child: Text(
+  //                       'OK',
+  //                       style: TextStyle(color: UiConstants.primaryColor),
+  //                     ),
+  //                     onPressed: () {
+  //                       if (selectedDate != null) initialDate = selectedDate;
+  //                       Navigator.of(ctx).pop();
+  //                       FocusScope.of(context).unfocus();
+  //                     })
+  //               ],
+  //             ),
+  //           ));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -202,6 +210,9 @@ class NameInputScreenState extends State<NameInputScreen> {
           (authProvider.myUser != null && authProvider.myUser.age != null)
               ? new TextEditingController(text: authProvider.myUser.age)
               : new TextEditingController();
+      _dateFieldController = new TextEditingController();
+      _monthFieldController = new TextEditingController();
+      _yearFieldController = new TextEditingController();
     }
     return Container(
       child: ListView(
@@ -253,7 +264,10 @@ class NameInputScreenState extends State<NameInputScreen> {
                         autofocus: true,
                         decoration: InputDecoration(
                           labelText: 'Email',
-                          prefixIcon: Icon(Icons.email),
+                          prefixIcon: Icon(
+                            Icons.email,
+                            size: 20,
+                          ),
                           focusColor: UiConstants.primaryColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -284,6 +298,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                           child: Row(
                             children: [
                               Icon(Icons.email,
+                                  size: 20,
                                   color: _isContinuedWithGoogle
                                       ? UiConstants.primaryColor
                                       : Colors.grey),
@@ -298,6 +313,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                               emailText != "Email"
                                   ? Icon(
                                       Icons.verified,
+                                      size: SizeConfig.blockSizeVertical * 2.4,
                                       color: UiConstants.primaryColor,
                                     )
                                   : SizedBox()
@@ -316,6 +332,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                     labelText: 'Name',
                     prefixIcon: Icon(
                       Icons.person,
+                      size: 20,
                     ),
                   ),
                   autofocus: false,
@@ -329,43 +346,43 @@ class NameInputScreenState extends State<NameInputScreen> {
                 SizedBox(
                   height: 20,
                 ),
-                InkWell(
-                  onTap: () {
-                    // _selectDate(context);
-                    _showAndoroidDatePicker();
-                    FocusScope.of(context).unfocus();
-                  },
-                  child: TextFormField(
-                    textAlign: TextAlign.start,
-                    enabled: false,
-                    keyboardType: TextInputType.datetime,
-                    validator: (value) {
-                      return null;
-                    },
-                    autofocus: false,
-                    controller: _dateController,
-                    decoration: InputDecoration(
-                      focusColor: UiConstants.primaryColor,
-                      disabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: UiConstants.primaryColor.withOpacity(0.3),
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      labelText: 'Date of Birth',
-                      hintText: 'Choose a date',
-                      prefixIcon: Icon(
-                        Icons.calendar_today,
-                        color: _dateController.text == ""
-                            ? Colors.grey
-                            : UiConstants.primaryColor,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
+                // InkWell(
+                //   onTap: () {
+                //     // _selectDate(context);
+                //     _showAndoroidDatePicker();
+                //     FocusScope.of(context).unfocus();
+                //   },
+                //   child: TextFormField(
+                //     textAlign: TextAlign.start,
+                //     enabled: false,
+                //     keyboardType: TextInputType.datetime,
+                //     validator: (value) {
+                //       return null;
+                //     },
+                //     autofocus: false,
+                //     controller: _dateController,
+                //     decoration: InputDecoration(
+                //       focusColor: UiConstants.primaryColor,
+                //       disabledBorder: OutlineInputBorder(
+                //         borderSide: BorderSide(
+                //           color: UiConstants.primaryColor.withOpacity(0.3),
+                //         ),
+                //         borderRadius: BorderRadius.circular(10),
+                //       ),
+                //       labelText: 'Date of Birth',
+                //       hintText: 'Choose a date',
+                //       prefixIcon: Icon(
+                //         Icons.calendar_today,
+                //         color: _dateController.text == ""
+                //             ? Colors.grey
+                //             : UiConstants.primaryColor,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(
+                //   height: 20,
+                // ),
                 Container(
                   margin: EdgeInsets.only(
                     bottom: 20,
@@ -386,7 +403,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                       ),
                       SvgPicture.asset(
                         'images/svgs/gender.svg',
-                        height: SizeConfig.blockSizeVertical * 2,
+                        height: 20,
                         color: gen == null
                             ? Colors.grey
                             : UiConstants.primaryColor,
@@ -431,6 +448,112 @@ class NameInputScreenState extends State<NameInputScreen> {
                     ],
                   ),
                 ),
+
+                Container(
+                  padding: EdgeInsets.all(5),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: dateInputError != ""
+                          ? Colors.red
+                          : UiConstants.primaryColor.withOpacity(0.3),
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: SizeConfig.blockSizeHorizontal * 5,
+                      ),
+                      DateField(
+                        controller: _dateFieldController,
+                        fieldWidth: SizeConfig.screenWidth * 0.12,
+                        labelText: "dd",
+                        maxlength: 2,
+                        validate: (String val) {
+                          if (val.isEmpty || val == null) {
+                            setState(() {
+                              dateInputError = "Date field cannot be empty";
+                            });
+                          } else if (int.tryParse(val) > 31 ||
+                              int.tryParse(val) < 1) {
+                            setState(() {
+                              dateInputError = "Invalid date";
+                            });
+                          }
+                          return null;
+                        },
+                      ),
+                      Expanded(child: Center(child: Text("/"))),
+                      DateField(
+                        controller: _monthFieldController,
+                        fieldWidth: SizeConfig.screenWidth * 0.12,
+                        labelText: "mm",
+                        maxlength: 2,
+                        validate: (String val) {
+                          if (val.isEmpty || val == null) {
+                            setState(() {
+                              dateInputError = "Date field cannot be empty";
+                            });
+                          } else if (int.tryParse(val) > 13 ||
+                              int.tryParse(val) < 0) {
+                            setState(() {
+                              dateInputError = "Invalid date";
+                            });
+                          }
+                          return null;
+                        },
+                      ),
+                      Expanded(child: Center(child: Text("/"))),
+                      DateField(
+                        controller: _yearFieldController,
+                        fieldWidth: SizeConfig.screenWidth * 0.16,
+                        labelText: "yyyy",
+                        maxlength: 4,
+                        validate: (String val) {
+                          if (val.isEmpty || val == null) {
+                            setState(() {
+                              dateInputError = "Date field cannot be empty";
+                            });
+                          } else if (int.tryParse(val) > DateTime.now().year ||
+                              int.tryParse(val) < 1950) {
+                            setState(() {
+                              dateInputError = "Invalid date";
+                            });
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      IconButton(
+                        onPressed: _showAndoroidDatePicker,
+                        icon: Icon(
+                          Icons.calendar_today,
+                          size: 20,
+                          color: UiConstants.primaryColor,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                if (dateInputError != "")
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                          dateInputError,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ],
+                  ),
+                SizedBox(
+                  height: 20,
+                ),
                 Text("Have you ever invested in Mutual Funds?",
                     style: TextStyle(
                         color: Colors.grey[600], fontStyle: FontStyle.italic)),
@@ -438,7 +561,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                   height: 10,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     ElevatedButton(
                       // color: (_isInvested ?? false)
@@ -531,7 +654,9 @@ class NameInputScreenState extends State<NameInputScreen> {
     _isInvested = value;
   }
 
-  DateTime get dob => selectedDate;
+  DateTime get dob {
+    return selectedDate;
+  }
 
   int get gender => gen;
 
@@ -540,4 +665,83 @@ class NameInputScreenState extends State<NameInputScreen> {
   }
 
   get formKey => _formKey;
+
+  bool isValidDate() {
+    String inputDate = _yearFieldController.text +
+        _monthFieldController.text +
+        _dateFieldController.text;
+    print("Input date : " + inputDate);
+    final date = DateTime.parse(inputDate);
+    final originalFormatString = toOriginalFormatString(date);
+    if (inputDate == originalFormatString) {
+      selectedDate = date;
+      return true;
+    }
+    return false;
+  }
+
+  String toOriginalFormatString(DateTime dateTime) {
+    final y = dateTime.year.toString().padLeft(4, '0');
+    final m = dateTime.month.toString().padLeft(2, '0');
+    final d = dateTime.day.toString().padLeft(2, '0');
+    return "$y$m$d";
+  }
+}
+
+class DateField extends StatelessWidget {
+  final String labelText;
+  final TextEditingController controller;
+  final maxlength;
+  final double fieldWidth;
+  final Function validate;
+
+  DateField(
+      {this.controller,
+      this.labelText,
+      this.maxlength,
+      this.fieldWidth,
+      this.validate});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: fieldWidth,
+      child: TextFormField(
+        controller: controller,
+        maxLength: maxlength,
+        cursorColor: UiConstants.primaryColor,
+        cursorWidth: 1,
+        validator: (val) => validate(val),
+        onChanged: (val) {
+          if (val.length == maxlength && maxlength == 2) {
+            FocusScope.of(context).nextFocus();
+          } else if (val.length == maxlength && maxlength == 4) {
+            FocusScope.of(context).unfocus();
+          }
+        },
+        keyboardType: TextInputType.datetime,
+        style: TextStyle(
+          letterSpacing: 2,
+          fontWeight: FontWeight.w500,
+        ),
+        decoration: InputDecoration(
+          counterText: "",
+          border: UnderlineInputBorder(
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide.none,
+          ),
+          hintText: labelText,
+          hintStyle: TextStyle(
+            color: Colors.grey[400],
+            letterSpacing: 2,
+          ),
+        ),
+      ),
+    );
+  }
 }

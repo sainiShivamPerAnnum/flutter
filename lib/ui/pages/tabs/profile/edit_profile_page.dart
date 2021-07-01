@@ -270,10 +270,10 @@ class _EditProfileState extends State<EditProfile> {
                                           asset: Padding(
                                             padding: EdgeInsets.symmetric(
                                                 vertical: 8),
-                                            child: Lottie.asset(
-                                                "images/lottie/storage-permission.json",
+                                            child: Image.asset(
+                                                "images/gallery.png",
                                                 height: SizeConfig.screenWidth *
-                                                    0.3),
+                                                    0.24),
                                           ),
                                           confirmAction: () {
                                             Navigator.pop(context);

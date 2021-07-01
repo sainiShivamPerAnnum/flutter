@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
-
+import 'dart:math' as math;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/fcm_listener.dart';
@@ -26,6 +26,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class LoginController extends StatefulWidget {
@@ -118,7 +119,7 @@ class _LoginControllerState extends State<LoginController>
         ///this is the first time that the otp was requested
         baseProvider.isLoginNextInProgress = false;
         _controller.animateToPage(OtpInputScreen.index,
-            duration: Duration(seconds: 2), curve: Curves.easeIn);
+            duration: Duration(seconds: 2), curve: Curves.easeOutCirc);
         setState(() {});
       } else {
         ///the otp was requested to be resent
@@ -259,44 +260,60 @@ class _LoginControllerState extends State<LoginController>
                         index: 3,
                         icon: Icons.account_circle_rounded),
                     Positioned(
-                      left: SizeConfig.blockSizeHorizontal * 4,
-                      top: kToolbarHeight * 1.6 +
-                          ((SizeConfig.screenHeight - kToolbarHeight * 2) / 4) *
-                              value,
-                      child: value - value.toInt() == 0
-                          ? AnimatedBuilder(
-                              animation: animationController,
-                              builder: (ctx, _) {
-                                return Transform.translate(
-                                  offset: Offset(
-                                    0,
-                                    -8 * (1 - animationController.value),
+                        left: SizeConfig.blockSizeHorizontal * 4,
+                        top: kToolbarHeight * 1.6 +
+                            ((SizeConfig.screenHeight - kToolbarHeight * 2) /
+                                    4) *
+                                value,
+                        child: value - value.toInt() == 0
+                            ?
+                            // AnimatedBuilder(
+                            //     animation: animationController,
+                            //     builder: (ctx, _) {
+                            //       return Transform.translate(
+                            //         offset: Offset(
+                            //           0,
+                            //           -8 * (1 - animationController.value),
+                            //         ),
+                            //         child:
+                            Container(
+                                width: 30,
+                                height: 30,
+                                alignment: Alignment.bottomCenter,
+                                child: Transform(
+                                  alignment: Alignment.center,
+                                  transform: Matrix4.rotationY(math.pi),
+                                  child: Lottie.asset(
+                                    "images/lottie/loki.json",
                                   ),
-                                  child: Container(
-                                    width: 30,
-                                    height: 30,
-                                    alignment: Alignment.bottomCenter,
-                                    child: RotatedBox(
-                                      quarterTurns: 2,
-                                      child: Icon(
-                                        Icons.airplanemode_on_rounded,
-                                        size: 30 *
-                                            (1 - animationController.value),
-                                        color: UiConstants.primaryColor,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              })
-                          : RotatedBox(
-                              quarterTurns: 2,
-                              child: Icon(
-                                Icons.airplanemode_on_rounded,
-                                size: 30,
-                                color: UiConstants.primaryColor,
-                              ),
-                            ),
-                    ),
+                                )
+                                // RotatedBox(
+                                //   quarterTurns: 2,
+                                //   child: Icon(
+                                //     Icons.airplanemode_on_rounded,
+                                //     size: 30 *
+                                //         (1 - animationController.value),
+                                //     color: UiConstants.primaryColor,
+                                //   ),
+                                // ),
+                                )
+                            //   );
+                            // })
+                            : Transform(
+                                alignment: Alignment.center,
+                                transform: Matrix4.rotationY(math.pi),
+                                child: Lottie.asset("images/lottie/loki.json",
+                                    animate: false, height: 30, width: 30),
+                              )
+                        // RotatedBox(
+                        //     quarterTurns: 2,
+                        //     child: Icon(
+                        //       Icons.airplanemode_on_rounded,
+                        //       size: 30,
+                        //       color: UiConstants.primaryColor,
+                        //     ),
+                        //   ),
+                        ),
                   ],
                 );
               }),
@@ -438,11 +455,17 @@ class _LoginControllerState extends State<LoginController>
       case NameInputScreen.index:
         {
           //if(nameInScreen.validate()) {
+
           if (_nameScreenKey.currentState.formKey.currentState.validate()) {
             if (_nameScreenKey.currentState.selectedDate == null) {
-              baseProvider.showNegativeAlert('Invalid details',
-                  'Please enter your date of birth', context);
-              return false;
+              print("Date not selected from datepicker");
+              if (!_nameScreenKey.currentState.isValidDate()) {
+                print("Entered date is not valid");
+                baseProvider.showNegativeAlert('Invalid Date of Birth',
+                    'Please enter a valid date of birth', context);
+                return false;
+              }
+              print("date selected from datepicker");
             } else if (!_isAdult(_nameScreenKey.currentState.selectedDate)) {
               baseProvider.showNegativeAlert('Invalid details',
                   'You need to be above 18 to join', context);
@@ -496,7 +519,7 @@ class _LoginControllerState extends State<LoginController>
             baseProvider.isLoginNextInProgress = false;
             setState(() {});
             _controller.animateToPage(Username.index,
-                duration: Duration(seconds: 2), curve: Curves.easeIn);
+                duration: Duration(seconds: 2), curve: Curves.easeOutCirc);
 
             // } else {
             //   baseProvider.showNegativeAlert(
@@ -623,7 +646,7 @@ class _LoginControllerState extends State<LoginController>
       //set 'tutorial shown' flag to false to ensure tutorial gets shown to the user
       lclDbProvider.saveHomeTutorialComplete = false;
       _controller.animateToPage(NameInputScreen.index,
-          duration: Duration(seconds: 2), curve: Curves.easeIn);
+          duration: Duration(seconds: 2), curve: Curves.easeOutCirc);
       //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user
@@ -651,8 +674,7 @@ class _LoginControllerState extends State<LoginController>
     if (!baseProvider.isLoginNextInProgress) {
       baseProvider.isOtpResendCount = 0;
       _controller.animateToPage(MobileInputScreen.index,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.fastLinearToSlowEaseIn);
+          duration: Duration(milliseconds: 300), curve: Curves.easeOutCirc);
     }
   }
 
