@@ -2,15 +2,14 @@ import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pin_input_text_field/pin_input_text_field.dart';
 import 'package:provider/provider.dart';
 
 class VerifyEmail extends StatefulWidget {
@@ -24,14 +23,16 @@ class VerifyEmail extends StatefulWidget {
 
 class VerifyEmailState extends State<VerifyEmail> {
   TextEditingController email = new TextEditingController();
+  TextEditingController otp = new TextEditingController();
   final formKey = GlobalKey<FormState>();
   Timer timer;
   bool isGmailVerifying = false;
   BaseUtil baseProvider;
   DBModel dbProvider;
-  bool _isVerifying = false;
-  bool _isVerified = false;
+
   bool _isContinueWithGoogle = false;
+  bool isOtpSent = false;
+  bool isProcessing = false;
   bool _isEmailEnabled = false;
   @override
   void initState() {
@@ -86,7 +87,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                       title: Text("Choose a Google instead"),
                       onTap: () async {
                         setState(() {
-                          _isVerifying = true;
+                          isProcessing = true;
                         });
                         final GoogleSignInAccount googleUser =
                             await GoogleSignIn().signIn();
@@ -97,8 +98,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                           setState(() {
                             _isContinueWithGoogle = true;
                             email.text = googleUser.email;
-                            _isVerified = true;
-                            _isVerifying = false;
+                            isProcessing = false;
                           });
                           Navigator.pop(context);
                         }
@@ -110,9 +110,10 @@ class VerifyEmailState extends State<VerifyEmail> {
                         Icons.alternate_email,
                         color: UiConstants.primaryColor,
                       ),
-                      title: Text("continue with another email"),
+                      title: Text("continue with an email"),
                       onTap: () {
                         setState(() {
+                          email.text = baseProvider.myUser.email;
                           _isEmailEnabled = true;
                         });
                         Navigator.pop(context);
@@ -130,43 +131,49 @@ class VerifyEmailState extends State<VerifyEmail> {
         });
   }
 
-  verifyEmail() async {
-    String emailAddress;
-    if (formKey.currentState.validate() && _isVerifying != true) {
-      if (email.text == null || email.text.isEmpty)
-        emailAddress = baseProvider.myUser.email;
-      else
-        emailAddress = email.text.trim();
-      // print(baseProvider.firebaseUser.emailVerified.toString());
-      // await baseProvider.firebaseUser
-      //     .verifyBeforeUpdateEmail("donewithfinger@gmail.com");
-      // print("done.........");
-      // print(baseProvider.firebaseUser.emailVerified.toString());
-      await baseProvider.firebaseUser.reload();
-      await baseProvider.firebaseUser.updateEmail(emailAddress);
-      await baseProvider.firebaseUser.sendEmailVerification();
+  // verifyEmail() async {
+  //   String emailAddress;
+  //   if (formKey.currentState.validate() && isProcessing != true) {
+  //     if (email.text == null || email.text.isEmpty)
+  //       emailAddress = baseProvider.myUser.email;
+  //     else
+  //       emailAddress = email.text.trim();
+  //     // print(baseProvider.firebaseUser.emailVerified.toString());
+  //     // await baseProvider.firebaseUser
+  //     //     .verifyBeforeUpdateEmail("donewithfinger@gmail.com");
+  //     // print("done.........");
+  //     // print(baseProvider.firebaseUser.emailVerified.toString());
+  //     await baseProvider.firebaseUser.reload();
+  //     await baseProvider.firebaseUser.updateEmail(emailAddress);
+  //     await baseProvider.firebaseUser.sendEmailVerification();
 
-      setState(() {
-        _isVerifying = true;
-      });
-      timer = Timer.periodic(Duration(seconds: 5), (t) {
-        baseProvider.firebaseUser.reload().then((_) {
-          print("Waiting for response");
-          if (baseProvider.firebaseUser.emailVerified) {
-            timer.cancel();
-            print("Email verified successfully");
-            baseProvider.myUser.email = emailAddress;
-            baseProvider.myUser.isEmailVerified = true;
-            baseProvider.isLoginNextInProgress = false;
-            setState(() {
-              _isVerifying = false;
-              _isVerified = true;
-            });
-          }
-        });
-      });
-    }
-  }
+  //     setState(() {
+  //       isProcessing = true;
+  //     });
+  //     timer = Timer.periodic(Duration(seconds: 5), (t) {
+  //       baseProvider.firebaseUser.reload().then((_) {
+  //         print("Waiting for response");
+  //         if (baseProvider.firebaseUser.emailVerified) {
+  //           timer.cancel();
+  //           print("Email verified successfully");
+  //           baseProvider.myUser.email = emailAddress;
+  //           baseProvider.myUser.isEmailVerified = true;
+  //           baseProvider.isLoginNextInProgress = false;
+  //           setState(() {
+  //             isProcessing = false;
+  //             _isVerified = true;
+  //           });
+  //         }
+  //       });
+  //     });
+  //   }
+  // }
+
+  sendEmail() {}
+
+  generateOtp() {}
+
+  verifyOtp() {}
 
   @override
   Widget build(BuildContext context) {
@@ -216,7 +223,6 @@ class VerifyEmailState extends State<VerifyEmail> {
                         return null;
                       },
                       decoration: InputDecoration(
-                        hintText: baseProvider.myUser.email,
                         prefixIcon: Icon(Icons.email_rounded),
                       ),
                     ),
@@ -225,14 +231,64 @@ class VerifyEmailState extends State<VerifyEmail> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 24),
                   child: Text(
-                      "We'll send you a confirmation link. click on the link to verify your account"),
+                      "We'll send you a 6 digits OTP (one time password) on this email. enter the OTP here to verify your email"),
                 ),
                 SizedBox(
                   height: 24,
                 ),
+                !isOtpSent
+                    ? Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Enter the OTP",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline4
+                                  .copyWith(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                            ),
+                            SizedBox(
+                              height: 24,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(0, 18.0, 0, 18.0),
+                              child: PinInputTextField(
+                                autoFocus: true,
+                                pinLength: 6,
+                                decoration: BoxLooseDecoration(
+                                  enteredColor: UiConstants.primaryColor,
+                                  solidColor: UiConstants.primaryColor
+                                      .withOpacity(0.04),
+                                  strokeColor: UiConstants.primaryColor,
+                                  strokeWidth: 1,
+                                  textStyle: GoogleFonts.montserrat(
+                                      fontSize: 20, color: Colors.black),
+                                ),
+                                controller: otp,
+                                onChanged: (value) {
+                                  print(value);
+                                  if (value.length == 6) {
+                                    verifyOtp();
+                                  }
+                                },
+                                onSubmit: (pin) {
+                                  print("Pressed submit for pin: " +
+                                      pin.toString() +
+                                      "\n  No action taken.");
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : SizedBox(),
                 Spacer(),
                 InkWell(
-                  onTap: verifyEmail,
+                  //onTap: verifyEmail,
                   child: Container(
                     margin: EdgeInsets.symmetric(vertical: 24),
                     width: SizeConfig.screenWidth -
@@ -243,7 +299,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                       color: UiConstants.primaryColor,
                     ),
                     alignment: Alignment.center,
-                    child: _isVerifying
+                    child: isProcessing
                         ? CircularProgressIndicator(
                             color: Colors.white,
                           )
@@ -256,57 +312,6 @@ class VerifyEmailState extends State<VerifyEmail> {
               ],
             ),
           ),
-          _isVerifying
-              ? Container(
-                  color: Colors.white.withOpacity(0.5),
-                  child: Column(
-                    children: [
-                      CircularProgressIndicator(),
-                      Text("Email verifying, please don't press back")
-                    ],
-                  ),
-                )
-              : SizedBox(),
-          _isVerified
-              ? Container(
-                  color: Colors.white.withOpacity(0.8),
-                  padding: EdgeInsets.all(SizeConfig.screenWidth * 0.25),
-                  width: SizeConfig.screenWidth,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.verified_rounded,
-                        color: Colors.green,
-                        size: 50,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text("Email verified successfully."),
-                      ),
-                      InkWell(
-                        onTap: () => backButtonDispatcher.didPopRoute(),
-                        child: Container(
-                          margin: EdgeInsets.symmetric(vertical: 24),
-                          width: SizeConfig.screenWidth -
-                              SizeConfig.blockSizeHorizontal * 5,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: UiConstants.primaryColor,
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            "Close",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              : SizedBox(),
         ],
       ),
     );

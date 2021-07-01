@@ -96,7 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
           physics: BouncingScrollPhysics(),
           children: [
             Container(
-              height: kToolbarHeight,
+              height: kToolbarHeight * 1.6,
             ),
             InkWell(
               onTap: () {
@@ -208,7 +208,32 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: SizeConfig.screenHeight * 0.02,
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Spacer(),
+                        TextButton.icon(
+                          onPressed: () {
+                            appState.currentAction = PageAction(
+                                state: PageState.addPage,
+                                page: EditProfileConfig);
+                          },
+                          label: Text(
+                            "Edit",
+                            style: GoogleFonts.montserrat(
+                              color: Colors.white,
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.edit_outlined,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.blockSizeHorizontal * 3,
+                        )
+                      ],
                     ),
                     Expanded(
                       child: Row(
@@ -275,16 +300,21 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                               ),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              Text(
-                                'Member since ${_getUserMembershipDate()}',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: SizeConfig.smallTextSize,
-                                ),
-                              ),
+                              baseProvider.myUser.username != null
+                                  ? Padding(
+                                      padding:
+                                          EdgeInsets.only(bottom: 16, top: 8),
+                                      child: Text(
+                                        "@${baseProvider.myUser.username}",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: SizeConfig.mediumTextSize,
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox(
+                                      height: 8,
+                                    ),
                             ],
                           )
                         ],
@@ -293,24 +323,31 @@ class _ProfilePageState extends State<ProfilePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                          size: SizeConfig.mediumTextSize,
-                        ),
-                        SizedBox(
-                          width: 8,
-                        ),
                         Text(
-                          "Tap to edit name",
+                          'Member since ${_getUserMembershipDate()}',
                           style: TextStyle(
-                              color: Colors.white,
-                              fontSize: SizeConfig.mediumTextSize),
-                        )
+                            color: Colors.black,
+                            fontSize: SizeConfig.smallTextSize,
+                          ),
+                        ),
+                        // Icon(
+                        //   Icons.edit,
+                        //   color: Colors.white,
+                        //   size: SizeConfig.mediumTextSize,
+                        // ),
+                        // SizedBox(
+                        //   width: 8,
+                        // ),
+                        // Text(
+                        //   "Tap to edit name",
+                        //   style: TextStyle(
+                        //       color: Colors.white,
+                        //       fontSize: SizeConfig.mediumTextSize),
+                        // )
                       ],
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 20,
                     )
                   ],
                 ),
@@ -352,25 +389,16 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         )
                       : SizedBox(),
-                  ProfileTabTile(
-                    leadWidget: Icon(
-                      Icons.account_circle_outlined,
-                      size: SizeConfig.blockSizeHorizontal * 5,
-                      color: UiConstants.primaryColor,
-                    ),
-                    title: "Username",
-                    onPress: () {},
-                    trailWidget: baseProvider.myUser.username != null
-                        ? Text(
-                            "@${baseProvider.myUser.username.replaceAll('@', '.')}",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.montserrat(
-                              color: UiConstants.primaryColor,
-                              fontSize: SizeConfig.mediumTextSize,
-                            ),
-                          )
-                        : Container(
+                  baseProvider.myUser.username == null
+                      ? ProfileTabTile(
+                          leadWidget: Icon(
+                            Icons.account_circle_outlined,
+                            size: SizeConfig.blockSizeHorizontal * 5,
+                            color: UiConstants.primaryColor,
+                          ),
+                          title: "Username",
+                          onPress: () {},
+                          trailWidget: Container(
                             height: 30,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(6),
@@ -399,7 +427,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                           ),
-                  ),
+                        )
+                      : SizedBox(),
                   ProfileTabTilePan(
                     logo: "images/contact-book.png",
                     title: "PAN Number",

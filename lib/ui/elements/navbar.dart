@@ -44,7 +44,7 @@ class NavBar extends StatelessWidget {
         //   BoxShadow(blurRadius: 24, color: Colors.black12),
         // ],
       ),
-      height: kToolbarHeight,
+      height: SizeConfig.screenHeight * 0.06,
       padding:
           EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
       //Clip the row of widgets, to suppress any overflow errors that might occur during animation

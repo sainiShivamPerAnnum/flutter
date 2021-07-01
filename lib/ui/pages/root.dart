@@ -197,11 +197,11 @@ class _RootState extends State<Root> {
                 delegate.parseRoute(Uri.parse("d-ham"));
               },
               child: Container(
-                height: kToolbarHeight * 0.8,
-                width: SizeConfig.screenHeight * 0.05,
+                height: kToolbarHeight,
+                width: kToolbarHeight,
                 margin: EdgeInsets.symmetric(
                   horizontal: SizeConfig.blockSizeHorizontal * 5,
-                  vertical: kToolbarHeight * 0.1,
+                  vertical: kToolbarHeight * 0.4,
                 ),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,

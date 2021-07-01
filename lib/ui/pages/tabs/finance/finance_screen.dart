@@ -13,7 +13,6 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
@@ -108,7 +107,7 @@ class _FinancePageState extends State<FinancePage> {
                   SliverList(
                       delegate: SliverChildListDelegate([
                     Container(
-                      height: AppBar().preferredSize.height * 0.7,
+                      height: kToolbarHeight * 1.4,
                     ),
                     BaseUtil.buildShowcaseWrapper(
                       _showcaseHeader,
