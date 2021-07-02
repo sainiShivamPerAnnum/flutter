@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
@@ -35,6 +36,7 @@ import 'package:showcaseview/showcase.dart';
 import 'core/base_remote_config.dart';
 import 'core/model/TambolaBoard.dart';
 import 'core/model/UserAugmontDetail.dart';
+import 'core/ops/augmont_ops.dart';
 import 'ui/pages/hamburger/chatsupport_page.dart';
 import 'util/size_config.dart';
 
@@ -75,6 +77,10 @@ class BaseUtil extends ChangeNotifier {
   ReferralDetail myReferralInfo;
   static PackageInfo packageInfo;
   Map<String, dynamic> freshchatKeys;
+
+  // Objects for Transaction list Pagination
+  DocumentSnapshot lastTransactionListDocument;
+  bool hasMoreTransactionListDocuments = true;
 
   DateTime _userCreationTimestamp;
   int isOtpResendCount = 0;
@@ -613,6 +619,45 @@ class BaseUtil extends ChangeNotifier {
         myUser.uid, _userTicketWallet, Constants.NEW_USER_TICKET_COUNT);
     //updateInitUserTicketCount method returns no change if operations fails
     return (_userTicketWallet.initTck != _t);
+  }
+
+  void setDisplayPictureUrl(String url) {
+    myUserDpUrl = url;
+    notifyListeners();
+  }
+
+  void setUserName(String newName) {
+    myUser.name = newName;
+    notifyListeners();
+  }
+
+  void refreshAugmontBalance() async {
+    _dbModel.getUserFundWallet(myUser.uid).then((aValue) {
+      if (aValue != null) {
+        userFundWallet = aValue;
+        if (userFundWallet.augGoldQuantity > 0)
+          _updateAugmontBalance();
+      }
+    });
+  }
+
+  Future<void> _updateAugmontBalance() async {
+    if (augmontDetail == null ||
+        (userFundWallet.augGoldQuantity == 0 &&
+            userFundWallet.augGoldBalance == 0)) return;
+    AugmontModel().getRates().then((currRates) {
+      if (currRates == null ||
+          currRates.goldSellPrice == null ||
+          userFundWallet.augGoldQuantity == 0) return;
+
+      augmontGoldRates = currRates;
+      double gSellRate = augmontGoldRates.goldSellPrice;
+      userFundWallet.augGoldBalance = BaseUtil.digitPrecision(
+          userFundWallet.augGoldQuantity * gSellRate);
+      notifyListeners(); //might cause ui error if screen no longer active
+    }).catchError((err) {
+      print('$err');
+    });
   }
 
   static String getMonthName(int monthNum) {

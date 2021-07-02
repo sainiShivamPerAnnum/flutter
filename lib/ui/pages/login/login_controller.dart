@@ -193,7 +193,8 @@ class _LoginControllerState extends State<LoginController> {
                                 recognizer: new TapGestureRecognizer()
                                   ..onTap = () {
                                     HapticFeedback.vibrate();
-                                    Navigator.of(context).pushNamed('/tnc');
+                                    appStateProvider.currentAction =
+                                    PageAction(state: PageState.addPage, page: TncPageConfig);
                                   },
                               ),
                             ],

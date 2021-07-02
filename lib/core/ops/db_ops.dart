@@ -173,14 +173,17 @@ class DBModel extends ChangeNotifier {
     }
   }
 
-  Future<List<UserTransaction>> getFilteredUserTransactions(BaseUser user,
-      String type, String subtype,
+  Future<Map<String,dynamic>> getFilteredUserTransactions(BaseUser user,
+      String type, String subtype,DocumentSnapshot lastDocument,
       [int limit = 30]) async {
+    Map<String,dynamic> resultTransactionsMap = Map<String,dynamic>();
     List<UserTransaction> requestedTxns = [];
     try {
       String _id = user.uid;
       QuerySnapshot _querySnapshot =
-      await _api.getUserTransactionsByField(_id, type, subtype, limit);
+      await _api.getUserTransactionsByField(_id, type, subtype, lastDocument,limit);
+      resultTransactionsMap['lastDocument'] = _querySnapshot.docs.last;
+      resultTransactionsMap['length'] = _querySnapshot.docs.length;
       _querySnapshot.docs.forEach((txn) {
         try {
           if (txn.exists)
@@ -190,10 +193,14 @@ class DBModel extends ChangeNotifier {
         }
       });
       print("LENGTH----------------->" + requestedTxns.length.toString());
-      return requestedTxns;
+      resultTransactionsMap['listOfTransactions'] = requestedTxns;
+      return resultTransactionsMap;
     } catch (err) {
       log.error('Failed to fetch user mini transactions');
-      return requestedTxns;
+      resultTransactionsMap['length'] = 0;
+      resultTransactionsMap['listOfTransactions'] = requestedTxns;
+      resultTransactionsMap['lastDocument'] = lastDocument;
+      return resultTransactionsMap;
     }
   }
 

@@ -397,6 +397,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
         ///update UI
         _modalKey2.currentState.onDepositComplete(true);
         augmontProvider.completeTransaction();
+        baseProvider.refreshAugmontBalance();
         return true;
       }
     } else if (txn.tranStatus == UserTransaction.TRAN_STATUS_CANCELLED) {
