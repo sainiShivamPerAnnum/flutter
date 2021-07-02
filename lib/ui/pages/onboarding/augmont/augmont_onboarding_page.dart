@@ -466,8 +466,8 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
   }
 
   Future<Map<String, dynamic>> _getVerifiedDetails(
-      String aPan, String aPanName) async {
-    if (aPan == null || aPan.isEmpty)
+      String enteredPan, String enteredPanName) async {
+    if (enteredPan == null || enteredPan.isEmpty)
       return {'flag': false, 'reason': 'Invalid Details'};
     bool _flag = true;
     String _reason = '';
