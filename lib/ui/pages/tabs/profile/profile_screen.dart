@@ -213,22 +213,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     Row(
                       children: [
                         Spacer(),
-                        TextButton.icon(
-                          onPressed: () {
-                            appState.currentAction = PageAction(
-                                state: PageState.addPage,
-                                page: EditProfileConfig);
-                          },
-                          label: Text(
-                            "Edit",
-                            style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                            ),
-                          ),
-                          icon: Icon(
-                            Icons.edit_outlined,
-                            color: Colors.white,
-                          ),
+                        Icon(
+                          Icons.edit_outlined,
+                          color: Colors.white,
+                          size: SizeConfig.blockSizeHorizontal * 4,
                         ),
                         SizedBox(
                           width: SizeConfig.blockSizeHorizontal * 3,
@@ -305,7 +293,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       padding:
                                           EdgeInsets.only(bottom: 16, top: 8),
                                       child: Text(
-                                        "@${baseProvider.myUser.username}",
+                                        "@${baseProvider.myUser.username.replaceAll('@', '.')}",
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: SizeConfig.mediumTextSize,
@@ -330,24 +318,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             fontSize: SizeConfig.smallTextSize,
                           ),
                         ),
-                        // Icon(
-                        //   Icons.edit,
-                        //   color: Colors.white,
-                        //   size: SizeConfig.mediumTextSize,
-                        // ),
-                        // SizedBox(
-                        //   width: 8,
-                        // ),
-                        // Text(
-                        //   "Tap to edit name",
-                        //   style: TextStyle(
-                        //       color: Colors.white,
-                        //       fontSize: SizeConfig.mediumTextSize),
-                        // )
                       ],
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 10,
                     )
                   ],
                 ),

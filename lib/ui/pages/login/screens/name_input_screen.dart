@@ -682,8 +682,12 @@ class NameInputScreenState extends State<NameInputScreen> {
     if (inputDate == originalFormatString) {
       selectedDate = date;
       return true;
+    } else {
+      setState(() {
+        dateInputError = "Invalid date";
+      });
+      return false;
     }
-    return false;
   }
 
   String toOriginalFormatString(DateTime dateTime) {

@@ -456,16 +456,21 @@ class _LoginControllerState extends State<LoginController>
         {
           //if(nameInScreen.validate()) {
 
-          if (_nameScreenKey.currentState.formKey.currentState.validate()) {
+          if (_nameScreenKey.currentState.formKey.currentState.validate() &&
+              _nameScreenKey.currentState.isValidDate()) {
             if (_nameScreenKey.currentState.selectedDate == null) {
-              print("Date not selected from datepicker");
-              if (!_nameScreenKey.currentState.isValidDate()) {
-                print("Entered date is not valid");
-                baseProvider.showNegativeAlert('Invalid Date of Birth',
-                    'Please enter a valid date of birth', context);
-                return false;
-              }
-              print("date selected from datepicker");
+              // print("Date not selected from datepicker");
+              // if (!_nameScreenKey.currentState.isValidDate()) {
+              //print("Entered date is not valid");
+              baseProvider.showNegativeAlert('Invalid Date of Birth',
+                  'Please enter a valid date of birth', context);
+              return false;
+              // } else if (!_isAdult(_nameScreenKey.currentState.selectedDate)) {
+              //   baseProvider.showNegativeAlert('Invalid details',
+              //       'You need to be above 18 to join', context);
+              //   return false;
+              // }
+              //print("date selected from datepicker");
             } else if (!_isAdult(_nameScreenKey.currentState.selectedDate)) {
               baseProvider.showNegativeAlert('Invalid details',
                   'You need to be above 18 to join', context);
@@ -580,16 +585,20 @@ class _LoginControllerState extends State<LoginController>
               } else {
                 baseProvider.showNegativeAlert(
                     'Update failed', 'Please try again in sometime', context);
-                baseProvider.isLoginNextInProgress = true;
+                baseProvider.isLoginNextInProgress = false;
                 setState(() {});
               }
             } else {
               baseProvider.showNegativeAlert('Oops! we ran into trouble!',
                   'Please try again in sometime', context);
+              baseProvider.isLoginNextInProgress = false;
+              setState(() {});
             }
           } else {
             baseProvider.showNegativeAlert('Oops! we ran into trouble!',
                 'Please try again in sometime', context);
+            baseProvider.isLoginNextInProgress = false;
+            setState(() {});
           }
 
           break;

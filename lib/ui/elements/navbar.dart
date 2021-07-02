@@ -44,7 +44,7 @@ class NavBar extends StatelessWidget {
         //   BoxShadow(blurRadius: 24, color: Colors.black12),
         // ],
       ),
-      height: SizeConfig.screenHeight * 0.06,
+      height: 60,
       padding:
           EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
       //Clip the row of widgets, to suppress any overflow errors that might occur during animation
@@ -113,7 +113,7 @@ class _NavbarButtonState extends State<NavbarButton>
             rotationY: 180 * _iconAnimController.value,
             child: SvgPicture.asset(
               widget.data.iconImage,
-              height: kToolbarHeight / 2,
+              height: 30,
               color: widget.isSelected ? Colors.white : Color(0xffcccccc),
             )),
         //Add some hz spacing

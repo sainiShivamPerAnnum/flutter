@@ -237,9 +237,8 @@ class VerifyEmailState extends State<VerifyEmail> {
         children: [
           Container(
             padding: EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: ListView(
+              //crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
                   height: kToolbarHeight,
@@ -261,7 +260,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                     padding: EdgeInsets.only(top: 30, bottom: 10),
                     child: TextFormField(
                       controller: email,
-                      enabled: _isProcessing ? false : true,
+                      enabled: _isProcessing || _isOtpSent ? false : true,
                       cursorColor: Colors.black,
                       keyboardType: TextInputType.text,
                       validator: (val) {
@@ -292,6 +291,8 @@ class VerifyEmailState extends State<VerifyEmail> {
                 ),
                 _isProcessing
                     ? Container(
+                        width: SizeConfig.screenWidth,
+                        alignment: Alignment.center,
                         child: Column(
                           children: [
                             CircularProgressIndicator(),
@@ -310,12 +311,9 @@ class VerifyEmailState extends State<VerifyEmail> {
                           children: [
                             Text(
                               "Enter the OTP",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline4
-                                  .copyWith(
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: SizeConfig.cardTitleTextSize),
                             ),
                             SizedBox(
                               height: 24,
@@ -403,37 +401,49 @@ class VerifyEmailState extends State<VerifyEmail> {
                         ),
                       )
                     : SizedBox(),
-                Spacer(),
-                InkWell(
-                  onTap: confirmAction,
-                  child: Container(
-                    margin: EdgeInsets.symmetric(vertical: 24),
-                    width: SizeConfig.screenWidth -
-                        SizeConfig.blockSizeHorizontal * 5,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: UiConstants.primaryColor,
-                    ),
-                    alignment: Alignment.center,
-                    child: _isVerifying || _isProcessing
-                        ? SpinKitThreeBounce(
-                            color: UiConstants.spinnerColor2,
-                            size: 18.0,
-                          )
-                        : Text(
-                            _isOtpSent ? "Verify" : "Send OTP",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: SizeConfig.mediumTextSize,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                  ),
-                )
+                SizedBox(
+                  height: SizeConfig.screenHeight * 0.2,
+                ),
               ],
             ),
           ),
+          Positioned(
+              bottom: 0,
+              child: Container(
+                width: SizeConfig.screenWidth,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: confirmAction,
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 24),
+                        width: SizeConfig.screenWidth -
+                            SizeConfig.blockSizeHorizontal * 5,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: UiConstants.primaryColor,
+                        ),
+                        alignment: Alignment.center,
+                        child: _isVerifying || _isProcessing
+                            ? SpinKitThreeBounce(
+                                color: UiConstants.spinnerColor2,
+                                size: 18.0,
+                              )
+                            : Text(
+                                _isOtpSent ? "Verify" : "Send OTP",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: SizeConfig.mediumTextSize,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                      ),
+                    )
+                  ],
+                ),
+              ))
         ],
       ),
     );

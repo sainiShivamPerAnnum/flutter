@@ -177,7 +177,7 @@ class _FundsChartViewState extends State<FundsChartView> {
                             .getEstTotalWealth()
                             .toStringAsFixed(2)
                             .length *
-                        2),
+                        1.6),
                 color: UiConstants.textColor,
               ),
               showChartValuesInPercentage: false,
