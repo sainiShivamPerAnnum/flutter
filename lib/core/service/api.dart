@@ -518,6 +518,45 @@ class Api {
     }
   }
 
+  Future<bool> createEmailVerificationDocument(
+      String email, String otp, String username) async {
+    String htmlCode = """ 
+        <div style="font-family: Montserrat,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+        <div style="margin:50px auto;width:70%;padding:20px 0">
+        <div style="border-bottom:1px solid #eee">
+        <a href="" style="font-size:1.4em;color: #2EB19F;text-decoration:none;font-weight:600">Fello</a>
+        </div>
+        <p style="font-size:1.1em">Hi,</p>
+        <p>Thank you for choosing Fello. Use the following OTP to complete your email verification process. OTP is valid for 15 minutes</p>
+        <h2 style="background: #2EB19F;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">$otp</h2>
+        <p style="font-size:0.9em;">Regards,<br />Fello Technologies</p>
+        <hr style="border:none;border-top:1px solid #eee" />
+        <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
+        <p>Fello Technologies Inc</p>
+        <p>Address to be added</p>
+        <p>India</p>
+        </div>
+        </div>
+        </div>        
+        """;
+
+    Map<String, dynamic> data = {
+      'to': [email],
+      'message': {
+        'text': 'This is the text body',
+        'subject': '$otp - OTP for email verification',
+        'html': htmlCode
+      }
+    };
+    try {
+      await _db.collection('emailotprequests').add(data);
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
   //---------------------------------------REALTIME DATABASE-------------------------------------------//
 
   Future<bool> checkUserNameAvailability(String username) async {

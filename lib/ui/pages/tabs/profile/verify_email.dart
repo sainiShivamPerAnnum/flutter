@@ -1,7 +1,8 @@
 import 'dart:async';
-
+import 'dart:math' as math;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,11 +30,15 @@ class VerifyEmailState extends State<VerifyEmail> {
   bool isGmailVerifying = false;
   BaseUtil baseProvider;
   DBModel dbProvider;
+  String generatedOTP;
 
   bool _isContinueWithGoogle = false;
-  bool isOtpSent = false;
-  bool isProcessing = false;
+  bool _isOtpSent = false;
+  bool _isProcessing = false;
+  bool _isVerifying = false;
   bool _isEmailEnabled = false;
+  bool _isSessionExpired = false;
+  bool _isOtpIncorrect = false;
   @override
   void initState() {
     email = TextEditingController();
@@ -84,25 +89,9 @@ class VerifyEmailState extends State<VerifyEmail> {
                         height: 24,
                         width: 24,
                       ),
-                      title: Text("Choose a Google instead"),
-                      onTap: () async {
-                        setState(() {
-                          isProcessing = true;
-                        });
-                        final GoogleSignInAccount googleUser =
-                            await GoogleSignIn().signIn();
-                        if (googleUser != null) {
-                          email.text = googleUser.displayName;
-                          baseProvider.myUser.isEmailVerified = true;
-                          baseProvider.myUserDpUrl = googleUser.photoUrl;
-                          setState(() {
-                            _isContinueWithGoogle = true;
-                            email.text = googleUser.email;
-                            isProcessing = false;
-                          });
-                          Navigator.pop(context);
-                        }
-                      },
+                      title: Text("Choose a Google account"),
+                      subtitle: Text("No verification requried"),
+                      onTap: verifyGmail,
                     ),
                     Divider(),
                     ListTile(
@@ -113,6 +102,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                       title: Text("continue with an email"),
                       onTap: () {
                         setState(() {
+                          _isContinueWithGoogle = false;
                           email.text = baseProvider.myUser.email;
                           _isEmailEnabled = true;
                         });
@@ -131,49 +121,83 @@ class VerifyEmailState extends State<VerifyEmail> {
         });
   }
 
-  // verifyEmail() async {
-  //   String emailAddress;
-  //   if (formKey.currentState.validate() && isProcessing != true) {
-  //     if (email.text == null || email.text.isEmpty)
-  //       emailAddress = baseProvider.myUser.email;
-  //     else
-  //       emailAddress = email.text.trim();
-  //     // print(baseProvider.firebaseUser.emailVerified.toString());
-  //     // await baseProvider.firebaseUser
-  //     //     .verifyBeforeUpdateEmail("donewithfinger@gmail.com");
-  //     // print("done.........");
-  //     // print(baseProvider.firebaseUser.emailVerified.toString());
-  //     await baseProvider.firebaseUser.reload();
-  //     await baseProvider.firebaseUser.updateEmail(emailAddress);
-  //     await baseProvider.firebaseUser.sendEmailVerification();
+  generateOtp() {
+    var rnd = new math.Random();
+    var next = rnd.nextDouble() * 1000000;
+    while (next < 100000) {
+      next *= 10;
+    }
+    generatedOTP = next.toInt().toString();
+  }
 
-  //     setState(() {
-  //       isProcessing = true;
-  //     });
-  //     timer = Timer.periodic(Duration(seconds: 5), (t) {
-  //       baseProvider.firebaseUser.reload().then((_) {
-  //         print("Waiting for response");
-  //         if (baseProvider.firebaseUser.emailVerified) {
-  //           timer.cancel();
-  //           print("Email verified successfully");
-  //           baseProvider.myUser.email = emailAddress;
-  //           baseProvider.myUser.isEmailVerified = true;
-  //           baseProvider.isLoginNextInProgress = false;
-  //           setState(() {
-  //             isProcessing = false;
-  //             _isVerified = true;
-  //           });
-  //         }
-  //       });
-  //     });
-  //   }
-  // }
+  sendEmail() {
+    if (formKey.currentState.validate()) {
+      dbProvider
+          .sendEmailToVerifyEmail(
+              email.text, generatedOTP, baseProvider.myUser.name)
+          .then((res) {
+        if (res) {
+          setState(() {
+            _isOtpSent = true;
+          });
+        } else {
+          baseProvider.showNegativeAlert(
+              "Oops, we ran into trouble",
+              "Email cannot be verified at the moment, please try in sometime.",
+              context);
+        }
+      });
+    }
+  }
 
-  sendEmail() {}
+  verifyOtp() async {
+    setState(() {
+      _isOtpIncorrect = false;
+      _isVerifying = true;
+    });
+    if (generatedOTP == otp.text) {
+      baseProvider.myUser.isEmailVerified = true;
+      bool res = await dbProvider.updateUser(baseProvider.myUser);
+      if (res) {
+        setState(() {
+          _isVerifying = false;
+        });
+        baseProvider.showPositiveAlert("Success",
+            "Email Verified,refresh your app once to unlock features", context);
+        backButtonDispatcher.didPopRoute();
+      } else {
+        baseProvider.showNegativeAlert("Oops! we ran into problem",
+            "Email cannot be verified at the moment", context);
+      }
+    } else {}
+  }
 
-  generateOtp() {}
+  verifyGmail() async {
+    setState(() {
+      _isProcessing = true;
+    });
+    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+    if (googleUser != null) {
+      email.text = googleUser.email;
+      baseProvider.myUser.email = googleUser.email;
+      baseProvider.myUser.isEmailVerified = true;
+      baseProvider.myUserDpUrl = googleUser.photoUrl;
+      bool res = await dbProvider.updateUser(baseProvider.myUser);
+      if (res) {
+        setState(() {
+          _isProcessing = false;
+        });
+        baseProvider.showPositiveAlert("Success",
+            "Email Verified,refresh your app once to unlock features", context);
+        Navigator.pop(context);
 
-  verifyOtp() {}
+        backButtonDispatcher.didPopRoute();
+      } else {
+        baseProvider.showNegativeAlert("Oops! we ran into problem",
+            "Email cannot be verified at the moment", context);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -190,17 +214,19 @@ class VerifyEmailState extends State<VerifyEmail> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: kToolbarHeight * 2,
+                  height: kToolbarHeight,
                 ),
                 Text(
-                  "Enter your email",
-                  style: Theme.of(context).textTheme.headline4.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                  "Let's verify your email",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: SizeConfig.cardTitleTextSize),
                 ),
                 SizedBox(
                   height: 24,
                 ),
+                Text(
+                    "Enter the email which you'd like to link with your fello account"),
                 Form(
                   key: formKey,
                   child: Container(
@@ -236,7 +262,20 @@ class VerifyEmailState extends State<VerifyEmail> {
                 SizedBox(
                   height: 24,
                 ),
-                !isOtpSent
+                _isProcessing
+                    ? Container(
+                        child: Column(
+                          children: [
+                            CircularProgressIndicator(),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Text("Sending OTP,please wait")
+                          ],
+                        ),
+                      )
+                    : SizedBox(),
+                _isOtpSent
                     ? Container(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -282,13 +321,63 @@ class VerifyEmailState extends State<VerifyEmail> {
                                 },
                               ),
                             ),
+                            SizedBox(
+                              height: 24,
+                            ),
+                            Row(
+                              children: [
+                                Text("OTP is only valid for "),
+                                TweenAnimationBuilder<Duration>(
+                                    duration: Duration(minutes: 15),
+                                    tween: Tween(
+                                        begin: Duration(minutes: 15),
+                                        end: Duration.zero),
+                                    onEnd: () {
+                                      print('Timer ended');
+                                      baseProvider.showNegativeAlert(
+                                          "Session Expired!",
+                                          "Please try again",
+                                          context);
+                                      backButtonDispatcher.didPopRoute();
+                                    },
+                                    builder: (BuildContext context,
+                                        Duration value, Widget child) {
+                                      final minutes = value.inMinutes;
+                                      final seconds = value.inSeconds % 60;
+                                      return Text(
+                                        '$minutes:$seconds',
+                                        style: TextStyle(
+                                          color: UiConstants.primaryColor,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      );
+                                    }),
+                                // Text(
+                                //   "15:00",
+                                //   style: TextStyle(
+                                //     color: UiConstants.primaryColor,
+                                //     fontWeight: FontWeight.w700,
+                                //   ),
+                                // ),
+                                Text("  minutes.")
+                              ],
+                            )
                           ],
+                        ),
+                      )
+                    : SizedBox(),
+                _isOtpIncorrect
+                    ? Text(
+                        "OTP is incorrect,please try again",
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.w700,
                         ),
                       )
                     : SizedBox(),
                 Spacer(),
                 InkWell(
-                  //onTap: verifyEmail,
+                  onTap: generateOtp,
                   child: Container(
                     margin: EdgeInsets.symmetric(vertical: 24),
                     width: SizeConfig.screenWidth -
@@ -299,7 +388,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                       color: UiConstants.primaryColor,
                     ),
                     alignment: Alignment.center,
-                    child: isProcessing
+                    child: _isVerifying
                         ? CircularProgressIndicator(
                             color: Colors.white,
                           )
