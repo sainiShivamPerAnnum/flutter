@@ -1,4 +1,6 @@
-import 'package:bezier_chart/bezier_chart.dart';
+import 'package:felloapp/ui/elements/graph/bezier_chart_custom_config.dart';
+import 'package:felloapp/ui/elements/graph/bezier_chart_custom_widget.dart';
+import 'package:felloapp/ui/elements/graph/bezier_custom_line.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -218,7 +220,8 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child:  new BezierChart(
-          bezierChartScale: BezierChartScale.WEEKLY,
+          bezierChartScale: BezierChartScale.CUSTOM,
+          xAxisCustomValues: [],
           fromDate: (_selectedFrequency!=0)?_dataPoints[0].timestamp:_lastDate.subtract(Duration(hours: 672)),
           bezierChartAggregation: BezierChartAggregation.AVERAGE,
           footerDateTimeBuilder: (date,value) {
