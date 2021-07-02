@@ -1575,7 +1575,12 @@ class _BezierChartPainter extends CustomPainter {
       return footerDateTimeBuilder(dataPoint.xAxis as DateTime, scale);
     }
     if (scale == BezierChartScale.CUSTOM) {
-      return "${formatAsIntOrDouble(dataPoint.value)}\n";
+      // return "${formatAsIntOrDouble(dataPoint.value)}\n";
+      final dateFormat = intl.DateFormat('MMM');
+      final dateFormatYear = intl.DateFormat('y');
+      final year =
+      dateFormatYear.format(dataPoint.xAxis as DateTime).substring(2);
+      return "${dateFormat.format(dataPoint.xAxis as DateTime)}\n'$year";
     } else if (scale == BezierChartScale.HOURLY) {
       final dateFormat = intl.DateFormat('HH:mm\n');
       return "${dateFormat.format(dataPoint.xAxis as DateTime)}";
