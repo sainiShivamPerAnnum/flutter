@@ -39,8 +39,10 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
           double _a = 1;
           for(var v in _dataPoints) {
             _bezierPoints.add(DataPoint(value: v.rate, xAxis: v.timestamp));
-            _bezierPointsCustom.add(DataPoint(value: v.rate, xAxis: _a));
-            _bezierPointsCustomMap[_a++] = v.timestamp;
+            if(v.timestamp.month % 3 == 0) {
+              _bezierPointsCustom.add(DataPoint(value: v.rate, xAxis: _a));
+              _bezierPointsCustomMap[_a++] = v.timestamp;
+            }
           }
           _lastDate = _dataPoints[_dataPoints.length-1].timestamp;
           _bezierPointsMonthly.addAll(_bezierPoints);
