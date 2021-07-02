@@ -1,4 +1,5 @@
 import 'package:bezier_chart/bezier_chart.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
@@ -16,8 +17,11 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
   AugmontModel augmontProvider;
   List<GoldGraphPoint> _dataPoints;
   List<DataPoint<DateTime>> _bezierPoints = [];
+  List<DataPoint<DateTime>> _bezierPointsMonthly =[], _bezierPointsYearly=[];
   String _dataPointsState = "loading";
   int _selectedFrequency = 1;
+  DateTime _lastDate;
+  double _height;
   List<BezierChartScale> _scales = [BezierChartScale.WEEKLY, BezierChartScale.MONTHLY, BezierChartScale.YEARLY];
 
   @override
@@ -27,18 +31,19 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
       print('loading');
       _getDataPoints().then((value){
         if(value!=null) { 
-          print(value.length);
           _dataPoints = value; 
           for(var v in _dataPoints) {
             _bezierPoints.add(DataPoint(value: v.rate, xAxis: v.timestamp));
           }
-          print(_bezierPoints.toString());
+          _lastDate = _dataPoints[_dataPoints.length-1].timestamp;
+          _bezierPointsMonthly.addAll(_bezierPoints);
+          _bezierPointsYearly.addAll(_bezierPoints);
         }
         (value==null) ? _dataPointsState = "error" : _dataPointsState = "done";
         setState(() {});
       });
     }
-    double _height = MediaQuery.of(context).size.height;
+    _height = MediaQuery.of(context).size.height;
     if(_dataPointsState=="loading") {
       return Container(
           margin: EdgeInsets.symmetric(
@@ -54,35 +59,7 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
     switch(_dataPointsState) {
       case 'done' : {
         return Column(children: [
-          Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: _height * 0.02,
-            ),
-            height: _height * 0.35,
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child:  BezierChart(
-                bezierChartScale: _scales[_selectedFrequency],
-                fromDate: _dataPoints[0].timestamp,
-                toDate: _dataPoints[_dataPoints.length-1].timestamp,
-                selectedDate: _dataPoints[_dataPoints.length-1].timestamp,
-                series: [
-                  BezierLine(data: _bezierPoints, label: 'Gold Rate', lineColor: UiConstants.primaryColor)
-                ],
-                config: BezierChartConfig(
-                  showVerticalIndicator: true,
-                  pinchZoom: false,
-                  displayDataPointWhenNoValue: false,
-                  verticalIndicatorColor: Colors.grey[400],
-                  updatePositionOnTap: true,
-                  snap: true,
-                  footerHeight: 50,
-                  xAxisTextStyle: TextStyle(color: Color(0xff484848))
-                ),
-              )
-            ),
-          ),
+          _buildChart(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -217,5 +194,122 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
       print(err);
     }
     return _res;
+  }
+
+  Widget _buildChart() {
+    if(_selectedFrequency==0) {
+      return _returnWeeklyGoldChart();
+    }
+    else if(_selectedFrequency==1) {
+      return _returnMonthlyGoldChart();
+    }
+    else {
+      return _returnYearlyGoldChart();
+    }
+  }
+
+  Widget _returnWeeklyGoldChart() {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: _height * 0.02,
+      ),
+      height: _height * 0.35,
+      width: SizeConfig.screenWidth*0.9,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child:  new BezierChart(
+          bezierChartScale: BezierChartScale.WEEKLY,
+          fromDate: (_selectedFrequency!=0)?_dataPoints[0].timestamp:_lastDate.subtract(Duration(hours: 672)),
+          bezierChartAggregation: BezierChartAggregation.AVERAGE,
+          footerDateTimeBuilder: (date,value) {
+            return date.day.toString()+'/'+date.month.toString()+'/'+date.year.toString().substring(2,4);
+          },
+          toDate: _lastDate,
+          selectedDate: _lastDate,
+          series: [
+            BezierLine(data: _bezierPoints, label: 'Gold Rate(₹/gm)', lineColor: UiConstants.primaryColor)
+          ],
+          config: BezierChartConfig(
+            showVerticalIndicator: true,
+            physics: const BouncingScrollPhysics(),
+            displayDataPointWhenNoValue: false,
+            verticalIndicatorColor: Colors.grey[400],
+            // updatePositionOnTap: true,
+            // snap: true,
+            pinchZoom: true,
+            footerHeight: SizeConfig.blockSizeVertical*5,
+            xAxisTextStyle: TextStyle(color: Color(0xff484848), fontSize: SizeConfig.smallTextSize*1.2)
+          ),
+        )
+      ),
+    );
+  }
+
+  Widget _returnMonthlyGoldChart() {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: _height * 0.02,
+      ),
+      height: _height * 0.35,
+      width: SizeConfig.screenWidth*0.9,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child:  new BezierChart(
+          bezierChartScale: BezierChartScale.MONTHLY,
+          fromDate: (_selectedFrequency!=0)?_dataPoints[0].timestamp:_lastDate.subtract(Duration(hours: 17520)),
+          bezierChartAggregation: BezierChartAggregation.AVERAGE,
+          toDate: _lastDate,
+          selectedDate: _lastDate,
+          series: [
+            BezierLine(data: _bezierPointsMonthly, label: 'Gold Rate(₹/gm)', lineColor: UiConstants.primaryColor)
+          ],
+          config: BezierChartConfig(
+            showVerticalIndicator: true,
+            physics: const BouncingScrollPhysics(),
+            displayDataPointWhenNoValue: false,
+            verticalIndicatorColor: Colors.grey[400],
+            // updatePositionOnTap: true,
+            // snap: true,
+            pinchZoom: true,
+            footerHeight: SizeConfig.blockSizeVertical*5,
+            xAxisTextStyle: TextStyle(color: Color(0xff484848), fontSize: SizeConfig.smallTextSize*1.2)
+          ),
+        )
+      ),
+    );
+  }
+
+  Widget _returnYearlyGoldChart() {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: _height * 0.02,
+      ),
+      height: _height * 0.35,
+      width: SizeConfig.screenWidth*0.9,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child:  new BezierChart(
+          bezierChartScale: BezierChartScale.YEARLY,
+          fromDate: (_selectedFrequency!=0)?_dataPoints[0].timestamp:_lastDate.subtract(Duration(hours: 17520)),
+          bezierChartAggregation: BezierChartAggregation.AVERAGE,
+          toDate: _lastDate,
+          selectedDate: _lastDate,
+          series: [
+            BezierLine(data: _bezierPointsYearly, label: 'Gold Rate(₹/gm)', lineColor: UiConstants.primaryColor)
+          ],
+          config: BezierChartConfig(
+            showVerticalIndicator: true,
+            physics: const BouncingScrollPhysics(),
+            displayDataPointWhenNoValue: false,
+            verticalIndicatorColor: Colors.grey[400],
+            // updatePositionOnTap: true,
+            // snap: true,
+            pinchZoom: true,
+            footerHeight: SizeConfig.blockSizeVertical*5,
+            xAxisTextStyle: TextStyle(color: Color(0xff484848), fontSize: SizeConfig.smallTextSize*1.2)
+          ),
+        )
+      ),
+    );
   }
 }

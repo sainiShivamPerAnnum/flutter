@@ -718,4 +718,5 @@ class BaseUtil extends ChangeNotifier {
   set userTicketWallet(UserTicketWallet value) {
     _userTicketWallet = value;
   }
+
 }
