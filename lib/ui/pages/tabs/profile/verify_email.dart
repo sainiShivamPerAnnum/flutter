@@ -7,6 +7,7 @@ import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -122,25 +123,33 @@ class VerifyEmailState extends State<VerifyEmail> {
   }
 
   generateOtp() {
+    setState(() {
+      _isProcessing = true;
+    });
     var rnd = new math.Random();
     var next = rnd.nextDouble() * 1000000;
     while (next < 100000) {
       next *= 10;
     }
     generatedOTP = next.toInt().toString();
+    print(generatedOTP);
+    sendEmail();
   }
 
   sendEmail() {
     if (formKey.currentState.validate()) {
       dbProvider
-          .sendEmailToVerifyEmail(
-              email.text, generatedOTP, baseProvider.myUser.name)
+          .sendEmailToVerifyEmail(email.text.trim(), generatedOTP)
           .then((res) {
         if (res) {
           setState(() {
             _isOtpSent = true;
+            _isProcessing = false;
           });
         } else {
+          setState(() {
+            _isProcessing = false;
+          });
           baseProvider.showNegativeAlert(
               "Oops, we ran into trouble",
               "Email cannot be verified at the moment, please try in sometime.",
@@ -156,12 +165,13 @@ class VerifyEmailState extends State<VerifyEmail> {
       _isVerifying = true;
     });
     if (generatedOTP == otp.text) {
+      baseProvider.myUser.email = email.text.trim();
       baseProvider.myUser.isEmailVerified = true;
       bool res = await dbProvider.updateUser(baseProvider.myUser);
+      setState(() {
+        _isVerifying = false;
+      });
       if (res) {
-        setState(() {
-          _isVerifying = false;
-        });
         baseProvider.showPositiveAlert("Success",
             "Email Verified,refresh your app once to unlock features", context);
         backButtonDispatcher.didPopRoute();
@@ -169,7 +179,11 @@ class VerifyEmailState extends State<VerifyEmail> {
         baseProvider.showNegativeAlert("Oops! we ran into problem",
             "Email cannot be verified at the moment", context);
       }
-    } else {}
+    } else {
+      setState(() {
+        _isOtpIncorrect = true;
+      });
+    }
   }
 
   verifyGmail() async {
@@ -190,12 +204,26 @@ class VerifyEmailState extends State<VerifyEmail> {
         baseProvider.showPositiveAlert("Success",
             "Email Verified,refresh your app once to unlock features", context);
         Navigator.pop(context);
-
         backButtonDispatcher.didPopRoute();
       } else {
         baseProvider.showNegativeAlert("Oops! we ran into problem",
             "Email cannot be verified at the moment", context);
       }
+    } else {
+      setState(() {
+        _isProcessing = false;
+      });
+      baseProvider.showNegativeAlert("No account selected",
+          "Please select any of the google accounts", context);
+    }
+  }
+
+  confirmAction() {
+    if (!_isVerifying && !_isProcessing) {
+      if (_isOtpSent)
+        verifyOtp();
+      else
+        generateOtp();
     }
   }
 
@@ -233,7 +261,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                     padding: EdgeInsets.only(top: 30, bottom: 10),
                     child: TextFormField(
                       controller: email,
-                      enabled: _isEmailEnabled,
+                      enabled: _isProcessing ? false : true,
                       cursorColor: Colors.black,
                       keyboardType: TextInputType.text,
                       validator: (val) {
@@ -377,7 +405,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                     : SizedBox(),
                 Spacer(),
                 InkWell(
-                  onTap: generateOtp,
+                  onTap: confirmAction,
                   child: Container(
                     margin: EdgeInsets.symmetric(vertical: 24),
                     width: SizeConfig.screenWidth -
@@ -388,13 +416,18 @@ class VerifyEmailState extends State<VerifyEmail> {
                       color: UiConstants.primaryColor,
                     ),
                     alignment: Alignment.center,
-                    child: _isVerifying
-                        ? CircularProgressIndicator(
-                            color: Colors.white,
+                    child: _isVerifying || _isProcessing
+                        ? SpinKitThreeBounce(
+                            color: UiConstants.spinnerColor2,
+                            size: 18.0,
                           )
                         : Text(
-                            "Verify",
-                            style: TextStyle(color: Colors.white),
+                            _isOtpSent ? "Verify" : "Send OTP",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: SizeConfig.mediumTextSize,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                   ),
                 )

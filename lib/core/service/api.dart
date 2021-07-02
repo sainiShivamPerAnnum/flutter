@@ -518,8 +518,7 @@ class Api {
     }
   }
 
-  Future<bool> createEmailVerificationDocument(
-      String email, String otp, String username) async {
+  Future<bool> createEmailVerificationDocument(String email, String otp) async {
     String htmlCode = """ 
         <div style="font-family: Montserrat,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
         <div style="margin:50px auto;width:70%;padding:20px 0">

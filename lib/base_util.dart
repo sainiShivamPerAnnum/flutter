@@ -207,7 +207,7 @@ class BaseUtil extends ChangeNotifier {
         color: UiConstants.accentColor, //change your color here
       ),
       title: Text('${Constants.APP_NAME}',
-          style: TextStyle(
+          style: GoogleFonts.montserrat(
               color: Colors.white,
               fontWeight: FontWeight.w500,
               fontSize: SizeConfig.largeTextSize)),

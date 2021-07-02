@@ -90,6 +90,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                         width: 24,
                       ),
                       title: Text("Continue with Google"),
+                      subtitle: Text("No verification required"),
                       onTap: () async {
                         final GoogleSignInAccount googleUser =
                             await GoogleSignIn().signIn();
@@ -102,6 +103,11 @@ class NameInputScreenState extends State<NameInputScreen> {
                             emailText = googleUser.email;
                           });
                           Navigator.pop(context);
+                        } else {
+                          baseProvider.showNegativeAlert(
+                              "No account selected",
+                              "please choose any of the google accounts",
+                              context);
                         }
                       },
                     ),
