@@ -20,6 +20,8 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
   List<GoldGraphPoint> _dataPoints;
   List<DataPoint<DateTime>> _bezierPoints = [];
   List<DataPoint<DateTime>> _bezierPointsMonthly =[], _bezierPointsYearly=[];
+  List<DataPoint<double>> _bezierPointsCustom = [];
+  Map<double, DateTime> _bezierPointsCustomMap = {};
   String _dataPointsState = "loading";
   int _selectedFrequency = 1;
   DateTime _lastDate;
@@ -33,9 +35,12 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
       print('loading');
       _getDataPoints().then((value){
         if(value!=null) { 
-          _dataPoints = value; 
+          _dataPoints = value;
+          double _a = 1;
           for(var v in _dataPoints) {
             _bezierPoints.add(DataPoint(value: v.rate, xAxis: v.timestamp));
+            _bezierPointsCustom.add(DataPoint(value: v.rate, xAxis: _a));
+            _bezierPointsCustomMap[_a++] = v.timestamp;
           }
           _lastDate = _dataPoints[_dataPoints.length-1].timestamp;
           _bezierPointsMonthly.addAll(_bezierPoints);
@@ -221,16 +226,15 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
         padding: const EdgeInsets.all(8.0),
         child:  new BezierChart(
           bezierChartScale: BezierChartScale.CUSTOM,
-          xAxisCustomValues: [],
-          fromDate: (_selectedFrequency!=0)?_dataPoints[0].timestamp:_lastDate.subtract(Duration(hours: 672)),
+          xAxisCustomValues: _bezierPointsCustomMap.keys.toList(),
+          xAxisCustomValueDates: _bezierPointsCustomMap,
           bezierChartAggregation: BezierChartAggregation.AVERAGE,
           footerDateTimeBuilder: (date,value) {
             return date.day.toString()+'/'+date.month.toString()+'/'+date.year.toString().substring(2,4);
           },
-          toDate: _lastDate,
           selectedDate: _lastDate,
           series: [
-            BezierLine(data: _bezierPoints, label: 'Gold Rate(₹/gm)', lineColor: UiConstants.primaryColor)
+            BezierLine(data: _bezierPointsCustom, label: 'Gold Rate(₹/gm)', lineColor: UiConstants.primaryColor)
           ],
           config: BezierChartConfig(
             showVerticalIndicator: true,

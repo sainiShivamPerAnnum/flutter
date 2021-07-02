@@ -26,6 +26,7 @@ class BezierChart extends StatefulWidget {
   ///This value is required only if the `BezierChartScale` is `BezierChartScale.CUSTOM`
   ///and these values must be sorted in increasing way (These will be showed in the Axis X).
   final List<double> xAxisCustomValues;
+  final Map<double, DateTime> xAxisCustomValueDates;
 
   ///[Optional] This callback only works if the `BezierChartScale` is `BezierChartScale.CUSTOM` otherwise it will be ignored
   ///This is used to display a custom footer value based on the current 'x' value
@@ -81,6 +82,7 @@ class BezierChart extends StatefulWidget {
     Key key,
     this.config,
     this.xAxisCustomValues,
+    this.xAxisCustomValueDates,
     this.footerValueBuilder,
     this.bubbleLabelValueBuilder,
     this.footerDateTimeBuilder,
@@ -288,7 +290,7 @@ class BezierChartState extends State<BezierChart>
     final scale = _currentBezierChartScale;
     if (scale == BezierChartScale.CUSTOM) {
       _xAxisDataPoints = widget.xAxisCustomValues
-          .map((val) => DataPoint<double>(value: val, xAxis: val))
+          .map((val) => DataPoint<DateTime>(value: val, xAxis: widget.xAxisCustomValueDates[val]))
           .toList();
     } else if (scale == BezierChartScale.HOURLY) {
       final hours = widget.toDate.difference(widget.fromDate).inHours;
