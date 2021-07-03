@@ -172,7 +172,7 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
         width: SizeConfig.screenWidth * 0.2,
         child: Text(
           '$title: ',
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             color: UiConstants.accentColor,
             fontSize: SizeConfig.mediumTextSize,
           ),
@@ -183,7 +183,7 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
         child: Text(
           value,
           overflow: TextOverflow.clip,
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             color: Colors.black54,
             fontSize: SizeConfig.mediumTextSize,
             fontWeight: FontWeight.w500,

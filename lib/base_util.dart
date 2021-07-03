@@ -189,7 +189,7 @@ class BaseUtil extends ChangeNotifier {
     try {
       var unreadCount = await Freshchat.getUnreadCountAsync;
       return (unreadCount['count'] > 0);
-    }catch(e) {
+    } catch (e) {
       log.error('Error reading unread count variable: $e');
       return false;
     }
@@ -626,8 +626,23 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setUserName(String newName) {
+  void setName(String newName) {
     myUser.name = newName;
+    notifyListeners();
+  }
+
+  void setUsername(String userName) {
+    myUser.username = userName;
+    notifyListeners();
+  }
+
+  void setEmailVerified() {
+    myUser.isEmailVerified = true;
+    notifyListeners();
+  }
+
+  void setEmail(String email) {
+    myUser.email = email;
     notifyListeners();
   }
 
@@ -635,8 +650,7 @@ class BaseUtil extends ChangeNotifier {
     _dbModel.getUserFundWallet(myUser.uid).then((aValue) {
       if (aValue != null) {
         userFundWallet = aValue;
-        if (userFundWallet.augGoldQuantity > 0)
-          _updateAugmontBalance();
+        if (userFundWallet.augGoldQuantity > 0) _updateAugmontBalance();
       }
     });
   }
@@ -652,8 +666,8 @@ class BaseUtil extends ChangeNotifier {
 
       augmontGoldRates = currRates;
       double gSellRate = augmontGoldRates.goldSellPrice;
-      userFundWallet.augGoldBalance = BaseUtil.digitPrecision(
-          userFundWallet.augGoldQuantity * gSellRate);
+      userFundWallet.augGoldBalance =
+          BaseUtil.digitPrecision(userFundWallet.augGoldQuantity * gSellRate);
       notifyListeners(); //might cause ui error if screen no longer active
     }).catchError((err) {
       print('$err');

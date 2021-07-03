@@ -200,7 +200,7 @@ class _TransactionsState extends State<Transactions> {
           ),
           title: Text(
             "Transactions",
-            style: GoogleFonts.montserrat(
+            style: TextStyle(
               color: Colors.white,
             ),
           ),
@@ -217,7 +217,7 @@ class _TransactionsState extends State<Transactions> {
                   children: [
                     // Text(
                     //   "Filters",
-                    //   style: GoogleFonts.montserrat(
+                    //   style: TextStyle(
                     //       fontSize: SizeConfig.mediumTextSize,
                     //       fontWeight: FontWeight.w700),
                     // ),
@@ -236,7 +236,7 @@ class _TransactionsState extends State<Transactions> {
                               DropdownMenuItem(
                                 child: Text(
                                   "All",
-                                  style: GoogleFonts.montserrat(
+                                  style: TextStyle(
                                       fontSize: SizeConfig.mediumTextSize),
                                 ),
                                 value: 1,
@@ -244,7 +244,7 @@ class _TransactionsState extends State<Transactions> {
                               DropdownMenuItem(
                                 child: Text(
                                   "Deposit",
-                                  style: GoogleFonts.montserrat(
+                                  style: TextStyle(
                                       fontSize: SizeConfig.mediumTextSize),
                                 ),
                                 value: 2,
@@ -252,14 +252,14 @@ class _TransactionsState extends State<Transactions> {
                               DropdownMenuItem(
                                   child: Text(
                                     "Withdrawal",
-                                    style: GoogleFonts.montserrat(
+                                    style: TextStyle(
                                         fontSize: SizeConfig.mediumTextSize),
                                   ),
                                   value: 3),
                               DropdownMenuItem(
                                   child: Text(
                                     "Prize",
-                                    style: GoogleFonts.montserrat(
+                                    style: TextStyle(
                                         fontSize: SizeConfig.mediumTextSize),
                                   ),
                                   value: 4),
@@ -288,7 +288,7 @@ class _TransactionsState extends State<Transactions> {
                               DropdownMenuItem(
                                 child: Text(
                                   "All",
-                                  style: GoogleFonts.montserrat(
+                                  style: TextStyle(
                                       fontSize: SizeConfig.mediumTextSize),
                                 ),
                                 value: 1,
@@ -296,14 +296,14 @@ class _TransactionsState extends State<Transactions> {
                               DropdownMenuItem(
                                   child: Text(
                                     "ICICI",
-                                    style: GoogleFonts.montserrat(
+                                    style: TextStyle(
                                         fontSize: SizeConfig.mediumTextSize),
                                   ),
                                   value: 2),
                               DropdownMenuItem(
                                   child: Text(
                                     "Augmont",
-                                    style: GoogleFonts.montserrat(
+                                    style: TextStyle(
                                         fontSize: SizeConfig.mediumTextSize),
                                   ),
                                   value: 3),
@@ -337,7 +337,7 @@ class _TransactionsState extends State<Transactions> {
                               ),
                               Text(
                                 "No transactions to show yet",
-                                style: GoogleFonts.montserrat(
+                                style: TextStyle(
                                   fontSize: SizeConfig.largeTextSize,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -380,13 +380,13 @@ class _TransactionsState extends State<Transactions> {
           getTileTitle(
             filteredList[index].subType.toString(),
           ),
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             fontSize: SizeConfig.mediumTextSize,
           ),
         ),
         subtitle: Text(
           getTileSubtitle(filteredList[index].type),
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             color: getTileColor(filteredList[index].tranStatus),
             fontSize: SizeConfig.smallTextSize,
           ),
@@ -397,14 +397,14 @@ class _TransactionsState extends State<Transactions> {
             Text(
               (filteredList[index].type == "WITHDRAWAL" ? "- " : "+ ") +
                   "₹ ${filteredList[index].amount.toString()}",
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 color: getTileColor(filteredList[index].tranStatus),
                 fontSize: SizeConfig.mediumTextSize,
               ),
             ),
             Text(
               _getFormattedTime(filteredList[index].timestamp),
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                   color: getTileColor(filteredList[index].tranStatus),
                   fontSize: SizeConfig.smallTextSize),
             )

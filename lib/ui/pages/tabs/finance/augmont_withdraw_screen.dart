@@ -66,7 +66,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
         ),
         title: Text(
           "Withdrawal",
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w500,
           ),
@@ -404,7 +404,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
         width: SizeConfig.screenWidth * 0.2,
         child: Text(
           '$title: ',
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             color: UiConstants.accentColor,
             fontSize: SizeConfig.mediumTextSize,
           ),
@@ -415,7 +415,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
         child: Text(
           value,
           overflow: TextOverflow.clip,
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             color: Colors.black54,
             fontSize: SizeConfig.mediumTextSize,
             fontWeight: FontWeight.bold,
@@ -433,7 +433,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
         width: SizeConfig.screenWidth * 0.2,
         child: Text(
           '$title: ',
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             color: UiConstants.accentColor,
             fontSize: SizeConfig.mediumTextSize,
           ),
@@ -447,7 +447,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
               Text(
                 '$value ',
                 overflow: TextOverflow.clip,
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                   color: Colors.black54,
                   fontSize: SizeConfig.mediumTextSize,
                   fontWeight: FontWeight.bold,

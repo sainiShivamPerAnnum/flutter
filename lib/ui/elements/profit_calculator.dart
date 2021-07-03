@@ -32,7 +32,7 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
-    outputprice = price + price * (0.06/12) * months;
+    outputprice = price + price * (0.06 / 12) * months;
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: _height * 0.02,
@@ -57,7 +57,7 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
             "PROFIT CALCULATOR",
             style: TextStyle(
               fontWeight: FontWeight.w700,
-              fontSize: 24,
+              fontSize: SizeConfig.largeTextSize,
             ),
           ),
           SizedBox(
@@ -84,6 +84,10 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
                           contentPadding: EdgeInsets.only(
                               left: 15, bottom: 11, top: 11, right: 15),
                           hintText: price.toString(),
+                          enabledBorder:
+                              OutlineInputBorder(borderSide: BorderSide.none),
+                          focusedBorder:
+                              OutlineInputBorder(borderSide: BorderSide.none),
                         ),
                         onChanged: (value) {
                           setState(() {
@@ -148,11 +152,12 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
             activeColor: UiConstants.primaryColor,
             inactiveColor: UiConstants.primaryColor,
           ),
-          Text('*Projected returns based on past 6 month performance',
+          Text(
+            '*Projected returns based on past 6 month performance',
             style: TextStyle(
                 color: Colors.blueGrey[600],
-                fontSize: SizeConfig.smallTextSize*1.2
-            ),)
+                fontSize: SizeConfig.smallTextSize * 1.2),
+          )
         ],
       ),
     );

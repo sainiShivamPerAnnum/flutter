@@ -12,8 +12,9 @@ class SizeConfig {
   static double largeTextSize;
   static double cardTitleTextSize;
 
+  static BorderRadius homeViewBorder;
+
   static bool isGamefirstTime;
-  static bool showTutorial;
 
   void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
@@ -21,11 +22,15 @@ class SizeConfig {
     screenHeight = _mediaQueryData.size.height;
     blockSizeHorizontal = screenWidth / 100;
     blockSizeVertical = screenHeight / 100;
-    smallTextSize = screenHeight * 0.01;
-    mediumTextSize = screenWidth * 0.036;
-    largeTextSize = screenWidth * 0.05;
-    cardTitleTextSize = screenWidth * 0.07;
+    smallTextSize = blockSizeHorizontal * 2.8;
+    mediumTextSize = blockSizeHorizontal * 3.6;
+    largeTextSize = blockSizeHorizontal * 5;
+    cardTitleTextSize = blockSizeHorizontal * 7;
     isGamefirstTime = true;
-    showTutorial = true;
+
+    homeViewBorder = BorderRadius.only(
+      bottomLeft: Radius.circular(SizeConfig.blockSizeHorizontal * 10),
+      bottomRight: Radius.circular(SizeConfig.blockSizeHorizontal * 10),
+    );
   }
 }

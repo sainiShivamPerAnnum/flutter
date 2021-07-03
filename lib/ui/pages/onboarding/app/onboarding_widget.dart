@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/dots_indicator.dart';
 import 'package:felloapp/ui/pages/onboarding/app/screens/page1.dart';
 import 'package:felloapp/ui/pages/onboarding/app/screens/page2.dart';
@@ -54,6 +56,7 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final stateProvider = Provider.of<AppState>(context, listen: false);
     return new Scaffold(
         backgroundColor: Colors.transparent,
         body: new Stack(
@@ -143,8 +146,11 @@ class _OnboardingMainPageState extends State<OnboardingMainPage> {
                                 //onboardProvider.saveOnboardStatus(true);
                                 _controller.dispose();
                                 // Navigator.of(context).pop();
-                                Navigator.of(context)
-                                    .pushReplacementNamed('/login');
+                                // Navigator.of(context)
+                                //     .pushReplacementNamed('/login');
+                                // stateProvider.currentAction = PageAction(
+                                //     state: PageState.replace,
+                                //     page: LoginPageConfig);
                               },
                               highlightColor: Colors.orange.withOpacity(0.5),
                               splashColor: Colors.orange.withOpacity(0.5),

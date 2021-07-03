@@ -120,10 +120,7 @@ class _GamePageState extends State<GamePage> {
       child: Container(
         decoration: BoxDecoration(
           color: UiConstants.backgroundColor,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(50),
-            bottomRight: Radius.circular(50),
-          ),
+          borderRadius: SizeConfig.homeViewBorder,
         ),
         child: Stack(
           children: [
@@ -137,28 +134,30 @@ class _GamePageState extends State<GamePage> {
                 ),
               ),
             ),
-            PageView(
-              scrollDirection: Axis.vertical,
-              controller: _controller,
-              onPageChanged: (int page) {
-                appState.setCurrentGameTabIndex = page;
-                if (appState.getCurrentGameTabIndex == 1 &&
-                    SizeConfig.isGamefirstTime == true) {
-                  checkConfetti();
-                }
-              },
-              children: [
-                ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(50),
-                      bottomRight: Radius.circular(50),
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: AppBar().preferredSize.height * 2,
-                        ),
-                        InkWell(
+            SafeArea(
+              child: PageView(
+                scrollDirection: Axis.vertical,
+                controller: _controller,
+                onPageChanged: (int page) {
+                  setState(() {
+                    appState.setCurrentGameTabIndex = page;
+                  });
+                  if (appState.getCurrentGameTabIndex == 1 &&
+                      SizeConfig.isGamefirstTime == true) {
+                    checkConfetti();
+                  }
+                },
+                children: [
+                  ClipRRect(
+                    borderRadius: SizeConfig.homeViewBorder,
+                    child: Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Spacer(
+                            flex: 2,
+                          ),
+                          InkWell(
                             onTap: () {
                               HapticFeedback.vibrate();
                               showDialog(
@@ -169,25 +168,32 @@ class _GamePageState extends State<GamePage> {
                               );
                             },
                             child: BaseUtil.buildShowcaseWrapper(
-                                _showcaseHeader,
-                                'Your game tickets appear here. You receive 1 game ticket for every ₹${Constants.INVESTMENT_AMOUNT_FOR_TICKET} you save. You can also click here to see a further breakdown.',
-                                TicketCount(baseProvider.userTicketWallet
-                                    .getActiveTickets()))),
-                        Expanded(
-                          flex: 4,
-                          child: BaseUtil.buildShowcaseWrapper(
-                              _showcaseFooter,
-                              'Use the tickets to play exciting weekly games and win fun prizes!',
-                              GameCardList(
-                                games: _gameList,
-                                onGameChange: _handleGameChange,
-                              )),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Container(
+                              _showcaseHeader,
+                              'Your game tickets appear here. You receive 1 game ticket for every ₹${Constants.INVESTMENT_AMOUNT_FOR_TICKET} you save. You can also click here to see a further breakdown.',
+                              TicketCount(baseProvider.userTicketWallet
+                                  .getActiveTickets()),
+                            ),
+                          ),
+                          Spacer(
+                            flex: 1,
+                          ),
+                          BaseUtil.buildShowcaseWrapper(
+                            _showcaseFooter,
+                            'Use the tickets to play exciting weekly games and win fun prizes!',
+                            GameCardList(
+                              games: _gameList,
+                              onGameChange: _handleGameChange,
+                            ),
+                          ),
+                          Spacer(
+                            flex: 1,
+                          ),
+                          Container(
+                            height: SizeConfig.screenHeight * 0.2,
                             width: SizeConfig.screenWidth,
                             child: ListView(
+                              shrinkWrap: true,
+                              itemExtent: SizeConfig.screenWidth * 0.8,
                               scrollDirection: Axis.horizontal,
                               physics: BouncingScrollPhysics(),
                               children: [
@@ -199,8 +205,9 @@ class _GamePageState extends State<GamePage> {
                                   title: "Want more tickets?",
                                   action: [
                                     GameOfferCardButton(
-                                      onPressed: () =>
-                                          delegate.parseRoute(Uri.parse("finance")),
+                                      onPressed: () => delegate
+                                          .parseRoute(Uri.parse("finance")),
+
                                       ///TODO remove post testing
                                       // onPressed: () => showDialog(
                                       //   context: context,
@@ -235,7 +242,7 @@ class _GamePageState extends State<GamePage> {
                                     Color(0xffD4AC5B),
                                     Color(0xffDECBA4),
                                   ],
-                                  title: "Share your thoughts with us",
+                                  title: "Share your thoughts",
                                   action: [
                                     GameOfferCardButton(
                                       onPressed: () {
@@ -273,7 +280,8 @@ class _GamePageState extends State<GamePage> {
                                                                   .uid,
                                                           fdbk)
                                                       .then((flag) {
-                                                    Navigator.of(context).pop();
+                                                    backButtonDispatcher
+                                                        .didPopRoute();
                                                     if (flag) {
                                                       baseProvider
                                                           .showPositiveAlert(
@@ -287,46 +295,6 @@ class _GamePageState extends State<GamePage> {
                                             ),
                                           ),
                                         );
-                                        // AppState.screenStack
-                                        //     .add(ScreenItem.dialog);
-                                        // showDialog(
-                                        //   context: context,
-                                        //   builder: (BuildContext context) =>
-                                        //       FeedbackDialog(
-                                        //     title: "Tell us what you think",
-                                        //     description:
-                                        //         "We'd love to hear from you",
-                                        //     buttonText: "Submit",
-                                        //     dialogAction: (String fdbk) {
-                                        //       if (fdbk != null &&
-                                        //           fdbk.isNotEmpty) {
-                                        //         //feedback submission allowed even if user not signed in
-                                        //         dbProvider
-                                        //             .submitFeedback(
-                                        //                 (baseProvider.firebaseUser ==
-                                        //                             null ||
-                                        //                         baseProvider
-                                        //                                 .firebaseUser
-                                        //                                 .uid ==
-                                        //                             null)
-                                        //                     ? 'UNKNOWN'
-                                        //                     : baseProvider
-                                        //                         .firebaseUser
-                                        //                         .uid,
-                                        //                 fdbk)
-                                        //             .then((flag) {
-                                        //           Navigator.of(context).pop();
-                                        //           if (flag) {
-                                        //             baseProvider.showPositiveAlert(
-                                        //                 'Thank You',
-                                        //                 'We appreciate your feedback!',
-                                        //                 context);
-                                        //           }
-                                        //         });
-                                        //       }
-                                        //     },
-                                        //   ),
-                                        // );
                                       },
                                       title: "Feedback",
                                     ),
@@ -335,21 +303,27 @@ class _GamePageState extends State<GamePage> {
                               ],
                             ),
                           ),
-                        ),
-                      ],
-                    )),
-                Container(
-                  child: Column(
-                    children: [
-                      Container(
-                        height: AppBar().preferredSize.height,
+                          Spacer(
+                            flex: 1,
+                          )
+                        ],
                       ),
-                      WeekWinnerBoard(),
-                      Leaderboard(),
-                    ],
+                    ),
                   ),
-                )
-              ],
+                  ClipRRect(
+                    borderRadius: SizeConfig.homeViewBorder,
+                    child: Column(
+                      children: [
+                        Container(
+                          height: kToolbarHeight * 0.8,
+                        ),
+                        WeekWinnerBoard(),
+                        Leaderboard(),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
             Container(
               height: 100,
@@ -384,7 +358,7 @@ class _GamePageState extends State<GamePage> {
                           ),
                           Text(
                             "Swipe up to see prizes and leaderboards",
-                            style: GoogleFonts.montserrat(
+                            style: TextStyle(
                               fontSize: 8,
                             ),
                           ),
@@ -461,12 +435,12 @@ class _TicketCountState extends State<TicketCount>
             style: GoogleFonts.montserrat(
               color: Colors.white,
               fontSize: SizeConfig.screenHeight * 0.08,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w500,
             ),
           ),
           Text(
             "Tickets",
-            style: GoogleFonts.montserrat(
+            style: TextStyle(
                 color: Colors.white, fontSize: SizeConfig.mediumTextSize),
           ),
         ],
@@ -484,75 +458,60 @@ class GameCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    return Container(
-      margin: EdgeInsets.only(
-        bottom: SizeConfig.screenHeight * 0.05,
-        left: width * 0.05,
-      ),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          gradient: new LinearGradient(
-            colors: gradient,
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
+    return Wrap(
+      children: [
+        Container(
+          margin: EdgeInsets.only(
+            left: SizeConfig.blockSizeHorizontal * 5,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: gradient[0].withOpacity(0.3),
-              offset: Offset(5, 5),
-              blurRadius: 10,
-            ),
-            BoxShadow(
-              color: gradient[1].withOpacity(0.3),
-              offset: Offset(5, 5),
-              blurRadius: 10,
-            ),
-          ]),
-      width: width * 0.8,
-      child: Stack(
-        children: [
-          // Positioned(
-          //   right: 10,
-          //   bottom: 0,
-          //   child: Opacity(
-          //     opacity: 0.3,
-          //     child: Image.asset(
-          //       asset,
-          //       height: height * 0.25,
-          //       width: width * 0.5,
-          //     ),
-          //   ),
-          // ),
-          Container(
-            width: width * 0.8,
-            padding: EdgeInsets.all(width * 0.05),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: GoogleFonts.montserrat(
-                      color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          offset: Offset(5, 5),
-                          color: Colors.black26,
-                          blurRadius: 10,
-                        )
-                      ],
-                      fontWeight: FontWeight.w700,
-                      fontSize: width * 0.06),
+          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              gradient: new LinearGradient(
+                colors: gradient,
+                begin: Alignment.bottomLeft,
+                end: Alignment.topRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: gradient[0].withOpacity(0.3),
+                  offset: Offset(5, 5),
+                  blurRadius: 10,
                 ),
-                Row(
-                  children: action,
-                )
-              ],
-            ),
-          )
-        ],
-      ),
+                BoxShadow(
+                  color: gradient[1].withOpacity(0.3),
+                  offset: Offset(5, 5),
+                  blurRadius: 10,
+                ),
+              ]),
+          width: SizeConfig.screenWidth * 0.8,
+          height: SizeConfig.screenHeight * 0.16,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        offset: Offset(5, 5),
+                        color: Colors.black26,
+                        blurRadius: 10,
+                      )
+                    ],
+                    fontWeight: FontWeight.w700,
+                    fontSize: SizeConfig.screenWidth * 0.06),
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: action,
+              )
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -566,32 +525,33 @@ class GameOfferCardButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          border: Border.all(
-            width: 2,
-            color: Colors.white,
+      child: GestureDetector(
+        onTap: onPressed,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+            border: Border.all(
+              width: 2,
+              color: Colors.white,
+            ),
+            color: Colors.transparent,
+            // boxShadow: [
+            //   BoxShadow(
+            //       color: gradient[0].withOpacity(0.2),
+            //       blurRadius: 20,
+            //       offset: Offset(5, 5),
+            //       spreadRadius: 10),
+            // ],
+            borderRadius: BorderRadius.circular(100),
           ),
-          color: Colors.transparent,
-          // boxShadow: [
-          //   BoxShadow(
-          //       color: gradient[0].withOpacity(0.2),
-          //       blurRadius: 20,
-          //       offset: Offset(5, 5),
-          //       spreadRadius: 10),
-          // ],
-          borderRadius: BorderRadius.circular(100),
-        ),
-        child: Text(
-          title,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.montserrat(
-              color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+          ),
         ),
       ),
-    ));
+    );
   }
 }
