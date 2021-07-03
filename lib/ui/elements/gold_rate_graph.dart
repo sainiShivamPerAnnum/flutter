@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:felloapp/ui/elements/graph/bezier_chart_custom_config.dart';
 import 'package:felloapp/ui/elements/graph/bezier_chart_custom_widget.dart';
 import 'package:felloapp/ui/elements/graph/bezier_custom_line.dart';
@@ -36,12 +38,38 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
       _getDataPoints().then((value){
         if(value!=null) { 
           _dataPoints = value;
+          _dataPoints.sort((a,b)=> a.timestamp.compareTo(b.timestamp));
           double _a = 1;
-          for(var v in _dataPoints) {
-            _bezierPoints.add(DataPoint(value: v.rate, xAxis: v.timestamp));
-            if(v.timestamp.month % 3 == 0) {
-              _bezierPointsCustom.add(DataPoint(value: v.rate, xAxis: _a));
-              _bezierPointsCustomMap[_a++] = v.timestamp;
+          // for(var v in _dataPoints) {
+          //   _bezierPoints.add(DataPoint(value: v.rate, xAxis: v.timestamp));
+          //   if(v.timestamp.month % 3 == 0) {
+          //    _bezierPointsCustom.add(DataPoint(value: v.rate, xAxis: _a));
+          //    _bezierPointsCustomMap[_a++] = v.timestamp;
+          //   }
+          // }
+          for(int i=0;i<_dataPoints.length;i++) {
+            _bezierPoints.add(DataPoint(value: _dataPoints[i].rate, xAxis: _dataPoints[i].timestamp));
+            print('at i : $i' );
+            if(_dataPoints[i].timestamp.month%3==0) {
+              double rateSum = _dataPoints[i].rate;
+              int j = i+1;
+              int count = 1;
+              while(_dataPoints[j].timestamp.month==_dataPoints[i].timestamp.month && _dataPoints[j].timestamp.year==_dataPoints[i].timestamp.year && j<_dataPoints.length) {
+                _bezierPoints.add(DataPoint(value: _dataPoints[j].rate, xAxis: _dataPoints[j].timestamp));
+                rateSum += _dataPoints[j].rate;
+                count++;
+                j++;
+              }
+              if(count>1) {
+                --j;
+                i=j;
+              }
+              int decimalPlaces = 2;
+              int fac = pow(10, decimalPlaces);
+              double averagedValue = (rateSum/count);
+              averagedValue = (averagedValue * fac).round() / fac;
+              _bezierPointsCustom.add(DataPoint(value: averagedValue, xAxis: _a));
+              _bezierPointsCustomMap[_a++] = _dataPoints[i].timestamp;
             }
           }
           _lastDate = _dataPoints[_dataPoints.length-1].timestamp;
@@ -90,7 +118,7 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text('Weekly',style: TextStyle(color: (_selectedFrequency==0)?Colors.white:Colors.black,),),
+                    child: Text('Quarterly',style: TextStyle(color: (_selectedFrequency==0)?Colors.white:Colors.black,),),
                   ),
                 ),
               ),
@@ -162,9 +190,12 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
        _res = await augmontProvider.getGoldRateChart(DateTime(2019,1,1), DateTime.now());
        final Map<DateTime, double> line1 = {
         DateTime.utc(2018, 03, 19): 3130,
+        DateTime.utc(2018, 03, 21): 4000,
+        DateTime.utc(2018, 03, 22): 3800,
         DateTime.utc(2018, 04, 29): 3199,
         DateTime.utc(2018, 05, 30): 3205,
         DateTime.utc(2018, 06, 10): 3152,
+        DateTime.utc(2018, 06, 11): 3350,
         DateTime.utc(2018, 07, 18): 3053,
         DateTime.utc(2018, 08, 03): 3118,
         DateTime.utc(2018, 09, 02): 3138,
@@ -223,7 +254,7 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
         horizontal: _height * 0.02,
       ),
       height: _height * 0.35,
-      width: SizeConfig.screenWidth*0.9,
+      width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child:  new BezierChart(
@@ -243,8 +274,8 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
             physics: const BouncingScrollPhysics(),
             displayDataPointWhenNoValue: false,
             verticalIndicatorColor: Colors.grey[400],
-            // updatePositionOnTap: true,
-            // snap: true,
+            updatePositionOnTap: true,
+            snap: true,
             pinchZoom: true,
             footerHeight: SizeConfig.blockSizeVertical*5,
             xAxisTextStyle: TextStyle(color: Color(0xff484848), fontSize: SizeConfig.smallTextSize*1.2)
@@ -260,12 +291,12 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
         horizontal: _height * 0.02,
       ),
       height: _height * 0.35,
-      width: SizeConfig.screenWidth*0.9,
+      width: double.infinity,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(0.0),
         child:  new BezierChart(
           bezierChartScale: BezierChartScale.MONTHLY,
-          fromDate: (_selectedFrequency!=0)?_dataPoints[0].timestamp:_lastDate.subtract(Duration(hours: 17520)),
+          fromDate: _dataPoints[0].timestamp,
           bezierChartAggregation: BezierChartAggregation.AVERAGE,
           toDate: _lastDate,
           selectedDate: _lastDate,
@@ -277,8 +308,8 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
             physics: const BouncingScrollPhysics(),
             displayDataPointWhenNoValue: false,
             verticalIndicatorColor: Colors.grey[400],
-            // updatePositionOnTap: true,
-            // snap: true,
+            updatePositionOnTap: true,
+            snap: true,
             pinchZoom: true,
             footerHeight: SizeConfig.blockSizeVertical*5,
             xAxisTextStyle: TextStyle(color: Color(0xff484848), fontSize: SizeConfig.smallTextSize*1.2)
@@ -294,12 +325,12 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
         horizontal: _height * 0.02,
       ),
       height: _height * 0.35,
-      width: SizeConfig.screenWidth*0.9,
+      width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child:  new BezierChart(
           bezierChartScale: BezierChartScale.YEARLY,
-          fromDate: (_selectedFrequency!=0)?_dataPoints[0].timestamp:_lastDate.subtract(Duration(hours: 17520)),
+          fromDate: _dataPoints[0].timestamp,
           bezierChartAggregation: BezierChartAggregation.AVERAGE,
           toDate: _lastDate,
           selectedDate: _lastDate,
@@ -311,8 +342,8 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
             physics: const BouncingScrollPhysics(),
             displayDataPointWhenNoValue: false,
             verticalIndicatorColor: Colors.grey[400],
-            // updatePositionOnTap: true,
-            // snap: true,
+            updatePositionOnTap: true,
+            snap: true,
             pinchZoom: true,
             footerHeight: SizeConfig.blockSizeVertical*5,
             xAxisTextStyle: TextStyle(color: Color(0xff484848), fontSize: SizeConfig.smallTextSize*1.2)

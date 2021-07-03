@@ -578,7 +578,7 @@ class BezierChartState extends State<BezierChart>
               final date = DateTime(year, month);
               newDataPoints.add(
                 DataPoint<DateTime>(
-                  value: value,
+                  value: double.parse(value.toStringAsFixed(2)),
                   xAxis: date,
                 ),
               );
@@ -600,7 +600,7 @@ class BezierChartState extends State<BezierChart>
               final date = DateTime(year);
               newDataPoints.add(
                 DataPoint<DateTime>(
-                  value: value,
+                  value: double.parse(value.toStringAsFixed(2)),
                   xAxis: date,
                 ),
               );
