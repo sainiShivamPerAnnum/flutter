@@ -28,7 +28,6 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
   int _selectedFrequency = 1;
   DateTime _lastDate;
   double _height;
-  List<BezierChartScale> _scales = [BezierChartScale.WEEKLY, BezierChartScale.MONTHLY, BezierChartScale.YEARLY];
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +37,7 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
       _getDataPoints().then((value){
         if(value!=null) { 
           _dataPoints = value;
+          print(_dataPoints.toString());
           _dataPoints.sort((a,b)=> a.timestamp.compareTo(b.timestamp));
           double _a = 1;
           // for(var v in _dataPoints) {
@@ -72,6 +72,7 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
             }
           }
           _lastDate = _dataPoints[_dataPoints.length-1].timestamp;
+          print(_bezierPointsCustom.length);
           _bezierPointsMonthly.addAll(_bezierPoints);
           _bezierPointsYearly.addAll(_bezierPoints);
         }
@@ -187,6 +188,7 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
     List<GoldGraphPoint> _res;
     try {
        _res = await augmontProvider.getGoldRateChart(DateTime(2019,1,1), DateTime.now());
+       print(_res.length);
       //  final Map<DateTime, double> line1 = {
       //   DateTime.utc(2018, 03, 19): 3130,
       //   DateTime.utc(2018, 03, 21): 4000,
@@ -237,12 +239,51 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
 
   Widget _buildChart() {
     if(_selectedFrequency==0) {
+      if(_bezierPointsCustom.length==0 || _bezierPointsCustom==null) {
+        return Container(
+          margin: EdgeInsets.symmetric(
+            horizontal: _height * 0.02,
+          ),
+          height: _height * 0.3,
+          width: double.infinity,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child:  Center(child: Text('The graph has no data'),),
+          ),
+        );
+      }
       return _returnWeeklyGoldChart();
     }
     else if(_selectedFrequency==1) {
+      if(_bezierPointsMonthly.length==0 || _bezierPointsMonthly==null) {
+        return Container(
+          margin: EdgeInsets.symmetric(
+            horizontal: _height * 0.02,
+          ),
+          height: _height * 0.3,
+          width: double.infinity,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child:  Center(child: Text('The graph has no data'),),
+          ),
+        );
+      }
       return _returnMonthlyGoldChart();
     }
     else {
+      if(_bezierPointsYearly.length==0 || _bezierPointsYearly==null) {
+        return Container(
+          margin: EdgeInsets.symmetric(
+            horizontal: _height * 0.02,
+          ),
+          height: _height * 0.3,
+          width: double.infinity,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child:  Center(child: Text('The graph has no data'),),
+          ),
+        );
+      }
       return _returnYearlyGoldChart();
     }
   }
@@ -275,7 +316,7 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
             verticalIndicatorColor: Colors.grey[400],
             updatePositionOnTap: true,
             snap: true,
-            pinchZoom: true,
+            // pinchZoom: true,
             footerHeight: SizeConfig.blockSizeVertical*5,
             xAxisTextStyle: TextStyle(color: Color(0xff484848), fontSize: SizeConfig.smallTextSize*1.2)
           ),
@@ -309,7 +350,7 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
             verticalIndicatorColor: Colors.grey[400],
             updatePositionOnTap: true,
             snap: true,
-            pinchZoom: true,
+            // pinchZoom: true,
             footerHeight: SizeConfig.blockSizeVertical*5,
             xAxisTextStyle: TextStyle(color: Color(0xff484848), fontSize: SizeConfig.smallTextSize*1.2)
           ),
@@ -343,7 +384,7 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
             verticalIndicatorColor: Colors.grey[400],
             updatePositionOnTap: true,
             snap: true,
-            pinchZoom: true,
+            // pinchZoom: true,
             footerHeight: SizeConfig.blockSizeVertical*5,
             xAxisTextStyle: TextStyle(color: Color(0xff484848), fontSize: SizeConfig.smallTextSize*1.2)
           ),

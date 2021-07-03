@@ -502,4 +502,9 @@ class GoldGraphPoint{
   final DateTime timestamp;
 
   GoldGraphPoint(this.rate, this.timestamp);
+  @override
+  String toString() {
+    return ("Rate ${this.rate} Time ${this.timestamp}");
+    // return super.toString();
+  }
 }
