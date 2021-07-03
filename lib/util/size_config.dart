@@ -22,8 +22,8 @@ class SizeConfig {
     screenHeight = _mediaQueryData.size.height;
     blockSizeHorizontal = screenWidth / 100;
     blockSizeVertical = screenHeight / 100;
-    smallTextSize = screenHeight * 0.01;
-    mediumTextSize = blockSizeHorizontal * 3.2;
+    smallTextSize = blockSizeHorizontal * 2.8;
+    mediumTextSize = blockSizeHorizontal * 3.6;
     largeTextSize = blockSizeHorizontal * 5;
     cardTitleTextSize = blockSizeHorizontal * 7;
     isGamefirstTime = true;

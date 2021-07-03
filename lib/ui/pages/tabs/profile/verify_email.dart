@@ -34,6 +34,7 @@ class VerifyEmailState extends State<VerifyEmail> {
   String generatedOTP;
 
   bool _isContinueWithGoogle = false;
+  bool _isGoogleLoginInProcess = false;
   bool _isOtpSent = false;
   bool _isProcessing = false;
   bool _isVerifying = false;
@@ -72,13 +73,23 @@ class VerifyEmailState extends State<VerifyEmail> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Choose an email option",
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 24,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          "Choose an email option",
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 24,
+                          ),
+                        ),
+                        Spacer(),
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          iconSize: 30,
+                          onPressed: () => backButtonDispatcher.didPopRoute(),
+                        ),
+                      ],
                     ),
                     Divider(
                       height: 32,
@@ -93,6 +104,9 @@ class VerifyEmailState extends State<VerifyEmail> {
                       title: Text("Choose a Google account"),
                       subtitle: Text("No verification requried"),
                       onTap: verifyGmail,
+                      trailing: _isGoogleLoginInProcess
+                          ? CircularProgressIndicator()
+                          : SizedBox(),
                     ),
                     Divider(),
                     ListTile(
@@ -103,6 +117,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                       title: Text("continue with an email"),
                       onTap: () {
                         setState(() {
+                          _isGoogleLoginInProcess = false;
                           _isContinueWithGoogle = false;
                           email.text = baseProvider.myUser.email;
                           _isEmailEnabled = true;
@@ -188,7 +203,7 @@ class VerifyEmailState extends State<VerifyEmail> {
 
   verifyGmail() async {
     setState(() {
-      _isProcessing = true;
+      _isGoogleLoginInProcess = true;
     });
     final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
     if (googleUser != null) {
@@ -199,7 +214,7 @@ class VerifyEmailState extends State<VerifyEmail> {
       bool res = await dbProvider.updateUser(baseProvider.myUser);
       if (res) {
         setState(() {
-          _isProcessing = false;
+          _isGoogleLoginInProcess = false;
         });
         baseProvider.showPositiveAlert("Success",
             "Email Verified,refresh your app once to unlock features", context);
@@ -211,7 +226,7 @@ class VerifyEmailState extends State<VerifyEmail> {
       }
     } else {
       setState(() {
-        _isProcessing = false;
+        _isGoogleLoginInProcess = false;
       });
       baseProvider.showNegativeAlert("No account selected",
           "Please select any of the google accounts", context);
@@ -416,42 +431,43 @@ class VerifyEmailState extends State<VerifyEmail> {
             ),
           ),
           Positioned(
-              bottom: 0,
-              child: Container(
-                width: SizeConfig.screenWidth,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: confirmAction,
-                      child: Container(
-                        margin: EdgeInsets.symmetric(vertical: 24),
-                        width: SizeConfig.screenWidth -
-                            SizeConfig.blockSizeHorizontal * 5,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: UiConstants.primaryColor,
-                        ),
-                        alignment: Alignment.center,
-                        child: _isVerifying || _isProcessing
-                            ? SpinKitThreeBounce(
-                                color: UiConstants.spinnerColor2,
-                                size: 18.0,
-                              )
-                            : Text(
-                                _isOtpSent ? "Verify" : "Send OTP",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: SizeConfig.mediumTextSize,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
+            bottom: 0,
+            child: Container(
+              width: SizeConfig.screenWidth,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: confirmAction,
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 24),
+                      width: SizeConfig.screenWidth -
+                          SizeConfig.blockSizeHorizontal * 5,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: UiConstants.primaryColor,
                       ),
-                    )
-                  ],
-                ),
-              ))
+                      alignment: Alignment.center,
+                      child: _isVerifying || _isProcessing
+                          ? SpinKitThreeBounce(
+                              color: UiConstants.spinnerColor2,
+                              size: 18.0,
+                            )
+                          : Text(
+                              _isOtpSent ? "Verify" : "Send OTP",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: SizeConfig.mediumTextSize,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          )
         ],
       ),
     );

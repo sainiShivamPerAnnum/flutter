@@ -63,7 +63,7 @@ class ObscureStyle {
     this.obscureText: '*',
   })  :
 
-  /// Not allowed empty string and multiline string.
+        /// Not allowed empty string and multiline string.
         assert(obscureText.length > 0),
         assert(obscureText.indexOf(_wrapLine) == -1);
 }
@@ -98,13 +98,13 @@ class UnderlineDecoration extends PinDecoration {
     this.color: Colors.cyan,
     this.lineHeight: 2.0,
   }) : super(
-    textStyle: textStyle,
-    obscureStyle: obscureStyle,
-    errorText: errorText,
-    errorTextStyle: errorTextStyle,
-    hintText: hintText,
-    hintTextStyle: hintTextStyle,
-  );
+          textStyle: textStyle,
+          obscureStyle: obscureStyle,
+          errorText: errorText,
+          errorTextStyle: errorTextStyle,
+          hintText: hintText,
+          hintTextStyle: hintTextStyle,
+        );
 
   @override
   PinEntryType get pinEntryType => PinEntryType.underline;
@@ -160,13 +160,13 @@ class BoxTightDecoration extends PinDecoration {
     this.radius: const Radius.circular(8.0),
     this.strokeColor: Colors.cyan,
   }) : super(
-    textStyle: textStyle,
-    obscureStyle: obscureStyle,
-    errorText: errorText,
-    errorTextStyle: errorTextStyle,
-    hintText: hintText,
-    hintTextStyle: hintTextStyle,
-  );
+          textStyle: textStyle,
+          obscureStyle: obscureStyle,
+          errorText: errorText,
+          errorTextStyle: errorTextStyle,
+          hintText: hintText,
+          hintTextStyle: hintTextStyle,
+        );
 
   @override
   PinEntryType get pinEntryType => PinEntryType.boxTight;
@@ -233,13 +233,13 @@ class BoxLooseDecoration extends PinDecoration {
     this.gapSpaces,
     this.strokeColor: Colors.cyan,
   }) : super(
-    textStyle: textStyle,
-    obscureStyle: obscureStyle,
-    errorText: errorText,
-    errorTextStyle: errorTextStyle,
-    hintText: hintText,
-    hintTextStyle: hintTextStyle,
-  );
+          textStyle: textStyle,
+          obscureStyle: obscureStyle,
+          errorText: errorText,
+          errorTextStyle: errorTextStyle,
+          hintText: hintText,
+          hintTextStyle: hintTextStyle,
+        );
 
   @override
   PinEntryType get pinEntryType => PinEntryType.boxLoose;
@@ -320,12 +320,12 @@ class PinInputTextField extends StatefulWidget {
     this.onChanged,
   })  :
 
-  /// pinLength must larger than 0.
-  /// If pinEditingController isn't null, guarantee the [pinLength] equals to the pinEditingController's _pinMaxLength
+        /// pinLength must larger than 0.
+        /// If pinEditingController isn't null, guarantee the [pinLength] equals to the pinEditingController's _pinMaxLength
         assert(pinLength != null && pinLength > 0),
         assert(decoration != null),
 
-  /// Hint length must equal to the [pinLength].
+        /// Hint length must equal to the [pinLength].
         assert(decoration.hintText == null ||
             decoration.hintText.length == pinLength),
         assert(decoration is BoxTightDecoration ||
@@ -337,9 +337,9 @@ class PinInputTextField extends StatefulWidget {
                     (decoration.gapSpaces?.length ?? (pinLength - 1)))),
         inputFormatters = inputFormatter == null
             ? <TextInputFormatter>[
-          WhitelistingTextInputFormatter.digitsOnly,
-          LengthLimitingTextInputFormatter(pinLength)
-        ]
+                WhitelistingTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(pinLength)
+              ]
             : inputFormatter
           ..add(LengthLimitingTextInputFormatter(pinLength)),
         super(key: key);
@@ -504,9 +504,12 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
           counterText: '',
 
           /// Hide the outline border.
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-          ),
+          enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+          focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+          disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+
+          /// Hide the outline border.
+          border: OutlineInputBorder(borderSide: BorderSide.none),
 
           /// Bind the error text from pin decoration to this input decoration.
           errorText: widget.decoration.errorText,
@@ -535,12 +538,12 @@ class _PinPaint extends CustomPainter {
     this.type: PinEntryType.boxTight,
     this.themeData,
   }) : this.decoration = decoration.copyWith(
-    textStyle: decoration.textStyle ?? themeData.textTheme.headline,
-    errorTextStyle: decoration.errorTextStyle ??
-        themeData.textTheme.caption.copyWith(color: themeData.errorColor),
-    hintTextStyle: decoration.hintTextStyle ??
-        themeData.textTheme.headline.copyWith(color: themeData.hintColor),
-  );
+          textStyle: decoration.textStyle ?? themeData.textTheme.headline,
+          errorTextStyle: decoration.errorTextStyle ??
+              themeData.textTheme.caption.copyWith(color: themeData.errorColor),
+          hintTextStyle: decoration.hintTextStyle ??
+              themeData.textTheme.headline.copyWith(color: themeData.hintColor),
+        );
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) =>
@@ -990,44 +993,44 @@ class PinInputTextFormField extends FormField<String> {
         assert(autovalidate != null),
         assert(pinLength != null && pinLength > 0),
         super(
-          key: key,
-          initialValue:
-          controller != null ? controller.text : (initialValue ?? ''),
-          onSaved: onSaved,
-          validator: (value) {
-            var result = validator(value);
-            if (result == null) {
-              if (value.isEmpty) {
-                return 'Input field is empty.';
-              }
-              if (value.length < pinLength) {
-                if (pinLength - value.length > 1) {
-                  return 'Missing ${pinLength - value.length} digits of input.';
-                } else {
-                  return 'Missing last digit of input.';
+            key: key,
+            initialValue:
+                controller != null ? controller.text : (initialValue ?? ''),
+            onSaved: onSaved,
+            validator: (value) {
+              var result = validator(value);
+              if (result == null) {
+                if (value.isEmpty) {
+                  return 'Input field is empty.';
+                }
+                if (value.length < pinLength) {
+                  if (pinLength - value.length > 1) {
+                    return 'Missing ${pinLength - value.length} digits of input.';
+                  } else {
+                    return 'Missing last digit of input.';
+                  }
                 }
               }
-            }
-            return result;
-          },
-          autovalidate: autovalidate,
-          enabled: enabled,
-          builder: (FormFieldState<String> field) {
-            final _PinInputTextFormFieldState state = field;
-            return PinInputTextField(
-              pinLength: pinLength,
-              onSubmit: onSubmit,
-              decoration: decoration.copyWith(errorText: field.errorText),
-              inputFormatter: inputFormatter,
-              keyboardType: keyboardType,
-              controller: state._effectiveController,
-              focusNode: focusNode,
-              autoFocus: autoFocus,
-              textInputAction: textInputAction,
-              enabled: enabled,
-              onChanged: onChanged,
-            );
-          });
+              return result;
+            },
+            autovalidate: autovalidate,
+            enabled: enabled,
+            builder: (FormFieldState<String> field) {
+              final _PinInputTextFormFieldState state = field;
+              return PinInputTextField(
+                pinLength: pinLength,
+                onSubmit: onSubmit,
+                decoration: decoration.copyWith(errorText: field.errorText),
+                inputFormatter: inputFormatter,
+                keyboardType: keyboardType,
+                controller: state._effectiveController,
+                focusNode: focusNode,
+                autoFocus: autoFocus,
+                textInputAction: textInputAction,
+                enabled: enabled,
+                onChanged: onChanged,
+              );
+            });
 
   @override
   _PinInputTextFormFieldState createState() => _PinInputTextFormFieldState();

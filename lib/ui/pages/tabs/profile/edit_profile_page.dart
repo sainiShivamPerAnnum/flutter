@@ -49,16 +49,16 @@ class _EditProfileState extends State<EditProfile> {
 
   chooseprofilePicture() async {
     final temp = await ImagePicker().getImage(source: ImageSource.gallery);
-    // if (temp != null) {
-    //   HapticFeedback.vibrate();
-    //   print("--------------------------------->" + temp.path);
-    //   showDialog(
-    //     context: context,
-    //     builder: (BuildContext context) => ChangeProfilePicture(
-    //       image: File(temp.path),
-    //     ),
-    //   );
-    // }
+    if (temp != null) {
+      HapticFeedback.vibrate();
+      print("--------------------------------->" + temp.path);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => ChangeProfilePicture(
+          image: File(temp.path),
+        ),
+      );
+    }
 
     setState(() {
       profilePic = File(temp.path);

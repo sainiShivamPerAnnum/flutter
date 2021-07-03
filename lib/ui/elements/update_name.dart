@@ -1,29 +1,21 @@
-import 'dart:io';
 import 'dart:ui';
-import 'package:felloapp/core/base_analytics.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
-class ChangeProfilePicture extends StatefulWidget {
-  final File image;
-  ChangeProfilePicture({this.image});
+class UpdateNameDialog extends StatefulWidget {
   @override
-  _ChangeProfilePictureState createState() => _ChangeProfilePictureState();
+  _UpdateNameDialogState createState() => _UpdateNameDialogState();
 }
 
-class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
-  final FirebaseStorage storage = FirebaseStorage.instance;
+class _UpdateNameDialogState extends State<UpdateNameDialog> {
   BaseUtil baseProvider;
   bool isUploading = false;
-  bool isUploaded = false;
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
@@ -41,50 +33,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
     );
   }
 
-  Future<File> testCompressAndGetFile(File file, String targetPath) async {
-    int quality = 50;
-    double filesize = file.lengthSync() / (1024 * 1024);
-    if (filesize < 1) {
-      quality = 75;
-    }
-    var result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path,
-      targetPath,
-      quality: quality,
-      rotate: 0,
-    );
-
-    print(file.lengthSync());
-    print(result.lengthSync());
-
-    return result;
-  }
-
-  Future<bool> updatePicture(BuildContext context) async {
-    bool isUploaded = false;
-    Directory tempdir = await getTemporaryDirectory();
-    String imageName = widget.image.path.split("/").last;
-    String targetPath = "${tempdir.path}/c-$imageName";
-    print("temp path: " + targetPath);
-    print("orignal path: " + widget.image.path);
-    await testCompressAndGetFile(File(widget.image.path), targetPath);
-    FirebaseStorage storage = FirebaseStorage.instance;
-    Reference ref = storage.ref().child("dps/${baseProvider.myUser.uid}/image");
-    UploadTask uploadTask = ref.putFile(File(targetPath));
-    uploadTask.then((res) async {
-      await res.ref.getDownloadURL().then((url) {
-        if (url != null) {
-          isUploaded = true;
-          baseProvider.isProfilePictureUpdated = true;
-          baseProvider.myUserDpUrl = url;
-        }
-        print(url);
-      });
-    });
-    return isUploaded;
-  }
-
-  dialogContent(BuildContext context) {
+  Widget dialogContent(BuildContext context) {
     return Wrap(
       children: [
         Container(
@@ -98,29 +47,30 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: Text(
-                  "Update Profile Picture",
+                  "Update Name",
                   style: GoogleFonts.montserrat(
                     fontWeight: FontWeight.w500,
                     fontSize: SizeConfig.largeTextSize,
                   ),
                 ),
               ),
-              Container(
-                height: SizeConfig.screenHeight * 0.2,
-                width: SizeConfig.screenHeight * 0.2,
-                decoration:
-                    BoxDecoration(shape: BoxShape.circle, color: Colors.black),
-                child: Stack(
-                  children: [
-                    ClipOval(
-                      child: Image.file(
-                        widget.image,
-                        height: SizeConfig.screenHeight * 0.2,
-                        width: SizeConfig.screenHeight * 0.2,
-                        fit: BoxFit.cover,
-                      ),
+              TextField(
+                autofocus: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: UiConstants.primaryColor,
+                      width: 1,
                     ),
-                  ],
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: UiConstants.primaryColor,
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
               ),
               InkWell(
@@ -128,24 +78,6 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
                   setState(() {
                     isUploading = true;
                   });
-                  if (widget.image != null) {
-                    updatePicture(context).then((flag) {
-                      if (flag) {
-                        BaseAnalytics.logProfilePictureAdded();
-                        baseProvider.showPositiveAlert('Complete',
-                            'Your profile Picture have been updated', context);
-                      } else {
-                        baseProvider.showNegativeAlert(
-                            'Failed',
-                            'Your Profile Picture could not be updated at the moment',
-                            context);
-                      }
-                      setState(() {
-                        isUploading = false;
-                      });
-                      Navigator.pop(context);
-                    });
-                  }
                 },
                 child: Container(
                   margin: EdgeInsets.symmetric(vertical: 24),

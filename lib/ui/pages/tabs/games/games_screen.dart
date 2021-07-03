@@ -432,10 +432,10 @@ class _TicketCountState extends State<TicketCount>
             _animation != null
                 ? _animation.value.round().toString()
                 : "${widget.totalCount}",
-            style: TextStyle(
+            style: GoogleFonts.montserrat(
               color: Colors.white,
               fontSize: SizeConfig.screenHeight * 0.08,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w500,
             ),
           ),
           Text(
