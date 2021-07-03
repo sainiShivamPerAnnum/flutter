@@ -57,7 +57,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
   @override
   Widget build(BuildContext context) {
     _width = MediaQuery.of(context).size.width;
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    baseProvider = Provider.of<BaseUtil>(context,listen: false);
     appState = Provider.of<AppState>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
