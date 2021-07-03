@@ -1178,7 +1178,6 @@ class _UserEditProfileCardState extends State<UserEditProfileCard> {
                 left: SizeConfig.blockSizeHorizontal * 2, bottom: 8),
             child: TextField(
               cursorColor: Colors.white,
-              autofocus: true,
               controller: _nameController,
               style: GoogleFonts.montserrat(
                 color: Colors.white,
@@ -1202,6 +1201,7 @@ class _UserEditProfileCardState extends State<UserEditProfileCard> {
             children: [
               TextButton(
                 onPressed: () {
+                  FocusScope.of(context).unfocus();
                   setState(() {
                     isUploading = !isUploading;
                   });
@@ -1248,7 +1248,10 @@ class _UserEditProfileCardState extends State<UserEditProfileCard> {
                 ),
               ),
               TextButton(
-                onPressed: () => cardKey.currentState.toggleCard(),
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  cardKey.currentState.toggleCard();
+                },
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(
