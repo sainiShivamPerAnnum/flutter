@@ -281,7 +281,7 @@ class HomeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-        bottom: 30,
+        bottom: 20,
       ),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -319,7 +319,7 @@ class HomeCard extends StatelessWidget {
           ),
           Container(
             width: double.infinity,
-            padding: EdgeInsets.all(SizeConfig.screenWidth * 0.05),
+            padding: EdgeInsets.all(SizeConfig.screenWidth * 0.06),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -345,7 +345,7 @@ class HomeCard extends StatelessWidget {
                   subtitle,
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: SizeConfig.mediumTextSize * 1.2,
+                      fontSize: SizeConfig.mediumTextSize * 1.3,
                       fontWeight: FontWeight.w400),
                 ),
                 SizedBox(
@@ -374,7 +374,7 @@ class HomeCard extends StatelessWidget {
                       buttonText,
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: SizeConfig.mediumTextSize),
+                          fontSize: SizeConfig.mediumTextSize*1.3),
                     ),
                   ),
                 )
