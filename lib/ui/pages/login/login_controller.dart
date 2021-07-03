@@ -7,6 +7,7 @@ import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
@@ -67,6 +68,7 @@ class _LoginControllerState extends State<LoginController>
 
   @override
   void initState() {
+    AppState.unsavedChanges = true;
     super.initState();
     _currentPage = (initPage != null) ? initPage : MobileInputScreen.index;
     _formProgress = 0.2 * (_currentPage + 1);
@@ -608,6 +610,7 @@ class _LoginControllerState extends State<LoginController>
 
     await baseProvider.init();
     await fcmProvider.setupFcm();
+    AppState.unsavedChanges = false;
     appStateProvider.currentAction =
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
     baseProvider.showPositiveAlert(

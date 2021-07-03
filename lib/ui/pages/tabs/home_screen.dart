@@ -352,6 +352,12 @@ class HomeCard extends StatelessWidget {
                   subtitle,
                   style: TextStyle(
                       color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          color: gradient[0],
+                          offset: Offset(1, 1),
+                        ),
+                      ],
                       fontSize: SizeConfig.mediumTextSize * 1.3,
                       fontWeight: FontWeight.w400),
                 ),
@@ -381,7 +387,7 @@ class HomeCard extends StatelessWidget {
                       buttonText,
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: SizeConfig.mediumTextSize*1.3),
+                          fontSize: SizeConfig.mediumTextSize * 1.3),
                     ),
                   ),
                 )

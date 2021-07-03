@@ -36,7 +36,8 @@ class _ClaimUsernameState extends State<ClaimUsername> {
           setState(() {
             _isUpdating = false;
           });
-          baseProvider.showPositiveAlert("Username Added!", "Yayy", context);
+          baseProvider.showPositiveAlert(
+              "Success!", "Username updated successfully", context);
           backButtonDispatcher.didPopRoute();
         } else {
           setState(() {

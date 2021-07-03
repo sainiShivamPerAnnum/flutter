@@ -946,152 +946,153 @@ class _UserProfileCardState extends State<UserProfileCard> {
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.blockSizeHorizontal * 4,
       ),
-      child: Column(
+      child: Stack(
         children: [
-          SizedBox(
-            height: 12,
-          ),
-          Row(
+          Column(
             children: [
-              Spacer(),
-              InkWell(
-                onTap: () {
-                  cardKey.currentState.toggleCard();
-                },
-                child: Icon(
-                  Icons.edit_outlined,
-                  color: Colors.white,
-                  size: SizeConfig.blockSizeHorizontal * 4,
+              SizedBox(
+                height: 12,
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: SizeConfig.blockSizeHorizontal * 5,
+                    ),
+                    Container(
+                      height: picSize,
+                      width: picSize,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                      child: Stack(
+                        children: [
+                          isImageLoading
+                              ? Image.asset(
+                                  "images/profile.png",
+                                  height: picSize,
+                                  width: picSize,
+                                  fit: BoxFit.cover,
+                                )
+                              : ClipOval(
+                                  child: CachedNetworkImage(
+                                    imageUrl: baseProvider.myUserDpUrl,
+                                    height: picSize,
+                                    width: picSize,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: InkWell(
+                              onTap: () => showDialog(
+                                  context: context,
+                                  builder: (ctx) {
+                                    return ConfirmActionDialog(
+                                        title: "Permission",
+                                        description:
+                                            "We need your gallery access in order to complete this process. Kindly provide the permission.",
+                                        buttonText: "Continue",
+                                        asset: Padding(
+                                          padding:
+                                              EdgeInsets.symmetric(vertical: 8),
+                                          child: Image.asset(
+                                              "images/gallery.png",
+                                              height: SizeConfig.screenWidth *
+                                                  0.24),
+                                        ),
+                                        confirmAction: () {
+                                          Navigator.pop(context);
+                                          chooseprofilePicture();
+                                        },
+                                        cancelAction: () =>
+                                            Navigator.pop(context));
+                                  }),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: SizeConfig.blockSizeHorizontal * 4,
+                                child: Icon(
+                                  Icons.photo_camera_rounded,
+                                  color: UiConstants.primaryColor,
+                                  size: SizeConfig.blockSizeHorizontal * 4,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: SizeConfig.blockSizeHorizontal * 5,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: SizeConfig.screenWidth * 0.5,
+                          child: Text(
+                            baseProvider.myUser.name,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: SizeConfig.cardTitleTextSize,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        baseProvider.myUser.username != null
+                            ? Padding(
+                                padding: EdgeInsets.only(top: 4),
+                                child: Text(
+                                  "@${baseProvider.myUser.username.replaceAll('@', '.')}",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: SizeConfig.mediumTextSize,
+                                  ),
+                                ),
+                              )
+                            : SizedBox(
+                                height: 8,
+                              ),
+                      ],
+                    )
+                  ],
                 ),
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Member since ${_getUserMembershipDate()}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: SizeConfig.smallTextSize,
+                    ),
+                  ),
+                ],
+              ),
               SizedBox(
-                width: SizeConfig.blockSizeHorizontal * 3,
+                height: 16,
               )
             ],
           ),
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: SizeConfig.blockSizeHorizontal * 5,
-                ),
-                Container(
-                  height: picSize,
-                  width: picSize,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
-                  ),
-                  child: Stack(
-                    children: [
-                      isImageLoading
-                          ? Image.asset(
-                              "images/profile.png",
-                              height: picSize,
-                              width: picSize,
-                              fit: BoxFit.cover,
-                            )
-                          : ClipOval(
-                              child: CachedNetworkImage(
-                                imageUrl: baseProvider.myUserDpUrl,
-                                height: picSize,
-                                width: picSize,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: InkWell(
-                          onTap: () => showDialog(
-                              context: context,
-                              builder: (ctx) {
-                                return ConfirmActionDialog(
-                                    title: "Permission",
-                                    description:
-                                        "We need your gallery access in order to complete this process. Kindly provide the permission.",
-                                    buttonText: "Continue",
-                                    asset: Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 8),
-                                      child: Image.asset("images/gallery.png",
-                                          height:
-                                              SizeConfig.screenWidth * 0.24),
-                                    ),
-                                    confirmAction: () {
-                                      Navigator.pop(context);
-                                      chooseprofilePicture();
-                                    },
-                                    cancelAction: () => Navigator.pop(context));
-                              }),
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: SizeConfig.blockSizeHorizontal * 4,
-                            child: Icon(
-                              Icons.photo_camera_rounded,
-                              color: UiConstants.primaryColor,
-                              size: SizeConfig.blockSizeHorizontal * 4,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: SizeConfig.blockSizeHorizontal * 5,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: SizeConfig.screenWidth * 0.5,
-                      child: Text(
-                        baseProvider.myUser.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: SizeConfig.cardTitleTextSize,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    baseProvider.myUser.username != null
-                        ? Padding(
-                            padding: EdgeInsets.only(top: 4),
-                            child: Text(
-                              "@${baseProvider.myUser.username.replaceAll('@', '.')}",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: SizeConfig.mediumTextSize,
-                              ),
-                            ),
-                          )
-                        : SizedBox(
-                            height: 8,
-                          ),
-                  ],
-                )
-              ],
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Member since ${_getUserMembershipDate()}',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: SizeConfig.smallTextSize,
-                ),
+          Positioned(
+            top: 4,
+            right: 4,
+            child: IconButton(
+              onPressed: () {
+                cardKey.currentState.toggleCard();
+              },
+              icon: Icon(
+                Icons.edit_outlined,
+                color: Colors.white,
               ),
-            ],
-          ),
-          SizedBox(
-            height: 16,
+            ),
           )
         ],
       ),

@@ -1,7 +1,11 @@
+class OTPEmail {
+  getEmailCode(String otp) {
+    return """
+    
 <!DOCTYPE HTML>
 <html>
 
-<head>ks
+<head>
 
     <title></title>
 
@@ -374,7 +378,7 @@
                                                                                     <a href="https://www.instagram.com/fellofinance/?hl=en"
                                                                                         title="Instagram"
                                                                                         target="_blank">
-                                                                                        <img src="https://lh3.googleusercontent.com/proxy/gPPhtB9BRZjMB87TesvXo7AMzwNruNXTxaMw8ZnL8oYmClipGqBKBFXCn66OyQrfSt6hF730HIeH3peo2ULiROZwhH4rzm5w2PYD5eDajlu7nYScPerP_XRYg4l5G3ZYnF4Mx8L5CiGRQafd8HCH_uwnLt5z"
+                                                                                        <img src="https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Instagram_colored_svg_1-512.png"
                                                                                             alt="Instagram"
                                                                                             title="Instagram" width="32"
                                                                                             style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
@@ -440,17 +444,11 @@
                                                                 style="color: #7e7e81; line-height: 150%; text-align: center; word-wrap: break-word;">
                                                                 <p style="line-height: 150%; font-size: 14px;"><span
                                                                         style="font-size: 12px; line-height: 18px;">Fello
-                                                                        Technologies</span></p>
-                                                                <p style="font-size: 14px; line-height: 150%;"><span
-                                                                        style="font-size: 12px; line-height: 18px;">4321
-                                                                        Area Ave.&nbsp; I&nbsp; North town
-                                                                        CA 2345&nbsp; I&nbsp; Country Name. </span></p>
-                                                                <p style="font-size: 14px; line-height: 150%;"><span
-                                                                        style="font-size: 12px; line-height: 18px;">Company
-                                                                        Number: 07094561</span></p>
+                                                                        Technologies pvt ltd.</span></p>
+                                                               
                                                                 <p style="font-size: 14px; line-height: 150%;"><span
                                                                         style="font-size: 12px; line-height: 18px;">&copy;
-                                                                        Healthcare. Inc. </span></p>
+                                                                        Copyright 2021 </span></p>
                                                             </div>
 
                                                         </td>
@@ -473,3 +471,7 @@
 </body>
 
 </html>
+    
+     """;
+  }
+}

@@ -211,14 +211,13 @@ class VerifyEmailState extends State<VerifyEmail> {
       email.text = googleUser.email;
       baseProvider.myUser.email = googleUser.email;
       baseProvider.myUser.isEmailVerified = true;
-      baseProvider.myUserDpUrl = googleUser.photoUrl;
       bool res = await dbProvider.updateUser(baseProvider.myUser);
       if (res) {
         setState(() {
           _isGoogleLoginInProcess = false;
         });
-        baseProvider.showPositiveAlert("Success",
-            "Email Verified,refresh your app once to unlock features", context);
+        baseProvider.showPositiveAlert(
+            "Success", "Email Verified successfully", context);
         Navigator.pop(context);
         backButtonDispatcher.didPopRoute();
       } else {

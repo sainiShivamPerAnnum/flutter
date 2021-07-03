@@ -71,6 +71,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
     FirebaseStorage storage = FirebaseStorage.instance;
     Reference ref = storage.ref().child("dps/${baseProvider.myUser.uid}/image");
     UploadTask uploadTask = ref.putFile(File(targetPath));
+
     uploadTask.then((res) async {
       await res.ref.getDownloadURL().then((url) {
         if (url != null) {
