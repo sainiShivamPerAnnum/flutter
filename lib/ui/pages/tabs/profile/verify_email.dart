@@ -393,11 +393,19 @@ class VerifyEmailState extends State<VerifyEmail> {
                       )
                     : SizedBox(),
                 _isOtpIncorrect
-                    ? Text(
-                        "OTP is incorrect,please try again",
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.w700,
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "OTP is incorrect,please try again",
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
                         ),
                       )
                     : SizedBox(),

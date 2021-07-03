@@ -64,42 +64,57 @@ class _ClaimUsernameState extends State<ClaimUsername> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     return Scaffold(
-      body: Container(
-        padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.blockSizeHorizontal * 5),
-        child: Column(
-          children: [
-            SizedBox(
-              height: kToolbarHeight * 2,
-            ),
-            Username(
-              key: _usernameKey,
-            ),
-            Spacer(),
-            InkWell(
-              onTap: _isUpdating ? () {} : setUsername,
-              child: Container(
-                margin: EdgeInsets.symmetric(vertical: 24),
-                width:
-                    SizeConfig.screenWidth - SizeConfig.blockSizeHorizontal * 5,
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: UiConstants.primaryColor,
+      appBar: BaseUtil.getAppBar(context),
+      body: Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.blockSizeHorizontal * 5),
+            child: ListView(
+              children: [
+                SizedBox(
+                  height: kToolbarHeight,
                 ),
-                alignment: Alignment.center,
-                child: _isUpdating
-                    ? CircularProgressIndicator(
-                        color: Colors.white,
-                      )
-                    : Text(
-                        "Set username",
-                        style: TextStyle(color: Colors.white),
+                Username(
+                  key: _usernameKey,
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            child: Container(
+              width: SizeConfig.screenWidth,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: _isUpdating ? () {} : setUsername,
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 24),
+                      width: SizeConfig.screenWidth -
+                          SizeConfig.blockSizeHorizontal * 10,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: UiConstants.primaryColor,
                       ),
+                      alignment: Alignment.center,
+                      child: _isUpdating
+                          ? CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : Text(
+                              "Set username",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                    ),
+                  )
+                ],
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }

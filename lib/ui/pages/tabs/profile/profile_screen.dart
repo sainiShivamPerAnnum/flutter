@@ -254,19 +254,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                           fit: BoxFit.cover,
                                         ),
                                       ),
-                                // Positioned(
-                                //   bottom: 0,
-                                //   right: 0,
-                                //   child: CircleAvatar(
-                                //     backgroundColor: Colors.white,
-                                //     radius: SizeConfig.blockSizeHorizontal * 4,
-                                //     child: Icon(
-                                //       Icons.camera_alt_rounded,
-                                //       color: UiConstants.primaryColor,
-                                //       size: SizeConfig.blockSizeHorizontal * 4,
-                                //     ),
-                                //   ),
-                                // ),
                               ],
                             ),
                           ),
@@ -321,7 +308,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 16,
                     )
                   ],
                 ),
@@ -347,9 +334,12 @@ class _ProfilePageState extends State<ProfilePage> {
                             direction: Axis.horizontal,
                             child: InkWell(
                               onTap: () {
-                                appState.currentAction = PageAction(
-                                    state: PageState.addPage,
-                                    page: VerifyEmailPageConfig);
+                                if (baseProvider.myUser.isEmailVerified ==
+                                        null ||
+                                    !baseProvider.myUser.isEmailVerified)
+                                  appState.currentAction = PageAction(
+                                      state: PageState.addPage,
+                                      page: VerifyEmailPageConfig);
                               },
                               child: Text(
                                 "Your email is not verified yet. Tap here to verify it now else you won't be able to use any of the services",
@@ -388,9 +378,10 @@ class _ProfilePageState extends State<ProfilePage> {
                               //       UiConstants.primaryColor.withOpacity(0.3),
                               // ),
                               onTap: () {
-                                appState.currentAction = PageAction(
-                                    state: PageState.addPage,
-                                    page: ClaimUsernamePageConfig);
+                                if (baseProvider.myUser.username == null)
+                                  appState.currentAction = PageAction(
+                                      state: PageState.addPage,
+                                      page: ClaimUsernamePageConfig);
                               },
                               child: Text(
                                 "Claim!",

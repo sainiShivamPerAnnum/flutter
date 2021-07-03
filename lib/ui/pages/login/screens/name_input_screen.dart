@@ -155,49 +155,6 @@ class NameInputScreenState extends State<NameInputScreen> {
       });
   }
 
-  // Show the modal that contains the CupertinoDatePicker
-  // void _showDatePicker(ctx) {
-  //   // showCupertinoModalPopup is a built-in function of the cupertino library
-  //   showCupertinoModalPopup(
-  //       context: ctx,
-  //       builder: (_) => Container(
-  //             height: 500,
-  //             color: Colors.white,
-  //             child: Column(
-  //               children: [
-  //                 Container(
-  //                   height: 400,
-  //                   child: CupertinoDatePicker(
-  //                       backgroundColor: Colors.white70,
-  //                       mode: CupertinoDatePickerMode.date,
-  //                       minimumDate: DateTime(1950, 1, 1, 0, 0),
-  //                       maximumDate: DateTime(2008, 1, 1, 0, 0),
-  //                       initialDateTime: initialDate,
-  //                       onDateTimeChanged: (val) {
-  //                         setState(() {
-  //                           selectedDate = val;
-  //                           _dateController.text =
-  //                               "${val.toLocal()}".split(' ')[0];
-  //                         });
-  //                       }),
-  //                 ),
-
-  //                 // Close the modal
-  //                 CupertinoButton(
-  //                     child: Text(
-  //                       'OK',
-  //                       style: TextStyle(color: UiConstants.primaryColor),
-  //                     ),
-  //                     onPressed: () {
-  //                       if (selectedDate != null) initialDate = selectedDate;
-  //                       Navigator.of(ctx).pop();
-  //                       FocusScope.of(context).unfocus();
-  //                     })
-  //               ],
-  //             ),
-  //           ));
-  // }
-
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
@@ -288,7 +245,8 @@ class NameInputScreenState extends State<NameInputScreen> {
                         },
                       )
                     : InkWell(
-                        onTap: showEmailOptions,
+                        onTap:
+                            _isContinuedWithGoogle ? () {} : showEmailOptions,
                         child: Container(
                           height: 60,
                           padding:

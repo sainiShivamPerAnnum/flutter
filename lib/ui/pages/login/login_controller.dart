@@ -119,7 +119,7 @@ class _LoginControllerState extends State<LoginController>
         ///this is the first time that the otp was requested
         baseProvider.isLoginNextInProgress = false;
         _controller.animateToPage(OtpInputScreen.index,
-            duration: Duration(seconds: 2), curve: Curves.easeOutCirc);
+            duration: Duration(seconds: 2), curve: Curves.easeInToLinear);
         setState(() {});
       } else {
         ///the otp was requested to be resent
@@ -409,6 +409,7 @@ class _LoginControllerState extends State<LoginController>
   }
 
   _processScreenInput(int currentPage) async {
+    FocusScope.of(context).unfocus();
     switch (currentPage) {
       case MobileInputScreen.index:
         {
@@ -459,18 +460,9 @@ class _LoginControllerState extends State<LoginController>
           if (_nameScreenKey.currentState.formKey.currentState.validate() &&
               _nameScreenKey.currentState.isValidDate()) {
             if (_nameScreenKey.currentState.selectedDate == null) {
-              // print("Date not selected from datepicker");
-              // if (!_nameScreenKey.currentState.isValidDate()) {
-              //print("Entered date is not valid");
               baseProvider.showNegativeAlert('Invalid Date of Birth',
                   'Please enter a valid date of birth', context);
               return false;
-              // } else if (!_isAdult(_nameScreenKey.currentState.selectedDate)) {
-              //   baseProvider.showNegativeAlert('Invalid details',
-              //       'You need to be above 18 to join', context);
-              //   return false;
-              // }
-              //print("date selected from datepicker");
             } else if (!_isAdult(_nameScreenKey.currentState.selectedDate)) {
               baseProvider.showNegativeAlert('Invalid details',
                   'You need to be above 18 to join', context);
@@ -516,91 +508,51 @@ class _LoginControllerState extends State<LoginController>
 
             bool isInv = _nameScreenKey.currentState.isInvested;
             if (isInv != null) baseProvider.myUser.isInvested = isInv;
-            //currentPage = AddressInputScreen.index;
-            // bool flag = await dbProvider.updateUser(baseProvider.myUser);
-            // if (flag) {
-            //   log.debug("User object saved successfully");
-            // _onSignUpComplete();
             baseProvider.isLoginNextInProgress = false;
             setState(() {});
             _controller.animateToPage(Username.index,
-                duration: Duration(seconds: 2), curve: Curves.easeOutCirc);
-
-            // } else {
-            //   baseProvider.showNegativeAlert(
-            //       'Update failed', 'Please try again in sometime', context);
-            // }
-            // _controller.animateToPage(AddressInputScreen.index,
-            //     duration: Duration(milliseconds: 300), curve:Curves.fastLinearToSlowEaseIn);
+                duration: Duration(seconds: 2), curve: Curves.easeInToLinear);
           }
           break;
         }
-      // case VerifyEmail.index:
-      //   {
-      //     baseProvider.isLoginNextInProgress = true;
-      //     setState(() {});
-      // String email = _emailVerifyKey.currentState.email.text.trim();
-      // if (_emailVerifyKey.currentState.formKey.currentState.validate()) {
-      //   await baseProvider.firebaseUser.updateEmail(email);
-      //   await baseProvider.firebaseUser.sendEmailVerification();
-      //   _emailVerifyKey.currentState.timer =
-      //       Timer.periodic(Duration(seconds: 5), (timer) {
-      //     baseProvider.firebaseUser.reload().then((_) {
-      //       print("Waiting for response");
-      //       if (baseProvider.firebaseUser.emailVerified) {
-      //         _emailVerifyKey.currentState.timer.cancel();
-      //         print("Email verified successfully");
-      //         baseProvider.myUser.email = email;
-      //         baseProvider.myUser.isEmailVerified = true;
-      //         baseProvider.isLoginNextInProgress = false;
-      //         setState(() {});
-      //         _controller.animateToPage(Username.index,
-      //             duration: Duration(milliseconds: 300),
-      //             curve:Curves.fastLinearToSlowEaseIn);
-      //       }
-      //     });
-      //   });
-      // }
 
-      //     break;
-      //   }
       case Username.index:
         {
-          baseProvider.isLoginNextInProgress = true;
-          setState(() {});
+          if (!_usernameKey.currentState.isLoading &&
+              _usernameKey.currentState.isValid) {
+            baseProvider.isLoginNextInProgress = true;
+            setState(() {});
 
-          String username =
-              _usernameKey.currentState.username.text.replaceAll('.', '@');
-          if (await dbProvider.checkIfUsernameIsAvailable(username)) {
-            bool res = await dbProvider.setUsername(
-                username, baseProvider.firebaseUser.uid);
-            if (res) {
-              baseProvider.myUser.username = username;
-              bool flag = await dbProvider.updateUser(baseProvider.myUser);
-              if (flag) {
-                log.debug("User object saved successfully");
-                _onSignUpComplete();
-                // _controller.animateToPage(VerifyEmail.index,
-                //     duration: Duration(milliseconds: 300), curve:Curves.fastLinearToSlowEaseIn);
+            String username =
+                _usernameKey.currentState.username.text.replaceAll('.', '@');
+            if (await dbProvider.checkIfUsernameIsAvailable(username)) {
+              bool res = await dbProvider.setUsername(
+                  username, baseProvider.firebaseUser.uid);
+              if (res) {
+                baseProvider.myUser.username = username;
+                bool flag = await dbProvider.updateUser(baseProvider.myUser);
+                if (flag) {
+                  log.debug("User object saved successfully");
+                  _onSignUpComplete();
+                } else {
+                  baseProvider.showNegativeAlert(
+                      'Update failed', 'Please try again in sometime', context);
+                  baseProvider.isLoginNextInProgress = false;
+                  setState(() {});
+                }
               } else {
-                baseProvider.showNegativeAlert(
-                    'Update failed', 'Please try again in sometime', context);
+                baseProvider.showNegativeAlert('Username update failed',
+                    'Please try again in sometime', context);
                 baseProvider.isLoginNextInProgress = false;
                 setState(() {});
               }
             } else {
-              baseProvider.showNegativeAlert('Oops! we ran into trouble!',
-                  'Please try again in sometime', context);
+              baseProvider.showNegativeAlert('username not available',
+                  'Please choose another username', context);
               baseProvider.isLoginNextInProgress = false;
               setState(() {});
             }
-          } else {
-            baseProvider.showNegativeAlert('Oops! we ran into trouble!',
-                'Please try again in sometime', context);
-            baseProvider.isLoginNextInProgress = false;
-            setState(() {});
           }
-
           break;
         }
     }
@@ -655,7 +607,7 @@ class _LoginControllerState extends State<LoginController>
       //set 'tutorial shown' flag to false to ensure tutorial gets shown to the user
       lclDbProvider.saveHomeTutorialComplete = false;
       _controller.animateToPage(NameInputScreen.index,
-          duration: Duration(seconds: 2), curve: Curves.easeOutCirc);
+          duration: Duration(seconds: 2), curve: Curves.easeInToLinear);
       //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user
@@ -683,7 +635,7 @@ class _LoginControllerState extends State<LoginController>
     if (!baseProvider.isLoginNextInProgress) {
       baseProvider.isOtpResendCount = 0;
       _controller.animateToPage(MobileInputScreen.index,
-          duration: Duration(milliseconds: 300), curve: Curves.easeOutCirc);
+          duration: Duration(milliseconds: 300), curve: Curves.easeInToLinear);
     }
   }
 
