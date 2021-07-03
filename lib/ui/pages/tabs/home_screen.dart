@@ -239,24 +239,31 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             width: 30,
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                getGreeting().toUpperCase(),
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: SizeConfig.largeTextSize),
-              ),
-              Text(
-                baseProvider.myUser.name,
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                    color: Colors.white, fontSize: SizeConfig.largeTextSize),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  getGreeting().toUpperCase(),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: SizeConfig.largeTextSize),
+                ),
+                SizedBox(height: 5),
+                FittedBox(
+                  child: Text(
+                    baseProvider.myUser.name,
+                    maxLines: 1,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: SizeConfig.largeTextSize),
+                  ),
+                ),
+              ],
+            ),
           )
         ],
       ),

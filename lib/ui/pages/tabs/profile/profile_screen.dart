@@ -268,6 +268,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 width: SizeConfig.screenWidth * 0.5,
                                 child: Text(
                                   baseProvider.myUser.name,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: SizeConfig.cardTitleTextSize,
