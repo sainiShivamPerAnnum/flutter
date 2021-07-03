@@ -142,9 +142,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Onboard:
           _addPageData(GetStartedPage(), OnboardPageConfig);
           break;
-        case Pages.EditProfile:
-          _addPageData(EditProfile(), EditProfileConfig);
-          break;
+        // case Pages.EditProfile:
+        //   _addPageData(EditProfile(), EditProfileConfig);
+        //   break;
         case Pages.MfDetails:
           _addPageData(MFDetailsPage(), MfDetailsPageConfig);
           break;

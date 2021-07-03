@@ -76,7 +76,8 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
         if (url != null) {
           isUploaded = true;
           baseProvider.isProfilePictureUpdated = true;
-          baseProvider.myUserDpUrl = url;
+          //baseProvider.myUserDpUrl = url;
+          baseProvider.setDisplayPictureUrl(url);
         }
         print(url);
       });
@@ -148,11 +149,11 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
                   }
                 },
                 child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 24),
+                  margin: EdgeInsets.only(top: 24, bottom: 8),
                   width: double.infinity,
                   height: 40,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(8),
                     color: UiConstants.primaryColor,
                   ),
                   alignment: Alignment.center,
@@ -179,7 +180,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
                   height: 40,
                   decoration: BoxDecoration(
                     border: Border.all(color: UiConstants.primaryColor),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   alignment: Alignment.center,
                   child: isUploading

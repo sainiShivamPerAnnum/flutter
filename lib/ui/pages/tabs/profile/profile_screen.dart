@@ -85,63 +85,70 @@ class _ProfilePageState extends State<ProfilePage> {
           physics: BouncingScrollPhysics(),
           children: [
             Container(
-              height: kToolbarHeight * 1.6,
+              height: SizeConfig.screenHeight * 0.1,
             ),
-            FlipCard(
-              key: cardKey,
-              direction: FlipDirection.VERTICAL, // default
-              speed: 800,
-              flipOnTouch: false,
-              front: UserProfileCard(),
-              back: UserEditProfileCard(
-                oldname: baseProvider.myUser.name,
-              ),
+            Consumer<BaseUtil>(
+              builder: (ctx, bp, child) {
+                return FlipCard(
+                  key: cardKey,
+                  direction: FlipDirection.VERTICAL, // default
+                  speed: 800,
+                  flipOnTouch: false,
+                  front: UserProfileCard(),
+                  back: UserEditProfileCard(
+                    oldname: baseProvider.myUser.name,
+                  ),
+                );
+              },
             ),
-            showEmailVerifyLink(),
+            Consumer<BaseUtil>(
+              builder: (ctx, bp, child) {
+                return showEmailVerifyLink();
+              },
+            ),
             Container(
               child: Column(
                 children: [
-                  baseProvider.myUser.username == null
-                      ? ProfileTabTile(
-                          leadWidget: Icon(
-                            Icons.account_circle_outlined,
-                            size: SizeConfig.blockSizeHorizontal * 5,
-                            color: UiConstants.primaryColor,
-                          ),
-                          title: "Username",
-                          onPress: () {},
-                          trailWidget: Container(
-                            height: 30,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                              border:
-                                  Border.all(color: Colors.orange, width: 2),
-                            ),
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            alignment: Alignment.center,
-                            child: GestureDetector(
-                              // style: ElevatedButton.styleFrom(
-                              //   primary: UiConstants.primaryColor,
-                              //   shadowColor:
-                              //       UiConstants.primaryColor.withOpacity(0.3),
-                              // ),
-                              onTap: () {
-                                if (baseProvider.myUser.username == null)
-                                  appState.currentAction = PageAction(
-                                      state: PageState.addPage,
-                                      page: ClaimUsernamePageConfig);
-                              },
-                              child: Text(
-                                "Claim!",
-                                style: GoogleFonts.montserrat(
-                                    color: Colors.orange,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: SizeConfig.mediumTextSize),
+                  Consumer<BaseUtil>(
+                    builder: (ctx, bp, child) {
+                      return baseProvider.myUser.username == null
+                          ? ProfileTabTile(
+                              leadWidget: Icon(
+                                Icons.account_circle_outlined,
+                                size: SizeConfig.blockSizeHorizontal * 5,
+                                color: UiConstants.primaryColor,
                               ),
-                            ),
-                          ),
-                        )
-                      : SizedBox(),
+                              title: "Username",
+                              onPress: () {},
+                              trailWidget: Container(
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                  border: Border.all(
+                                      color: Colors.orange, width: 2),
+                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                alignment: Alignment.center,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    if (baseProvider.myUser.username == null)
+                                      appState.currentAction = PageAction(
+                                          state: PageState.addPage,
+                                          page: ClaimUsernamePageConfig);
+                                  },
+                                  child: Text(
+                                    "Claim!",
+                                    style: GoogleFonts.montserrat(
+                                        color: Colors.orange,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: SizeConfig.mediumTextSize),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : SizedBox();
+                    },
+                  ),
                   ProfileTabTilePan(
                     logo: "images/contact-book.png",
                     title: "PAN Number",
@@ -1206,7 +1213,8 @@ class _UserEditProfileCardState extends State<UserEditProfileCard> {
                   setState(() {
                     isUploading = !isUploading;
                   });
-                  baseProvider.myUser.name = _nameController.text.trim();
+                  // baseProvider.myUser.name = _nameController.text.trim();
+                  baseProvider.setName(_nameController.text.trim());
                   dbProvider.updateUser(baseProvider.myUser).then((flag) {
                     setState(() {
                       isUploading = false;

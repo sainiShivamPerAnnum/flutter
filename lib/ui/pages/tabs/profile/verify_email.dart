@@ -180,8 +180,8 @@ class VerifyEmailState extends State<VerifyEmail> {
       _isVerifying = true;
     });
     if (generatedOTP == otp.text) {
-      baseProvider.myUser.email = email.text.trim();
-      baseProvider.myUser.isEmailVerified = true;
+      baseProvider.setEmail(email.text.trim());
+      baseProvider.setEmailVerified();
       bool res = await dbProvider.updateUser(baseProvider.myUser);
       setState(() {
         _isVerifying = false;
@@ -197,6 +197,7 @@ class VerifyEmailState extends State<VerifyEmail> {
     } else {
       setState(() {
         _isOtpIncorrect = true;
+        _isVerifying = false;
       });
     }
   }

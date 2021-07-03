@@ -17,18 +17,20 @@ class _ClaimUsernameState extends State<ClaimUsername> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   bool _isUpdating = false;
+  final regex = RegExp(r"^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-z0-9.]{4,20}$");
 
   setUsername() async {
     setState(() {
       _isUpdating = true;
     });
     String username =
-        _usernameKey.currentState.username.text.replaceAll('.', '@');
-    if (await dbProvider.checkIfUsernameIsAvailable(username)) {
+        _usernameKey.currentState.username.text.trim().replaceAll('.', '@');
+    if (regex.hasMatch(username) &&
+        await dbProvider.checkIfUsernameIsAvailable(username)) {
       bool res =
           await dbProvider.setUsername(username, baseProvider.firebaseUser.uid);
       if (res) {
-        baseProvider.myUser.username = username;
+        baseProvider.setUsername(username);
         bool flag = await dbProvider.updateUser(baseProvider.myUser);
         if (flag) {
           setState(() {

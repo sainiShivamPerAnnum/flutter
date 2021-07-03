@@ -197,8 +197,8 @@ class _RootState extends State<Root> {
                 delegate.parseRoute(Uri.parse("d-ham"));
               },
               child: Container(
-                height: SizeConfig.blockSizeVertical * 5.6,
-                width: SizeConfig.blockSizeVertical * 5.6,
+                height: SizeConfig.blockSizeVertical * 5,
+                width: SizeConfig.blockSizeVertical * 5,
                 margin: EdgeInsets.symmetric(
                   horizontal: SizeConfig.blockSizeHorizontal * 5,
                   vertical: kToolbarHeight * 0.4,
@@ -209,7 +209,7 @@ class _RootState extends State<Root> {
                 ),
                 alignment: Alignment.center,
                 child: Container(
-                  height: SizeConfig.blockSizeVertical * 1.6,
+                  height: SizeConfig.blockSizeVertical * 1.4,
                   child: Image.asset(
                     "images/menu.png",
                     color: (appState.getCurrentTabIndex == 0 ||
