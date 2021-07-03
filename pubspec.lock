@@ -766,7 +766,7 @@ packages:
     source: hosted
     version: "4.0.1"
   pin_input_text_field:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: pin_input_text_field
       url: "https://pub.dartlang.org"
