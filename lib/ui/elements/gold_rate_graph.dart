@@ -34,7 +34,7 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
   Widget build(BuildContext context) {
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     if(_dataPointsState=="loading") {
-      print('loading');
+      // print('loading');
       _getDataPoints().then((value){
         if(value!=null) { 
           _dataPoints = value;
@@ -49,7 +49,6 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
           // }
           for(int i=0;i<_dataPoints.length;i++) {
             _bezierPoints.add(DataPoint(value: _dataPoints[i].rate, xAxis: _dataPoints[i].timestamp));
-            print('at i : $i' );
             if(_dataPoints[i].timestamp.month%3==0) {
               double rateSum = _dataPoints[i].rate;
               int j = i+1;
@@ -188,48 +187,48 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
     List<GoldGraphPoint> _res;
     try {
        _res = await augmontProvider.getGoldRateChart(DateTime(2019,1,1), DateTime.now());
-       final Map<DateTime, double> line1 = {
-        DateTime.utc(2018, 03, 19): 3130,
-        DateTime.utc(2018, 03, 21): 4000,
-        DateTime.utc(2018, 03, 22): 3800,
-        DateTime.utc(2018, 04, 29): 3199,
-        DateTime.utc(2018, 05, 30): 3205,
-        DateTime.utc(2018, 06, 10): 3152,
-        DateTime.utc(2018, 06, 11): 3350,
-        DateTime.utc(2018, 07, 18): 3053,
-        DateTime.utc(2018, 08, 03): 3118,
-        DateTime.utc(2018, 09, 02): 3138,
-        DateTime.utc(2018, 10, 04): 3281,
-        DateTime.utc(2018, 12, 10): 3142,
-        DateTime.utc(2019, 01, 25): 3223,
-        DateTime.utc(2019, 02, 17): 3223,
-        DateTime.utc(2019, 03, 12): 3443,
-        DateTime.utc(2019, 04, 14): 3280,
-        DateTime.utc(2019, 05, 18): 3279,
-        DateTime.utc(2019, 06, 10): 3294,
-        DateTime.utc(2019, 07, 18): 3466,
-        DateTime.utc(2019, 08, 03): 3590,
-        DateTime.utc(2019, 09, 02): 3994,
-        DateTime.utc(2019, 10, 04): 3877,
-        DateTime.utc(2019, 12, 10): 4008,
-        DateTime.utc(2020, 01, 25): 3925,
-        DateTime.utc(2020, 02, 17): 4026,
-        DateTime.utc(2020, 03, 12): 4221,
-        DateTime.utc(2020, 04, 14): 4347,
-        DateTime.utc(2020, 05, 18): 4473,
-        DateTime.utc(2020, 06, 10): 4650,
-        DateTime.utc(2020, 07, 18): 4848,
-        DateTime.utc(2020, 08, 03): 5050,
-        DateTime.utc(2020, 09, 02): 5530,
-        DateTime.utc(2020, 10, 04): 5340,
-        DateTime.utc(2020, 12, 10): 5225,
-        DateTime.utc(2021, 01, 25): 5141,
-        DateTime.utc(2021, 02, 17): 4702,
-      };
-      _res.clear();
-      line1.forEach((key, value) {
-        _res.add(GoldGraphPoint(value, key));
-      });
+      //  final Map<DateTime, double> line1 = {
+      //   DateTime.utc(2018, 03, 19): 3130,
+      //   DateTime.utc(2018, 03, 21): 4000,
+      //   DateTime.utc(2018, 03, 22): 3800,
+      //   DateTime.utc(2018, 04, 29): 3199,
+      //   DateTime.utc(2018, 05, 30): 3205,
+      //   DateTime.utc(2018, 06, 10): 3152,
+      //   DateTime.utc(2018, 06, 11): 3350,
+      //   DateTime.utc(2018, 07, 18): 3053,
+      //   DateTime.utc(2018, 08, 03): 3118,
+      //   DateTime.utc(2018, 09, 02): 3138,
+      //   DateTime.utc(2018, 10, 04): 3281,
+      //   DateTime.utc(2018, 12, 10): 3142,
+      //   DateTime.utc(2019, 01, 25): 3223,
+      //   DateTime.utc(2019, 02, 17): 3223,
+      //   DateTime.utc(2019, 03, 12): 3443,
+      //   DateTime.utc(2019, 04, 14): 3280,
+      //   DateTime.utc(2019, 05, 18): 3279,
+      //   DateTime.utc(2019, 06, 10): 3294,
+      //   DateTime.utc(2019, 07, 18): 3466,
+      //   DateTime.utc(2019, 08, 03): 3590,
+      //   DateTime.utc(2019, 09, 02): 3994,
+      //   DateTime.utc(2019, 10, 04): 3877,
+      //   DateTime.utc(2019, 12, 10): 4008,
+      //   DateTime.utc(2020, 01, 25): 3925,
+      //   DateTime.utc(2020, 02, 17): 4026,
+      //   DateTime.utc(2020, 03, 12): 4221,
+      //   DateTime.utc(2020, 04, 14): 4347,
+      //   DateTime.utc(2020, 05, 18): 4473,
+      //   DateTime.utc(2020, 06, 10): 4650,
+      //   DateTime.utc(2020, 07, 18): 4848,
+      //   DateTime.utc(2020, 08, 03): 5050,
+      //   DateTime.utc(2020, 09, 02): 5530,
+      //   DateTime.utc(2020, 10, 04): 5340,
+      //   DateTime.utc(2020, 12, 10): 5225,
+      //   DateTime.utc(2021, 01, 25): 5141,
+      //   DateTime.utc(2021, 02, 17): 4702,
+      // };
+      // _res.clear();
+      // line1.forEach((key, value) {
+      //   _res.add(GoldGraphPoint(value, key));
+      // });
     } catch(err) {
       print(err);
     }
