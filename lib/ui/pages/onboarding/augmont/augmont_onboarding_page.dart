@@ -36,13 +36,13 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
   static TextEditingController _panInput = new TextEditingController();
   static TextEditingController _panHolderNameInput =
       new TextEditingController();
-  static TextEditingController _bankHolderNameInput =
-      new TextEditingController();
-  static TextEditingController _bankAccountNumberInput =
-      new TextEditingController();
-  static TextEditingController _reenterbankAccountNumberInput =
-      new TextEditingController();
-  static TextEditingController _bankIfscInput = new TextEditingController();
+  // static TextEditingController _bankHolderNameInput =
+  //     new TextEditingController();
+  // static TextEditingController _bankAccountNumberInput =
+  //     new TextEditingController();
+  // static TextEditingController _reenterbankAccountNumberInput =
+  //     new TextEditingController();
+  // static TextEditingController _bankIfscInput = new TextEditingController();
   bool _isInit = false;
   static String stateChosenValue;
 
@@ -234,83 +234,83 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                       .toList(),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 10, left: 10),
-                child: Text(
-                  "Bank Details",
-                  style: TextStyle(color: Colors.blueGrey[600]),
-                ),
-              ),
-              Divider(
-                indent: 10,
-                endIndent: 10,
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10, left: 10),
-                child: Text("Account Holder Name"),
-              ),
-              InputField(
-                child: TextFormField(
-                  decoration:
-                      inputFieldDecoration('Your name as per your bank'),
-                  controller: _bankHolderNameInput,
-                  keyboardType: TextInputType.name,
-                  textCapitalization: TextCapitalization.characters,
-                  enabled: true,
-                  autofocus: false,
-                  validator: (value) {
-                    return null;
-                  },
-                ),
-              ),
-              SizedBox(height: 10),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text("Bank Account Number"),
-              ),
-              InputField(
-                child: TextFormField(
-                  decoration: inputFieldDecoration('Your bank account number'),
-                  controller: _bankAccountNumberInput,
-                  autofocus: false,
-                  keyboardType: TextInputType.number,
-                  enabled: true,
-                  validator: (value) => null,
-                ),
-              ),
-              SizedBox(height: 10),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text("Confirm Bank Account Number"),
-              ),
-              InputField(
-                child: TextFormField(
-                  decoration:
-                      inputFieldDecoration('Re-enter bank account number'),
-                  controller: _reenterbankAccountNumberInput,
-                  autofocus: false,
-                  obscureText: true,
-                  keyboardType: TextInputType.number,
-                  enabled: true,
-                  validator: (value) => null,
-                ),
-              ),
-              SizedBox(height: 10),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text("Bank IFSC"),
-              ),
-              InputField(
-                child: TextFormField(
-                  decoration: inputFieldDecoration('Your bank\'s IFSC code'),
-                  controller: _bankIfscInput,
-                  autofocus: false,
-                  keyboardType: TextInputType.streetAddress,
-                  textCapitalization: TextCapitalization.characters,
-                  enabled: true,
-                  validator: (value) => null,
-                ),
-              ),
+              // Padding(
+              //   padding: EdgeInsets.only(top: 10, left: 10),
+              //   child: Text(
+              //     "Bank Details",
+              //     style: TextStyle(color: Colors.blueGrey[600]),
+              //   ),
+              // ),
+              // Divider(
+              //   indent: 10,
+              //   endIndent: 10,
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.only(top: 10, left: 10),
+              //   child: Text("Account Holder Name"),
+              // ),
+              // InputField(
+              //   child: TextFormField(
+              //     decoration:
+              //         inputFieldDecoration('Your name as per your bank'),
+              //     controller: _bankHolderNameInput,
+              //     keyboardType: TextInputType.name,
+              //     textCapitalization: TextCapitalization.characters,
+              //     enabled: true,
+              //     autofocus: false,
+              //     validator: (value) {
+              //       return null;
+              //     },
+              //   ),
+              // ),
+              // SizedBox(height: 10),
+              // Padding(
+              //   padding: EdgeInsets.only(left: 10),
+              //   child: Text("Bank Account Number"),
+              // ),
+              // InputField(
+              //   child: TextFormField(
+              //     decoration: inputFieldDecoration('Your bank account number'),
+              //     controller: _bankAccountNumberInput,
+              //     autofocus: false,
+              //     keyboardType: TextInputType.number,
+              //     enabled: true,
+              //     validator: (value) => null,
+              //   ),
+              // ),
+              // SizedBox(height: 10),
+              // Padding(
+              //   padding: EdgeInsets.only(left: 10),
+              //   child: Text("Confirm Bank Account Number"),
+              // ),
+              // InputField(
+              //   child: TextFormField(
+              //     decoration:
+              //         inputFieldDecoration('Re-enter bank account number'),
+              //     controller: _reenterbankAccountNumberInput,
+              //     autofocus: false,
+              //     obscureText: true,
+              //     keyboardType: TextInputType.number,
+              //     enabled: true,
+              //     validator: (value) => null,
+              //   ),
+              // ),
+              // SizedBox(height: 10),
+              // Padding(
+              //   padding: EdgeInsets.only(left: 10),
+              //   child: Text("Bank IFSC"),
+              // ),
+              // InputField(
+              //   child: TextFormField(
+              //     decoration: inputFieldDecoration('Your bank\'s IFSC code'),
+              //     controller: _bankIfscInput,
+              //     autofocus: false,
+              //     keyboardType: TextInputType.streetAddress,
+              //     textCapitalization: TextCapitalization.characters,
+              //     enabled: true,
+              //     validator: (value) => null,
+              //   ),
+              // ),
               SizedBox(height: 10),
               Container(
                 width: MediaQuery.of(context).size.width - 50,
@@ -347,7 +347,8 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                         ///next get all details required for registration
                         Map<String, dynamic> veriDetails =
                             await _getVerifiedDetails(_panInput.text,
-                                _panHolderNameInput.text, _bankIfscInput.text);
+                                _panHolderNameInput.text);
+                                //  _bankIfscInput.text);
 
                         if (veriDetails != null &&
                             veriDetails['flag'] != null &&
@@ -362,21 +363,18 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                                 AugmontConfirmRegnDialog(
                               panNumber: _panInput.text,
                               panName: _panHolderNameInput.text,
-                              bankHolderName: _bankHolderNameInput.text,
-                              bankBranchName: veriDetails['bank_branch'],
-                              bankAccNo: _bankAccountNumberInput.text,
-                              bankIfsc: _bankIfscInput.text,
-                              bankName: veriDetails['bank_name'],
+                              bankHolderName: "",
+                              bankBranchName: "",
+                              bankAccNo: "",
+                              bankIfsc: "",
+                              bankName: "",
                               onAccept: () async {
                                 ///finally now register the augmont user
                                 UserAugmontDetail detail =
                                     await augmontProvider.createUser(
                                         baseProvider.myUser.mobile,
                                         _panInput.text,
-                                        stateChosenValue,
-                                        _bankHolderNameInput.text,
-                                        _bankAccountNumberInput.text,
-                                        _bankIfscInput.text);
+                                        stateChosenValue,"","","");
                                 if (detail == null) {
                                   baseProvider.showNegativeAlert(
                                       'Registration Failed',
@@ -402,6 +400,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                             ),
                           );
                         } else {
+                          print('inside failed name');
                           baseProvider.showNegativeAlert(
                               'Invalid Details',
                               veriDetails['reason'] ?? 'Please try again',
@@ -444,35 +443,35 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
       baseProvider.showNegativeAlert('State missing',
           'Kindly enter your current residential state', context);
       return false;
-    } else if (_bankHolderNameInput.text.isEmpty) {
-      baseProvider.showNegativeAlert(
-          'Name missing', 'Kindly enter your name as per your bank', context);
-      return false;
-    } else if (_bankAccountNumberInput.text.isEmpty) {
-      baseProvider.showNegativeAlert(
-          'Account missing', 'Kindly enter your bank account number', context);
-      return false;
-    } else if (_bankAccountNumberInput.text !=
-        _reenterbankAccountNumberInput.text) {
-      baseProvider.showNegativeAlert('Account number mismatch',
-          'The bank account numbers did not match', context);
-      return false;
-    } else if (_bankIfscInput.text.isEmpty) {
-      baseProvider.showNegativeAlert(
-          'Name missing', 'Kindly enter your bank IFSC code', context);
-      return false;
-    }
+    } 
+    // else if (_bankHolderNameInput.text.isEmpty) {
+    //   baseProvider.showNegativeAlert(
+    //       'Name missing', 'Kindly enter your name as per your bank', context);
+    //   return false;
+    // } else if (_bankAccountNumberInput.text.isEmpty) {
+    //   baseProvider.showNegativeAlert(
+    //       'Account missing', 'Kindly enter your bank account number', context);
+    //   return false;
+    // } else if (_bankAccountNumberInput.text !=
+    //     _reenterbankAccountNumberInput.text) {
+    //   baseProvider.showNegativeAlert('Account number mismatch',
+    //       'The bank account numbers did not match', context);
+    //   return false;
+    // } else if (_bankIfscInput.text.isEmpty) {
+    //   baseProvider.showNegativeAlert(
+    //       'Name missing', 'Kindly enter your bank IFSC code', context);
+    //   return false;
+    // }
     return true;
   }
 
   Future<Map<String, dynamic>> _getVerifiedDetails(
-      String enteredPan, String enteredPanName, String enteredIfsc) async {
-    if (enteredPan == null || enteredPan.isEmpty || enteredIfsc == null || enteredIfsc.isEmpty)
+      String enteredPan, String enteredPanName) async {
+    if (enteredPan == null || enteredPan.isEmpty)
       return {'flag': false, 'reason': 'Invalid Details'};
     bool _flag = true;
     String _reason = '';
     if (!iProvider.isInit()) await iProvider.init();
-
     ///test pan number using icici api and verify if the name entered by user matches name fetched
     var kObj = await iProvider.getKycStatus(enteredPan);
     if (kObj == null ||
@@ -496,27 +495,28 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
       }
     }
     if (!_flag) {
+      print('returning false flag');
       return {'flag': _flag, 'reason': _reason};
     }
 
     ///test ifsc code using icici api
-    var bankDetail = await iProvider.getBankInfo(enteredPanName, enteredIfsc);
-    if (bankDetail == null ||
-        bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
-        bankDetail[GetBankDetail.resBankName] == null) {
-      log.error('Couldnt fetch an appropriate response');
-      _flag = false;
-      _reason = 'Invalid IFSC Code';
-    }
-    if (!_flag) {
-      return {'flag': _flag, 'reason': _reason};
-    }
+    // var bankDetail = await iProvider.getBankInfo(aPan, aIfsc);
+    // if (bankDetail == null ||
+    //     bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
+    //     bankDetail[GetBankDetail.resBankName] == null) {
+    //   log.error('Couldnt fetch an appropriate response');
+    //   _flag = false;
+    //   _reason = 'Invalid IFSC Code';
+    // }
+    // if (!_flag) {
+    //   return {'flag': _flag, 'reason': _reason};
+    // }
 
     return {
       'flag': true,
       'pan_name': kObj[GetKycStatus.resName],
-      'bank_name': bankDetail[GetBankDetail.resBankName],
-      'bank_branch': bankDetail[GetBankDetail.resBranchName]
+      // 'bank_name': bankDetail[GetBankDetail.resBankName],
+      // 'bank_branch': bankDetail[GetBankDetail.resBranchName]
     };
   }
 

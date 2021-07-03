@@ -100,7 +100,7 @@ class _EditProfileState extends State<EditProfile> {
         if (url != null) {
           isUploaded = true;
           baseProvider.isProfilePictureUpdated = true;
-          baseProvider.myUserDpUrl = url;
+          baseProvider.setDisplayPictureUrl(url);
         }
         print(url);
       });
@@ -458,7 +458,7 @@ class _EditProfileState extends State<EditProfile> {
                                 color: UiConstants.spinnerColor2,
                                 size: 18.0,
                               ),
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState.validate()) {
                             // baseProvider.firebaseUser = await FirebaseAuth.instance.currentUser();
                             FocusScope.of(context).unfocus();
@@ -485,12 +485,13 @@ class _EditProfileState extends State<EditProfile> {
 
                               return;
                             } else {
-                              baseProvider.myUser.name = pName;
+                              // baseProvider.myUser.name = pName;
+                              baseProvider.setUserName(pName);
                               baseProvider.myUser.email = pEmail;
                               baseProvider.myUser.age = pAge;
                               BaseAnalytics.logUserProfile(baseProvider.myUser);
                               if (profilePic != null) {
-                                updatePicture(context).then((flag) {
+                                await updatePicture(context).then((flag) {
                                   if (flag) {
                                     BaseAnalytics.logProfilePictureAdded();
                                     baseProvider.showPositiveAlert(
@@ -506,7 +507,7 @@ class _EditProfileState extends State<EditProfile> {
                                 });
                               }
 
-                              dbProvider
+                              await dbProvider
                                   .updateUser(baseProvider.myUser)
                                   .then((flag) {
                                 if (flag) {

@@ -114,17 +114,22 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                     (widget.panNumber != null)
                         ? _buildRow('Name as per PAN', widget.panName)
                         : Container(),
-                    _buildRow('Bank Account No', widget.bankAccNo),
+                    (widget.bankAccNo != null && widget.bankAccNo.isNotEmpty) ?
+                    _buildRow('Bank Account No', widget.bankAccNo) : Container(),
+                    (widget.bankHolderName!=null && widget.bankHolderName.isNotEmpty) ?
                     _buildRow(
-                        'Name of Bank account holder', widget.bankHolderName),
-                    _buildRow('Name of Bank', widget.bankName),
-                    _buildRow('Bank Branch Name', widget.bankBranchName),
-                    _buildRow('Bank IFSC', widget.bankIfsc),
+                        'Name of Bank account holder', widget.bankHolderName) : Container(),
+                    (widget.bankName!=null && widget.bankName.isNotEmpty) ?
+                    _buildRow('Name of Bank', widget.bankName) : Container(),
+                    (widget.bankBranchName!=null && widget.bankBranchName.isNotEmpty) ?
+                    _buildRow('Bank Branch Name', widget.bankBranchName) : Container(),
+                    (widget.bankIfsc!=null && widget.bankIfsc.isNotEmpty) ?
+                    _buildRow('Bank IFSC', widget.bankIfsc) : Container(),
                     (widget.panNumber != null)
                         ? Padding(
                             padding: EdgeInsets.all(10),
                             child: Text(
-                              'Your PAN information cant be changed later',
+                              'This information cant be changed later',
                               style: TextStyle(
                                   fontStyle: FontStyle.italic,
                                   fontSize: SizeConfig.smallTextSize),
