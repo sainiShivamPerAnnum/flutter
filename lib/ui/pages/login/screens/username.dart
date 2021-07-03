@@ -89,7 +89,7 @@ class UsernameState extends State<Username> {
                 ),
               ),
             ),
-            Text("You can change this later too in the profile section"),
+            Text("You cannot change your username anytime later"),
             SizedBox(
               height: 16,
             ),

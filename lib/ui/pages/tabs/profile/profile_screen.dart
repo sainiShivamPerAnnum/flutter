@@ -302,7 +302,8 @@ class _ProfilePageState extends State<ProfilePage> {
             },
             child: Container(
               alignment: Alignment.center,
-              margin: EdgeInsets.only(bottom: 24),
+              margin: EdgeInsets.symmetric(
+                  vertical: 16, horizontal: SizeConfig.blockSizeHorizontal * 5),
               width:
                   SizeConfig.screenWidth - SizeConfig.blockSizeHorizontal * 16,
               child: MarqueeWidget(
