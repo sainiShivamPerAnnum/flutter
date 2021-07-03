@@ -146,13 +146,17 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
       child: new Material(
         child: MaterialButton(
           child: (!baseProvider.isAugDepositRouteLogicInProgress)
-              ? Text(
-                  _getActionButtonText(),
-                  style: Theme.of(context)
-                      .textTheme
-                      .button
-                      .copyWith(color: Colors.white),
-                )
+              ? Consumer<BaseUtil>(
+                builder: (ctx, bp, child) {
+                  return Text(
+                    _getActionButtonText(),
+                    style: Theme.of(context)
+                        .textTheme
+                        .button
+                        .copyWith(color: Colors.white),
+                  );
+                },
+              )
               : SpinKitThreeBounce(
                   color: UiConstants.spinnerColor2,
                   size: 18.0,

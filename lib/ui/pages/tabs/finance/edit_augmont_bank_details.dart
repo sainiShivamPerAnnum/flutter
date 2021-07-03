@@ -42,6 +42,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
   TextEditingController _bankHolderNameController;
   TextEditingController _bankAccNoController;
   TextEditingController _bankIfscController;
+  TextEditingController _bankAccNoConfirmController;
   bool _isInitialized = false;
   DBModel dbProvider;
   BaseUtil baseProvider;
@@ -60,6 +61,11 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
               text: baseProvider.augmontDetail.bankHolderName)
           : new TextEditingController();
       _bankAccNoController = (baseProvider.augmontDetail != null &&
+              baseProvider.augmontDetail.bankAccNo != null)
+          ? new TextEditingController(
+              text: baseProvider.augmontDetail.bankAccNo)
+          : new TextEditingController();
+        _bankAccNoConfirmController = (baseProvider.augmontDetail != null &&
               baseProvider.augmontDetail.bankAccNo != null)
           ? new TextEditingController(
               text: baseProvider.augmontDetail.bankAccNo)
@@ -191,6 +197,28 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     height: 20,
                   ),
                   TextFormField(
+                    controller: _bankAccNoConfirmController,
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: 'Confirm Bank Account Number',
+                      focusColor: UiConstants.primaryColor,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      prefixIcon: Icon(Icons.keyboard),
+                    ),
+                    validator: (value) {
+                      print(value);
+                      return (value != null && value.isNotEmpty)
+                          ? null
+                          : 'Field cannot be empty';
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
                     controller: _bankIfscController,
                     keyboardType: TextInputType.streetAddress,
                     textCapitalization: TextCapitalization.characters,
@@ -263,6 +291,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
     ///CHECK FOR CHANGES
     var pBankHolderName = _bankHolderNameController.text;
     var pBankAccNo = _bankAccNoController.text;
+    var pConfirmBankAccNo = _bankAccNoConfirmController.text;
     var pBankIfsc = _bankIfscController.text;
 
     var curBankHolderName = baseProvider.augmontDetail.bankHolderName;
@@ -277,6 +306,14 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
     if (noChanges) {
       baseProvider.showNegativeAlert(
           'No Update', 'No changes were made', context);
+      baseProvider.isEditAugmontBankDetailInProgress = false;
+      setState(() {});
+      return;
+    }
+
+    if(pConfirmBankAccNo!=pBankAccNo) {
+      baseProvider.showNegativeAlert(
+          'Fields mismatch', 'Bank account numbers do not match', context);
       baseProvider.isEditAugmontBankDetailInProgress = false;
       setState(() {});
       return;
@@ -309,9 +346,10 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
               bankBranchName: bankDetail[GetBankDetail.resBranchName],
               onAccept: () async {
                 ///FINALLY NOW UPDATE THE BANK DETAILS
-                baseProvider.augmontDetail.bankHolderName = pBankHolderName;
-                baseProvider.augmontDetail.bankAccNo = pBankAccNo;
-                baseProvider.augmontDetail.ifsc = pBankIfsc;
+                // baseProvider.augmontDetail.bankHolderName = pBankHolderName;
+                // baseProvider.augmontDetail.bankAccNo = pBankAccNo;
+                // baseProvider.augmontDetail.ifsc = pBankIfsc;
+                baseProvider.updateAugmontDetails(pBankHolderName, pBankAccNo, pBankIfsc);
                 dbProvider
                     .updateUserAugmontDetails(
                         baseProvider.myUser.uid, baseProvider.augmontDetail)
