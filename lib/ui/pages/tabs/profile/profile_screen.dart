@@ -106,6 +106,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 return showEmailVerifyLink();
               },
             ),
+            SizedBox(height: 16),
             Container(
               child: Column(
                 children: [
@@ -1239,7 +1240,6 @@ class _UserEditProfileCardState extends State<UserEditProfileCard> {
                     ),
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  height: 32,
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: isUploading
                       ? SpinKitThreeBounce(
@@ -1269,10 +1269,9 @@ class _UserEditProfileCardState extends State<UserEditProfileCard> {
                     ),
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  height: 32,
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text(
-                    "Cancle",
+                    "Cancel",
                     style: GoogleFonts.montserrat(
                       color: Colors.white,
                       fontSize: SizeConfig.mediumTextSize,

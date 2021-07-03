@@ -54,11 +54,11 @@ class NameInputScreenState extends State<NameInputScreen> {
   bool _isContinuedWithGoogle = false;
   bool _emailEnabled = false;
   String emailText = "Email";
+  bool isEmailEntered = false;
 
   showEmailOptions() {
     showModalBottomSheet(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        isDismissible: false,
         context: context,
         builder: (ctx) {
           return Wrap(
@@ -90,7 +90,6 @@ class NameInputScreenState extends State<NameInputScreen> {
                         width: 24,
                       ),
                       title: Text("Continue with Google"),
-                      subtitle: Text("No verification required"),
                       onTap: () async {
                         final GoogleSignInAccount googleUser =
                             await GoogleSignIn().signIn();
@@ -99,6 +98,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                           baseProvider.myUser.isEmailVerified = true;
                           baseProvider.myUserDpUrl = googleUser.photoUrl;
                           setState(() {
+                            isEmailEntered = true;
                             _isContinuedWithGoogle = true;
                             emailText = googleUser.email;
                           });
@@ -117,9 +117,16 @@ class NameInputScreenState extends State<NameInputScreen> {
                         Icons.alternate_email,
                         color: UiConstants.primaryColor,
                       ),
-                      title: Text("use another email"),
+                      title: Text("Use another email"),
+                      subtitle: Text(
+                        "this requires an extra verification step",
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      ),
                       onTap: () {
                         setState(() {
+                          isEmailEntered = true;
                           _emailEnabled = true;
                         });
                         Navigator.pop(context);
@@ -631,6 +638,9 @@ class NameInputScreenState extends State<NameInputScreen> {
   get formKey => _formKey;
 
   bool isValidDate() {
+    setState(() {
+      dateInputError = "";
+    });
     String inputDate = _yearFieldController.text +
         _monthFieldController.text +
         _dateFieldController.text;
