@@ -33,6 +33,15 @@ class _FinancePageState extends State<FinancePage> {
 
   Future<void> _onFundsRefresh() async {
     //TODO ADD LOADER
+
+    ///////HEY NIMIT THIS IS TEST CODE TO FETCH GOLD RATES BETWEEN A FROM AND TO DATE////////////////
+    // DateTime dt = new DateTime(2019,1,1);
+    // DateTime dt2 = DateTime.now();
+    // augmontProvider.getGoldRateChart(dt, dt2).then((value) {
+    //   log.debug(value);
+    //   log.debug('tester');
+    // });
+    ////////////////////////////////////////////////////////////////////////////////////
     return dbProvider.getUserFundWallet(baseProvider.myUser.uid).then((aValue) {
       if (aValue != null) {
         baseProvider.userFundWallet = aValue;
