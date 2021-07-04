@@ -576,13 +576,13 @@ class Api {
   >
 <html >
 
-<head>ks
+<head>
 
   <title></title>
 
   <style type="text/css">
     table,
-    td {ks
+    td {
       color: #000000;
     }
 

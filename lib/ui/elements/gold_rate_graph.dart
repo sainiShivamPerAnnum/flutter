@@ -25,7 +25,7 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
   List<DataPoint<double>> _bezierPointsCustom = [];
   Map<double, DateTime> _bezierPointsCustomMap = {};
   String _dataPointsState = "loading";
-  int _selectedFrequency = 1;
+  int _selectedFrequency = 0;
   DateTime _lastDate;
   double _height;
 
@@ -104,27 +104,6 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
               GestureDetector(
                 onTap : (){
                   setState(() {
-                    _selectedFrequency = 0;
-                  });
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 2,
-                      color: UiConstants.primaryColor,
-                    ),
-                    borderRadius: BorderRadius.circular(100),
-                    color: (_selectedFrequency==0)?UiConstants.primaryColor:Colors.transparent,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('Quarterly',style: TextStyle(color: (_selectedFrequency==0)?Colors.white:Colors.black,),),
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap : (){
-                  setState(() {
                     _selectedFrequency = 1;
                   });
                 },
@@ -140,6 +119,27 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text('Monthly', style: TextStyle(color: (_selectedFrequency==1)?Colors.white:Colors.black,),),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap : (){
+                  setState(() {
+                    _selectedFrequency = 0;
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 2,
+                      color: UiConstants.primaryColor,
+                    ),
+                    borderRadius: BorderRadius.circular(100),
+                    color: (_selectedFrequency==0)?UiConstants.primaryColor:Colors.transparent,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Quarterly',style: TextStyle(color: (_selectedFrequency==0)?Colors.white:Colors.black,),),
                   ),
                 ),
               ),

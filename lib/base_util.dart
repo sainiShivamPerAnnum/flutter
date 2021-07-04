@@ -642,7 +642,8 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void setEmail(String email) {
-    myUser.email = email;  
+    myUser.email = email;
+  }
 
   void refreshAugmontBalance() async {
     _dbModel.getUserFundWallet(myUser.uid).then((aValue) {
