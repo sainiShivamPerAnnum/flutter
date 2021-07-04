@@ -642,9 +642,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void setEmail(String email) {
-    myUser.email = email;
-    notifyListeners();
-  }
+    myUser.email = email;  
 
   void refreshAugmontBalance() async {
     _dbModel.getUserFundWallet(myUser.uid).then((aValue) {
@@ -673,6 +671,18 @@ class BaseUtil extends ChangeNotifier {
       print('$err');
     });
   }
+    
+ void updateAugmontDetails(String holderName, String accountNumber, String ifscode) {
+    _augmontDetail.bankHolderName = holderName;
+    _augmontDetail.bankAccNo = accountNumber;
+    _augmontDetail.ifsc = ifscode;
+    notifyListeners();
+  }
+
+  void updateAugmontOnboarded(bool newValue) {
+    _myUser.isAugmontOnboarded = newValue;
+      notifyListeners();
+  }  
 
   static String getMonthName(int monthNum) {
     switch (monthNum) {

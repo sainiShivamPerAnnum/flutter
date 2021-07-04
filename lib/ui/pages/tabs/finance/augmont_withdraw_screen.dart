@@ -94,15 +94,19 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 5, 5, 0),
                   child: MaterialButton(
-                    child: Container(
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                        child: _checkBankInfoMissing?Text('Add Bank Info'):Text('Edit Bank Info')
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: UiConstants.primaryColor),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                    child: Consumer<BaseUtil>(
+                      builder: (ctx, bp, child) {
+                        return Container(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                            child: _checkBankInfoMissing?Text('Add Bank Info'):Text('Edit Bank Info')
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: UiConstants.primaryColor),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        );
+                      },
                     ),
                     onPressed: () {
                       // Navigator.push(
