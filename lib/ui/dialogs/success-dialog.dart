@@ -115,7 +115,7 @@ class SuccessDialog extends StatelessWidget {
                     onPressed: () {
                       Navigator.pop(context);
                       Navigator.pop(context);
-                      baseProvider.showRefreshIndicator(context);
+                      // baseProvider.showRefreshIndicator(context);
                     },
                   ),
                 ),
