@@ -15,10 +15,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  // final ValueChanged<int> tabChange;
-
-  // HomePage({this.tabChange});
-
   @override
   _HomePageState createState() => _HomePageState();
 }

@@ -1,7 +1,7 @@
 name: felloapp
 description: Game-based Investments
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none'
 
 version: 2.2.5+15
 
@@ -18,8 +18,8 @@ dependencies:
   firebase_remote_config: ^0.6.0
   firebase_in_app_messaging: ^0.3.0+1
   firebase_messaging: ^8.0.0-dev.14
-  firebase_database:
-  google_sign_in: 
+  firebase_database: ^6.0.0
+  google_sign_in: ^4.5.9
   #core packages
   connectivity: ^0.4.6+2
   encrypt: ^4.1.0
@@ -44,7 +44,6 @@ dependencies:
   cached_network_image: ^2.0.0
   confetti: ^0.5.4+1
   flip_card: ^0.5.0
-  #pin_input_text_field: ^2.0.3
   flat_icons_flutter: ^1.0.2
   flutter_spinkit: ^4.0.0
   flutter_share_me: ^0.9.2
@@ -54,7 +53,6 @@ dependencies:
   flutter_svg: ^0.19.3
   flushbar: ^1.10.4
   fl_animated_linechart: ^1.1.4
-  #bezier_chart : ^1.0.17+1
   google_fonts: ^1.1.1
   image_picker: ^0.6.7+21
   lottie: ^0.7.0+1
