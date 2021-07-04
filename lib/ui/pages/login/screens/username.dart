@@ -24,6 +24,7 @@ class UsernameState extends State<Username> {
   bool isLoading = false;
   bool isUpdating = false;
   bool isUpdated = false;
+  final _formKey = GlobalKey<FormState>();
 
   void validate(String value) async {
     setState(() {
@@ -93,19 +94,27 @@ class UsernameState extends State<Username> {
             SizedBox(
               height: 16,
             ),
-            Container(
-              child: TextFormField(
-                controller: username,
-                autofocus: true,
-                cursorColor: Colors.black,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  labelText: "username",
-                  prefixIcon: Icon(Icons.account_circle_rounded),
+            Form(
+              key: _formKey,
+              child: Container(
+                child: TextFormField(
+                  controller: username,
+                  autofocus: true,
+                  cursorColor: Colors.black,
+                  keyboardType: TextInputType.text,
+                  validator: (val) {
+                    if (val == null || val.isEmpty)
+                      return "username cannot be empty";
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    labelText: "username",
+                    prefixIcon: Icon(Icons.account_circle_rounded),
+                  ),
+                  onChanged: (value) {
+                    validate(value);
+                  },
                 ),
-                onChanged: (value) {
-                  validate(value);
-                },
               ),
             ),
             Container(
@@ -146,6 +155,8 @@ class UsernameState extends State<Username> {
       ),
     );
   }
+
+  get formKey => _formKey;
 }
 
 class RuleTile extends StatelessWidget {

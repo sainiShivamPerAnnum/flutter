@@ -16,12 +16,14 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       context: _routerDelegate.navigatorKey.currentContext,
       builder: (ctx) => ConfirmActionDialog(
         title: "Are you sure?",
-        description: "You have unsaved changes, if you exit it will be lost",
+        description:
+            "You are halfway onboarded, if you exit, progress will be lost",
         buttonText: "Yes",
         confirmAction: () {
           print(AppState.screenStack);
           AppState.unsavedChanges = false;
           didPopRoute();
+
           return _routerDelegate.popRoute();
         },
         cancelAction: () {

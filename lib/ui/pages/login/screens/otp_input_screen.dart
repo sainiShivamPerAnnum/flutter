@@ -1,4 +1,5 @@
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
+import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -11,7 +12,13 @@ class OtpInputScreen extends StatefulWidget {
   final VoidCallback resendOtp;
   final VoidCallback changeNumber;
   static const int index = 1; //pager index
-  OtpInputScreen({Key key, this.otpEntered, this.resendOtp, this.changeNumber})
+  final String mobileNo;
+  OtpInputScreen(
+      {Key key,
+      this.otpEntered,
+      this.resendOtp,
+      this.changeNumber,
+      this.mobileNo})
       : super(key: key);
 
   @override
@@ -72,7 +79,8 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                   ),
                 ),
               ),
-              Text("We have sent you an OTP to your mobile number ******0005"),
+              Text(
+                  "We have sent you an OTP to your mobile number ******${LoginController.mobileno.substring(6)}"),
               SizedBox(
                 height: 16,
               ),
@@ -218,9 +226,9 @@ class OtpInputScreenState extends State<OtpInputScreen> {
     );
   }
 
-  set setMobileNo(String mobile) {
-    mobileNo = mobile;
-  }
+  // set setMobileNo(String mobile) {
+  //   mobileNo = mobile;
+  // }
 
   onOtpReceived() {
     setState(() {

@@ -1,11 +1,14 @@
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
@@ -53,11 +56,12 @@ class NameInputScreenState extends State<NameInputScreen> {
   bool _isContinuedWithGoogle = false;
   bool _emailEnabled = false;
   String emailText = "Email";
+  bool isEmailEntered = false;
+  bool isUploaded = false;
 
   showEmailOptions() {
     showModalBottomSheet(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        isDismissible: false,
         context: context,
         builder: (ctx) {
           return Wrap(
@@ -89,26 +93,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                         width: 24,
                       ),
                       title: Text("Continue with Google"),
-                      subtitle: Text("No verification required"),
-                      onTap: () async {
-                        final GoogleSignInAccount googleUser =
-                            await GoogleSignIn().signIn();
-                        if (googleUser != null) {
-                          _nameFieldController.text = googleUser.displayName;
-                          baseProvider.myUser.isEmailVerified = true;
-                          baseProvider.myUserDpUrl = googleUser.photoUrl;
-                          setState(() {
-                            _isContinuedWithGoogle = true;
-                            emailText = googleUser.email;
-                          });
-                          Navigator.pop(context);
-                        } else {
-                          baseProvider.showNegativeAlert(
-                              "No account selected",
-                              "please choose any of the google accounts",
-                              context);
-                        }
-                      },
+                      onTap: continueWithGoogle,
                     ),
                     Divider(),
                     ListTile(
@@ -116,9 +101,16 @@ class NameInputScreenState extends State<NameInputScreen> {
                         Icons.alternate_email,
                         color: UiConstants.primaryColor,
                       ),
-                      title: Text("use another email"),
+                      title: Text("Use another email"),
+                      subtitle: Text(
+                        "this requires an extra verification step",
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      ),
                       onTap: () {
                         setState(() {
+                          isEmailEntered = true;
                           _emailEnabled = true;
                         });
                         Navigator.pop(context);
@@ -134,6 +126,50 @@ class NameInputScreenState extends State<NameInputScreen> {
             ],
           );
         });
+  }
+
+  continueWithGoogle() async {
+    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+    if (googleUser != null) {
+      _nameFieldController.text = googleUser.displayName;
+      baseProvider.myUser.isEmailVerified = true;
+      baseProvider.myUserDpUrl = googleUser.photoUrl;
+      Uint8List bytes =
+          (await NetworkAssetBundle(Uri.parse(googleUser.photoUrl))
+                  .load(googleUser.photoUrl))
+              .buffer
+              .asUint8List();
+      FirebaseStorage storage = FirebaseStorage.instance;
+
+      Reference ref =
+          storage.ref().child("dps/${baseProvider.myUser.uid}/image");
+      UploadTask uploadTask = ref.putData(bytes);
+      uploadTask.then((res) async {
+        await res.ref.getDownloadURL().then((url) {
+          if (url != null) {
+            isUploaded = true;
+            baseProvider.isProfilePictureUpdated = true;
+            //baseProvider.myUserDpUrl = url;
+            baseProvider.setDisplayPictureUrl(url);
+            setState(() {
+              isUploaded = true;
+              isEmailEntered = true;
+              _isContinuedWithGoogle = true;
+              emailText = googleUser.email;
+            });
+          } else {
+            baseProvider.showNegativeAlert(
+                "Oops, we ran into trouble", "please try again", context);
+          }
+          print(url);
+        });
+      });
+      ;
+      Navigator.pop(context);
+    } else {
+      baseProvider.showNegativeAlert("No account selected",
+          "please choose any of the google accounts", context);
+    }
   }
 
   void _showAndoroidDatePicker() async {
@@ -630,6 +666,9 @@ class NameInputScreenState extends State<NameInputScreen> {
   get formKey => _formKey;
 
   bool isValidDate() {
+    setState(() {
+      dateInputError = "";
+    });
     String inputDate = _yearFieldController.text +
         _monthFieldController.text +
         _dateFieldController.text;
