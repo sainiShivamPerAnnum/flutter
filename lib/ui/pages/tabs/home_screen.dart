@@ -119,36 +119,6 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 
-  Function getFixedAction(int id) {
-    switch (id) {
-      case 108:
-        return () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => GuideDialog(),
-          );
-        };
-      case 120:
-        return () {
-          appState.setCurrentTabIndex = 3;
-        };
-      case 140:
-        return () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => GamePoll(),
-          );
-        };
-      default:
-        return () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => GuideDialog(),
-          );
-        };
-    }
-  }
-
   void logError(String code, String message) =>
       print('Error: $code\nError Message: $message');
 

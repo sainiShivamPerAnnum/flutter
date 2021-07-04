@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:felloapp/core/ops/augmont_ops.dart';
-import 'package:felloapp/ui/elements/graph/bezier_chart_custom_config.dart';
-import 'package:felloapp/ui/elements/graph/bezier_chart_custom_widget.dart';
-import 'package:felloapp/ui/elements/graph/bezier_custom_line.dart';
+import 'package:felloapp/ui/elements/bezier_graph/bezier_chart_custom_config.dart';
+import 'package:felloapp/ui/elements/bezier_graph/bezier_chart_custom_widget.dart';
+import 'package:felloapp/ui/elements/bezier_graph/bezier_custom_line.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
