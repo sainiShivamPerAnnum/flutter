@@ -37,7 +37,6 @@ import 'core/base_remote_config.dart';
 import 'core/model/TambolaBoard.dart';
 import 'core/model/UserAugmontDetail.dart';
 import 'core/ops/augmont_ops.dart';
-import 'ui/pages/hamburger/chatsupport_page.dart';
 import 'util/size_config.dart';
 
 class BaseUtil extends ChangeNotifier {
@@ -672,8 +671,9 @@ class BaseUtil extends ChangeNotifier {
       print('$err');
     });
   }
-    
- void updateAugmontDetails(String holderName, String accountNumber, String ifscode) {
+
+  void updateAugmontDetails(
+      String holderName, String accountNumber, String ifscode) {
     _augmontDetail.bankHolderName = holderName;
     _augmontDetail.bankAccNo = accountNumber;
     _augmontDetail.ifsc = ifscode;
@@ -682,8 +682,8 @@ class BaseUtil extends ChangeNotifier {
 
   void updateAugmontOnboarded(bool newValue) {
     _myUser.isAugmontOnboarded = newValue;
-      notifyListeners();
-  }  
+    notifyListeners();
+  }
 
   static String getMonthName(int monthNum) {
     switch (monthNum) {
@@ -788,5 +788,4 @@ class BaseUtil extends ChangeNotifier {
   set userTicketWallet(UserTicketWallet value) {
     _userTicketWallet = value;
   }
-
 }

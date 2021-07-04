@@ -24,13 +24,14 @@ class TransactionHelpDialog extends StatelessWidget {
         'The transaction is failing on my UPI App'),
     new HelpDetail(HelpType.TxnHowToHelp,
         'I am still not sure about how to complete my transaction'),
-    new HelpDetail(HelpType.TxnOtherQueryHelp, 'Other query about my transaction'),
+    new HelpDetail(
+        HelpType.TxnOtherQueryHelp, 'Other query about my transaction'),
   ];
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    dbProvider = Provider.of<DBModel>(context,listen:false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
     _width = MediaQuery.of(context).size.width;
     _height = MediaQuery.of(context).size.height;
     return Dialog(
@@ -60,16 +61,12 @@ class TransactionHelpDialog extends StatelessWidget {
             style: TextStyle(
                 color: Colors.black54,
                 fontSize: 20,
-              fontWeight: FontWeight.bold
-            ),
+                fontWeight: FontWeight.bold),
           ),
           Text(
             'We will look into your query and help you easily resolve it',
             textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Colors.black54,
-                fontSize: 16
-            ),
+            style: TextStyle(color: Colors.black54, fontSize: 16),
           ),
           SizedBox(
             height: 10,

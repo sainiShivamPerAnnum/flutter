@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 class InputField extends StatelessWidget {
   final Widget child;
+
   InputField({this.child});
+
   @override
   Widget build(BuildContext context) {
     return Container(

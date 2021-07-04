@@ -50,6 +50,7 @@ class PageConfiguration {
   final String path;
   final Pages uiPage;
   PageAction currentPageAction;
+
   PageConfiguration(
       {@required this.key,
       @required this.path,

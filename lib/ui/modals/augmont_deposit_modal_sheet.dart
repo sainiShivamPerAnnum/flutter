@@ -32,6 +32,7 @@ class AugmontDepositModalSheet extends StatefulWidget {
 class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     with SingleTickerProviderStateMixin {
   AugmontDepositModalSheetState();
+
   Log log = new Log('AugmontDepositModalSheet');
   var heightOfModalBottomSheet = 100.0;
   bool _isDepositsEnabled = true;
@@ -159,8 +160,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                 },
               ),
             ),
-            _buildPurchaseDescriptionCard(
-                _getDouble(_amtController.text)),
+            _buildPurchaseDescriptionCard(_getDouble(_amtController.text)),
             Wrap(
               spacing: 20,
               children: [
@@ -378,7 +378,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     double grams = augmontProvider.getGoldQuantityFromTaxedAmount(amt, rate);
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(5,0,5,5),
+      padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -386,14 +386,14 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         children: [
           Text(
             '+ GST = ₹${taxIncluded.toStringAsFixed(2)}',
-            style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),
+            style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
           ),
           SizedBox(
             height: 3,
           ),
           Text(
             'Gold amount: ${grams.toStringAsFixed(4)} grams',
-            style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),
+            style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
           )
         ],
       ),

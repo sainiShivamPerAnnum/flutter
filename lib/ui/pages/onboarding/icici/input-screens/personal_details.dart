@@ -10,7 +10,9 @@ class PersonalPage extends StatefulWidget {
   static const int index = 1;
   final personalForm;
   final isNameDisabled;
-  PersonalPage({@required this.personalForm, this.isNameDisabled=false});
+
+  PersonalPage({@required this.personalForm, this.isNameDisabled = false});
+
   @override
   _PersonalPageState createState() => _PersonalPageState();
 }
@@ -18,7 +20,8 @@ class PersonalPage extends StatefulWidget {
 class _PersonalPageState extends State<PersonalPage> {
   BaseUtil baseProvider;
   IciciOnboardController controllerInstance = new IciciOnboardController();
-  TextEditingController _dateController = new TextEditingController(text: '${IDP.selectedDate.toLocal()}'.split(' ')[0]);
+  TextEditingController _dateController = new TextEditingController(
+      text: '${IDP.selectedDate.toLocal()}'.split(' ')[0]);
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -51,9 +54,12 @@ class _PersonalPageState extends State<PersonalPage> {
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    IDP.name.text = (baseProvider.iciciDetail!=null)?baseProvider.iciciDetail.panName:'';
-    IDP.email.text = (baseProvider.myUser!=null)?baseProvider.myUser.email:'';
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    IDP.name.text = (baseProvider.iciciDetail != null)
+        ? baseProvider.iciciDetail.panName
+        : '';
+    IDP.email.text =
+        (baseProvider.myUser != null) ? baseProvider.myUser.email : '';
     return SafeArea(
       child: SingleChildScrollView(
         child: Container(
@@ -98,7 +104,8 @@ class _PersonalPageState extends State<PersonalPage> {
                     bottom: 20,
                     top: 5,
                   ),
-                  padding: EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 15),
+                  padding:
+                      EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 15),
                   width: double.infinity,
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
@@ -106,7 +113,7 @@ class _PersonalPageState extends State<PersonalPage> {
                   ),
                   child: Padding(
                     padding:
-                    const EdgeInsets.only(bottom: 11, top: 11, right: 15),
+                        const EdgeInsets.only(bottom: 11, top: 11, right: 15),
                     child: Text(
                       baseProvider.myUser.mobile,
                       style: TextStyle(
@@ -165,14 +172,13 @@ class _PersonalPageState extends State<PersonalPage> {
                       enabled: false,
                       keyboardType: TextInputType.text,
                       validator: (value) {
-                       return null;
+                        return null;
                       },
                       controller: _dateController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Enter Date',
                         suffixIcon: Icon(
-
                           Icons.calendar_today,
                           color: UiConstants.primaryColor,
                         ),
@@ -189,5 +195,4 @@ class _PersonalPageState extends State<PersonalPage> {
       ),
     );
   }
-
 }

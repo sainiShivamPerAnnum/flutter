@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import 'package:felloapp/core/base_analytics.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/dots_indicator.dart';
 import 'package:felloapp/ui/pages/onboarding/app/screens/page1.dart';
 import 'package:felloapp/ui/pages/onboarding/app/screens/page2.dart';

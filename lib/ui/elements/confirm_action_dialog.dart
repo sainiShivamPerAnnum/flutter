@@ -1,5 +1,3 @@
-import 'package:felloapp/main.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -12,6 +10,7 @@ class ConfirmActionDialog extends StatefulWidget {
   final String title, description, buttonText, cancelBtnText;
   final Function confirmAction, cancelAction;
   final Widget asset;
+
   ConfirmActionDialog(
       {@required this.title,
       @required this.description,

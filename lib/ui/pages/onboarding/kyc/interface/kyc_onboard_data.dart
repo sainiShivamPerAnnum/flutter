@@ -903,8 +903,9 @@ class KycOnboardData {
                                         margin: const EdgeInsets.symmetric(
                                             horizontal: 20.0),
                                         child: Text(
-                                            BaseRemoteConfig.remoteConfig.getString(
-                                                BaseRemoteConfig.KYC_COMPLETION_PRIZE),
+                                            BaseRemoteConfig.remoteConfig
+                                                .getString(BaseRemoteConfig
+                                                    .KYC_COMPLETION_PRIZE),
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontWeight: FontWeight.w700,

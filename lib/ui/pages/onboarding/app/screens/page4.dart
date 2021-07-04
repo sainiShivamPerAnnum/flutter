@@ -11,19 +11,14 @@ class Page4 extends StatelessWidget {
       height: double.infinity,
       width: double.infinity,
       decoration: new BoxDecoration(
-          gradient: LinearGradient(
-              colors: [
+          gradient: LinearGradient(colors: [
 //                Colors.green[400],
 //                Colors.blue[600],
 //                Colors.blue[900],
-                Colors.grey[50],
-                Colors.grey[50],
-                Colors.grey[100],
-              ],
-              begin: Alignment(0.5, -1.0),
-              end: Alignment(0.5, 1.0)
-          )
-      ),
+        Colors.grey[50],
+        Colors.grey[50],
+        Colors.grey[100],
+      ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0))),
       child: Stack(
         children: <Widget>[
           new Positioned(
@@ -46,22 +41,24 @@ class Page4 extends StatelessWidget {
                 new Padding(
                   //padding: const EdgeInsets.all(18.0),
                   padding: const EdgeInsets.fromLTRB(18.0, 25, 18.0, 18.0),
-                  child: Text(Assets.onboardingHeader[3],
+                  child: Text(
+                    Assets.onboardingHeader[3],
                     style: Theme.of(context).textTheme.display1.copyWith(
-                        color: Colors.grey[800],
-                        fontWeight: FontWeight.w500
-                    ),
+                        color: Colors.grey[800], fontWeight: FontWeight.w500),
                     textAlign: TextAlign.center,
                   ),
                 ),
                 Padding(
-                  //padding: const EdgeInsets.all(18.0),
+                    //padding: const EdgeInsets.all(18.0),
                     padding: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0.0),
-                    child:Text(Assets.onboardingDesc[3],
-                      style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.grey[800]),
+                    child: Text(
+                      Assets.onboardingDesc[3],
+                      style: Theme.of(context)
+                          .textTheme
+                          .subhead
+                          .copyWith(color: Colors.grey[800]),
                       textAlign: TextAlign.center,
-                    )
-                ),
+                    )),
               ],
             ),
           )

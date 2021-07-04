@@ -1,6 +1,4 @@
-import 'package:felloapp/ui/dialogs/guide_dialog.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:flutter/material.dart';
 
 class FeedCard {
   static Log log = new Log('HomeCard');
@@ -17,8 +15,15 @@ class FeedCard {
       this._assetLocalLink, this._actionUri, this._clrCodeA, this._clrCodeB);
 
   FeedCard.fromMap(Map<String, dynamic> cMap)
-      : this(cMap['id'], cMap['title'], cMap['subtitle'], cMap['btnText'],
-            cMap['assetLocalLink'], cMap['actionUri'], cMap['clrCodeA'], cMap['clrCodeB']);
+      : this(
+            cMap['id'],
+            cMap['title'],
+            cMap['subtitle'],
+            cMap['btnText'],
+            cMap['assetLocalLink'],
+            cMap['actionUri'],
+            cMap['clrCodeA'],
+            cMap['clrCodeB']);
 
   String get subtitle => _subtitle;
 

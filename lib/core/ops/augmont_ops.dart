@@ -191,39 +191,44 @@ class AugmontModel extends ChangeNotifier {
       _baseProvider.currentAugmontTxn = tTxn;
       _rzpGateway.setTransactionListener(_onRazorpayPaymentProcessed);
     }
-    
+
     String _docKey = await _dbModel.addUserTransaction(
         _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
     _baseProvider.currentAugmontTxn.docKey = _docKey;
-    
+
     return _baseProvider.currentAugmontTxn;
   }
 
-  Future<List<GoldGraphPoint>> getGoldRateChart(DateTime fromTime, DateTime toTime) async{
-    if(fromTime == null || toTime == null || fromTime.isAfter(toTime)) return null;
+  Future<List<GoldGraphPoint>> getGoldRateChart(
+      DateTime fromTime, DateTime toTime) async {
+    if (fromTime == null || toTime == null || fromTime.isAfter(toTime))
+      return null;
     if (!isInit()) await _init();
 
     var _params = {
       GetRateChart.fldFromTime: '${fromTime.millisecondsSinceEpoch}',
       GetRateChart.fldToTime: '${toTime.millisecondsSinceEpoch}',
     };
-    var _request =
-    http.Request('GET', Uri.parse(_constructRequest(GetRateChart.path, _params)));
+    var _request = http.Request(
+        'GET', Uri.parse(_constructRequest(GetRateChart.path, _params)));
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
 
     final resMap = await _processResponse(_response);
-    if (resMap == null || resMap['Items'] == null || !resMap[INTERNAL_FAIL_FLAG]) {
+    if (resMap == null ||
+        resMap['Items'] == null ||
+        !resMap[INTERNAL_FAIL_FLAG]) {
       log.error('Query Failed');
       return null;
     } else {
       List<GoldGraphPoint> pointData = [];
-      for(var rPoint in resMap['Items']) {
+      for (var rPoint in resMap['Items']) {
         try {
-          GoldGraphPoint point = GoldGraphPoint(BaseUtil.toDouble(rPoint['rRate']),
+          GoldGraphPoint point = GoldGraphPoint(
+              BaseUtil.toDouble(rPoint['rRate']),
               DateTime.fromMillisecondsSinceEpoch(rPoint['rTimestamp']));
           pointData.add(point);
-        }catch(e) {
+        } catch (e) {
           continue;
         }
       }
@@ -236,7 +241,7 @@ class AugmontModel extends ChangeNotifier {
     goldTxn.docKey =
         key; //add the firebase document key to this object as it was added later
     _baseProvider.currentAugmontTxn = goldTxn;
-    
+
     if (_baseProvider.currentAugmontTxn.rzp[UserTransaction.subFldRzpStatus] ==
         UserTransaction.RZP_TRAN_STATUS_COMPLETE) {
       //payment completed successfully
@@ -245,7 +250,7 @@ class AugmontModel extends ChangeNotifier {
       _onPaymentFailed();
     }
   }
-  
+
   ///submit gold purchase augmont api
   ///update object
   _onPaymentComplete() async {
@@ -268,7 +273,7 @@ class AugmontModel extends ChangeNotifier {
         'GET', Uri.parse(_constructRequest(SubmitGoldPurchase.path, _params)));
     _request.headers.addAll(headers);
     http.StreamedResponse _response = await _request.send();
-    
+
     final resMap = await _processResponse(_response);
     if (resMap == null ||
         !resMap[INTERNAL_FAIL_FLAG] ||
@@ -498,11 +503,12 @@ class AugmontModel extends ChangeNotifier {
   }
 }
 
-class GoldGraphPoint{
+class GoldGraphPoint {
   final double rate;
   final DateTime timestamp;
 
   GoldGraphPoint(this.rate, this.timestamp);
+
   @override
   String toString() {
     return ("Rate ${this.rate} Time ${this.timestamp}");

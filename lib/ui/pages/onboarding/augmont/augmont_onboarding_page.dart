@@ -36,6 +36,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
   static TextEditingController _panInput = new TextEditingController();
   static TextEditingController _panHolderNameInput =
       new TextEditingController();
+
   // static TextEditingController _bankHolderNameInput =
   //     new TextEditingController();
   // static TextEditingController _bankAccountNumberInput =
@@ -346,9 +347,9 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
 
                         ///next get all details required for registration
                         Map<String, dynamic> veriDetails =
-                            await _getVerifiedDetails(_panInput.text,
-                                _panHolderNameInput.text);
-                                //  _bankIfscInput.text);
+                            await _getVerifiedDetails(
+                                _panInput.text, _panHolderNameInput.text);
+                        //  _bankIfscInput.text);
 
                         if (veriDetails != null &&
                             veriDetails['flag'] != null &&
@@ -374,7 +375,10 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                                     await augmontProvider.createUser(
                                         baseProvider.myUser.mobile,
                                         _panInput.text,
-                                        stateChosenValue,"","","");
+                                        stateChosenValue,
+                                        "",
+                                        "",
+                                        "");
                                 if (detail == null) {
                                   baseProvider.showNegativeAlert(
                                       'Registration Failed',
@@ -443,7 +447,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
       baseProvider.showNegativeAlert('State missing',
           'Kindly enter your current residential state', context);
       return false;
-    } 
+    }
     // else if (_bankHolderNameInput.text.isEmpty) {
     //   baseProvider.showNegativeAlert(
     //       'Name missing', 'Kindly enter your name as per your bank', context);
@@ -472,6 +476,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     bool _flag = true;
     String _reason = '';
     if (!iProvider.isInit()) await iProvider.init();
+
     ///test pan number using icici api and verify if the name entered by user matches name fetched
     var kObj = await iProvider.getKycStatus(enteredPan);
     if (kObj == null ||

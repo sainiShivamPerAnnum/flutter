@@ -36,8 +36,6 @@ class FatcaForms extends StatefulWidget {
 // 05	Suspended
 // 06	Deceased
 
-
-
 class _FatcaFormsState extends State<FatcaForms> {
   bool isPolExp;
   bool isRelPolExp;
@@ -65,9 +63,9 @@ class _FatcaFormsState extends State<FatcaForms> {
 
   final _formKey = GlobalKey<FormState>();
 
-  List<String> maritalStatus = ['MARRIED','UNMARRIED',"OTHERS"];
+  List<String> maritalStatus = ['MARRIED', 'UNMARRIED', "OTHERS"];
 
-  List<String> nomineeRelationShip = ['FATHER','SPOUSE'];
+  List<String> nomineeRelationShip = ['FATHER', 'SPOUSE'];
 
   KYCModel kycModel = KYCModel();
 
@@ -113,9 +111,8 @@ class _FatcaFormsState extends State<FatcaForms> {
     {"CODE": "06", "NAME": "Deceased"},
   ];
 
-  Widget createDropdown(var title, var text, var data)
-  {
-    return  ListTile(
+  Widget createDropdown(var title, var text, var data) {
+    return ListTile(
       title: Text("$title"),
       subtitle: InputField(
         child: DropdownButtonFormField(
@@ -129,25 +126,19 @@ class _FatcaFormsState extends State<FatcaForms> {
               mstatus = newVal;
             });
           },
-
-          items: data.map<DropdownMenuItem<String>>((String valueItem){
+          items: data.map<DropdownMenuItem<String>>((String valueItem) {
             return DropdownMenuItem<String>(
               value: valueItem,
               child: Text(valueItem),
-
             );
           }).toList(),
-
         ),
       ),
     );
   }
 
   Widget createEditableField(
-      TextEditingController controller,
-      String title,
-      var inputType
-      ) {
+      TextEditingController controller, String title, var inputType) {
     return ListTile(
       title: Text(title),
       subtitle: InputField(
@@ -155,7 +146,8 @@ class _FatcaFormsState extends State<FatcaForms> {
           decoration: InputDecoration(border: InputBorder.none),
           controller: controller,
           textCapitalization: TextCapitalization.characters,
-          keyboardType: inputType == "mobile"?  TextInputType.number : TextInputType.text,
+          keyboardType:
+              inputType == "mobile" ? TextInputType.number : TextInputType.text,
           validator: (value) {
             if (value.isEmpty) {
               return 'Field Cannot be Empty';
@@ -176,7 +168,6 @@ class _FatcaFormsState extends State<FatcaForms> {
       ),
       body: Form(
         key: _formKey,
-
         child: Padding(
           padding: const EdgeInsets.only(
             top: 20,
@@ -363,8 +354,7 @@ class _FatcaFormsState extends State<FatcaForms> {
                         iconEnabledColor: UiConstants.primaryColor,
                         hint: Text("What is your gender?"),
                         onChanged: (String newVal) {
-                          setState(()
-                          {
+                          setState(() {
                             gender = newVal;
                           });
                         },
@@ -453,23 +443,21 @@ class _FatcaFormsState extends State<FatcaForms> {
                               "Spouse",
                             ),
                           ),
-
                         ]),
                   ),
                 ),
 
                 // createDropdown("Gender", "What is your gender?", maritalStatus),
 
-
                 // createDropdown("Nominee Relationship", "Select a relationship", nomineeRelationShip),
 
-
-                createEditableField(email, "Enter Your Email","text"),
-                createEditableField(mobileNumber, "Enter Your Mobile Number","mobile"),
-                createEditableField(panNumber, "Enter Your PAN Number","text"),
-                createEditableField(nominee, "Enter Nominee Name","text"),
-                createEditableField(fname, "Enter Your Father's Name","text"),
-                createEditableField(mName, "Enter Your Mother's Name","text"),
+                createEditableField(email, "Enter Your Email", "text"),
+                createEditableField(
+                    mobileNumber, "Enter Your Mobile Number", "mobile"),
+                createEditableField(panNumber, "Enter Your PAN Number", "text"),
+                createEditableField(nominee, "Enter Nominee Name", "text"),
+                createEditableField(fname, "Enter Your Father's Name", "text"),
+                createEditableField(mName, "Enter Your Mother's Name", "text"),
 
                 ListTile(
                   title: Text("Occupation"),
@@ -491,12 +479,12 @@ class _FatcaFormsState extends State<FatcaForms> {
                       items: occupation
                           .map(
                             (e) => DropdownMenuItem(
-                          value: e["OCC_CODE"],
-                          child: Text(
-                            e["OCC_NAME"],
-                          ),
-                        ),
-                      )
+                              value: e["OCC_CODE"],
+                              child: Text(
+                                e["OCC_NAME"],
+                              ),
+                            ),
+                          )
                           .toList(),
                     ),
                   ),
@@ -521,12 +509,12 @@ class _FatcaFormsState extends State<FatcaForms> {
                       items: address
                           .map(
                             (e) => DropdownMenuItem(
-                          value: e["CODE"],
-                          child: Text(
-                            e["NAME"],
-                          ),
-                        ),
-                      )
+                              value: e["CODE"],
+                              child: Text(
+                                e["NAME"],
+                              ),
+                            ),
+                          )
                           .toList(),
                     ),
                   ),
@@ -553,12 +541,12 @@ class _FatcaFormsState extends State<FatcaForms> {
                       items: residential
                           .map(
                             (e) => DropdownMenuItem(
-                          value: e["CODE"],
-                          child: Text(
-                            e["NAME"],
-                          ),
-                        ),
-                      )
+                              value: e["CODE"],
+                              child: Text(
+                                e["NAME"],
+                              ),
+                            ),
+                          )
                           .toList(),
                     ),
                   ),
@@ -585,18 +573,16 @@ class _FatcaFormsState extends State<FatcaForms> {
                       items: kycCode
                           .map(
                             (e) => DropdownMenuItem(
-                          value: e["CODE"],
-                          child: Text(
-                            e["NAME"],
-                          ),
-                        ),
-                      )
+                              value: e["CODE"],
+                              child: Text(
+                                e["NAME"],
+                              ),
+                            ),
+                          )
                           .toList(),
                     ),
                   ),
                 ),
-
-
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -616,8 +602,7 @@ class _FatcaFormsState extends State<FatcaForms> {
                         ),
                       ),
                       child: FlatButton(
-                        onPressed: ()async
-                        {
+                        onPressed: () async {
                           getOccupationDesc();
 
                           getKycApplicationDesc();
@@ -628,16 +613,21 @@ class _FatcaFormsState extends State<FatcaForms> {
                           isPolExp == true ? polExp = "YES" : polExp = "NO";
 
                           var relPolExp;
-                          isRelPolExp == true ? relPolExp = "YES" : relPolExp = "NO";
+                          isRelPolExp == true
+                              ? relPolExp = "YES"
+                              : relPolExp = "NO";
 
                           var resOutInd;
-                          isResOutInd == true ? resOutInd = "YES" : resOutInd = "NO";
+                          isResOutInd == true
+                              ? resOutInd = "YES"
+                              : resOutInd = "NO";
 
                           var relatedPerson;
-                          isInvestor == true ? relatedPerson = "YES" : relatedPerson = "NO";
+                          isInvestor == true
+                              ? relatedPerson = "YES"
+                              : relatedPerson = "NO";
 
-
-                           var result = await  kycModel.fatcaForms(
+                          var result = await kycModel.fatcaForms(
                               polExp.toString(),
                               relPolExp.toString(),
                               resOutInd.toString(),
@@ -659,22 +649,16 @@ class _FatcaFormsState extends State<FatcaForms> {
                               addDescSeln,
                               addSeln,
                               addDescSeln,
-
                               101,
                               "India",
                               residentialSeln,
                               residentialDescSeln,
-
                               mobileNumber.text,
                               91,
                               email.text,
                               fname.text,
-                              mName.text
-
-
-
-                          );
-                           print(result);
+                              mName.text);
+                          print(result);
 
                           if (result['flag'] == true) {
                             // setState(() {
@@ -683,20 +667,10 @@ class _FatcaFormsState extends State<FatcaForms> {
 
                             Navigator.of(context).pop(result);
                           } else {
-
-
                             Navigator.of(context).pop(result);
-
 
                             print("error");
                           }
-
-
-
-
-
-
-
                         },
                         child: Text(
                           "Submit",
@@ -719,56 +693,40 @@ class _FatcaFormsState extends State<FatcaForms> {
     );
   }
 
-  getKycApplicationDesc()
-  {
+  getKycApplicationDesc() {
     // get kyc applicatiopn description
-    for(var i in kycCode)
-    {
-      if(kycAccountCodeSeln == i['CODE'])
-      {
+    for (var i in kycCode) {
+      if (kycAccountCodeSeln == i['CODE']) {
         print(i['NAME']);
         kycAccountDescriptionSeln = i['NAME'];
-
       }
     }
   }
 
-  getOccupationDesc()
-  {
-    for(var i in occupation)
-    {
-      if(occSeln == i['OCC_CODE'])
-      {
+  getOccupationDesc() {
+    for (var i in occupation) {
+      if (occSeln == i['OCC_CODE']) {
         occDescriptionSeln = i['OCC_NAME'];
-
       }
       print(occDescriptionSeln);
     }
   }
-  getAddress()
-  {
-    for(var i in address)
-    {
-      if(addSeln == i['CODE'])
-      {
-        addDescSeln = i['NAME'];
 
+  getAddress() {
+    for (var i in address) {
+      if (addSeln == i['CODE']) {
+        addDescSeln = i['NAME'];
       }
       print(addDescSeln);
     }
   }
 
-  getResidentialDesc()
-  {
-    for(var i in residential)
-    {
-      if(residentialSeln == i['CODE'])
-      {
+  getResidentialDesc() {
+    for (var i in residential) {
+      if (residentialSeln == i['CODE']) {
         residentialDescSeln = i['NAME'];
-
       }
       print(residentialDescSeln);
     }
   }
-
 }

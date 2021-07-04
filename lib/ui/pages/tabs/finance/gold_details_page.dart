@@ -19,7 +19,6 @@ import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/augmont_withdraw_screen.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/logger.dart';
@@ -33,13 +32,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class AugmontDetailsPage extends StatefulWidget {
   static const int STATUS_UNAVAILABLE = 0;
   static const int STATUS_REGISTER = 1;
   static const int STATUS_OPEN = 2;
+
   @override
   _AugmontDetailsPageState createState() => _AugmontDetailsPageState();
 
@@ -149,16 +148,16 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
         child: MaterialButton(
           child: (!baseProvider.isAugDepositRouteLogicInProgress)
               ? Consumer<BaseUtil>(
-                builder: (ctx, bp, child) {
-                  return Text(
-                    _getActionButtonText(),
-                    style: Theme.of(context)
-                        .textTheme
-                        .button
-                        .copyWith(color: Colors.white),
-                  );
-                },
-              )
+                  builder: (ctx, bp, child) {
+                    return Text(
+                      _getActionButtonText(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .button
+                          .copyWith(color: Colors.white),
+                    );
+                  },
+                )
               : SpinKitThreeBounce(
                   color: UiConstants.spinnerColor2,
                   size: 18.0,

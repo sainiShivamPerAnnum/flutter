@@ -16,6 +16,7 @@ class UpdateNameDialog extends StatefulWidget {
 class _UpdateNameDialogState extends State<UpdateNameDialog> {
   BaseUtil baseProvider;
   bool isUploading = false;
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);

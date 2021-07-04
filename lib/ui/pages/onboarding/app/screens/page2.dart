@@ -11,19 +11,14 @@ class Page2 extends StatelessWidget {
       height: double.infinity,
       width: double.infinity,
       decoration: new BoxDecoration(
-          gradient: LinearGradient(
-              colors: [
+          gradient: LinearGradient(colors: [
 //                Colors.pink[400],
 //                Colors.deepPurple[600],
 //                Colors.deepPurple[900],
-                Colors.grey[50],
-                Colors.grey[50],
-                Colors.grey[100],
-              ],
-              begin: Alignment(0.5, -1.0),
-              end: Alignment(0.5, 1.0)
-          )
-      ),
+        Colors.grey[50],
+        Colors.grey[50],
+        Colors.grey[100],
+      ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0))),
       child: Stack(
         children: <Widget>[
           new Positioned(
@@ -45,24 +40,23 @@ class Page2 extends StatelessWidget {
                 ),
                 new Padding(
                   padding: const EdgeInsets.fromLTRB(18.0, 25, 18.0, 18.0),
-                  child: Text(Assets.onboardingHeader[1],
+                  child: Text(
+                    Assets.onboardingHeader[1],
                     style: Theme.of(context).textTheme.display1.copyWith(
-                        color: Colors.grey[800],
-                        fontWeight: FontWeight.w500
-                    ),
+                        color: Colors.grey[800], fontWeight: FontWeight.w500),
                     textAlign: TextAlign.center,
                   ),
                 ),
                 Padding(
-                  //padding: const EdgeInsets.all(18.0),
+                    //padding: const EdgeInsets.all(18.0),
                     padding: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0.0),
-                    child:Text(Assets.onboardingDesc[1],
+                    child: Text(
+                      Assets.onboardingDesc[1],
                       style: Theme.of(context).textTheme.subhead.copyWith(
-                          color: Colors.grey[800],
-                      ),
+                            color: Colors.grey[800],
+                          ),
                       textAlign: TextAlign.center,
-                    )
-                ),
+                    )),
               ],
             ),
           )

@@ -8,24 +8,22 @@ class CustomAnimText extends AnimatedWidget {
 
   //final opacityAnimation = Tween<double>(begin: 0.1, end: 1).animate(controller);
 
-  CustomAnimText({Key key, Animation<double> animation, this.animText, this.textStyle})
+  CustomAnimText(
+      {Key key, Animation<double> animation, this.animText, this.textStyle})
       : super(key: key, listenable: animation);
 
   Widget build(BuildContext context) {
     final animation = listenable as Animation<double>;
     return Opacity(
-        //margin: EdgeInsets.symmetric(vertical: 10),
-        //height: animation.value,
-        //width: animation.value,
+      //margin: EdgeInsets.symmetric(vertical: 10),
+      //height: animation.value,
+      //width: animation.value,
       opacity: _opacityTween.evaluate(animation),
       child: Text(
-        animText??'Loading',
-        style: textStyle??TextStyle(
-            color: Colors.grey[800],
-            fontSize: 20
-        ),
+        animText ?? 'Loading',
+        style: textStyle ?? TextStyle(color: Colors.grey[800], fontSize: 20),
       ),
-      );
+    );
     //);
   }
 }
@@ -33,23 +31,25 @@ class CustomAnimText extends AnimatedWidget {
 class BreathingText extends StatefulWidget {
   final String alertText;
   final TextStyle textStyle;
+
   BreathingText({this.alertText, this.textStyle});
-  
+
   _BreathingTextState createState() => _BreathingTextState();
 }
 
 // #docregion print-state
-class _BreathingTextState extends State<BreathingText> with SingleTickerProviderStateMixin {
+class _BreathingTextState extends State<BreathingText>
+    with SingleTickerProviderStateMixin {
   Animation<double> animation;
   AnimationController controller;
 
   @override
   void initState() {
     super.initState();
-    controller =
-        AnimationController(duration: const Duration(milliseconds: 1400), vsync: this);
+    controller = AnimationController(
+        duration: const Duration(milliseconds: 1400), vsync: this);
     animation = Tween<double>(begin: 0.1, end: 1).animate(controller)
-    // #enddocregion print-state
+      // #enddocregion print-state
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           controller.reverse();
@@ -57,16 +57,20 @@ class _BreathingTextState extends State<BreathingText> with SingleTickerProvider
           controller.forward();
         }
       })
-    // #docregion print-state
+      // #docregion print-state
       ..addStatusListener((state) {}
-      //print('$state')
-    );
+          //print('$state')
+          );
     controller.forward();
   }
+
   // #enddocregion print-state
 
   @override
-  Widget build(BuildContext context) => CustomAnimText(animation: animation, animText: widget.alertText, textStyle: widget.textStyle);
+  Widget build(BuildContext context) => CustomAnimText(
+      animation: animation,
+      animText: widget.alertText,
+      textStyle: widget.textStyle);
 
   @override
   void dispose() {

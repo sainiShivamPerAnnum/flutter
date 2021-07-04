@@ -2,7 +2,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
-import 'package:felloapp/ui/pages/tabs/finance/edit_augmont_bank_details.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
@@ -12,8 +11,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class AugmontWithdrawScreen extends StatefulWidget {
@@ -57,7 +54,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
   @override
   Widget build(BuildContext context) {
     _width = MediaQuery.of(context).size.width;
-    baseProvider = Provider.of<BaseUtil>(context,listen: false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
@@ -98,9 +95,10 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                       builder: (ctx, bp, child) {
                         return Container(
                           child: Padding(
-                            padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                            child: _checkBankInfoMissing?Text('Add Bank Info'):Text('Edit Bank Info')
-                          ),
+                              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                              child: _checkBankInfoMissing
+                                  ? Text('Add Bank Info')
+                                  : Text('Edit Bank Info')),
                           decoration: BoxDecoration(
                             border: Border.all(color: UiConstants.primaryColor),
                             borderRadius: BorderRadius.circular(10),
@@ -343,10 +341,10 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
           ),
           onPressed: () async {
             HapticFeedback.vibrate();
-            if(_checkBankInfoMissing) {
-              baseProvider.showNegativeAlert('Bank Details Missing', 'Please enter your bank details', context);
-            }
-            else {
+            if (_checkBankInfoMissing) {
+              baseProvider.showNegativeAlert('Bank Details Missing',
+                  'Please enter your bank details', context);
+            } else {
               if (widget.withdrawableGoldQnty == 0.0) {
                 return;
               }
@@ -398,9 +396,13 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
     );
   }
 
-  bool get _checkBankInfoMissing => (baseProvider.augmontDetail.bankAccNo.isEmpty || baseProvider.augmontDetail.bankAccNo==null ||
-            baseProvider.augmontDetail.bankHolderName.isEmpty || baseProvider.augmontDetail.bankHolderName==null ||
-            baseProvider.augmontDetail.ifsc.isEmpty || baseProvider.augmontDetail.ifsc==null);
+  bool get _checkBankInfoMissing =>
+      (baseProvider.augmontDetail.bankAccNo.isEmpty ||
+          baseProvider.augmontDetail.bankAccNo == null ||
+          baseProvider.augmontDetail.bankHolderName.isEmpty ||
+          baseProvider.augmontDetail.bankHolderName == null ||
+          baseProvider.augmontDetail.ifsc.isEmpty ||
+          baseProvider.augmontDetail.ifsc == null);
 
   _buildRow(String title, String value) {
     return ListTile(

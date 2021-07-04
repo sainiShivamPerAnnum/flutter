@@ -1,12 +1,12 @@
-import 'package:felloapp/ui/pages/root.dart';
+import 'dart:core';
+import 'dart:math';
+
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:core';
-import 'dart:math';
 
 class NavBar extends StatelessWidget {
   final ValueChanged<int> itemTapped;

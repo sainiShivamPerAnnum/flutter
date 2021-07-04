@@ -14,8 +14,8 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/tambola_dialog.dart';
-import 'package:felloapp/ui/dialogs/weekly_draw_dialog.dart';
 import 'package:felloapp/ui/dialogs/tambola_user_results_dialog.dart';
+import 'package:felloapp/ui/dialogs/weekly_draw_dialog.dart';
 import 'package:felloapp/ui/elements/board_selector.dart';
 import 'package:felloapp/ui/elements/roulette.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
@@ -30,7 +30,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
 

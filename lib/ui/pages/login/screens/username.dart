@@ -1,5 +1,4 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -25,6 +24,7 @@ class UsernameState extends State<Username> {
   bool isLoading = false;
   bool isUpdating = false;
   bool isUpdated = false;
+
   void validate(String value) async {
     setState(() {
       isLoading = true;
@@ -150,6 +150,7 @@ class UsernameState extends State<Username> {
 
 class RuleTile extends StatelessWidget {
   final String rule;
+
   RuleTile({this.rule});
 
   @override

@@ -141,15 +141,14 @@ class UserTicketWallet {
   /// where SUFFIX = {REF}
   _buildLockedTicketBalance(Map<String, dynamic> tMap) {
     _lockedTck = [];
-    int _refLockedTck = (_isValidField(tMap[fldReferralLocked]))
-        ? tMap[fldReferralLocked]
-        : 0;
-    if(_refLockedTck > 0) _lockedTck.add(LockedTicket("REF", _refLockedTck));
+    int _refLockedTck =
+        (_isValidField(tMap[fldReferralLocked])) ? tMap[fldReferralLocked] : 0;
+    if (_refLockedTck > 0) _lockedTck.add(LockedTicket("REF", _refLockedTck));
 
-    int _prizeLockedTck = (_isValidField(tMap[fldPrizeLocked]))
-        ? tMap[fldPrizeLocked]
-        : 0;
-    if(_prizeLockedTck > 0) _lockedTck.add(LockedTicket("PRIZE", _prizeLockedTck));
+    int _prizeLockedTck =
+        (_isValidField(tMap[fldPrizeLocked])) ? tMap[fldPrizeLocked] : 0;
+    if (_prizeLockedTck > 0)
+      _lockedTck.add(LockedTicket("PRIZE", _prizeLockedTck));
   }
 
   int _getWeekCode() {

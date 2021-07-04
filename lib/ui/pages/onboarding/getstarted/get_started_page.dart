@@ -20,6 +20,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
   List<bool> isVisible = List<bool>.filled(4, false);
   AppState appState;
   static const Duration animDuration = Duration(milliseconds: 190);
+
   @override
   Widget build(BuildContext context) {
     appState = Provider.of<AppState>(context, listen: false);

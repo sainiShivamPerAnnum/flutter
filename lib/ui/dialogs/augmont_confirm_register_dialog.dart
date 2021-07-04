@@ -7,7 +7,6 @@ import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class AugmontConfirmRegnDialog extends StatefulWidget {
@@ -114,17 +113,24 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                     (widget.panNumber != null)
                         ? _buildRow('Name as per PAN', widget.panName)
                         : Container(),
-                    (widget.bankAccNo != null && widget.bankAccNo.isNotEmpty) ?
-                    _buildRow('Bank Account No', widget.bankAccNo) : Container(),
-                    (widget.bankHolderName!=null && widget.bankHolderName.isNotEmpty) ?
-                    _buildRow(
-                        'Name of Bank account holder', widget.bankHolderName) : Container(),
-                    (widget.bankName!=null && widget.bankName.isNotEmpty) ?
-                    _buildRow('Name of Bank', widget.bankName) : Container(),
-                    (widget.bankBranchName!=null && widget.bankBranchName.isNotEmpty) ?
-                    _buildRow('Bank Branch Name', widget.bankBranchName) : Container(),
-                    (widget.bankIfsc!=null && widget.bankIfsc.isNotEmpty) ?
-                    _buildRow('Bank IFSC', widget.bankIfsc) : Container(),
+                    (widget.bankAccNo != null && widget.bankAccNo.isNotEmpty)
+                        ? _buildRow('Bank Account No', widget.bankAccNo)
+                        : Container(),
+                    (widget.bankHolderName != null &&
+                            widget.bankHolderName.isNotEmpty)
+                        ? _buildRow('Name of Bank account holder',
+                            widget.bankHolderName)
+                        : Container(),
+                    (widget.bankName != null && widget.bankName.isNotEmpty)
+                        ? _buildRow('Name of Bank', widget.bankName)
+                        : Container(),
+                    (widget.bankBranchName != null &&
+                            widget.bankBranchName.isNotEmpty)
+                        ? _buildRow('Bank Branch Name', widget.bankBranchName)
+                        : Container(),
+                    (widget.bankIfsc != null && widget.bankIfsc.isNotEmpty)
+                        ? _buildRow('Bank IFSC', widget.bankIfsc)
+                        : Container(),
                     (widget.panNumber != null)
                         ? Padding(
                             padding: EdgeInsets.all(10),

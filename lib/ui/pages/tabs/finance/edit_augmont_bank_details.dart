@@ -1,31 +1,18 @@
-import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
-import 'package:felloapp/ui/elements/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
-import 'package:felloapp/ui/pages/login/screens/Field-Container.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-
-import '../../root.dart';
 
 class EditAugmontBankDetail extends StatefulWidget {
   final String prevImage;
@@ -65,7 +52,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
           ? new TextEditingController(
               text: baseProvider.augmontDetail.bankAccNo)
           : new TextEditingController();
-        _bankAccNoConfirmController = (baseProvider.augmontDetail != null &&
+      _bankAccNoConfirmController = (baseProvider.augmontDetail != null &&
               baseProvider.augmontDetail.bankAccNo != null)
           ? new TextEditingController(
               text: baseProvider.augmontDetail.bankAccNo)
@@ -311,7 +298,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       return;
     }
 
-    if(pConfirmBankAccNo!=pBankAccNo) {
+    if (pConfirmBankAccNo != pBankAccNo) {
       baseProvider.showNegativeAlert(
           'Fields mismatch', 'Bank account numbers do not match', context);
       baseProvider.isEditAugmontBankDetailInProgress = false;
@@ -349,7 +336,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                 // baseProvider.augmontDetail.bankHolderName = pBankHolderName;
                 // baseProvider.augmontDetail.bankAccNo = pBankAccNo;
                 // baseProvider.augmontDetail.ifsc = pBankIfsc;
-                baseProvider.updateAugmontDetails(pBankHolderName, pBankAccNo, pBankIfsc);
+                baseProvider.updateAugmontDetails(
+                    pBankHolderName, pBankAccNo, pBankIfsc);
                 dbProvider
                     .updateUserAugmontDetails(
                         baseProvider.myUser.uid, baseProvider.augmontDetail)

@@ -171,9 +171,8 @@ class StrikeThroughWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: _child,
-      padding: EdgeInsets.symmetric(
-          horizontal:
-              6), // this line is optional to make strikethrough effect outside a text
+      padding: EdgeInsets.symmetric(horizontal: 6),
+      // this line is optional to make strikethrough effect outside a text
       decoration: BoxDecoration(
         image: DecorationImage(
             image: AssetImage(Assets.strikeThroughGraphic),

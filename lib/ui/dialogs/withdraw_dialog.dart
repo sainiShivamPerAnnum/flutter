@@ -8,14 +8,15 @@ import 'package:flutter/services.dart';
 class WithdrawDialog extends StatefulWidget {
   final int balance;
   final Function withdrawAction;
+
   WithdrawDialog({this.balance, this.withdrawAction});
-  
+
   @override
   State createState() => WithdrawDialogState();
 }
 
 class WithdrawDialogState extends State<WithdrawDialog> {
-  final Log log = new Log('WithdrawDialog');  
+  final Log log = new Log('WithdrawDialog');
   TextEditingController _amountController = TextEditingController();
   TextEditingController _upiAddressController = TextEditingController();
   String _amountError;
@@ -24,7 +25,7 @@ class WithdrawDialogState extends State<WithdrawDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      insetPadding: EdgeInsets.only(left:20, top:50, bottom: 80, right:20),
+      insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
@@ -42,7 +43,8 @@ class WithdrawDialogState extends State<WithdrawDialog> {
           SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Padding(
-                padding: EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
+                padding:
+                    EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -56,23 +58,22 @@ class WithdrawDialogState extends State<WithdrawDialog> {
                       width: 180,
                       height: 180,
                     ),
-                    Text('WITHDRAW',
+                    Text(
+                      'WITHDRAW',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w700,
-                        color: UiConstants.primaryColor
-                      ),
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
+                          color: UiConstants.primaryColor),
                     ),
-                    Text('All withdrawal requests are manually verified and processed everyday at 10PM',
+                    Text(
+                        'All withdrawal requests are manually verified and processed everyday at 10PM',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 20,
                             height: 1.2,
                             color: UiConstants.accentColor,
-                            fontWeight: FontWeight.w300
-                        )
-                    ),
+                            fontWeight: FontWeight.w300)),
                     SizedBox(
                       height: 10,
                     ),
@@ -102,9 +103,9 @@ class WithdrawDialogState extends State<WithdrawDialog> {
                           style: TextStyle(color: Colors.red),
                         ),
                       ),
-                      SizedBox(
-                        height: 5,
-                      ),
+                    SizedBox(
+                      height: 5,
+                    ),
                     Container(
                       margin: EdgeInsets.only(top: 12),
                       child: Row(
@@ -138,20 +139,20 @@ class WithdrawDialogState extends State<WithdrawDialog> {
                     SizedBox(
                       height: 10,
                     ),
-                    Text('* Only users who have previously saved at least ₹100 are eligible for withdrawals',
+                    Text(
+                        '* Only users who have previously saved at least ₹100 are eligible for withdrawals',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 12,
                             height: 1.2,
                             color: UiConstants.accentColor,
-                            fontWeight: FontWeight.w300
-                        )
-                    ),
+                            fontWeight: FontWeight.w300)),
                     Padding(
                         padding: const EdgeInsets.all(0),
                         child: RichText(
                           text: TextSpan(
-                              text: "* To read more about about the eligibility rules, please refer to our ",
+                              text:
+                                  "* To read more about about the eligibility rules, please refer to our ",
                               style: TextStyle(
                                 color: Colors.black,
                               ),
@@ -164,49 +165,47 @@ class WithdrawDialogState extends State<WithdrawDialog> {
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {
                                         HapticFeedback.vibrate();
-                                        Navigator.of(context).pushNamed('/refpolicy');
+                                        Navigator.of(context)
+                                            .pushNamed('/refpolicy');
                                       }),
                               ]),
                         )),
                   ],
-                )
-            ),
+                )),
           )
-          ]
-    );
+        ]);
   }
 
   Widget _buildSubmitButton(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width-40,
+      width: MediaQuery.of(context).size.width - 40,
       height: 50.0,
       decoration: BoxDecoration(
-        gradient: new LinearGradient(
-            colors: [
-              UiConstants.primaryColor,
-              UiConstants.primaryColor.withBlue(190),
-            ],
-            begin: Alignment(0.5, -1.0),
-            end: Alignment(0.5, 1.0)
-        ),
+        gradient: new LinearGradient(colors: [
+          UiConstants.primaryColor,
+          UiConstants.primaryColor.withBlue(190),
+        ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
         borderRadius: new BorderRadius.circular(10.0),
-        
       ),
       child: new Material(
         child: MaterialButton(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('WITHDRAW ',
-                style: Theme.of(context).textTheme.button.copyWith(color: Colors.white),
+              Text(
+                'WITHDRAW ',
+                style: Theme.of(context)
+                    .textTheme
+                    .button
+                    .copyWith(color: Colors.white),
               ),
             ],
           ),
-          onPressed: () async{
+          onPressed: () async {
             HapticFeedback.vibrate();
             final amtErr = _validateAmount(_amountController.text);
             final upiErr = _validateUPIAddress(_upiAddressController.text);
-            if(amtErr != null) {
+            if (amtErr != null) {
               setState(() {
                 _amountError = amtErr;
               });
@@ -215,7 +214,7 @@ class WithdrawDialogState extends State<WithdrawDialog> {
             setState(() {
               _amountError = null;
             });
-            if(upiErr != null) {
+            if (upiErr != null) {
               setState(() {
                 _upiAddressError = upiErr;
               });
@@ -224,9 +223,10 @@ class WithdrawDialogState extends State<WithdrawDialog> {
             setState(() {
               _upiAddressError = null;
             });
-            
-            if(_amountError == null && _upiAddressError == null) {
-              return widget.withdrawAction(_amountController.text, _upiAddressController.text);
+
+            if (_amountError == null && _upiAddressError == null) {
+              return widget.withdrawAction(
+                  _amountController.text, _upiAddressController.text);
             }
           },
           highlightColor: Colors.orange.withOpacity(0.5),
@@ -239,22 +239,24 @@ class WithdrawDialogState extends State<WithdrawDialog> {
   }
 
   String _validateAmount(String value) {
-    if(value == null || value.isEmpty) {
+    if (value == null || value.isEmpty) {
       return 'Please enter a valid amount';
     }
-    try{
+    try {
       double amount = double.parse(value);
-      if(amount > widget.balance) return 'Insufficient balance';
-      if(amount < 1) return 'Please enter value more than ₹1';
+      if (amount > widget.balance) return 'Insufficient balance';
+      if (amount < 1)
+        return 'Please enter value more than ₹1';
       //else if(amount > 1500) return 'We are currently only accepting deposits below ₹1500';
-      else return null;
-    }catch(e) {
+      else
+        return null;
+    } catch (e) {
       return 'Please enter a valid amount';
     }
   }
 
   String _validateUPIAddress(String value) {
-    if(value == null || value.isEmpty) {
+    if (value == null || value.isEmpty) {
       return 'Please enter a valid UPI address';
     }
     return null;

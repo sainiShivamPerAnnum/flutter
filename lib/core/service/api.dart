@@ -5,11 +5,8 @@ import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/size_config.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class Api {
   Log log = new Log("Api");
@@ -227,8 +224,8 @@ class Api {
     return query.get();
   }
 
-  Future<QuerySnapshot> getUserTransactionsByField(
-      String user_id, String type, String subtype, DocumentSnapshot lastDocument,int limit) {
+  Future<QuerySnapshot> getUserTransactionsByField(String user_id, String type,
+      String subtype, DocumentSnapshot lastDocument, int limit) {
     Query query = _db
         .collection(Constants.COLN_USERS)
         .doc(user_id)
@@ -239,8 +236,7 @@ class Api {
       query = query.where(UserTransaction.fldSubType, isEqualTo: subtype);
     if (limit != -1 && limit > 10) query = query.limit(limit);
     query = query.orderBy(UserTransaction.fldTimestamp, descending: true);
-    if(lastDocument != null)
-      query = query.startAfterDocument(lastDocument);
+    if (lastDocument != null) query = query.startAfterDocument(lastDocument);
     return query.get();
   }
 
