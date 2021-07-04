@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
-import 'package:felloapp/ui/elements/graph/bezier_chart_custom_config.dart';
-import 'package:felloapp/ui/elements/graph/bezier_custom_line.dart';
+import 'package:felloapp/ui/elements/bezier_graph/bezier_chart_custom_config.dart';
+import 'package:felloapp/ui/elements/bezier_graph/bezier_custom_line.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

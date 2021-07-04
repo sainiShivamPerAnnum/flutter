@@ -1,10 +1,7 @@
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
+
 import 'router_delegate.dart';
 
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {

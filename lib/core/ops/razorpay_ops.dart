@@ -1,4 +1,3 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/util/assets.dart';
@@ -7,12 +6,10 @@ import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/razorpay_api_util.dart';
-import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-class RazorpayModel extends ChangeNotifier
-{
+class RazorpayModel extends ChangeNotifier {
   final Log log = new Log('RazorpayModel');
   HttpModel _httpModel = locator<HttpModel>();
   UserTransaction _currentTxn;
@@ -97,7 +94,7 @@ class RazorpayModel extends ChangeNotifier
     if (!_init(txn)) return null; //initialise razorpay
 
     Map<String, dynamic> orderDetails =
-        await _httpModel.generateRzpOrderId(_currentTxn.amount,note);
+        await _httpModel.generateRzpOrderId(_currentTxn.amount, note);
     if (orderDetails == null) {
       log.error('Failed to generate order id');
       return null;
@@ -118,9 +115,13 @@ class RazorpayModel extends ChangeNotifier
       'description': 'Digital Gold Purchase',
       'timeout': 120, // in seconds
       'image': Assets.logoBase64,
-      'remember_customer':false,
-      'readonly':{'contact':true,'email':true,'name':false},
-      'theme':{'hide_topbar':false,'color':'#2EB19F','backdrop_color':'#F1F1F1'},
+      'remember_customer': false,
+      'readonly': {'contact': true, 'email': true, 'name': false},
+      'theme': {
+        'hide_topbar': false,
+        'color': '#2EB19F',
+        'backdrop_color': '#F1F1F1'
+      },
       'prefill': {'contact': mobile, 'email': email}
     };
 

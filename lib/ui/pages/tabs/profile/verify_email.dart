@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/main.dart';
@@ -41,6 +42,7 @@ class VerifyEmailState extends State<VerifyEmail> {
   bool _isEmailEnabled = false;
   bool _isSessionExpired = false;
   bool _isOtpIncorrect = false;
+
   @override
   void initState() {
     email = TextEditingController();

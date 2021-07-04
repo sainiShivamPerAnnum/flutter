@@ -6,8 +6,8 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/elements/funds_chart_view.dart';
+import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -118,26 +118,25 @@ class _FinancePageState extends State<FinancePage> {
                     Container(
                       height: kToolbarHeight * 1.4,
                     ),
-                    BaseUtil.buildShowcaseWrapper(
-                      _showcaseHeader,
-                      'Your savings and investments will show up here. The balances are based on live market rates.',
-                      Consumer<BaseUtil>(
-                        builder: (context, baseUtil, child) {
-                          return Container(
-                            child:
-                                baseProvider.userFundWallet.getEstTotalWealth() > 0
-                                    ? FundsChartView(
-                                        userFundWallet: baseProvider.userFundWallet,
-                                        goldMoreInfo: goldMoreInfoStr,
-                                        doRefresh: () {
-                                          _onFundsRefresh();
-                                        },
-                                      )
-                                    : ZeroBalView(),
-                          );
-                        },
-                      )
-                    ),
+                    BaseUtil.buildShowcaseWrapper(_showcaseHeader,
+                        'Your savings and investments will show up here. The balances are based on live market rates.',
+                        Consumer<BaseUtil>(
+                      builder: (context, baseUtil, child) {
+                        return Container(
+                          child: baseProvider.userFundWallet
+                                      .getEstTotalWealth() >
+                                  0
+                              ? FundsChartView(
+                                  userFundWallet: baseProvider.userFundWallet,
+                                  goldMoreInfo: goldMoreInfoStr,
+                                  doRefresh: () {
+                                    _onFundsRefresh();
+                                  },
+                                )
+                              : ZeroBalView(),
+                        );
+                      },
+                    )),
                     Divider(
                       color: Colors.black38,
                     ),

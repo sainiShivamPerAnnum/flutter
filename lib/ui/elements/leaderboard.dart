@@ -1,15 +1,9 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/PrizeLeader.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
-import '../../core/model/PrizeLeader.dart';
-import '../../core/model/ReferralLeader.dart';
-import '../../util/size_config.dart';
 
 class Leaderboard extends StatefulWidget {
   @override

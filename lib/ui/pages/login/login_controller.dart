@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'dart:ui';
 import 'dart:math' as math;
+import 'dart:ui';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/fcm_listener.dart';
@@ -23,10 +24,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -626,6 +624,7 @@ class ProgressBarItem extends StatelessWidget {
   final double value;
   final int index;
   final IconData icon;
+
   ProgressBarItem({this.value, this.index, this.icon});
 
   @override

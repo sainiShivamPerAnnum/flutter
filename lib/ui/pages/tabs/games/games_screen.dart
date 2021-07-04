@@ -8,7 +8,6 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/dialogs/Fold-Card/card.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
 import 'package:felloapp/ui/dialogs/ticket_details_dialog.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';

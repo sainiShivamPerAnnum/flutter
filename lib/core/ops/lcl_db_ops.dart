@@ -1,4 +1,3 @@
-import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -39,14 +38,14 @@ class LocalDBModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> isConfettiRequired(int weekCde) async{
-    try{
+  Future<bool> isConfettiRequired(int weekCde) async {
+    try {
       final file = await _api.confettiFile;
       String contents = await file.readAsString();
       //check if confetti file has this week's code
       //if not, confetti is required
       return (int.parse(contents) != weekCde);
-    }catch(e) {
+    } catch (e) {
       return true;
     }
   }
@@ -57,16 +56,16 @@ class LocalDBModel extends ChangeNotifier {
 
   Future saveTambolaResultProcessingStatus(bool flag) async {
     // Write the file
-    int status = (flag)?1:0;
+    int status = (flag) ? 1 : 0;
     return _api.writeTmbResultFile('$status');
   }
 
   Future<int> get isTambolaTutorialComplete async {
     try {
       final file = await _api.tambolaTutorialFile;
-      if(file == null) return 0;
+      if (file == null) return 0;
       String contents = await file.readAsString();
-      if(contents == null || contents.isEmpty) return 0;
+      if (contents == null || contents.isEmpty) return 0;
 
       return int.parse(contents);
     } catch (e) {
@@ -76,16 +75,16 @@ class LocalDBModel extends ChangeNotifier {
   }
 
   set saveTambolaTutorialComplete(bool flag) {
-    int status = (flag)?1:0;
+    int status = (flag) ? 1 : 0;
     _api.writeFreshTambolaTutorialFile('$status');
   }
 
   Future<int> get isHomeTutorialComplete async {
     try {
       final file = await _api.homeTutorialFile;
-      if(file == null) return 1;
+      if (file == null) return 1;
       String contents = await file.readAsString();
-      if(contents == null || contents.isEmpty) return 1;  //default to true
+      if (contents == null || contents.isEmpty) return 1; //default to true
 
       return int.parse(contents);
     } catch (e) {
@@ -95,40 +94,38 @@ class LocalDBModel extends ChangeNotifier {
   }
 
   set saveHomeTutorialComplete(bool flag) {
-    int status = (flag)?1:0;
+    int status = (flag) ? 1 : 0;
     _api.writeFreshHomeTutorialFile('$status');
   }
 
-  Future<bool> deleteLocalAppData() async{
-    try{
+  Future<bool> deleteLocalAppData() async {
+    try {
       await _api.deleteTmbResultFile();
-    }catch(e) {
+    } catch (e) {
       log.error('Failed to delete onboarding file:' + e.toString());
     }
-    try{
+    try {
       await _api.deleteFreshTambolaTutorialFile();
-    }catch(e) {
+    } catch (e) {
       log.error('Failed to delete fresh tambola tutorial file:' + e.toString());
     }
-    try{
+    try {
       await _api.deleteFreshHomeTutorialFile();
-    }catch(e) {
+    } catch (e) {
       log.error('Failed to delete fresh user file:' + e.toString());
     }
-    try{
+    try {
       await _api.deleteConfettiFile();
-    }catch(e) {
+    } catch (e) {
       log.error('Failed to delete confetti track file:' + e.toString());
     }
     //User file deletion is crucial for return flag. Rest can be missing
-    try{
+    try {
       await _api.deleteUserFile();
       return true;
-    }catch(e) {
+    } catch (e) {
       log.error('Failed to delete onboarding or user file:' + e.toString());
       return false;
     }
-
   }
-
 }

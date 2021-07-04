@@ -10,15 +10,15 @@ class SingleDigit extends StatefulWidget {
 
   _SingleDigitState _state;
 
-  SingleDigit({
-    this.boxDecoration: const BoxDecoration(color: Colors.transparent),
-    this.textStyle: const TextStyle(color: Colors.black, fontSize: 22),
-    this.initialValue: 0
-  });
+  SingleDigit(
+      {this.boxDecoration: const BoxDecoration(color: Colors.transparent),
+      this.textStyle: const TextStyle(color: Colors.black, fontSize: 22),
+      this.initialValue: 0});
 
   @override
   State<StatefulWidget> createState() {
-    _state = new _SingleDigitState(textStyle, boxDecoration, 0, this.initialValue);
+    _state =
+        new _SingleDigitState(textStyle, boxDecoration, 0, this.initialValue);
     return _state;
   }
 
@@ -29,9 +29,10 @@ class SingleDigit extends StatefulWidget {
   }
 }
 
-class _SingleDigitState extends State<SingleDigit> with TickerProviderStateMixin {
-
-  _SingleDigitState(this._textStyle, this._boxDecoration, this.previousValue, this.currentValue);
+class _SingleDigitState extends State<SingleDigit>
+    with TickerProviderStateMixin {
+  _SingleDigitState(this._textStyle, this._boxDecoration, this.previousValue,
+      this.currentValue);
 
   final TextStyle _textStyle;
   final BoxDecoration _boxDecoration;
@@ -62,14 +63,13 @@ class _SingleDigitState extends State<SingleDigit> with TickerProviderStateMixin
       controller = AnimationController(
           duration: const Duration(milliseconds: 1400), vsync: this);
       animation = Tween<double>(
-          begin: previousValue.toDouble(),
-          end: currentValue.toDouble())
+              begin: previousValue.toDouble(), end: currentValue.toDouble())
           .animate(controller)
-        ..addListener(() {
-          setState(() {});
-        });
+            ..addListener(() {
+              setState(() {});
+            });
       controller.forward();
-    }catch(e) {
+    } catch (e) {
       log.error('Raffle digit animation breaking');
     }
   }
@@ -89,7 +89,6 @@ class _SingleDigitState extends State<SingleDigit> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-
     final Size digitSize = _getSingleDigitSize();
 
     return Container(
@@ -100,11 +99,15 @@ class _SingleDigitState extends State<SingleDigit> with TickerProviderStateMixin
         child: ClipRect(
           clipper: CustomDigitClipper(digitSize),
           child: Transform.translate(
-            offset: Offset(0, - this.animation.value * digitSize.height),
+            offset: Offset(0, -this.animation.value * digitSize.height),
             child: Column(
               children: <Widget>[
                 for (var i = 0; i < 100; i++)
-                  Text(i.toString(), style: _textStyle, textAlign: TextAlign.center,)   // ADD STYLE TO THE TEXT
+                  Text(
+                    i.toString(),
+                    style: _textStyle,
+                    textAlign: TextAlign.center,
+                  ) // ADD STYLE TO THE TEXT
               ],
             ),
           ),
@@ -129,6 +132,7 @@ class _SingleDigitState extends State<SingleDigit> with TickerProviderStateMixin
 
 class CustomDigitClipper extends CustomClipper<Rect> {
   CustomDigitClipper(this.digitSize);
+
   final Size digitSize;
 
   @override

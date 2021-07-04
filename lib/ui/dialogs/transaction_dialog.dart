@@ -1,11 +1,7 @@
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class TransactionDialog extends StatefulWidget {
   TransactionDialog();
@@ -70,10 +66,7 @@ class _TransactionState extends State<TransactionDialog> {
                   style: TextStyle(
                       fontSize: 20,
                       color: UiConstants.primaryColor,
-                      fontWeight: FontWeight.bold
-                  )
-              ),
-
+                      fontWeight: FontWeight.bold)),
               SizedBox(
                 height: 10,
               ),
@@ -83,9 +76,7 @@ class _TransactionState extends State<TransactionDialog> {
                       fontSize: 20,
                       height: 1.2,
                       color: UiConstants.accentColor,
-                      fontWeight: FontWeight.w300
-                  )
-              ),
+                      fontWeight: FontWeight.w300)),
             ],
           ),
         ),

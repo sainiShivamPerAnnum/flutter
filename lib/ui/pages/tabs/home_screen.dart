@@ -12,14 +12,9 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  // final ValueChanged<int> tabChange;
-
-  // HomePage({this.tabChange});
-
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -122,36 +117,6 @@ class _HomePageState extends State<HomePage> {
             )
           ],
         ));
-  }
-
-  Function getFixedAction(int id) {
-    switch (id) {
-      case 108:
-        return () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => GuideDialog(),
-          );
-        };
-      case 120:
-        return () {
-          appState.setCurrentTabIndex = 3;
-        };
-      case 140:
-        return () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => GamePoll(),
-          );
-        };
-      default:
-        return () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => GuideDialog(),
-          );
-        };
-    }
   }
 
   void logError(String code, String message) =>

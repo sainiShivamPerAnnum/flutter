@@ -8,7 +8,6 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -32,21 +31,25 @@ class _TransactionsState extends State<Transactions> {
 
   getTransactions() {
     isLoading = true;
-    if (baseProvider != null && dbProvider != null && baseProvider.hasMoreTransactionListDocuments) {
+    if (baseProvider != null &&
+        dbProvider != null &&
+        baseProvider.hasMoreTransactionListDocuments) {
       dbProvider
-          .getFilteredUserTransactions(baseProvider.myUser, null, null, baseProvider.lastTransactionListDocument)
-          .then((Map<String,dynamic> tMap) {
-        if(baseProvider.userMiniTxnList==null || baseProvider.userMiniTxnList.length==0) {
+          .getFilteredUserTransactions(baseProvider.myUser, null, null,
+              baseProvider.lastTransactionListDocument)
+          .then((Map<String, dynamic> tMap) {
+        if (baseProvider.userMiniTxnList == null ||
+            baseProvider.userMiniTxnList.length == 0) {
           baseProvider.userMiniTxnList = List.from(tMap['listOfTransactions']);
-        }
-        else {
-          baseProvider.userMiniTxnList.addAll(List.from(tMap['listOfTransactions']));
+        } else {
+          baseProvider.userMiniTxnList
+              .addAll(List.from(tMap['listOfTransactions']));
         }
         filteredList = baseProvider.userMiniTxnList;
-        if(tMap['lastDocument']!=null) {
+        if (tMap['lastDocument'] != null) {
           baseProvider.lastTransactionListDocument = tMap['lastDocument'];
         }
-        if(tMap['length']<30) {
+        if (tMap['length'] < 30) {
           baseProvider.hasMoreTransactionListDocuments = false;
         }
         // print(
@@ -185,8 +188,10 @@ class _TransactionsState extends State<Transactions> {
         filteredList = [];
       }
       _scrollController.addListener(() async {
-        if (_scrollController.offset >= _scrollController.position.maxScrollExtent && !_scrollController.position.outOfRange) {
-          if(baseProvider.hasMoreTransactionListDocuments && !isLoading) {
+        if (_scrollController.offset >=
+                _scrollController.position.maxScrollExtent &&
+            !_scrollController.position.outOfRange) {
+          if (baseProvider.hasMoreTransactionListDocuments && !isLoading) {
             getTransactions();
           }
         }

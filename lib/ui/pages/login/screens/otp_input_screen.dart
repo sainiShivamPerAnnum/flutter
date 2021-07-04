@@ -3,7 +3,6 @@ import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -35,6 +34,8 @@ class OtpInputScreenState extends State<OtpInputScreen> {
   bool _isResendClicked = false;
   final _pinEditingController = new TextEditingController();
   FocusNode focusNode;
+  String mobileNo;
+
   @override
   void initState() {
     focusNode = new FocusNode();

@@ -12,33 +12,31 @@ class UserMiniTransaction {
   Timestamp _timestamp;
   String _note;
 
-  UserMiniTransaction(
-      this._amount,
-      this._closingBalance,
-      this._type,
-      this._subType,
-      this._tranStatus,
-      this._timestamp,
-      this._note);
+  UserMiniTransaction(this._amount, this._closingBalance, this._type,
+      this._subType, this._tranStatus, this._timestamp, this._note);
 
-  UserMiniTransaction.fromMap(Map<String, dynamic> data):this(
-    toDouble(data[UserTransaction.fldAmount]),data[UserTransaction.fldClosingBalance],
-    data[UserTransaction.fldType],data[UserTransaction.fldSubType],
-    data[UserTransaction.fldTranStatus],data[UserTransaction.fldTimestamp],
-    data[UserTransaction.fldNote],
-  );
+  UserMiniTransaction.fromMap(Map<String, dynamic> data)
+      : this(
+          toDouble(data[UserTransaction.fldAmount]),
+          data[UserTransaction.fldClosingBalance],
+          data[UserTransaction.fldType],
+          data[UserTransaction.fldSubType],
+          data[UserTransaction.fldTranStatus],
+          data[UserTransaction.fldTimestamp],
+          data[UserTransaction.fldNote],
+        );
 
   static double toDouble(dynamic fld) {
     double res = 0;
-    try{
+    try {
       res = fld;
       return res;
-    }catch(e) {}
+    } catch (e) {}
 
     try {
       int p = fld;
       return p + .0;
-    }catch(err) {}
+    } catch (err) {}
 
     return res;
   }

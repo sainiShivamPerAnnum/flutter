@@ -8,11 +8,12 @@ import 'package:provider/provider.dart';
 class ContactUsBtn extends StatelessWidget {
   BaseUtil baseProvider;
   DBModel reqProvider;
+
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    reqProvider = Provider.of<DBModel>(context,listen:false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    reqProvider = Provider.of<DBModel>(context, listen: false);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -31,8 +32,10 @@ class ContactUsBtn extends StatelessWidget {
                       if (baseProvider.isSignedIn() &&
                           baseProvider.isActiveUser()) {
                         reqProvider
-                            .addCallbackRequest(baseProvider.firebaseUser.uid,
-                            baseProvider.myUser.name, baseProvider.myUser.mobile)
+                            .addCallbackRequest(
+                                baseProvider.firebaseUser.uid,
+                                baseProvider.myUser.name,
+                                baseProvider.myUser.mobile)
                             .then((flag) {
                           if (flag) {
                             Navigator.of(context).pop();

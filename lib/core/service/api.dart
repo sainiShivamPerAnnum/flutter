@@ -6,11 +6,8 @@ import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/email-verify-otp.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/size_config.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class Api {
   Log log = new Log("Api");

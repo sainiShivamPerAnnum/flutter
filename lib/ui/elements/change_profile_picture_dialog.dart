@@ -1,20 +1,23 @@
 import 'dart:io';
 import 'dart:ui';
-import 'package:felloapp/core/base_analytics.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 class ChangeProfilePicture extends StatefulWidget {
   final File image;
+
   ChangeProfilePicture({this.image});
+
   @override
   _ChangeProfilePictureState createState() => _ChangeProfilePictureState();
 }
@@ -24,6 +27,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
   BaseUtil baseProvider;
   bool isUploading = false;
   bool isUploaded = false;
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);

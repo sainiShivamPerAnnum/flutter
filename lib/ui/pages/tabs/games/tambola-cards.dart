@@ -1,13 +1,12 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class TambolaCardsList extends StatelessWidget {
   final List<TambolaBoardView> tambolaBoardView;
 
   TambolaCardsList({this.tambolaBoardView});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
