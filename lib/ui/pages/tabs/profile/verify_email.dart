@@ -168,8 +168,8 @@ class VerifyEmailState extends State<VerifyEmail> {
             _isProcessing = false;
           });
           baseProvider.showNegativeAlert(
-              "Oops, we ran into trouble",
-              "Email cannot be verified at the moment, please try in sometime.",
+              "Verification failed",
+              "Email cannot be verified at the moment, please try again in sometime.",
               context);
         }
       });
@@ -190,7 +190,7 @@ class VerifyEmailState extends State<VerifyEmail> {
       });
       if (res) {
         baseProvider.showPositiveAlert("Email verified",
-            "Thank you for verifying", context);
+            "Thank you for verifying. Status will update on app restart.", context);
         backButtonDispatcher.didPopRoute();
       } else {
         baseProvider.showNegativeAlert("Email verification failed",

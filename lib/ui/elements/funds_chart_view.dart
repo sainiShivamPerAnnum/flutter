@@ -9,6 +9,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'dart:math' as math;
+
 
 class FundsChartView extends StatefulWidget {
   final UserFundWallet userFundWallet;
@@ -172,12 +174,12 @@ class _FundsChartViewState extends State<FundsChartView> {
               showChartValues: false,
               chartValueBackgroundColor: UiConstants.backgroundColor,
               chartValueStyle: GoogleFonts.montserrat(
-                fontSize: SizeConfig.screenWidth /
+                fontSize: math.min(SizeConfig.screenWidth /
                     (widget.userFundWallet
                             .getEstTotalWealth()
                             .toStringAsFixed(2)
                             .length *
-                        1.6),
+                        1.6),SizeConfig.largeTextSize*2),
                 color: UiConstants.textColor,
               ),
               showChartValuesInPercentage: false,

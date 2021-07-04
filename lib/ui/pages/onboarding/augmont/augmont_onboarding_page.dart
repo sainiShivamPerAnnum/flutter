@@ -7,17 +7,23 @@ import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
+import 'package:felloapp/ui/dialogs/augmont_regn_security_dialog.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
+import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/augmont_state_list.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AugmontOnboarding extends StatefulWidget {
   AugmontOnboarding({Key key}) : super(key: key);
@@ -128,23 +134,23 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
               Center(
                   child: SizedBox(
                 child: Image(
-                  image: AssetImage(Assets.onboardingSlide[2]),
+                  image: AssetImage('images/aug-logo.png'),
                   fit: BoxFit.contain,
                 ),
                 width: 180,
-                height: 150,
+                height: 60,
               )),
               Center(
                   child: Text(
-                'Register',
+                'Digital Gold Registration',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w700,
-                    color: UiConstants.primaryColor),
+                    color: Color(0xffFFD700)),
               )),
               SizedBox(
-                height: 10,
+                height: 20,
               ),
               Padding(
                 padding: EdgeInsets.only(left: 10),
@@ -212,8 +218,11 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
               InputField(
                 child: DropdownButtonFormField(
                   decoration: InputDecoration(
-                    border: InputBorder.none,
-                  ),
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none),
                   iconEnabledColor: UiConstants.primaryColor,
                   hint: Text("Which state do you live in?"),
                   value: stateChosenValue,
@@ -405,6 +414,13 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                           );
                         } else {
                           print('inside failed name');
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => MoreInfoDialog(
+                                text: veriDetails['reason'],
+                                imagePath: Assets.dummyPanCardShowNumber,
+                                title: 'Invalid Details',
+                              ));
                           baseProvider.showNegativeAlert(
                               'Invalid Details',
                               veriDetails['reason'] ?? 'Please try again',
@@ -422,7 +438,90 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                   color: Colors.transparent,
                   borderRadius: new BorderRadius.circular(30.0),
                 ),
-              )
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                child: InkWell(
+                  onTap: () {
+                    HapticFeedback.vibrate();
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AugmontRegnSecurityDialog(
+                          text: Assets.infoAugmontRegnSecurity,
+                          imagePath: 'images/aes256.png',
+                          title: 'Security > Rest',
+                        ));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.4),
+                          spreadRadius: 1,
+                          blurRadius: 1,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(6),
+                        child: Text(
+                          'Note on Security 🔒',
+                          style: TextStyle(
+                              fontSize: SizeConfig.smallTextSize*1.3,
+                              color: Colors.black54
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                child: InkWell(
+                  onTap: () async{
+                    HapticFeedback.vibrate();
+                    const url = "https://www.augmont.com/about-us";
+                    if (await canLaunch(url))
+                      await launch(url);
+                    else
+                     baseProvider.showNegativeAlert('Failed to launch URL', 'Please try again in sometime', context);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.4),
+                          spreadRadius: 1,
+                          blurRadius: 1,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(6),
+                        child: Text(
+                          'More about Augmont 💰',
+                          style: TextStyle(
+                              fontSize: SizeConfig.smallTextSize*1.3,
+                              color: Colors.black54
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           )),
     );
@@ -496,7 +595,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
       if (_r.toUpperCase() != _e.toUpperCase()) {
         _flag = false;
         _reason =
-            'The name on your PAN card does not match. Please enter your legal name.';
+            'The name on your PAN card does not match with the entered name. Please try again.';
       }
     }
     if (!_flag) {

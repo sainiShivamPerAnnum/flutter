@@ -101,7 +101,7 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
         child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SpinKitThreeBounce(
-              color: UiConstants.spinnerColor2,
+              color: Colors.blueGrey[300],
               size: 18.0,
             )),
       );
