@@ -132,8 +132,8 @@ class _TicketState extends State<FCard> {
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.all(10),
-                    child: Lottie.asset("images/lottie/clap.json",
-                        height: 100, repeat: false),
+                    child:
+                        Lottie.asset("images/lottie/clap.json", repeat: false),
                   ),
                 ),
                 FittedBox(
@@ -177,7 +177,7 @@ class _TicketState extends State<FCard> {
                   children: [
                     Image.asset(
                       "images/fello_logo.png",
-                      width: SizeConfig.screenWidth*0.12,
+                      width: SizeConfig.screenWidth * 0.12,
                     ),
                     Spacer(),
                     IconButton(
@@ -237,7 +237,7 @@ class _TicketState extends State<FCard> {
                 Center(
                   child: Text(
                     "र ${widget.unclaimedPrize}",
-                    style: GoogleFonts.manrope(
+                    style: GoogleFonts.montserrat(
                       color: Colors.white,
                       height: 1.3,
                       shadows: [
@@ -280,7 +280,7 @@ class _TicketState extends State<FCard> {
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
                   "OR",
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.montserrat(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
                   ),
@@ -461,7 +461,6 @@ class _CloseCardState extends State<CloseCard> {
     return Container(
       height: double.infinity,
       width: double.infinity,
-      padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Color(0xfff9f3f3),
@@ -469,9 +468,7 @@ class _CloseCardState extends State<CloseCard> {
       child: Stack(
         children: [
           Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 10,
-            ),
+            padding: EdgeInsets.all(10),
             child: Row(
               children: [
                 Column(
@@ -479,11 +476,11 @@ class _CloseCardState extends State<CloseCard> {
                   children: [
                     Lottie.asset(
                       "images/lottie/winner-crown.json",
-                      height: SizeConfig.screenWidth*0.2,
+                      height: SizeConfig.screenWidth * 0.16,
                     ),
                     Container(
-                      height: SizeConfig.screenWidth*0.2,
-                      width: SizeConfig.screenWidth*0.2,
+                      height: SizeConfig.screenWidth * 0.16,
+                      width: SizeConfig.screenWidth * 0.16,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: UiConstants.primaryColor,
@@ -498,7 +495,7 @@ class _CloseCardState extends State<CloseCard> {
                         ),
                       ),
                     ),
-                    SizedBox(height: SizeConfig.screenWidth*0.05)
+                    Spacer()
                   ],
                 ),
                 SizedBox(width: SizeConfig.blockSizeHorizontal * 5),
@@ -508,10 +505,11 @@ class _CloseCardState extends State<CloseCard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Spacer(),
                       FittedBox(
                         fit: BoxFit.contain,
                         child: Text(
-                          "Congratulations 🎉",
+                          "Congratulations 🎉  ",
                           style: GoogleFonts.montserrat(
                             fontWeight: FontWeight.w700,
                             color: Color(0xff194350),
@@ -521,14 +519,15 @@ class _CloseCardState extends State<CloseCard> {
                       ),
                       SizedBox(height: 10),
                       Text(
-                        "You have र${widget.unclaimedPrize} worth of unclaimed rewards from your past referrals and tambola winnings!",
+                        "You have र${widget.unclaimedPrize} worth of unclaimed rewards!",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.montserrat(
                           color: Colors.black,
+                          fontSize: SizeConfig.mediumTextSize,
                         ),
                       ),
-                      SizedBox(
-                        height: 20,
+                      Spacer(
+                        flex: 1,
                       ),
                       Container(
                         alignment: Alignment.center,
@@ -536,18 +535,21 @@ class _CloseCardState extends State<CloseCard> {
                             border: Border.all(
                                 color: UiConstants.primaryColor, width: 2),
                             borderRadius: BorderRadius.circular(10)),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 26, vertical: 10),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.blockSizeHorizontal * 2,
+                            vertical: SizeConfig.blockSizeHorizontal),
                         child: FittedBox(
                           child: Text(
                             "Claim",
                             style: GoogleFonts.montserrat(
                               color: Colors.black,
                               fontWeight: FontWeight.w500,
+                              fontSize: SizeConfig.mediumTextSize,
                             ),
                           ),
                         ),
-                      )
+                      ),
+                      Spacer(),
                     ],
                   ),
                 ),
@@ -565,7 +567,7 @@ class _CloseCardState extends State<CloseCard> {
                 icon: Icon(
                   Icons.clear_rounded,
                   color: Colors.black,
-                  size: 30,
+                  size: SizeConfig.blockSizeHorizontal * 5,
                 ),
               ),
             ],
@@ -711,10 +713,9 @@ class _CloseCardState extends State<CloseCard> {
       return 'Your prize shall be credited to you soon!';
   }
 
-  _buildShareCard() async{
+  _buildShareCard() async {
     //////ADDING A PRE_CALL DUE TO SCREENSHOT PACKAGE BUG
-    await screenshotController
-        .captureFromWidget(ShareCard(
+    await screenshotController.captureFromWidget(ShareCard(
       dpUrl: baseProvider.myUserDpUrl,
       claimChoice: widget.claimtype,
       prizeAmount: baseProvider.userFundWallet.processingRedemptionBalance,
@@ -723,13 +724,14 @@ class _CloseCardState extends State<CloseCard> {
     ////////////////////////////////////////////
     screenshotController
         .captureFromWidget(
-      ShareCard(
-        dpUrl: baseProvider.myUserDpUrl,
-        claimChoice: widget.claimtype,
-        prizeAmount: baseProvider.userFundWallet.processingRedemptionBalance,
-        username: baseProvider.myUser.name,
-      ),delay: const Duration(seconds: 1)
-    )
+            ShareCard(
+              dpUrl: baseProvider.myUserDpUrl,
+              claimChoice: widget.claimtype,
+              prizeAmount:
+                  baseProvider.userFundWallet.processingRedemptionBalance,
+              username: baseProvider.myUser.name,
+            ),
+            delay: const Duration(seconds: 1))
         .then((Uint8List image) async {
       setState(() {
         isCapturing = false;
@@ -741,7 +743,8 @@ class _CloseCardState extends State<CloseCard> {
       Share.shareFiles(
         ['$directory/fello-reward-$dt.png'],
         subject: 'Fello Rewards',
-        text: 'Fello really is a very rewarding way to invest in assets and play games! You should try it out too: https://fello.in/download/android',
+        text:
+            'Fello really is a very rewarding way to invest in assets and play games! You should try it out too: https://fello.in/download/android',
       );
     }).catchError((onError) {
       print(onError);

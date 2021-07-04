@@ -16,8 +16,7 @@ class TambolaCardsList extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.white),
           title: Text(
             "My Tambola Cards",
-            style: GoogleFonts.montserrat(
-                color: Colors.white, fontWeight: FontWeight.w500),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
           )),
       body: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20),

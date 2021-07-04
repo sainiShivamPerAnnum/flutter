@@ -1,3 +1,4 @@
+import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
@@ -83,25 +84,24 @@ class TravelCardRenderer extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: Text(game.title,
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                   color: Color(0xff272768),
                   fontWeight: FontWeight.w700,
-                  fontSize: cardWidth * 0.08),
+                  fontSize: cardWidth * 0.07),
               textAlign: TextAlign.center),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
           child: Text(game.description,
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 color: Color(0xff272768),
+                fontSize: SizeConfig.mediumTextSize,
               ),
               textAlign: TextAlign.center),
         ),
 
         TextButton(
-          style: ButtonStyle(
-
-          ),
+          style: ButtonStyle(),
           // disabledColor: Colors.transparent,
           // color: Colors.transparent,
           child: Text('Tap to Play'.toUpperCase(), style: Styles.cardAction),

@@ -14,6 +14,7 @@ import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/gold_profit_calculator.dart';
+import 'package:felloapp/ui/elements/gold_rate_graph.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/augmont_withdraw_screen.dart';
@@ -115,7 +116,8 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                   child: Column(
                     children: [
                       FundInfo(),
-                      FundGraph(),
+                      GoldRateGraph(),
+                      // FundGraph(),
                       FundDetailsTable(
                           baseProvider.userFundWallet.augGoldQuantity),
                       GoldProfitCalculator(),
@@ -722,7 +724,7 @@ class FundInfo extends StatelessWidget {
               child: Text(
                 "Augmont Digital Gold",
                 textAlign: TextAlign.left,
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: SizeConfig.largeTextSize),
               ),

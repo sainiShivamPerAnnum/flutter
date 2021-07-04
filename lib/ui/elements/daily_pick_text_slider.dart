@@ -82,8 +82,8 @@ class DPTextSliderState extends State<DPTextSlider> {
       _pagerWidgets.add(
         Text(
           info,
-          style: GoogleFonts.montserrat(
-              color: Colors.white70, fontSize: SizeConfig.smallTextSize*1.4),
+          style: TextStyle(
+              color: Colors.white70, fontSize: SizeConfig.smallTextSize * 1.4),
           textAlign: TextAlign.center,
         ),
       );

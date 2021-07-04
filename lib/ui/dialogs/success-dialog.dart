@@ -38,7 +38,7 @@ class SuccessDialog extends StatelessWidget {
             padding: EdgeInsets.all(10),
             child: Text(
               "Investment Successful",
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 fontSize: SizeConfig.largeTextSize,
                 fontWeight: FontWeight.w700,
                 color: UiConstants.primaryColor,
@@ -76,7 +76,7 @@ class SuccessDialog extends StatelessWidget {
                   child: TextButton(
                     child: Text(
                       "Invest more",
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: SizeConfig.mediumTextSize,
                         fontWeight: FontWeight.w500,
@@ -106,7 +106,7 @@ class SuccessDialog extends StatelessWidget {
                   child: TextButton(
                     child: Text(
                       "Close",
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: SizeConfig.mediumTextSize,
                         fontWeight: FontWeight.w500,

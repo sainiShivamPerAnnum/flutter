@@ -1,5 +1,6 @@
+import 'dart:async';
 import 'dart:ui';
-
+import 'dart:math' as math;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/fcm_listener.dart';
@@ -11,14 +12,21 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
+import 'package:felloapp/ui/pages/login/screens/username.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class LoginController extends StatefulWidget {
@@ -30,7 +38,8 @@ class LoginController extends StatefulWidget {
   State<StatefulWidget> createState() => _LoginControllerState(initPage);
 }
 
-class _LoginControllerState extends State<LoginController> {
+class _LoginControllerState extends State<LoginController>
+    with TickerProviderStateMixin {
   final Log log = new Log("LoginController");
   final int initPage;
   double _formProgress = 0.2;
@@ -43,15 +52,18 @@ class _LoginControllerState extends State<LoginController> {
   static FcmListener fcmProvider;
   static LocalDBModel lclDbProvider;
   static AppState appStateProvider;
+  AnimationController animationController;
 
   String userMobile;
   String _verificationId;
   String _augmentedVerificationId;
+  ValueNotifier<double> _pageNotifier;
   static List<Widget> _pages;
   int _currentPage;
   final _mobileScreenKey = new GlobalKey<MobileInputScreenState>();
   final _otpScreenKey = new GlobalKey<OtpInputScreenState>();
   final _nameScreenKey = new GlobalKey<NameInputScreenState>();
+  final _usernameKey = new GlobalKey<UsernameState>();
 
   @override
   void initState() {
@@ -59,15 +71,38 @@ class _LoginControllerState extends State<LoginController> {
     _currentPage = (initPage != null) ? initPage : MobileInputScreen.index;
     _formProgress = 0.2 * (_currentPage + 1);
     _controller = new PageController(initialPage: _currentPage);
+    _controller.addListener(_pageListener);
+    _pageNotifier = ValueNotifier(0.0);
     _pages = [
       MobileInputScreen(key: _mobileScreenKey),
       OtpInputScreen(
-          key: _otpScreenKey,
-          otpEntered: _onOtpFilled,
-          resendOtp: _onOtpResendRequested),
+        key: _otpScreenKey,
+        otpEntered: _onOtpFilled,
+        resendOtp: _onOtpResendRequested,
+        changeNumber: _onChangeNumberRequest,
+      ),
       NameInputScreen(key: _nameScreenKey),
+      Username(key: _usernameKey)
       // AddressInputScreen(key: _addressScreenKey),
     ];
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 3),
+    )
+      ..forward()
+      ..repeat(reverse: false);
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_pageListener);
+    _controller.dispose();
+    animationController.dispose();
+    super.dispose();
+  }
+
+  void _pageListener() {
+    _pageNotifier.value = _controller.page;
   }
 
   Future<void> _verifyPhone() async {
@@ -84,7 +119,7 @@ class _LoginControllerState extends State<LoginController> {
         ///this is the first time that the otp was requested
         baseProvider.isLoginNextInProgress = false;
         _controller.animateToPage(OtpInputScreen.index,
-            duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+            duration: Duration(seconds: 2), curve: Curves.easeInToLinear);
         setState(() {});
       } else {
         ///the otp was requested to be resent
@@ -147,21 +182,46 @@ class _LoginControllerState extends State<LoginController> {
     appStateProvider = Provider.of<AppState>(context, listen: false);
     return Scaffold(
       // appBar: BaseUtil.getAppBar(),
-      backgroundColor: Color(0xfff1f1f1),
+
       body: SafeArea(
           child: Stack(
         children: <Widget>[
-          LinearProgressIndicator(
-              value: _formProgress,
-              backgroundColor: Colors.transparent,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                  UiConstants.primaryColor.withBlue(150))),
+          // LinearProgressIndicator(
+          //   value: _formProgress,
+          //   backgroundColor: Colors.transparent,
+          //   valueColor: AlwaysStoppedAnimation<Color>(
+          //     UiConstants.primaryColor.withBlue(150),
+          //   ),
+          // ),
+          Positioned(
+            top: kToolbarHeight / 3,
+            child: Container(
+              alignment: Alignment.center,
+              width: SizeConfig.screenWidth,
+              child: Image.asset("images/fello_logo.png", height: 40),
+            ),
+          ),
           new PageView.builder(
             physics: new NeverScrollableScrollPhysics(),
+            scrollDirection: Axis.vertical,
             controller: _controller,
             itemCount: _pages.length,
             itemBuilder: (BuildContext context, int index) {
-              return _pages[index % _pages.length];
+              //print(index - _controller.page);
+              return ValueListenableBuilder(
+                  valueListenable: _pageNotifier,
+                  builder: (ctx, value, _) {
+                    final factorChange = value - index;
+                    return Padding(
+                      padding: EdgeInsets.only(
+                          top: kToolbarHeight * 1.5,
+                          left: SizeConfig.blockSizeHorizontal * 16,
+                          right: SizeConfig.blockSizeHorizontal * 5),
+                      child: Opacity(
+                          opacity: (1 - factorChange.abs()).clamp(0.0, 1.0),
+                          child: _pages[index % _pages.length]),
+                    );
+                  });
             },
             onPageChanged: (int index) {
               setState(() {
@@ -170,6 +230,94 @@ class _LoginControllerState extends State<LoginController> {
               });
             },
           ),
+          ValueListenableBuilder<double>(
+              valueListenable: _pageNotifier,
+              builder: (ctx, value, child) {
+                return Stack(
+                  children: [
+                    Positioned(
+                      left: SizeConfig.blockSizeHorizontal * 4 + 14,
+                      top: kToolbarHeight * 2 + 8,
+                      // bottom: (SizeConfig.screenHeight - kToolbarHeight * 1.7) -
+                      //     ((SizeConfig.screenHeight - kToolbarHeight * 2) / 4) *
+                      //         value,
+                      width: 1,
+                      child: Container(
+                        height:
+                            ((SizeConfig.screenHeight - kToolbarHeight * 2) /
+                                    4) *
+                                value,
+                        color: UiConstants.primaryColor.withOpacity(0.2),
+                      ),
+                    ),
+                    ProgressBarItem(value: value, index: 0, icon: Icons.phone),
+                    ProgressBarItem(
+                        value: value, index: 1, icon: Icons.password),
+                    ProgressBarItem(
+                        value: value, index: 2, icon: Icons.details_rounded),
+                    ProgressBarItem(
+                        value: value,
+                        index: 3,
+                        icon: Icons.account_circle_rounded),
+                    Positioned(
+                        left: SizeConfig.blockSizeHorizontal * 4,
+                        top: kToolbarHeight * 1.6 +
+                            ((SizeConfig.screenHeight - kToolbarHeight * 2) /
+                                    4) *
+                                value,
+                        child: value - value.toInt() == 0
+                            ?
+                            // AnimatedBuilder(
+                            //     animation: animationController,
+                            //     builder: (ctx, _) {
+                            //       return Transform.translate(
+                            //         offset: Offset(
+                            //           0,
+                            //           -8 * (1 - animationController.value),
+                            //         ),
+                            //         child:
+                            Container(
+                                width: 30,
+                                height: 30,
+                                alignment: Alignment.bottomCenter,
+                                child: Transform(
+                                  alignment: Alignment.center,
+                                  transform: Matrix4.rotationY(math.pi),
+                                  child: Lottie.asset(
+                                    "images/lottie/loki.json",
+                                  ),
+                                )
+                                // RotatedBox(
+                                //   quarterTurns: 2,
+                                //   child: Icon(
+                                //     Icons.airplanemode_on_rounded,
+                                //     size: 30 *
+                                //         (1 - animationController.value),
+                                //     color: UiConstants.primaryColor,
+                                //   ),
+                                // ),
+                                )
+                            //   );
+                            // })
+                            : Transform(
+                                alignment: Alignment.center,
+                                transform: Matrix4.rotationY(math.pi),
+                                child: Lottie.asset("images/lottie/loki.json",
+                                    animate: false, height: 30, width: 30),
+                              )
+                        // RotatedBox(
+                        //     quarterTurns: 2,
+                        //     child: Icon(
+                        //       Icons.airplanemode_on_rounded,
+                        //       size: 30,
+                        //       color: UiConstants.primaryColor,
+                        //     ),
+                        //   ),
+                        ),
+                  ],
+                );
+              }),
+
           Align(
             alignment: Alignment.bottomCenter,
             child: Column(
@@ -183,12 +331,15 @@ class _LoginControllerState extends State<LoginController> {
                             children: [
                               new TextSpan(
                                 text: 'By continuing, you agree to our ',
-                                style: new TextStyle(color: Colors.black45),
+                                style: GoogleFonts.montserrat(
+                                    fontSize: SizeConfig.smallTextSize,
+                                    color: Colors.black45),
                               ),
                               new TextSpan(
                                 text: 'Terms of Service',
-                                style: new TextStyle(
+                                style: GoogleFonts.montserrat(
                                     color: Colors.black45,
+                                    fontSize: SizeConfig.smallTextSize,
                                     decoration: TextDecoration.underline),
                                 recognizer: new TapGestureRecognizer()
                                   ..onTap = () {
@@ -201,14 +352,16 @@ class _LoginControllerState extends State<LoginController> {
                           ),
                         ))
                     : Container(),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20, 10, 20, 20.0),
+                Container(
+                  width: SizeConfig.screenWidth,
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       new Container(
-                        width: MediaQuery.of(context).size.width - 50,
+                        width: SizeConfig.screenWidth -
+                            SizeConfig.blockSizeHorizontal * 10,
                         height: 50.0,
                         decoration: BoxDecoration(
                           gradient: new LinearGradient(
@@ -257,6 +410,7 @@ class _LoginControllerState extends State<LoginController> {
   }
 
   _processScreenInput(int currentPage) async {
+    FocusScope.of(context).unfocus();
     switch (currentPage) {
       case MobileInputScreen.index:
         {
@@ -303,10 +457,12 @@ class _LoginControllerState extends State<LoginController> {
       case NameInputScreen.index:
         {
           //if(nameInScreen.validate()) {
-          if (_nameScreenKey.currentState.formKey.currentState.validate()) {
+
+          if (_nameScreenKey.currentState.formKey.currentState.validate() &&
+              _nameScreenKey.currentState.isValidDate()) {
             if (_nameScreenKey.currentState.selectedDate == null) {
-              baseProvider.showNegativeAlert('Invalid details',
-                  'Please enter your date of birth', context);
+              baseProvider.showNegativeAlert('Invalid Date of Birth',
+                  'Please enter a valid date of birth', context);
               return false;
             } else if (!_isAdult(_nameScreenKey.currentState.selectedDate)) {
               baseProvider.showNegativeAlert('Invalid details',
@@ -353,17 +509,50 @@ class _LoginControllerState extends State<LoginController> {
 
             bool isInv = _nameScreenKey.currentState.isInvested;
             if (isInv != null) baseProvider.myUser.isInvested = isInv;
-            //currentPage = AddressInputScreen.index;
-            bool flag = await dbProvider.updateUser(baseProvider.myUser);
-            if (flag) {
-              log.debug("User object saved successfully");
-              _onSignUpComplete();
+            baseProvider.isLoginNextInProgress = false;
+            setState(() {});
+            _controller.animateToPage(Username.index,
+                duration: Duration(seconds: 2), curve: Curves.easeInToLinear);
+          }
+          break;
+        }
+
+      case Username.index:
+        {
+          if (!_usernameKey.currentState.isLoading &&
+              _usernameKey.currentState.isValid) {
+            baseProvider.isLoginNextInProgress = true;
+            setState(() {});
+
+            String username =
+                _usernameKey.currentState.username.text.replaceAll('.', '@');
+            if (await dbProvider.checkIfUsernameIsAvailable(username)) {
+              bool res = await dbProvider.setUsername(
+                  username, baseProvider.firebaseUser.uid);
+              if (res) {
+                baseProvider.myUser.username = username;
+                bool flag = await dbProvider.updateUser(baseProvider.myUser);
+                if (flag) {
+                  log.debug("User object saved successfully");
+                  _onSignUpComplete();
+                } else {
+                  baseProvider.showNegativeAlert(
+                      'Update failed', 'Please try again in sometime', context);
+                  baseProvider.isLoginNextInProgress = false;
+                  setState(() {});
+                }
+              } else {
+                baseProvider.showNegativeAlert('Username update failed',
+                    'Please try again in sometime', context);
+                baseProvider.isLoginNextInProgress = false;
+                setState(() {});
+              }
             } else {
-              baseProvider.showNegativeAlert(
-                  'Update failed', 'Please try again in sometime', context);
+              baseProvider.showNegativeAlert('username not available',
+                  'Please choose another username', context);
+              baseProvider.isLoginNextInProgress = false;
+              setState(() {});
             }
-            // _controller.animateToPage(AddressInputScreen.index,
-            //     duration: Duration(milliseconds: 300), curve: Curves.easeIn);
           }
           break;
         }
@@ -419,7 +608,8 @@ class _LoginControllerState extends State<LoginController> {
       //set 'tutorial shown' flag to false to ensure tutorial gets shown to the user
       lclDbProvider.saveHomeTutorialComplete = false;
       _controller.animateToPage(NameInputScreen.index,
-          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+          duration: Duration(seconds: 2), curve: Curves.easeInToLinear);
+      //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user
       await BaseAnalytics.analytics.logLogin(loginMethod: 'phonenumber');
@@ -442,6 +632,14 @@ class _LoginControllerState extends State<LoginController> {
     }
   }
 
+  _onChangeNumberRequest() {
+    if (!baseProvider.isLoginNextInProgress) {
+      baseProvider.isOtpResendCount = 0;
+      _controller.animateToPage(MobileInputScreen.index,
+          duration: Duration(milliseconds: 300), curve: Curves.easeInToLinear);
+    }
+  }
+
   Future _onSignUpComplete() async {
     baseProvider.isLoginNextInProgress = false;
     await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
@@ -449,7 +647,6 @@ class _LoginControllerState extends State<LoginController> {
 
     await baseProvider.init();
     await fcmProvider.setupFcm();
-    // Navigator.of(context).pushReplacementNamed('/approot');
     appStateProvider.currentAction =
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
     baseProvider.showPositiveAlert(
@@ -458,5 +655,37 @@ class _LoginControllerState extends State<LoginController> {
         context);
     //process complete
     //TODO move to home through animation
+  }
+}
+
+class ProgressBarItem extends StatelessWidget {
+  final double value;
+  final int index;
+  final IconData icon;
+  ProgressBarItem({this.value, this.index, this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    final topPos = kToolbarHeight * 2 +
+        5 +
+        ((SizeConfig.screenHeight - kToolbarHeight * 2) / 4) * index;
+    return Positioned(
+      left: SizeConfig.blockSizeHorizontal * 4.5,
+      top: topPos,
+      child: Container(
+        height: 25,
+        width: 25,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: value > index ? UiConstants.primaryColor : Colors.white,
+          border: Border.all(color: UiConstants.primaryColor),
+        ),
+        child: Icon(
+          icon,
+          size: 16,
+          color: value > index ? Colors.white : UiConstants.primaryColor,
+        ),
+      ),
+    );
   }
 }

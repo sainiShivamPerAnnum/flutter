@@ -242,85 +242,86 @@ class _TambolaGameScreen extends State<TambolaHome> {
         //debugShowCheckedModeBanner: false,
         backgroundColor: Color(0xfff1f1f1),
         body: ShowCaseWidget(
-          builder: Builder(builder: (context) => Stack(
-            children: [
-              Container(
-                height: SizeConfig.screenHeight * 0.2,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    stops: [0.1, 0.6],
-                    colors: [
-                      UiConstants.primaryColor.withGreen(190),
-                      UiConstants.primaryColor,
+          builder: Builder(
+              builder: (context) => Stack(
+                    children: [
+                      Container(
+                        height: SizeConfig.screenHeight * 0.2,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            stops: [0.1, 0.6],
+                            colors: [
+                              UiConstants.primaryColor.withGreen(190),
+                              UiConstants.primaryColor,
+                            ],
+                          ),
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.elliptical(
+                                MediaQuery.of(context).size.width * 0.50, 18),
+                            bottomRight: Radius.elliptical(
+                                MediaQuery.of(context).size.width * 0.50, 18),
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Spacer(),
+                            _buildTicketCount(),
+                            SizedBox(
+                              height: 10,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SafeArea(
+                          child: SingleChildScrollView(
+                              physics: BouncingScrollPhysics(),
+                              child: _buildCardCanvas(context))),
+                      Positioned(
+                        top: 5,
+                        child: SafeArea(
+                          child: Container(
+                            width: SizeConfig.screenWidth,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.blockSizeHorizontal * 3),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                IconButton(
+                                  color: Colors.white,
+                                  icon: Icon(Icons.arrow_back),
+                                  onPressed: () {
+                                    HapticFeedback.vibrate();
+                                    backButtonDispatcher.didPopRoute();
+                                  },
+                                ),
+                                Text('Tambola',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: SizeConfig.largeTextSize)),
+                                IconButton(
+                                  color: Colors.white,
+                                  icon: Icon(Icons.help_outline),
+                                  onPressed: () {
+                                    HapticFeedback.vibrate();
+                                    _showTutorial = true;
+                                    if (!_startTutorial(context)) {
+                                      //baseProvider.showNegativeAlert('Try soon', message, context)
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      // SafeArea(
+                      //     child: Align(
+                      //         alignment: Alignment.bottomCenter, child: _buildPrizeButton()))
                     ],
-                  ),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.elliptical(
-                        MediaQuery.of(context).size.width * 0.50, 18),
-                    bottomRight: Radius.elliptical(
-                        MediaQuery.of(context).size.width * 0.50, 18),
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Spacer(),
-                    _buildTicketCount(),
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ],
-                ),
-              ),
-              SafeArea(
-                  child: SingleChildScrollView(
-                      physics: BouncingScrollPhysics(),
-                      child: _buildCardCanvas(context))),
-              Positioned(
-                top: 5,
-                child: SafeArea(
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.blockSizeHorizontal * 3),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          color: Colors.white,
-                          icon: Icon(Icons.arrow_back),
-                          onPressed: () {
-                            HapticFeedback.vibrate();
-                            backButtonDispatcher.didPopRoute();
-                          },
-                        ),
-                        Text('Tambola',
-                            style: GoogleFonts.montserrat(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: SizeConfig.largeTextSize)),
-                        IconButton(
-                          color: Colors.white,
-                          icon: Icon(Icons.help_outline),
-                          onPressed: () {
-                            HapticFeedback.vibrate();
-                            _showTutorial = true;
-                            if (!_startTutorial(context)) {
-                              //baseProvider.showNegativeAlert('Try soon', message, context)
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              // SafeArea(
-              //     child: Align(
-              //         alignment: Alignment.bottomCenter, child: _buildPrizeButton()))
-            ],
-          )),
+                  )),
         )
         //),
         );
@@ -389,7 +390,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
                           padding: EdgeInsets.only(left: 25),
                           child: Text(
                             'Ticket #${_currentBoard.getTicketNumber()}',
-                            style: GoogleFonts.montserrat(
+                            style: TextStyle(
                               fontSize: SizeConfig.smallTextSize,
                             ),
                           ),
@@ -399,7 +400,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
                   GestureDetector(
                     child: Text(
                       "Show All Tickets   ",
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                         color: UiConstants.primaryColor.withGreen(600),
                       ),
                     ),
@@ -494,19 +495,25 @@ class _TambolaGameScreen extends State<TambolaHome> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: _podiumItem(
-                "images/Tambola/fullhouse.png", '₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_FULL)}', "Full House"),
+                "images/Tambola/fullhouse.png",
+                '₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_FULL)}',
+                "Full House"),
           ),
           Row(
             children: [
               Expanded(
                 flex: 6,
-                child: _podiumItem("images/Tambola/rows.png", "₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_TOP)}",
+                child: _podiumItem(
+                    "images/Tambola/rows.png",
+                    "₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_TOP)}",
                     "First/Second/Third Row"),
               ),
               Expanded(
                 flex: 4,
                 child: _podiumItem(
-                    "images/Tambola/corners.png", "₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_CORNER)}", "Corners"),
+                    "images/Tambola/corners.png",
+                    "₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_CORNER)}",
+                    "Corners"),
               )
             ],
           ),
@@ -519,7 +526,8 @@ class _TambolaGameScreen extends State<TambolaHome> {
             children: [
               ExpansionPanel(
                 headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
-                    "images/svgs/howitworks.svg", Assets.tambolaFaqList[0].keys.first),
+                    "images/svgs/howitworks.svg",
+                    Assets.tambolaFaqList[0].keys.first),
                 isExpanded: detStatus[0],
                 body: Container(
                   child: Column(
@@ -676,7 +684,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
               children: [
                 Text(
                   _activeTambolaCardCount.toString(),
-                  style: GoogleFonts.montserrat(
+                  style: TextStyle(
                       fontSize: SizeConfig.cardTitleTextSize,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
@@ -685,7 +693,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
                   (_activeTambolaCardCount == 1)
                       ? 'Tambola ticket'
                       : 'Tambola tickets',
-                  style: GoogleFonts.montserrat(
+                  style: TextStyle(
                       fontSize: SizeConfig.smallTextSize, color: Colors.white),
                 ),
               ],
@@ -698,7 +706,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
       child: Text(title,
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
               color: Colors.blueGrey[800],
               fontWeight: FontWeight.w500,
               fontSize: SizeConfig.largeTextSize)),
@@ -797,7 +805,8 @@ class _TambolaGameScreen extends State<TambolaHome> {
     double totalInvestedPrinciple =
         baseProvider.userFundWallet.augGoldPrinciple +
             baseProvider.userFundWallet.iciciPrinciple;
-    bool _isEligible = (totalInvestedPrinciple >= BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
+    bool _isEligible =
+        (totalInvestedPrinciple >= BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
 
     log.debug('Resultant wins: ${ticketCodeWinIndex.toString()}');
 
@@ -822,8 +831,10 @@ class _TambolaGameScreen extends State<TambolaHome> {
               _isEligible,
               ticketCodeWinIndex)
           .then((flag) {
-        baseProvider.showPositiveAlert('Congratulations 🎉',
-            'Your tickets have been submitted for processing your prizes!', context);
+        baseProvider.showPositiveAlert(
+            'Congratulations 🎉',
+            'Your tickets have been submitted for processing your prizes!',
+            context);
       });
     }
   }
@@ -1069,7 +1080,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
           Expanded(
             child: Text(title,
                 textAlign: TextAlign.left,
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                     fontSize: SizeConfig.mediumTextSize,
                     height: 1.6,
                     color: UiConstants.accentColor)),
@@ -1077,7 +1088,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
           Expanded(
             child: Text(prize,
                 textAlign: TextAlign.end,
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                     fontSize: SizeConfig.mediumTextSize,
                     height: 1.6,
                     fontWeight: FontWeight.bold,
@@ -1144,7 +1155,7 @@ class Odds extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(20, 10, 10, 20),
                 child: Text("Odds",
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                         fontSize: SizeConfig.largeTextSize,
                         fontWeight: FontWeight.w500,
                         color: Colors.blueGrey[800]))),
@@ -1244,7 +1255,7 @@ class Odds extends StatelessWidget {
                     SizedBox(width: 9.0),
                     Text(
                       _title,
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                           color: Colors.blueGrey,
                           fontSize: SizeConfig.smallTextSize),
                     ),
@@ -1257,14 +1268,14 @@ class Odds extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       _tOdd,
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                         color: Colors.blueGrey,
                         fontSize: SizeConfig.mediumTextSize,
                       ),
                     ),
                     Text(
                       'This ticket',
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                         color: Colors.blueGrey,
                         fontSize: SizeConfig.smallTextSize,
                       ),
@@ -1279,7 +1290,7 @@ class Odds extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       _oOdd,
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                         color: Colors.blueGrey,
                         fontSize: SizeConfig.mediumTextSize,
                       ),
@@ -1287,7 +1298,7 @@ class Odds extends StatelessWidget {
                     Text(
                       'Best ticket',
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                         color: Colors.blue[900],
                         fontSize: SizeConfig.smallTextSize,
                       ),

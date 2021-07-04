@@ -196,7 +196,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
         width: SizeConfig.screenWidth * 0.2,
         child: Text(
           title,
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             color: UiConstants.accentColor,
             fontSize: SizeConfig.mediumTextSize,
           ),
@@ -207,7 +207,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
         child: Text(
           value,
           overflow: TextOverflow.clip,
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             color: Colors.black54,
             fontSize: SizeConfig.largeTextSize,
             fontWeight: FontWeight.w500,

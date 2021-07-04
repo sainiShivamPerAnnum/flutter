@@ -189,7 +189,7 @@ class BaseUtil extends ChangeNotifier {
     try {
       var unreadCount = await Freshchat.getUnreadCountAsync;
       return (unreadCount['count'] > 0);
-    }catch(e) {
+    } catch (e) {
       log.error('Error reading unread count variable: $e');
       return false;
     }
@@ -626,29 +626,29 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setUserName(String newName) {
+  void setName(String newName) {
     myUser.name = newName;
     notifyListeners();
   }
 
-  void updateAugmontDetails(String holderName, String accountNumber, String ifscode) {
-    _augmontDetail.bankHolderName = holderName;
-    _augmontDetail.bankAccNo = accountNumber;
-    _augmontDetail.ifsc = ifscode;
+  void setUsername(String userName) {
+    myUser.username = userName;
     notifyListeners();
   }
 
-  void updateAugmontOnboarded(bool newValue) {
-    _myUser.isAugmontOnboarded = newValue;
+  void setEmailVerified() {
+    myUser.isEmailVerified = true;
     notifyListeners();
   }
+
+  void setEmail(String email) {
+    myUser.email = email;  
 
   void refreshAugmontBalance() async {
     _dbModel.getUserFundWallet(myUser.uid).then((aValue) {
       if (aValue != null) {
         userFundWallet = aValue;
-        if (userFundWallet.augGoldQuantity > 0)
-          _updateAugmontBalance();
+        if (userFundWallet.augGoldQuantity > 0) _updateAugmontBalance();
       }
     });
   }
@@ -664,13 +664,25 @@ class BaseUtil extends ChangeNotifier {
 
       augmontGoldRates = currRates;
       double gSellRate = augmontGoldRates.goldSellPrice;
-      userFundWallet.augGoldBalance = BaseUtil.digitPrecision(
-          userFundWallet.augGoldQuantity * gSellRate);
+      userFundWallet.augGoldBalance =
+          BaseUtil.digitPrecision(userFundWallet.augGoldQuantity * gSellRate);
       notifyListeners(); //might cause ui error if screen no longer active
     }).catchError((err) {
       print('$err');
     });
   }
+    
+ void updateAugmontDetails(String holderName, String accountNumber, String ifscode) {
+    _augmontDetail.bankHolderName = holderName;
+    _augmontDetail.bankAccNo = accountNumber;
+    _augmontDetail.ifsc = ifscode;
+    notifyListeners();
+  }
+
+  void updateAugmontOnboarded(bool newValue) {
+    _myUser.isAugmontOnboarded = newValue;
+      notifyListeners();
+  }  
 
   static String getMonthName(int monthNum) {
     switch (monthNum) {
@@ -775,4 +787,5 @@ class BaseUtil extends ChangeNotifier {
   set userTicketWallet(UserTicketWallet value) {
     _userTicketWallet = value;
   }
+
 }
