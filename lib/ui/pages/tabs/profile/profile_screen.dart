@@ -1183,12 +1183,14 @@ class _UserEditProfileCardState extends State<UserEditProfileCard> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
+            width: SizeConfig.screenWidth,
             height: SizeConfig.blockSizeVertical * 5,
             padding: EdgeInsets.only(
                 left: SizeConfig.blockSizeHorizontal * 2, bottom: 8),
             child: TextField(
               cursorColor: Colors.white,
               controller: _nameController,
+              maxLines: 1,
               style: GoogleFonts.montserrat(
                 color: Colors.white,
                 fontSize: SizeConfig.cardTitleTextSize,
