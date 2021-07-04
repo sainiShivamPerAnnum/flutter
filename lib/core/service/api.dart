@@ -4,10 +4,10 @@ import 'package:felloapp/core/model/ReferralDetail.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/email-verify-otp.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 
 class Api {
   Log log = new Log("Api");
@@ -518,7 +518,9 @@ class Api {
   }
 
   Future<bool> createEmailVerificationDocument(String email, String otp) async {
-    String htmlCode = OTPEmail().getEmailCode(otp);
+    // String htmlCode = OTPEmail().getEmailCode(otp);
+    String htmlCode = await rootBundle
+        .loadString('resources/fello-email-verification.html');
 
     Map<String, dynamic> data = {
       'to': [email],
@@ -529,7 +531,7 @@ class Api {
       }
     };
     try {
-      await _db.collection('emailotprequests').add(data);
+      await _db.collection(Constants.COLN_EMAILOTPREQUESTS).add(data);
       return true;
     } catch (e) {
       print(e.toString());

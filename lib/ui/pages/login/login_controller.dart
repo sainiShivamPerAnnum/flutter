@@ -275,14 +275,14 @@ class _LoginControllerState extends State<LoginController>
                               new TextSpan(
                                 text: 'By continuing, you agree to our ',
                                 style: GoogleFonts.montserrat(
-                                    fontSize: SizeConfig.smallTextSize,
+                                    fontSize: SizeConfig.smallTextSize*1.2,
                                     color: Colors.black45),
                               ),
                               new TextSpan(
                                 text: 'Terms of Service',
                                 style: GoogleFonts.montserrat(
                                     color: Colors.black45,
-                                    fontSize: SizeConfig.smallTextSize,
+                                    fontSize: SizeConfig.smallTextSize*1.2,
                                     decoration: TextDecoration.underline),
                                 recognizer: new TapGestureRecognizer()
                                   ..onTap = () {
