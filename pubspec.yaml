@@ -28,6 +28,7 @@ dependencies:
   freshchat_sdk: ^0.6.0
   path: ^1.8.0
   path_provider: ^1.6.27
+  permission_handler: ^5.1.0+2
   provider: ^5.0.0
   get_it: ^6.0.0
   geolocator: ^6.1.14
@@ -89,5 +90,6 @@ flutter:
     - images/lottie/
     - images/process/
     - resources/augmont/fello-augmont-invoice.html
+    - resources/fello-email-verification.html
 
 

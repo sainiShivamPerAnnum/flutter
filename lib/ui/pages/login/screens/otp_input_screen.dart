@@ -13,6 +13,7 @@ class OtpInputScreen extends StatefulWidget {
   final VoidCallback changeNumber;
   static const int index = 1; //pager index
   final String mobileNo;
+
   OtpInputScreen(
       {Key key,
       this.otpEntered,
@@ -28,10 +29,11 @@ class OtpInputScreen extends StatefulWidget {
 class OtpInputScreenState extends State<OtpInputScreen> {
   Log log = new Log("OtpInputScreen");
   String _otp;
-  String _loaderMessage = "Enter the received otp..";
+  String _loaderMessage = "Enter the received OTP..";
   bool _otpFieldEnabled = true;
   bool _autoDetectingOtp = true;
   bool _isResendClicked = false;
+  bool _isTriesExceeded = false;
   final _pinEditingController = new TextEditingController();
   FocusNode focusNode;
   String mobileNo;
@@ -80,7 +82,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                 ),
               ),
               Text(
-                  "We have sent you an OTP to your mobile number ******${LoginController.mobileno.substring(6)}"),
+                  "Please enter the 6 digit code sent to your mobile number ******${LoginController.mobileno.substring(6)}"),
               SizedBox(
                 height: 16,
               ),
@@ -135,17 +137,14 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                   },
                 ),
               ),
-              SizedBox(height: 16.0),
-
-              Text("OTP might takes up to one minute to arrive"),
               SizedBox(
                 height: 16,
               ),
-              (!_autoDetectingOtp)
+              (!_autoDetectingOtp && !_isTriesExceeded)
                   ? Row(
                       children: [
                         Text(
-                          "Didn't get the OTP? ",
+                          "Didn't get an OTP? ",
                           style: TextStyle(
                             color: Colors.black45,
                             fontWeight: FontWeight.w500,
@@ -153,7 +152,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                         ),
                         InkWell(
                           child: Text(
-                            "Resend OTP",
+                            " Resend",
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontWeight: FontWeight.w700,
@@ -168,6 +167,15 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                           },
                         ),
                       ],
+                    )
+                  : SizedBox(),
+              (_isTriesExceeded)
+                  ? Text(
+                      "OTP requests exceeded. Please try again in sometime or contact us.",
+                      style: TextStyle(
+                        color: Colors.black45,
+                        fontWeight: FontWeight.w500,
+                      ),
                     )
                   : SizedBox(),
               Row(
@@ -189,7 +197,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                             SizedBox(
                               height: 8,
                             ),
-                            Text("Detecting OTP")
+                            Text(_loaderMessage)
                           ],
                         )
                       : Container(),
@@ -248,6 +256,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
   onOtpResendConfirmed(bool flag) {
     if (flag) {
       //otp successfully resent
+      _isTriesExceeded = false;
       _isResendClicked = false;
       _otpFieldEnabled = true;
       _loaderMessage = 'OTP has been successfully resent';
@@ -255,6 +264,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
       setState(() {});
     } else {
       //otp tries exceeded
+      _isTriesExceeded = true;
       _isResendClicked = true;
       _otpFieldEnabled = true;
       _autoDetectingOtp = false;

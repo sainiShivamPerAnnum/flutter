@@ -329,7 +329,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
           Expanded(
             child: Text(
               title,
-              style: TextStyle(fontSize: SizeConfig.mediumTextSize),
+              style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),
             ),
           ),
           Expanded(
@@ -337,7 +337,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
             children: [
               Text(
                 value,
-                style: TextStyle(fontSize: SizeConfig.mediumTextSize),
+                style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),
               ),
               SizedBox(
                 width: 4,
@@ -346,7 +346,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                 child: Icon(
                   Icons.info_outline,
                   color: Colors.grey,
-                  size: SizeConfig.mediumTextSize,
+                  size: SizeConfig.mediumTextSize*1.4,
                 ),
                 onTap: () {
                   HapticFeedback.vibrate();

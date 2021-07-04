@@ -78,7 +78,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                     Row(
                       children: [
                         Text(
-                          "Choose an email option",
+                          "Verification option",
                           style: TextStyle(
                             color: Colors.black54,
                             fontWeight: FontWeight.w700,
@@ -104,7 +104,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                         width: 24,
                       ),
                       title: Text("Choose a Google account"),
-                      subtitle: Text("No verification requried"),
+                      subtitle: Text(""),
                       onTap: verifyGmail,
                       trailing: _isGoogleLoginInProcess
                           ? CircularProgressIndicator()
@@ -116,7 +116,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                         Icons.alternate_email,
                         color: UiConstants.primaryColor,
                       ),
-                      title: Text("continue with an email"),
+                      title: Text("Receive an OTP on your email"),
                       onTap: () {
                         setState(() {
                           _isGoogleLoginInProcess = false;
@@ -189,12 +189,12 @@ class VerifyEmailState extends State<VerifyEmail> {
         _isVerifying = false;
       });
       if (res) {
-        baseProvider.showPositiveAlert("Success",
-            "Email Verified,refresh your app once to unlock features", context);
+        baseProvider.showPositiveAlert("Email verified",
+            "Thank you for verifying", context);
         backButtonDispatcher.didPopRoute();
       } else {
-        baseProvider.showNegativeAlert("Oops! we ran into problem",
-            "Email cannot be verified at the moment", context);
+        baseProvider.showNegativeAlert("Email verification failed",
+            "Please try again in sometime", context);
       }
     } else {
       setState(() {
@@ -253,187 +253,191 @@ class VerifyEmailState extends State<VerifyEmail> {
       body: Stack(
         children: [
           Container(
-            padding: EdgeInsets.all(20),
-            child: ListView(
-              //crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: kToolbarHeight,
-                ),
-                Text(
-                  "Let's verify your email",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: SizeConfig.cardTitleTextSize),
-                ),
-                SizedBox(
-                  height: 24,
-                ),
-                Text(
-                    "Enter the email which you'd like to link with your fello account"),
-                Form(
-                  key: formKey,
-                  child: Container(
-                    padding: EdgeInsets.only(top: 30, bottom: 10),
-                    child: TextFormField(
-                      controller: email,
-                      enabled: _isProcessing || _isOtpSent ? false : true,
-                      cursorColor: Colors.black,
-                      keyboardType: TextInputType.text,
-                      validator: (val) {
-                        if (val == "")
+            padding: EdgeInsets.fromLTRB(20,20,20,math.min(MediaQuery.of(context).viewInsets.bottom,SizeConfig.screenHeight*0.09)),
+            width: SizeConfig.screenWidth,
+            // height: SizeConfig.screenHeight,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                //crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: kToolbarHeight,
+                  ),
+                  Text(
+                    "Complete verification",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: SizeConfig.cardTitleTextSize),
+                  ),
+                  SizedBox(
+                    height: 24,
+                  ),
+                  Text(
+                      "Please enter the email where you'd like to receive all transaction related updates"),
+                  Form(
+                    key: formKey,
+                    child: Container(
+                      padding: EdgeInsets.only(top: 30, bottom: 10),
+                      child: TextFormField(
+                        controller: email,
+                        enabled: _isProcessing || _isOtpSent ? false : true,
+                        cursorColor: Colors.black,
+                        keyboardType: TextInputType.text,
+                        validator: (val) {
+                          if (val == "")
+                            return null;
+                          else if (val == null)
+                            return "Please enter an email";
+                          else if (!RegExp(
+                              r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+                              .hasMatch(val)) {
+                            return "Enter a valid email";
+                          }
                           return null;
-                        else if (val == null)
-                          return "Please enter an email";
-                        else if (!RegExp(
-                                r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-                            .hasMatch(val)) {
-                          return "Enter a valid email";
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.email_rounded),
+                        },
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.email_rounded),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 24),
-                  child: Text(
-                      "We'll send you a 6 digits OTP (one time password) on this email. enter the OTP here to verify your email"),
-                ),
-                SizedBox(
-                  height: 24,
-                ),
-                _isProcessing
-                    ? Container(
-                        width: SizeConfig.screenWidth,
-                        alignment: Alignment.center,
-                        child: Column(
-                          children: [
-                            CircularProgressIndicator(),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text("Sending OTP,please wait")
-                          ],
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 24),
+                    child: Text((!_isOtpSent)?"We will send you a 6 digit code on this email.":"Please check your inbox folders for the code"),
+                  ),
+                  SizedBox(
+                    height: 24,
+                  ),
+                  _isProcessing
+                      ? Container(
+                    width: SizeConfig.screenWidth,
+                    alignment: Alignment.center,
+                    child: Column(
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(
+                          height: 8,
                         ),
-                      )
-                    : SizedBox(),
-                _isOtpSent
-                    ? Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Text("Sending OTP")
+                      ],
+                    ),
+                  )
+                      : SizedBox(),
+                  _isOtpSent
+                      ? Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Enter the OTP",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: SizeConfig.cardTitleTextSize),
+                        ),
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Padding(
+                          padding:
+                          const EdgeInsets.fromLTRB(0, 18.0, 0, 18.0),
+                          child: PinInputTextField(
+                            autoFocus: true,
+                            pinLength: 6,
+                            decoration: BoxLooseDecoration(
+                              enteredColor: UiConstants.primaryColor,
+                              solidColor: UiConstants.primaryColor
+                                  .withOpacity(0.04),
+                              strokeColor: UiConstants.primaryColor,
+                              strokeWidth: 1,
+                              textStyle: GoogleFonts.montserrat(
+                                  fontSize: 20, color: Colors.black),
+                            ),
+                            controller: otp,
+                            onChanged: (value) {
+                              print(value);
+                              if (value.length == 6) {
+                                verifyOtp();
+                              }
+                            },
+                            onSubmit: (pin) {
+                              print("Pressed submit for pin: " +
+                                  pin.toString() +
+                                  "\n  No action taken.");
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Row(
                           children: [
-                            Text(
-                              "Enter the OTP",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: SizeConfig.cardTitleTextSize),
-                            ),
-                            SizedBox(
-                              height: 24,
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(0, 18.0, 0, 18.0),
-                              child: PinInputTextField(
-                                autoFocus: true,
-                                pinLength: 6,
-                                decoration: BoxLooseDecoration(
-                                  enteredColor: UiConstants.primaryColor,
-                                  solidColor: UiConstants.primaryColor
-                                      .withOpacity(0.04),
-                                  strokeColor: UiConstants.primaryColor,
-                                  strokeWidth: 1,
-                                  textStyle: GoogleFonts.montserrat(
-                                      fontSize: 20, color: Colors.black),
-                                ),
-                                controller: otp,
-                                onChanged: (value) {
-                                  print(value);
-                                  if (value.length == 6) {
-                                    verifyOtp();
-                                  }
+                            Text("OTP is only valid for "),
+                            TweenAnimationBuilder<Duration>(
+                                duration: Duration(minutes: 15),
+                                tween: Tween(
+                                    begin: Duration(minutes: 15),
+                                    end: Duration.zero),
+                                onEnd: () {
+                                  print('Timer ended');
+                                  baseProvider.showNegativeAlert(
+                                      "Session Expired!",
+                                      "Please try again",
+                                      context);
+                                  backButtonDispatcher.didPopRoute();
                                 },
-                                onSubmit: (pin) {
-                                  print("Pressed submit for pin: " +
-                                      pin.toString() +
-                                      "\n  No action taken.");
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              height: 24,
-                            ),
-                            Row(
-                              children: [
-                                Text("OTP is only valid for "),
-                                TweenAnimationBuilder<Duration>(
-                                    duration: Duration(minutes: 15),
-                                    tween: Tween(
-                                        begin: Duration(minutes: 15),
-                                        end: Duration.zero),
-                                    onEnd: () {
-                                      print('Timer ended');
-                                      baseProvider.showNegativeAlert(
-                                          "Session Expired!",
-                                          "Please try again",
-                                          context);
-                                      backButtonDispatcher.didPopRoute();
-                                    },
-                                    builder: (BuildContext context,
-                                        Duration value, Widget child) {
-                                      final minutes = value.inMinutes;
-                                      final seconds = value.inSeconds % 60;
-                                      return Text(
-                                        '$minutes:$seconds',
-                                        style: TextStyle(
-                                          color: UiConstants.primaryColor,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      );
-                                    }),
-                                // Text(
-                                //   "15:00",
-                                //   style: TextStyle(
-                                //     color: UiConstants.primaryColor,
-                                //     fontWeight: FontWeight.w700,
-                                //   ),
-                                // ),
-                                Text("  minutes.")
-                              ],
-                            )
+                                builder: (BuildContext context,
+                                    Duration value, Widget child) {
+                                  final minutes = value.inMinutes;
+                                  final seconds = value.inSeconds % 60;
+                                  return Text(
+                                    '$minutes:$seconds',
+                                    style: TextStyle(
+                                      color: UiConstants.primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                }),
+                            // Text(
+                            //   "15:00",
+                            //   style: TextStyle(
+                            //     color: UiConstants.primaryColor,
+                            //     fontWeight: FontWeight.w700,
+                            //   ),
+                            // ),
+                            Text("  minutes.")
                           ],
+                        )
+                      ],
+                    ),
+                  )
+                      : SizedBox(),
+                  _isOtpIncorrect
+                      ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "OTP is incorrect,please try again",
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      )
-                    : SizedBox(),
-                _isOtpIncorrect
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "OTP is incorrect,please try again",
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : SizedBox(),
-                SizedBox(
-                  height: SizeConfig.screenHeight * 0.2,
-                ),
-              ],
+                      ],
+                    ),
+                  )
+                      : SizedBox(),
+                  SizedBox(
+                    height: SizeConfig.screenHeight * 0.2,
+                  ),
+                ],
+              ),
             ),
           ),
-          Positioned(
-            bottom: 0,
+          Align(
+            alignment: Alignment.bottomCenter,
             child: Container(
               width: SizeConfig.screenWidth,
               child: Row(
@@ -453,17 +457,17 @@ class VerifyEmailState extends State<VerifyEmail> {
                       alignment: Alignment.center,
                       child: _isVerifying || _isProcessing
                           ? SpinKitThreeBounce(
-                              color: UiConstants.spinnerColor2,
-                              size: 18.0,
-                            )
+                        color: UiConstants.spinnerColor2,
+                        size: 18.0,
+                      )
                           : Text(
-                              _isOtpSent ? "Verify" : "Send OTP",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: SizeConfig.mediumTextSize,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                        _isOtpSent ? "Verify" : "Send OTP",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: SizeConfig.mediumTextSize,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                   )
                 ],

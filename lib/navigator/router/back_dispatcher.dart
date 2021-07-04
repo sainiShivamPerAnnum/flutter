@@ -15,9 +15,9 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       barrierDismissible: false,
       context: _routerDelegate.navigatorKey.currentContext,
       builder: (ctx) => ConfirmActionDialog(
-        title: "Are you sure?",
+        title: "Exit onboarding?",
         description:
-            "You are halfway onboarded, if you exit, progress will be lost",
+            "You are almost there.🕺\n Are you sure you want to exit?",
         buttonText: "Yes",
         confirmAction: () {
           print(AppState.screenStack);

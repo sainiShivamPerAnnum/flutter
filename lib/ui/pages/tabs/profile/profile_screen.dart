@@ -27,6 +27,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -316,12 +317,12 @@ class _ProfilePageState extends State<ProfilePage> {
               width:
                   SizeConfig.screenWidth - SizeConfig.blockSizeHorizontal * 16,
               child: MarqueeWidget(
-                pauseDuration: Duration(seconds: 2),
-                animationDuration: Duration(seconds: 3),
-                backDuration: Duration(seconds: 3),
+                pauseDuration: Duration(seconds: 1),
+                animationDuration: Duration(seconds: 2),
+                backDuration: Duration(seconds: 2),
                 direction: Axis.horizontal,
                 child: Text(
-                  "Your email is not verified yet. Tap here to verify it now else you won't be able to use any of the services",
+                  "Your email needs to be verified. Click here to complete this step.",
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     color: Colors.red[300],
@@ -989,29 +990,39 @@ class _UserProfileCardState extends State<UserProfileCard> {
                             bottom: 0,
                             right: 0,
                             child: InkWell(
-                              onTap: () => showDialog(
-                                  context: context,
-                                  builder: (ctx) {
-                                    return ConfirmActionDialog(
-                                        title: "Permission",
-                                        description:
-                                            "We need your gallery access in order to complete this process. Kindly provide the permission.",
-                                        buttonText: "Continue",
-                                        asset: Padding(
-                                          padding:
-                                              EdgeInsets.symmetric(vertical: 8),
-                                          child: Image.asset(
-                                              "images/gallery.png",
-                                              height: SizeConfig.screenWidth *
-                                                  0.24),
-                                        ),
-                                        confirmAction: () {
-                                          Navigator.pop(context);
-                                          chooseprofilePicture();
-                                        },
-                                        cancelAction: () =>
-                                            Navigator.pop(context));
-                                  }),
+                              onTap: () async {
+                                var _status = await Permission.photos.status;
+                                if (_status.isUndetermined || _status.isRestricted || _status.isLimited || _status.isDenied) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (ctx) {
+                                        return ConfirmActionDialog(
+                                            title: "Request Permission",
+                                            description:
+                                                "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
+                                            buttonText: "Continue",
+                                            asset: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 8),
+                                              child: Image.asset(
+                                                  "images/gallery.png",
+                                                  height:
+                                                      SizeConfig.screenWidth *
+                                                          0.24),
+                                            ),
+                                            confirmAction: () {
+                                              Navigator.pop(context);
+                                              chooseprofilePicture();
+                                            },
+                                            cancelAction: () =>
+                                                Navigator.pop(context));
+                                      });
+                                }else if(_status.isGranted){
+                                  chooseprofilePicture();
+                                }else{
+                                  baseProvider.showNegativeAlert('Permission Unavailable', 'Please enable permission from settings to continue', context);
+                                }
+                              },
                               child: CircleAvatar(
                                 backgroundColor: Colors.white,
                                 radius: SizeConfig.blockSizeHorizontal * 4,

@@ -83,14 +83,14 @@ class UsernameState extends State<Username> {
             Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Text(
-                "Choose a cool username",
+                "Pick a username",
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: SizeConfig.screenWidth * 0.06,
                 ),
               ),
             ),
-            Text("You cannot change your username anytime later"),
+            Text("This is going to be your unique ID✨"),
             SizedBox(
               height: 16,
             ),
@@ -108,7 +108,7 @@ class UsernameState extends State<Username> {
                     return null;
                   },
                   decoration: InputDecoration(
-                    labelText: "username",
+                    hintText: "username",
                     prefixIcon: Icon(Icons.account_circle_rounded),
                   ),
                   onChanged: (value) {

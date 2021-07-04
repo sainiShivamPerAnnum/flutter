@@ -103,9 +103,10 @@ class NameInputScreenState extends State<NameInputScreen> {
                       ),
                       title: Text("Use another email"),
                       subtitle: Text(
-                        "this requires an extra verification step",
+                        "this option requires an extra step",
                         style: TextStyle(
-                          color: Colors.red,
+                          fontSize: SizeConfig.smallTextSize * 1.3,
+                          color: Colors.red[300],
                         ),
                       ),
                       onTap: () {
@@ -168,11 +169,11 @@ class NameInputScreenState extends State<NameInputScreen> {
       Navigator.pop(context);
     } else {
       baseProvider.showNegativeAlert("No account selected",
-          "please choose any of the google accounts", context);
+          "Please choose an account from the list", context);
     }
   }
 
-  void _showAndoroidDatePicker() async {
+  void _showAndroidDatePicker() async {
     var res = await showDatePicker(
       context: context,
       initialDate: DateTime(2000, 1, 1),
@@ -226,7 +227,7 @@ class NameInputScreenState extends State<NameInputScreen> {
               ),
             ),
           ),
-          Text("Please make sure all details are correct"),
+          Text("This is required to setup your account"),
           SizedBox(
             height: 24,
           ),
@@ -494,8 +495,9 @@ class NameInputScreenState extends State<NameInputScreen> {
                             setState(() {
                               dateInputError = "Date field cannot be empty";
                             });
-                          } else if (int.tryParse(val) > 13 ||
-                              int.tryParse(val) < 0) {
+                          } else if (int.tryParse(val) != null &&
+                              (int.tryParse(val) > 13 ||
+                                  int.tryParse(val) < 0)) {
                             setState(() {
                               dateInputError = "Invalid date";
                             });
@@ -527,7 +529,7 @@ class NameInputScreenState extends State<NameInputScreen> {
                         width: 16,
                       ),
                       IconButton(
-                        onPressed: _showAndoroidDatePicker,
+                        onPressed: _showAndroidDatePicker,
                         icon: Icon(
                           Icons.calendar_today,
                           size: 20,
@@ -673,16 +675,29 @@ class NameInputScreenState extends State<NameInputScreen> {
         _monthFieldController.text +
         _dateFieldController.text;
     print("Input date : " + inputDate);
-    final date = DateTime.parse(inputDate);
-    final originalFormatString = toOriginalFormatString(date);
-    if (inputDate == originalFormatString) {
-      selectedDate = date;
-      return true;
-    } else {
+    if (inputDate == null || inputDate.isEmpty) {
       setState(() {
         dateInputError = "Invalid date";
       });
       return false;
+    }
+    final date = DateTime.tryParse(inputDate);
+    if (date == null) {
+      setState(() {
+        dateInputError = "Invalid date";
+      });
+      return false;
+    } else {
+      final originalFormatString = toOriginalFormatString(date);
+      if (inputDate == originalFormatString) {
+        selectedDate = date;
+        return true;
+      } else {
+        setState(() {
+          dateInputError = "Invalid date";
+        });
+        return false;
+      }
     }
   }
 

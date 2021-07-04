@@ -76,18 +76,21 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
     Reference ref = storage.ref().child("dps/${baseProvider.myUser.uid}/image");
     UploadTask uploadTask = ref.putFile(File(targetPath));
 
-    uploadTask.then((res) async {
-      await res.ref.getDownloadURL().then((url) {
-        if (url != null) {
-          isUploaded = true;
-          baseProvider.isProfilePictureUpdated = true;
-          //baseProvider.myUserDpUrl = url;
-          baseProvider.setDisplayPictureUrl(url);
-        }
+    try {
+      var res = await uploadTask;
+      String url = await res.ref.getDownloadURL();
+      if (url != null) {
+        isUploaded = true;
+        baseProvider.isProfilePictureUpdated = true;
+        //baseProvider.myUserDpUrl = url;
+        baseProvider.setDisplayPictureUrl(url);
         print(url);
-      });
-    });
-    return isUploaded;
+      }
+      return isUploaded;
+    }catch(e) {
+      print('$e');
+      return false;
+    }
   }
 
   dialogContent(BuildContext context) {
@@ -139,7 +142,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
                       if (flag) {
                         BaseAnalytics.logProfilePictureAdded();
                         baseProvider.showPositiveAlert('Complete',
-                            'Your profile Picture have been updated', context);
+                            'Your profile Picture has been updated', context);
                       } else {
                         baseProvider.showNegativeAlert(
                             'Failed',
@@ -194,7 +197,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
                           size: 18.0,
                         )
                       : Text(
-                          "Cancle",
+                          "Cancel",
                           style: GoogleFonts.montserrat(
                             color: UiConstants.primaryColor,
                             fontSize: SizeConfig.mediumTextSize,

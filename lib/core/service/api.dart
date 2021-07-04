@@ -521,7 +521,7 @@ class Api {
     // String htmlCode = OTPEmail().getEmailCode(otp);
     String htmlCode = await rootBundle
         .loadString('resources/fello-email-verification.html');
-
+    htmlCode = htmlCode.replaceAll('\$otp', otp);
     Map<String, dynamic> data = {
       'to': [email],
       'message': {

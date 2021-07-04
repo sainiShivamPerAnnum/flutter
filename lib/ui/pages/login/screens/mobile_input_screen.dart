@@ -50,9 +50,10 @@ class MobileInputScreenState extends State<MobileInputScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "Let's quickly onboard you",
+              "Let's get you onboarded ✅",
               style: TextStyle(
                 fontSize: SizeConfig.mediumTextSize,
+                color: Colors.black54
               ),
             ),
             Padding(
@@ -60,7 +61,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                 vertical: 24,
               ),
               child: Text(
-                "Let's start with your mobile number",
+                "Please share your mobile number",
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: SizeConfig.screenWidth * 0.06,
@@ -92,7 +93,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
             ),
             SizedBox(height: 24),
             Text(
-                "We'll send you an OTP on this number to help secure your account"),
+                "For verification purposes, an OTP shall be sent to this number."),
           ],
           //)
         ),

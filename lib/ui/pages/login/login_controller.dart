@@ -420,7 +420,7 @@ class _LoginControllerState extends State<LoginController>
                   'Please enter a valid date of birth', context);
               return false;
             } else if (!_isAdult(_nameScreenKey.currentState.selectedDate)) {
-              baseProvider.showNegativeAlert('Invalid details',
+              baseProvider.showNegativeAlert('Ineligible',
                   'You need to be above 18 to join', context);
               return false;
             }
