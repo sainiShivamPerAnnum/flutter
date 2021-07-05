@@ -992,7 +992,10 @@ class _UserProfileCardState extends State<UserProfileCard> {
                             child: InkWell(
                               onTap: () async {
                                 var _status = await Permission.photos.status;
-                                if (_status.isUndetermined || _status.isRestricted || _status.isLimited || _status.isDenied) {
+                                if (_status.isUndetermined ||
+                                    _status.isRestricted ||
+                                    _status.isLimited ||
+                                    _status.isDenied) {
                                   showDialog(
                                       context: context,
                                       builder: (ctx) {
@@ -1017,10 +1020,13 @@ class _UserProfileCardState extends State<UserProfileCard> {
                                             cancelAction: () =>
                                                 Navigator.pop(context));
                                       });
-                                }else if(_status.isGranted){
+                                } else if (_status.isGranted) {
                                   chooseprofilePicture();
-                                }else{
-                                  baseProvider.showNegativeAlert('Permission Unavailable', 'Please enable permission from settings to continue', context);
+                                } else {
+                                  baseProvider.showNegativeAlert(
+                                      'Permission Unavailable',
+                                      'Please enable permission from settings to continue',
+                                      context);
                                 }
                               },
                               child: CircleAvatar(
