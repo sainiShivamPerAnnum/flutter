@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -13,6 +14,7 @@ import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/augmont_state_list.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -37,6 +39,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
   BaseUtil baseProvider;
   AugmontModel augmontProvider;
   ICICIModel iProvider;
+  DBModel dbProvider;
   AppState appState;
   double _width;
   static TextEditingController _panInput = new TextEditingController();
@@ -57,6 +60,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
   Widget build(BuildContext context) {
     _width = MediaQuery.of(context).size.width;
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
     iProvider = Provider.of<ICICIModel>(context, listen: false);
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
@@ -593,6 +597,11 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
       String _r = recvdPanName.replaceAll(new RegExp(r"\s"), "");
       String _e = enteredPanName.replaceAll(new RegExp(r"\s"), "");
       if (_r.toUpperCase() != _e.toUpperCase()) {
+        await dbProvider.logFailure(baseProvider.myUser.uid, FailType.UserAugmontRegnFailed, {
+          'entered_pan_name': enteredPanName,
+          'recvd_pan_name': recvdPanName,
+          'pan_number': enteredPan
+        });
         _flag = false;
         _reason =
             'The name on your PAN card does not match with the entered name. Please try again.';

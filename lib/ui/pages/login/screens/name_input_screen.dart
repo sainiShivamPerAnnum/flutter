@@ -136,14 +136,14 @@ class NameInputScreenState extends State<NameInputScreen> {
       baseProvider.myUser.isEmailVerified = true;
       baseProvider.myUserDpUrl = googleUser.photoUrl;
       Uint8List bytes =
-          (await NetworkAssetBundle(Uri.parse(googleUser.photoUrl))
-                  .load(googleUser.photoUrl))
-              .buffer
-              .asUint8List();
+      (await NetworkAssetBundle(Uri.parse(googleUser.photoUrl))
+          .load(googleUser.photoUrl))
+          .buffer
+          .asUint8List();
       FirebaseStorage storage = FirebaseStorage.instance;
 
       Reference ref =
-          storage.ref().child("dps/${baseProvider.myUser.uid}/image");
+      storage.ref().child("dps/${baseProvider.myUser.uid}/image");
       UploadTask uploadTask = ref.putData(bytes);
       uploadTask.then((res) async {
         await res.ref.getDownloadURL().then((url) {
@@ -198,17 +198,17 @@ class NameInputScreenState extends State<NameInputScreen> {
       _isInitialized = true;
       authProvider = Provider.of<BaseUtil>(context, listen: false);
       _nameFieldController =
-          (authProvider.myUser != null && authProvider.myUser.name != null)
-              ? new TextEditingController(text: authProvider.myUser.name)
-              : new TextEditingController();
+      (authProvider.myUser != null && authProvider.myUser.name != null)
+          ? new TextEditingController(text: authProvider.myUser.name)
+          : new TextEditingController();
       _emailFieldController =
-          (authProvider.myUser != null && authProvider.myUser.email != null)
-              ? new TextEditingController(text: authProvider.myUser.email)
-              : new TextEditingController();
+      (authProvider.myUser != null && authProvider.myUser.email != null)
+          ? new TextEditingController(text: authProvider.myUser.email)
+          : new TextEditingController();
       _ageFieldController =
-          (authProvider.myUser != null && authProvider.myUser.age != null)
-              ? new TextEditingController(text: authProvider.myUser.age)
-              : new TextEditingController();
+      (authProvider.myUser != null && authProvider.myUser.age != null)
+          ? new TextEditingController(text: authProvider.myUser.age)
+          : new TextEditingController();
       _dateFieldController = new TextEditingController();
       _monthFieldController = new TextEditingController();
       _yearFieldController = new TextEditingController();
@@ -258,69 +258,69 @@ class NameInputScreenState extends State<NameInputScreen> {
                 // ),
                 _emailEnabled
                     ? TextFormField(
-                        controller: _emailFieldController,
-                        keyboardType: TextInputType.emailAddress,
-                        autofocus: true,
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: Icon(
-                            Icons.email,
-                            size: 20,
-                          ),
-                          focusColor: UiConstants.primaryColor,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        validator: (value) {
-                          return (value != null &&
-                                  value.isNotEmpty &&
-                                  _emailRegex.hasMatch(value))
-                              ? null
-                              : 'Please enter a valid email';
-                        },
-                      )
+                  controller: _emailFieldController,
+                  keyboardType: TextInputType.emailAddress,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    prefixIcon: Icon(
+                      Icons.email,
+                      size: 20,
+                    ),
+                    focusColor: UiConstants.primaryColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  validator: (value) {
+                    return (value != null &&
+                        value.isNotEmpty &&
+                        _emailRegex.hasMatch(value))
+                        ? null
+                        : 'Please enter a valid email';
+                  },
+                )
                     : InkWell(
-                        onTap:
-                            _isContinuedWithGoogle ? () {} : showEmailOptions,
-                        child: Container(
-                          height: 60,
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: UiConstants.primaryColor.withOpacity(0.3),
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: [
-                              Icon(Icons.email,
-                                  size: 20,
-                                  color: _isContinuedWithGoogle
-                                      ? UiConstants.primaryColor
-                                      : Colors.grey),
-                              SizedBox(width: 12),
-                              Text(
-                                emailText,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Spacer(),
-                              emailText != "Email"
-                                  ? Icon(
-                                      Icons.verified,
-                                      size: SizeConfig.blockSizeVertical * 2.4,
-                                      color: UiConstants.primaryColor,
-                                    )
-                                  : SizedBox()
-                            ],
+                  onTap:
+                  _isContinuedWithGoogle ? () {} : showEmailOptions,
+                  child: Container(
+                    height: 60,
+                    padding:
+                    EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: UiConstants.primaryColor.withOpacity(0.3),
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: [
+                        Icon(Icons.email,
+                            size: 20,
+                            color: _isContinuedWithGoogle
+                                ? UiConstants.primaryColor
+                                : Colors.grey),
+                        SizedBox(width: 12),
+                        Text(
+                          emailText,
+                          style: TextStyle(
+                            fontSize: 16,
                           ),
                         ),
-                      ),
+                        Spacer(),
+                        emailText != "Email"
+                            ? Icon(
+                          Icons.verified,
+                          size: SizeConfig.blockSizeVertical * 2.4,
+                          color: UiConstants.primaryColor,
+                        )
+                            : SizedBox()
+                      ],
+                    ),
+                  ),
+                ),
 
                 SizedBox(
                   height: 24,
@@ -516,7 +516,9 @@ class NameInputScreenState extends State<NameInputScreen> {
                             setState(() {
                               dateInputError = "Date field cannot be empty";
                             });
-                          } else if (int.tryParse(val) > DateTime.now().year ||
+                          } else if (int.tryParse(val) > DateTime
+                              .now()
+                              .year ||
                               int.tryParse(val) < 1950) {
                             setState(() {
                               dateInputError = "Invalid date";
@@ -629,7 +631,11 @@ class NameInputScreenState extends State<NameInputScreen> {
     });
   }
 
-  String get email => _emailFieldController.text;
+  String get email {
+    if(!_isContinuedWithGoogle)return _emailFieldController.text;
+    else if(emailText == 'Email') return null;
+    else return emailText;
+  }
 
   set email(String value) {
     _emailFieldController.text = value;
@@ -716,12 +722,11 @@ class DateField extends StatelessWidget {
   final double fieldWidth;
   final Function validate;
 
-  DateField(
-      {this.controller,
-      this.labelText,
-      this.maxlength,
-      this.fieldWidth,
-      this.validate});
+  DateField({this.controller,
+    this.labelText,
+    this.maxlength,
+    this.fieldWidth,
+    this.validate});
 
   @override
   Widget build(BuildContext context) {
