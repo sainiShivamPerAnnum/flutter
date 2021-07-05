@@ -4,7 +4,6 @@ import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
-import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 
 class AugmontInvoiceService {
@@ -21,7 +20,8 @@ class AugmontInvoiceService {
 
       final String targetPath = appDocDir.path;
       // final String targetFileName = invoiceMap[GetInvoice.resTransactionId];
-      final String targetFileName = 'fello-invoice-'+invoiceMap[GetInvoice.resInvoiceNumber];
+      final String targetFileName =
+          'fello-invoice-' + invoiceMap[GetInvoice.resInvoiceNumber];
       final String htmlContent = await _generatePdfData(invoiceMap);
       final generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
           htmlContent, targetPath, targetFileName);
@@ -29,7 +29,7 @@ class AugmontInvoiceService {
 
       log.debug(generatedPdfFilePath);
       return generatedPdfFilePath;
-    }catch(e) {
+    } catch (e) {
       log.error('$e');
       return null;
     }
@@ -46,8 +46,7 @@ class AugmontInvoiceService {
 
       _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_TRANID),
           data[GetInvoice.resTransactionId] ?? 'N/A');
-      _content = _content.replaceAll(
-          _makeKey(GetInvoice.PDF_KEY_INVOICENUMBER),
+      _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_INVOICENUMBER),
           data[GetInvoice.resInvoiceNumber] ?? 'N/A');
       _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_INVOICEDATE),
           data[GetInvoice.resDate] ?? 'N/A');
@@ -74,7 +73,8 @@ class AugmontInvoiceService {
       //
       _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_AMOUNT),
           data[GetInvoice.resAmount] ?? 'N/A');
-      _content = _content.replaceAll(_makeKey(GetInvoice.PDF_KEY_PRETAX_SUBTOTAL),
+      _content = _content.replaceAll(
+          _makeKey(GetInvoice.PDF_KEY_PRETAX_SUBTOTAL),
           data[GetInvoice.resSubtotal] ?? 'N/A');
 
       return _content;

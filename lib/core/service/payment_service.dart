@@ -495,13 +495,17 @@ class PaymentService extends ChangeNotifier {
 
     //update fund wallet
     double _f = baseProvider.userFundWallet.iciciPrinciple;
-    baseProvider.userFundWallet = await dbProvider.updateUserIciciBalance(baseProvider.myUser.uid, baseProvider.userFundWallet, amt);
-    bool isFundWalletUpdated = (_f != baseProvider.userFundWallet.iciciPrinciple);
+    baseProvider.userFundWallet = await dbProvider.updateUserIciciBalance(
+        baseProvider.myUser.uid, baseProvider.userFundWallet, amt);
+    bool isFundWalletUpdated =
+        (_f != baseProvider.userFundWallet.iciciPrinciple);
 
     //update ticket count
     int _t = baseProvider.userTicketWallet.icici1565Tck;
-    baseProvider.userTicketWallet = await dbProvider.updateICICIUserTicketCount(baseProvider.myUser.uid, baseProvider.userTicketWallet, ticketCount);
-    bool isTckWalletUpdated = (_t != baseProvider.userTicketWallet.icici1565Tck);
+    baseProvider.userTicketWallet = await dbProvider.updateICICIUserTicketCount(
+        baseProvider.myUser.uid, baseProvider.userTicketWallet, ticketCount);
+    bool isTckWalletUpdated =
+        (_t != baseProvider.userTicketWallet.icici1565Tck);
 
     //update user transaction
     bool txnFlag = await dbProvider.updateUserTransaction(
@@ -524,8 +528,13 @@ class PaymentService extends ChangeNotifier {
     }
 
     baseProvider.currentICICITxn = null;
-    log.debug('Updated all flags:: $icFlag\t$usFlag\t$txnFlag\t$isFundWalletUpdated\t$isTckWalletUpdated');
-    return (icFlag && usFlag && txnFlag && isFundWalletUpdated && isTckWalletUpdated);
+    log.debug(
+        'Updated all flags:: $icFlag\t$usFlag\t$txnFlag\t$isFundWalletUpdated\t$isTckWalletUpdated');
+    return (icFlag &&
+        usFlag &&
+        txnFlag &&
+        isFundWalletUpdated &&
+        isTckWalletUpdated);
   }
 
   Future<bool> _onTransactionRejected() async {
@@ -589,12 +598,18 @@ class PaymentService extends ChangeNotifier {
 
     //update user funds
     double _f = baseProvider.userFundWallet.iciciPrinciple;
-    baseProvider.userFundWallet = await dbProvider.updateUserIciciBalance(baseProvider.myUser.uid, baseProvider.userFundWallet, amt*-1);
-    bool isFundWalletUpdated = (_f != baseProvider.userFundWallet.iciciPrinciple);
+    baseProvider.userFundWallet = await dbProvider.updateUserIciciBalance(
+        baseProvider.myUser.uid, baseProvider.userFundWallet, amt * -1);
+    bool isFundWalletUpdated =
+        (_f != baseProvider.userFundWallet.iciciPrinciple);
 
     int _t = baseProvider.userTicketWallet.icici1565Tck;
-    baseProvider.userTicketWallet = await dbProvider.updateICICIUserTicketCount(baseProvider.myUser.uid, baseProvider.userTicketWallet, ticketCount*-1);
-    bool isTckWalletUpdated = (_t != baseProvider.userTicketWallet.icici1565Tck);
+    baseProvider.userTicketWallet = await dbProvider.updateICICIUserTicketCount(
+        baseProvider.myUser.uid,
+        baseProvider.userTicketWallet,
+        ticketCount * -1);
+    bool isTckWalletUpdated =
+        (_t != baseProvider.userTicketWallet.icici1565Tck);
 
     baseProvider.userMiniTxnList = null; //so transactions get refreshed
     if (isInstantTxn) {
@@ -639,7 +654,6 @@ class PaymentService extends ChangeNotifier {
         return otpId;
     }
   }
-
 
   addPaymentStatusListener(ValueChanged<int> listener) {
     _onProcessComplete = listener;
@@ -986,6 +1000,7 @@ class PaymentService extends ChangeNotifier {
         ///add the txn to db
         await dbProvider.addUserTransaction(baseProvider.myUser.uid,
             baseProvider.currentICICINonInstantWthrlTxn);
+
         ///clean global field if txn failed
         if (baseProvider.currentICICINonInstantWthrlTxn.tranStatus ==
             UserTransaction.TRAN_STATUS_CANCELLED) {

@@ -32,6 +32,7 @@ class AugmontDepositModalSheet extends StatefulWidget {
 class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     with SingleTickerProviderStateMixin {
   AugmontDepositModalSheetState();
+
   Log log = new Log('AugmontDepositModalSheet');
   var heightOfModalBottomSheet = 100.0;
   bool _isDepositsEnabled = true;
@@ -71,7 +72,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     if (!_isInitialized) _initFields();
     return Container(
       padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom),
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       margin: EdgeInsets.only(left: 18, right: 18),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -159,8 +160,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                 },
               ),
             ),
-            _buildPurchaseDescriptionCard(
-                _getDouble(_amtController.text)),
+            _buildPurchaseDescriptionCard(_getDouble(_amtController.text)),
             Wrap(
               spacing: 20,
               children: [
@@ -329,7 +329,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
           Expanded(
             child: Text(
               title,
-              style: TextStyle(fontSize: SizeConfig.mediumTextSize),
+              style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),
             ),
           ),
           Expanded(
@@ -337,7 +337,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
             children: [
               Text(
                 value,
-                style: TextStyle(fontSize: SizeConfig.mediumTextSize),
+                style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),
               ),
               SizedBox(
                 width: 4,
@@ -346,7 +346,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                 child: Icon(
                   Icons.info_outline,
                   color: Colors.grey,
-                  size: SizeConfig.mediumTextSize,
+                  size: SizeConfig.mediumTextSize*1.4,
                 ),
                 onTap: () {
                   HapticFeedback.vibrate();
@@ -378,7 +378,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     double grams = augmontProvider.getGoldQuantityFromTaxedAmount(amt, rate);
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(5,0,5,5),
+      padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -386,14 +386,14 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         children: [
           Text(
             '+ GST = ₹${taxIncluded.toStringAsFixed(2)}',
-            style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),
+            style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
           ),
           SizedBox(
             height: 3,
           ),
           Text(
             'Gold amount: ${grams.toStringAsFixed(4)} grams',
-            style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),
+            style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
           )
         ],
       ),

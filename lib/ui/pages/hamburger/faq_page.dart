@@ -7,7 +7,9 @@ import 'package:provider/provider.dart';
 
 class FAQPage extends StatefulWidget {
   FAQPage({this.onPush});
+
   final ValueChanged<String> onPush;
+
   @override
   State createState() {
     return _FAQList(onPush: onPush);
@@ -16,6 +18,7 @@ class FAQPage extends StatefulWidget {
 
 class _FAQList extends State<FAQPage> {
   _FAQList({this.onPush});
+
   final ValueChanged<String> onPush;
   Log log = new Log('FAQPage');
   BaseUtil baseProvider;

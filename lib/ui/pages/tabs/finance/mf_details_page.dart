@@ -26,7 +26,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -500,7 +499,7 @@ class FundInfo extends StatelessWidget {
               child: Text(
                 "ICICI Prudential Mutual Fund",
                 textAlign: TextAlign.left,
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: SizeConfig.largeTextSize),
               ),

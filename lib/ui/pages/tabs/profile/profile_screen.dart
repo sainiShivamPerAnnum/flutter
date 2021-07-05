@@ -9,12 +9,16 @@ import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/elements/change_profile_picture_dialog.dart';
+import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
+import 'package:felloapp/ui/elements/marquee_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flip_card/flip_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,9 +26,13 @@ import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -35,21 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   AppState appState;
-  bool isImageLoading = false;
   bool isPanFieldHidden = true;
-
-  Future<void> getProfilePicUrl() async {
-    try {
-      baseProvider.myUserDpUrl =
-          await dbProvider.getUserDP(baseProvider.myUser.uid);
-      if (baseProvider.myUserDpUrl != null) {
-        setState(() {
-          isImageLoading = false;
-        });
-        print("got the image");
-      }
-    } catch (e) {}
-  }
 
   @override
   void initState() {
@@ -63,10 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
-    if (baseProvider.myUserDpUrl == null) {
-      isImageLoading = true;
-      getProfilePicUrl();
-    }
+
     if (!baseProvider.userReferralInfoFetched)
       dbProvider.getUserReferralInfo(baseProvider.myUser.uid).then((value) {
         baseProvider.userReferralInfoFetched = true;
@@ -85,148 +76,82 @@ class _ProfilePageState extends State<ProfilePage> {
     //   });
     // }
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.02),
       decoration: BoxDecoration(
         color: UiConstants.backgroundColor,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(50),
-          bottomRight: Radius.circular(50),
-        ),
+        borderRadius: SizeConfig.homeViewBorder,
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(50),
-          bottomRight: Radius.circular(50),
-        ),
+        borderRadius: SizeConfig.homeViewBorder,
         child: ListView(
           physics: BouncingScrollPhysics(),
           children: [
             Container(
-              height: AppBar().preferredSize.height * 1.6,
+              height: SizeConfig.screenHeight * 0.1,
             ),
-            GestureDetector(
-              onTap: () {
-                HapticFeedback.vibrate();
-                appState.currentAction = PageAction(
-                    state: PageState.addPage, page: EditProfileConfig);
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //       builder: (context) => EditProfile(
-                //             prevImage: baseProvider.myUserDpUrl,
-                //           ),),
-                // );
+            Consumer<BaseUtil>(
+              builder: (ctx, bp, child) {
+                return FlipCard(
+                  key: cardKey,
+                  direction: FlipDirection.VERTICAL,
+                  // default
+                  speed: 800,
+                  flipOnTouch: false,
+                  front: UserProfileCard(),
+                  back: UserEditProfileCard(
+                    oldname: baseProvider.myUser.name,
+                  ),
+                );
               },
-              child: Container(
-                height: SizeConfig.screenHeight * 0.24,
-                margin: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.blockSizeHorizontal * 2),
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(
-                      "images/profile-card.png",
-                    ),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                child: Container(
-                  padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
-                  width: double.infinity,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: SizeConfig.screenHeight * 0.02,
-                      ),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 20,
-                            ),
-                            isImageLoading
-                                ? Image.asset(
-                                    "images/profile.png",
-                                    height: SizeConfig.screenWidth * 0.25,
-                                    fit: BoxFit.cover,
-                                  )
-                                : ClipOval(
-                                    child: CachedNetworkImage(
-                                      imageUrl: baseProvider.myUserDpUrl,
-                                      height: SizeConfig.screenWidth * 0.25,
-                                      width: SizeConfig.screenWidth * 0.25,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                            SizedBox(
-                              width: SizeConfig.screenWidth * 0.05,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: SizeConfig.screenWidth * 0.5,
-                                  child: Text(
-                                    baseProvider.myUser.name,
-                                    style: GoogleFonts.montserrat(
-                                      color: Colors.white,
-                                      fontSize: SizeConfig.cardTitleTextSize,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  'Member since ${_getUserMembershipDate()}',
-                                  style: GoogleFonts.montserrat(
-                                    color: Colors.black,
-                                    fontSize: SizeConfig.smallTextSize,
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                            size: SizeConfig.blockSizeHorizontal * 4,
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                            "Tap to edit details",
-                            style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      )
-                    ],
-                  ),
-                ),
-              ),
             ),
-            SizedBox(
-              height: 20,
+            Consumer<BaseUtil>(
+              builder: (ctx, bp, child) {
+                return showEmailVerifyLink();
+              },
             ),
+            SizedBox(height: 16),
             Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.blockSizeHorizontal * 2,
-              ),
               child: Column(
                 children: [
+                  Consumer<BaseUtil>(
+                    builder: (ctx, bp, child) {
+                      return baseProvider.myUser.username == null
+                          ? ProfileTabTile(
+                              leadWidget: Icon(
+                                Icons.account_circle_outlined,
+                                size: SizeConfig.blockSizeHorizontal * 5,
+                                color: UiConstants.primaryColor,
+                              ),
+                              title: "Username",
+                              onPress: () {},
+                              trailWidget: Container(
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                  border: Border.all(
+                                      color: Colors.orange, width: 2),
+                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                alignment: Alignment.center,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    if (baseProvider.myUser.username == null)
+                                      appState.currentAction = PageAction(
+                                          state: PageState.addPage,
+                                          page: ClaimUsernamePageConfig);
+                                  },
+                                  child: Text(
+                                    "Claim!",
+                                    style: GoogleFonts.montserrat(
+                                        color: Colors.orange,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: SizeConfig.mediumTextSize),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : SizedBox();
+                    },
+                  ),
                   ProfileTabTilePan(
                     logo: "images/contact-book.png",
                     title: "PAN Number",
@@ -241,49 +166,46 @@ class _ProfilePageState extends State<ProfilePage> {
                         isPanFieldHidden = !isPanFieldHidden;
                         setState(() {});
                       } else {
-                        // AppState.screenStack.add(ScreenItem.dialog);
-                        // showDialog(
-                        //   context: context,
-                        //   builder: (BuildContext context) => WillPopScope(
-                        //     onWillPop: () {
-                        //       AppState.screenStack.removeLast();
-                        //       print("Popped a dialog");
-                        //       return Future.value(true);
-                        //     },
-                        //     child: MoreInfoDialog(
-                        //       text: Assets.infoWhyPan,
-                        //       title: 'Where is my PAN Number used?',
-                        //     ),
-                        //   ),
-                        // );
                         delegate.parseRoute(Uri.parse("d-panInfo"));
                       }
                     },
                   ),
                   ProfileTabTile(
-                      logo: "images/transaction.png",
+                      leadWidget: Image.asset(
+                        "images/transaction.png",
+                        height: SizeConfig.blockSizeHorizontal * 5,
+                      ),
                       title: "Transactions",
-                      value: "See All",
+                      trailWidget: Text(
+                        "See All",
+                        style: GoogleFonts.montserrat(
+                          color: UiConstants.primaryColor,
+                          fontSize: SizeConfig.mediumTextSize,
+                        ),
+                      ),
                       onPress: () => appState.currentAction = PageAction(
                           state: PageState.addPage,
                           page: TransactionPageConfig)),
                   ProfileTabTile(
-                      logo: "images/referrals.png",
+                      leadWidget: Image.asset(
+                        "images/referrals.png",
+                        height: SizeConfig.blockSizeHorizontal * 5,
+                      ),
                       title: "Referrals",
-                      value: _myReferralCount.toString(),
+                      trailWidget: Text(
+                        _myReferralCount.toString(),
+                        style: GoogleFonts.montserrat(
+                          color: UiConstants.primaryColor,
+                          fontSize: SizeConfig.mediumTextSize,
+                        ),
+                      ),
                       onPress: () => appState.currentAction = PageAction(
                           state: PageState.addPage, page: ReferralPageConfig)),
                 ],
               ),
             ),
             ShareCard(),
-            SizedBox(
-              height: 50,
-            ),
             Social(),
-            SizedBox(
-              height: 50,
-            ),
             _appVersionRow(),
             _termsRow(),
             SizedBox(
@@ -373,37 +295,44 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  String _getUserMembershipDate() {
-    List<String> months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ];
-    if (baseProvider.userCreationTimestamp != null) {
-      int month = baseProvider.userCreationTimestamp.month;
-      int year = baseProvider.userCreationTimestamp.year;
-      int yearShort = year % 2000;
-
-      return '${months[month - 1]}\'$yearShort';
-    } else {
-      return '\'Unavailable\'';
-    }
-  }
-
   int get _myReferralCount {
     if (baseProvider == null ||
         baseProvider.myReferralInfo == null ||
         baseProvider.myReferralInfo.refCount == null) return 0;
     return baseProvider.myReferralInfo.refCount;
+  }
+
+  Widget showEmailVerifyLink() {
+    return baseProvider.myUser.isEmailVerified == null ||
+            baseProvider.myUser.isEmailVerified == false
+        ? InkWell(
+            onTap: () {
+              appState.currentAction = PageAction(
+                  state: PageState.addPage, page: VerifyEmailPageConfig);
+            },
+            child: Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.symmetric(
+                  vertical: 16, horizontal: SizeConfig.blockSizeHorizontal * 5),
+              width:
+                  SizeConfig.screenWidth - SizeConfig.blockSizeHorizontal * 16,
+              child: MarqueeWidget(
+                pauseDuration: Duration(seconds: 1),
+                animationDuration: Duration(seconds: 2),
+                backDuration: Duration(seconds: 2),
+                direction: Axis.horizontal,
+                child: Text(
+                  "Your email needs to be verified. Click here to complete this step.",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: Colors.red[300],
+                    fontSize: SizeConfig.mediumTextSize,
+                  ),
+                ),
+              ),
+            ),
+          )
+        : SizedBox();
   }
 }
 
@@ -411,11 +340,12 @@ class Social extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        margin: EdgeInsets.symmetric(vertical: 50),
         width: SizeConfig.screenWidth,
         child: Column(children: [
           Text(
             "Connect With Us",
-            style: GoogleFonts.montserrat(
+            style: TextStyle(
               color: UiConstants.textColor,
               fontSize: SizeConfig.screenHeight * 0.02,
             ),
@@ -521,7 +451,7 @@ class ShareCard extends StatelessWidget {
               children: [
                 Text(
                   "Both get ₹ 25 on every referral",
-                  style: GoogleFonts.montserrat(
+                  style: TextStyle(
                       color: Colors.white,
                       shadows: [
                         Shadow(
@@ -538,7 +468,7 @@ class ShareCard extends StatelessWidget {
                 ),
                 Text(
                   "You and your friend also receive 10 game tickets that week!",
-                  style: GoogleFonts.montserrat(
+                  style: TextStyle(
                       color: Colors.white, fontSize: SizeConfig.mediumTextSize),
                 ),
                 SizedBox(height: 20),
@@ -593,9 +523,10 @@ class _ShareOptionsState extends State<ShareOptions> {
     rProvider = Provider.of<RazorpayModel>(context, listen: false);
     _init();
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
             border: Border.all(
               width: 2,
@@ -604,7 +535,7 @@ class _ShareOptionsState extends State<ShareOptions> {
             color: Colors.transparent,
             borderRadius: BorderRadius.circular(100),
           ),
-          child: MaterialButton(
+          child: InkWell(
             child: (!baseProvider.isReferralLinkBuildInProgressOther)
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -612,7 +543,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                       Text(
                         'SHARE',
                         style: GoogleFonts.montserrat(
-                          fontSize: SizeConfig.mediumTextSize * 0.8,
+                          fontSize: SizeConfig.mediumTextSize * 0.9,
                           color: Colors.white,
                         ),
                       ),
@@ -630,7 +561,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                     color: UiConstants.spinnerColor2,
                     size: 18.0,
                   ),
-            onPressed: () async {
+            onTap: () async {
               BaseAnalytics.analytics.logShare(
                   contentType: 'referral',
                   itemId: baseProvider.myUser.uid,
@@ -657,10 +588,11 @@ class _ShareOptionsState extends State<ShareOptions> {
             splashColor: Colors.orange.withOpacity(0.5),
           ),
         ),
-        Spacer(),
+        SizedBox(width: 10),
         (Platform.isIOS)
             ? Text('')
             : Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
                   border: Border.all(
                     width: 2,
@@ -669,16 +601,18 @@ class _ShareOptionsState extends State<ShareOptions> {
                   color: Colors.transparent,
                   borderRadius: BorderRadius.circular(100),
                 ),
-                child: MaterialButton(
+                child: InkWell(
                   child: (!baseProvider.isReferralLinkBuildInProgressWhatsapp)
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text('SHARE ON WHATSAPP',
-                                style: GoogleFonts.montserrat(
-                                  fontSize: SizeConfig.mediumTextSize * 0.8,
-                                  color: Colors.white,
-                                )),
+                            Text(
+                              'SHARE ON WHATSAPP',
+                              style: GoogleFonts.montserrat(
+                                fontSize: SizeConfig.mediumTextSize * 0.9,
+                                color: Colors.white,
+                              ),
+                            ),
                             SizedBox(
                               width: 5,
                             ),
@@ -693,7 +627,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                           color: UiConstants.spinnerColor2,
                           size: 18.0,
                         ),
-                  onPressed: () async {
+                  onTap: () async {
                     ////////////////////////////////
                     BaseAnalytics.analytics.logShare(
                         contentType: 'referral',
@@ -814,7 +748,7 @@ class CardButton extends StatelessWidget {
           children: [
             Text(
               text,
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                   color: Colors.white,
                   fontSize: SizeConfig.screenWidth * 0.035),
             ),
@@ -833,45 +767,40 @@ class CardButton extends StatelessWidget {
 }
 
 class ProfileTabTile extends StatelessWidget {
-  final String logo, title, value;
+  final String title;
+  final Widget leadWidget, trailWidget;
   final Function onPress;
 
-  ProfileTabTile({this.logo, this.onPress, this.title, this.value});
+  ProfileTabTile({this.leadWidget, this.onPress, this.title, this.trailWidget});
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: width * 0.02),
-      child: Column(
-        children: [
-          ListTile(
-            leading: Image.asset(
-              logo,
-              height: SizeConfig.screenHeight * 0.02,
-              width: SizeConfig.screenHeight * 0.02,
+    return InkWell(
+      onTap: onPress,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.blockSizeHorizontal * 5),
+        child: Column(
+          children: [
+            SizedBox(height: SizeConfig.blockSizeHorizontal * 4),
+            Row(
+              children: [
+                leadWidget,
+                SizedBox(width: SizeConfig.blockSizeHorizontal * 5),
+                Text(
+                  title,
+                  style: GoogleFonts.montserrat(
+                    fontSize: SizeConfig.mediumTextSize,
+                  ),
+                ),
+                Spacer(),
+                trailWidget,
+              ],
             ),
-            title: Text(
-              title,
-              style: GoogleFonts.montserrat(
-                color: UiConstants.textColor,
-                fontSize: SizeConfig.mediumTextSize,
-              ),
-            ),
-            trailing: Text(
-              value,
-              style: GoogleFonts.montserrat(
-                color: UiConstants.primaryColor,
-                fontSize: SizeConfig.mediumTextSize,
-              ),
-            ),
-            onTap: onPress,
-          ),
-          Divider(
-            endIndent: width * 0.1,
-            indent: width * 0.1,
-          ),
-        ],
+            SizedBox(height: SizeConfig.blockSizeHorizontal * 4),
+            Divider()
+          ],
+        ),
       ),
     );
   }
@@ -893,25 +822,32 @@ class ProfileTabTilePan extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: width * 0.02),
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.blockSizeHorizontal * 5,
+      ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ListTile(
-              leading: Image.asset(
+          SizedBox(height: SizeConfig.blockSizeHorizontal * 4),
+          Row(
+            children: [
+              Image.asset(
                 logo,
-                height: SizeConfig.screenHeight * 0.02,
-                width: SizeConfig.screenHeight * 0.02,
+                height: SizeConfig.blockSizeHorizontal * 5,
               ),
-              title: Text(
+              SizedBox(
+                width: SizeConfig.blockSizeHorizontal * 5,
+              ),
+              Text(
                 title,
                 style: GoogleFonts.montserrat(
                   color: UiConstants.textColor,
                   fontSize: SizeConfig.mediumTextSize,
                 ),
               ),
-              trailing: isAvailable
+              Spacer(),
+              isAvailable
                   ? Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -949,16 +885,420 @@ class ProfileTabTilePan extends StatelessWidget {
                               padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
                               child: Icon(
                                 Icons.info_outline,
+                                size: SizeConfig.largeTextSize,
                                 color: UiConstants.primaryColor,
                               )),
                           onTap: onPress,
                         )
                       ],
-                    )),
-          Divider(
-            endIndent: width * 0.1,
-            indent: width * 0.1,
+                    ),
+            ],
           ),
+          SizedBox(height: SizeConfig.blockSizeHorizontal * 4),
+          Divider()
+        ],
+      ),
+    );
+  }
+}
+
+class UserProfileCard extends StatefulWidget {
+  @override
+  _UserProfileCardState createState() => _UserProfileCardState();
+}
+
+class _UserProfileCardState extends State<UserProfileCard> {
+  BaseUtil baseProvider;
+  DBModel dbProvider;
+  bool isImageLoading = false;
+  double picSize = SizeConfig.screenWidth * 0.24;
+
+  Future<void> getProfilePicUrl() async {
+    try {
+      baseProvider.myUserDpUrl =
+          await dbProvider.getUserDP(baseProvider.myUser.uid);
+      if (baseProvider.myUserDpUrl != null) {
+        setState(() {
+          isImageLoading = false;
+        });
+        print("got the image");
+      }
+    } catch (e) {}
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    if (baseProvider.myUserDpUrl == null) {
+      isImageLoading = true;
+      getProfilePicUrl();
+    }
+    return Container(
+      width: SizeConfig.screenWidth,
+      height: SizeConfig.screenHeight * 0.24,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(
+            "images/profile-card.png",
+          ),
+          fit: BoxFit.fill,
+        ),
+      ),
+      margin: EdgeInsets.symmetric(
+        horizontal: SizeConfig.blockSizeHorizontal * 4,
+      ),
+      child: Stack(
+        children: [
+          Column(
+            children: [
+              SizedBox(
+                height: 12,
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: SizeConfig.blockSizeHorizontal * 5,
+                    ),
+                    Container(
+                      height: picSize,
+                      width: picSize,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                      child: Stack(
+                        children: [
+                          isImageLoading
+                              ? Image.asset(
+                                  "images/profile.png",
+                                  height: picSize,
+                                  width: picSize,
+                                  fit: BoxFit.cover,
+                                )
+                              : ClipOval(
+                                  child: CachedNetworkImage(
+                                    imageUrl: baseProvider.myUserDpUrl,
+                                    height: picSize,
+                                    width: picSize,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: InkWell(
+                              onTap: () async {
+                                var _status = await Permission.photos.status;
+                                if (_status.isUndetermined || _status.isRestricted || _status.isLimited || _status.isDenied) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (ctx) {
+                                        return ConfirmActionDialog(
+                                            title: "Request Permission",
+                                            description:
+                                                "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
+                                            buttonText: "Continue",
+                                            asset: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 8),
+                                              child: Image.asset(
+                                                  "images/gallery.png",
+                                                  height:
+                                                      SizeConfig.screenWidth *
+                                                          0.24),
+                                            ),
+                                            confirmAction: () {
+                                              Navigator.pop(context);
+                                              chooseprofilePicture();
+                                            },
+                                            cancelAction: () =>
+                                                Navigator.pop(context));
+                                      });
+                                }else if(_status.isGranted){
+                                  chooseprofilePicture();
+                                }else{
+                                  baseProvider.showNegativeAlert('Permission Unavailable', 'Please enable permission from settings to continue', context);
+                                }
+                              },
+                              child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: SizeConfig.blockSizeHorizontal * 4,
+                                child: Icon(
+                                  Icons.photo_camera_rounded,
+                                  color: UiConstants.primaryColor,
+                                  size: SizeConfig.blockSizeHorizontal * 4,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: SizeConfig.blockSizeHorizontal * 5,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: SizeConfig.screenWidth * 0.5,
+                          child: Text(
+                            baseProvider.myUser.name,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: SizeConfig.cardTitleTextSize,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        baseProvider.myUser.username != null
+                            ? Padding(
+                                padding: EdgeInsets.only(top: 4),
+                                child: Text(
+                                  "@${baseProvider.myUser.username.replaceAll('@', '.')}",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: SizeConfig.mediumTextSize,
+                                  ),
+                                ),
+                              )
+                            : SizedBox(
+                                height: 8,
+                              ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Member since ${_getUserMembershipDate()}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: SizeConfig.smallTextSize,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 16,
+              )
+            ],
+          ),
+          Positioned(
+            top: 4,
+            right: 4,
+            child: IconButton(
+              onPressed: () {
+                cardKey.currentState.toggleCard();
+              },
+              icon: Icon(
+                Icons.edit_outlined,
+                color: Colors.white,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  chooseprofilePicture() async {
+    final temp = await ImagePicker().getImage(source: ImageSource.gallery);
+    if (temp != null) {
+      HapticFeedback.vibrate();
+      print("--------------------------------->" + temp.path);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => ChangeProfilePicture(
+          image: File(temp.path),
+        ),
+      );
+    }
+  }
+
+  String _getUserMembershipDate() {
+    List<String> months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+    if (baseProvider.userCreationTimestamp != null) {
+      int month = baseProvider.userCreationTimestamp.month;
+      int year = baseProvider.userCreationTimestamp.year;
+      int yearShort = year % 2000;
+
+      return '${months[month - 1]}\'$yearShort';
+    } else {
+      return '\'Unavailable\'';
+    }
+  }
+}
+
+class UserEditProfileCard extends StatefulWidget {
+  final String oldname;
+
+  UserEditProfileCard({this.oldname});
+
+  @override
+  _UserEditProfileCardState createState() => _UserEditProfileCardState();
+}
+
+class _UserEditProfileCardState extends State<UserEditProfileCard> {
+  bool isUploading = false;
+  TextEditingController _nameController;
+  BaseUtil baseProvider;
+  DBModel dbProvider;
+
+  @override
+  void initState() {
+    _nameController = new TextEditingController(text: widget.oldname);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    return Container(
+      width: SizeConfig.screenWidth,
+      height: SizeConfig.screenHeight * 0.24,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(
+            "images/profile-card.png",
+          ),
+          fit: BoxFit.fill,
+        ),
+      ),
+      margin: EdgeInsets.symmetric(
+        horizontal: SizeConfig.blockSizeHorizontal * 4,
+      ),
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: SizeConfig.screenWidth,
+            height: SizeConfig.blockSizeVertical * 5,
+            padding: EdgeInsets.only(
+                left: SizeConfig.blockSizeHorizontal * 2, bottom: 8),
+            child: TextField(
+              cursorColor: Colors.white,
+              controller: _nameController,
+              maxLines: 1,
+              style: GoogleFonts.montserrat(
+                color: Colors.white,
+                fontSize: SizeConfig.cardTitleTextSize,
+                fontWeight: FontWeight.w500,
+              ),
+              decoration: InputDecoration(
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 2),
+                ),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 2),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 2),
+                ),
+              ),
+            ),
+          ),
+          Row(
+            children: [
+              TextButton(
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  setState(() {
+                    isUploading = !isUploading;
+                  });
+                  // baseProvider.myUser.name = _nameController.text.trim();
+                  baseProvider.setName(_nameController.text.trim());
+                  dbProvider.updateUser(baseProvider.myUser).then((flag) {
+                    setState(() {
+                      isUploading = false;
+                    });
+                    if (flag) {
+                      cardKey.currentState.toggleCard();
+                      baseProvider.showPositiveAlert('Complete',
+                          'Your details have been updated', context);
+                    } else {
+                      baseProvider.showNegativeAlert(
+                          'Failed',
+                          'Your details could not be updated at the moment',
+                          context);
+                    }
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 1,
+                      color: Colors.white,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: isUploading
+                      ? SpinKitThreeBounce(
+                          color: UiConstants.spinnerColor2,
+                          size: 18.0,
+                        )
+                      : Text(
+                          "Update",
+                          style: GoogleFonts.montserrat(
+                            color: Colors.white,
+                            fontSize: SizeConfig.mediumTextSize,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  cardKey.currentState.toggleCard();
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 1,
+                      color: Colors.white,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Text(
+                    "Cancel",
+                    style: GoogleFonts.montserrat(
+                      color: Colors.white,
+                      fontSize: SizeConfig.mediumTextSize,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          )
         ],
       ),
     );

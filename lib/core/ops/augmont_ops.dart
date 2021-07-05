@@ -92,7 +92,8 @@ class AugmontModel extends ChangeNotifier {
 
       _baseProvider.augmontDetail = UserAugmontDetail.newUser(
           _uid, _uname, stateId, bankHolderName, bankAccNo, ifsc);
-      _baseProvider.myUser.isAugmontOnboarded = true;
+      // _baseProvider.myUser.isAugmontOnboarded = true;
+      _baseProvider.updateAugmontOnboarded(true);
       if (_baseProvider.myUser.pan == null ||
           _baseProvider.myUser.pan.isEmpty ||
           _baseProvider.myUser.pan != pan) _baseProvider.myUser.pan = pan;
@@ -196,6 +197,43 @@ class AugmontModel extends ChangeNotifier {
     _baseProvider.currentAugmontTxn.docKey = _docKey;
 
     return _baseProvider.currentAugmontTxn;
+  }
+
+  Future<List<GoldGraphPoint>> getGoldRateChart(
+      DateTime fromTime, DateTime toTime) async {
+    if (fromTime == null || toTime == null || fromTime.isAfter(toTime))
+      return null;
+    if (!isInit()) await _init();
+
+    var _params = {
+      GetRateChart.fldFromTime: '${fromTime.millisecondsSinceEpoch}',
+      GetRateChart.fldToTime: '${toTime.millisecondsSinceEpoch}',
+    };
+    var _request = http.Request(
+        'GET', Uri.parse(_constructRequest(GetRateChart.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await _processResponse(_response);
+    if (resMap == null ||
+        resMap['Items'] == null ||
+        !resMap[INTERNAL_FAIL_FLAG]) {
+      log.error('Query Failed');
+      return null;
+    } else {
+      List<GoldGraphPoint> pointData = [];
+      for (var rPoint in resMap['Items']) {
+        try {
+          GoldGraphPoint point = GoldGraphPoint(
+              BaseUtil.toDouble(rPoint['rRate']),
+              DateTime.fromMillisecondsSinceEpoch(rPoint['rTimestamp']));
+          pointData.add(point);
+        } catch (e) {
+          continue;
+        }
+      }
+      return pointData;
+    }
   }
 
   _onRazorpayPaymentProcessed(UserTransaction goldTxn) {
@@ -462,5 +500,18 @@ class AugmontModel extends ChangeNotifier {
   double getGoldQuantityFromSellAmount(double amount, double rate) {
     double qnt = amount / rate;
     return BaseUtil.digitPrecision(qnt, 4, false);
+  }
+}
+
+class GoldGraphPoint {
+  final double rate;
+  final DateTime timestamp;
+
+  GoldGraphPoint(this.rate, this.timestamp);
+
+  @override
+  String toString() {
+    return ("Rate ${this.rate} Time ${this.timestamp}");
+    // return super.toString();
   }
 }

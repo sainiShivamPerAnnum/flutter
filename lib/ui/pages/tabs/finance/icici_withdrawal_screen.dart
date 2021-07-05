@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -105,7 +104,7 @@ class ICICIWithdrawalState extends State<ICICIWithdrawal> {
         ),
         title: Text(
           "Withdrawal",
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w500,
           ),
@@ -124,7 +123,7 @@ class ICICIWithdrawalState extends State<ICICIWithdrawal> {
                       ),
                       Text(
                         "Total Available Balance",
-                        style: GoogleFonts.montserrat(
+                        style: TextStyle(
                           fontWeight: FontWeight.w300,
                           fontSize: SizeConfig.smallTextSize,
                         ),
@@ -136,7 +135,7 @@ class ICICIWithdrawalState extends State<ICICIWithdrawal> {
                         ),
                         child: Text(
                           "₹ ${_currentTotalBalance.toStringAsFixed(2)}",
-                          style: GoogleFonts.montserrat(
+                          style: TextStyle(
                             fontWeight: FontWeight.w700,
                             color: UiConstants.primaryColor,
                             fontSize: SizeConfig.cardTitleTextSize,
@@ -205,7 +204,7 @@ class ICICIWithdrawalState extends State<ICICIWithdrawal> {
                                     ),
                                     Text(
                                       "Instantly",
-                                      style: GoogleFonts.montserrat(
+                                      style: TextStyle(
                                         color: Colors.black87,
                                         fontWeight: FontWeight.w500,
                                         fontSize: SizeConfig.largeTextSize,
@@ -214,7 +213,7 @@ class ICICIWithdrawalState extends State<ICICIWithdrawal> {
                                     FittedBox(
                                       child: Text(
                                         "₹ ${_userWithdrawInstantAmount.toStringAsFixed(2)}",
-                                        style: GoogleFonts.montserrat(
+                                        style: TextStyle(
                                           color: UiConstants.primaryColor,
                                           fontWeight: FontWeight.w700,
                                           fontSize: SizeConfig.largeTextSize,
@@ -246,7 +245,7 @@ class ICICIWithdrawalState extends State<ICICIWithdrawal> {
                                     ),
                                     Text(
                                       "By $formatted *",
-                                      style: GoogleFonts.montserrat(
+                                      style: TextStyle(
                                         color: Colors.black87,
                                         fontWeight: FontWeight.w500,
                                         fontSize: SizeConfig.largeTextSize,
@@ -254,7 +253,7 @@ class ICICIWithdrawalState extends State<ICICIWithdrawal> {
                                     ),
                                     Text(
                                       "Presently unavailable",
-                                      style: GoogleFonts.montserrat(
+                                      style: TextStyle(
                                         color: Colors.black87,
                                         fontWeight: FontWeight.w300,
                                         fontSize: SizeConfig.mediumTextSize,
@@ -263,7 +262,7 @@ class ICICIWithdrawalState extends State<ICICIWithdrawal> {
                                     FittedBox(
                                       child: Text(
                                         "₹ ${_userWithdrawNonInstantAmount.toStringAsFixed(2)}",
-                                        style: GoogleFonts.montserrat(
+                                        style: TextStyle(
                                           color: Colors.amber,
                                           fontWeight: FontWeight.w700,
                                           fontSize: SizeConfig.largeTextSize,
@@ -286,7 +285,7 @@ class ICICIWithdrawalState extends State<ICICIWithdrawal> {
             _errorMessage != null
                 ? Text(
                     _errorMessage,
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       color: Colors.red,
                     ),
                   )

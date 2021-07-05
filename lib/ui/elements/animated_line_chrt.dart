@@ -18,10 +18,10 @@ class CustomAnimatedLineChart extends StatefulWidget {
   final TapText tapText;
 
   const CustomAnimatedLineChart(
-      this.chart, {
-        Key key,
-        this.tapText,
-      }) : super(key: key);
+    this.chart, {
+    Key key,
+    this.tapText,
+  }) : super(key: key);
 
   @override
   _AnimatedLineChartState createState() => _AnimatedLineChartState();
@@ -34,11 +34,11 @@ class _AnimatedLineChartState extends State<CustomAnimatedLineChart>
 
   @override
   void initState() {
-    _controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 2000));
+    _controller = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 2000));
 
     Animation curve =
-    CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+        CurvedAnimation(parent: _controller, curve: Curves.easeIn);
 
     _animation = Tween(begin: 0.0, end: 1.0).animate(curve);
 
@@ -57,13 +57,13 @@ class _AnimatedLineChartState extends State<CustomAnimatedLineChart>
   Widget build(BuildContext context) {
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          widget.chart.initialize(constraints.maxWidth, constraints.maxHeight);
-          return _GestureWrapper(
-            widget.chart,
-            _animation,
-            tapText: widget.tapText,
-          );
-        });
+      widget.chart.initialize(constraints.maxWidth, constraints.maxHeight);
+      return _GestureWrapper(
+        widget.chart,
+        _animation,
+        tapText: widget.tapText,
+      );
+    });
   }
 }
 
@@ -74,11 +74,11 @@ class _GestureWrapper extends StatefulWidget {
   final TapText tapText;
 
   const _GestureWrapper(
-      this._chart,
-      this._animation, {
-        Key key,
-        this.tapText,
-      }) : super(key: key);
+    this._chart,
+    this._animation, {
+    Key key,
+    this.tapText,
+  }) : super(key: key);
 
   @override
   _GestureWrapperState createState() => _GestureWrapperState();
@@ -211,7 +211,7 @@ class ChartPainter extends CustomPainter {
     }
 
     List<HighlightPoint> highlights =
-    _chart.getClosetHighlightPoints(_horizontalDragPosition);
+        _chart.getClosetHighlightPoints(_horizontalDragPosition);
     List<TextPainter> textPainters = List();
     int index = 0;
     double minHighlightX = highlights[0].chartPoint.x;

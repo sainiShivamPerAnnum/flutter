@@ -1,11 +1,9 @@
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class OnboardDialog extends StatefulWidget {
-
   @override
   State createState() => OnboardDialogState();
 }
@@ -18,7 +16,7 @@ class OnboardDialogState extends State<OnboardDialog> {
   OnboardDialogState();
 
   @override
-  void initState(){
+  void initState() {
     _pageController = PageController(initialPage: _pageIndex);
     super.initState();
   }
@@ -88,65 +86,62 @@ class OnboardDialogState extends State<OnboardDialog> {
                 height: 20,
               ),
               Padding(
-                padding: EdgeInsets.only(left:20, right:20),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    (_pageIndex>0)?InkWell(
-                      child: Text('PREVIOUS',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            color: UiConstants.accentColor,
-                            fontSize: 18
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      (_pageIndex > 0)
+                          ? InkWell(
+                              child: Text(
+                                'PREVIOUS',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    color: UiConstants.accentColor,
+                                    fontSize: 18),
+                              ),
+                              onTap: () {
+                                if (_pageIndex > 0) {
+                                  onTabTapped(_pageIndex - 1);
+                                }
+                              },
+                            )
+                          : Container(),
+                      InkWell(
+                        child: Text(
+                          (_pageIndex == 2) ? 'GOT IT' : 'NEXT',
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                              color: UiConstants.accentColor, fontSize: 18),
                         ),
-                      ),
-                      onTap: () {
-                        if(_pageIndex>0){
-                          onTabTapped(_pageIndex-1);
-                        }
-                      },
-                    ):Container(),
-                    InkWell(
-                      child: Text((_pageIndex==2)?'GOT IT':'NEXT',
-                        textAlign: TextAlign.right,
-                        style: TextStyle(
-                            color: UiConstants.accentColor,
-                            fontSize: 18
-                        ),
-                      ),
-                      onTap: () {
-                        if(_pageIndex<2) {
-                          onTabTapped(_pageIndex+1);
+                        onTap: () {
+                          if (_pageIndex < 2) {
+                            onTabTapped(_pageIndex + 1);
 
-                          // this._pageIndex = this._pageIndex + 1;
-                          // setState(() {});
-                        }else{
-                          Navigator.of(context).pop();
-                        }
-                      },
-                    )
-                  ],
-                )
-              )
+                            // this._pageIndex = this._pageIndex + 1;
+                            // setState(() {});
+                          } else {
+                            Navigator.of(context).pop();
+                          }
+                        },
+                      )
+                    ],
+                  ))
             ],
           ),
-          )
-
+        )
       ],
     );
   }
 
   Widget _pageViewItem(int index) {
     return Text(Assets.onboardDialogDesc[index],
-      textAlign: TextAlign.center,
-      style: TextStyle(
-      fontSize: 20,
-      height: 1.2,
-      color: UiConstants.accentColor,
-      fontWeight: FontWeight.w300
-      )
-    );
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            fontSize: 20,
+            height: 1.2,
+            color: UiConstants.accentColor,
+            fontWeight: FontWeight.w300));
   }
 
   Widget _addPageView() {
@@ -168,6 +163,7 @@ class OnboardDialogState extends State<OnboardDialog> {
   }
 
   void onTabTapped(int index) {
-    this._pageController.animateToPage(index,duration: const Duration(milliseconds: 500),curve: Curves.easeInOut);
+    this._pageController.animateToPage(index,
+        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
   }
 }

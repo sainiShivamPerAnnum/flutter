@@ -50,6 +50,22 @@ class _MyAppState extends State<MyApp> {
     backButtonDispatcher = FelloBackButtonDispatcher(delegate);
   }
 
+  static const MaterialColor kPrimaryColor = MaterialColor(
+    0xff2EB19F,
+    const <int, Color>{
+      50: const Color(0xff2EB19F),
+      100: const Color(0xff2EB19F),
+      200: const Color(0xff2EB19F),
+      300: const Color(0xff2EB19F),
+      400: const Color(0xff2EB19F),
+      500: const Color(0xff2EB19F),
+      600: const Color(0xff2EB19F),
+      700: const Color(0xff2EB19F),
+      800: const Color(0xff2EB19F),
+      900: const Color(0xff2EB19F),
+    },
+  );
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -70,10 +86,45 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp.router(
         title: Constants.APP_NAME,
         theme: ThemeData(
-            primaryColor: UiConstants.primaryColor,
-            primarySwatch: Colors.green,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            textTheme: GoogleFonts.rubikTextTheme()),
+          primaryColor: UiConstants.primaryColor,
+          primarySwatch: kPrimaryColor,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          textTheme: GoogleFonts.montserratTextTheme(),
+          inputDecorationTheme: InputDecorationTheme(
+            //labelStyle: TextStyle(color: UiConstants.primaryColor),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: UiConstants.primaryColor.withOpacity(0.3), width: 1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderSide:
+                  BorderSide(color: Colors.grey.withOpacity(0.3), width: 1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: UiConstants.primaryColor,
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.red.withOpacity(0.3),
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.red.withOpacity(0.3),
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
         debugShowCheckedModeBanner: false,
         backButtonDispatcher: backButtonDispatcher,
         routerDelegate: delegate,

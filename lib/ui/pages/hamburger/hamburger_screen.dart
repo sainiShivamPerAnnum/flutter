@@ -5,16 +5,12 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/dialogs/aboutus_dialog.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
-import 'package:felloapp/ui/elements/contact_dialog.dart';
-import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class HamburgerMenu extends StatelessWidget {
@@ -63,7 +59,7 @@ class HamburgerMenu extends StatelessWidget {
               ),
             ),
             Container(
-              width: SizeConfig.screenHeight * 0.1,
+              width: SizeConfig.screenHeight * 0.08,
               padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -76,7 +72,7 @@ class HamburgerMenu extends StatelessWidget {
                   backButtonDispatcher.didPopRoute();
                 },
                 icon: Icon(
-                  Icons.cancel_rounded,
+                  Icons.close,
                   color: Colors.white,
                 ),
               ),
@@ -92,8 +88,8 @@ class HamburgerMenu extends StatelessWidget {
         title: Text(option.value,
             textAlign: TextAlign.center,
             style: (option.isEnabled)
-                ? GoogleFonts.montserrat(
-                    fontSize: 24.0,
+                ? TextStyle(
+                    fontSize: SizeConfig.largeTextSize,
                     color: Colors.white,
                     fontWeight: FontWeight.w500)
                 : TextStyle(fontSize: 18.0, color: Colors.grey[400])),
@@ -255,161 +251,87 @@ class OptionDetail {
   final String key;
   final String value;
   final bool isEnabled;
+
   OptionDetail({this.key, this.value, this.isEnabled});
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // OLD CONTACT US SYSTEM---------------------------------------------------------------------------------------------------
 
-          //TODO Navigator.of(context).pushNamed('/support');
-          // showDialog(
-          //     context: context,
-          //     builder: (BuildContext dialogContext) => ContactUsDialog(
-          //           isResident: (baseProvider.isSignedIn() &&
-          //               baseProvider.isActiveUser()),
-          //           isUnavailable: BaseUtil.isDeviceOffline,
-          //           onClick: () {
-          //             if (BaseUtil.isDeviceOffline) {
-          //               baseProvider.showNoInternetAlert(context);
-          //               return;
-          //             }
-          //             if (baseProvider.isSignedIn() &&
-          //                 baseProvider.isActiveUser()) {
-          //               reqProvider
-          //                   .addCallbackRequest(
-          //                       baseProvider.firebaseUser.uid,
-          //                       baseProvider.myUser.name,
-          //                       baseProvider.myUser.mobile)
-          //                   .then((flag) {
-          //                 if (flag) {
-          //                   Navigator.of(context).pop();
-          //                   baseProvider.showPositiveAlert(
-          //                       'Callback placed!',
-          //                       'We\'ll contact you soon on your registered mobile',
-          //                       context);
-          //                 }
-          //               });
-          //             } else {
-          //               baseProvider.showNegativeAlert('Unavailable',
-          //                   'Callbacks are reserved for active users', context);
-          //             }
-          //           },
-          //         ));
-          //TODO AppState.screenStack.add(ScreenItem.dialog);
-          // showDialog(
-          //     context: context,
-          //     builder: (BuildContext dialogContext) => WillPopScope(
-          //           onWillPop: () {
-          //             AppState.screenStack.removeLast();
-          //             return Future.value(true);
-          //           },
-          //           child: ContactUsDialog(
-          //             isResident: (baseProvider.isSignedIn() &&
-          //                 baseProvider.isActiveUser()),
-          //             isUnavailable: BaseUtil.isDeviceOffline,
-          //             onClick: () {
-          //               if (BaseUtil.isDeviceOffline) {
-          //                 baseProvider.showNoInternetAlert(context);
-          //                 return;
-          //               }
-          //               if (baseProvider.isSignedIn() &&
-          //                   baseProvider.isActiveUser()) {
-          //                 reqProvider
-          //                     .addCallbackRequest(
-          //                         baseProvider.firebaseUser.uid,
-          //                         baseProvider.myUser.name,
-          //                         baseProvider.myUser.mobile)
-          //                     .then((flag) {
-          //                   if (flag) {
-          //                     Navigator.of(context).pop();
-          //                     AppState.screenStack.removeLast();
-          //                     baseProvider.showPositiveAlert(
-          //                         'Callback placed!',
-          //                         'We\'ll contact you soon on your registered mobile',
-          //                         context);
-          //                   }
-          //                 });
-          //               } else {
-          //                 baseProvider.showNegativeAlert(
-          //                     'Unavailable',
-          //                     'Callbacks are reserved for active users',
-          //                     context);
-          //               }
-          //             },
-          //           ),
-          //         ));
+//TODO Navigator.of(context).pushNamed('/support');
+// showDialog(
+//     context: context,
+//     builder: (BuildContext dialogContext) => ContactUsDialog(
+//           isResident: (baseProvider.isSignedIn() &&
+//               baseProvider.isActiveUser()),
+//           isUnavailable: BaseUtil.isDeviceOffline,
+//           onClick: () {
+//             if (BaseUtil.isDeviceOffline) {
+//               baseProvider.showNoInternetAlert(context);
+//               return;
+//             }
+//             if (baseProvider.isSignedIn() &&
+//                 baseProvider.isActiveUser()) {
+//               reqProvider
+//                   .addCallbackRequest(
+//                       baseProvider.firebaseUser.uid,
+//                       baseProvider.myUser.name,
+//                       baseProvider.myUser.mobile)
+//                   .then((flag) {
+//                 if (flag) {
+//                   Navigator.of(context).pop();
+//                   baseProvider.showPositiveAlert(
+//                       'Callback placed!',
+//                       'We\'ll contact you soon on your registered mobile',
+//                       context);
+//                 }
+//               });
+//             } else {
+//               baseProvider.showNegativeAlert('Unavailable',
+//                   'Callbacks are reserved for active users', context);
+//             }
+//           },
+//         ));
+//TODO AppState.screenStack.add(ScreenItem.dialog);
+// showDialog(
+//     context: context,
+//     builder: (BuildContext dialogContext) => WillPopScope(
+//           onWillPop: () {
+//             AppState.screenStack.removeLast();
+//             return Future.value(true);
+//           },
+//           child: ContactUsDialog(
+//             isResident: (baseProvider.isSignedIn() &&
+//                 baseProvider.isActiveUser()),
+//             isUnavailable: BaseUtil.isDeviceOffline,
+//             onClick: () {
+//               if (BaseUtil.isDeviceOffline) {
+//                 baseProvider.showNoInternetAlert(context);
+//                 return;
+//               }
+//               if (baseProvider.isSignedIn() &&
+//                   baseProvider.isActiveUser()) {
+//                 reqProvider
+//                     .addCallbackRequest(
+//                         baseProvider.firebaseUser.uid,
+//                         baseProvider.myUser.name,
+//                         baseProvider.myUser.mobile)
+//                     .then((flag) {
+//                   if (flag) {
+//                     Navigator.of(context).pop();
+//                     AppState.screenStack.removeLast();
+//                     baseProvider.showPositiveAlert(
+//                         'Callback placed!',
+//                         'We\'ll contact you soon on your registered mobile',
+//                         context);
+//                   }
+//                 });
+//               } else {
+//                 baseProvider.showNegativeAlert(
+//                     'Unavailable',
+//                     'Callbacks are reserved for active users',
+//                     context);
+//               }
+//             },
+//           ),
+//         ));
 //--------------------------------------------------------------------------------------------------------------------------------

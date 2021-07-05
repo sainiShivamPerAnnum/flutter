@@ -1,11 +1,9 @@
-import 'package:felloapp/main.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:freshchat_sdk/freshchat_user.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -77,7 +75,7 @@ class _ChatSupportState extends State<ChatSupport> {
                 child: Padding(
                   padding: EdgeInsets.all(5),
                   child: SpinKitFadingCircle(
-                    size: SizeConfig.screenWidth*0.2,
+                    size: SizeConfig.screenWidth * 0.2,
                     color: UiConstants.primaryColor,
                   ),
                 ))));

@@ -46,8 +46,8 @@ class DepositModalSheetState extends State<DepositModalSheet>
         _vpaController.text = baseProvider.iciciDetail.vpa;
       _isFirstInvestment = (!baseProvider.iciciDetail.firstInvMade) ?? true;
       _isPendingTransaction = (baseProvider.myUser.pendingTxnId != null);
-      String isEnabledStr =
-          BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.ICICI_DEPOSITS_ENABLED);
+      String isEnabledStr = BaseRemoteConfig.remoteConfig
+          .getString(BaseRemoteConfig.ICICI_DEPOSITS_ENABLED);
       try {
         int t = (isEnabledStr != null) ? int.parse(isEnabledStr) : 1;
         _isDepositsEnabled = (t == 1);

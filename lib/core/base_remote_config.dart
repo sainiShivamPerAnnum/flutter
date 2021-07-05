@@ -1,6 +1,5 @@
 import 'package:felloapp/base_util.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/cupertino.dart';
 
 class BaseRemoteConfig {
   static RemoteConfig remoteConfig;
@@ -86,8 +85,7 @@ class BaseRemoteConfig {
     ..._UNLOCK_REFERRAL_AMT
   };
 
-
-  static Future<bool> init() async{
+  static Future<bool> init() async {
     remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(DEFAULTS);
     try {
@@ -154,9 +152,9 @@ class BaseRemoteConfig {
 
   static int get UNLOCK_REFERRAL_AMT {
     String _val = _UNLOCK_REFERRAL_AMT.keys.first;
-    if(_val != null || _val.isNotEmpty) {
+    if (_val != null || _val.isNotEmpty) {
       int iVal = BaseUtil.toInt(_val);
-      return (iVal>0)?iVal:100;
+      return (iVal > 0) ? iVal : 100;
     }
     return 100;
   }

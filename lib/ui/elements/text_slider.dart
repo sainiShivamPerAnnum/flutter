@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
-class NavySlider extends StatefulWidget{
+class NavySlider extends StatefulWidget {
   final List<String> infoList;
 
   NavySlider({this.infoList});
@@ -24,20 +23,20 @@ class NavySliderState extends State<NavySlider> {
     _pageController = PageController(initialPage: _pageIndex);
 
     _timer = Timer.periodic(Duration(seconds: 9), (Timer timer) {
-      if (_pageIndex < widget.infoList.length-1) {
+      if (_pageIndex < widget.infoList.length - 1) {
         _pageIndex++;
       } else {
         _pageIndex = 0;
       }
 
-      if(_pageController.positions.isNotEmpty)_pageController.animateToPage(
-        _pageIndex,
-        duration: Duration(milliseconds: 600),
-        curve: Curves.easeIn,
-      );
+      if (_pageController.positions.isNotEmpty)
+        _pageController.animateToPage(
+          _pageIndex,
+          duration: Duration(milliseconds: 600),
+          curve: Curves.easeIn,
+        );
     });
   }
-
 
   @override
   void dispose() {
@@ -56,12 +55,13 @@ class NavySliderState extends State<NavySlider> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(child: Container(
+                Expanded(
+                    child: Container(
                   height: 25,
                   width: 400,
                   child: PageView(
                     physics: NeverScrollableScrollPhysics(),
-                    children:_buildTextPages(),
+                    children: _buildTextPages(),
                     onPageChanged: onPageChanged,
                     controller: _pageController,
                   ),
@@ -72,14 +72,12 @@ class NavySliderState extends State<NavySlider> {
                   color: Colors.black54,
                 )
               ],
-            )
-        )
-    );
+            )));
   }
 
   List<Widget> _buildTextPages() {
     List<Widget> _pagerWidgets = [];
-    if(widget.infoList == null || widget.infoList.length == 0) {
+    if (widget.infoList == null || widget.infoList.length == 0) {
       _pagerWidgets.add(Text(''));
     }
     widget.infoList.forEach((info) {
