@@ -27,16 +27,16 @@ class UsernameState extends State<Username> {
   bool isUpdated = false;
   final _formKey = GlobalKey<FormState>();
 
-  void validate(String value) async {
+  Future<bool> validate() async {
     setState(() {
-      username = value.replaceAll('.', '@');
+      username = usernameController.text.trim().replaceAll('.', '@');
       isLoading = true;
     });
-    if (value == "" || value == null)
+    if (username == "" || username == null)
       setState(() {
         isValid = null;
       });
-    else if (regex.hasMatch(value)) {
+    else if (regex.hasMatch(username)) {
       bool res = await dbProvider.checkIfUsernameIsAvailable(username);
       setState(() {
         isValid = res;
@@ -49,6 +49,7 @@ class UsernameState extends State<Username> {
     setState(() {
       isLoading = false;
     });
+    return isValid;
   }
 
   Widget showResult() {
@@ -116,7 +117,7 @@ class UsernameState extends State<Username> {
                     ),
                   ),
                   onChanged: (value) {
-                    validate(value);
+                    validate();
                   },
                 ),
               ),

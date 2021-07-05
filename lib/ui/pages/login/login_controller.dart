@@ -472,6 +472,9 @@ class _LoginControllerState extends State<LoginController>
       case Username.index:
         {
           if (_usernameKey.currentState.formKey.currentState.validate()) {
+            if (!await _usernameKey.currentState.validate()) {
+              return false;
+            }
             if (!_usernameKey.currentState.isLoading &&
                 _usernameKey.currentState.isValid) {
               baseProvider.isLoginNextInProgress = true;
