@@ -155,27 +155,27 @@ class NameInputScreenState extends State<NameInputScreen> {
         Reference ref =
             storage.ref().child("dps/${baseProvider.myUser.uid}/image");
         UploadTask uploadTask = ref.putData(bytes);
-        uploadTask.then((res) async {
-          await res.ref.getDownloadURL().then((url) {
-            if (url != null) {
+        try {
+          var res = await uploadTask;
+          String url = await res.ref.getDownloadURL();
+          if (url != null) {
+            isUploaded = true;
+            baseProvider.isProfilePictureUpdated = true;
+            baseProvider.setDisplayPictureUrl(url);
+            setState(() {
               isUploaded = true;
-              baseProvider.isProfilePictureUpdated = true;
-              //baseProvider.myUserDpUrl = url;
-              baseProvider.setDisplayPictureUrl(url);
-              setState(() {
-                isUploaded = true;
-                isEmailEntered = true;
-                _isContinuedWithGoogle = true;
-                emailText = googleUser.email;
-              });
-            } else {
-              baseProvider.showNegativeAlert(
-                  "Oops, we ran into trouble", "please try again", context);
-            }
-            print(url);
-          });
-        });
-
+              isEmailEntered = true;
+              _isContinuedWithGoogle = true;
+              emailText = googleUser.email;
+            });
+          } else {
+            baseProvider.showNegativeAlert(
+                "Issue occurred", "Please try again", context);
+          }
+        }catch(e) {
+          baseProvider.showNegativeAlert(
+              "Issue occurred", "Please try again", context);
+        }
         Navigator.pop(context);
       } else {
         baseProvider.showNegativeAlert("No account selected",
