@@ -25,7 +25,7 @@ class _ClaimUsernameState extends State<ClaimUsername> {
       _isUpdating = true;
     });
     String username =
-        _usernameKey.currentState.username.text.trim().replaceAll('.', '@');
+        _usernameKey.currentState.username.trim().replaceAll('.', '@');
     if (regex.hasMatch(username) &&
         await dbProvider.checkIfUsernameIsAvailable(username)) {
       bool res =

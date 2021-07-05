@@ -478,7 +478,7 @@ class _LoginControllerState extends State<LoginController>
               setState(() {});
 
               String username =
-                  _usernameKey.currentState.username.text.replaceAll('.', '@');
+                  _usernameKey.currentState.username.replaceAll('.', '@');
               if (await dbProvider.checkIfUsernameIsAvailable(username)) {
                 bool res = await dbProvider.setUsername(
                     username, baseProvider.firebaseUser.uid);
