@@ -140,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           page: ClaimUsernamePageConfig);
                                   },
                                   child: Text(
-                                    "Claim!",
+                                    "Claim",
                                     style: GoogleFonts.montserrat(
                                         color: Colors.orange,
                                         fontWeight: FontWeight.w500,

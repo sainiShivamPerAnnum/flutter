@@ -208,7 +208,14 @@ class VerifyEmailState extends State<VerifyEmail> {
     setState(() {
       _isGoogleLoginInProcess = true;
     });
-    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+    final _gSignIn = GoogleSignIn();
+    try {
+      if (await _gSignIn.isSignedIn()) await _gSignIn.signOut();
+      print('Signed out');
+    }catch(e) {
+      print('Failed to signout: $e');
+    }
+    final GoogleSignInAccount googleUser = await _gSignIn.signIn();
     if (googleUser != null) {
       email.text = googleUser.email;
       baseProvider.myUser.email = googleUser.email;
