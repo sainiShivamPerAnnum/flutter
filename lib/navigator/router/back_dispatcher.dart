@@ -43,7 +43,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     } else {
       if (AppState.unsavedChanges == true) {
         BaseUtil().showNegativeAlert(
-            "Exit Onboarding?",
+            "Exit Onboarding?🕺",
             "Press back once more to exit",
             _routerDelegate.navigatorKey.currentContext);
         AppState.unsavedChanges = false;
