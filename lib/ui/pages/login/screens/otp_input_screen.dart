@@ -150,22 +150,31 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        InkWell(
-                          child: Text(
-                            " Resend",
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          onTap: () {
-                            log.debug("Resend action triggered");
-                            if (!_isResendClicked) {
-                              //ensure that button isnt clicked multiple times
-                              if (widget.resendOtp != null) widget.resendOtp();
-                            }
-                          },
-                        ),
+                        _isResendClicked
+                            ? SpinKitThreeBounce(
+                                color: UiConstants.primaryColor,
+                                size: 12.0,
+                              )
+                            : InkWell(
+                                child: Text(
+                                  " Resend",
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                onTap: () {
+                                  log.debug("Resend action triggered");
+                                  if (!_isResendClicked) {
+                                    //ensure that button isnt clicked multiple times
+                                    setState(() {
+                                      _isResendClicked = true;
+                                    });
+                                    if (widget.resendOtp != null)
+                                      widget.resendOtp();
+                                  }
+                                },
+                              ),
                       ],
                     )
                   : SizedBox(),
@@ -178,32 +187,39 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                       ),
                     )
                   : SizedBox(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Spacer(),
-                  (_autoDetectingOtp)
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  25.0, 25.0, 25.0, 25.0),
-                              child: SpinKitDoubleBounce(
-                                color: UiConstants.spinnerColor,
-                                //controller: AnimationController(vsync: this, duration: const Duration(milliseconds: 1200)),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(_loaderMessage)
-                          ],
+              Container(
+                margin: EdgeInsets.only(top: 16),
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(25.0, 25.0, 25.0, 25.0),
+                          child: SpinKitDoubleBounce(
+                            color: UiConstants.spinnerColor,
+                            //controller: AnimationController(vsync: this, duration: const Duration(milliseconds: 1200)),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Container(
+                          width: SizeConfig.screenWidth * 0.64,
+                          child: Text(
+                            _loaderMessage,
+                            textAlign: TextAlign.center,
+                          ),
                         )
-                      : Container(),
-                  SizedBox(width: SizeConfig.blockSizeHorizontal * 5 + 30),
-                  Spacer()
-                ],
+                      ],
+                    ),
+                    SizedBox(width: SizeConfig.blockSizeHorizontal * 5 + 30)
+                  ],
+                ),
               ),
 
               //(_autoDetectingOtp) ? SizedBox(height: 5.0) : Container(),

@@ -2,6 +2,8 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -60,116 +62,129 @@ class NameInputScreenState extends State<NameInputScreen> {
   bool isUploaded = false;
 
   showEmailOptions() {
+    AppState.screenStack.add(ScreenItem.dialog);
     showModalBottomSheet(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         context: context,
         builder: (ctx) {
-          return Wrap(
-            children: [
-              Container(
-                decoration: BoxDecoration(),
-                padding: EdgeInsets.all(
-                  SizeConfig.blockSizeHorizontal * 5,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Choose an email option",
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 24,
-                      ),
-                    ),
-                    Divider(
-                      height: 32,
-                      thickness: 2,
-                    ),
-                    ListTile(
-                      leading: SvgPicture.asset(
-                        "images/svgs/google.svg",
-                        height: 24,
-                        width: 24,
-                      ),
-                      title: Text("Continue with Google"),
-                      onTap: continueWithGoogle,
-                    ),
-                    Divider(),
-                    ListTile(
-                      leading: Icon(
-                        Icons.alternate_email,
-                        color: UiConstants.primaryColor,
-                      ),
-                      title: Text("Use another email"),
-                      subtitle: Text(
-                        "this option requires an extra step",
+          return WillPopScope(
+            onWillPop: () async {
+              backButtonDispatcher.didPopRoute();
+              return true;
+            },
+            child: Wrap(
+              children: [
+                Container(
+                  decoration: BoxDecoration(),
+                  padding: EdgeInsets.all(
+                    SizeConfig.blockSizeHorizontal * 5,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Choose an email option",
                         style: TextStyle(
-                          fontSize: SizeConfig.smallTextSize * 1.3,
-                          color: Colors.red[300],
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 24,
                         ),
                       ),
-                      onTap: () {
-                        setState(() {
-                          isEmailEntered = true;
-                          _emailEnabled = true;
-                        });
-                        Navigator.pop(context);
-                      },
-                    ),
-                    SizedBox(
-                      height: 24,
-                    )
-                  ],
+                      Divider(
+                        height: 32,
+                        thickness: 2,
+                      ),
+                      ListTile(
+                        leading: SvgPicture.asset(
+                          "images/svgs/google.svg",
+                          height: 24,
+                          width: 24,
+                        ),
+                        title: Text("Continue with Google"),
+                        onTap: continueWithGoogle,
+                      ),
+                      Divider(),
+                      ListTile(
+                        leading: Icon(
+                          Icons.alternate_email,
+                          color: UiConstants.primaryColor,
+                        ),
+                        title: Text("Use another email"),
+                        subtitle: Text(
+                          "this option requires an extra step",
+                          style: TextStyle(
+                            fontSize: SizeConfig.smallTextSize * 1.3,
+                            color: Colors.red[300],
+                          ),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            isEmailEntered = true;
+                            _emailEnabled = true;
+                          });
+                          Navigator.pop(context);
+                        },
+                      ),
+                      SizedBox(
+                        height: 24,
+                      )
+                    ],
+                  ),
+                  width: double.infinity,
                 ),
-                width: double.infinity,
-              ),
-            ],
+              ],
+            ),
           );
         });
   }
 
   continueWithGoogle() async {
-    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-    if (googleUser != null) {
-      _nameFieldController.text = googleUser.displayName;
-      baseProvider.myUser.isEmailVerified = true;
-      baseProvider.myUserDpUrl = googleUser.photoUrl;
-      Uint8List bytes =
-          (await NetworkAssetBundle(Uri.parse(googleUser.photoUrl))
-                  .load(googleUser.photoUrl))
-              .buffer
-              .asUint8List();
-      FirebaseStorage storage = FirebaseStorage.instance;
+    try {
+      final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+      if (googleUser != null) {
+        _nameFieldController.text = googleUser.displayName;
+        baseProvider.myUser.isEmailVerified = true;
+        baseProvider.myUserDpUrl = googleUser.photoUrl;
+        Uint8List bytes =
+            (await NetworkAssetBundle(Uri.parse(googleUser.photoUrl))
+                    .load(googleUser.photoUrl))
+                .buffer
+                .asUint8List();
+        FirebaseStorage storage = FirebaseStorage.instance;
 
-      Reference ref =
-          storage.ref().child("dps/${baseProvider.myUser.uid}/image");
-      UploadTask uploadTask = ref.putData(bytes);
-      uploadTask.then((res) async {
-        await res.ref.getDownloadURL().then((url) {
-          if (url != null) {
-            isUploaded = true;
-            baseProvider.isProfilePictureUpdated = true;
-            //baseProvider.myUserDpUrl = url;
-            baseProvider.setDisplayPictureUrl(url);
-            setState(() {
+        Reference ref =
+            storage.ref().child("dps/${baseProvider.myUser.uid}/image");
+        UploadTask uploadTask = ref.putData(bytes);
+        uploadTask.then((res) async {
+          await res.ref.getDownloadURL().then((url) {
+            if (url != null) {
               isUploaded = true;
-              isEmailEntered = true;
-              _isContinuedWithGoogle = true;
-              emailText = googleUser.email;
-            });
-          } else {
-            baseProvider.showNegativeAlert(
-                "Oops, we ran into trouble", "please try again", context);
-          }
-          print(url);
+              baseProvider.isProfilePictureUpdated = true;
+              //baseProvider.myUserDpUrl = url;
+              baseProvider.setDisplayPictureUrl(url);
+              setState(() {
+                isUploaded = true;
+                isEmailEntered = true;
+                _isContinuedWithGoogle = true;
+                emailText = googleUser.email;
+              });
+            } else {
+              baseProvider.showNegativeAlert(
+                  "Oops, we ran into trouble", "please try again", context);
+            }
+            print(url);
+          });
         });
-      });
-      ;
-      Navigator.pop(context);
-    } else {
-      baseProvider.showNegativeAlert("No account selected",
-          "Please choose an account from the list", context);
+
+        Navigator.pop(context);
+      } else {
+        baseProvider.showNegativeAlert("No account selected",
+            "Please choose an account from the list", context);
+      }
+    } catch (e) {
+      print(e.toString());
+      baseProvider.showNegativeAlert(
+          "Oops, we ran into problem", "Please try again", context);
     }
   }
 
@@ -235,27 +250,6 @@ class NameInputScreenState extends State<NameInputScreen> {
             key: _formKey,
             child: Column(
               children: <Widget>[
-                // SizedBox(
-                //   height: 30,
-                // ),
-                // Align(
-                //   child: Image.asset(
-                //     Assets.logoMaxSize,
-                //     height: SizeConfig.screenHeight * 0.05,
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: 30,
-                // ),
-                // Text(
-                //   "Tell us a little about yourself",
-                //   style: TextStyle(
-                //       fontSize: SizeConfig.largeTextSize,
-                //       fontWeight: FontWeight.w700),
-                // ),
-                // SizedBox(
-                //   height: 20,
-                // ),
                 _emailEnabled
                     ? TextFormField(
                         controller: _emailFieldController,
@@ -321,7 +315,6 @@ class NameInputScreenState extends State<NameInputScreen> {
                           ),
                         ),
                       ),
-
                 SizedBox(
                   height: 24,
                 ),
@@ -342,47 +335,9 @@ class NameInputScreenState extends State<NameInputScreen> {
                         : 'Please enter your name';
                   },
                 ),
-
                 SizedBox(
                   height: 20,
                 ),
-                // InkWell(
-                //   onTap: () {
-                //     // _selectDate(context);
-                //     _showAndoroidDatePicker();
-                //     FocusScope.of(context).unfocus();
-                //   },
-                //   child: TextFormField(
-                //     textAlign: TextAlign.start,
-                //     enabled: false,
-                //     keyboardType: TextInputType.datetime,
-                //     validator: (value) {
-                //       return null;
-                //     },
-                //     autofocus: false,
-                //     controller: _dateController,
-                //     decoration: InputDecoration(
-                //       focusColor: UiConstants.primaryColor,
-                //       disabledBorder: OutlineInputBorder(
-                //         borderSide: BorderSide(
-                //           color: UiConstants.primaryColor.withOpacity(0.3),
-                //         ),
-                //         borderRadius: BorderRadius.circular(10),
-                //       ),
-                //       labelText: 'Date of Birth',
-                //       hintText: 'Choose a date',
-                //       prefixIcon: Icon(
-                //         Icons.calendar_today,
-                //         color: _dateController.text == ""
-                //             ? Colors.grey
-                //             : UiConstants.primaryColor,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: 20,
-                // ),
                 Container(
                   margin: EdgeInsets.only(
                     bottom: 20,
@@ -448,7 +403,6 @@ class NameInputScreenState extends State<NameInputScreen> {
                     ],
                   ),
                 ),
-
                 Container(
                   padding: EdgeInsets.all(5),
                   width: double.infinity,

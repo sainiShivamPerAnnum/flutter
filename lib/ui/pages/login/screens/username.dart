@@ -109,7 +109,10 @@ class UsernameState extends State<Username> {
                   },
                   decoration: InputDecoration(
                     hintText: "username",
-                    prefixIcon: Icon(Icons.account_circle_rounded),
+                    prefixIcon: Icon(
+                      Icons.alternate_email_rounded,
+                      size: 20,
+                    ),
                   ),
                   onChanged: (value) {
                     validate(value);

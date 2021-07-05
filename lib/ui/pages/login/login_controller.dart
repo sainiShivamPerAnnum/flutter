@@ -66,7 +66,6 @@ class _LoginControllerState extends State<LoginController>
 
   @override
   void initState() {
-    AppState.unsavedChanges = true;
     super.initState();
     _currentPage = (initPage != null) ? initPage : MobileInputScreen.index;
     _formProgress = 0.2 * (_currentPage + 1);
@@ -275,14 +274,14 @@ class _LoginControllerState extends State<LoginController>
                               new TextSpan(
                                 text: 'By continuing, you agree to our ',
                                 style: GoogleFonts.montserrat(
-                                    fontSize: SizeConfig.smallTextSize*1.2,
+                                    fontSize: SizeConfig.smallTextSize * 1.2,
                                     color: Colors.black45),
                               ),
                               new TextSpan(
                                 text: 'Terms of Service',
                                 style: GoogleFonts.montserrat(
                                     color: Colors.black45,
-                                    fontSize: SizeConfig.smallTextSize*1.2,
+                                    fontSize: SizeConfig.smallTextSize * 1.2,
                                     decoration: TextDecoration.underline),
                                 recognizer: new TapGestureRecognizer()
                                   ..onTap = () {
@@ -385,9 +384,8 @@ class _LoginControllerState extends State<LoginController>
             setState(() {});
             bool flag = await baseProvider.authenticateUser(baseProvider
                 .generateAuthCredential(_augmentedVerificationId, otp));
-            //.then((flag) {
             if (flag) {
-//                otpInScreen.onOtpReceived();
+              AppState.unsavedChanges = true;
               _otpScreenKey.currentState.onOtpReceived();
               _onSignInSuccess();
             } else {
@@ -397,7 +395,6 @@ class _LoginControllerState extends State<LoginController>
               FocusScope.of(_otpScreenKey.currentContext).unfocus();
               setState(() {});
             }
-//            });
           } else {
             baseProvider.showNegativeAlert(
                 'Enter OTP', 'Please enter a valid one time password', context);
@@ -420,8 +417,8 @@ class _LoginControllerState extends State<LoginController>
                   'Please enter a valid date of birth', context);
               return false;
             } else if (!_isAdult(_nameScreenKey.currentState.selectedDate)) {
-              baseProvider.showNegativeAlert('Ineligible',
-                  'You need to be above 18 to join', context);
+              baseProvider.showNegativeAlert(
+                  'Ineligible', 'You need to be above 18 to join', context);
               return false;
             }
             if (_nameScreenKey.currentState.gen == null ||
@@ -595,7 +592,7 @@ class _LoginControllerState extends State<LoginController>
 
   _onChangeNumberRequest() {
     if (!baseProvider.isLoginNextInProgress) {
-      baseProvider.isOtpResendCount = 0;
+      AppState.unsavedChanges = false;
       _controller.animateToPage(MobileInputScreen.index,
           duration: Duration(milliseconds: 300), curve: Curves.easeInToLinear);
     }
