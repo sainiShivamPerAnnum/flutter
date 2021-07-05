@@ -21,45 +21,55 @@ class _ClaimUsernameState extends State<ClaimUsername> {
   final regex = RegExp(r"^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-z0-9.]{4,20}$");
 
   setUsername() async {
-    setState(() {
-      _isUpdating = true;
-    });
-    String username =
-        _usernameKey.currentState.username.text.trim().replaceAll('.', '@');
-    if (regex.hasMatch(username) &&
-        await dbProvider.checkIfUsernameIsAvailable(username)) {
-      bool res =
-          await dbProvider.setUsername(username, baseProvider.firebaseUser.uid);
-      if (res) {
-        baseProvider.setUsername(username);
-        bool flag = await dbProvider.updateUser(baseProvider.myUser);
-        if (flag) {
-          setState(() {
-            _isUpdating = false;
-          });
-          baseProvider.showPositiveAlert(
-              "Success!", "Username updated successfully", context);
-          backButtonDispatcher.didPopRoute();
+    if (_usernameKey.currentState.formKey.currentState.validate()) {
+      if (!await _usernameKey.currentState.validate()) {
+        return false;
+      }
+      if (!_usernameKey.currentState.isLoading &&
+          _usernameKey.currentState.isValid) {
+        setState(() {
+          _isUpdating = true;
+        });
+        String username =
+            _usernameKey.currentState.username.trim().replaceAll('.', '@');
+        if (regex.hasMatch(username) &&
+            await dbProvider.checkIfUsernameIsAvailable(username)) {
+          bool res = await dbProvider.setUsername(
+              username, baseProvider.firebaseUser.uid);
+          if (res) {
+            baseProvider.setUsername(username);
+            bool flag = await dbProvider.updateUser(baseProvider.myUser);
+            if (flag) {
+              setState(() {
+                _isUpdating = false;
+              });
+              baseProvider.showPositiveAlert(
+                  "Success!", "Username updated successfully", context);
+              backButtonDispatcher.didPopRoute();
+            } else {
+              setState(() {
+                _isUpdating = false;
+              });
+              baseProvider.showNegativeAlert('Oops! we ran into trouble',
+                  'Please try again in sometime', context);
+            }
+          } else {
+            setState(() {
+              _isUpdating = false;
+            });
+            baseProvider.showNegativeAlert('Oops! we ran into trouble!',
+                'Please try again in sometime', context);
+          }
         } else {
           setState(() {
             _isUpdating = false;
           });
-          baseProvider.showNegativeAlert('Oops! we ran into trouble',
+          baseProvider.showNegativeAlert('Oops! we ran into trouble!',
               'Please try again in sometime', context);
         }
       } else {
-        setState(() {
-          _isUpdating = false;
-        });
-        baseProvider.showNegativeAlert('Oops! we ran into trouble!',
-            'Please try again in sometime', context);
+        baseProvider.showNegativeAlert("Error", "Please try again", context);
       }
-    } else {
-      setState(() {
-        _isUpdating = false;
-      });
-      baseProvider.showNegativeAlert('Oops! we ran into trouble!',
-          'Please try again in sometime', context);
     }
   }
 

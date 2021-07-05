@@ -15,9 +15,10 @@ class Username extends StatefulWidget {
 }
 
 class UsernameState extends State<Username> {
-  TextEditingController username = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
   BaseUtil baseProvider;
   DBModel dbProvider;
+  String username = "";
 
   final regex = RegExp(r"^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-z0-9.]{4,20}$");
   bool isValid;
@@ -26,16 +27,16 @@ class UsernameState extends State<Username> {
   bool isUpdated = false;
   final _formKey = GlobalKey<FormState>();
 
-  void validate(String value) async {
+  Future<bool> validate() async {
     setState(() {
+      username = usernameController.text.trim().replaceAll('.', '@');
       isLoading = true;
     });
-    if (value == "" || value == null)
+    if (username == "" || username == null)
       setState(() {
         isValid = null;
       });
-    else if (regex.hasMatch(value)) {
-      String username = value.replaceAll('.', '@');
+    else if (regex.hasMatch(username)) {
       bool res = await dbProvider.checkIfUsernameIsAvailable(username);
       setState(() {
         isValid = res;
@@ -48,6 +49,7 @@ class UsernameState extends State<Username> {
     setState(() {
       isLoading = false;
     });
+    return isValid;
   }
 
   Widget showResult() {
@@ -60,11 +62,11 @@ class UsernameState extends State<Username> {
         ),
       );
     } else if (isValid == true)
-      return Text("${username.text} is available",
+      return Text("$username is available",
           style: TextStyle(
               color: UiConstants.primaryColor, fontWeight: FontWeight.w500));
     else if (isValid == false)
-      return Text("${username.text} is not available",
+      return Text("$username is not available",
           style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500));
     return SizedBox(
       height: 16,
@@ -98,7 +100,7 @@ class UsernameState extends State<Username> {
               key: _formKey,
               child: Container(
                 child: TextFormField(
-                  controller: username,
+                  controller: usernameController,
                   autofocus: true,
                   cursorColor: Colors.black,
                   keyboardType: TextInputType.text,
@@ -115,7 +117,7 @@ class UsernameState extends State<Username> {
                     ),
                   ),
                   onChanged: (value) {
-                    validate(value);
+                    validate();
                   },
                 ),
               ),
