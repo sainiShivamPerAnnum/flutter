@@ -18,18 +18,19 @@ class MobileInputScreenState extends State<MobileInputScreen> {
   final _formKey = GlobalKey<FormState>();
   final _mobileController = TextEditingController();
   bool _validate = true;
+  bool showAvailableMobileNos = true;
   Log log = new Log("MobileInputScreen");
   static final GlobalKey<FormFieldState<String>> _phoneFieldKey =
       GlobalKey<FormFieldState<String>>();
 
-  @override
-  void initState() {
-    Future.delayed(Duration(seconds: 2), showAvailablePhoneNumbers);
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   Future.delayed(Duration(seconds: 2), showAvailablePhoneNumbers);
+  //   super.initState();
+  // }
 
   void showAvailablePhoneNumbers() async {
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid && showAvailableMobileNos) {
       final SmsAutoFill _autoFill = SmsAutoFill();
       String completePhoneNumber = await _autoFill.hint;
       if (completePhoneNumber != null) {
@@ -38,6 +39,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
               completePhoneNumber.substring(completePhoneNumber.length - 10);
         });
       }
+      showAvailableMobileNos = false;
     }
   }
 
@@ -52,9 +54,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
             Text(
               "Let's get you onboarded ✅",
               style: TextStyle(
-                fontSize: SizeConfig.mediumTextSize,
-                color: Colors.black54
-              ),
+                  fontSize: SizeConfig.mediumTextSize, color: Colors.black54),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(
@@ -83,6 +83,7 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
+                  onTap: showAvailablePhoneNumbers,
                   controller: _mobileController,
                   validator: (value) => _validateMobile(),
                   onFieldSubmitted: (v) {

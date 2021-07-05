@@ -5,6 +5,7 @@ import 'package:felloapp/ui/pages/login/screens/username.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class ClaimUsername extends StatefulWidget {
@@ -104,8 +105,9 @@ class _ClaimUsernameState extends State<ClaimUsername> {
                       ),
                       alignment: Alignment.center,
                       child: _isUpdating
-                          ? CircularProgressIndicator(
-                              color: Colors.white,
+                          ? SpinKitThreeBounce(
+                              color: UiConstants.spinnerColor2,
+                              size: 18.0,
                             )
                           : Text(
                               "Set username",
