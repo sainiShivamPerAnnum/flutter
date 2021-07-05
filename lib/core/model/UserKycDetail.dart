@@ -22,8 +22,18 @@ class UserKycDetail {
   static final String fldIsStepComplete = 'kStepsCompleteArr';
   static final String fldCreatedTime = 'kCreatedTime';
   static final String fldUpdatedTime = 'kUpdatedTime';
-  static const List <int> _initStepList = [
-    2,0,0,0,0,0,0,0,0,0,0,
+  static const List<int> _initStepList = [
+    2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
   ];
 
   UserKycDetail(
@@ -38,8 +48,8 @@ class UserKycDetail {
       this._updatedTime);
 
   UserKycDetail.newUser(String username, String password)
-      : this(username, password, null, null, null, null, _initStepList, Timestamp.now(),
-            Timestamp.now());
+      : this(username, password, null, null, null, null, _initStepList,
+            Timestamp.now(), Timestamp.now());
 
   UserKycDetail.fromMap(Map<String, dynamic> data)
       : this(

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 class FieldContainer extends StatelessWidget {
   final Widget child;
+
   FieldContainer({this.child});
+
   @override
   Widget build(BuildContext context) {
     return Container(

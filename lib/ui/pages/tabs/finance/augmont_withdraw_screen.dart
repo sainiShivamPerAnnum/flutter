@@ -2,7 +2,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
-import 'package:felloapp/ui/pages/tabs/finance/edit_augmont_bank_details.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
@@ -12,8 +11,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class AugmontWithdrawScreen extends StatefulWidget {
@@ -66,7 +63,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
         ),
         title: Text(
           "Withdrawal",
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w500,
           ),
@@ -94,15 +91,20 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 5, 5, 0),
                   child: MaterialButton(
-                    child: Container(
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                        child: Text('Edit Bank Info'),
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: UiConstants.primaryColor),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                    child: Consumer<BaseUtil>(
+                      builder: (ctx, bp, child) {
+                        return Container(
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                              child: _checkBankInfoMissing
+                                  ? Text('Add Bank Info')
+                                  : Text('Edit Bank Info')),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: UiConstants.primaryColor),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        );
+                      },
                     ),
                     onPressed: () {
                       // Navigator.push(
@@ -339,45 +341,50 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
           ),
           onPressed: () async {
             HapticFeedback.vibrate();
-            if (widget.withdrawableGoldQnty == 0.0) {
-              return;
-            }
-            final amtErr = _validateAmount(_quantityController.text);
-            if (amtErr != null) {
+            if (_checkBankInfoMissing) {
+              baseProvider.showNegativeAlert('Bank Details Missing',
+                  'Please enter your bank details', context);
+            } else {
+              if (widget.withdrawableGoldQnty == 0.0) {
+                return;
+              }
+              final amtErr = _validateAmount(_quantityController.text);
+              if (amtErr != null) {
+                setState(() {
+                  _amountError = amtErr;
+                });
+                return;
+              }
               setState(() {
-                _amountError = amtErr;
+                _amountError = null;
               });
-              return;
-            }
-            setState(() {
-              _amountError = null;
-            });
-            if (_amountError == null) {
-              double qnt = double.parse(_quantityController.text);
-              String _confirmMsg =
-                  "Are you sure you want to continue? $qnt grams of digital gold shall be processed.";
-              showDialog(
-                context: context,
-                builder: (ctx) => ConfirmActionDialog(
-                  title: "Please confirm your action",
-                  description: _confirmMsg,
-                  buttonText: "Withdraw",
-                  cancelBtnText: 'Cancel',
-                  confirmAction: () {
-                    Navigator.of(context).pop();
-                    _isLoading = true;
-                    setState(() {});
-                    widget.onAmountConfirmed({
-                      'withdrawal_quantity': qnt,
-                    });
-                    return true;
-                  },
-                  cancelAction: () {
-                    Navigator.of(context).pop();
-                    return false;
-                  },
-                ),
-              );
+              if (_amountError == null) {
+                double qnt = double.parse(_quantityController.text);
+                String _confirmMsg =
+                    "Are you sure you want to continue? $qnt grams of digital gold shall be processed.";
+                showDialog(
+                  context: context,
+                  builder: (ctx) => ConfirmActionDialog(
+                    title: "Please confirm your action",
+                    description: _confirmMsg,
+                    buttonText: "Withdraw",
+                    cancelBtnText: 'Cancel',
+                    confirmAction: () {
+                      Navigator.of(context).pop();
+                      _isLoading = true;
+                      setState(() {});
+                      widget.onAmountConfirmed({
+                        'withdrawal_quantity': qnt,
+                      });
+                      return true;
+                    },
+                    cancelAction: () {
+                      Navigator.of(context).pop();
+                      return false;
+                    },
+                  ),
+                );
+              }
             }
           },
           highlightColor: Colors.orange.withOpacity(0.5),
@@ -389,13 +396,21 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
     );
   }
 
+  bool get _checkBankInfoMissing =>
+      (baseProvider.augmontDetail.bankAccNo.isEmpty ||
+          baseProvider.augmontDetail.bankAccNo == null ||
+          baseProvider.augmontDetail.bankHolderName.isEmpty ||
+          baseProvider.augmontDetail.bankHolderName == null ||
+          baseProvider.augmontDetail.ifsc.isEmpty ||
+          baseProvider.augmontDetail.ifsc == null);
+
   _buildRow(String title, String value) {
     return ListTile(
       title: Container(
         width: SizeConfig.screenWidth * 0.2,
         child: Text(
           '$title: ',
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             color: UiConstants.accentColor,
             fontSize: SizeConfig.mediumTextSize,
           ),
@@ -406,7 +421,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
         child: Text(
           value,
           overflow: TextOverflow.clip,
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             color: Colors.black54,
             fontSize: SizeConfig.mediumTextSize,
             fontWeight: FontWeight.bold,
@@ -424,7 +439,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
         width: SizeConfig.screenWidth * 0.2,
         child: Text(
           '$title: ',
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             color: UiConstants.accentColor,
             fontSize: SizeConfig.mediumTextSize,
           ),
@@ -438,7 +453,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
               Text(
                 '$value ',
                 overflow: TextOverflow.clip,
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                   color: Colors.black54,
                   fontSize: SizeConfig.mediumTextSize,
                   fontWeight: FontWeight.bold,

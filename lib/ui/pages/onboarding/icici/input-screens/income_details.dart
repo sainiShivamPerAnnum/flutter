@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 class IncomeDetailsInputScreen extends StatefulWidget {
   static const int index = 2;
+
   @override
   _IncomeDetailsInputScreenState createState() =>
       _IncomeDetailsInputScreenState();

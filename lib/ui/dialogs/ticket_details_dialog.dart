@@ -1,15 +1,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserTicketWallet.dart';
-import 'package:felloapp/core/model/UserTransaction.dart';
-import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 class TicketDetailsDialog extends StatefulWidget {
@@ -114,10 +109,11 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
                         : Container(),
                     (widget._userTicketWallet.getActiveTickets() > 0)
                         ? _addListField(
-                        'Total Active:',
-                        '',
-                        widget._userTicketWallet.getActiveTickets(),
-                        'This week', true)
+                            'Total Active:',
+                            '',
+                            widget._userTicketWallet.getActiveTickets(),
+                            'This week',
+                            true)
                         : Container(),
                   ],
                 )),
@@ -126,7 +122,8 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
   }
 
   Widget _addListField(
-      String title, String subtitle, int count, String trailingText, [isTotal = false]) {
+      String title, String subtitle, int count, String trailingText,
+      [isTotal = false]) {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(
         horizontal: SizeConfig.blockSizeHorizontal * 8,
@@ -136,45 +133,47 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
         width: SizeConfig.screenWidth * 0.2,
         child: Text(
           title,
-          style: (!isTotal)?GoogleFonts.montserrat(
-            color: UiConstants.accentColor,
-            fontSize: SizeConfig.mediumTextSize,
-          ):GoogleFonts.montserrat(
-            color: Colors.black54,
-            fontSize: SizeConfig.mediumTextSize,
-            fontWeight: FontWeight.bold
-          ),
+          style: (!isTotal)
+              ? TextStyle(
+                  color: UiConstants.accentColor,
+                  fontSize: SizeConfig.mediumTextSize,
+                )
+              : TextStyle(
+                  color: Colors.black54,
+                  fontSize: SizeConfig.mediumTextSize,
+                  fontWeight: FontWeight.bold),
         ),
       ),
       trailing: Container(
-        width: SizeConfig.screenWidth * 0.3,
-        child: Column(
-          children: [
-            Text(
-              (count==1)?'$count ticket':'$count tickets',
-              overflow: TextOverflow.clip,
-              style: (!isTotal)?GoogleFonts.montserrat(
-                color: Colors.black54,
-                fontSize: SizeConfig.largeTextSize,
-                fontWeight: FontWeight.w400,
-              ):GoogleFonts.montserrat(
-                color: Colors.black54,
-                fontSize: SizeConfig.largeTextSize,
-                fontWeight: FontWeight.bold,
+          width: SizeConfig.screenWidth * 0.3,
+          child: Column(
+            children: [
+              Text(
+                (count == 1) ? '$count ticket' : '$count tickets',
+                overflow: TextOverflow.clip,
+                style: (!isTotal)
+                    ? TextStyle(
+                        color: Colors.black54,
+                        fontSize: SizeConfig.largeTextSize,
+                        fontWeight: FontWeight.w400,
+                      )
+                    : TextStyle(
+                        color: Colors.black54,
+                        fontSize: SizeConfig.largeTextSize,
+                        fontWeight: FontWeight.bold,
+                      ),
               ),
-            ),
-            Text(
-              trailingText,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.clip,
-              style: GoogleFonts.montserrat(
-                color: UiConstants.accentColor,
-                fontSize: SizeConfig.smallTextSize,
+              Text(
+                trailingText,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.clip,
+                style: TextStyle(
+                  color: UiConstants.accentColor,
+                  fontSize: SizeConfig.smallTextSize,
+                ),
               ),
-            ),
-          ],
-        )
-      ),
+            ],
+          )),
     );
   }
 }

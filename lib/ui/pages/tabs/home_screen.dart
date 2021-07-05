@@ -12,14 +12,9 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  // final ValueChanged<int> tabChange;
-
-  // HomePage({this.tabChange});
-
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -39,7 +34,6 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           isImageLoading = false;
         });
-        print("got the image");
       } catch (e) {
         print('HomeScreen: SetState called after dispose');
       }
@@ -91,10 +85,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
         decoration: BoxDecoration(
           color: UiConstants.backgroundColor,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(50),
-            bottomRight: Radius.circular(50),
-          ),
+          borderRadius: SizeConfig.homeViewBorder,
         ),
         child: Stack(
           children: [
@@ -110,12 +101,10 @@ class _HomePageState extends State<HomePage> {
             ),
             SafeArea(
               child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(50),
-                  bottomRight: Radius.circular(50),
-                ),
+                borderRadius: SizeConfig.homeViewBorder,
                 child: Padding(
-                  padding: EdgeInsets.only(left: SizeConfig.screenWidth * 0.05),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.blockSizeHorizontal * 5),
                   child: ListView(
                     controller: AppState.homeCardListController,
                     physics: BouncingScrollPhysics(),
@@ -130,57 +119,28 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 
-  Function getFixedAction(int id) {
-    switch (id) {
-      case 108:
-        return () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => GuideDialog(),
-          );
-        };
-      case 120:
-        return () {
-          appState.setCurrentTabIndex = 3;
-        };
-      case 140:
-        return () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => GamePoll(),
-          );
-        };
-      default:
-        return () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => GuideDialog(),
-          );
-        };
-    }
-  }
-
   void logError(String code, String message) =>
       print('Error: $code\nError Message: $message');
 
   List<Widget> _buildLoadingFeed() {
     return [
       Container(
-        height: AppBar().preferredSize.height,
+        height: kToolbarHeight,
       ),
       _buildProfileRow(),
       Padding(
-          padding: EdgeInsets.all(30),
-          child: SpinKitWave(
-            color: UiConstants.primaryColor,
-          ))
+        padding: EdgeInsets.symmetric(vertical: 30),
+        child: SpinKitWave(
+          color: UiConstants.primaryColor,
+        ),
+      )
     ];
   }
 
   List<Widget> _buildHomeFeed(List<FeedCard> cards) {
     List<Widget> _widget = [
       Container(
-        height: AppBar().preferredSize.height,
+        height: kToolbarHeight,
       ),
       _buildProfileRow(),
     ];
@@ -227,7 +187,7 @@ class _HomePageState extends State<HomePage> {
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: Colors.white,
-                  width: 5,
+                  width: 3,
                 )),
             child: isImageLoading
                 ? Image.asset(
@@ -244,24 +204,31 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             width: 30,
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                getGreeting().toUpperCase(),
-                style: GoogleFonts.manrope(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: SizeConfig.largeTextSize),
-              ),
-              Text(
-                baseProvider.myUser.name,
-                textAlign: TextAlign.start,
-                style: GoogleFonts.manrope(
-                    color: Colors.white, fontSize: SizeConfig.largeTextSize),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  getGreeting().toUpperCase(),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: SizeConfig.largeTextSize),
+                ),
+                SizedBox(height: 5),
+                FittedBox(
+                  child: Text(
+                    baseProvider.myUser.name,
+                    maxLines: 1,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: SizeConfig.largeTextSize),
+                  ),
+                ),
+              ],
+            ),
           )
         ],
       ),
@@ -284,11 +251,9 @@ class HomeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return Container(
       margin: EdgeInsets.only(
-        bottom: 30,
-        right: width * 0.05,
+        bottom: 20,
       ),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -320,20 +285,20 @@ class HomeCard extends StatelessWidget {
               child: Image.asset(
                 asset,
                 //height: height * 0.25,
-                width: width * 0.5,
+                width: SizeConfig.screenWidth * 0.5,
               ),
             ),
           ),
           Container(
             width: double.infinity,
-            padding: EdgeInsets.all(width * 0.05),
+            padding: EdgeInsets.all(SizeConfig.screenWidth * 0.06),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.manrope(
+                  style: TextStyle(
                       color: Colors.white,
                       shadows: [
                         Shadow(
@@ -350,9 +315,15 @@ class HomeCard extends StatelessWidget {
                 ),
                 Text(
                   subtitle,
-                  style: GoogleFonts.manrope(
+                  style: TextStyle(
                       color: Colors.white,
-                      fontSize: SizeConfig.mediumTextSize * 1.2,
+                      shadows: [
+                        Shadow(
+                          color: gradient[0],
+                          offset: Offset(1, 1),
+                        ),
+                      ],
+                      fontSize: SizeConfig.mediumTextSize * 1.3,
                       fontWeight: FontWeight.w400),
                 ),
                 SizedBox(
@@ -361,7 +332,7 @@ class HomeCard extends StatelessWidget {
                 GestureDetector(
                   onTap: onPressed,
                   child: Container(
-                    padding: EdgeInsets.all(15),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
                       border: Border.all(
                         width: 2,
@@ -379,8 +350,9 @@ class HomeCard extends StatelessWidget {
                     ),
                     child: Text(
                       buttonText,
-                      style: GoogleFonts.manrope(
-                          color: Colors.white, fontSize: width * 0.035),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: SizeConfig.mediumTextSize * 1.3),
                     ),
                   ),
                 )

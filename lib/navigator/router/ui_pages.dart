@@ -19,6 +19,8 @@ const String EditAugBankDetailsPath = '/editAugBankDetails';
 const String TambolaTicketsPath = '/tambolaTickets';
 const String ReferralPolicyPath = '/refPolicy';
 const String ChatSupportPath = '/chatSupport';
+const String ClaimUsernamePath = '/claimUsername';
+const String VerifyEmailPath = '/verifyEmail';
 
 enum Pages {
   Splash,
@@ -38,7 +40,9 @@ enum Pages {
   EditAugBankDetails,
   TambolaTickets,
   RefPolicy,
-  ChatSupport
+  ChatSupport,
+  ClaimUsername,
+  VerifyEmail
 }
 
 class PageConfiguration {
@@ -46,6 +50,7 @@ class PageConfiguration {
   final String path;
   final Pages uiPage;
   PageAction currentPageAction;
+
   PageConfiguration(
       {@required this.key,
       @required this.path,
@@ -146,4 +151,14 @@ PageConfiguration ChatSupportPageConfig = PageConfiguration(
   key: 'ChatSupport',
   path: ChatSupportPath,
   uiPage: Pages.ChatSupport,
+);
+PageConfiguration ClaimUsernamePageConfig = PageConfiguration(
+  key: 'ClaimUsername',
+  path: ClaimUsernamePath,
+  uiPage: Pages.ClaimUsername,
+);
+PageConfiguration VerifyEmailPageConfig = PageConfiguration(
+  key: 'VerifyEmail',
+  path: VerifyEmailPath,
+  uiPage: Pages.VerifyEmail,
 );

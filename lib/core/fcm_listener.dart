@@ -34,14 +34,13 @@ class FcmListener extends ChangeNotifier {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-
   static Future<dynamic> backgroundMessageHandler(RemoteMessage message) async {
     print('background notif');
 
     Freshchat.isFreshchatNotification(message.data).then((flag) {
-      if(flag) {
+      if (flag) {
         _handleFreshchatNotif(message.data);
-      }else{
+      } else {
         //TODO Background message that is not Freshchat
       }
     });
@@ -50,7 +49,8 @@ class FcmListener extends ChangeNotifier {
 
   static _handleFreshchatNotif(Map<String, dynamic> freshChatData) {
     print('background freshchat notif $freshChatData');
-    Freshchat.setNotificationConfig(largeIcon: "ic_chat_support", smallIcon: "ic_fello_notif");
+    Freshchat.setNotificationConfig(
+        largeIcon: "ic_chat_support", smallIcon: "ic_fello_notif");
     Freshchat.handlePushNotification(freshChatData);
   }
 
@@ -58,7 +58,7 @@ class FcmListener extends ChangeNotifier {
     _fcm = FirebaseMessaging.instance;
     _fcm.getInitialMessage().then((RemoteMessage message) {
       log.debug("onMessage recieved: " + message.toString());
-      if(message != null && message.data != null) {
+      if (message != null && message.data != null) {
         _handler.handleMessage(message.data);
       }
     });
@@ -71,9 +71,9 @@ class FcmListener extends ChangeNotifier {
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
       Freshchat.isFreshchatNotification(message.data).then((flag) {
-        if(flag) {
+        if (flag) {
           _handleFreshchatNotif(message.data);
-        }else if (message.data != null && message.data.isNotEmpty) {
+        } else if (message.data != null && message.data.isNotEmpty) {
           _handler.handleMessage(message.data);
         } else if (notification != null) {
           _handler.handleNotification(notification.title, notification.body);

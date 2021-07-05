@@ -17,7 +17,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
   BaseUtil baseProvider;
   ScrollController _controller;
   List<WeekWinner> _weekPrizeWinnersList;
-  
+
   @override
   void initState() {
     _controller = ScrollController();
@@ -67,10 +67,8 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
         }
       });
     }
-    _weekPrizeWinnersList
-        .sort((a, b) => (a.prize).compareTo(b.prize));
-    _weekPrizeWinnersList =
-        _weekPrizeWinnersList.reversed.toList();
+    _weekPrizeWinnersList.sort((a, b) => (a.prize).compareTo(b.prize));
+    _weekPrizeWinnersList = _weekPrizeWinnersList.reversed.toList();
     return Expanded(
       child: Container(
         margin: EdgeInsets.symmetric(
@@ -105,7 +103,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
           children: [
             Text(
               "Last Week's Winners",
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 color: Colors.white,
                 fontSize: SizeConfig.largeTextSize,
                 fontWeight: FontWeight.w700,
@@ -115,7 +113,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
             Text(
               "Tambola Winners for week: ${getWeek()[0]} to ${getWeek()[1]}",
               //TODO CHANGE BASED ON WEEK
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                   color: Colors.white, fontSize: SizeConfig.smallTextSize),
             ),
             SizedBox(
@@ -166,7 +164,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                                     backgroundColor: Colors.transparent,
                                     child: Text(
                                       '#${i + 1}',
-                                      style: GoogleFonts.montserrat(
+                                      style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: SizeConfig.mediumTextSize,
                                         color: Colors.white,
@@ -180,14 +178,14 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                                   // ),
                                   title: Text(
                                     "${_weekPrizeWinnersList[i].name[0].toUpperCase()}${_weekPrizeWinnersList[i].name.substring(1).toLowerCase()}",
-                                    style: GoogleFonts.montserrat(
+                                    style: TextStyle(
                                       color: Colors.white,
                                       fontSize: SizeConfig.mediumTextSize,
                                     ),
                                   ),
                                   trailing: Text(
                                     "₹ ${_weekPrizeWinnersList[i].prize.toString()}",
-                                    style: GoogleFonts.montserrat(
+                                    style: TextStyle(
                                       color: Colors.white,
                                       fontSize: SizeConfig.largeTextSize,
                                       fontWeight: FontWeight.w500,
@@ -200,7 +198,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                         : Center(
                             child: Text(
                               "Winners will be updated soon.",
-                              style: GoogleFonts.montserrat(
+                              style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 color: Colors.white,
                                 fontSize: SizeConfig.largeTextSize,

@@ -52,7 +52,7 @@ class ShareCard extends StatelessWidget {
               SizedBox(height: 10),
               Text(
                 "${username.split(' ').first}!",
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                   color: Colors.white,
                   height: 1.3,
                   fontWeight: FontWeight.w700,
@@ -90,7 +90,7 @@ class ShareCard extends StatelessWidget {
                     Center(
                       child: Text(
                         "र $prizeAmount",
-                        style: GoogleFonts.manrope(
+                        style: TextStyle(
                           color: Colors.white,
                           height: 1.3,
                           shadows: [
@@ -111,7 +111,7 @@ class ShareCard extends StatelessWidget {
               SizedBox(height: 10),
               Text(
                 "rewarded as",
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
                   fontSize: SizeConfig.largeTextSize,
@@ -130,7 +130,7 @@ class ShareCard extends StatelessWidget {
                 claimChoice == PrizeClaimChoice.AMZ_VOUCHER
                     ? "Amazon Gift Voucher"
                     : "Augmont Digital Gold",
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
                   fontSize: SizeConfig.largeTextSize,

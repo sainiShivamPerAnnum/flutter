@@ -1,9 +1,6 @@
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
 class FcmHandler extends ChangeNotifier {
   Log log = new Log("FcmHandler");

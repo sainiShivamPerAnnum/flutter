@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class DPTextSlider extends StatefulWidget {
   final List<String> infoList;
@@ -82,8 +81,8 @@ class DPTextSliderState extends State<DPTextSlider> {
       _pagerWidgets.add(
         Text(
           info,
-          style: GoogleFonts.montserrat(
-              color: Colors.white70, fontSize: SizeConfig.smallTextSize*1.4),
+          style: TextStyle(
+              color: Colors.white70, fontSize: SizeConfig.smallTextSize * 1.4),
           textAlign: TextAlign.center,
         ),
       );

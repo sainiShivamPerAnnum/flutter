@@ -2,12 +2,12 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class SuccessDialog extends StatelessWidget {
   BaseUtil baseProvider;
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -38,7 +38,7 @@ class SuccessDialog extends StatelessWidget {
             padding: EdgeInsets.all(10),
             child: Text(
               "Investment Successful",
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 fontSize: SizeConfig.largeTextSize,
                 fontWeight: FontWeight.w700,
                 color: UiConstants.primaryColor,
@@ -76,7 +76,7 @@ class SuccessDialog extends StatelessWidget {
                   child: TextButton(
                     child: Text(
                       "Invest more",
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: SizeConfig.mediumTextSize,
                         fontWeight: FontWeight.w500,
@@ -106,7 +106,7 @@ class SuccessDialog extends StatelessWidget {
                   child: TextButton(
                     child: Text(
                       "Close",
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: SizeConfig.mediumTextSize,
                         fontWeight: FontWeight.w500,
@@ -115,7 +115,7 @@ class SuccessDialog extends StatelessWidget {
                     onPressed: () {
                       Navigator.pop(context);
                       Navigator.pop(context);
-                      baseProvider.showRefreshIndicator(context);
+                      // baseProvider.showRefreshIndicator(context);
                     },
                   ),
                 ),

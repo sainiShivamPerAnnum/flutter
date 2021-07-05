@@ -82,13 +82,12 @@ class SubmitGoldSell {
   static final String resAugTranId = 'transactionId';
 }
 
-class Passbook{
+class Passbook {
   static final String path = 'api/passbook';
   static final String fldAugmontUid = 'uid';
 
   static final String resGoldGrams = 'goldGrms';
   static final String resSilverGrams = 'silverGrms';
-
 }
 
 /**
@@ -111,7 +110,7 @@ class Passbook{
     }
  *
  * **/
-class GetInvoice{
+class GetInvoice {
   static final String path = 'api/invoice';
   static final String fldTranId = 'tranid';
 
@@ -139,4 +138,15 @@ class GetInvoice{
   static const PDF_KEY_IGST_AMOUNT = 'IGSTAMT';
   static const PDF_KEY_PRETAX_SUBTOTAL = 'PRETAX';
   static const PDF_KEY_AMOUNT = 'AMT';
+}
+
+class GetRateChart {
+  static final String path = 'api/v1/rates/history';
+
+  static final String fldFromTime = 'from';
+  static final String fldToTime = 'to';
+
+  static final String resRate = 'rRate';
+  static final String resTimestamp = 'rTimestamp';
+  static final String resType = 'rType';
 }

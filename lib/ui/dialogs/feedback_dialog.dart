@@ -1,14 +1,13 @@
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 
 class FeedbackDialog extends StatefulWidget {
   final String title, description, buttonText;
   final Function dialogAction;
   final Image image;
+
   FeedbackDialog({
     @required this.title,
     @required this.description,

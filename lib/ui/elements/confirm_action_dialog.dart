@@ -1,22 +1,23 @@
-import 'package:felloapp/main.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ConfirmActionDialog extends StatefulWidget {
   final String title, description, buttonText, cancelBtnText;
   final Function confirmAction, cancelAction;
-  final Image image;
+  final Widget asset;
+
   ConfirmActionDialog(
       {@required this.title,
       @required this.description,
       @required this.buttonText,
       @required this.confirmAction,
       @required this.cancelAction,
-      this.image,
+      this.asset,
       this.cancelBtnText = 'Cancel'});
 
   @override
@@ -69,17 +70,18 @@ class _FormDialogState extends State<ConfirmActionDialog> {
             children: <Widget>[
               Text(
                 widget.title,
-                style: TextStyle(
+                style: GoogleFonts.montserrat(
                   fontSize: 24.0,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               SizedBox(height: 16.0),
+              widget.asset ?? SizedBox(),
               Text(
                 widget.description,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16.0,
+                style: GoogleFonts.montserrat(
+                  fontSize: SizeConfig.mediumTextSize,
                 ),
               ),
               SizedBox(height: 16.0),
@@ -95,7 +97,11 @@ class _FormDialogState extends State<ConfirmActionDialog> {
 
                         return widget.cancelAction();
                       },
-                      child: Text(widget.cancelBtnText),
+                      child: Text(
+                        widget.cancelBtnText,
+                        style: GoogleFonts.montserrat(
+                            color: UiConstants.primaryColor),
+                      ),
                     ),
                   ),
                   Align(
@@ -106,7 +112,11 @@ class _FormDialogState extends State<ConfirmActionDialog> {
                         log.debug('DialogAction clicked');
                         return widget.confirmAction();
                       },
-                      child: Text(widget.buttonText),
+                      child: Text(
+                        widget.buttonText,
+                        style: GoogleFonts.montserrat(
+                            color: UiConstants.primaryColor),
+                      ),
                     ),
                   ),
                 ],

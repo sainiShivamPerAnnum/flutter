@@ -10,18 +10,24 @@ class AugmontRates {
   double _cgstPercent;
   double _sgstPercent;
 
-  AugmontRates(this._blockId, this._goldBuyPrice, this._goldSellPrice,
-      this._silverBuyPrice, this._silverSellPrice, this._cgstPercent,
+  AugmontRates(
+      this._blockId,
+      this._goldBuyPrice,
+      this._goldSellPrice,
+      this._silverBuyPrice,
+      this._silverSellPrice,
+      this._cgstPercent,
       this._sgstPercent);
 
-  AugmontRates.fromMap(Map<String, dynamic> data) :this(
-      data['blockId'],
-      getDouble(data['rates']['gBuy']),
-      getDouble(data['rates']['gSell']),
-      getDouble(data['rates']['sBuy']),
-      getDouble(data['rates']['sSell']),
-      getDouble(data['taxes'][0]['taxPerc']),
-      getDouble(data['taxes'][1]['taxPerc']));
+  AugmontRates.fromMap(Map<String, dynamic> data)
+      : this(
+            data['blockId'],
+            getDouble(data['rates']['gBuy']),
+            getDouble(data['rates']['gSell']),
+            getDouble(data['rates']['sBuy']),
+            getDouble(data['rates']['sSell']),
+            getDouble(data['taxes'][0]['taxPerc']),
+            getDouble(data['taxes'][1]['taxPerc']));
 
   static double getDouble(String s) {
     if (s == null) {

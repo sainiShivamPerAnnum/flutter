@@ -1,7 +1,7 @@
 import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:felloapp/core/ops/kyc_ops.dart';
-import 'package:felloapp/ui/pages/onboarding/kyc/interface/kyc_onboard_data.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -9,7 +9,9 @@ import 'package:video_player/video_player.dart';
 class MyCam extends StatefulWidget {
   final List<CameraDescription> cameras;
   final String randNum;
+
   MyCam({@required this.cameras, @required this.randNum});
+
   @override
   _MyCamState createState() => _MyCamState();
 }
@@ -293,13 +295,12 @@ class _MyCamState extends State<MyCam> {
                   actions: [
                     TextButton(
                       child: Text("Looks Good"),
-                      onPressed: () async{
+                      onPressed: () async {
                         print(videoFile.path);
 
-                       var result =  await kycModel.recordVideo(videoFile.path);
+                        var result = await kycModel.recordVideo(videoFile.path);
 
-                       print(result);
-
+                        print(result);
 
                         Navigator.pop(context);
                         Navigator.of(context).pop(videoFile.path);

@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:math';
+
+import 'package:flutter/material.dart';
 
 const double IMAGE_SIZE = 250.0;
 
@@ -8,21 +9,21 @@ class CircleWithImage extends StatelessWidget {
 
   CircleWithImage(this.image);
 
-  Widget _centerCircle(double radius, double opacity){
+  Widget _centerCircle(double radius, double opacity) {
     return new Positioned(
       width: radius,
       child: Container(
         width: radius,
         height: radius,
         decoration: BoxDecoration(
-          shape:  BoxShape.circle,
+          shape: BoxShape.circle,
           color: Colors.grey[300].withOpacity(opacity),
         ),
       ),
     );
   }
 
-  Widget _largeCircle(Size size){
+  Widget _largeCircle(Size size) {
     Random rnd = new Random();
     double top = rnd.nextDouble();
     double radius = rnd.nextDouble() * size.height;
@@ -35,14 +36,14 @@ class CircleWithImage extends StatelessWidget {
         width: radius,
         height: radius,
         decoration: BoxDecoration(
-          shape:  BoxShape.circle,
+          shape: BoxShape.circle,
           color: Colors.white.withOpacity(opacity),
         ),
       ),
     );
   }
 
-  Widget _smallCircle(Size size){
+  Widget _smallCircle(Size size) {
     Random rnd = new Random();
     double top = rnd.nextDouble() * size.height;
     double left = rnd.nextDouble() * size.width;
@@ -57,7 +58,7 @@ class CircleWithImage extends StatelessWidget {
         width: radius,
         height: radius,
         decoration: BoxDecoration(
-          shape:  BoxShape.circle,
+          shape: BoxShape.circle,
           color: Colors.white.withOpacity(opacity),
         ),
       ),
@@ -68,8 +69,10 @@ class CircleWithImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     List<Widget> widgets = [];
-    List<Widget> smallCircles = List(10).map((_) => _smallCircle(MediaQuery.of(context).size)).toList();
-    List<Widget> largeCircles = List(5).map((_) => _largeCircle(MediaQuery.of(context).size)).toList();
+    List<Widget> smallCircles =
+        List(10).map((_) => _smallCircle(MediaQuery.of(context).size)).toList();
+    List<Widget> largeCircles =
+        List(5).map((_) => _largeCircle(MediaQuery.of(context).size)).toList();
     List<Widget> centerCircles = [
       _centerCircle(width * 1.35, 0.07),
       _centerCircle(width * 1.25, 0.1),
