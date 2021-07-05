@@ -212,7 +212,7 @@ class VerifyEmailState extends State<VerifyEmail> {
     if (googleUser != null) {
       email.text = googleUser.email;
       baseProvider.myUser.email = googleUser.email;
-      baseProvider.myUser.isEmailVerified = true;
+      baseProvider.setEmailVerified();
       bool res = await dbProvider.updateUser(baseProvider.myUser);
       if (res) {
         setState(() {
