@@ -5,6 +5,7 @@ import 'package:felloapp/ui/pages/login/screens/username.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class ClaimUsername extends StatefulWidget {
@@ -20,45 +21,55 @@ class _ClaimUsernameState extends State<ClaimUsername> {
   final regex = RegExp(r"^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-z0-9.]{4,20}$");
 
   setUsername() async {
-    setState(() {
-      _isUpdating = true;
-    });
-    String username =
-        _usernameKey.currentState.username.text.trim().replaceAll('.', '@');
-    if (regex.hasMatch(username) &&
-        await dbProvider.checkIfUsernameIsAvailable(username)) {
-      bool res =
-          await dbProvider.setUsername(username, baseProvider.firebaseUser.uid);
-      if (res) {
-        baseProvider.setUsername(username);
-        bool flag = await dbProvider.updateUser(baseProvider.myUser);
-        if (flag) {
-          setState(() {
-            _isUpdating = false;
-          });
-          baseProvider.showPositiveAlert(
-              "Success!", "Username updated successfully", context);
-          backButtonDispatcher.didPopRoute();
+    if (_usernameKey.currentState.formKey.currentState.validate()) {
+      if (!await _usernameKey.currentState.validate()) {
+        return false;
+      }
+      if (!_usernameKey.currentState.isLoading &&
+          _usernameKey.currentState.isValid) {
+        setState(() {
+          _isUpdating = true;
+        });
+        String username =
+            _usernameKey.currentState.username.trim().replaceAll('.', '@');
+        if (regex.hasMatch(username) &&
+            await dbProvider.checkIfUsernameIsAvailable(username)) {
+          bool res = await dbProvider.setUsername(
+              username, baseProvider.firebaseUser.uid);
+          if (res) {
+            baseProvider.setUsername(username);
+            bool flag = await dbProvider.updateUser(baseProvider.myUser);
+            if (flag) {
+              setState(() {
+                _isUpdating = false;
+              });
+              baseProvider.showPositiveAlert(
+                  "Success!", "Username updated successfully", context);
+              backButtonDispatcher.didPopRoute();
+            } else {
+              setState(() {
+                _isUpdating = false;
+              });
+              baseProvider.showNegativeAlert('Oops! we ran into trouble',
+                  'Please try again in sometime', context);
+            }
+          } else {
+            setState(() {
+              _isUpdating = false;
+            });
+            baseProvider.showNegativeAlert('Oops! we ran into trouble!',
+                'Please try again in sometime', context);
+          }
         } else {
           setState(() {
             _isUpdating = false;
           });
-          baseProvider.showNegativeAlert('Oops! we ran into trouble',
+          baseProvider.showNegativeAlert('Oops! we ran into trouble!',
               'Please try again in sometime', context);
         }
       } else {
-        setState(() {
-          _isUpdating = false;
-        });
-        baseProvider.showNegativeAlert('Oops! we ran into trouble!',
-            'Please try again in sometime', context);
+        baseProvider.showNegativeAlert("Error", "Please try again", context);
       }
-    } else {
-      setState(() {
-        _isUpdating = false;
-      });
-      baseProvider.showNegativeAlert('Oops! we ran into trouble!',
-          'Please try again in sometime', context);
     }
   }
 
@@ -104,8 +115,9 @@ class _ClaimUsernameState extends State<ClaimUsername> {
                       ),
                       alignment: Alignment.center,
                       child: _isUpdating
-                          ? CircularProgressIndicator(
-                              color: Colors.white,
+                          ? SpinKitThreeBounce(
+                              color: UiConstants.spinnerColor2,
+                              size: 18.0,
                             )
                           : Text(
                               "Set username",

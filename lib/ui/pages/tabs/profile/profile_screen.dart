@@ -140,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           page: ClaimUsernamePageConfig);
                                   },
                                   child: Text(
-                                    "Claim!",
+                                    "Claim",
                                     style: GoogleFonts.montserrat(
                                         color: Colors.orange,
                                         fontWeight: FontWeight.w500,
@@ -1172,6 +1172,7 @@ class _UserEditProfileCardState extends State<UserEditProfileCard> {
   TextEditingController _nameController;
   BaseUtil baseProvider;
   DBModel dbProvider;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -1202,29 +1203,42 @@ class _UserEditProfileCardState extends State<UserEditProfileCard> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            width: SizeConfig.screenWidth,
-            height: SizeConfig.blockSizeVertical * 5,
-            padding: EdgeInsets.only(
-                left: SizeConfig.blockSizeHorizontal * 2, bottom: 8),
-            child: TextField(
-              cursorColor: Colors.white,
-              controller: _nameController,
-              maxLines: 1,
-              style: GoogleFonts.montserrat(
-                color: Colors.white,
-                fontSize: SizeConfig.cardTitleTextSize,
-                fontWeight: FontWeight.w500,
-              ),
-              decoration: InputDecoration(
-                border: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 2),
+          Form(
+            key: _formKey,
+            child: Container(
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.blockSizeVertical * 5,
+              padding: EdgeInsets.only(
+                  left: SizeConfig.blockSizeHorizontal * 2, bottom: 8),
+              child: TextFormField(
+                cursorColor: Colors.white,
+                controller: _nameController,
+                maxLines: 1,
+                style: GoogleFonts.montserrat(
+                  color: Colors.white,
+                  fontSize: SizeConfig.cardTitleTextSize,
+                  fontWeight: FontWeight.w500,
                 ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 2),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 2),
+                validator: (val) {
+                  if (val.trim() == "") return "Name cannot be empty";
+                  return null;
+                },
+                decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white, width: 2),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white, width: 2),
+                  ),
+                  errorBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red, width: 2),
+                  ),
+                  focusedErrorBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red, width: 2),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white, width: 2),
+                  ),
                 ),
               ),
             ),
@@ -1233,27 +1247,29 @@ class _UserEditProfileCardState extends State<UserEditProfileCard> {
             children: [
               TextButton(
                 onPressed: () {
-                  FocusScope.of(context).unfocus();
-                  setState(() {
-                    isUploading = !isUploading;
-                  });
-                  // baseProvider.myUser.name = _nameController.text.trim();
-                  baseProvider.setName(_nameController.text.trim());
-                  dbProvider.updateUser(baseProvider.myUser).then((flag) {
+                  if (_formKey.currentState.validate()) {
+                    FocusScope.of(context).unfocus();
                     setState(() {
-                      isUploading = false;
+                      isUploading = !isUploading;
                     });
-                    if (flag) {
-                      cardKey.currentState.toggleCard();
-                      baseProvider.showPositiveAlert('Complete',
-                          'Your details have been updated', context);
-                    } else {
-                      baseProvider.showNegativeAlert(
-                          'Failed',
-                          'Your details could not be updated at the moment',
-                          context);
-                    }
-                  });
+                    // baseProvider.myUser.name = _nameController.text.trim();
+                    baseProvider.setName(_nameController.text.trim());
+                    dbProvider.updateUser(baseProvider.myUser).then((flag) {
+                      setState(() {
+                        isUploading = false;
+                      });
+                      if (flag) {
+                        cardKey.currentState.toggleCard();
+                        baseProvider.showPositiveAlert('Complete',
+                            'Your details have been updated', context);
+                      } else {
+                        baseProvider.showNegativeAlert(
+                            'Failed',
+                            'Your details could not be updated at the moment',
+                            context);
+                      }
+                    });
+                  }
                 },
                 child: Container(
                   decoration: BoxDecoration(
