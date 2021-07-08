@@ -6,6 +6,7 @@ import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/dialogs/success-dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/fundPalettes.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -133,12 +134,14 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
               endIndent: SizeConfig.screenWidth * 0.3,
             ),
             _buildRateCard(),
-            InputField(
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 8),
               child: TextFormField(
                 autofocus: false,
                 controller: _amtController,
                 keyboardType: TextInputType.number,
-                decoration: inputFieldDecoration("Enter an amount"),
+                cursorColor: augmontGoldPalette.primaryColor,
+                decoration: augmontFieldInputDecoration("Enter an amount"),
                 validator: (value) {
                   Pattern pattern = "^[0-9]*\$";
                   RegExp amRegex = RegExp(pattern);
@@ -239,7 +242,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                       dismissThresholds: 0.8,
                       icon: Icon(
                         Icons.arrow_forward_ios,
-                        color: UiConstants.primaryColor,
+                        color: augmontGoldPalette.primaryColor,
                       ),
                     ),
                   )
@@ -248,7 +251,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                 ? Padding(
                     padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
                     child: SpinKitRing(
-                      color: UiConstants.primaryColor,
+                      color: augmontGoldPalette.primaryColor,
                       size: 38.0,
                     ),
                   )
@@ -329,7 +332,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
           Expanded(
             child: Text(
               title,
-              style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),
+              style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
             ),
           ),
           Expanded(
@@ -337,7 +340,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
             children: [
               Text(
                 value,
-                style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),
+                style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
               ),
               SizedBox(
                 width: 4,
@@ -346,7 +349,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                 child: Icon(
                   Icons.info_outline,
                   color: Colors.grey,
-                  size: SizeConfig.mediumTextSize*1.4,
+                  size: SizeConfig.mediumTextSize * 1.4,
                 ),
                 onTap: () {
                   HapticFeedback.vibrate();

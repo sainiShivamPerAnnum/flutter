@@ -1,3 +1,4 @@
+import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 
 class FAQCard extends StatelessWidget {
@@ -8,11 +9,9 @@ class FAQCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double _height = MediaQuery.of(context).size.height;
     return Container(
-      margin: EdgeInsets.all(
-        _height * 0.02,
-      ),
+      margin: EdgeInsets.symmetric(
+          vertical: 16, horizontal: SizeConfig.blockSizeHorizontal * 5),
       width: double.infinity,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -20,9 +19,9 @@ class FAQCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         boxShadow: <BoxShadow>[
           BoxShadow(
-            offset: Offset(5, 5),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
+            offset: Offset(2, 2),
+            blurRadius: 0,
+            color: Color(0xffD7B56D).withOpacity(0.3),
             spreadRadius: 0,
           ),
         ],
@@ -42,6 +41,7 @@ class FAQCard extends StatelessWidget {
           ListView.builder(
             shrinkWrap: true,
             itemCount: _faqHeaders.length,
+            physics: NeverScrollableScrollPhysics(),
             itemBuilder: (ctx, i) {
               return FAQCardItems(
                 idx: i,
@@ -87,36 +87,44 @@ class _FAQCardItemsState extends State<FAQCardItems> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                widget.itemHeader,
-                softWrap: true,
-                maxLines: 2,
+    return InkWell(
+      onTap: toggleContainerHeight,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  widget.itemHeader,
+                  softWrap: true,
+                  maxLines: 2,
+                  style: TextStyle(
+                      fontWeight: !open ? FontWeight.w300 : FontWeight.w700),
+                ),
               ),
-            ),
-            IconButton(
-              onPressed: toggleContainerHeight,
-              icon: Icon(
-                !open ? Icons.arrow_drop_down : Icons.arrow_drop_up,
+              IconButton(
+                onPressed: toggleContainerHeight,
+                icon: Icon(
+                  !open ? Icons.arrow_drop_down : Icons.arrow_drop_up,
+                ),
               ),
-            ),
-          ],
-        ),
-        AnimatedContainer(
-          curve: Curves.fastOutSlowIn,
-          duration: Duration(milliseconds: 500),
-          height: open ? MediaQuery.of(context).size.height * 0.15 : 0,
-          padding: EdgeInsets.only(
-            right: 30,
+            ],
           ),
-          width: double.infinity,
-          child: Text(widget.itemResponse),
-        ),
-      ],
+          AnimatedContainer(
+            curve: Curves.fastOutSlowIn,
+            duration: Duration(milliseconds: 500),
+            height: open ? MediaQuery.of(context).size.height * 0.15 : 0,
+            padding: EdgeInsets.only(
+              right: 30,
+            ),
+            width: double.infinity,
+            child: Text(
+              widget.itemResponse,
+              style: TextStyle(height: 1.4),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

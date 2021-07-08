@@ -15,6 +15,7 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.da
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/augmont_state_list.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/fundPalettes.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -42,6 +43,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
   DBModel dbProvider;
   AppState appState;
   double _width;
+
   static TextEditingController _panInput = new TextEditingController();
   static TextEditingController _panHolderNameInput =
       new TextEditingController();
@@ -69,8 +71,17 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
       _isInit = true;
     }
     return Scaffold(
-      appBar: BaseUtil.getAppBar(context),
-      body: SafeArea(child: _bodyContent(context)),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Image(
+          image: AssetImage('images/aug-logo.png'),
+          height: SizeConfig.blockSizeVertical * 3,
+          fit: BoxFit.contain,
+        ),
+        shadowColor: augmontGoldPalette.primaryColor.withOpacity(0.5),
+        centerTitle: true,
+      ),
+      body: _bodyContent(context),
     );
   }
 
@@ -83,6 +94,14 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
             ? 0.3
             : 1,
       ),
+      // Row(
+      //   children: [
+      //     IconButton(
+      //       onPressed: () => backButtonDispatcher.didPopRoute(),
+      //       icon: Icon(Icons.arrow_back_rounded),
+      //     ),
+      //   ],
+      // ),
       (baseProvider.isAugmontRegnCompleteAnimateInProgress)
           ? Align(
               alignment: Alignment.center,
@@ -107,7 +126,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                           child: LinearProgressIndicator(
                             backgroundColor: Colors.blueGrey[200],
                             valueColor: AlwaysStoppedAnimation(
-                                UiConstants.primaryColor),
+                                augmontGoldPalette.primaryColor),
                             minHeight: 4,
                           )),
                       Padding(
@@ -129,97 +148,100 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Padding(
-          padding: EdgeInsets.only(top: 20, bottom: 40, left: 35, right: 35),
+          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                  child: SizedBox(
-                child: Image(
-                  image: AssetImage('images/aug-logo.png'),
-                  fit: BoxFit.contain,
-                ),
-                width: 180,
-                height: 60,
-              )),
-              Center(
-                  child: Text(
-                'Digital Gold Registration',
-                textAlign: TextAlign.center,
-                style: TextStyle(
+                child: Text(
+                  'Digital Gold Registration',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xffFFD700)),
-              )),
-              SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text("Mobile No"),
-              ),
-              Container(
-                margin: EdgeInsets.only(
-                  bottom: 20,
-                  top: 5,
-                ),
-                padding:
-                    EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 15),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 11, top: 11, right: 15),
-                  child: Text(
-                    baseProvider.myUser.mobile,
-                    style: TextStyle(
-                      color: Colors.black54,
-                    ),
+                    color: augmontGoldPalette.primaryColor,
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text("PAN Card Number"),
+              SizedBox(
+                height: 24,
               ),
-              InputField(
-                child: TextFormField(
-                  decoration: inputFieldDecoration('PAN Number'),
-                  controller: _panInput,
-                  autofocus: false,
-                  textCapitalization: TextCapitalization.characters,
-                  enabled: true,
+              // Padding(
+              //   padding: EdgeInsets.only(left: 10),
+              //   child: Text("Mobile No"),
+              // ),
+              // Container(
+              //   padding:
+              //       EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 15),
+              //   width: double.infinity,
+              //   decoration: BoxDecoration(
+              //     border: Border.all(color: Colors.grey),
+              //     borderRadius: BorderRadius.circular(10),
+              //   ),
+              //   child: Padding(
+              //     padding:
+              //         const EdgeInsets.only(bottom: 14, top: 14, right: 15),
+              //     child: Text(
+              //       baseProvider.myUser.mobile,
+              //       style: TextStyle(
+              //         color: Colors.black54,
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              TextFormField(
+                decoration:
+                    augmontFieldInputDecoration(baseProvider.myUser.mobile)
+                        .copyWith(hintText: baseProvider.myUser.mobile),
+                enabled: false,
+              ),
+              // Padding(
+              //   padding: EdgeInsets.only(left: 10),
+              //   child: Text("PAN Card Number"),
+              // ),
+              SizedBox(height: 16),
+              TextFormField(
+                cursorColor: augmontGoldPalette.primaryColor,
+                decoration: augmontFieldInputDecoration("PAN Card Number"),
+                controller: _panInput,
+                autofocus: false,
+                textCapitalization: TextCapitalization.characters,
+                enabled: true,
+              ),
+              // Padding(
+              //   padding: EdgeInsets.only(top: 10, left: 10),
+              //   child: Text("Name on PAN Card"),
+              // ),
+              SizedBox(height: 16),
+
+              TextFormField(
+                decoration: augmontFieldInputDecoration(
+                    'Your name as per your PAN Card'),
+                controller: _panHolderNameInput,
+                keyboardType: TextInputType.name,
+                textCapitalization: TextCapitalization.characters,
+                enabled: true,
+                autofocus: false,
+                validator: (value) {
+                  return null;
+                },
+              ),
+              SizedBox(height: 16),
+              // Padding(
+              //   padding: EdgeInsets.only(left: 10),
+              //   child: Text("Residential State"),
+              // ),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10, left: 10),
-                child: Text("Name on PAN Card"),
-              ),
-              InputField(
-                child: TextFormField(
-                  decoration:
-                      inputFieldDecoration('Your name as per your PAN Card'),
-                  controller: _panHolderNameInput,
-                  keyboardType: TextInputType.name,
-                  textCapitalization: TextCapitalization.characters,
-                  enabled: true,
-                  autofocus: false,
-                  validator: (value) {
-                    return null;
-                  },
+                decoration: BoxDecoration(
+                  border: Border.all(color: augmontGoldPalette.primaryColor),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-              ),
-              SizedBox(height: 10),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text("Residential State"),
-              ),
-              InputField(
                 child: DropdownButtonFormField(
                   decoration: InputDecoration(
                       border: InputBorder.none,
@@ -227,7 +249,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                       disabledBorder: InputBorder.none,
                       errorBorder: InputBorder.none,
                       focusedBorder: InputBorder.none),
-                  iconEnabledColor: UiConstants.primaryColor,
+                  iconEnabledColor: augmontGoldPalette.primaryColor,
                   hint: Text("Which state do you live in?"),
                   value: stateChosenValue,
                   onChanged: (String newVal) {
@@ -325,14 +347,16 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
               //     validator: (value) => null,
               //   ),
               // ),
-              SizedBox(height: 10),
+              SizedBox(height: 24),
               Container(
-                width: MediaQuery.of(context).size.width - 50,
+                width: SizeConfig.screenWidth,
                 height: 50.0,
                 decoration: BoxDecoration(
                   gradient: new LinearGradient(colors: [
-                    UiConstants.primaryColor,
-                    UiConstants.primaryColor.withBlue(200),
+                    augmontGoldPalette.primaryColor,
+                    augmontGoldPalette.primaryColor2
+                    // UiConstants.primaryColor,
+                    // UiConstants.primaryColor.withBlue(200),
                   ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
                   borderRadius: new BorderRadius.circular(10.0),
                 ),
@@ -421,10 +445,10 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                           showDialog(
                               context: context,
                               builder: (BuildContext context) => MoreInfoDialog(
-                                text: veriDetails['reason'],
-                                imagePath: Assets.dummyPanCardShowNumber,
-                                title: 'Invalid Details',
-                              ));
+                                    text: veriDetails['reason'],
+                                    imagePath: Assets.dummyPanCardShowNumber,
+                                    title: 'Invalid Details',
+                                  ));
                           baseProvider.showNegativeAlert(
                               'Invalid Details',
                               veriDetails['reason'] ?? 'Please try again',
@@ -446,81 +470,78 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
               SizedBox(
                 height: 30,
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
-                child: InkWell(
-                  onTap: () {
-                    HapticFeedback.vibrate();
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) => AugmontRegnSecurityDialog(
-                          text: Assets.infoAugmontRegnSecurity,
-                          imagePath: 'images/aes256.png',
-                          title: 'Security > Rest',
-                        ));
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
-                          spreadRadius: 1,
-                          blurRadius: 1,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(6),
-                        child: Text(
-                          'Note on Security 🔒',
-                          style: TextStyle(
-                              fontSize: SizeConfig.smallTextSize*1.3,
-                              color: Colors.black54
-                          ),
-                        ),
+              InkWell(
+                onTap: () {
+                  HapticFeedback.vibrate();
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          AugmontRegnSecurityDialog(
+                            text: Assets.infoAugmontRegnSecurity,
+                            imagePath: 'images/aes256.png',
+                            title: 'Security > Rest',
+                          ));
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 4),
+                  margin: EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.4),
+                        spreadRadius: 1,
+                        blurRadius: 1,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(6),
+                      child: Text(
+                        'Note on Security 🔒',
+                        style: TextStyle(
+                            fontSize: SizeConfig.smallTextSize * 1.3,
+                            color: Colors.black54),
                       ),
                     ),
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
-                child: InkWell(
-                  onTap: () async{
-                    HapticFeedback.vibrate();
-                    const url = "https://www.augmont.com/about-us";
-                    if (await canLaunch(url))
-                      await launch(url);
-                    else
-                     baseProvider.showNegativeAlert('Failed to launch URL', 'Please try again in sometime', context);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
-                          spreadRadius: 1,
-                          blurRadius: 1,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(6),
-                        child: Text(
-                          'More about Augmont 💰',
-                          style: TextStyle(
-                              fontSize: SizeConfig.smallTextSize*1.3,
-                              color: Colors.black54
-                          ),
-                        ),
+              InkWell(
+                onTap: () async {
+                  HapticFeedback.vibrate();
+                  const url = "https://www.augmont.com/about-us";
+                  if (await canLaunch(url))
+                    await launch(url);
+                  else
+                    baseProvider.showNegativeAlert('Failed to launch URL',
+                        'Please try again in sometime', context);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.4),
+                        spreadRadius: 1,
+                        blurRadius: 1,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(6),
+                      child: Text(
+                        'More about Augmont 💰',
+                        style: TextStyle(
+                            fontSize: SizeConfig.smallTextSize * 1.3,
+                            color: Colors.black54),
                       ),
                     ),
                   ),
@@ -597,7 +618,8 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
       String _r = recvdPanName.replaceAll(new RegExp(r"\s"), "");
       String _e = enteredPanName.replaceAll(new RegExp(r"\s"), "");
       if (_r.toUpperCase() != _e.toUpperCase()) {
-        await dbProvider.logFailure(baseProvider.myUser.uid, FailType.UserAugmontRegnFailed, {
+        await dbProvider.logFailure(
+            baseProvider.myUser.uid, FailType.UserAugmontRegnFailed, {
           'entered_pan_name': enteredPanName,
           'recvd_pan_name': recvdPanName,
           'pan_number': enteredPan
