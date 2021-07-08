@@ -1,7 +1,6 @@
 import 'package:felloapp/main.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'router/ui_pages.dart';
 
@@ -10,6 +9,7 @@ const String LoggedInKey = 'LoggedIn';
 enum PageState { none, addPage, addAll, addWidget, pop, replace, replaceAll }
 enum ScreenItem { page, dialog }
 enum Homeviews { dashboard, games, finance, profile }
+
 var scr = new GlobalKey();
 
 class PageAction {
@@ -63,6 +63,7 @@ class AppState extends ChangeNotifier {
 // GETTERS AND SETTERS
 
   int get getCurrentTabIndex => _rootIndex;
+
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
     print(_rootIndex);
@@ -70,6 +71,7 @@ class AppState extends ChangeNotifier {
   }
 
   int get getCurrentGameTabIndex => _gameTabIndex;
+
   set setCurrentGameTabIndex(int index) {
     _gameTabIndex = index;
     print(_gameTabIndex);
@@ -77,6 +79,7 @@ class AppState extends ChangeNotifier {
   }
 
   int get getCurrentGameIndex => _gameIndex;
+
   set setCurrentGameIndex(int index) {
     _gameIndex = index;
     print(_gameIndex);
@@ -84,6 +87,7 @@ class AppState extends ChangeNotifier {
   }
 
   PageAction get currentAction => _currentAction;
+
   set currentAction(PageAction action) {
     _currentAction = action;
     notifyListeners();

@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
+import 'package:felloapp/core/model/TicketRequest.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:synchronized/synchronized.dart';
-import 'package:felloapp/core/model/TicketRequest.dart';
 
 class TambolaGenerationService extends ChangeNotifier {
   Log log = new Log('TambolaGenerationService');
@@ -97,33 +97,36 @@ class TambolaGenerationService extends ChangeNotifier {
     });
   }
 
-  Future<bool> _initiateTicketDeletion() async{
-    return await _delLock.synchronized(() async{
+  Future<bool> _initiateTicketDeletion() async {
+    return await _delLock.synchronized(() async {
       if (baseProvider.userWeeklyBoards == null ||
           baseProvider.userWeeklyBoards.isEmpty ||
-          BaseUtil.atomicTicketDeletionLeftCount == 0) return _onTicketDeletionRequestFailed();
+          BaseUtil.atomicTicketDeletionLeftCount == 0)
+        return _onTicketDeletionRequestFailed();
       baseProvider.userWeeklyBoards.sort((a, b) => a
           .assigned_time.millisecondsSinceEpoch
           .compareTo(b.assigned_time.millisecondsSinceEpoch));
       print('post sort');
 
       List<TambolaBoard> _tList = [];
-      for(TambolaBoard board in baseProvider.userWeeklyBoards) {
+      for (TambolaBoard board in baseProvider.userWeeklyBoards) {
         _tList.add(board);
       }
 
       int _k = 0;
       int _t = BaseUtil.atomicTicketDeletionLeftCount;
       List<String> _deleteTicketRefList = [];
-      while(_t > 0) {
+      while (_t > 0) {
         _deleteTicketRefList.add(baseProvider.userWeeklyBoards[_k].doc_key);
         _k++;
         _t--;
       }
-      if(_deleteTicketRefList.length > 0) {
-        bool flag = await dbProvider.deleteSelectUserTickets(baseProvider.myUser.uid, _deleteTicketRefList);
-        if(flag) {
-          baseProvider.userWeeklyBoards.removeRange(0, BaseUtil.atomicTicketDeletionLeftCount);
+      if (_deleteTicketRefList.length > 0) {
+        bool flag = await dbProvider.deleteSelectUserTickets(
+            baseProvider.myUser.uid, _deleteTicketRefList);
+        if (flag) {
+          baseProvider.userWeeklyBoards
+              .removeRange(0, BaseUtil.atomicTicketDeletionLeftCount);
           BaseUtil.atomicTicketDeletionLeftCount = 0;
           return true;
         }
@@ -138,7 +141,7 @@ class TambolaGenerationService extends ChangeNotifier {
         .ceil();
 
     int _countPacket = (BaseUtil.atomicTicketGenerationLeftCount >
-        Constants.MAX_TICKET_GEN_PER_REQUEST)
+            Constants.MAX_TICKET_GEN_PER_REQUEST)
         ? Constants.MAX_TICKET_GEN_PER_REQUEST
         : BaseUtil.atomicTicketGenerationLeftCount;
     _currentSubscription = await dbProvider.subscribeToTicketRequest(
@@ -207,5 +210,4 @@ class TambolaGenerationService extends ChangeNotifier {
   setTambolaTicketGenerationResultListener(ValueChanged<int> listener) {
     this._generationComplete = listener;
   }
-
 }

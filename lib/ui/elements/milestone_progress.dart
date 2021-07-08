@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 typedef MilestoneProgressBuilder = Widget Function(
@@ -14,16 +13,15 @@ class MilestoneProgress extends StatelessWidget {
   final Color completedIconColor;
   final Color incompleteIconColor;
 
-
   MilestoneProgress(
       {@required this.width,
-        this.maxIconSize = 24,
-        @required this.totalMilestones,
-        @required this.completedMilestone,
-        this.completedIconData = Icons.check_circle,
-        this.nonCompletedIconData = Icons.adjust,
-        this.completedIconColor = Colors.green,
-        this.incompleteIconColor = Colors.grey})
+      this.maxIconSize = 24,
+      @required this.totalMilestones,
+      @required this.completedMilestone,
+      this.completedIconData = Icons.check_circle,
+      this.nonCompletedIconData = Icons.adjust,
+      this.completedIconColor = Colors.green,
+      this.incompleteIconColor = Colors.grey})
       : assert(width != null),
         assert(totalMilestones != null),
         assert(completedMilestone != null),

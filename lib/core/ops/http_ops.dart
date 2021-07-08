@@ -1,14 +1,14 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
-import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:felloapp/util/credentials_stage.dart';
-import 'dart:io';
-import 'dart:convert';
 
 class HttpModel extends ChangeNotifier {
   BaseUtil _baseUtil = locator<BaseUtil>(); //required to fetch client token
@@ -118,7 +118,7 @@ class HttpModel extends ChangeNotifier {
   }
 
   Future<bool> registerPrizeClaim(
-      String userId, double amount, PrizeClaimChoice claimChoice) async{
+      String userId, double amount, PrizeClaimChoice claimChoice) async {
     if (userId == null || amount == null || claimChoice == null) return null;
     String _uri =
         '$_userTxnOpsUri/api/registerPrizeClaim?userId=$userId&amount=$amount&redeemType=${claimChoice.value()}';
@@ -134,7 +134,9 @@ class HttpModel extends ChangeNotifier {
       log.debug(response.body);
       Map<String, dynamic> parsed = jsonDecode(response.body);
       log.debug(parsed.toString());
-      if(response.statusCode == 200 && parsed['flag'] != null && parsed['flag'] == true) {
+      if (response.statusCode == 200 &&
+          parsed['flag'] != null &&
+          parsed['flag'] == true) {
         log.debug('Action successful');
         return true;
       }

@@ -25,16 +25,14 @@ class WeeklyDrawDialog extends StatelessWidget {
       return Container(
         height: 150,
         child: Center(
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Text('This week\'s numbers have not been drawn yet.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black54
-              ),
-            ),
-          )
-        ),
+            child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Text(
+            'This week\'s numbers have not been drawn yet.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.black54),
+          ),
+        )),
       );
     }
     DateTime today = DateTime.now();
@@ -51,14 +49,13 @@ class WeeklyDrawDialog extends StatelessWidget {
     }
 
     return Padding(
-      padding: EdgeInsets.only(top: 30, bottom: 30),
+        padding: EdgeInsets.only(top: 30, bottom: 30),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: colElems,
-      )
-    );
+        ));
   }
 
   String getDayName(int weekday) {

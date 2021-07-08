@@ -1,6 +1,5 @@
 import 'package:felloapp/ui/elements/daily_pick_text_slider.dart';
 import 'package:felloapp/util/size_config.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Roulette extends StatelessWidget {
@@ -75,6 +74,7 @@ class Roulette extends StatelessWidget {
 
 class Holes extends StatefulWidget {
   final int pick;
+
   Holes({this.pick});
 
   @override

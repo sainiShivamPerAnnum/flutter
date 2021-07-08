@@ -1,15 +1,9 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/PrizeLeader.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
-import '../../core/model/PrizeLeader.dart';
-import '../../core/model/ReferralLeader.dart';
-import '../../util/size_config.dart';
 
 class Leaderboard extends StatefulWidget {
   @override
@@ -115,7 +109,7 @@ class _LeaderboardState extends State<Leaderboard> {
           children: [
             Text(
               "Leaderboard",
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 color: Colors.white,
                 fontSize: SizeConfig.screenHeight * 0.024,
                 fontWeight: FontWeight.w700,
@@ -242,7 +236,7 @@ class _LeaderboardState extends State<Leaderboard> {
                                 : Center(
                                     child: Text(
                                       "Leaders will be updated soon.",
-                                      style: GoogleFonts.montserrat(
+                                      style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.white,
                                         fontSize: SizeConfig.largeTextSize,
@@ -284,7 +278,7 @@ class _LeaderboardState extends State<Leaderboard> {
                                 : Center(
                                     child: Text(
                                       "Leaders will be updated soon.",
-                                      style: GoogleFonts.montserrat(
+                                      style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.white,
                                         fontSize: SizeConfig.largeTextSize,
@@ -305,7 +299,9 @@ class _LeaderboardState extends State<Leaderboard> {
 
   List<Widget> buildLeaderBoardList(String type) {
     List<ListTile> leaderBoardItems = [];
-    int length = type == "Prize" ? baseProvider.prizeLeaders.length : baseProvider.referralLeaders.length;
+    int length = type == "Prize"
+        ? baseProvider.prizeLeaders.length
+        : baseProvider.referralLeaders.length;
     for (int i = length - 1; i > -1; i--) {
       leaderBoardItems.add(ListTile(
         contentPadding: EdgeInsets.symmetric(
@@ -316,7 +312,7 @@ class _LeaderboardState extends State<Leaderboard> {
           backgroundColor: Colors.transparent,
           child: Text(
             '#${length - i}',
-            style: GoogleFonts.montserrat(
+            style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: SizeConfig.mediumTextSize,
               color: Colors.white,
@@ -327,7 +323,7 @@ class _LeaderboardState extends State<Leaderboard> {
           type == "Prize"
               ? "${baseProvider.prizeLeaders[i].name[0].toUpperCase()}${baseProvider.prizeLeaders[i].name.substring(1).toLowerCase()}"
               : "${baseProvider.referralLeaders[i].name[0].toUpperCase()}${baseProvider.referralLeaders[i].name.substring(1).toLowerCase()}",
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             color: Colors.white,
             fontSize: SizeConfig.mediumTextSize,
           ),
@@ -336,7 +332,7 @@ class _LeaderboardState extends State<Leaderboard> {
           type == "Prize"
               ? "₹ ${baseProvider.prizeLeaders[i].totalWin.toString()}"
               : "₹ ${(baseProvider.referralLeaders[i].refCount * Constants.REFERRAL_AMT_BONUS).toString()}",
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             color: Colors.white,
             fontSize: SizeConfig.largeTextSize,
             fontWeight: FontWeight.w500,
@@ -387,7 +383,7 @@ class _LeaderboardState extends State<Leaderboard> {
 //                   winners[0],
 //                   maxLines: 1,
 //                   overflow: TextOverflow.ellipsis,
-//                   style: GoogleFonts.montserrat(
+//                   style: TextStyle(
 //                     color: Colors.white,
 //                     fontSize: SizeConfig.mediumTextSize,
 //                   ),
@@ -404,7 +400,7 @@ class _LeaderboardState extends State<Leaderboard> {
 //                   ),
 //                   child: Text(
 //                     "₹ 200",
-//                     style: GoogleFonts.montserrat(
+//                     style: TextStyle(
 //                       color: Colors.white,
 //                       fontSize: SizeConfig.mediumTextSize,
 //                     ),
@@ -439,7 +435,7 @@ class _LeaderboardState extends State<Leaderboard> {
 //                   winners[1],
 //                   maxLines: 1,
 //                   overflow: TextOverflow.ellipsis,
-//                   style: GoogleFonts.montserrat(
+//                   style: TextStyle(
 //                     color: Colors.white,
 //                     fontSize: SizeConfig.mediumTextSize,
 //                   ),
@@ -456,7 +452,7 @@ class _LeaderboardState extends State<Leaderboard> {
 //                   ),
 //                   child: Text(
 //                     "₹ 500",
-//                     style: GoogleFonts.montserrat(
+//                     style: TextStyle(
 //                       color: Colors.white,
 //                       fontSize: SizeConfig.largeTextSize,
 //                     ),
@@ -491,7 +487,7 @@ class _LeaderboardState extends State<Leaderboard> {
 //                   winners[2],
 //                   maxLines: 1,
 //                   overflow: TextOverflow.ellipsis,
-//                   style: GoogleFonts.montserrat(
+//                   style: TextStyle(
 //                     color: Colors.white,
 //                     fontSize: SizeConfig.mediumTextSize,
 //                   ),
@@ -508,7 +504,7 @@ class _LeaderboardState extends State<Leaderboard> {
 //                   ),
 //                   child: Text(
 //                     "₹ 80",
-//                     style: GoogleFonts.montserrat(
+//                     style: TextStyle(
 //                         color: Colors.white,
 //                         fontSize: SizeConfig.largeTextSize),
 //                   ),

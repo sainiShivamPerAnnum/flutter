@@ -84,6 +84,10 @@ class _GoldProfitCalculatorState extends State<GoldProfitCalculator> {
                           contentPadding: EdgeInsets.only(
                               left: 15, bottom: 11, top: 11, right: 15),
                           hintText: price.toString(),
+                          enabledBorder:
+                              OutlineInputBorder(borderSide: BorderSide.none),
+                          focusedBorder:
+                              OutlineInputBorder(borderSide: BorderSide.none),
                         ),
                         onChanged: (value) {
                           setState(() {
@@ -148,11 +152,12 @@ class _GoldProfitCalculatorState extends State<GoldProfitCalculator> {
             activeColor: UiConstants.primaryColor,
             inactiveColor: UiConstants.primaryColor,
           ),
-          Text('*Projected returns based on past 3 year performance',
-          style: TextStyle(
-            color: Colors.blueGrey[600],
-            fontSize: SizeConfig.smallTextSize*1.2
-          ),)
+          Text(
+            '*Projected returns based on past 3 year performance',
+            style: TextStyle(
+                color: Colors.blueGrey[600],
+                fontSize: SizeConfig.smallTextSize * 1.2),
+          )
         ],
       ),
     );

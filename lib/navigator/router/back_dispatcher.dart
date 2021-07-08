@@ -1,10 +1,8 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
+
 import 'router_delegate.dart';
 
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
@@ -18,14 +16,14 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       barrierDismissible: false,
       context: _routerDelegate.navigatorKey.currentContext,
       builder: (ctx) => ConfirmActionDialog(
-        title: "Are you sure?",
-        description: "You have unsaved changes, if you exit it will be lost",
+        title: "Exit onboarding?",
+        description: "You are almost there.🕺\n Are you sure you want to exit?",
         buttonText: "Yes",
         confirmAction: () {
           print(AppState.screenStack);
           AppState.unsavedChanges = false;
           didPopRoute();
-          return _routerDelegate.popRoute();
+          return didPopRoute();
         },
         cancelAction: () {
           didPopRoute();
@@ -44,7 +42,12 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       return Future.value(true);
     } else {
       if (AppState.unsavedChanges == true) {
-        return _confirmExit();
+        BaseUtil().showNegativeAlert(
+            "Exit Onboarding?🕺",
+            "Press back once more to exit",
+            _routerDelegate.navigatorKey.currentContext);
+        AppState.unsavedChanges = false;
+        //return _confirmExit();
       } else {
         return _routerDelegate.popRoute();
       }

@@ -4,14 +4,18 @@ import 'package:google_fonts/google_fonts.dart';
 class Styles {
   static const double hzScreenPadding = 18;
 
-  static final TextStyle baseTitle = GoogleFonts.montserrat(fontSize: 11);
-  static final TextStyle baseBody = GoogleFonts.montserrat(fontSize: 11);
+  static final TextStyle baseTitle = TextStyle(fontSize: 11);
+  static final TextStyle baseBody = TextStyle(fontSize: 11);
 
   static final TextStyle appHeader =
       baseTitle.copyWith(color: Color(0xFF0e0e0e), fontSize: 36, height: 1);
 
-  static final TextStyle cardTitle =
-      baseTitle.copyWith(height: 1, color: Color(0xFF1a1a1a), fontSize: 25);
+  static final TextStyle cardTitle = baseTitle.copyWith(
+    height: 1,
+    color: Color(0xFF1a1a1a),
+    fontSize: 25,
+    fontWeight: FontWeight.w700,
+  );
   static final TextStyle cardSubtitle =
       baseBody.copyWith(color: Color(0xFF666666), height: 1.5, fontSize: 12);
   static final TextStyle cardAction = baseBody.copyWith(

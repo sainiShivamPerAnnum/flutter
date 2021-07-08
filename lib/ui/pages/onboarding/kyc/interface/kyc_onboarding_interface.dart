@@ -7,8 +7,6 @@ import 'package:felloapp/ui/pages/onboarding/kyc/interface/summary_tab.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -135,8 +133,8 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface>
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
-    baseProvider = Provider.of<BaseUtil>(context,listen:false);
-    dbProvider = Provider.of<DBModel>(context,listen:false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
     return Scaffold(
       key: _kycOnboardScaffoldKey,
       body: Stack(
@@ -153,7 +151,7 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface>
                   pinned: true,
                   title: Text(
                     "  KYC Verification",
-                    style: GoogleFonts.quicksand(
+                    style: TextStyle(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -193,7 +191,7 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface>
                                 children: [
                                   Text(
                                     "Get Your KYC Done",
-                                    style: GoogleFonts.poppins(
+                                    style: TextStyle(
                                       fontWeight: FontWeight.w700,
                                       color: Color(0xff00587a),
                                       fontSize: _width * 0.09,
@@ -205,7 +203,7 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface>
                                   Text(
                                     "Complete your KYC once and invest anywhere afterwards.",
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.poppins(
+                                    style: TextStyle(
                                       fontWeight: FontWeight.w700,
                                       color: Color(0xff00587a),
                                       fontSize: 16,
@@ -557,7 +555,7 @@ class _KycOnboardInterfaceState extends State<KycOnboardInterface>
                           ),
                           Text(
                             "REWARD",
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: 20,
                               color: Colors.white,

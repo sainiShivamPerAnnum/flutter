@@ -1,7 +1,5 @@
-import 'dart:collection';
-import 'package:encrypt/encrypt.dart' as encrypt;
 
-import 'package:felloapp/base_util.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 
@@ -13,6 +11,7 @@ class BaseUser {
   String _email;
   String _dob;
   String _gender; // 0: Male | 1: Female | -1: Rather Not to say
+  String _username;
   String _client_token; //fetched from a subcollection
   int _ticket_count;
   int _account_balance;
@@ -31,6 +30,7 @@ class BaseUser {
   String _pendingTxnId;
   bool _isIciciEnabled;
   bool _isAugmontEnabled;
+  bool _isemailVerified;
 
   static final String fldId = "mID";
   static final String fldMobile = "mMobile";
@@ -49,6 +49,8 @@ class BaseUser {
   static final String fldLifeTimeWinnings = "mLifeTimeWin";
   static final String fldPan = "mPan";
   static final String fldAge = "mAge";
+  static final String fldUsername = "mUsername";
+  static final String fldIsEmailVerified = "mIsEmailVerified";
   static final String fldIsInvested = "mIsInvested";
   static final String fldIsIciciOnboarded = "mIsIciciOnboarded";
   static final String fldIsAugmontOnboarded = "mIsAugmontOnboarded";
@@ -58,28 +60,31 @@ class BaseUser {
   static final String fldIsAugmontEnabled = "mIsAugmontEnabled";
 
   BaseUser(
-      this._uid,
-      this._mobile,
-      this._email,
-      this._name,
-      this._dob,
-      this._gender,
-      this._client_token,
-      this._prize_balance,
-      this._lifetime_winnings,
-      this._pan,
-      this._age,
-      this._isInvested,
-      this._isIciciOnboarded,
-      this._isAugmontOnboarded,
-      this._isKycVerified,
-      this._pendingTxnId,
-      this._isIciciEnabled,
-      this._isAugmontEnabled);
+    this._uid,
+    this._mobile,
+    this._email,
+    this._name,
+    this._dob,
+    this._gender,
+    this._client_token,
+    this._prize_balance,
+    this._lifetime_winnings,
+    this._pan,
+    this._age,
+    this._isInvested,
+    this._isIciciOnboarded,
+    this._isAugmontOnboarded,
+    this._isKycVerified,
+    this._pendingTxnId,
+    this._isIciciEnabled,
+    this._isAugmontEnabled,
+    this._username,
+    this._isemailVerified,
+  );
 
   BaseUser.newUser(String id, String mobile)
       : this(id, mobile, null, null, null, null, null, 0, 0, null, null, false,
-            false, false, Constants.KYC_UNTESTED, null, false, true);
+            false, false, Constants.KYC_UNTESTED, null, false, true, "", false);
 
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token])
       : this(
@@ -100,7 +105,9 @@ class BaseUser {
             data[fldIsKycVerified] ?? Constants.KYC_UNTESTED,
             data[fldPendingTxnId],
             data[fldIsIciciEnabled],
-            data[fldIsAugmontEnabled]);
+            data[fldIsAugmontEnabled],
+            data[fldUsername],
+            data[fldIsEmailVerified]);
 
   //to send user object to server
   toJson() {
@@ -118,7 +125,9 @@ class BaseUser {
       fldIsIciciOnboarded: _isIciciOnboarded,
       fldIsAugmontOnboarded: _isAugmontOnboarded,
       fldIsKycVerified: _isKycVerified,
-      fldPendingTxnId: _pendingTxnId
+      fldPendingTxnId: _pendingTxnId,
+      fldUsername: _username,
+      fldIsEmailVerified: _isemailVerified
     };
     if (_isIciciEnabled != null) userObj[fldIsIciciEnabled] = _isIciciEnabled;
     if (_isAugmontEnabled != null)
@@ -149,7 +158,7 @@ class BaseUser {
   }
 
   static String _encryptPan(String decde) {
-    if(decde == null || decde.isEmpty) return null;
+    if (decde == null || decde.isEmpty) return null;
     final key = encrypt.Key.fromUtf8(Constants.PAN_AES_KEY);
     final iv = encrypt.IV.fromLength(16);
 
@@ -183,6 +192,12 @@ class BaseUser {
 
   set name(String value) {
     _name = value;
+  }
+
+  String get username => _username;
+
+  set username(String value) {
+    _username = value;
   }
 
   String get mobile => _mobile;
@@ -219,6 +234,12 @@ class BaseUser {
 
   set age(String value) {
     _age = value;
+  }
+
+  bool get isEmailVerified => _isemailVerified;
+
+  set isEmailVerified(bool value) {
+    _isemailVerified = value;
   }
 
   bool get isInvested => _isInvested;

@@ -11,8 +11,8 @@ class TambolaWinnersDetail {
   int _totalWinners;
   List<WeekWinner> _winnerList;
 
-  TambolaWinnersDetail(this._winnerDocumentId, this._weeksAvgTicketCount, this._highestTicketCount,
-      this._totalWinners, this._winnerList);
+  TambolaWinnersDetail(this._winnerDocumentId, this._weeksAvgTicketCount,
+      this._highestTicketCount, this._totalWinners, this._winnerList);
 
   TambolaWinnersDetail.fromMap(Map<String, dynamic> data, String id) {
     this._winnerDocumentId = id;
@@ -33,7 +33,9 @@ class TambolaWinnersDetail {
         try {
           Map<String, dynamic> wValue = _winners[wKey];
           WeekWinner _weekWinner = new WeekWinner(
-              wKey,wValue['name'],BaseUtil.toDouble(wValue['prize']),
+              wKey,
+              wValue['name'],
+              BaseUtil.toDouble(wValue['prize']),
               _getChoiceEnumValue(wValue['claim_type']));
           _winnerList.add(_weekWinner);
         } catch (error) {
@@ -52,14 +54,20 @@ class TambolaWinnersDetail {
   }
 
   PrizeClaimChoice _getChoiceEnumValue(String value) {
-    if(value == null || value.isEmpty) return PrizeClaimChoice.NA;
-    else if(value == 'NA') return PrizeClaimChoice.NA;
-    else if(value == 'AMZ_VOUCHER') return PrizeClaimChoice.AMZ_VOUCHER;
-    else if(value == 'GOLD_CREDIT') return PrizeClaimChoice.GOLD_CREDIT;
-    else return PrizeClaimChoice.NA;
+    if (value == null || value.isEmpty)
+      return PrizeClaimChoice.NA;
+    else if (value == 'NA')
+      return PrizeClaimChoice.NA;
+    else if (value == 'AMZ_VOUCHER')
+      return PrizeClaimChoice.AMZ_VOUCHER;
+    else if (value == 'GOLD_CREDIT')
+      return PrizeClaimChoice.GOLD_CREDIT;
+    else
+      return PrizeClaimChoice.NA;
   }
 
-  bool get isWinnerListAvailable => (_winnerList != null && _winnerList.length > 0);
+  bool get isWinnerListAvailable =>
+      (_winnerList != null && _winnerList.length > 0);
 
   int get totalWinners => _totalWinners;
 
@@ -69,7 +77,7 @@ class TambolaWinnersDetail {
 
   String get winnerDocumentId => _winnerDocumentId;
 
-  List<WeekWinner> get winnerList => (_winnerList == null)?{}:_winnerList;
+  List<WeekWinner> get winnerList => (_winnerList == null) ? {} : _winnerList;
 
   set winnerList(List<WeekWinner> value) {
     _winnerList = value;
@@ -84,18 +92,14 @@ class WeekWinner {
 
   WeekWinner(this._uid, this._name, this._prize, this.claimChoice);
 
-  double get prize => (_prize == null)?0.0:_prize;
+  double get prize => (_prize == null) ? 0.0 : _prize;
 
-  String get name => (_name == null)?'Anonymous':_name;
+  String get name => (_name == null) ? 'Anonymous' : _name;
 
   String get uid => _uid;
 }
 
-enum PrizeClaimChoice{
-  NA,
-  AMZ_VOUCHER,
-  GOLD_CREDIT
-}
+enum PrizeClaimChoice { NA, AMZ_VOUCHER, GOLD_CREDIT }
 
 extension ParseToString on PrizeClaimChoice {
   String value() {

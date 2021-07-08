@@ -8,7 +8,6 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -25,20 +24,36 @@ class _TransactionsState extends State<Transactions> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   List<UserTransaction> filteredList;
+  ScrollController _scrollController = ScrollController();
 
   /// Will used to access the Animated list
   // final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
 
   getTransactions() {
     isLoading = true;
-    if (baseProvider != null && dbProvider != null) {
+    if (baseProvider != null &&
+        dbProvider != null &&
+        baseProvider.hasMoreTransactionListDocuments) {
       dbProvider
-          .getFilteredUserTransactions(baseProvider.myUser, null, null)
-          .then((List<UserTransaction> tList) {
-        baseProvider.userMiniTxnList = List.from(tList);
-        filteredList = List.from(baseProvider.userMiniTxnList);
-        print(
-            "---------------------${baseProvider.userMiniTxnList}-----------------");
+          .getFilteredUserTransactions(baseProvider.myUser, null, null,
+              baseProvider.lastTransactionListDocument)
+          .then((Map<String, dynamic> tMap) {
+        if (baseProvider.userMiniTxnList == null ||
+            baseProvider.userMiniTxnList.length == 0) {
+          baseProvider.userMiniTxnList = List.from(tMap['listOfTransactions']);
+        } else {
+          baseProvider.userMiniTxnList
+              .addAll(List.from(tMap['listOfTransactions']));
+        }
+        filteredList = baseProvider.userMiniTxnList;
+        if (tMap['lastDocument'] != null) {
+          baseProvider.lastTransactionListDocument = tMap['lastDocument'];
+        }
+        if (tMap['length'] < 30) {
+          baseProvider.hasMoreTransactionListDocuments = false;
+        }
+        // print(
+        //     "---------------------${baseProvider.userMiniTxnList}-----------------");
         setState(() {
           isLoading = false;
         });
@@ -160,7 +175,6 @@ class _TransactionsState extends State<Transactions> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     if (baseProvider.userMiniTxnList == null
-
         // || baseProvider.userMiniTxnList.isEmpty
         ) {
       getTransactions();
@@ -173,6 +187,15 @@ class _TransactionsState extends State<Transactions> {
       } else {
         filteredList = [];
       }
+      _scrollController.addListener(() async {
+        if (_scrollController.offset >=
+                _scrollController.position.maxScrollExtent &&
+            !_scrollController.position.outOfRange) {
+          if (baseProvider.hasMoreTransactionListDocuments && !isLoading) {
+            getTransactions();
+          }
+        }
+      });
       isInit = false;
     }
     return Scaffold(
@@ -182,7 +205,7 @@ class _TransactionsState extends State<Transactions> {
           ),
           title: Text(
             "Transactions",
-            style: GoogleFonts.montserrat(
+            style: TextStyle(
               color: Colors.white,
             ),
           ),
@@ -199,7 +222,7 @@ class _TransactionsState extends State<Transactions> {
                   children: [
                     // Text(
                     //   "Filters",
-                    //   style: GoogleFonts.montserrat(
+                    //   style: TextStyle(
                     //       fontSize: SizeConfig.mediumTextSize,
                     //       fontWeight: FontWeight.w700),
                     // ),
@@ -218,7 +241,7 @@ class _TransactionsState extends State<Transactions> {
                               DropdownMenuItem(
                                 child: Text(
                                   "All",
-                                  style: GoogleFonts.montserrat(
+                                  style: TextStyle(
                                       fontSize: SizeConfig.mediumTextSize),
                                 ),
                                 value: 1,
@@ -226,7 +249,7 @@ class _TransactionsState extends State<Transactions> {
                               DropdownMenuItem(
                                 child: Text(
                                   "Deposit",
-                                  style: GoogleFonts.montserrat(
+                                  style: TextStyle(
                                       fontSize: SizeConfig.mediumTextSize),
                                 ),
                                 value: 2,
@@ -234,14 +257,14 @@ class _TransactionsState extends State<Transactions> {
                               DropdownMenuItem(
                                   child: Text(
                                     "Withdrawal",
-                                    style: GoogleFonts.montserrat(
+                                    style: TextStyle(
                                         fontSize: SizeConfig.mediumTextSize),
                                   ),
                                   value: 3),
                               DropdownMenuItem(
                                   child: Text(
                                     "Prize",
-                                    style: GoogleFonts.montserrat(
+                                    style: TextStyle(
                                         fontSize: SizeConfig.mediumTextSize),
                                   ),
                                   value: 4),
@@ -270,7 +293,7 @@ class _TransactionsState extends State<Transactions> {
                               DropdownMenuItem(
                                 child: Text(
                                   "All",
-                                  style: GoogleFonts.montserrat(
+                                  style: TextStyle(
                                       fontSize: SizeConfig.mediumTextSize),
                                 ),
                                 value: 1,
@@ -278,14 +301,14 @@ class _TransactionsState extends State<Transactions> {
                               DropdownMenuItem(
                                   child: Text(
                                     "ICICI",
-                                    style: GoogleFonts.montserrat(
+                                    style: TextStyle(
                                         fontSize: SizeConfig.mediumTextSize),
                                   ),
                                   value: 2),
                               DropdownMenuItem(
                                   child: Text(
                                     "Augmont",
-                                    style: GoogleFonts.montserrat(
+                                    style: TextStyle(
                                         fontSize: SizeConfig.mediumTextSize),
                                   ),
                                   value: 3),
@@ -319,7 +342,7 @@ class _TransactionsState extends State<Transactions> {
                               ),
                               Text(
                                 "No transactions to show yet",
-                                style: GoogleFonts.montserrat(
+                                style: TextStyle(
                                   fontSize: SizeConfig.largeTextSize,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -329,6 +352,7 @@ class _TransactionsState extends State<Transactions> {
                         : ListView(
                             physics: BouncingScrollPhysics(),
                             padding: EdgeInsets.all(10),
+                            controller: _scrollController,
                             children: _getTxns(),
                           )),
               ),
@@ -361,13 +385,13 @@ class _TransactionsState extends State<Transactions> {
           getTileTitle(
             filteredList[index].subType.toString(),
           ),
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             fontSize: SizeConfig.mediumTextSize,
           ),
         ),
         subtitle: Text(
           getTileSubtitle(filteredList[index].type),
-          style: GoogleFonts.montserrat(
+          style: TextStyle(
             color: getTileColor(filteredList[index].tranStatus),
             fontSize: SizeConfig.smallTextSize,
           ),
@@ -378,14 +402,14 @@ class _TransactionsState extends State<Transactions> {
             Text(
               (filteredList[index].type == "WITHDRAWAL" ? "- " : "+ ") +
                   "₹ ${filteredList[index].amount.toString()}",
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 color: getTileColor(filteredList[index].tranStatus),
                 fontSize: SizeConfig.mediumTextSize,
               ),
             ),
             Text(
               _getFormattedTime(filteredList[index].timestamp),
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                   color: getTileColor(filteredList[index].tranStatus),
                   fontSize: SizeConfig.smallTextSize),
             )

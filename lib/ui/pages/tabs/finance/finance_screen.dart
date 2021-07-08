@@ -6,14 +6,13 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/elements/funds_chart_view.dart';
+import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
@@ -34,6 +33,15 @@ class _FinancePageState extends State<FinancePage> {
 
   Future<void> _onFundsRefresh() async {
     //TODO ADD LOADER
+
+    ///////HEY NIMIT THIS IS TEST CODE TO FETCH GOLD RATES BETWEEN A FROM AND TO DATE////////////////
+    // DateTime dt = new DateTime(2019,1,1);
+    // DateTime dt2 = DateTime.now();
+    // augmontProvider.getGoldRateChart(dt, dt2).then((value) {
+    //   log.debug(value);
+    //   log.debug('tester');
+    // });
+    ////////////////////////////////////////////////////////////////////////////////////
     return dbProvider.getUserFundWallet(baseProvider.myUser.uid).then((aValue) {
       if (aValue != null) {
         baseProvider.userFundWallet = aValue;
@@ -95,17 +103,11 @@ class _FinancePageState extends State<FinancePage> {
         height: SizeConfig.screenHeight,
         decoration: BoxDecoration(
           color: UiConstants.backgroundColor,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(50),
-            bottomRight: Radius.circular(50),
-          ),
+          borderRadius: SizeConfig.homeViewBorder,
         ),
         child: SafeArea(
           child: ClipRRect(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(50),
-              bottomRight: Radius.circular(50),
-            ),
+            borderRadius: SizeConfig.homeViewBorder,
             child: Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.screenHeight * 0.016),
@@ -114,33 +116,36 @@ class _FinancePageState extends State<FinancePage> {
                   SliverList(
                       delegate: SliverChildListDelegate([
                     Container(
-                      height: AppBar().preferredSize.height * 0.7,
+                      height: kToolbarHeight * 1.4,
                     ),
-                    BaseUtil.buildShowcaseWrapper(
-                      _showcaseHeader,
-                      'Your savings and investments will show up here. The balances are based on live market rates.',
-                      Container(
-                        child:
-                            baseProvider.userFundWallet.getEstTotalWealth() > 0
-                                ? FundsChartView(
-                                    userFundWallet: baseProvider.userFundWallet,
-                                    goldMoreInfo: goldMoreInfoStr,
-                                    doRefresh: () {
-                                      _onFundsRefresh();
-                                    },
-                                  )
-                                : ZeroBalView(),
-                      ),
-                    ),
+                    BaseUtil.buildShowcaseWrapper(_showcaseHeader,
+                        'Your savings and investments will show up here. The balances are based on live market rates.',
+                        Consumer<BaseUtil>(
+                      builder: (context, baseUtil, child) {
+                        return Container(
+                          child: baseProvider.userFundWallet
+                                      .getEstTotalWealth() >
+                                  0
+                              ? FundsChartView(
+                                  userFundWallet: baseProvider.userFundWallet,
+                                  goldMoreInfo: goldMoreInfoStr,
+                                  doRefresh: () {
+                                    _onFundsRefresh();
+                                  },
+                                )
+                              : ZeroBalView(),
+                        );
+                      },
+                    )),
                     Divider(
                       color: Colors.black38,
                     ),
                     Text(
                       "Available Funds",
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 24,
+                        fontSize: SizeConfig.largeTextSize,
                         color: UiConstants.textColor,
                       ),
                     ),
@@ -235,7 +240,7 @@ class ZeroBalView extends StatelessWidget {
             child: Text(
               "Your savings and prize balance is currently zero.",
               textAlign: TextAlign.center,
-              style: GoogleFonts.montserrat(
+              style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: SizeConfig.mediumTextSize,
               ),
@@ -276,10 +281,12 @@ class FundWidget extends StatelessWidget {
                 Center(
                   child: Text(
                     fund.title,
-                    style: GoogleFonts.montserrat(
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: height * 0.024,
-                      fontWeight: FontWeight.w500,
+                      height: 1.4,
+                      letterSpacing: 1.5,
+                      fontSize: SizeConfig.largeTextSize,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
@@ -290,7 +297,7 @@ class FundWidget extends StatelessWidget {
                           padding: EdgeInsets.only(bottom: height * 0.022),
                           child: Text(
                             'Coming Soon',
-                            style: GoogleFonts.montserrat(
+                            style: TextStyle(
                               color: Colors.white,
                               fontSize: height * 0.020,
                               fontWeight: FontWeight.w400,

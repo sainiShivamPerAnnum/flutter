@@ -7,7 +7,6 @@ import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class ReferralsPage extends StatefulWidget {
@@ -57,7 +56,7 @@ class _ReferralsPageState extends State<ReferralsPage> {
           ),
           title: Text(
             "Your Referrals",
-            style: GoogleFonts.montserrat(
+            style: TextStyle(
               color: Colors.white,
             ),
           ),
@@ -182,7 +181,7 @@ class _ReferralsPageState extends State<ReferralsPage> {
                           width: SizeConfig.screenWidth * 0.5,
                           child: Text(
                             rDetail.userName ?? '',
-                            style: GoogleFonts.montserrat(
+                            style: TextStyle(
                               color: Colors.white,
                               fontSize: SizeConfig.cardTitleTextSize,
                               fontWeight: FontWeight.w500,
@@ -194,7 +193,7 @@ class _ReferralsPageState extends State<ReferralsPage> {
                         ),
                         Text(
                           'Referred on ${_getUserMembershipDate(rDetail.timestamp)}',
-                          style: GoogleFonts.montserrat(
+                          style: TextStyle(
                             color: Colors.black,
                             fontSize: SizeConfig.smallTextSize * 1.3,
                           ),
@@ -209,7 +208,7 @@ class _ReferralsPageState extends State<ReferralsPage> {
               ),
               Text(
                 _getBonusText(rDetail),
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                   color: Colors.white,
                 ),
               ),
@@ -270,5 +269,4 @@ class _ReferralsPageState extends State<ReferralsPage> {
       return '\'Unavailable\'';
     }
   }
-
 }
