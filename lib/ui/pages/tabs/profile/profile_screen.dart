@@ -45,6 +45,19 @@ class _ProfilePageState extends State<ProfilePage> {
   AppState appState;
   bool isPanFieldHidden = true;
 
+  Future<void> getProfilePicUrl() async {
+    try {
+      baseProvider.myUserDpUrl =
+          await dbProvider.getUserDP(baseProvider.myUser.uid);
+      if (baseProvider.myUserDpUrl != null) {
+        setState(() {
+          isImageLoading = false;
+        });
+        print("got the image");
+      }
+    } catch (e) { }
+  }
+
   @override
   void initState() {
     super.initState();
