@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
@@ -125,7 +126,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
     ///next get the tambola tickets of this week
     if (!baseProvider.weeklyTicksFetched) {
       List<TambolaBoard> _boards =
-          await dbProvider.getWeeksTambolaTickets(baseProvider.myUser.uid);
+      await dbProvider.getWeeksTambolaTickets(baseProvider.myUser.uid);
       baseProvider.weeklyTicksFetched = true;
       if (_boards != null) {
         baseProvider.userWeeklyBoards = _boards;
@@ -238,11 +239,12 @@ class _TambolaGameScreen extends State<TambolaHome> {
     _checkSundayResultsProcessing();
     if (_showTutorial) _startTutorial(context);
     return Scaffold(
-        //debugShowCheckedModeBanner: false,
+      //debugShowCheckedModeBanner: false,
         backgroundColor: Color(0xfff1f1f1),
         body: ShowCaseWidget(
           builder: Builder(
-              builder: (context) => Stack(
+              builder: (context) =>
+                  Stack(
                     children: [
                       Container(
                         height: SizeConfig.screenHeight * 0.2,
@@ -258,9 +260,15 @@ class _TambolaGameScreen extends State<TambolaHome> {
                           ),
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.elliptical(
-                                MediaQuery.of(context).size.width * 0.50, 18),
+                                MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * 0.50, 18),
                             bottomRight: Radius.elliptical(
-                                MediaQuery.of(context).size.width * 0.50, 18),
+                                MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * 0.50, 18),
                           ),
                         ),
                         child: Column(
@@ -322,8 +330,8 @@ class _TambolaGameScreen extends State<TambolaHome> {
                     ],
                   )),
         )
-        //),
-        );
+      //),
+    );
   }
 
   Widget _buildCardCanvas(BuildContext c) {
@@ -335,31 +343,31 @@ class _TambolaGameScreen extends State<TambolaHome> {
         SizedBox(height: SizeConfig.screenHeight * 0.143),
         (baseProvider.weeklyDrawFetched)
             ? InkWell(
-                child: BaseUtil.buildShowcaseWrapper(
-                    _showcaseTwo,
-                    Assets.showCaseDesc[1],
-                    _buildTodaysPicksWidget(baseProvider.weeklyDigits)),
-                onTap: () {
-                  HapticFeedback.vibrate();
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) =>
-                          WeeklyDrawDialog(baseProvider.weeklyDigits));
-                },
-              )
+          child: BaseUtil.buildShowcaseWrapper(
+              _showcaseTwo,
+              Assets.showCaseDesc[1],
+              _buildTodaysPicksWidget(baseProvider.weeklyDigits)),
+          onTap: () {
+            HapticFeedback.vibrate();
+            showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    WeeklyDrawDialog(baseProvider.weeklyDigits));
+          },
+        )
             : Padding(
-                //Loader
-                padding: EdgeInsets.all(10),
-                child: Container(
-                  width: double.infinity,
-                  height: 200,
-                  child: Center(
-                    child: SpinKitWave(
-                      color: UiConstants.primaryColor,
-                    ),
-                  ),
-                ),
+          //Loader
+          padding: EdgeInsets.all(10),
+          child: Container(
+            width: double.infinity,
+            height: 200,
+            child: Center(
+              child: SpinKitWave(
+                color: UiConstants.primaryColor,
               ),
+            ),
+          ),
+        ),
         SizedBox(
           height: 24.0,
         ),
@@ -382,18 +390,18 @@ class _TambolaGameScreen extends State<TambolaHome> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   (baseProvider.weeklyTicksFetched &&
-                          baseProvider.userWeeklyBoards != null &&
-                          _activeTambolaCardCount > 0 &&
-                          _currentBoard != null)
+                      baseProvider.userWeeklyBoards != null &&
+                      _activeTambolaCardCount > 0 &&
+                      _currentBoard != null)
                       ? Padding(
-                          padding: EdgeInsets.only(left: 25),
-                          child: Text(
-                            'Ticket #${_currentBoard.getTicketNumber()}',
-                            style: TextStyle(
-                              fontSize: SizeConfig.smallTextSize,
-                            ),
-                          ),
-                        )
+                    padding: EdgeInsets.only(left: 25),
+                    child: Text(
+                      'Ticket #${_currentBoard.getTicketNumber()}',
+                      style: TextStyle(
+                        fontSize: SizeConfig.smallTextSize,
+                      ),
+                    ),
+                  )
                       : Container(),
                   // _activeTambolaCardCount > 10 ?
                   GestureDetector(
@@ -438,22 +446,22 @@ class _TambolaGameScreen extends State<TambolaHome> {
           height: 16,
         ),
         (baseProvider.weeklyTicksFetched &&
-                baseProvider.userWeeklyBoards != null &&
-                _activeTambolaCardCount > 0 &&
-                baseProvider.weeklyDrawFetched)
+            baseProvider.userWeeklyBoards != null &&
+            _activeTambolaCardCount > 0 &&
+            baseProvider.weeklyDrawFetched)
             ? BaseUtil.buildShowcaseWrapper(
-                _showcaseFour,
-                Assets.showCaseDesc[3],
-                Odds(baseProvider.weeklyDigits, _currentBoard,
-                    _refreshBestBoards()))
+            _showcaseFour,
+            Assets.showCaseDesc[3],
+            Odds(baseProvider.weeklyDigits, _currentBoard,
+                _refreshBestBoards()))
             : Padding(
-                //Loader
-                padding: EdgeInsets.all(10),
-                child: Container(
-                  width: double.infinity,
-                  height: 50,
-                ),
-              ),
+          //Loader
+          padding: EdgeInsets.all(10),
+          child: Container(
+            width: double.infinity,
+            height: 50,
+          ),
+        ),
         SizedBox(
           height: 16,
         ),
@@ -475,7 +483,19 @@ class _TambolaGameScreen extends State<TambolaHome> {
                 indent: SizeConfig.blockSizeHorizontal * 10,
               ),
               //_buildPrizeTabView(),
-              _buildPrizePodium()
+              _buildPrizePodium(),
+              (Platform.isIOS) ? Padding(
+                padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                child: Center(
+                  child: Text('Note: Apple is not involved in any way with the Fello Tambola',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.blueGrey,
+                        fontSize: SizeConfig.mediumTextSize
+                    ),
+                  ),
+                ),
+              ):Container()
             ],
           ),
         )
@@ -495,7 +515,8 @@ class _TambolaGameScreen extends State<TambolaHome> {
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: _podiumItem(
                 "images/Tambola/fullhouse.png",
-                '₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_FULL)}',
+                '₹ ${BaseRemoteConfig.remoteConfig.getString(
+                    BaseRemoteConfig.TAMBOLA_WIN_FULL)}',
                 "Full House"),
           ),
           Row(
@@ -504,14 +525,16 @@ class _TambolaGameScreen extends State<TambolaHome> {
                 flex: 6,
                 child: _podiumItem(
                     "images/Tambola/rows.png",
-                    "₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_TOP)}",
+                    "₹ ${BaseRemoteConfig.remoteConfig.getString(
+                        BaseRemoteConfig.TAMBOLA_WIN_TOP)}",
                     "First/Second/Third Row"),
               ),
               Expanded(
                 flex: 4,
                 child: _podiumItem(
                     "images/Tambola/corners.png",
-                    "₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_CORNER)}",
+                    "₹ ${BaseRemoteConfig.remoteConfig.getString(
+                        BaseRemoteConfig.TAMBOLA_WIN_CORNER)}",
                     "Corners"),
               )
             ],
@@ -524,9 +547,10 @@ class _TambolaGameScreen extends State<TambolaHome> {
             elevation: 0,
             children: [
               ExpansionPanel(
-                headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
-                    "images/svgs/howitworks.svg",
-                    Assets.tambolaFaqList[0].keys.first),
+                headerBuilder: (ctx, isOpen) =>
+                    _prizeFAQHeader(
+                        "images/svgs/howitworks.svg",
+                        Assets.tambolaFaqList[0].keys.first),
                 isExpanded: detStatus[0],
                 body: Container(
                   child: Column(
@@ -543,9 +567,10 @@ class _TambolaGameScreen extends State<TambolaHome> {
                 ),
               ),
               ExpansionPanel(
-                headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
-                    "images/svgs/cash-distribution.svg",
-                    Assets.tambolaFaqList[1].keys.first),
+                headerBuilder: (ctx, isOpen) =>
+                    _prizeFAQHeader(
+                        "images/svgs/cash-distribution.svg",
+                        Assets.tambolaFaqList[1].keys.first),
                 isExpanded: detStatus[1],
                 body: Container(
                   padding: EdgeInsets.only(right: 25),
@@ -563,9 +588,10 @@ class _TambolaGameScreen extends State<TambolaHome> {
                 ),
               ),
               ExpansionPanel(
-                headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
-                    "images/svgs/redeem.svg",
-                    Assets.tambolaFaqList[2].keys.first),
+                headerBuilder: (ctx, isOpen) =>
+                    _prizeFAQHeader(
+                        "images/svgs/redeem.svg",
+                        Assets.tambolaFaqList[2].keys.first),
                 body: Container(
                   padding: EdgeInsets.only(right: 25),
                   child: Column(
@@ -583,9 +609,10 @@ class _TambolaGameScreen extends State<TambolaHome> {
                 isExpanded: detStatus[2],
               ),
               ExpansionPanel(
-                headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
-                    "images/svgs/winmore.svg",
-                    Assets.tambolaFaqList[3].keys.first),
+                headerBuilder: (ctx, isOpen) =>
+                    _prizeFAQHeader(
+                        "images/svgs/winmore.svg",
+                        Assets.tambolaFaqList[3].keys.first),
                 body: Container(
                   padding: EdgeInsets.only(right: 25),
                   child: Column(
@@ -716,14 +743,18 @@ class _TambolaGameScreen extends State<TambolaHome> {
     if (baseProvider.userWeeklyBoards == null ||
         baseProvider.userWeeklyBoards.isEmpty ||
         baseProvider.weeklyDigits == null ||
-        baseProvider.weeklyDigits.toList().isEmpty ||
+        baseProvider.weeklyDigits
+            .toList()
+            .isEmpty ||
         localDBModel == null) {
       log.debug('Testing is not ready yet');
       return false;
     }
     DateTime date = DateTime.now();
     if (date.weekday == DateTime.sunday) {
-      if (baseProvider.weeklyDigits.toList().length == 35) {
+      if (baseProvider.weeklyDigits
+          .toList()
+          .length == 35) {
         localDBModel.isTambolaResultProcessingDone().then((flag) {
           if (flag == 0) {
             log.debug('Ticket results not yet displayed. Displaying: ');
@@ -752,48 +783,50 @@ class _TambolaGameScreen extends State<TambolaHome> {
     if (baseProvider.userWeeklyBoards == null ||
         baseProvider.userWeeklyBoards.isEmpty ||
         baseProvider.weeklyDigits == null ||
-        baseProvider.weeklyDigits.toList().isEmpty) {
+        baseProvider.weeklyDigits
+            .toList()
+            .isEmpty) {
       log.debug('Testing is not ready yet');
       return false;
     }
     Map<String, int> ticketCodeWinIndex = {};
     baseProvider.userWeeklyBoards.forEach((boardObj) {
       if (boardObj.getCornerOdds(baseProvider.weeklyDigits
-              .getPicksPostDate(boardObj.generatedDayCode)) ==
+          .getPicksPostDate(boardObj.generatedDayCode)) ==
           0) {
         if (boardObj.getTicketNumber() != 'NA')
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
               Constants.CORNERS_COMPLETED;
       }
       if (boardObj.getRowOdds(
-              0,
-              baseProvider.weeklyDigits
-                  .getPicksPostDate(boardObj.generatedDayCode)) ==
+          0,
+          baseProvider.weeklyDigits
+              .getPicksPostDate(boardObj.generatedDayCode)) ==
           0) {
         if (boardObj.getTicketNumber() != 'NA')
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
               Constants.ROW_ONE_COMPLETED;
       }
       if (boardObj.getRowOdds(
-              1,
-              baseProvider.weeklyDigits
-                  .getPicksPostDate(boardObj.generatedDayCode)) ==
+          1,
+          baseProvider.weeklyDigits
+              .getPicksPostDate(boardObj.generatedDayCode)) ==
           0) {
         if (boardObj.getTicketNumber() != 'NA')
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
               Constants.ROW_TWO_COMPLETED;
       }
       if (boardObj.getRowOdds(
-              2,
-              baseProvider.weeklyDigits
-                  .getPicksPostDate(boardObj.generatedDayCode)) ==
+          2,
+          baseProvider.weeklyDigits
+              .getPicksPostDate(boardObj.generatedDayCode)) ==
           0) {
         if (boardObj.getTicketNumber() != 'NA')
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
               Constants.ROW_THREE_COMPLETED;
       }
       if (boardObj.getFullHouseOdds(baseProvider.weeklyDigits
-              .getPicksPostDate(boardObj.generatedDayCode)) ==
+          .getPicksPostDate(boardObj.generatedDayCode)) ==
           0) {
         if (boardObj.getTicketNumber() != 'NA')
           ticketCodeWinIndex[boardObj.getTicketNumber()] =
@@ -805,7 +838,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
         baseProvider.userFundWallet.augGoldPrinciple +
             baseProvider.userFundWallet.iciciPrinciple;
     bool _isEligible =
-        (totalInvestedPrinciple >= BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
+    (totalInvestedPrinciple >= BaseRemoteConfig.UNLOCK_REFERRAL_AMT);
 
     log.debug('Resultant wins: ${ticketCodeWinIndex.toString()}');
 
@@ -813,7 +846,8 @@ class _TambolaGameScreen extends State<TambolaHome> {
       new Timer(const Duration(milliseconds: 2500), () {
         showDialog(
             context: context,
-            builder: (BuildContext context) => TambolaResultsDialog(
+            builder: (BuildContext context) =>
+                TambolaResultsDialog(
                   winningsMap: ticketCodeWinIndex,
                   isEligible: _isEligible,
                 ));
@@ -823,12 +857,12 @@ class _TambolaGameScreen extends State<TambolaHome> {
     if (ticketCodeWinIndex.length > 0) {
       dbProvider
           .addWinClaim(
-              baseProvider.myUser.uid,
-              baseProvider.myUser.name,
-              baseProvider.myUser.mobile,
-              baseProvider.userTicketWallet.getActiveTickets(),
-              _isEligible,
-              ticketCodeWinIndex)
+          baseProvider.myUser.uid,
+          baseProvider.myUser.name,
+          baseProvider.myUser.mobile,
+          baseProvider.userTicketWallet.getActiveTickets(),
+          _isEligible,
+          ticketCodeWinIndex)
           .then((flag) {
         baseProvider.showPositiveAlert(
             'Congratulations 🎉',
@@ -845,10 +879,12 @@ class _TambolaGameScreen extends State<TambolaHome> {
     }
     //initialise
     _bestTambolaBoards =
-        List<TambolaBoard>.filled(5, baseProvider.userWeeklyBoards[0]);
+    List<TambolaBoard>.filled(5, baseProvider.userWeeklyBoards[0]);
 
     if (baseProvider.weeklyDigits == null ||
-        baseProvider.weeklyDigits.toList().isEmpty) {
+        baseProvider.weeklyDigits
+            .toList()
+            .isEmpty) {
       return _bestTambolaBoards;
     }
 
@@ -860,9 +896,9 @@ class _TambolaGameScreen extends State<TambolaHome> {
       if (_bestTambolaBoards[4] == null) _bestTambolaBoards[4] = board;
 
       if (_bestTambolaBoards[0].getRowOdds(
-              0,
-              baseProvider.weeklyDigits
-                  .getPicksPostDate(_bestTambolaBoards[0].generatedDayCode)) >
+          0,
+          baseProvider.weeklyDigits
+              .getPicksPostDate(_bestTambolaBoards[0].generatedDayCode)) >
           board.getRowOdds(
               0,
               baseProvider.weeklyDigits
@@ -870,9 +906,9 @@ class _TambolaGameScreen extends State<TambolaHome> {
         _bestTambolaBoards[0] = board;
       }
       if (_bestTambolaBoards[1].getRowOdds(
-              1,
-              baseProvider.weeklyDigits
-                  .getPicksPostDate(_bestTambolaBoards[1].generatedDayCode)) >
+          1,
+          baseProvider.weeklyDigits
+              .getPicksPostDate(_bestTambolaBoards[1].generatedDayCode)) >
           board.getRowOdds(
               1,
               baseProvider.weeklyDigits
@@ -880,9 +916,9 @@ class _TambolaGameScreen extends State<TambolaHome> {
         _bestTambolaBoards[1] = board;
       }
       if (_bestTambolaBoards[2].getRowOdds(
-              2,
-              baseProvider.weeklyDigits
-                  .getPicksPostDate(_bestTambolaBoards[2].generatedDayCode)) >
+          2,
+          baseProvider.weeklyDigits
+              .getPicksPostDate(_bestTambolaBoards[2].generatedDayCode)) >
           board.getRowOdds(
               2,
               baseProvider.weeklyDigits
@@ -890,13 +926,13 @@ class _TambolaGameScreen extends State<TambolaHome> {
         _bestTambolaBoards[2] = board;
       }
       if (_bestTambolaBoards[3].getCornerOdds(baseProvider.weeklyDigits
-              .getPicksPostDate(_bestTambolaBoards[3].generatedDayCode)) >
+          .getPicksPostDate(_bestTambolaBoards[3].generatedDayCode)) >
           board.getCornerOdds(baseProvider.weeklyDigits
               .getPicksPostDate(board.generatedDayCode))) {
         _bestTambolaBoards[3] = board;
       }
       if (_bestTambolaBoards[4].getFullHouseOdds(baseProvider.weeklyDigits
-              .getPicksPostDate(_bestTambolaBoards[4].generatedDayCode)) >
+          .getPicksPostDate(_bestTambolaBoards[4].generatedDayCode)) >
           board.getFullHouseOdds(baseProvider.weeklyDigits
               .getPicksPostDate(board.generatedDayCode))) {
         _bestTambolaBoards[4] = board;
@@ -932,22 +968,22 @@ class _TambolaGameScreen extends State<TambolaHome> {
               child: Center(
                 child: (ticketsBeingGenerated)
                     ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: SpinKitWave(color: UiConstants.primaryColor),
-                          ),
-                          Text(
-                            'Your tickets are being generated..',
-                            style: TextStyle(
-                              fontSize: SizeConfig.mediumTextSize,
-                            ),
-                          )
-                        ],
-                      )
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: SpinKitWave(color: UiConstants.primaryColor),
+                    ),
+                    Text(
+                      'Your tickets are being generated..',
+                      style: TextStyle(
+                        fontSize: SizeConfig.mediumTextSize,
+                      ),
+                    )
+                  ],
+                )
                     : Text('No tickets yet'),
               )));
     } else if (count == 1) {
@@ -997,7 +1033,9 @@ class _TambolaGameScreen extends State<TambolaHome> {
     List<int> _calledDigits;
     if (!baseProvider.weeklyDrawFetched ||
         picks == null ||
-        picks.toList().isEmpty)
+        picks
+            .toList()
+            .isEmpty)
       _calledDigits = [];
     else {
       _calledDigits = picks.getPicksPostDate(board.generatedDayCode);
@@ -1284,36 +1322,37 @@ class Odds extends StatelessWidget {
               ),
               Expanded(
                   child: InkWell(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Text(
-                      _oOdd,
-                      style: TextStyle(
-                        color: Colors.blueGrey,
-                        fontSize: SizeConfig.mediumTextSize,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          _oOdd,
+                          style: TextStyle(
+                            color: Colors.blueGrey,
+                            fontSize: SizeConfig.mediumTextSize,
+                          ),
+                        ),
+                        Text(
+                          'Best ticket',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.blue[900],
+                            fontSize: SizeConfig.smallTextSize,
+                          ),
+                        )
+                      ],
                     ),
-                    Text(
-                      'Best ticket',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.blue[900],
-                        fontSize: SizeConfig.smallTextSize,
-                      ),
-                    )
-                  ],
-                ),
-                onTap: () {
-                  HapticFeedback.vibrate();
-                  showDialog(
-                      context: cx,
-                      builder: (BuildContext context) => TambolaDialog(
-                            board: _bestBoard,
-                            digits: _digits,
-                          ));
-                },
-              )),
+                    onTap: () {
+                      HapticFeedback.vibrate();
+                      showDialog(
+                          context: cx,
+                          builder: (BuildContext context) =>
+                              TambolaDialog(
+                                board: _bestBoard,
+                                digits: _digits,
+                              ));
+                    },
+                  )),
             ]));
   }
 }

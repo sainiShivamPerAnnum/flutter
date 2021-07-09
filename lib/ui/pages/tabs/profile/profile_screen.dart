@@ -45,19 +45,6 @@ class _ProfilePageState extends State<ProfilePage> {
   AppState appState;
   bool isPanFieldHidden = true;
 
-  Future<void> getProfilePicUrl() async {
-    try {
-      baseProvider.myUserDpUrl =
-          await dbProvider.getUserDP(baseProvider.myUser.uid);
-      if (baseProvider.myUserDpUrl != null) {
-        setState(() {
-          isImageLoading = false;
-        });
-        print("got the image");
-      }
-    } catch (e) { }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -1004,43 +991,29 @@ class _UserProfileCardState extends State<UserProfileCard> {
                             right: 0,
                             child: InkWell(
                               onTap: () async {
-                                var _status = await Permission.photos.status;
-                                if (_status.isUndetermined ||
-                                    _status.isRestricted ||
-                                    _status.isLimited ||
-                                    _status.isDenied) {
-                                  showDialog(
-                                      context: context,
-                                      builder: (ctx) {
-                                        return ConfirmActionDialog(
-                                            title: "Request Permission",
-                                            description:
-                                                "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
-                                            buttonText: "Continue",
-                                            asset: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 8),
-                                              child: Image.asset(
-                                                  "images/gallery.png",
-                                                  height:
-                                                      SizeConfig.screenWidth *
-                                                          0.24),
-                                            ),
-                                            confirmAction: () {
-                                              Navigator.pop(context);
-                                              chooseprofilePicture();
-                                            },
-                                            cancelAction: () =>
-                                                Navigator.pop(context));
-                                      });
-                                } else if (_status.isGranted) {
-                                  chooseprofilePicture();
-                                } else {
-                                  baseProvider.showNegativeAlert(
-                                      'Permission Unavailable',
-                                      'Please enable permission from settings to continue',
-                                      context);
-                                }
+                                showDialog(
+                                    context: context,
+                                    builder: (ctx) {
+                                      return ConfirmActionDialog(
+                                          title: "Request Permission",
+                                          description:
+                                              "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
+                                          buttonText: "Continue",
+                                          asset: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 8),
+                                            child: Image.asset(
+                                                "images/gallery.png",
+                                                height: SizeConfig.screenWidth *
+                                                    0.24),
+                                          ),
+                                          confirmAction: () {
+                                            Navigator.pop(context);
+                                            chooseprofilePicture();
+                                          },
+                                          cancelAction: () =>
+                                              Navigator.pop(context));
+                                    });
                               },
                               child: CircleAvatar(
                                 backgroundColor: Colors.white,
