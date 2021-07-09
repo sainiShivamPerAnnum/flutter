@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:slider_button/slider_button.dart';
 
@@ -134,33 +135,39 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
               endIndent: SizeConfig.screenWidth * 0.3,
             ),
             _buildRateCard(),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 8),
-              child: TextFormField(
-                autofocus: false,
-                controller: _amtController,
-                keyboardType: TextInputType.number,
-                cursorColor: augmontGoldPalette.primaryColor,
-                decoration: augmontFieldInputDecoration("Enter an amount"),
-                validator: (value) {
-                  Pattern pattern = "^[0-9]*\$";
-                  RegExp amRegex = RegExp(pattern);
-                  if (value.isEmpty)
-                    return 'Please enter an amount';
-                  else if (!amRegex.hasMatch(value))
-                    return 'Please enter a valid amount';
+            Theme(
+              data: ThemeData.light().copyWith(
+                  textTheme: GoogleFonts.montserratTextTheme(),
+                  colorScheme: ColorScheme.light(
+                      primary: augmontGoldPalette.primaryColor)),
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 8),
+                child: TextFormField(
+                  autofocus: false,
+                  controller: _amtController,
+                  keyboardType: TextInputType.number,
+                  cursorColor: augmontGoldPalette.primaryColor,
+                  decoration: augmontFieldInputDecoration("Enter an amount"),
+                  validator: (value) {
+                    Pattern pattern = "^[0-9]*\$";
+                    RegExp amRegex = RegExp(pattern);
+                    if (value.isEmpty)
+                      return 'Please enter an amount';
+                    else if (!amRegex.hasMatch(value))
+                      return 'Please enter a valid amount';
 
-                  int amount = int.parse(value);
-                  if (amount < 10)
-                    return 'Minimum deposit amount is ₹10 per transaction';
-                  else if (amount > 20000)
-                    return 'Max deposit of ₹20000 allowed per transaction';
-                  else
-                    return null;
-                },
-                onChanged: (String val) {
-                  setState(() {});
-                },
+                    int amount = int.parse(value);
+                    if (amount < 10)
+                      return 'Minimum deposit amount is ₹10 per transaction';
+                    else if (amount > 20000)
+                      return 'Max deposit of ₹20000 allowed per transaction';
+                    else
+                      return null;
+                  },
+                  onChanged: (String val) {
+                    setState(() {});
+                  },
+                ),
               ),
             ),
             _buildPurchaseDescriptionCard(_getDouble(_amtController.text)),

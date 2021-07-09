@@ -40,6 +40,11 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       print("Current Stack: ${AppState.screenStack}");
 
       return Future.value(true);
+    } else if (AppState.screenStack.length == 1) {
+      if (_routerDelegate.appState.getCurrentTabIndex != 0) {
+        _routerDelegate.appState.returnHome();
+      } else
+        return _routerDelegate.popRoute();
     } else {
       if (AppState.unsavedChanges == true) {
         BaseUtil().showNegativeAlert(

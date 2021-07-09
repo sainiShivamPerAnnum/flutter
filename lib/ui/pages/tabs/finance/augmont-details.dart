@@ -128,8 +128,8 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                       "Ranked no 1 bullion in India"
                     ],
                   ),
-                  //GoldRateGraph(),
-                  FundGraph(),
+                  GoldRateGraph(),
+                  //FundGraph(),
                   FundDetailsTable(baseProvider.userFundWallet.augGoldQuantity),
                   GoldProfitCalculator(),
                   FAQCard(Assets.goldFaqHeaders, Assets.goldFaqAnswers),

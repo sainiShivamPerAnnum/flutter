@@ -24,6 +24,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -86,62 +87,68 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
   }
 
   _bodyContent(BuildContext context) {
-    return Stack(alignment: Alignment.topCenter, children: <Widget>[
-      Opacity(
-        child: _formContent(context),
-        opacity: (baseProvider.isAugmontRegnInProgress ||
-                baseProvider.isAugmontRegnCompleteAnimateInProgress)
-            ? 0.3
-            : 1,
-      ),
-      // Row(
-      //   children: [
-      //     IconButton(
-      //       onPressed: () => backButtonDispatcher.didPopRoute(),
-      //       icon: Icon(Icons.arrow_back_rounded),
-      //     ),
-      //   ],
-      // ),
-      (baseProvider.isAugmontRegnCompleteAnimateInProgress)
-          ? Align(
-              alignment: Alignment.center,
-              child: Container(
-                height: 100,
-                width: 100,
-                child: Lottie.asset(Assets.checkmarkLottie),
-              ),
-            )
-          : Container(),
-      (baseProvider.isAugmontRegnInProgress)
-          ? Align(
-              alignment: Alignment.center,
-              child: Padding(
-                  padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                          height: 4,
-                          width: double.infinity,
-                          child: LinearProgressIndicator(
-                            backgroundColor: Colors.blueGrey[200],
-                            valueColor: AlwaysStoppedAnimation(
-                                augmontGoldPalette.primaryColor),
-                            minHeight: 4,
-                          )),
-                      Padding(
-                          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                          child: Text(
-                            'Processing',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: UiConstants.accentColor, fontSize: 20),
-                          ))
-                    ],
-                  )),
-            )
-          : Container()
-    ]);
+    return Theme(
+      data: ThemeData.light().copyWith(
+          textTheme: GoogleFonts.montserratTextTheme(),
+          colorScheme:
+              ColorScheme.light(primary: augmontGoldPalette.primaryColor)),
+      child: Stack(alignment: Alignment.topCenter, children: <Widget>[
+        Opacity(
+          child: _formContent(context),
+          opacity: (baseProvider.isAugmontRegnInProgress ||
+                  baseProvider.isAugmontRegnCompleteAnimateInProgress)
+              ? 0.3
+              : 1,
+        ),
+        // Row(
+        //   children: [
+        //     IconButton(
+        //       onPressed: () => backButtonDispatcher.didPopRoute(),
+        //       icon: Icon(Icons.arrow_back_rounded),
+        //     ),
+        //   ],
+        // ),
+        (baseProvider.isAugmontRegnCompleteAnimateInProgress)
+            ? Align(
+                alignment: Alignment.center,
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  child: Lottie.asset(Assets.checkmarkLottie),
+                ),
+              )
+            : Container(),
+        (baseProvider.isAugmontRegnInProgress)
+            ? Align(
+                alignment: Alignment.center,
+                child: Padding(
+                    padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                            height: 4,
+                            width: double.infinity,
+                            child: LinearProgressIndicator(
+                              backgroundColor: Colors.blueGrey[200],
+                              valueColor: AlwaysStoppedAnimation(
+                                  augmontGoldPalette.primaryColor),
+                              minHeight: 4,
+                            )),
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                            child: Text(
+                              'Processing',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: UiConstants.accentColor, fontSize: 20),
+                            ))
+                      ],
+                    )),
+              )
+            : Container()
+      ]),
+    );
   }
 
   Widget _formContent(BuildContext context) {
@@ -193,8 +200,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
               // ),
               TextFormField(
                 decoration:
-                    augmontFieldInputDecoration(baseProvider.myUser.mobile)
-                        .copyWith(hintText: baseProvider.myUser.mobile),
+                    augmontFieldInputDecoration(baseProvider.myUser.mobile),
                 enabled: false,
               ),
               // Padding(
