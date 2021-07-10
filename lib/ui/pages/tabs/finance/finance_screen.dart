@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
@@ -285,7 +286,7 @@ class FundWidget extends StatelessWidget {
                       color: Colors.white,
                       height: 1.4,
                       letterSpacing: 1.5,
-                      fontSize: SizeConfig.largeTextSize,
+                      fontSize: math.min(SizeConfig.largeTextSize,30),
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -299,7 +300,7 @@ class FundWidget extends StatelessWidget {
                             'Coming Soon',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: height * 0.020,
+                              fontSize: math.min(height * 0.020,22),
                               fontWeight: FontWeight.w400,
                             ),
                           ),
