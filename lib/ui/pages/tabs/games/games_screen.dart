@@ -17,6 +17,7 @@ import 'package:felloapp/ui/elements/week-winners.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -187,7 +188,12 @@ class _GamePageState extends State<GamePage> {
                           Spacer(
                             flex: 1,
                           ),
-                          _buildIdeaSection(),
+                          /////////TODO HACKY CODE - WRITTEN TO MANAGE TABLET SIZE DIMENSIONS
+                          (SizeConfig.screenWidth >= 1200)?Transform.translate(
+                            offset: Offset(0, -SizeConfig.screenWidth * 0.08),
+                            child: _buildIdeaSection()
+                          ):_buildIdeaSection(),
+                          /////////////////////////////////////////////////////////////
                           Spacer(
                             flex: 1,
                           )
@@ -276,8 +282,7 @@ class _GamePageState extends State<GamePage> {
             title: "Want more tickets?",
             action: [
               GameOfferCardButton(
-                onPressed: () => delegate
-                    .parseRoute(Uri.parse("finance")),
+                onPressed: () => delegate.parseRoute(Uri.parse("finance")),
 
                 ///TODO remove post testing
                 // onPressed: () => showDialog(
@@ -302,8 +307,7 @@ class _GamePageState extends State<GamePage> {
                 width: 10,
               ),
               GameOfferCardButton(
-                onPressed: () => delegate
-                    .parseRoute(Uri.parse("profile")),
+                onPressed: () => delegate.parseRoute(Uri.parse("profile")),
                 title: "Share",
               ),
             ],
@@ -317,54 +321,40 @@ class _GamePageState extends State<GamePage> {
             action: [
               GameOfferCardButton(
                 onPressed: () {
-                  AppState.screenStack
-                      .add(ScreenItem.dialog);
+                  AppState.screenStack.add(ScreenItem.dialog);
                   showDialog(
                     context: context,
-                    builder: (BuildContext context) =>
-                        WillPopScope(
-                          onWillPop: () {
-                            backButtonDispatcher
-                                .didPopRoute();
-                            return Future.value(true);
-                          },
-                          child: FeedbackDialog(
-                            title: "Tell us what you think",
-                            description:
-                            "We'd love to hear from you",
-                            buttonText: "Submit",
-                            dialogAction: (String fdbk) {
-                              if (fdbk != null &&
-                                  fdbk.isNotEmpty) {
-                                //feedback submission allowed even if user not signed in
-                                dbProvider
-                                    .submitFeedback(
-                                    (baseProvider.firebaseUser ==
-                                        null ||
-                                        baseProvider
-                                            .firebaseUser
-                                            .uid ==
-                                            null)
+                    builder: (BuildContext context) => WillPopScope(
+                      onWillPop: () {
+                        backButtonDispatcher.didPopRoute();
+                        return Future.value(true);
+                      },
+                      child: FeedbackDialog(
+                        title: "Tell us what you think",
+                        description: "We'd love to hear from you",
+                        buttonText: "Submit",
+                        dialogAction: (String fdbk) {
+                          if (fdbk != null && fdbk.isNotEmpty) {
+                            //feedback submission allowed even if user not signed in
+                            dbProvider
+                                .submitFeedback(
+                                    (baseProvider.firebaseUser == null ||
+                                            baseProvider.firebaseUser.uid ==
+                                                null)
                                         ? 'UNKNOWN'
-                                        : baseProvider
-                                        .firebaseUser
-                                        .uid,
+                                        : baseProvider.firebaseUser.uid,
                                     fdbk)
-                                    .then((flag) {
-                                  backButtonDispatcher
-                                      .didPopRoute();
-                                  if (flag) {
-                                    baseProvider
-                                        .showPositiveAlert(
-                                        'Thank You',
-                                        'We appreciate your feedback!',
-                                        context);
-                                  }
-                                });
+                                .then((flag) {
+                              backButtonDispatcher.didPopRoute();
+                              if (flag) {
+                                baseProvider.showPositiveAlert('Thank You',
+                                    'We appreciate your feedback!', context);
                               }
-                            },
-                          ),
-                        ),
+                            });
+                          }
+                        },
+                      ),
+                    ),
                   );
                 },
                 title: "Feedback",
