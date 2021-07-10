@@ -17,7 +17,6 @@ class TravelCardRenderer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.only(
         right: 20,
       ),

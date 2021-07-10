@@ -152,24 +152,39 @@ class _ProfilePageState extends State<ProfilePage> {
                           : SizedBox();
                     },
                   ),
-                  ProfileTabTilePan(
-                    logo: "images/contact-book.png",
-                    title: "PAN Number",
-                    value: baseProvider.myUser.pan,
-                    isHidden: isPanFieldHidden,
-                    isAvailable: (baseProvider.myUser.pan != null &&
-                        baseProvider.myUser.pan.isNotEmpty),
-                    onPress: () {
-                      HapticFeedback.vibrate();
-                      if (baseProvider.myUser.pan != null &&
-                          baseProvider.myUser.pan.isNotEmpty) {
-                        isPanFieldHidden = !isPanFieldHidden;
-                        setState(() {});
-                      } else {
-                        delegate.parseRoute(Uri.parse("d-panInfo"));
-                      }
-                    },
+                  ProfileTabTile(
+                    leadWidget: Image.asset(
+                      "images/contact-book.png",
+                      height: SizeConfig.blockSizeHorizontal * 5,
+                    ),
+                    onPress: () => appState.currentAction = PageAction(
+                        state: PageState.addPage,
+                        page: UserProfileDetailsConfig),
+                    title: "Personal Details",
+                    trailWidget: Icon(
+                      Icons.arrow_forward_ios,
+                      color: UiConstants.primaryColor,
+                      size: SizeConfig.blockSizeHorizontal * 4,
+                    ),
                   ),
+                  // ProfileTabTilePan(
+                  //   logo: "images/contact-book.png",
+                  //   title: "PAN Number",
+                  //   value: baseProvider.myUser.pan,
+                  //   isHidden: isPanFieldHidden,
+                  //   isAvailable: (baseProvider.myUser.pan != null &&
+                  //       baseProvider.myUser.pan.isNotEmpty),
+                  //   onPress: () {
+                  //     HapticFeedback.vibrate();
+                  //     if (baseProvider.myUser.pan != null &&
+                  //         baseProvider.myUser.pan.isNotEmpty) {
+                  //       isPanFieldHidden = !isPanFieldHidden;
+                  //       setState(() {});
+                  //     } else {
+                  //       delegate.parseRoute(Uri.parse("d-panInfo"));
+                  //     }
+                  //   },
+                  // ),
                   ProfileTabTile(
                       leadWidget: Image.asset(
                         "images/transaction.png",

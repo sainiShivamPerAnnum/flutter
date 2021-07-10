@@ -21,6 +21,7 @@ import 'package:felloapp/ui/pages/tabs/games/tambola-home.dart';
 import 'package:felloapp/ui/pages/tabs/profile/claim_username.dart';
 import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions.dart';
+import 'package:felloapp/ui/pages/tabs/profile/user_profile_details.dart';
 import 'package:felloapp/ui/pages/tabs/profile/verify_email.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:flutter/cupertino.dart';
@@ -141,9 +142,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Onboard:
           _addPageData(GetStartedPage(), OnboardPageConfig);
           break;
-        // case Pages.EditProfile:
-        //   _addPageData(EditProfile(), EditProfileConfig);
-        //   break;
+        case Pages.UserProfileDetails:
+          _addPageData(UserProfileDetails(), UserProfileDetailsConfig);
+          break;
         case Pages.MfDetails:
           _addPageData(MFDetailsPage(), MfDetailsPageConfig);
           break;
@@ -255,8 +256,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.Root:
         RootPageConfig.currentPageAction = action;
         break;
-      case Pages.EditProfile:
-        EditProfileConfig.currentPageAction = action;
+      case Pages.UserProfileDetails:
+        UserProfileDetailsConfig.currentPageAction = action;
         break;
       case Pages.MfDetails:
         MfDetailsPageConfig.currentPageAction = action;
@@ -429,7 +430,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         appState.setCurrentTabIndex = 3;
         break;
       case 'editProfile':
-        pageConfiguration = EditProfileConfig;
+        pageConfiguration = UserProfileDetailsConfig;
         break;
       case 'mfDetails':
         pageConfiguration = MfDetailsPageConfig;
