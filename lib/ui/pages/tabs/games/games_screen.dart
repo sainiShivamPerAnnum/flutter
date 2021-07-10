@@ -191,8 +191,8 @@ class _GamePageState extends State<GamePage> {
                           /////////TODO HACKY CODE - WRITTEN TO MANAGE TABLET SIZE DIMENSIONS
                           (SizeConfig.screenWidth >= 1200)?Transform.translate(
                             offset: Offset(0, -SizeConfig.screenWidth * 0.08),
-                            child: _buildIdeaSection()
-                          ):_buildIdeaSection(),
+                            child: const IdeaSection()
+                          ):const IdeaSection(),
                           /////////////////////////////////////////////////////////////
                           Spacer(
                             flex: 1,
@@ -263,8 +263,15 @@ class _GamePageState extends State<GamePage> {
       ),
     );
   }
+}
 
-  Widget _buildIdeaSection() {
+class IdeaSection extends StatelessWidget{
+  const IdeaSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    final dbProvider = Provider.of<DBModel>(context, listen: false);
     return Container(
       height: SizeConfig.screenHeight * 0.2,
       width: SizeConfig.screenWidth,
@@ -283,24 +290,6 @@ class _GamePageState extends State<GamePage> {
             action: [
               GameOfferCardButton(
                 onPressed: () => delegate.parseRoute(Uri.parse("finance")),
-
-                ///TODO remove post testing
-                // onPressed: () => showDialog(
-                //   context: context,
-                //   barrierDismissible: false,
-                //   builder: (ctx) {
-                //     return Center(
-                //       child: Material(
-                //         color: Colors.transparent,
-                //         child: Stack(
-                //           children: [
-                //             Center(child: FCard()),
-                //           ],
-                //         ),
-                //       ),
-                //     );
-                //   },
-                // ),
                 title: "Invest",
               ),
               SizedBox(
@@ -338,12 +327,12 @@ class _GamePageState extends State<GamePage> {
                             //feedback submission allowed even if user not signed in
                             dbProvider
                                 .submitFeedback(
-                                    (baseProvider.firebaseUser == null ||
-                                            baseProvider.firebaseUser.uid ==
-                                                null)
-                                        ? 'UNKNOWN'
-                                        : baseProvider.firebaseUser.uid,
-                                    fdbk)
+                                (baseProvider.firebaseUser == null ||
+                                    baseProvider.firebaseUser.uid ==
+                                        null)
+                                    ? 'UNKNOWN'
+                                    : baseProvider.firebaseUser.uid,
+                                fdbk)
                                 .then((flag) {
                               backButtonDispatcher.didPopRoute();
                               if (flag) {
