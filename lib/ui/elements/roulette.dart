@@ -37,12 +37,14 @@ class Roulette extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: 0, bottom: 3),
-                child: DPTextSlider(
-                  infoList: dailyPickTextList,
-                ),
-              ),
+              (SizeConfig.screenWidth < 800)
+                  ? Padding(
+                      padding: EdgeInsets.only(top: 0, bottom: 3),
+                      child: DPTextSlider(
+                        infoList: dailyPickTextList,
+                      ),
+                    )
+                  : Container(),
               Container(
                 padding: EdgeInsets.only(bottom: 5),
                 child: Row(
