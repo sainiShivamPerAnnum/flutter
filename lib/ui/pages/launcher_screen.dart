@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui show Image, instantiateImageCodec;
 
+import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -28,6 +29,7 @@ class LogoFadeIn extends State<SplashScreen> {
   Timer _timer3;
   LogoStyle _logoStyle = LogoStyle.markOnly;
   ui.Image logo;
+  DeviceUnlock deviceUnlock;
 
   LogoFadeIn() {
     _loadImageAsset(Assets.logoMaxSize);
@@ -48,6 +50,7 @@ class LogoFadeIn extends State<SplashScreen> {
   }
 
   initialize() async {
+    deviceUnlock = DeviceUnlock();
     final baseProvider = Provider.of<BaseUtil>(context, listen: false);
     final fcmProvider = Provider.of<FcmListener>(context, listen: false);
     final stateProvider = Provider.of<AppState>(context, listen: false);
@@ -60,8 +63,29 @@ class LogoFadeIn extends State<SplashScreen> {
           PageAction(state: PageState.replaceAll, page: OnboardPageConfig);
     } else {
       log.debug("Existing User. Moving to Home..");
-      stateProvider.currentAction =
+      bool _unlocked;
+      if(baseProvider.isSecurityEnabled) {
+        try {
+          _unlocked = await deviceUnlock.request(localizedReason: 'Please authenticate in order to proceed');
+        } on DeviceUnlockUnavailable {
+          baseProvider.showPositiveAlert('No Device Authentication Found','Logging in, please enable device security to add lock', context);
+          _unlocked = true;
+        } on RequestInProgress {
+          _unlocked = false;
+          print('Request in progress');
+        }
+        if(_unlocked) {
+          stateProvider.currentAction =
+            PageAction(state: PageState.replaceAll, page: RootPageConfig);
+        }
+        else {
+          baseProvider.showNegativeAlert('Authentication Failed', 'Please restart app and authenticate', context);
+        }
+      }
+      else {
+        stateProvider.currentAction =
           PageAction(state: PageState.replaceAll, page: RootPageConfig);
+      } 
     }
   }
 

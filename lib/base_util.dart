@@ -31,6 +31,7 @@ import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcase.dart';
 
 import 'core/base_remote_config.dart';
@@ -117,11 +118,15 @@ class BaseUtil extends ChangeNotifier {
   static int atomicTicketGenerationLeftCount = 0;
   static int atomicTicketDeletionLeftCount = 0;
 
+  // app security variables
+  bool isSecurityEnabled = false;
+
   Future init() async {
+    //security
+    isSecurityEnabled = await getSecurityValue();
     ///analytics
     BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
-
     ///fetch on-boarding status and User details
     firebaseUser = FirebaseAuth.instance.currentUser;
     if (firebaseUser != null) {
@@ -683,6 +688,39 @@ class BaseUtil extends ChangeNotifier {
   void updateAugmontOnboarded(bool newValue) {
     _myUser.isAugmontOnboarded = newValue;
     notifyListeners();
+  }
+
+  void flipSecurityValue(bool value) {
+    this.isSecurityEnabled = !value;
+    saveSecurityValue(this.isSecurityEnabled);
+    notifyListeners();
+  }
+
+  void saveSecurityValue(bool newValue) async {
+    try {
+      SharedPreferences _prefs = await SharedPreferences.getInstance();
+      _prefs.setBool("securityEnabled", newValue);
+    } catch(e) {
+      log.debug("Error while saving security enabled value");
+    }
+  }
+
+  Future<bool> getSecurityValue() async {
+    try {
+      SharedPreferences _prefs = await SharedPreferences.getInstance();
+      if(_prefs.containsKey("securityEnabled")) {
+        bool _savedSecurityValue = _prefs.getBool("securityEnabled");
+        if(_savedSecurityValue!=null) {
+          return _savedSecurityValue;
+        }
+        else {
+          return false;
+        }
+      } 
+    } catch(e) {
+      log.debug("Error while retrieving security enabled value");
+    }
+    return false;
   }
 
   static String getMonthName(int monthNum) {

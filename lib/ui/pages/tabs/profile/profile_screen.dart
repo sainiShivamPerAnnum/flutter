@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
@@ -912,6 +913,7 @@ class _UserProfileCardState extends State<UserProfileCard> {
   DBModel dbProvider;
   bool isImageLoading = false;
   double picSize = SizeConfig.screenWidth * 0.24;
+  bool securityEnabled = false;
 
   Future<void> getProfilePicUrl() async {
     try {
@@ -936,7 +938,7 @@ class _UserProfileCardState extends State<UserProfileCard> {
     }
     return Container(
       width: SizeConfig.screenWidth,
-      height: SizeConfig.screenHeight * 0.24,
+      height: SizeConfig.screenHeight * 0.30,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(
@@ -1082,6 +1084,27 @@ class _UserProfileCardState extends State<UserProfileCard> {
                   ],
                 ),
               ),
+               Row(
+                children: [
+                  SizedBox(
+                    width: SizeConfig.blockSizeHorizontal * 5,
+                  ),
+                  Text('Enable Security', style: TextStyle(color: Colors.white, fontSize: SizeConfig.mediumTextSize,)),
+                  Consumer<BaseUtil>(
+                    builder: (ctx, bp, child) {
+                      return Switch(
+                        value: baseProvider.isSecurityEnabled,
+                        onChanged: (bool value){
+                          baseProvider.flipSecurityValue(baseProvider.isSecurityEnabled);
+                        },
+                        activeColor: UiConstants.darkPrimaryColor,
+                        inactiveThumbColor: UiConstants.spinnerColor,
+                        inactiveTrackColor: UiConstants.spinnerColor,
+                      );
+                    },
+                  )
+                ],
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -1096,7 +1119,7 @@ class _UserProfileCardState extends State<UserProfileCard> {
               ),
               SizedBox(
                 height: 16,
-              )
+              ),
             ],
           ),
           Positioned(
