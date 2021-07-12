@@ -86,7 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
           physics: BouncingScrollPhysics(),
           children: [
             Container(
-              height: SizeConfig.screenHeight * 0.1,
+              height: SizeConfig.screenHeight * 0.08,
             ),
             Consumer<BaseUtil>(
               builder: (ctx, bp, child) {
@@ -951,7 +951,7 @@ class _UserProfileCardState extends State<UserProfileCard> {
     }
     return Container(
       width: SizeConfig.screenWidth,
-      height: SizeConfig.screenHeight * 0.24,
+      height: SizeConfig.screenWidth * 0.52,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(
