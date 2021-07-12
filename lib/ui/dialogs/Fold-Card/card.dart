@@ -117,7 +117,9 @@ class _TicketState extends State<FCard> {
         // gradient: cardGradient,
         image: DecorationImage(
             image: AssetImage("images/prize-share-bg.png"), fit: BoxFit.cover),
-        borderRadius: BorderRadius.all(Radius.circular(15)),
+        borderRadius: BorderRadius.all(
+          Radius.circular(15),
+        ),
       ),
       child: Stack(
         children: [
@@ -174,7 +176,7 @@ class _TicketState extends State<FCard> {
                 Row(
                   children: [
                     Image.asset(
-                      "images/fello_logo.png",
+                      "images/fello-dark.png",
                       width: SizeConfig.screenWidth * 0.12,
                     ),
                     Spacer(),
@@ -205,7 +207,6 @@ class _TicketState extends State<FCard> {
       height: double.infinity,
       width: double.infinity,
       decoration: BoxDecoration(
-        // gradient: cardGradient,
         image: DecorationImage(
             image: AssetImage("images/prize-share-bg.png"), fit: BoxFit.cover),
         borderRadius: BorderRadius.only(
@@ -221,36 +222,23 @@ class _TicketState extends State<FCard> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
-            child: Stack(
-              children: [
-                Center(
-                  child: Opacity(
-                    opacity: 0.3,
-                    child: Image.asset(
-                      "images/prize-confetti-share.png",
-                      fit: BoxFit.fitHeight,
-                    ),
-                  ),
+            child: Center(
+              child: Text(
+                "र ${widget.unclaimedPrize}",
+                style: GoogleFonts.montserrat(
+                  color: Colors.white,
+                  height: 1.3,
+                  shadows: [
+                    Shadow(
+                      offset: Offset(2, 2),
+                      color: Colors.white30,
+                      blurRadius: 5,
+                    )
+                  ],
+                  fontWeight: FontWeight.w800,
+                  fontSize: SizeConfig.screenWidth * 0.12,
                 ),
-                Center(
-                  child: Text(
-                    "र ${widget.unclaimedPrize}",
-                    style: GoogleFonts.montserrat(
-                      color: Colors.white,
-                      height: 1.3,
-                      shadows: [
-                        Shadow(
-                          offset: Offset(2, 2),
-                          color: Colors.white30,
-                          blurRadius: 5,
-                        )
-                      ],
-                      fontWeight: FontWeight.w800,
-                      fontSize: SizeConfig.screenWidth * 0.12,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
           SizedBox(
@@ -300,7 +288,6 @@ class _TicketState extends State<FCard> {
       height: double.infinity,
       width: double.infinity,
       decoration: BoxDecoration(
-        // gradient: cardGradient,
         image: DecorationImage(
             image: AssetImage("images/prize-share-bg.png"), fit: BoxFit.cover),
         borderRadius: BorderRadius.only(

@@ -20,14 +20,14 @@ class ShareCard extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             image: DecorationImage(
-              image: AssetImage("images/prize-share-bg.png"),
+              image: AssetImage("images/prize-confetti-bg.png"),
               fit: BoxFit.cover,
             ),
           ),
           child: Column(
             children: [
               Image.asset(
-                "images/fello_logo.png",
+                "images/fello-dark.png",
                 height: 40,
               ),
               SizedBox(height: 20),
