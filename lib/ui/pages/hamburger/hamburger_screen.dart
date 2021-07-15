@@ -7,6 +7,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
+import 'package:felloapp/ui/pages/hamburger/contact_us_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
@@ -134,9 +135,9 @@ class HamburgerMenu extends StatelessWidget {
         {
           // Navigator.push(
           //     context, MaterialPageRoute(builder: (ctx) => ChatSupport()));
-          appstate.currentAction =
-              PageAction(state: PageState.addPage, page: ChatSupportPageConfig);
-
+          // appstate.currentAction =
+              // PageAction(state: PageState.addPage, page: ChatSupportPageConfig);
+          Navigator.push(context, MaterialPageRoute(builder: (ctx) => ContactUsPage()));
           break;
         }
       // case 'kyc':

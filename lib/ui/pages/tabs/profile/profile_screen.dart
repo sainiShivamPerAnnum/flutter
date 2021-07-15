@@ -913,7 +913,6 @@ class _UserProfileCardState extends State<UserProfileCard> {
   DBModel dbProvider;
   bool isImageLoading = false;
   double picSize = SizeConfig.screenWidth * 0.24;
-  bool securityEnabled = false;
 
   Future<void> getProfilePicUrl() async {
     try {
@@ -938,7 +937,7 @@ class _UserProfileCardState extends State<UserProfileCard> {
     }
     return Container(
       width: SizeConfig.screenWidth,
-      height: SizeConfig.screenHeight * 0.30,
+      height: SizeConfig.screenHeight * 0.24,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(
@@ -1083,27 +1082,6 @@ class _UserProfileCardState extends State<UserProfileCard> {
                     )
                   ],
                 ),
-              ),
-               Row(
-                children: [
-                  SizedBox(
-                    width: SizeConfig.blockSizeHorizontal * 5,
-                  ),
-                  Text('Enable Security', style: TextStyle(color: Colors.white, fontSize: SizeConfig.mediumTextSize,)),
-                  Consumer<BaseUtil>(
-                    builder: (ctx, bp, child) {
-                      return Switch(
-                        value: baseProvider.isSecurityEnabled,
-                        onChanged: (bool value){
-                          baseProvider.flipSecurityValue(baseProvider.isSecurityEnabled);
-                        },
-                        activeColor: UiConstants.darkPrimaryColor,
-                        inactiveThumbColor: UiConstants.spinnerColor,
-                        inactiveTrackColor: UiConstants.spinnerColor,
-                      );
-                    },
-                  )
-                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -1341,6 +1319,24 @@ class _UserEditProfileCardState extends State<UserEditProfileCard> {
                     ),
                   ),
                 ),
+              )
+            ],
+          ),
+          Row(
+            children: [
+              Text('Enable Security', style: TextStyle(color: Colors.white, fontSize: SizeConfig.mediumTextSize,)),
+              Consumer<BaseUtil>(
+                builder: (ctx, bp, child) {
+                  return Switch(
+                    value: baseProvider.isSecurityEnabled,
+                    onChanged: (bool value){
+                      baseProvider.flipSecurityValue(baseProvider.isSecurityEnabled);
+                    },
+                    activeColor: UiConstants.darkPrimaryColor,
+                    inactiveThumbColor: UiConstants.spinnerColor,
+                    inactiveTrackColor: UiConstants.spinnerColor,
+                  );
+                },
               )
             ],
           )

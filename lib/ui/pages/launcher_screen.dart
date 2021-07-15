@@ -10,6 +10,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/breathing_text_widget.dart';
 import 'package:felloapp/ui/elements/logo_canvas.dart';
 import 'package:felloapp/ui/elements/logo_container.dart';
+import 'package:felloapp/ui/pages/update_section/update_screen.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
@@ -75,17 +76,19 @@ class LogoFadeIn extends State<SplashScreen> {
           print('Request in progress');
         }
         if(_unlocked) {
+          // TODO : Check for new update and stop if new update available
           stateProvider.currentAction =
             PageAction(state: PageState.replaceAll, page: RootPageConfig);
+          // Navigator.push(context, MaterialPageRoute(builder: (context)=> UpdateRequiredScreen()));
         }
         else {
-          baseProvider.showNegativeAlert('Authentication Failed', 'Please restart app and authenticate', context);
+          baseProvider.showNegativeAlert('Authentication Failed', 'Please restart app', context);
         }
       }
       else {
         stateProvider.currentAction =
           PageAction(state: PageState.replaceAll, page: RootPageConfig);
-      } 
+      }
     }
   }
 
