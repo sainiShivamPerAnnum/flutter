@@ -32,36 +32,36 @@ class UpdateRequiredScreen extends StatelessWidget {
             ),
             SizedBox(height : SizeConfig.blockSizeVertical*5),
             Container(
-                width: SizeConfig.screenWidth*0.65,
-                height: SizeConfig.blockSizeVertical*8,
-                decoration: BoxDecoration(
-                  borderRadius: new BorderRadius.circular(100.0),
-                  color: UiConstants.primaryColor
-                ),
-                child: new Material(
-                  child: MaterialButton(
-                    child: Text(
-                            'Update',
-                            style: Theme.of(context)
-                                .textTheme
-                                .button
-                                .copyWith(color: Colors.white, fontSize: SizeConfig.largeTextSize, fontWeight: FontWeight.bold),),
-                    highlightColor: Colors.white30,
-                    splashColor: Colors.white30,
-                    onPressed: () {
-                      // TODO: implement update logic
-                      if(Platform.isIOS) {
-                        
-                      }
-                      else if(Platform.isAndroid) {
-                        //in-app update
-                      }
-                    },
-                  ),
-                  color: Colors.transparent,
-                  borderRadius: new BorderRadius.circular(30.0),
-                ),
+              width: SizeConfig.screenWidth*0.65,
+              height: SizeConfig.blockSizeVertical*8,
+              decoration: BoxDecoration(
+                borderRadius: new BorderRadius.circular(100.0),
+                color: UiConstants.primaryColor
               ),
+              child: new Material(
+                child: MaterialButton(
+                  child: Text(
+                          'Update',
+                          style: Theme.of(context)
+                              .textTheme
+                              .button
+                              .copyWith(color: Colors.white, fontSize: SizeConfig.largeTextSize, fontWeight: FontWeight.bold),),
+                  highlightColor: Colors.white30,
+                  splashColor: Colors.white30,
+                  onPressed: () {
+                    // TODO: implement update logic
+                    if(Platform.isIOS) {
+
+                    }
+                    else if(Platform.isAndroid) {
+                      //in-app update
+                    }
+                  },
+                ),
+                color: Colors.transparent,
+                borderRadius: new BorderRadius.circular(30.0),
+              ),
+            ),
           ]
         ),
       )

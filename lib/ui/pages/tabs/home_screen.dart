@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
         .setCurrentScreen(screenName: BaseAnalytics.PAGE_HOME);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) { 
       bool show_security = baseProvider.show_finance_tutorial;
-      // show = true;
+      // show_security = true;
       if(show_security && !baseProvider.isSecurityEnabled) {
         _showSecurityBottomSheet();
       }
