@@ -92,7 +92,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
   void _showRequestCallSheet() {
     List<String> timeSlots = ['12-2 PM', '2-4 PM', '4-6 PM', '6-8 PM'];
     int _selectedTimeSlotIndex = 0;
-    showModalBottomSheet(context: context, shape: RoundedRectangleBorder(borderRadius : BorderRadius.circular(35.0)),backgroundColor: UiConstants.bottomNavBarColor,isScrollControlled: true,builder: (context) {
+    showModalBottomSheet(context: context, shape: RoundedRectangleBorder(borderRadius : BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0))),backgroundColor: UiConstants.bottomNavBarColor,isScrollControlled: true,builder: (context) {
       return StatefulBuilder(builder: (context, setBottomSheetState) {
         return Padding(
           padding : EdgeInsets.only(bottom : MediaQuery.of(context).viewInsets.bottom),

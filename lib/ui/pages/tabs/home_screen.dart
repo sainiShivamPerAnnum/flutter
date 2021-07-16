@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showSecurityBottomSheet() {
-    showModalBottomSheet(context: context, shape: RoundedRectangleBorder(borderRadius : BorderRadius.circular(35.0)),backgroundColor: UiConstants.bottomNavBarColor,builder: (context) {
+    showModalBottomSheet(context: context, shape: RoundedRectangleBorder(borderRadius : BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0))),backgroundColor: UiConstants.bottomNavBarColor,builder: (context) {
       return Padding(
         padding: const EdgeInsets.only(top :25.0, bottom: 25.0, left: 45.0, right: 45.0),
         child: Column(

@@ -58,38 +58,57 @@ class LogoFadeIn extends State<SplashScreen> {
     await baseProvider.init();
     await fcmProvider.setupFcm();
     _timer3.cancel();
-    if (!baseProvider.isUserOnboarded) {
-      log.debug("New user. Moving to Onboarding..");
-      stateProvider.currentAction =
-          PageAction(state: PageState.replaceAll, page: OnboardPageConfig);
-    } else {
-      log.debug("Existing User. Moving to Home..");
-      bool _unlocked;
-      if(baseProvider.isSecurityEnabled) {
-        try {
-          _unlocked = await deviceUnlock.request(localizedReason: 'Please authenticate in order to proceed');
-        } on DeviceUnlockUnavailable {
-          baseProvider.showPositiveAlert('No Device Authentication Found','Logging in, please enable device security to add lock', context);
-          _unlocked = true;
-        } on RequestInProgress {
-          _unlocked = false;
-          print('Request in progress');
-        }
-        if(_unlocked) {
-          // TODO : Check for new update and stop if new update available
-          stateProvider.currentAction =
-            PageAction(state: PageState.replaceAll, page: RootPageConfig);
-          // Navigator.push(context, MaterialPageRoute(builder: (context)=> UpdateRequiredScreen()));
+    // TODO : Add update check here
+    bool isThereBreakingUpdate = await checkBreakingUpdate();
+    if(isThereBreakingUpdate) {
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> UpdateRequiredScreen()));
+    }
+    else {
+      if (!baseProvider.isUserOnboarded) {
+        log.debug("New user. Moving to Onboarding..");
+        stateProvider.currentAction =
+            PageAction(state: PageState.replaceAll, page: OnboardPageConfig);
+      } else {
+        log.debug("Existing User. Moving to Home..");
+        bool _unlocked;
+        if(baseProvider.isSecurityEnabled) {
+          try {
+            _unlocked = await deviceUnlock.request(localizedReason: 'Please authenticate in order to proceed');
+          } on DeviceUnlockUnavailable {
+            baseProvider.showPositiveAlert('No Device Authentication Found','Logging in, please enable device security to add lock', context);
+            _unlocked = true;
+          } on RequestInProgress {
+            _unlocked = false;
+            print('Request in progress');
+          }
+          if(_unlocked) {
+            stateProvider.currentAction =
+                PageAction(state: PageState.replaceAll, page: RootPageConfig);
+          }
+          else {
+            baseProvider.showNegativeAlert('Authentication Failed', 'Please restart app', context);
+          }
         }
         else {
-          baseProvider.showNegativeAlert('Authentication Failed', 'Please restart app', context);
+          stateProvider.currentAction =
+              PageAction(state: PageState.replaceAll, page: RootPageConfig);
         }
       }
-      else {
-        stateProvider.currentAction =
-          PageAction(state: PageState.replaceAll, page: RootPageConfig);
-      }
     }
+  }
+
+  Future<bool> checkBreakingUpdate() async {
+    String currentBuild = BaseUtil.packageInfo.buildNumber;
+    String minBuild;
+    // TODO : Add minimum build number fetching
+    if(int.parse(currentBuild)<int.parse(minBuild)) {
+      Future.delayed(Duration(seconds: 1), (){
+        return true;
+      });
+    }
+    Future.delayed(Duration(seconds: 1), (){
+      return false;
+    });
   }
 
   @override
