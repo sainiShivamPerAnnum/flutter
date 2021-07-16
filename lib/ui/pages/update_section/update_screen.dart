@@ -4,6 +4,7 @@ import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:launch_review/launch_review.dart';
 
 class UpdateRequiredScreen extends StatelessWidget {
   const UpdateRequiredScreen({Key key}) : super(key: key);
@@ -51,7 +52,7 @@ class UpdateRequiredScreen extends StatelessWidget {
                   onPressed: () {
                     // TODO: implement update logic
                     if(Platform.isIOS) {
-
+                      LaunchReview.launch();
                     }
                     else if(Platform.isAndroid) {
                       //in-app update
