@@ -104,6 +104,7 @@ class _HomePageState extends State<HomePage> {
                       splashColor: Colors.white30,
                       onPressed: () {
                         baseProvider.flipSecurityValue(false);
+                        Navigator.of(context).pop();
                       },
                     ),
                     color: Colors.transparent,
@@ -120,7 +121,7 @@ class _HomePageState extends State<HomePage> {
                   child: new Material(
                     child: MaterialButton(
                       child: Text(
-                              'Cancel',
+                              'Not now',
                               style: Theme.of(context)
                                   .textTheme
                                   .button

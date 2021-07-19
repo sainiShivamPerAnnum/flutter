@@ -1,5 +1,7 @@
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +24,13 @@ class ContactUsPage extends StatefulWidget {
 class _ContactUsPageState extends State<ContactUsPage> {
   BaseUtil baseProvider;
   AppState appState;
+  DBModel dbProvider;
   TextEditingController _requestCallPhoneController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context ,listen: false);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -52,12 +56,29 @@ class _ContactUsPageState extends State<ContactUsPage> {
       ),
       body : Stack(
         children: [
-          Positioned.fill(
-            child: SvgPicture.asset("images/contact_us.svg", height : SizeConfig.screenHeight*0.3,width : MediaQuery.of(context).size.width,alignment: Alignment.bottomRight,),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Container(
+                width: SizeConfig.screenWidth*0.7,
+                color: Colors.transparent,
+                child: SvgPicture.asset("images/contact_us_full_opacity.svg",colorBlendMode: BlendMode.dst,color: UiConstants.backgroundColor,alignment: Alignment.bottomRight)
+            ),
           ),
           ListView(
             physics: BouncingScrollPhysics(),
             children: [
+              SizedBox(height : SizeConfig.blockSizeVertical*1.5),
+              ListTile(title: Text('Chat with Us', style : TextStyle(fontSize: SizeConfig.largeTextSize, color: UiConstants.textColor)),tileColor: Colors.transparent, trailing: Icon(Icons.arrow_forward_ios),
+                onTap: (){
+                  HapticFeedback.vibrate();
+                  appState.currentAction = PageAction(state: PageState.addPage, page: ChatSupportPageConfig);
+              },),
+              SizedBox(height : SizeConfig.blockSizeVertical*1.5),
+              ListTile(title: Text('Email Us', style : TextStyle(fontSize: SizeConfig.largeTextSize, color: UiConstants.textColor)),tileColor: Colors.transparent, trailing: Icon(Icons.arrow_forward_ios),
+                onTap: (){
+                  HapticFeedback.vibrate();
+                  _launchEmail();
+                },),
               SizedBox(height : SizeConfig.blockSizeVertical*1.5),
               ListTile(title: Text('Request a call', style : TextStyle(fontSize: SizeConfig.largeTextSize, color: UiConstants.textColor)),tileColor: Colors.transparent, trailing: Icon(Icons.arrow_forward_ios,),
               onTap: () {
@@ -65,17 +86,11 @@ class _ContactUsPageState extends State<ContactUsPage> {
                 _showRequestCallSheet();
               },),
               SizedBox(height : SizeConfig.blockSizeVertical*1.5),
-              ListTile(title: Text('Email Us', style : TextStyle(fontSize: SizeConfig.largeTextSize, color: UiConstants.textColor)),tileColor: Colors.transparent, trailing: Icon(Icons.arrow_forward_ios),
-              onTap: (){
-                HapticFeedback.vibrate();
-                _launchEmail();
-              },),
-              SizedBox(height : SizeConfig.blockSizeVertical*1.5),
-              ListTile(title: Text('Chat with Us', style : TextStyle(fontSize: SizeConfig.largeTextSize, color: UiConstants.textColor)),tileColor: Colors.transparent, trailing: Icon(Icons.arrow_forward_ios),
-              onTap: (){
-                HapticFeedback.vibrate();
-                appState.currentAction = PageAction(state: PageState.addPage, page: ChatSupportPageConfig);
-              },),
+              ListTile(title: Text('Play Walkthrough', style : TextStyle(fontSize: SizeConfig.largeTextSize, color: UiConstants.textColor)),tileColor: Colors.transparent, trailing: Icon(Icons.arrow_forward_ios,),
+                onTap: () {
+                  HapticFeedback.vibrate();
+                  Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>WalkThroughPage()));
+                },),
               SizedBox(height : SizeConfig.blockSizeVertical*1.5),
               ListTile(title: Text('FAQs', style : TextStyle(fontSize: SizeConfig.largeTextSize, color: UiConstants.textColor)),tileColor: Colors.transparent, trailing: Icon(Icons.arrow_forward_ios),
               onTap: (){
@@ -91,6 +106,8 @@ class _ContactUsPageState extends State<ContactUsPage> {
 
   void _showRequestCallSheet() {
     List<String> timeSlots = ['12-2 PM', '2-4 PM', '4-6 PM', '6-8 PM'];
+    // times in 0-24 hour format
+    List<int> callTimes = [12,14,16,18];
     int _selectedTimeSlotIndex = 0;
     showModalBottomSheet(context: context, shape: RoundedRectangleBorder(borderRadius : BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0))),backgroundColor: UiConstants.bottomNavBarColor,isScrollControlled: true,builder: (context) {
       return StatefulBuilder(builder: (context, setBottomSheetState) {
@@ -131,6 +148,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                 // 12-8, 12-2, 2-4,4-6,6-8
                 Container(
                   height: SizeConfig.blockSizeVertical*6.5,
+                  width: SizeConfig.screenWidth,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: timeSlots.length,
@@ -146,6 +164,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                             });
                           },
                           child: Container(
+                            width: SizeConfig.screenWidth*0.25,
                             decoration: BoxDecoration(
                               border: Border.all(color: UiConstants.primaryColor),
                               borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), bottomLeft: Radius.circular(20.0)),
@@ -164,6 +183,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                             });
                           },
                           child: Container(
+                            width: SizeConfig.screenWidth*0.25,
                             decoration: BoxDecoration(
                               border: Border.all(color: UiConstants.primaryColor),
                               borderRadius: BorderRadius.only(topRight: Radius.circular(20.0), bottomRight: Radius.circular(20.0)),
@@ -182,6 +202,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                             });
                           },
                           child: Container(
+                            width: SizeConfig.screenWidth*0.25,
                             decoration: BoxDecoration(
                               border: Border.all(color: UiConstants.primaryColor),
                               color: (_selectedTimeSlotIndex==index)?UiConstants.primaryColor:Colors.transparent,
@@ -213,9 +234,28 @@ class _ContactUsPageState extends State<ContactUsPage> {
                                     .copyWith(color: Colors.white, fontSize: SizeConfig.mediumTextSize*1.4, fontWeight: FontWeight.bold),),
                         highlightColor: Colors.white30,
                         splashColor: Colors.white30,
-                        onPressed: () {
-                          // TODO : Implement request call logic
-
+                        onPressed: () async {
+                          try {
+                            if(_requestCallPhoneController.text.trim().length!=10) {
+                              baseProvider.showNegativeAlert('Incorrect', 'Please enter a valid phone number', context);
+                              return;
+                            }
+                            bool res = await dbProvider.addCallbackRequest(baseProvider.myUser.uid,
+                              baseProvider.myUser.name,
+                              _requestCallPhoneController.text.trim(),
+                              callTimes[_selectedTimeSlotIndex]);
+                            if(res) {
+                              baseProvider.showPositiveAlert('Callback Placed', 'Thank you for letting us know, we will call you soon!', context);
+                              Navigator.of(context).pop();
+                            }
+                            else {
+                              baseProvider.showPositiveAlert('Error', 'Something went wrong while placing a request, please try again later.', context);
+                              Navigator.of(context).pop();
+                            }
+                          } catch(e) {
+                            baseProvider.showPositiveAlert('Error', 'Something went wrong while placing a request, please try again later.', context);
+                            Navigator.of(context).pop();
+                          }
                         },
                       ),
                       color: Colors.transparent,

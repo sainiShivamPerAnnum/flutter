@@ -4,6 +4,7 @@ import 'dart:ui' as ui show Image, instantiateImageCodec;
 
 import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -58,8 +59,8 @@ class LogoFadeIn extends State<SplashScreen> {
     await baseProvider.init();
     await fcmProvider.setupFcm();
     _timer3.cancel();
-    // TODO : Add update check here
     bool isThereBreakingUpdate = await checkBreakingUpdate();
+    // isThereBreakingUpdate = true;
     if(isThereBreakingUpdate) {
       Navigator.push(context, MaterialPageRoute(builder: (context)=> UpdateRequiredScreen()));
     }
@@ -99,16 +100,18 @@ class LogoFadeIn extends State<SplashScreen> {
 
   Future<bool> checkBreakingUpdate() async {
     String currentBuild = BaseUtil.packageInfo.buildNumber;
-    String minBuild;
-    // TODO : Add minimum build number fetching
-    if(int.parse(currentBuild)<int.parse(minBuild)) {
-      Future.delayed(Duration(seconds: 1), (){
+    print('Current Build $currentBuild');
+    String minBuild = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER);
+    print('Min Build Required $minBuild');
+    // String minBuild = "0";
+    try {
+      if(int.parse(currentBuild)<int.parse(minBuild)) {
         return true;
-      });
-    }
-    Future.delayed(Duration(seconds: 1), (){
+      }
       return false;
-    });
+    } catch(e) {
+      return true;
+    }
   }
 
   @override

@@ -6,6 +6,7 @@ class BaseRemoteConfig {
 
   ///Each config is set as a map = {name, default value}
   static const Map<String, String> _DRAW_PICK_TIME = {'draw_pick_time': '18'};
+  static const Map<String, String> _FORCE_MIN_BUILD_NUMBER = {'force_min_build_number': '0'};
   static const Map<String, String> _TAMBOLA_HEADER_FIRST = {
     'tambola_header_1': 'Today\'s picks'
   };
@@ -64,6 +65,7 @@ class BaseRemoteConfig {
 
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,
+    ..._FORCE_MIN_BUILD_NUMBER,
     ..._TAMBOLA_HEADER_FIRST,
     ..._TAMBOLA_HEADER_SECOND,
     ..._DEPOSIT_UPI_ADDRESS,
@@ -109,6 +111,8 @@ class BaseRemoteConfig {
   }
 
   static String get DRAW_PICK_TIME => _DRAW_PICK_TIME.keys.first;
+
+  static String get FORCE_MIN_BUILD_NUMBER =>  _FORCE_MIN_BUILD_NUMBER.keys.first;
 
   static String get KYC_COMPLETION_PRIZE => _KYC_COMPLETION_PRIZE.keys.first;
 

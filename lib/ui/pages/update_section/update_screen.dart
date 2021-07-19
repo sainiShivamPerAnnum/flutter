@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:felloapp/ui/pages/tabs/profile/profile_screen.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:launch_review/launch_review.dart';
+import 'package:in_app_update/in_app_update.dart';
 
 class UpdateRequiredScreen extends StatelessWidget {
   const UpdateRequiredScreen({Key key}) : super(key: key);
@@ -16,7 +18,23 @@ class UpdateRequiredScreen extends StatelessWidget {
           child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: SizeConfig.blockSizeVertical*15,),
+            SafeArea(
+                child: GestureDetector(
+                  onTap : () {
+                    if(Platform.isIOS) {
+                      Navigator.of(context).pop();
+                    }
+                    else if(Platform.isAndroid) {
+                      SystemNavigator.pop();
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Align(alignment: Alignment.centerLeft,child: Icon(Icons.close, size: SizeConfig.blockSizeVertical*4,)),
+                  ),
+                )
+            ),
+            SizedBox(height: SizeConfig.blockSizeVertical*5,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -50,12 +68,11 @@ class UpdateRequiredScreen extends StatelessWidget {
                   highlightColor: Colors.white30,
                   splashColor: Colors.white30,
                   onPressed: () {
-                    // TODO: implement update logic
                     if(Platform.isIOS) {
-                      LaunchReview.launch();
+                      //TODO : Add ios Store link
                     }
                     else if(Platform.isAndroid) {
-                      //in-app update
+                      launchUrl('https://play.google.com/store/apps/details?id=in.fello.felloapp');
                     }
                   },
                 ),
