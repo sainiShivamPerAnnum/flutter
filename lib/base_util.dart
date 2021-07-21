@@ -406,7 +406,7 @@ class BaseUtil extends ChangeNotifier {
       _userCreationTimestamp = null;
 
       isOtpResendCount = 0;
-
+      delegate.appState.setCurrentTabIndex = 0;
       isUserOnboarded = false;
       isLoginNextInProgress = false;
       isEditProfileNextInProgress = false;

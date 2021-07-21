@@ -90,17 +90,18 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             Consumer<BaseUtil>(
               builder: (ctx, bp, child) {
-                return FlipCard(
-                  key: cardKey,
-                  direction: FlipDirection.VERTICAL,
-                  // default
-                  speed: 800,
-                  flipOnTouch: false,
-                  front: UserProfileCard(),
-                  back: UserEditProfileCard(
-                    oldname: baseProvider.myUser.name,
-                  ),
-                );
+                return UserProfileCard();
+                // return FlipCard(
+                //   key: cardKey,
+                //   direction: FlipDirection.VERTICAL,
+                //   // default
+                //   speed: 800,
+                //   flipOnTouch: false,
+                //   front: UserProfileCard(),
+                //   back: UserEditProfileCard(
+                //     oldname: baseProvider.myUser.name,
+                //   ),
+                // );
               },
             ),
             Consumer<BaseUtil>(
@@ -1001,60 +1002,60 @@ class _UserProfileCardState extends State<UserProfileCard> {
                                     fit: BoxFit.cover,
                                   ),
                                 ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: InkWell(
-                              onTap: () async {
-                                var _status = await Permission.photos.status;
-                                if (_status.isUndetermined ||
-                                    _status.isRestricted ||
-                                    _status.isLimited ||
-                                    _status.isDenied) {
-                                  showDialog(
-                                      context: context,
-                                      builder: (ctx) {
-                                        return ConfirmActionDialog(
-                                            title: "Request Permission",
-                                            description:
-                                                "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
-                                            buttonText: "Continue",
-                                            asset: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 8),
-                                              child: Image.asset(
-                                                  "images/gallery.png",
-                                                  height:
-                                                      SizeConfig.screenWidth *
-                                                          0.24),
-                                            ),
-                                            confirmAction: () {
-                                              Navigator.pop(context);
-                                              chooseprofilePicture();
-                                            },
-                                            cancelAction: () =>
-                                                Navigator.pop(context));
-                                      });
-                                } else if (_status.isGranted) {
-                                  chooseprofilePicture();
-                                } else {
-                                  baseProvider.showNegativeAlert(
-                                      'Permission Unavailable',
-                                      'Please enable permission from settings to continue',
-                                      context);
-                                }
-                              },
-                              child: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                radius: SizeConfig.blockSizeHorizontal * 4,
-                                child: Icon(
-                                  Icons.photo_camera_rounded,
-                                  color: UiConstants.primaryColor,
-                                  size: SizeConfig.blockSizeHorizontal * 4,
-                                ),
-                              ),
-                            ),
-                          ),
+                          // Positioned(
+                          //   bottom: 0,
+                          //   right: 0,
+                          //   child: InkWell(
+                          //     onTap: () async {
+                          //       var _status = await Permission.photos.status;
+                          //       if (_status.isUndetermined ||
+                          //           _status.isRestricted ||
+                          //           _status.isLimited ||
+                          //           _status.isDenied) {
+                          //         showDialog(
+                          //             context: context,
+                          //             builder: (ctx) {
+                          //               return ConfirmActionDialog(
+                          //                   title: "Request Permission",
+                          //                   description:
+                          //                       "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
+                          //                   buttonText: "Continue",
+                          //                   asset: Padding(
+                          //                     padding: EdgeInsets.symmetric(
+                          //                         vertical: 8),
+                          //                     child: Image.asset(
+                          //                         "images/gallery.png",
+                          //                         height:
+                          //                             SizeConfig.screenWidth *
+                          //                                 0.24),
+                          //                   ),
+                          //                   confirmAction: () {
+                          //                     Navigator.pop(context);
+                          //                     chooseprofilePicture();
+                          //                   },
+                          //                   cancelAction: () =>
+                          //                       Navigator.pop(context));
+                          //             });
+                          //       } else if (_status.isGranted) {
+                          //         chooseprofilePicture();
+                          //       } else {
+                          //         baseProvider.showNegativeAlert(
+                          //             'Permission Unavailable',
+                          //             'Please enable permission from settings to continue',
+                          //             context);
+                          //       }
+                          //     },
+                          //     child: CircleAvatar(
+                          //       backgroundColor: Colors.white,
+                          //       radius: SizeConfig.blockSizeHorizontal * 4,
+                          //       child: Icon(
+                          //         Icons.photo_camera_rounded,
+                          //         color: UiConstants.primaryColor,
+                          //         size: SizeConfig.blockSizeHorizontal * 4,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -1114,19 +1115,19 @@ class _UserProfileCardState extends State<UserProfileCard> {
               )
             ],
           ),
-          Positioned(
-            top: 4,
-            right: 4,
-            child: IconButton(
-              onPressed: () {
-                cardKey.currentState.toggleCard();
-              },
-              icon: Icon(
-                Icons.edit_outlined,
-                color: Colors.white,
-              ),
-            ),
-          )
+          // Positioned(
+          //   top: 4,
+          //   right: 4,
+          //   child: IconButton(
+          //     onPressed: () {
+          //       cardKey.currentState.toggleCard();
+          //     },
+          //     icon: Icon(
+          //       Icons.edit_outlined,
+          //       color: Colors.white,
+          //     ),
+          //   ),
+          // )
         ],
       ),
     );

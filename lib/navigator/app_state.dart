@@ -34,6 +34,7 @@ class AppState extends ChangeNotifier {
   static String _fcmData;
   static bool isRootLoaded = false;
   static bool unsavedChanges = false;
+  static bool isOnboardingInProgress = false;
   static List<ScreenItem> screenStack = [];
 
   PageAction _currentAction = PageAction();

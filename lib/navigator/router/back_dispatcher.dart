@@ -16,8 +16,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       barrierDismissible: false,
       context: _routerDelegate.navigatorKey.currentContext,
       builder: (ctx) => ConfirmActionDialog(
-        title: "Exit onboarding?",
-        description: "You are almost there.🕺\n Are you sure you want to exit?",
+        title: "You have unsaved changes",
+        description: "Are you sure you want to exit",
         buttonText: "Yes",
         confirmAction: () {
           print(AppState.screenStack);
@@ -34,28 +34,28 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
+    // If the top item is anything except a scaffold
     if (AppState.screenStack.last == ScreenItem.dialog) {
       Navigator.pop(_routerDelegate.navigatorKey.currentContext);
       AppState.screenStack.removeLast();
       print("Current Stack: ${AppState.screenStack}");
 
       return Future.value(true);
-    } else if (AppState.screenStack.length == 1) {
-      if (_routerDelegate.appState.getCurrentTabIndex != 0) {
-        _routerDelegate.appState.returnHome();
-      } else
-        return _routerDelegate.popRoute();
-    } else {
-      if (AppState.unsavedChanges == true) {
-        BaseUtil().showNegativeAlert(
-            "Exit Onboarding?🕺",
-            "Press back once more to exit",
-            _routerDelegate.navigatorKey.currentContext);
-        AppState.unsavedChanges = false;
-        //return _confirmExit();
-      } else {
-        return _routerDelegate.popRoute();
-      }
     }
+    // If the root tab is not 0 at the time of exit
+    else if (AppState.screenStack.length == 1 &&
+        _routerDelegate.appState.getCurrentTabIndex != 0) {
+      _routerDelegate.appState.returnHome();
+    } else if (AppState.isOnboardingInProgress) {
+      BaseUtil().showNegativeAlert(
+          "Exit Onboarding?🕺",
+          "Press back once more to exit",
+          _routerDelegate.navigatorKey.currentContext);
+      AppState.isOnboardingInProgress = false;
+      //return _confirmExit();
+    } else if (AppState.unsavedChanges)
+      return _confirmExit();
+    else
+      return _routerDelegate.popRoute();
   }
 }

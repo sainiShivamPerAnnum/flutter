@@ -1,21 +1,52 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/elements/change_profile_picture_dialog.dart';
+import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
+import 'package:felloapp/ui/elements/update_name.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../../../../base_util.dart';
 
-class UserProfileDetails extends StatelessWidget {
+class UserProfileDetails extends StatefulWidget {
+  @override
+  _UserProfileDetailsState createState() => _UserProfileDetailsState();
+}
+
+class _UserProfileDetailsState extends State<UserProfileDetails> {
   BaseUtil baseProvider;
+
   double picSize;
+
+  chooseprofilePicture() async {
+    final temp = await ImagePicker().getImage(source: ImageSource.gallery);
+    if (temp != null) {
+      HapticFeedback.vibrate();
+      print("--------------------------------->" + temp.path);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => ChangeProfilePicture(
+          image: File(temp.path),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    baseProvider = Provider.of<BaseUtil>(
+      context,
+    );
     picSize = SizeConfig.screenHeight / 4.8;
     return Scaffold(
       body: Container(
@@ -28,13 +59,26 @@ class UserProfileDetails extends StatelessWidget {
                 width: SizeConfig.screenWidth,
                 height: SizeConfig.screenHeight / 2.4,
                 decoration: BoxDecoration(
-                  gradient: new LinearGradient(colors: [
-                    UiConstants.primaryColor.withGreen(200),
-                    UiConstants.primaryColor,
-                  ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
+                  image: DecorationImage(
+                      image:
+                          CachedNetworkImageProvider(baseProvider.myUserDpUrl),
+                      fit: BoxFit.cover),
                 ),
                 child: Stack(
                   children: [
+                    Container(
+                      width: SizeConfig.screenWidth,
+                      height: SizeConfig.screenHeight / 2.4,
+                      decoration: BoxDecoration(
+                        gradient: new LinearGradient(
+                            colors: [
+                              Colors.black.withOpacity(0.5),
+                              Colors.black.withOpacity(0.7)
+                            ],
+                            begin: Alignment(0.5, -1.0),
+                            end: Alignment(0.5, 1.0)),
+                      ),
+                    ),
                     SafeArea(
                       child: Container(
                         width: SizeConfig.screenWidth,
@@ -44,24 +88,21 @@ class UserProfileDetails extends StatelessWidget {
                           children: [
                             SizedBox(height: kToolbarHeight),
                             Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal:
-                                      SizeConfig.blockSizeHorizontal * 5),
                               height: picSize,
                               width: picSize,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border:
                                     Border.all(color: Colors.white, width: 8),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: UiConstants.primaryColor
-                                          .withBlue(900)
-                                          .withOpacity(0.5),
-                                      offset: Offset(0, 10),
-                                      blurRadius: 30,
-                                      spreadRadius: 2)
-                                ],
+                                // boxShadow: [
+                                //   BoxShadow(
+                                //       color: UiConstants.primaryColor
+                                //           .withBlue(900)
+                                //           .withOpacity(0.5),
+                                //       offset: Offset(0, 10),
+                                //       blurRadius: 30,
+                                //       spreadRadius: 2)
+                                // ],
                                 image: DecorationImage(
                                     image: baseProvider.myUserDpUrl == null ||
                                             baseProvider.myUserDpUrl == ""
@@ -73,6 +114,59 @@ class UserProfileDetails extends StatelessWidget {
                                           ),
                                     fit: BoxFit.cover),
                               ),
+                              alignment: Alignment.bottomRight,
+                              child: Container(
+                                height: picSize / 4.4,
+                                width: picSize / 4.4,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: IconButton(
+                                  onPressed: () async {
+                                    var _status =
+                                        await Permission.photos.status;
+                                    if (_status.isUndetermined ||
+                                        _status.isRestricted ||
+                                        _status.isLimited ||
+                                        _status.isDenied) {
+                                      showDialog(
+                                          context: context,
+                                          builder: (ctx) {
+                                            return ConfirmActionDialog(
+                                                title: "Request Permission",
+                                                description:
+                                                    "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
+                                                buttonText: "Continue",
+                                                asset: Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 8),
+                                                  child: Image.asset(
+                                                      "images/gallery.png",
+                                                      height: SizeConfig
+                                                              .screenWidth *
+                                                          0.24),
+                                                ),
+                                                confirmAction: () {
+                                                  Navigator.pop(context);
+                                                  chooseprofilePicture();
+                                                },
+                                                cancelAction: () =>
+                                                    Navigator.pop(context));
+                                          });
+                                    } else if (_status.isGranted) {
+                                      chooseprofilePicture();
+                                    } else {
+                                      baseProvider.showNegativeAlert(
+                                          'Permission Unavailable',
+                                          'Please enable permission from settings to continue',
+                                          context);
+                                    }
+                                  },
+                                  icon: Icon(Icons.camera),
+                                  color: UiConstants.primaryColor,
+                                ),
+                              ),
                             ),
                             Container(
                               margin: EdgeInsets.only(
@@ -80,15 +174,38 @@ class UserProfileDetails extends StatelessWidget {
                                   right: SizeConfig.blockSizeHorizontal * 5,
                                   top: 16,
                                   bottom: SizeConfig.blockSizeHorizontal * 5),
-                              child: FittedBox(
-                                child: Text(
-                                  baseProvider.myUser.name,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: SizeConfig.cardTitleTextSize,
-                                    color: Colors.white,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: SizedBox(),
                                   ),
-                                ),
+                                  FittedBox(
+                                    child: Text(
+                                      baseProvider.myUser.name,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: SizeConfig.cardTitleTextSize,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      AppState.screenStack
+                                          .add(ScreenItem.dialog);
+                                      showDialog(
+                                          barrierDismissible: false,
+                                          context: context,
+                                          builder: (ctx) => UpdateNameDialog());
+                                    },
+                                    icon: Icon(
+                                      Icons.edit_outlined,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                           ],
