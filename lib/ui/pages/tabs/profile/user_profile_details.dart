@@ -2,13 +2,17 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/update_name.dart';
+import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:flat_icons_flutter/flat_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -25,7 +29,7 @@ class UserProfileDetails extends StatefulWidget {
 
 class _UserProfileDetailsState extends State<UserProfileDetails> {
   BaseUtil baseProvider;
-
+  FcmHandler fcmProvider;
   double picSize;
 
   chooseprofilePicture() async {
@@ -44,11 +48,11 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(
-      context,
-    );
+    baseProvider = Provider.of<BaseUtil>(context);
+    fcmProvider = Provider.of<FcmHandler>(context, listen: false);
     picSize = SizeConfig.screenHeight / 4.8;
     return Scaffold(
+      backgroundColor: Color(0xffEDEDED),
       body: Container(
         height: SizeConfig.screenHeight,
         width: SizeConfig.screenWidth,
@@ -173,7 +177,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                   left: SizeConfig.blockSizeHorizontal * 5,
                                   right: SizeConfig.blockSizeHorizontal * 5,
                                   top: 16,
-                                  bottom: SizeConfig.blockSizeHorizontal * 5),
+                                  bottom: SizeConfig.blockSizeHorizontal * 4),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -242,288 +246,254 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                   ],
                 ),
               ),
-              ProfileDetailsTile(
-                color: Colors.pink,
-                title: "Username",
-                value: "@${baseProvider.myUser.username}" ?? "Not claimed yet",
-                icon: Icons.alternate_email_rounded,
+              SectionCard(
+                baseProvider: baseProvider,
+                title: "Personal Details",
+                content: Container(
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          cardItem(
+                              "Username",
+                              baseProvider.myUser.username != null
+                                  ? "@${baseProvider.myUser.username}"
+                                  : "unavailable"),
+                          cardItem("Mobile Number",
+                              "+91 ${baseProvider.myUser.mobile}" ?? ""),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          cardItem(
+                              "Email",
+                              baseProvider.myUser.email != null
+                                  ? baseProvider.myUser.email
+                                  : "unavailable"),
+                          cardItem(
+                              baseProvider.myUser.dob != null
+                                  ? "Date of Birth"
+                                  : "Age",
+                              baseProvider.myUser.dob ??
+                                  baseProvider.myUser.age ??
+                                  "unavailable"),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          cardItem("Gender", getGender()),
+                          Expanded(
+                            child: ListTile(
+                              title: Text(
+                                "PAN",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: UiConstants.primaryColor
+                                        .withOpacity(0.5),
+                                    fontSize: SizeConfig.mediumTextSize * 0.8),
+                              ),
+                              subtitle: baseProvider.myUser.pan != null
+                                  ? Text(
+                                      baseProvider.myUser.pan,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: SizeConfig.mediumTextSize,
+                                      ),
+                                    )
+                                  : Wrap(
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            delegate.appState.currentAction =
+                                                PageAction(
+                                              state: PageState.addWidget,
+                                              widget: AugmontOnboarding(),
+                                              page: AugOnboardPageConfig,
+                                            );
+                                          },
+                                          child: Text(
+                                            "Register",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              ProfileDetailsTile(
-                color: UiConstants.primaryColor,
-                title: "Mobile No.",
-                value: baseProvider.myUser.mobile,
-                icon: Icons.phone,
+              SectionCard(
+                baseProvider: baseProvider,
+                title: "Bank Details",
+                content: Container(
+                  width: SizeConfig.screenWidth,
+                  child:
+                      // IF BANK DETAILS AVAILALBE
+                      // Column(
+                      //   children: [
+                      //     Row(
+                      //       children: [
+                      //         cardItem("Account Number",
+                      //             "1234567890" ?? "unavailable"),
+                      //       ],
+                      //     ),
+                      //     Row(
+                      //       children: [
+                      //         cardItem("Account Name",
+                      //             "Manish Maryada" ?? "unavailable"),
+                      //         cardItem(
+                      //             "IFSC Code", "PYTM123456" ?? "unavailable"),
+                      //       ],
+                      //     ),
+                      //   ],
+                      // ),
+                      // IF BANK DETAILS NOT AVAILBLE
+                      Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 16),
+                      Text("Your bank account details will be shown here",
+                          style: TextStyle(
+                            color: Colors.grey,
+                          )),
+                      ElevatedButton.icon(
+                        icon: Icon(Icons.add, color: Colors.white),
+                        onPressed: () {
+                          delegate.appState.currentAction = PageAction(
+                              state: PageState.addPage,
+                              page: EditAugBankDetailsPageConfig);
+                        },
+                        label: Text(
+                          "Add bank  ",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                    ],
+                  ),
+                ),
               ),
-              ProfileDetailsTile(
-                color: Colors.amber,
-                title: "Email",
-                value: baseProvider.myUser.email,
-                icon: Icons.email_rounded,
-              ),
-              ProfileDetailsTile(
-                color: Colors.blue,
-                title: "Date of Birth",
-                value: baseProvider.myUser.dob,
-                icon: Icons.calendar_today,
-              ),
-              ProfileDetailsTile(
-                color: Colors.purple,
-                title: "PAN",
-                value: baseProvider.myUser.pan ?? "N/A",
-                icon: Icons.air_sharp,
-              ),
-              ProfileDetailsTile(
-                color: Colors.orange,
-                title: "Gender",
-                value: baseProvider.myUser.gender == 'M' ? "Male" : "Female",
-                icon: baseProvider.myUser.gender == "M"
-                    ? Icons.male
-                    : Icons.female,
+              Card(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.5),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.blockSizeHorizontal * 2.5,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ListTile(
+                        title: Text(
+                          "App Preferences",
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w600,
+                              fontSize: SizeConfig.mediumTextSize * 1.2),
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      ListTile(
+                        title: Text("App Lock"),
+                        trailing:
+                            Switch.adaptive(value: true, onChanged: (val) {}),
+                      ),
+                      ListTile(
+                        title: Text("Tambola Draw Notifications"),
+                        trailing:
+                            Switch.adaptive(value: false, onChanged: (val) {}),
+                      ),
+                      SizedBox(height: 8),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
         ),
       ),
     );
+  }
 
-    // Scaffold(
-    //   body: Container(
-    //     height: SizeConfig.screenHeight,
-    //     width: SizeConfig.screenWidth,
-    //     child: Stack(children: [
-    //       Container(
-    //         width: SizeConfig.screenWidth,
-    //         height: SizeConfig.screenHeight,
-    //         decoration: BoxDecoration(
-    //           color: UiConstants.primaryColor,
-    //           image: DecorationImage(
-    //               image: baseProvider.myUserDpUrl != null
-    //                   ? CachedNetworkImageProvider(baseProvider.myUserDpUrl)
-    //                   : AssetImage("images/profile.png"),
-    //               fit: BoxFit.cover),
-    //         ),
-    //         child: BackdropFilter(
-    //           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-    //           child: Container(
-    //             decoration: BoxDecoration(
-    //               // gradient: new LinearGradient(colors: [
-    //               //   UiConstants.primaryColor.withOpacity(0.4),
-    //               //   UiConstants.primaryColor.withGreen(980).withOpacity(0.6),
-    //               // ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-    //               color: Colors.black.withOpacity(0.2),
-    //             ),
-    //             width: SizeConfig.screenWidth,
-    //             child: Stack(
-    //               children: [
-    //                 SafeArea(
-    //                   child: Container(
-    //                     height: kToolbarHeight,
-    //                     child: Row(
-    //                       children: [
-    //                         IconButton(
-    //                           icon: Icon(
-    //                             Icons.arrow_back_rounded,
-    //                             color: Colors.white,
-    //                             size: 30,
-    //                           ),
-    //                           onPressed: () =>
-    //                               backButtonDispatcher.didPopRoute(),
-    //                         ),
-    //                         Spacer(),
-    // Text(
-    //   "My Profile",
-    //   style: TextStyle(
-    //     color: Colors.white,
-    //     fontWeight: FontWeight.w700,
-    //     fontSize: SizeConfig.cardTitleTextSize * 0.8,
-    //   ),
-    // ),
-    //                         Spacer(),
-    //                         SizedBox(width: 40)
-    //                       ],
-    //                     ),
-    //                   ),
-    //                 )
-    //               ],
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-    //       Positioned(
-    //         bottom: SizeConfig.blockSizeHorizontal * 5,
-    //         child: Container(
-    //           width: SizeConfig.screenWidth,
-    //           child: Row(
-    //             mainAxisAlignment: MainAxisAlignment.center,
-    //             children: [
-    //               Container(
-    //                 padding: EdgeInsets.symmetric(
-    //                     horizontal: SizeConfig.blockSizeHorizontal * 8),
-    //                 decoration: BoxDecoration(
-    //                   color: Theme.of(context).scaffoldBackgroundColor,
-    //                   borderRadius: BorderRadius.circular(20),
-    //                 ),
-    //                 width: SizeConfig.screenWidth -
-    //                     SizeConfig.blockSizeHorizontal * 10,
-    //                 height: SizeConfig.screenHeight -
-    //                     kToolbarHeight * 1.2 -
-    //                     picSize,
-    // child: ListView(
-    //   children: [
-    //     Row(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       children: [
-    //         Container(
-    //           margin: EdgeInsets.only(
-    //               left: SizeConfig.blockSizeHorizontal * 5,
-    //               right: SizeConfig.blockSizeHorizontal * 5,
-    //               top: picSize / 3.5,
-    //               bottom: SizeConfig.blockSizeHorizontal * 5),
-    //           child: FittedBox(
-    //             child: Text(baseProvider.myUser.name,
-    //                 style: TextStyle(
-    //                   fontWeight: FontWeight.w700,
-    //                   fontSize: SizeConfig.cardTitleTextSize,
-    //                   color: Colors.black45,
-    //                 )),
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //     ProfileDetailsTile(
-    //       color: Colors.pink,
-    //       title: "Username",
-    //       value: "@${baseProvider.myUser.username}" ??
-    //           "Not claimed yet",
-    //       icon: Icons.alternate_email_rounded,
-    //     ),
-    //     ProfileDetailsTile(
-    //       color: UiConstants.primaryColor,
-    //       title: "Mobile No.",
-    //       value: baseProvider.myUser.mobile,
-    //       icon: Icons.phone,
-    //     ),
-    //     ProfileDetailsTile(
-    //       color: Colors.amber,
-    //       title: "Email",
-    //       value: baseProvider.myUser.email,
-    //       icon: Icons.email_rounded,
-    //     ),
-    //     ProfileDetailsTile(
-    //       color: Colors.blue,
-    //       title: "Date of Birth",
-    //       value: baseProvider.myUser.dob,
-    //       icon: Icons.calendar_today,
-    //     ),
-    //     ProfileDetailsTile(
-    //       color: Colors.purple,
-    //       title: "PAN",
-    //       value: baseProvider.myUser.pan ?? "N/A",
-    //       icon: Icons.air_sharp,
-    //     ),
-    //     ProfileDetailsTile(
-    //       color: Colors.orange,
-    //       title: "Gender",
-    //       value: baseProvider.myUser.gender == 'M'
-    //           ? "Male"
-    //           : "Female",
-    //       icon: baseProvider.myUser.gender == "M"
-    //           ? Icons.male
-    //           : Icons.female,
-    //     ),
-    //   ],
-    // ),
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    // Positioned(
-    //   top: kToolbarHeight * 1.4,
-    //   child: SafeArea(
-    //     child: Container(
-    //       width: SizeConfig.screenWidth,
-    //       child: Row(
-    //         mainAxisAlignment: MainAxisAlignment.center,
-    //         children: [
-    //           Container(
-    //             padding: EdgeInsets.symmetric(
-    //                 horizontal: SizeConfig.blockSizeHorizontal * 5),
-    //             height: picSize,
-    //             width: picSize,
-    //             decoration: BoxDecoration(
-    //               shape: BoxShape.circle,
-    //               border: Border.all(color: Colors.white, width: 8),
-    //               boxShadow: [
-    //                 BoxShadow(
-    //                     color: UiConstants.primaryColor
-    //                         .withBlue(900)
-    //                         .withOpacity(0.5),
-    //                     offset: Offset(0, 10),
-    //                     blurRadius: 30,
-    //                     spreadRadius: 2)
-    //               ],
-    //               image: DecorationImage(
-    //                   image: baseProvider.myUserDpUrl == null ||
-    //                           baseProvider.myUserDpUrl == ""
-    //                       ? AssetImage(
-    //                           "images/profile.png",
-    //                         )
-    //                       : CachedNetworkImageProvider(
-    //                           baseProvider.myUserDpUrl,
-    //                         ),
-    //                   fit: BoxFit.cover),
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    // )
-    //     ]),
-    //   ),
-    // );
+  String getGender() {
+    if (baseProvider.myUser.gender == "M")
+      return "Male";
+    else if (baseProvider.myUser.gender == "F")
+      return "Female";
+    else if (baseProvider.myUser.gender == "O") return "Prefer not say";
+    return "unavailable";
+  }
+
+  Widget cardItem(String title, String subTitle) {
+    return Expanded(
+      child: ListTile(
+        title: Text(
+          title,
+          style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: UiConstants.primaryColor.withOpacity(0.5),
+              fontSize: SizeConfig.mediumTextSize * 0.8),
+        ),
+        subtitle: Text(
+          subTitle,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: SizeConfig.mediumTextSize,
+          ),
+        ),
+      ),
+    );
   }
 }
 
-class ProfileDetailsTile extends StatelessWidget {
-  final String title, value;
-  final IconData icon;
-  final Color color;
+class SectionCard extends StatelessWidget {
+  const SectionCard(
+      {@required this.baseProvider,
+      @required this.title,
+      @required this.content});
 
-  ProfileDetailsTile({this.color, this.icon, this.title, this.value});
+  final BaseUtil baseProvider;
+  final String title;
+  final Widget content;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.symmetric(
-          vertical: SizeConfig.blockSizeHorizontal * 3,
-          horizontal: SizeConfig.blockSizeHorizontal * 5),
-      leading: Container(
-        height: SizeConfig.blockSizeHorizontal * 8,
-        width: SizeConfig.blockSizeHorizontal * 8,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: UiConstants.primaryColor.withOpacity(0.1),
+    return Card(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2.5),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.blockSizeHorizontal * 2.5,
         ),
-        child: Icon(
-          icon,
-          color: UiConstants.primaryColor,
-          size: SizeConfig.blockSizeHorizontal * 4,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              title: Text(
+                title,
+                style: TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w600,
+                    fontSize: SizeConfig.mediumTextSize * 1.2),
+              ),
+            ),
+            Divider(
+              height: 0,
+            ),
+            content,
+            SizedBox(
+              height: 8,
+            )
+          ],
         ),
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: UiConstants.primaryColor,
-          fontSize: SizeConfig.mediumTextSize,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      trailing: Text(
-        value,
-        style: TextStyle(
-            fontSize: SizeConfig.mediumTextSize * 1.2, color: Colors.black54),
       ),
     );
   }

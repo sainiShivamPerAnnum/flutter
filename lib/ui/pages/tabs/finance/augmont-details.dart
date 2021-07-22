@@ -104,43 +104,65 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
     iProvider = Provider.of<ICICIModel>(context, listen: false);
     fcmProvider = Provider.of<FcmListener>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
+
     return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            FundAppBar(
-                logo: "images/augmont-share.png",
-                title: "Augmont Gold",
-                backgroundImage:
-                    "https://www.augmont.in/wp-content/uploads/2017/04/augmont-dia-470x480.png"),
-          ];
-        },
-        body: Stack(
+      appBar: AppBar(
+        backgroundColor: augmontGoldPalette.secondaryColor,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  FundInfo(
-                    infoList: [
-                      "24k Digital Gold",
-                      "99.99% Purity",
-                      "17% growth rate in 3 years",
-                      "Ranked no 1 bullion in India"
-                    ],
-                  ),
-                  GoldRateGraph(),
-                  //FundGraph(),
-                  FundDetailsTable(baseProvider.userFundWallet.augGoldQuantity),
-                  GoldProfitCalculator(),
-                  FAQCard(Assets.goldFaqHeaders, Assets.goldFaqAnswers),
-                  _buildBetaWithdrawButton(),
-                ],
+            Image.asset("images/augmont-share.png",
+                height: kToolbarHeight * 0.4),
+            SizedBox(width: 5),
+            FittedBox(
+              child: Text(
+                "Augmont Gold",
+                style: GoogleFonts.montserrat(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-            Positioned(bottom: 0, child: _buildSaveButton()),
           ],
         ),
+        actions: [IconButton(onPressed: () {}, icon: SizedBox())],
       ),
+      // body: NestedScrollView(
+      //   headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+      //     return <Widget>[
+      //       FundAppBar(
+      //           logo: "images/augmont-share.png",
+      //           title: "Augmont Gold",
+      //           backgroundImage:
+      //               "https://www.augmont.in/wp-content/uploads/2017/04/augmont-dia-470x480.png"),
+      //     ];
+      //   },
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                FundInfo(
+                  infoList: [
+                    "24k Digital Gold",
+                    "99.99% Purity",
+                    "17% growth rate in 3 years",
+                    "Ranked no 1 bullion in India"
+                  ],
+                ),
+                GoldRateGraph(),
+                //FundGraph(),
+                FundDetailsTable(baseProvider.userFundWallet.augGoldQuantity),
+                GoldProfitCalculator(),
+                FAQCard(Assets.goldFaqHeaders, Assets.goldFaqAnswers),
+                _buildBetaWithdrawButton(),
+              ],
+            ),
+          ),
+          Positioned(bottom: 0, child: _buildSaveButton()),
+        ],
+      ),
+      // ),
     );
   }
 

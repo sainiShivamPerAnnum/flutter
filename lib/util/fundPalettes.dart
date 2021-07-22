@@ -15,7 +15,7 @@ class FundPalettes {
 // );
 
 FundPalettes augmontGoldPalette = FundPalettes(
-  primaryColor: Color(0xffFF8109),
-  primaryColor2: Color(0xffFFBC22),
+  primaryColor: Color(0xffFFB700),
+  primaryColor2: Color(0xffFFC300),
   secondaryColor: Color(0xff203130),
 );

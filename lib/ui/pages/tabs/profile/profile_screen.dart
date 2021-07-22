@@ -161,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onPress: () => appState.currentAction = PageAction(
                         state: PageState.addPage,
                         page: UserProfileDetailsConfig),
-                    title: "Personal Details",
+                    title: "Account",
                     trailWidget: Icon(
                       Icons.arrow_forward_ios,
                       color: UiConstants.primaryColor,
@@ -465,25 +465,99 @@ class ShareCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Both get ₹ 25 on every referral",
-                  style: TextStyle(
-                      color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          offset: Offset(5, 5),
-                          color: Colors.black26,
-                          blurRadius: 10,
-                        )
-                      ],
-                      fontWeight: FontWeight.w700,
-                      fontSize: SizeConfig.cardTitleTextSize),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Get ₹ 25 on every referral",
+                        style: TextStyle(
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                offset: Offset(5, 5),
+                                color: Colors.black26,
+                                blurRadius: 10,
+                              )
+                            ],
+                            fontWeight: FontWeight.w700,
+                            fontSize: SizeConfig.cardTitleTextSize),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (ctx) {
+                              AppState.screenStack.add(ScreenItem.dialog);
+                              return Wrap(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal:
+                                            SizeConfig.blockSizeHorizontal * 5),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(height: 8),
+                                        Row(
+                                          children: [
+                                            FittedBox(
+                                              child: Text(
+                                                "How to make a successful referral",
+                                                style: GoogleFonts.montserrat(
+                                                  fontWeight: FontWeight.w500,
+                                                  color:
+                                                      UiConstants.primaryColor,
+                                                  fontSize:
+                                                      SizeConfig.largeTextSize,
+                                                ),
+                                              ),
+                                            ),
+                                            Spacer(),
+                                            IconButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              icon: Icon(Icons.close),
+                                            )
+                                          ],
+                                        ),
+                                        Divider(),
+                                        Container(
+                                          child: ListView(
+                                            shrinkWrap: true,
+                                            children: [
+                                              referralTile(
+                                                  "Share your personalised link to your friends and family"),
+                                              referralTile(
+                                                  "Prize balance gets credited as soon as they sign up."),
+                                              referralTile(
+                                                  "Prize balance gets unlocked as soon as they make their first investment."),
+                                              referralTile(
+                                                  "The more you refer, the more you earn. Start referring now ")
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(height: 8),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              );
+                            });
+                      },
+                      child: Icon(
+                        Icons.info_outline,
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 Text(
-                  "You and your friend also receive 10 game tickets that week!",
+                  "Invite friends and get ₹ 25 each when your friend makes their first investment.",
                   style: TextStyle(
                       color: Colors.white, fontSize: SizeConfig.mediumTextSize),
                 ),
@@ -492,6 +566,28 @@ class ShareCard extends StatelessWidget {
               ],
             ),
           )
+        ],
+      ),
+    );
+  }
+
+  Widget referralTile(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        children: [
+          Icon(
+            Icons.brightness_1_outlined,
+            size: 12,
+            color: UiConstants.primaryColor,
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              title,
+              style: GoogleFonts.montserrat(),
+            ),
+          ),
         ],
       ),
     );
@@ -622,16 +718,16 @@ class _ShareOptionsState extends State<ShareOptions> {
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              'SHARE ON WHATSAPP',
-                              style: GoogleFonts.montserrat(
-                                fontSize: SizeConfig.mediumTextSize * 0.9,
-                                color: Colors.white,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
+                            // Text(
+                            //   'WHATSAPP',
+                            //   style: GoogleFonts.montserrat(
+                            //     fontSize: SizeConfig.mediumTextSize * 0.9,
+                            //     color: Colors.white,
+                            //   ),
+                            // ),
+                            // SizedBox(
+                            //   width: 5,
+                            // ),
                             SvgPicture.asset(
                               "images/svgs/whatsapp.svg",
                               color: Colors.white,
