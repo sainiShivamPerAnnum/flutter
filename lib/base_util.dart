@@ -122,11 +122,15 @@ class BaseUtil extends ChangeNotifier {
   bool isSecurityEnabled = false;
 
   Future init() async {
+    print('inside init base util');
     //security
     isSecurityEnabled = await getSecurityValue();
     ///analytics
     BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
+    //remote config for various remote variables
+    print('base util remote config');
+    await BaseRemoteConfig.init();
     ///fetch on-boarding status and User details
     firebaseUser = FirebaseAuth.instance.currentUser;
     if (firebaseUser != null) {
@@ -146,8 +150,6 @@ class BaseUtil extends ChangeNotifier {
       if (_userTicketWallet == null) {
         await _initiateNewTicketWallet();
       }
-      //remote config for various remote variables
-      await BaseRemoteConfig.init();
       //get user creation time
       _userCreationTimestamp = firebaseUser.metadata.creationTime;
       //check if there are any icici deposits txns in process

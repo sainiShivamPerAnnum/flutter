@@ -59,9 +59,9 @@ class _ContactUsPageState extends State<ContactUsPage> {
           Align(
             alignment: Alignment.bottomRight,
             child: Container(
-                width: SizeConfig.screenWidth*0.7,
+                width: SizeConfig.screenWidth*0.8,
                 color: Colors.transparent,
-                child: SvgPicture.asset("images/contact_us_full_opacity.svg",colorBlendMode: BlendMode.dst,color: UiConstants.backgroundColor,alignment: Alignment.bottomRight)
+                child: SvgPicture.asset("images/contact_us_half_opacity.svg",colorBlendMode: BlendMode.dst,color: UiConstants.backgroundColor,alignment: Alignment.bottomRight)
             ),
           ),
           ListView(
@@ -89,7 +89,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
               ListTile(title: Text('Play Walkthrough', style : TextStyle(fontSize: SizeConfig.largeTextSize, color: UiConstants.textColor)),tileColor: Colors.transparent, trailing: Icon(Icons.arrow_forward_ios,),
                 onTap: () {
                   HapticFeedback.vibrate();
-                  Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>WalkThroughPage()));
+                  appState.currentAction = PageAction(state: PageState.addPage, page: WalkThroughConfig);
                 },),
               SizedBox(height : SizeConfig.blockSizeVertical*1.5),
               ListTile(title: Text('FAQs', style : TextStyle(fontSize: SizeConfig.largeTextSize, color: UiConstants.textColor)),tileColor: Colors.transparent, trailing: Icon(Icons.arrow_forward_ios),

@@ -1,8 +1,12 @@
+import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:video_player/video_player.dart';
 
 class WalkThroughPage extends StatefulWidget {
   @override
@@ -10,47 +14,61 @@ class WalkThroughPage extends StatefulWidget {
 }
 
 class _WalkThroughPageState extends State<WalkThroughPage> {
-  List<String> _videoURLS = ['images/screen_demo.gif','images/screen_demo.gif','images/screen_demo.gif'];
-  List<String> _title = ['Finance', 'Games', 'Referrals'];
+  List<String> _videoURLS = ['images/demo_video.webm','images/demo_video.webm','images/demo_video.webm'];
+  VideoPlayerController _videoPlayerController;
   List<String> _content = [
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   ];
+  int _currentIndex = 0;
+  AppState stateProvider;
+
+  @override
+  void initState() {
+    _onControllerChange(0);
+    super.initState();
+  }
+
+  void _initController(int newIndex) async {
+    _videoPlayerController = VideoPlayerController.asset(_videoURLS[newIndex])
+        ..setLooping(true)
+        ..initialize().then((value) {
+          setState(() {
+            _videoPlayerController.play();
+          });
+        });
+  }
+
+  Future<void> _onControllerChange(int newIndex) async {
+    if(_videoPlayerController==null) {
+      _initController(newIndex);
+    } else {
+      final oldController = _videoPlayerController;
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+        await oldController.dispose();
+        _initController(newIndex);
+      });
+      setState(() {
+        _videoPlayerController = null;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    stateProvider = Provider.of<AppState>(context, listen: false);
     return Scaffold(
-      // appBar: AppBar(
-      //   leading: IconButton(
-      //     icon: Icon(
-      //       Icons.arrow_back_rounded,
-      //       color: Colors.white,
-      //     ),
-      //     onPressed: () {
-      //       Navigator.pop(context);
-      //       // backButtonDispatcher.didPopRoute();
-      //     },
-      //   ),
-      //   elevation: 1.0,
-      //   backgroundColor: UiConstants.primaryColor,
-      //   iconTheme: IconThemeData(
-      //     color: UiConstants.accentColor, //change your color here
-      //   ),
-      //   title: Text('Walkthrough',
-      //       style: GoogleFonts.montserrat(
-      //           color: Colors.white,
-      //           fontWeight: FontWeight.w500,
-      //           fontSize: SizeConfig.largeTextSize)),
-      // ),
       body: SafeArea(
         child: Stack(
           children: [
             Align(child: SvgPicture.asset('images/svgs/walkthrough_bg_illustration.svg',height: SizeConfig.screenHeight*0.5),alignment: Alignment.topLeft,),
             PageView(
               physics: BouncingScrollPhysics(),
-              onPageChanged: (index){
+              onPageChanged: (index) async {
                 setState(() {
-
+                  _currentIndex = index;
+                  _onControllerChange(_currentIndex);
                 });
               },
               children: [
@@ -59,6 +77,27 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                 _buildWalkthroughPage(2),
               ],
             ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                alignment: Alignment.center,
+                width: SizeConfig.screenWidth,
+                height: SizeConfig.blockSizeVertical*6,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  separatorBuilder:(ctx,idx) {return SizedBox(width: SizeConfig.blockSizeHorizontal*2,);},
+                  itemCount: _content.length,
+                  itemBuilder: (ctx,idx) {
+                    return Container(
+                      width: SizeConfig.blockSizeHorizontal*3,
+                      height: SizeConfig.blockSizeHorizontal*3,
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: (idx==_currentIndex)?Colors.grey[500]:Colors.grey[300]),
+                    );
+                  },
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -68,54 +107,40 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
     return SingleChildScrollView(
       child : Column(
         children: [
+         SizedBox(height: SizeConfig.blockSizeVertical*2.5,),
+         Container(
+           alignment: Alignment.centerRight,
+           width: SizeConfig.screenWidth*0.9,
+           child: (index!=_content.length-1)?GestureDetector(onTap: (){backButtonDispatcher.didPopRoute();},child: Text('Skip Tutorial >>', style: TextStyle(color: UiConstants.primaryColor, fontSize: SizeConfig.largeTextSize*0.65),)):SizedBox(width: 0,),
+         ),
           SizedBox(height: SizeConfig.blockSizeVertical*5,),
           Container(
-            // decoration: BoxDecoration(border: Border.all(color: Colors.black38, width: SizeConfig.blockSizeHorizontal*1.5), borderRadius: BorderRadius.circular(10.0)),
-            width: SizeConfig.screenWidth*0.6,
-            height: SizeConfig.screenHeight*0.6,
-            child: Image.asset(_videoURLS[index], gaplessPlayback: true,width: SizeConfig.screenWidth*0.6,fit: BoxFit.fill,height: SizeConfig.screenHeight*0.6,),
+            width: SizeConfig.screenWidth*0.75,
+            height: SizeConfig.screenHeight*0.7,
+            child: (_videoPlayerController!=null)?AspectRatio(
+              aspectRatio:_videoPlayerController.value.aspectRatio,
+              child: VideoPlayer(_videoPlayerController),
+            ):Center(child: CircularProgressIndicator(color: UiConstants.primaryColor,)),
           ),
-          // SizedBox(height: SizeConfig.blockSizeVertical*4,),
-          // Container(
-          //   width: SizeConfig.screenWidth*0.65,
-          //   child: Center(child: Text(_title[index], style: TextStyle(fontSize: SizeConfig.largeTextSize, color: UiConstants.textColor, fontWeight: FontWeight.bold),)),
-          // ),
           SizedBox(height: SizeConfig.blockSizeVertical*3,),
           Container(
             width: SizeConfig.screenWidth*0.65,
             child: Center(child: Text(_content[index], style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),)),
           ),
           SizedBox(height: SizeConfig.blockSizeVertical*3,),
-          Container(
-            alignment: Alignment.center,
-            width: SizeConfig.screenWidth,
-            height: SizeConfig.blockSizeVertical*6,
-            child: ListView.separated(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              separatorBuilder:(ctx,idx) {return SizedBox(width: SizeConfig.blockSizeHorizontal*2,);},
-              itemCount: _content.length,
-              itemBuilder: (ctx,idx) {
-                return Container(
-                  width: SizeConfig.blockSizeHorizontal*3,
-                  height: SizeConfig.blockSizeHorizontal*3,
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: (idx==index)?Colors.grey[500]:Colors.grey[300]),
-                );
-              },
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.only(left : 10.0, right: 30.0, top:8.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                (index!=_title.length-1)?Text('Skip Tutorial >>', style: TextStyle(color: UiConstants.primaryColor, fontSize: SizeConfig.largeTextSize*0.65),):SizedBox(width: 0,),
-                (index==_title.length-1)?Container(
+                (index==_content.length-1)?Container(
                   width: SizeConfig.screenWidth*0.3,
                   height: SizeConfig.blockSizeVertical*5,
                   decoration: BoxDecoration(
-                      borderRadius: new BorderRadius.circular(100.0),
-                      color: UiConstants.primaryColor
+                    gradient: new LinearGradient(colors: [
+                      UiConstants.primaryColor,
+                      UiConstants.primaryColor.withBlue(200),
+                    ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
                   ),
                   child: new Material(
                     child: MaterialButton(
@@ -128,7 +153,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                       highlightColor: Colors.white30,
                       splashColor: Colors.white30,
                       onPressed: () {
-
+                        stateProvider.currentAction = PageAction(state: PageState.addPage, page: WalkThroughCompletedConfig);
                       },
                     ),
                     color: Colors.transparent,
@@ -142,4 +167,14 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
       )
     );
   }
+
+  @override
+  void dispose() {
+    if(_videoPlayerController.value.isPlaying) {
+      _videoPlayerController.pause();
+    }
+    _videoPlayerController.dispose();
+    super.dispose();
+  }
+
 }

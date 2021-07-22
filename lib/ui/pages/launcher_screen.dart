@@ -32,8 +32,10 @@ class LogoFadeIn extends State<SplashScreen> {
   LogoStyle _logoStyle = LogoStyle.markOnly;
   ui.Image logo;
   DeviceUnlock deviceUnlock;
+  BaseUtil baseProvider;
 
-  LogoFadeIn() {
+  @override
+  void initState() {
     _loadImageAsset(Assets.logoMaxSize);
     Timer(const Duration(milliseconds: 700), () {
       setState(() {
@@ -49,11 +51,12 @@ class LogoFadeIn extends State<SplashScreen> {
         _isSlowConnection = true;
       });
     });
+    super.initState();
   }
 
   initialize() async {
     deviceUnlock = DeviceUnlock();
-    final baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
     final fcmProvider = Provider.of<FcmListener>(context, listen: false);
     final stateProvider = Provider.of<AppState>(context, listen: false);
     await baseProvider.init();
@@ -62,7 +65,7 @@ class LogoFadeIn extends State<SplashScreen> {
     bool isThereBreakingUpdate = await checkBreakingUpdate();
     // isThereBreakingUpdate = true;
     if(isThereBreakingUpdate) {
-      Navigator.push(context, MaterialPageRoute(builder: (context)=> UpdateRequiredScreen()));
+      stateProvider.currentAction = PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
     }
     else {
       if (!baseProvider.isUserOnboarded) {
@@ -102,8 +105,8 @@ class LogoFadeIn extends State<SplashScreen> {
     String currentBuild = BaseUtil.packageInfo.buildNumber;
     print('Current Build $currentBuild');
     String minBuild = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER);
-    print('Min Build Required $minBuild');
-    // String minBuild = "0";
+    // print('Min Build Required $minBuild');
+    minBuild = "0";
     try {
       if(int.parse(currentBuild)<int.parse(minBuild)) {
         return true;

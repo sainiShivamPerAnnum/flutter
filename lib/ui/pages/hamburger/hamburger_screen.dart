@@ -133,11 +133,8 @@ class HamburgerMenu extends StatelessWidget {
         }
       case 'contUs':
         {
-          // Navigator.push(
-          //     context, MaterialPageRoute(builder: (ctx) => ChatSupport()));
-          // appstate.currentAction =
-              // PageAction(state: PageState.addPage, page: ChatSupportPageConfig);
-          Navigator.push(context, MaterialPageRoute(builder: (ctx) => ContactUsPage()));
+          appstate.currentAction =
+              PageAction(state: PageState.addPage, page: ContactUsConfig);
           break;
         }
       // case 'kyc':

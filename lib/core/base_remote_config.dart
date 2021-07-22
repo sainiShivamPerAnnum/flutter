@@ -88,6 +88,7 @@ class BaseRemoteConfig {
   };
 
   static Future<bool> init() async {
+    print('initializing remote config');
     remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(DEFAULTS);
     try {
