@@ -317,6 +317,18 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.VerifyEmail:
         VerifyEmailPageConfig.currentPageAction = action;
         break;
+      case Pages.UpdateRequired:
+        UpdateRequiredConfig.currentPageAction = action;
+        break;
+      case Pages.ContactUs:
+        ContactUsConfig.currentPageAction = action;
+        break;
+      case Pages.WalkThrough:
+        WalkThroughConfig.currentPageAction = action;
+        break;
+      case Pages.WalkThroughCompleted:
+        WalkThroughCompletedConfig.currentPageAction = action;
+        break;
 
       default:
         break;

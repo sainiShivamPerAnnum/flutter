@@ -197,6 +197,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  device_unlock:
+    dependency: "direct main"
+    description:
+      name: device_unlock
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.2"
   encrypt:
     dependency: "direct main"
     description:
@@ -611,6 +618,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+  in_app_update:
+    dependency: "direct main"
+    description:
+      name: in_app_update
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   intl:
     dependency: transitive
     description:

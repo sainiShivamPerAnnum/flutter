@@ -65,10 +65,10 @@ class LogoFadeIn extends State<SplashScreen> {
     bool isThereBreakingUpdate = await checkBreakingUpdate();
     // isThereBreakingUpdate = true;
     isThereBreakingUpdate = false;
-    if(isThereBreakingUpdate) {
-      stateProvider.currentAction = PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
-    }
-    else {
+    if (isThereBreakingUpdate) {
+      stateProvider.currentAction =
+          PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
+    } else {
       if (!baseProvider.isUserOnboarded) {
         log.debug("New user. Moving to Onboarding..");
         stateProvider.currentAction =
@@ -76,25 +76,28 @@ class LogoFadeIn extends State<SplashScreen> {
       } else {
         log.debug("Existing User. Moving to Home..");
         bool _unlocked;
-        if(baseProvider.isSecurityEnabled) {
+        if (baseProvider.isSecurityEnabled) {
           try {
-            _unlocked = await deviceUnlock.request(localizedReason: 'Please authenticate in order to proceed');
+            _unlocked = await deviceUnlock.request(
+                localizedReason: 'Please authenticate in order to proceed');
           } on DeviceUnlockUnavailable {
-            baseProvider.showPositiveAlert('No Device Authentication Found','Logging in, please enable device security to add lock', context);
+            baseProvider.showPositiveAlert(
+                'No Device Authentication Found',
+                'Logging in, please enable device security to add lock',
+                context);
             _unlocked = true;
           } on RequestInProgress {
             _unlocked = false;
             print('Request in progress');
           }
-          if(_unlocked) {
+          if (_unlocked) {
             stateProvider.currentAction =
                 PageAction(state: PageState.replaceAll, page: RootPageConfig);
+          } else {
+            baseProvider.showNegativeAlert(
+                'Authentication Failed', 'Please restart app', context);
           }
-          else {
-            baseProvider.showNegativeAlert('Authentication Failed', 'Please restart app', context);
-          }
-        }
-        else {
+        } else {
           stateProvider.currentAction =
               PageAction(state: PageState.replaceAll, page: RootPageConfig);
         }
@@ -105,15 +108,16 @@ class LogoFadeIn extends State<SplashScreen> {
   Future<bool> checkBreakingUpdate() async {
     String currentBuild = BaseUtil.packageInfo.buildNumber;
     print('Current Build $currentBuild');
-    String minBuild = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER);
+    String minBuild = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER);
     print('Min Build Required $minBuild');
     // minBuild = "0";
     try {
-      if(int.parse(currentBuild)<int.parse(minBuild)) {
+      if (int.parse(currentBuild) < int.parse(minBuild)) {
         return true;
       }
       return false;
-    } catch(e) {
+    } catch (e) {
       return true;
     }
   }
