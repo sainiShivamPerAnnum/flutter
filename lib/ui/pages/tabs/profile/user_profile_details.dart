@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/fcm_handler.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -10,6 +11,7 @@ import 'package:felloapp/ui/elements/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/update_name.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
+import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flat_icons_flutter/flat_icons_flutter.dart';
@@ -29,6 +31,7 @@ class UserProfileDetails extends StatefulWidget {
 
 class _UserProfileDetailsState extends State<UserProfileDetails> {
   BaseUtil baseProvider;
+  DBModel dbProvider;
   FcmHandler fcmProvider;
   double picSize;
 
@@ -50,6 +53,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
     fcmProvider = Provider.of<FcmHandler>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+
     picSize = SizeConfig.screenHeight / 4.8;
     return Scaffold(
       backgroundColor: Color(0xffEDEDED),
@@ -331,52 +336,58 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                 baseProvider: baseProvider,
                 title: "Bank Details",
                 content: Container(
-                  width: SizeConfig.screenWidth,
-                  child:
-                      // IF BANK DETAILS AVAILALBE
-                      // Column(
-                      //   children: [
-                      //     Row(
-                      //       children: [
-                      //         cardItem("Account Number",
-                      //             "1234567890" ?? "unavailable"),
-                      //       ],
-                      //     ),
-                      //     Row(
-                      //       children: [
-                      //         cardItem("Account Name",
-                      //             "Manish Maryada" ?? "unavailable"),
-                      //         cardItem(
-                      //             "IFSC Code", "PYTM123456" ?? "unavailable"),
-                      //       ],
-                      //     ),
-                      //   ],
-                      // ),
-                      // IF BANK DETAILS NOT AVAILBLE
-                      Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 16),
-                      Text("Your bank account details will be shown here",
-                          style: TextStyle(
-                            color: Colors.grey,
+                    width: SizeConfig.screenWidth,
+                    child: baseProvider.augmontDetail != null &&
+                            baseProvider.augmontDetail.bankAccNo != null
+                        ? Column(
+                            children: [
+                              Row(
+                                children: [
+                                  cardItem(
+                                      "Account Number",
+                                      baseProvider.augmontDetail.bankAccNo ??
+                                          "unavailable"),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  cardItem(
+                                      "Account Name",
+                                      baseProvider
+                                              .augmontDetail.bankHolderName ??
+                                          "unavailable"),
+                                  cardItem(
+                                      "IFSC Code",
+                                      baseProvider.augmontDetail.ifsc ??
+                                          "unavailable"),
+                                ],
+                              ),
+                            ],
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(height: 16),
+                              Text(
+                                  "Your bank account details will be shown here",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  )),
+                              ElevatedButton.icon(
+                                icon: Icon(Icons.add, color: Colors.white),
+                                onPressed: () {
+                                  delegate.appState.currentAction = PageAction(
+                                      state: PageState.addPage,
+                                      page: EditAugBankDetailsPageConfig);
+                                },
+                                label: Text(
+                                  "Add bank  ",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                              SizedBox(height: 16),
+                            ],
                           )),
-                      ElevatedButton.icon(
-                        icon: Icon(Icons.add, color: Colors.white),
-                        onPressed: () {
-                          delegate.appState.currentAction = PageAction(
-                              state: PageState.addPage,
-                              page: EditAugBankDetailsPageConfig);
-                        },
-                        label: Text(
-                          "Add bank  ",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                    ],
-                  ),
-                ),
               ),
               Card(
                 color: Theme.of(context).scaffoldBackgroundColor,
