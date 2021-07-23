@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pie_chart/pie_chart.dart';
+import 'pie_chart/pie.dart';
 import 'dart:math' as math;
 
 
@@ -36,6 +36,13 @@ class _FundsChartViewState extends State<FundsChartView> {
     Color(0xffF18805),
     Color(0xff2e89ba),
     Colors.blueGrey,
+  ];
+
+  final List<bool> shouldHighlight = [
+    false,
+    false,
+    true,
+    false,
   ];
 
   Map<String, double> getChartMap() {
@@ -77,6 +84,7 @@ class _FundsChartViewState extends State<FundsChartView> {
               Expanded(
                 child: Legend(
                   title: title[1],
+                  isHighlighted: true,
                   amount: "₹ ${dataMap[title[1]].toStringAsFixed(2)}",
                   color: colorList[1],
                   onClick: () {
@@ -156,8 +164,9 @@ class _FundsChartViewState extends State<FundsChartView> {
             chartRadius: SizeConfig.screenWidth / 2,
             colorList: colorList,
             initialAngleInDegree: 0,
+            shouldHighlight: shouldHighlight,
             chartType: ChartType.ring,
-            ringStrokeWidth: 5,
+            ringStrokeWidth: 10,
             centerText:
                 "₹ ${widget.userFundWallet.getEstTotalWealth().toStringAsFixed(2)}",
             legendOptions: LegendOptions(
