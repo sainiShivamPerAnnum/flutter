@@ -64,6 +64,7 @@ class LogoFadeIn extends State<SplashScreen> {
     _timer3.cancel();
     bool isThereBreakingUpdate = await checkBreakingUpdate();
     // isThereBreakingUpdate = true;
+    isThereBreakingUpdate = false;
     if(isThereBreakingUpdate) {
       stateProvider.currentAction = PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
     }
@@ -105,8 +106,8 @@ class LogoFadeIn extends State<SplashScreen> {
     String currentBuild = BaseUtil.packageInfo.buildNumber;
     print('Current Build $currentBuild');
     String minBuild = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER);
-    // print('Min Build Required $minBuild');
-    minBuild = "0";
+    print('Min Build Required $minBuild');
+    // minBuild = "0";
     try {
       if(int.parse(currentBuild)<int.parse(minBuild)) {
         return true;

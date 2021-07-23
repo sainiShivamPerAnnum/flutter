@@ -21,7 +21,7 @@ class ContactUsPage extends StatefulWidget {
   _ContactUsPageState createState() => _ContactUsPageState();
 }
 
-class _ContactUsPageState extends State<ContactUsPage> {
+class _ContactUsPageState extends State<ContactUsPage> with TickerProviderStateMixin {
   BaseUtil baseProvider;
   AppState appState;
   DBModel dbProvider;
@@ -56,14 +56,14 @@ class _ContactUsPageState extends State<ContactUsPage> {
       ),
       body : Stack(
         children: [
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Container(
-                width: SizeConfig.screenWidth*0.8,
-                color: Colors.transparent,
-                child: SvgPicture.asset("images/contact_us_half_opacity.svg",colorBlendMode: BlendMode.dst,color: UiConstants.backgroundColor,alignment: Alignment.bottomRight)
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.bottomRight,
+          //   child: Container(
+          //       width: SizeConfig.screenWidth*0.8,
+          //       color: Colors.transparent,
+          //       child: SvgPicture.asset("images/contact_us_half_opacity.svg",colorBlendMode: BlendMode.dst,color: UiConstants.backgroundColor,alignment: Alignment.bottomRight)
+          //   ),
+          // ),
           ListView(
             physics: BouncingScrollPhysics(),
             children: [
