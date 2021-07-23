@@ -43,14 +43,18 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            Align(child: SvgPicture.asset('images/svgs/walkthrough_bg_illustration.svg',height: SizeConfig.screenHeight*0.5),alignment: Alignment.topLeft,),
+            Align(child: SvgPicture.asset('images/svgs/walkthrough_ellipse_bg.svg',height: SizeConfig.screenHeight*0.2),alignment: Alignment.topLeft,),
+            Align(child: SvgPicture.asset('images/svgs/walkthrough_ellipse_bg.svg',height: SizeConfig.screenHeight*0.2),alignment: Alignment.centerRight,),
             PageView.builder(
               controller: pageController,
               itemCount: _content.length,
-              onPageChanged: (index) async {
-                await _gifImage.evict();
-                _gifImage = AssetImage(_videoURLS[index]);
-                _currentIndex.value = index;
+              onPageChanged: (index) {
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  AssetImage _oldImage = _gifImage;
+                  _oldImage.evict();
+                  _gifImage = AssetImage(_videoURLS[index]);
+                  _currentIndex.value = index;
+                });
               },
               itemBuilder: (ctx, index) {
                 return ValueListenableBuilder(

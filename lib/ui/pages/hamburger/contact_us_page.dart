@@ -56,14 +56,21 @@ class _ContactUsPageState extends State<ContactUsPage> with TickerProviderStateM
       ),
       body : Stack(
         children: [
-          // Align(
-          //   alignment: Alignment.bottomRight,
-          //   child: Container(
-          //       width: SizeConfig.screenWidth*0.8,
-          //       color: Colors.transparent,
-          //       child: SvgPicture.asset("images/contact_us_half_opacity.svg",colorBlendMode: BlendMode.dst,color: UiConstants.backgroundColor,alignment: Alignment.bottomRight)
-          //   ),
-          // ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Container(
+                width: SizeConfig.screenWidth,
+                alignment: Alignment.bottomRight,
+                child: SvgPicture.asset('images/svgs/contact_bg_illustration.svg',alignment: Alignment.bottomRight,),
+                // decoration: BoxDecoration(
+                //   image: DecorationImage(
+                //     colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.6), BlendMode.dstATop),
+                //     alignment: Alignment.bottomRight,
+                //     image: AssetImage('images/contact_bg.png')
+                //   )
+                // ),
+            ),
+          ),
           ListView(
             physics: BouncingScrollPhysics(),
             children: [
