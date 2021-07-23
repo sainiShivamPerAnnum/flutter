@@ -46,7 +46,7 @@ class _GoldProfitCalculatorState extends State<GoldProfitCalculator> {
           BoxShadow(
             offset: Offset(2, 2),
             blurRadius: 0,
-            color: Color(0xffD7B56D).withOpacity(0.3),
+            color: augmontGoldPalette.primaryColor.withOpacity(0.3),
             spreadRadius: 0,
           ),
         ],

@@ -108,6 +108,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: augmontGoldPalette.secondaryColor,
+        iconTheme: IconThemeData(color: Colors.white),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -154,7 +155,8 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                 //FundGraph(),
                 FundDetailsTable(baseProvider.userFundWallet.augGoldQuantity),
                 GoldProfitCalculator(),
-                FAQCard(Assets.goldFaqHeaders, Assets.goldFaqAnswers),
+                FAQCard(Assets.goldFaqHeaders, Assets.goldFaqAnswers,
+                    augmontGoldPalette.primaryColor),
                 _buildBetaWithdrawButton(),
               ],
             ),
@@ -635,6 +637,7 @@ class FundDetailsTable extends StatelessWidget {
         left: SizeConfig.blockSizeHorizontal * 5,
         right: SizeConfig.blockSizeHorizontal * 5,
         bottom: 24,
+        top: 16,
       ),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -643,7 +646,7 @@ class FundDetailsTable extends StatelessWidget {
           BoxShadow(
             offset: Offset(2, 2),
             blurRadius: 0,
-            color: Color(0xffD7B56D).withOpacity(0.3),
+            color: augmontGoldPalette.primaryColor.withOpacity(0.3),
             spreadRadius: 0,
           ),
         ],

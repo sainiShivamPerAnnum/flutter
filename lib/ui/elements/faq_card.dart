@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 class FAQCard extends StatelessWidget {
   final List<String> _faqHeaders;
   final List<String> _faqResponses;
+  final Color _borderColor;
 
-  FAQCard(this._faqHeaders, this._faqResponses);
+  FAQCard(this._faqHeaders, this._faqResponses, this._borderColor);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class FAQCard extends StatelessWidget {
           BoxShadow(
             offset: Offset(2, 2),
             blurRadius: 0,
-            color: Color(0xffD7B56D).withOpacity(0.3),
+            color: _borderColor.withOpacity(0.3),
             spreadRadius: 0,
           ),
         ],

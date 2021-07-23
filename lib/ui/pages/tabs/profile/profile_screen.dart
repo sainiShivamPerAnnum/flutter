@@ -1060,170 +1060,95 @@ class _UserProfileCardState extends State<UserProfileCard> {
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.blockSizeHorizontal * 4,
       ),
-      child: Stack(
+      child: Column(
         children: [
-          Column(
-            children: [
-              SizedBox(
-                height: 12,
-              ),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: SizeConfig.blockSizeHorizontal * 5,
-                    ),
-                    Container(
-                      height: picSize,
-                      width: picSize,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                      child: Stack(
-                        children: [
-                          isImageLoading
-                              ? Image.asset(
-                                  "images/profile.png",
-                                  height: picSize,
-                                  width: picSize,
-                                  fit: BoxFit.cover,
-                                )
-                              : ClipOval(
-                                  child: CachedNetworkImage(
-                                    imageUrl: baseProvider.myUserDpUrl,
-                                    height: picSize,
-                                    width: picSize,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                          // Positioned(
-                          //   bottom: 0,
-                          //   right: 0,
-                          //   child: InkWell(
-                          //     onTap: () async {
-                          //       var _status = await Permission.photos.status;
-                          //       if (_status.isUndetermined ||
-                          //           _status.isRestricted ||
-                          //           _status.isLimited ||
-                          //           _status.isDenied) {
-                          //         showDialog(
-                          //             context: context,
-                          //             builder: (ctx) {
-                          //               return ConfirmActionDialog(
-                          //                   title: "Request Permission",
-                          //                   description:
-                          //                       "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
-                          //                   buttonText: "Continue",
-                          //                   asset: Padding(
-                          //                     padding: EdgeInsets.symmetric(
-                          //                         vertical: 8),
-                          //                     child: Image.asset(
-                          //                         "images/gallery.png",
-                          //                         height:
-                          //                             SizeConfig.screenWidth *
-                          //                                 0.24),
-                          //                   ),
-                          //                   confirmAction: () {
-                          //                     Navigator.pop(context);
-                          //                     chooseprofilePicture();
-                          //                   },
-                          //                   cancelAction: () =>
-                          //                       Navigator.pop(context));
-                          //             });
-                          //       } else if (_status.isGranted) {
-                          //         chooseprofilePicture();
-                          //       } else {
-                          //         baseProvider.showNegativeAlert(
-                          //             'Permission Unavailable',
-                          //             'Please enable permission from settings to continue',
-                          //             context);
-                          //       }
-                          //     },
-                          //     child: CircleAvatar(
-                          //       backgroundColor: Colors.white,
-                          //       radius: SizeConfig.blockSizeHorizontal * 4,
-                          //       child: Icon(
-                          //         Icons.photo_camera_rounded,
-                          //         color: UiConstants.primaryColor,
-                          //         size: SizeConfig.blockSizeHorizontal * 4,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.blockSizeHorizontal * 5,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: SizeConfig.screenWidth * 0.5,
-                          child: Text(
-                            baseProvider.myUser.name,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: SizeConfig.cardTitleTextSize,
-                              fontWeight: FontWeight.w500,
-                            ),
+          SizedBox(
+            height: 12,
+          ),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: SizeConfig.blockSizeHorizontal * 5,
+                ),
+                Container(
+                  height: picSize,
+                  width: picSize,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 2),
+                  ),
+                  child: isImageLoading
+                      ? Image.asset(
+                          "images/profile.png",
+                          height: picSize,
+                          width: picSize,
+                          fit: BoxFit.cover,
+                        )
+                      : ClipOval(
+                          child: CachedNetworkImage(
+                            imageUrl: baseProvider.myUserDpUrl,
+                            height: picSize,
+                            width: picSize,
+                            fit: BoxFit.cover,
                           ),
                         ),
-                        baseProvider.myUser.username != null
-                            ? Padding(
-                                padding: EdgeInsets.only(top: 4),
-                                child: Text(
-                                  "@${baseProvider.myUser.username.replaceAll('@', '.')}",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: SizeConfig.mediumTextSize,
-                                  ),
-                                ),
-                              )
-                            : SizedBox(
-                                height: 8,
+                ),
+                SizedBox(
+                  width: SizeConfig.blockSizeHorizontal * 5,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: SizeConfig.screenWidth * 0.5,
+                      child: Text(
+                        baseProvider.myUser.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: SizeConfig.cardTitleTextSize,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    baseProvider.myUser.username != null
+                        ? Padding(
+                            padding: EdgeInsets.only(top: 4),
+                            child: Text(
+                              "@${baseProvider.myUser.username.replaceAll('@', '.')}",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: SizeConfig.mediumTextSize,
                               ),
-                      ],
-                    )
+                            ),
+                          )
+                        : SizedBox(
+                            height: 8,
+                          ),
                   ],
+                )
+              ],
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Member since ${_getUserMembershipDate()}',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: SizeConfig.smallTextSize,
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Member since ${_getUserMembershipDate()}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: SizeConfig.smallTextSize,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 16,
-              )
             ],
           ),
-          // Positioned(
-          //   top: 4,
-          //   right: 4,
-          //   child: IconButton(
-          //     onPressed: () {
-          //       cardKey.currentState.toggleCard();
-          //     },
-          //     icon: Icon(
-          //       Icons.edit_outlined,
-          //       color: Colors.white,
-          //     ),
-          //   ),
-          // )
+          SizedBox(
+            height: 16,
+          )
         ],
       ),
     );
@@ -1270,171 +1195,171 @@ class _UserProfileCardState extends State<UserProfileCard> {
   }
 }
 
-class UserEditProfileCard extends StatefulWidget {
-  final String oldname;
+// class UserEditProfileCard extends StatefulWidget {
+//   final String oldname;
 
-  UserEditProfileCard({this.oldname});
+//   UserEditProfileCard({this.oldname});
 
-  @override
-  _UserEditProfileCardState createState() => _UserEditProfileCardState();
-}
+//   @override
+//   _UserEditProfileCardState createState() => _UserEditProfileCardState();
+// }
 
-class _UserEditProfileCardState extends State<UserEditProfileCard> {
-  bool isUploading = false;
-  TextEditingController _nameController;
-  BaseUtil baseProvider;
-  DBModel dbProvider;
-  final _formKey = GlobalKey<FormState>();
+// class _UserEditProfileCardState extends State<UserEditProfileCard> {
+//   bool isUploading = false;
+//   TextEditingController _nameController;
+//   BaseUtil baseProvider;
+//   DBModel dbProvider;
+//   final _formKey = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    _nameController = new TextEditingController(text: widget.oldname);
-    super.initState();
-  }
+//   @override
+//   void initState() {
+//     _nameController = new TextEditingController(text: widget.oldname);
+//     super.initState();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    dbProvider = Provider.of<DBModel>(context, listen: false);
-    return Container(
-      width: SizeConfig.screenWidth,
-      height: SizeConfig.screenHeight * 0.24,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(
-            "images/profile-card.png",
-          ),
-          fit: BoxFit.fill,
-        ),
-      ),
-      margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.blockSizeHorizontal * 4,
-      ),
-      padding:
-          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Form(
-            key: _formKey,
-            child: Container(
-              width: SizeConfig.screenWidth,
-              height: SizeConfig.blockSizeVertical * 5,
-              padding: EdgeInsets.only(
-                  left: SizeConfig.blockSizeHorizontal * 2, bottom: 8),
-              child: TextFormField(
-                cursorColor: Colors.white,
-                controller: _nameController,
-                maxLines: 1,
-                style: GoogleFonts.montserrat(
-                  color: Colors.white,
-                  fontSize: SizeConfig.cardTitleTextSize,
-                  fontWeight: FontWeight.w500,
-                ),
-                validator: (val) {
-                  if (val.trim() == "") return "Name cannot be empty";
-                  return null;
-                },
-                decoration: InputDecoration(
-                  border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2),
-                  ),
-                  errorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red, width: 2),
-                  ),
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red, width: 2),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              TextButton(
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    FocusScope.of(context).unfocus();
-                    setState(() {
-                      isUploading = !isUploading;
-                    });
-                    // baseProvider.myUser.name = _nameController.text.trim();
-                    baseProvider.setName(_nameController.text.trim());
-                    dbProvider.updateUser(baseProvider.myUser).then((flag) {
-                      setState(() {
-                        isUploading = false;
-                      });
-                      if (flag) {
-                        cardKey.currentState.toggleCard();
-                        baseProvider.showPositiveAlert('Complete',
-                            'Your details have been updated', context);
-                      } else {
-                        baseProvider.showNegativeAlert(
-                            'Failed',
-                            'Your details could not be updated at the moment',
-                            context);
-                      }
-                    });
-                  }
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: isUploading
-                      ? SpinKitThreeBounce(
-                          color: UiConstants.spinnerColor2,
-                          size: 18.0,
-                        )
-                      : Text(
-                          "Update",
-                          style: GoogleFonts.montserrat(
-                            color: Colors.white,
-                            fontSize: SizeConfig.mediumTextSize,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  FocusScope.of(context).unfocus();
-                  cardKey.currentState.toggleCard();
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Text(
-                    "Cancel",
-                    style: GoogleFonts.montserrat(
-                      color: Colors.white,
-                      fontSize: SizeConfig.mediumTextSize,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     baseProvider = Provider.of<BaseUtil>(context, listen: false);
+//     dbProvider = Provider.of<DBModel>(context, listen: false);
+//     return Container(
+//       width: SizeConfig.screenWidth,
+//       height: SizeConfig.screenHeight * 0.24,
+//       decoration: BoxDecoration(
+//         image: DecorationImage(
+//           image: AssetImage(
+//             "images/profile-card.png",
+//           ),
+//           fit: BoxFit.fill,
+//         ),
+//       ),
+//       margin: EdgeInsets.symmetric(
+//         horizontal: SizeConfig.blockSizeHorizontal * 4,
+//       ),
+//       padding:
+//           EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
+//       child: Column(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           Form(
+//             key: _formKey,
+//             child: Container(
+//               width: SizeConfig.screenWidth,
+//               height: SizeConfig.blockSizeVertical * 5,
+//               padding: EdgeInsets.only(
+//                   left: SizeConfig.blockSizeHorizontal * 2, bottom: 8),
+//               child: TextFormField(
+//                 cursorColor: Colors.white,
+//                 controller: _nameController,
+//                 maxLines: 1,
+//                 style: GoogleFonts.montserrat(
+//                   color: Colors.white,
+//                   fontSize: SizeConfig.cardTitleTextSize,
+//                   fontWeight: FontWeight.w500,
+//                 ),
+//                 validator: (val) {
+//                   if (val.trim() == "") return "Name cannot be empty";
+//                   return null;
+//                 },
+//                 decoration: InputDecoration(
+//                   border: UnderlineInputBorder(
+//                     borderSide: BorderSide(color: Colors.white, width: 2),
+//                   ),
+//                   enabledBorder: UnderlineInputBorder(
+//                     borderSide: BorderSide(color: Colors.white, width: 2),
+//                   ),
+//                   errorBorder: UnderlineInputBorder(
+//                     borderSide: BorderSide(color: Colors.red, width: 2),
+//                   ),
+//                   focusedErrorBorder: UnderlineInputBorder(
+//                     borderSide: BorderSide(color: Colors.red, width: 2),
+//                   ),
+//                   focusedBorder: UnderlineInputBorder(
+//                     borderSide: BorderSide(color: Colors.white, width: 2),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ),
+//           Row(
+//             children: [
+//               TextButton(
+//                 onPressed: () {
+//                   if (_formKey.currentState.validate()) {
+//                     FocusScope.of(context).unfocus();
+//                     setState(() {
+//                       isUploading = !isUploading;
+//                     });
+//                     // baseProvider.myUser.name = _nameController.text.trim();
+//                     baseProvider.setName(_nameController.text.trim());
+//                     dbProvider.updateUser(baseProvider.myUser).then((flag) {
+//                       setState(() {
+//                         isUploading = false;
+//                       });
+//                       if (flag) {
+//                         cardKey.currentState.toggleCard();
+//                         baseProvider.showPositiveAlert('Complete',
+//                             'Your details have been updated', context);
+//                       } else {
+//                         baseProvider.showNegativeAlert(
+//                             'Failed',
+//                             'Your details could not be updated at the moment',
+//                             context);
+//                       }
+//                     });
+//                   }
+//                 },
+//                 child: Container(
+//                   decoration: BoxDecoration(
+//                     border: Border.all(
+//                       width: 1,
+//                       color: Colors.white,
+//                     ),
+//                     borderRadius: BorderRadius.circular(5),
+//                   ),
+//                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+//                   child: isUploading
+//                       ? SpinKitThreeBounce(
+//                           color: UiConstants.spinnerColor2,
+//                           size: 18.0,
+//                         )
+//                       : Text(
+//                           "Update",
+//                           style: GoogleFonts.montserrat(
+//                             color: Colors.white,
+//                             fontSize: SizeConfig.mediumTextSize,
+//                             fontWeight: FontWeight.w500,
+//                           ),
+//                         ),
+//                 ),
+//               ),
+//               TextButton(
+//                 onPressed: () {
+//                   FocusScope.of(context).unfocus();
+//                   cardKey.currentState.toggleCard();
+//                 },
+//                 child: Container(
+//                   decoration: BoxDecoration(
+//                     border: Border.all(
+//                       width: 1,
+//                       color: Colors.white,
+//                     ),
+//                     borderRadius: BorderRadius.circular(5),
+//                   ),
+//                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+//                   child: Text(
+//                     "Cancel",
+//                     style: GoogleFonts.montserrat(
+//                       color: Colors.white,
+//                       fontSize: SizeConfig.mediumTextSize,
+//                       fontWeight: FontWeight.w500,
+//                     ),
+//                   ),
+//                 ),
+//               )
+//             ],
+//           )
+//         ],
+//       ),
+//     );
+//   }
+// }
