@@ -72,25 +72,14 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     _width = MediaQuery.of(context).size.width;
     if (!_isInitialized) _initFields();
-    return Container(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      margin: EdgeInsets.only(left: 18, right: 18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(18),
-          topRight: Radius.circular(18),
+    return new Wrap(
+      children: <Widget>[
+        new Padding(
+          padding: EdgeInsets.fromLTRB(
+              25.0, 15.0, 25.0, 25 + MediaQuery.of(context).viewInsets.bottom),
+          child: _depositDialog(),
         ),
-      ),
-      child: new Wrap(
-        children: <Widget>[
-          new Padding(
-            padding: const EdgeInsets.fromLTRB(25.0, 25.0, 25.0, 25.0),
-            child: _depositDialog(),
-          ),
-        ],
-      ),
+      ],
     );
   }
 

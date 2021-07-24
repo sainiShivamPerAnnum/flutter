@@ -20,9 +20,9 @@ class FAQCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         boxShadow: <BoxShadow>[
           BoxShadow(
-            offset: Offset(2, 2),
-            blurRadius: 0,
-            color: _borderColor.withOpacity(0.3),
+            offset: Offset(5, 5),
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.1),
             spreadRadius: 0,
           ),
         ],

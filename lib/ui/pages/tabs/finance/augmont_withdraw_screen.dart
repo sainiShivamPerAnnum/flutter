@@ -342,18 +342,13 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
   }
 
   Widget _buildSubmitButton(BuildContext context) {
-    Gradient _gradient = new LinearGradient(colors: [
-      UiConstants.primaryColor,
-      UiConstants.primaryColor.withBlue(190),
+    LinearGradient _gradient = new LinearGradient(colors: [
+      augmontGoldPalette.secondaryColor.withBlue(800),
+      augmontGoldPalette.secondaryColor,
+      //Colors.blueGrey,
+      //Colors.blueGrey[800],
     ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
-    if (widget.withdrawableGoldQnty == 0.0) {
-      _gradient = new LinearGradient(colors: [
-        augmontGoldPalette.secondaryColor.withBlue(800),
-        augmontGoldPalette.secondaryColor,
-        //Colors.blueGrey,
-        //Colors.blueGrey[800],
-      ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
-    }
+
     return Container(
       width: MediaQuery.of(context).size.width - 40,
       height: 50.0,

@@ -487,33 +487,44 @@ class ShareCard extends StatelessWidget {
                     InkWell(
                       onTap: () {
                         showModalBottomSheet(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  topRight: Radius.circular(16)),
+                            ),
                             context: context,
                             builder: (ctx) {
                               AppState.screenStack.add(ScreenItem.dialog);
                               return Wrap(
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal:
-                                            SizeConfig.blockSizeHorizontal * 5),
+                                    height: SizeConfig.screenHeight * 0.5,
                                     child: Column(
                                       children: [
                                         SizedBox(height: 8),
                                         Row(
                                           children: [
-                                            FittedBox(
-                                              child: Text(
-                                                "How to make a successful referral",
-                                                style: GoogleFonts.montserrat(
-                                                  fontWeight: FontWeight.w500,
-                                                  color:
-                                                      UiConstants.primaryColor,
-                                                  fontSize:
-                                                      SizeConfig.largeTextSize,
+                                            SizedBox(
+                                                width: SizeConfig
+                                                        .blockSizeHorizontal *
+                                                    5),
+                                            Expanded(
+                                              child: FittedBox(
+                                                fit: BoxFit.cover,
+                                                child: Text(
+                                                  "How to make a successful Referral",
+                                                  style: GoogleFonts.montserrat(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: UiConstants
+                                                        .primaryColor,
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                            Spacer(),
+                                            SizedBox(
+                                                width: SizeConfig
+                                                        .blockSizeHorizontal *
+                                                    10),
                                             IconButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
@@ -524,6 +535,10 @@ class ShareCard extends StatelessWidget {
                                         ),
                                         Divider(),
                                         Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: SizeConfig
+                                                      .blockSizeHorizontal *
+                                                  5),
                                           child: ListView(
                                             shrinkWrap: true,
                                             children: [
@@ -532,13 +547,23 @@ class ShareCard extends StatelessWidget {
                                               referralTile(
                                                   "Prize balance gets credited as soon as they sign up."),
                                               referralTile(
-                                                  "Prize balance gets unlocked as soon as they make their first investment."),
+                                                  "Prize balance gets unlocked when they make their first investment."),
                                               referralTile(
-                                                  "The more you refer, the more you earn. Start referring now ")
+                                                  "you can invest or withdraw that balance afterwards")
                                             ],
                                           ),
                                         ),
                                         SizedBox(height: 8),
+                                        Expanded(
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: CachedNetworkImageProvider(
+                                                    "https://image.freepik.com/free-vector/customers-earning-money-by-giving-likes_74855-7121.jpg"),
+                                              ),
+                                            ),
+                                          ),
+                                        )
                                       ],
                                     ),
                                   )
@@ -549,6 +574,7 @@ class ShareCard extends StatelessWidget {
                       child: Icon(
                         Icons.info_outline,
                         color: Colors.white,
+                        size: 16,
                       ),
                     )
                   ],
@@ -573,11 +599,11 @@ class ShareCard extends StatelessWidget {
 
   Widget referralTile(String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(
         children: [
           Icon(
-            Icons.brightness_1_outlined,
+            Icons.brightness_1,
             size: 12,
             color: UiConstants.primaryColor,
           ),

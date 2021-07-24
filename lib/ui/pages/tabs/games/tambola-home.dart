@@ -524,6 +524,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
             elevation: 0,
             children: [
               ExpansionPanel(
+                canTapOnHeader: true,
                 headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
                     "images/svgs/howitworks.svg",
                     Assets.tambolaFaqList[0].keys.first),
@@ -543,6 +544,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
                 ),
               ),
               ExpansionPanel(
+                canTapOnHeader: true,
                 headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
                     "images/svgs/cash-distribution.svg",
                     Assets.tambolaFaqList[1].keys.first),
@@ -563,6 +565,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
                 ),
               ),
               ExpansionPanel(
+                canTapOnHeader: true,
                 headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
                     "images/svgs/redeem.svg",
                     Assets.tambolaFaqList[2].keys.first),
@@ -583,6 +586,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
                 isExpanded: detStatus[2],
               ),
               ExpansionPanel(
+                canTapOnHeader: true,
                 headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
                     "images/svgs/winmore.svg",
                     Assets.tambolaFaqList[3].keys.first),

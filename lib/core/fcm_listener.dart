@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FcmListener extends ChangeNotifier {
   Log log = new Log("FcmListener");
@@ -20,7 +22,8 @@ class FcmListener extends ChangeNotifier {
   DBModel _dbModel = locator<DBModel>();
   FcmHandler _handler = locator<FcmHandler>();
   FirebaseMessaging _fcm;
-
+  bool _tambolaDrawNotifications;
+  bool isTambolaNotificationLoading = false;
   // /// Create a [AndroidNotificationChannel] for heads up notifications
   // static const AndroidNotificationChannel _androidChannel =
   //     AndroidNotificationChannel(
@@ -29,6 +32,13 @@ class FcmListener extends ChangeNotifier {
   //   'This channel is used for important notifications.', // description
   //   importance: Importance.high,
   // );
+
+  bool get tambolaDrawNotifications => _tambolaDrawNotifications;
+
+  set tambolaDrawNotifications(bool val) {
+    _tambolaDrawNotifications = val;
+    notifyListeners();
+  }
 
   /// Initialize the [FlutterLocalNotificationsPlugin] package.
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -104,12 +114,50 @@ class FcmListener extends ChangeNotifier {
     if (_baseUtil.myUser != null && _baseUtil.myUser.mobile != null)
       await _saveDeviceToken();
 
+    await getTambolaDrawNotificationStatus();
+
     return _fcm;
   }
 
   Future addSubscription(FcmTopic subId, {String suffix = ''}) async {
     await _fcm.subscribeToTopic(
         (suffix.isEmpty) ? subId.value() : '${subId.value()}$suffix');
+  }
+
+  Future removeSubscription(FcmTopic subId, {String suffix = ''}) async {
+    await _fcm.unsubscribeFromTopic(
+        (suffix.isEmpty) ? subId.value() : '${subId.value()}$suffix');
+  }
+
+  saveTambolaDrawNotification(bool val) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("tNotif", val);
+    tambolaDrawNotifications = val;
+  }
+
+  Future getTambolaDrawNotificationStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    tambolaDrawNotifications = prefs.getBool('tNotif') ?? true;
+  }
+
+  Future toggleTambolaDrawNotificationStatus(bool val) async {
+    // isTambolaNotificationLoading = true;
+    // notifyListeners();
+    print("Draw notification val : $val");
+    try {
+      if (val) {
+        await addSubscription(FcmTopic.TAMBOLAPLAYER);
+        print("subscription added");
+      } else {
+        await removeSubscription(FcmTopic.TAMBOLAPLAYER);
+        print("subscription removed");
+      }
+      saveTambolaDrawNotification(val);
+    } catch (e) {
+      log.error(e.toString());
+      _baseUtil.showNegativeAlert(
+          "Snap!", "Please try again", delegate.navigatorKey.currentContext);
+    }
   }
 
   _manageInitSubscriptions() async {
@@ -127,6 +175,7 @@ class FcmListener extends ChangeNotifier {
     if (_baseUtil.userTicketWallet != null &&
         _baseUtil.userTicketWallet.getActiveTickets() > 0) {
       addSubscription(FcmTopic.TAMBOLAPLAYER);
+      saveTambolaDrawNotification(true);
     }
 
     if (BaseUtil.packageInfo != null) {

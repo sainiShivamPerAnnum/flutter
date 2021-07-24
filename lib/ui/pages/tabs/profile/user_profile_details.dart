@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/fcm_handler.dart';
+import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -32,7 +33,7 @@ class UserProfileDetails extends StatefulWidget {
 class _UserProfileDetailsState extends State<UserProfileDetails> {
   BaseUtil baseProvider;
   DBModel dbProvider;
-  FcmHandler fcmProvider;
+  FcmListener fcmProvider;
   double picSize;
 
   chooseprofilePicture() async {
@@ -49,12 +50,23 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
     }
   }
 
+  Map<String, String> getBankDetail() {
+    Map<String, String> bankCreds = {};
+    if (baseProvider.augmontDetail != null) {
+      bankCreds["name"] = baseProvider.augmontDetail.bankHolderName;
+      bankCreds["number"] = baseProvider.augmontDetail.bankAccNo;
+      bankCreds["ifsc"] = baseProvider.augmontDetail.ifsc;
+    } else {
+      bankCreds = {"name": "N/A", "number": "N/A", "ifsc": "N/A"};
+    }
+    return bankCreds;
+  }
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
-    fcmProvider = Provider.of<FcmHandler>(context, listen: false);
+    fcmProvider = Provider.of<FcmListener>(context);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-
     picSize = SizeConfig.screenHeight / 4.8;
     return Scaffold(
       backgroundColor: Color(0xffEDEDED),
@@ -337,57 +349,47 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                 title: "Bank Details",
                 content: Container(
                     width: SizeConfig.screenWidth,
-                    child: baseProvider.augmontDetail != null &&
-                            baseProvider.augmontDetail.bankAccNo != null
-                        ? Column(
-                            children: [
-                              Row(
-                                children: [
-                                  cardItem(
-                                      "Account Number",
-                                      baseProvider.augmontDetail.bankAccNo ??
-                                          "unavailable"),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  cardItem(
-                                      "Account Name",
-                                      baseProvider
-                                              .augmontDetail.bankHolderName ??
-                                          "unavailable"),
-                                  cardItem(
-                                      "IFSC Code",
-                                      baseProvider.augmontDetail.ifsc ??
-                                          "unavailable"),
-                                ],
-                              ),
-                            ],
-                          )
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(height: 16),
-                              Text(
-                                  "Your bank account details will be shown here",
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                  )),
-                              ElevatedButton.icon(
-                                icon: Icon(Icons.add, color: Colors.white),
-                                onPressed: () {
-                                  delegate.appState.currentAction = PageAction(
-                                      state: PageState.addPage,
-                                      page: EditAugBankDetailsPageConfig);
-                                },
-                                label: Text(
-                                  "Add bank  ",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                              SizedBox(height: 16),
-                            ],
-                          )),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            cardItem(
+                                "Account Number", getBankDetail()["number"]),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            cardItem("Account Name", getBankDetail()["name"]),
+                            cardItem("IFSC Code", getBankDetail()["ifsc"]),
+                          ],
+                        ),
+                      ],
+                    )
+                    // : Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.center,
+                    //     children: [
+                    //       SizedBox(height: 16),
+                    //       Text(
+                    //           "Your bank account details will be shown here",
+                    //           style: TextStyle(
+                    //             color: Colors.grey,
+                    //           )),
+                    //       ElevatedButton.icon(
+                    //         icon: Icon(Icons.add, color: Colors.white),
+                    //         onPressed: () {
+                    //           delegate.appState.currentAction = PageAction(
+                    //               state: PageState.addPage,
+                    //               page: EditAugBankDetailsPageConfig);
+                    //         },
+                    //         label: Text(
+                    //           "Add bank  ",
+                    //           style: TextStyle(color: Colors.white),
+                    //         ),
+                    //       ),
+                    //       SizedBox(height: 16),
+                    //     ],
+                    //   ),
+                    ),
               ),
               Card(
                 color: Theme.of(context).scaffoldBackgroundColor,
@@ -418,8 +420,14 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                       ),
                       ListTile(
                         title: Text("Tambola Draw Notifications"),
-                        trailing:
-                            Switch.adaptive(value: false, onChanged: (val) {}),
+                        trailing: fcmProvider.isTambolaNotificationLoading
+                            ? CircularProgressIndicator()
+                            : Switch.adaptive(
+                                value: fcmProvider.tambolaDrawNotifications,
+                                onChanged: (val) {
+                                  fcmProvider
+                                      .toggleTambolaDrawNotificationStatus(val);
+                                }),
                       ),
                       SizedBox(height: 8),
                     ],
