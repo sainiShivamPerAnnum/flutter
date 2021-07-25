@@ -33,130 +33,291 @@ class _ContactUsPageState extends State<ContactUsPage>
     appState = Provider.of<AppState>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_rounded,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-              // backButtonDispatcher.didPopRoute();
-            },
-          ),
-          elevation: 1.0,
-          backgroundColor: UiConstants.primaryColor,
-          iconTheme: IconThemeData(
-            color: UiConstants.accentColor, //change your color here
-          ),
-          title: Text('Support',
-              style: GoogleFonts.montserrat(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                  fontSize: SizeConfig.largeTextSize)),
-        ),
-        body: Stack(
-          children: [
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Container(
-                width: SizeConfig.screenWidth,
-                alignment: Alignment.bottomRight,
-                child: SvgPicture.asset(
-                  'images/svgs/contact_bg_illustration.svg',
-                  alignment: Alignment.bottomRight,
-                ),
-                // decoration: BoxDecoration(
-                //   image: DecorationImage(
-                //     colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.6), BlendMode.dstATop),
-                //     alignment: Alignment.bottomRight,
-                //     image: AssetImage('images/contact_bg.png')
-                //   )
-                // ),
+      // appBar: AppBar(
+      //   leading: IconButton(
+      //     icon: Icon(
+      //       Icons.arrow_back_rounded,
+      //       color: Colors.white,
+      //     ),
+      //     onPressed: () {
+      //       Navigator.pop(context);
+      //       // backButtonDispatcher.didPopRoute();
+      //     },
+      //   ),
+      //   elevation: 1.0,
+      //   backgroundColor: UiConstants.primaryColor,
+      //   iconTheme: IconThemeData(
+      //     color: UiConstants.accentColor, //change your color here
+      //   ),
+      //   title: Text('Support',
+      //       style: GoogleFonts.montserrat(
+      //           color: Colors.white,
+      //           fontWeight: FontWeight.w500,
+      //           fontSize: SizeConfig.largeTextSize)),
+      // ),
+      body: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: new LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                stops: [0.1, 0.6],
+                colors: [
+                  UiConstants.primaryColor.withGreen(190),
+                  UiConstants.primaryColor,
+                ],
               ),
             ),
-            ListView(
-              physics: BouncingScrollPhysics(),
+            width: SizeConfig.screenWidth,
+            height: SizeConfig.screenHeight * 0.3,
+            child: Stack(
               children: [
-                SizedBox(height: SizeConfig.blockSizeVertical * 1.5),
-                ListTile(
-                  title: Text('Chat with Us',
-                      style: TextStyle(color: UiConstants.textColor)),
-                  tileColor: Colors.transparent,
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Opacity(
+                    opacity: 0.5,
+                    child: SvgPicture.asset(
+                      'images/svgs/contact_bg_illustration.svg',
+                      width: SizeConfig.screenWidth * 0.6,
+                    ),
                   ),
-                  onTap: () {
-                    HapticFeedback.vibrate();
-                    appState.currentAction = PageAction(
-                        state: PageState.addPage, page: ChatSupportPageConfig);
-                  },
                 ),
-                SizedBox(height: SizeConfig.blockSizeVertical * 1.5),
-                ListTile(
-                  title: Text('Email Us',
-                      style: TextStyle(color: UiConstants.textColor)),
-                  tileColor: Colors.transparent,
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
+                Container(
+                  height: SizeConfig.screenHeight * 0.3,
+                  width: SizeConfig.screenWidth * 0.6,
+                  alignment: Alignment.center,
+                  padding:
+                      EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: MediaQuery.of(context).padding.top),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: FittedBox(
+                              child: RichText(
+                                text: TextSpan(
+                                  text: "Su",
+                                  style: GoogleFonts.montserrat(
+                                      fontSize:
+                                          SizeConfig.cardTitleTextSize * 2,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white),
+                                  children: [
+                                    TextSpan(
+                                      text: 'pp',
+                                      style: GoogleFonts.montserrat(
+                                          fontSize:
+                                              SizeConfig.cardTitleTextSize * 2,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black),
+                                    ),
+                                    TextSpan(
+                                      text: 'ort ',
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "( 24 x 7 )",
+                            style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
+                      // Text(
+                      //   "24 x 7",
+                      //   style: TextStyle(
+                      //     color: Colors.white,
+                      //     fontWeight: FontWeight.w700,
+                      //   ),
+                      // ),
+                      Text(
+                        "We'd love to assist you with any kind of problem you face in the app.",
+                        style: TextStyle(
+                          color: Colors.white,
+                          height: 1.4,
+                          fontSize: SizeConfig.mediumTextSize,
+                        ),
+                      )
+                    ],
                   ),
-                  onTap: () {
-                    HapticFeedback.vibrate();
-                    _launchEmail();
-                  },
                 ),
-                SizedBox(height: SizeConfig.blockSizeVertical * 1.5),
-                ListTile(
-                  title: Text('Request a call',
-                      style: TextStyle(
-                        color: UiConstants.textColor,
-                      )),
-                  tileColor: Colors.transparent,
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
+                SafeArea(
+                  child: Container(
+                    width: SizeConfig.screenWidth,
+                    height: kToolbarHeight,
+                    child: Row(
+                      children: [
+                        SizedBox(width: SizeConfig.blockSizeHorizontal),
+                        IconButton(
+                          iconSize: 30,
+                          color: Colors.white,
+                          icon: Icon(
+                            Icons.arrow_back_rounded,
+                          ),
+                          onPressed: () => backButtonDispatcher.didPopRoute(),
+                        ),
+                        Spacer(),
+                        Image.asset(
+                          "images/fello_logo.png",
+                          width: SizeConfig.screenWidth * 0.1,
+                          color: Colors.white,
+                        ),
+                        Spacer(),
+                        IconButton(
+                          iconSize: 30,
+                          color: Colors.white,
+                          icon: SizedBox(),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
                   ),
-                  onTap: () {
-                    HapticFeedback.vibrate();
-                    _showRequestCallSheet();
-                  },
-                ),
-                SizedBox(height: SizeConfig.blockSizeVertical * 1.5),
-                ListTile(
-                  title: Text('Play Walkthrough',
-                      style: TextStyle(color: UiConstants.textColor)),
-                  tileColor: Colors.transparent,
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
-                  ),
-                  onTap: () {
-                    HapticFeedback.vibrate();
-                    appState.currentAction = PageAction(
-                        state: PageState.addPage, page: WalkThroughConfig);
-                  },
-                ),
-                SizedBox(height: SizeConfig.blockSizeVertical * 1.5),
-                ListTile(
-                  title: Text('FAQs',
-                      style: TextStyle(color: UiConstants.textColor)),
-                  tileColor: Colors.transparent,
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
-                  ),
-                  onTap: () {
-                    HapticFeedback.vibrate();
-                    appState.currentAction = PageAction(
-                        state: PageState.addPage, page: FaqPageConfig);
-                  },
                 ),
               ],
-            )
-          ],
-        ));
+            ),
+            // decoration: BoxDecoration(
+            //   image: DecorationImage(
+            //     colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.6), BlendMode.dstATop),
+            //     alignment: Alignment.bottomRight,
+            //     image: AssetImage('images/contact_bg.png')
+            //   )
+            // ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  ListTile(
+                    title: Text('Chat with Us',
+                        style: TextStyle(color: UiConstants.textColor)),
+                    tileColor: Colors.transparent,
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                    ),
+                    onTap: () {
+                      HapticFeedback.vibrate();
+                      appState.currentAction = PageAction(
+                          state: PageState.addPage,
+                          page: ChatSupportPageConfig);
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Email Us',
+                        style: TextStyle(color: UiConstants.textColor)),
+                    tileColor: Colors.transparent,
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                    ),
+                    onTap: () {
+                      HapticFeedback.vibrate();
+                      _launchEmail();
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Request a call',
+                        style: TextStyle(
+                          color: UiConstants.textColor,
+                        )),
+                    tileColor: Colors.transparent,
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                    ),
+                    onTap: () {
+                      HapticFeedback.vibrate();
+                      _showRequestCallSheet();
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Play Walkthrough',
+                        style: TextStyle(color: UiConstants.textColor)),
+                    tileColor: Colors.transparent,
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                    ),
+                    onTap: () {
+                      HapticFeedback.vibrate();
+                      appState.currentAction = PageAction(
+                          state: PageState.addPage, page: WalkThroughConfig);
+                    },
+                  ),
+                  ListTile(
+                    title: Text('FAQs',
+                        style: TextStyle(color: UiConstants.textColor)),
+                    tileColor: Colors.transparent,
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                    ),
+                    onTap: () {
+                      HapticFeedback.vibrate();
+                      appState.currentAction = PageAction(
+                          state: PageState.addPage, page: FaqPageConfig);
+                    },
+                  ),
+                  Container(
+                    height: SizeConfig.screenHeight * 0.3,
+                    width: SizeConfig.screenWidth,
+                    alignment: Alignment.center,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "images/fello-short-logo.png",
+                          color: Colors.grey,
+                          width: SizeConfig.cardTitleTextSize,
+                          height: SizeConfig.cardTitleTextSize,
+                        ),
+                        SizedBox(width: 4),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Version 1.0.2",
+                              style: TextStyle(
+                                  fontSize: SizeConfig.mediumTextSize,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              "Made for India ❤",
+                              style: TextStyle(
+                                fontSize: SizeConfig.smallTextSize,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   void _showRequestCallSheet() {
