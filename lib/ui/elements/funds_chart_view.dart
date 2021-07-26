@@ -54,6 +54,7 @@ class _FundsChartViewState extends State<FundsChartView> {
     true,
     false,
   ];
+
   int touchedIndex = -1;
   int startDegree = 0;
 
@@ -73,6 +74,14 @@ class _FundsChartViewState extends State<FundsChartView> {
     //return res;
   }
 
+  Map<String, String> _getDataDescriptions() {
+    return {
+      "Gold Balance" : widget.goldMoreInfo,
+      "Prize Balance" : "This is the amount of money you've earned as prized playing our games!",
+      "Locked Balance" : 'Referral rewards could be locked due to either of the reasons: \n\n• You were referred by your friend but you haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet. \n\n• You referred your friends but they haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet.',
+    };
+  }
+
   @override
   void initState() {
     startDegree = Random().nextInt(360) + 1;
@@ -83,6 +92,7 @@ class _FundsChartViewState extends State<FundsChartView> {
   Widget build(BuildContext context) {
     Map<String, double> dataMap = getChartMap();
     List<String> title = dataMap.keys.toList();
+    Map<String,String> descriptions = _getDataDescriptions();
     return Container(
       width: SizeConfig.screenWidth,
       height: SizeConfig.screenHeight * 0.25,
@@ -149,7 +159,7 @@ class _FundsChartViewState extends State<FundsChartView> {
                                         .toStringAsFixed(2)
                                         .length *
                                     2),
-                            SizeConfig.largeTextSize * 2),
+                            SizeConfig.largeTextSize*2),
                       ),
                     ),
                   ),
@@ -184,12 +194,7 @@ class _FundsChartViewState extends State<FundsChartView> {
                             showDialog(
                                 context: context,
                                 builder: (ctx) {
-                                  return Dialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(30.0)),
-                                    child: Text('Container'),
-                                  );
+                                  return _buildFundInfoDialog(dataMap, title, descriptions);
                                 });
                           },
                           icon: Icon(
@@ -335,6 +340,50 @@ class _FundsChartViewState extends State<FundsChartView> {
             ),
           )
         ],
+      ),
+    );
+  }
+
+  Widget _buildFundInfoDialog(Map<String,double> dataMap, List<String> titles, Map<String,String> descriptions) {
+    List<String> _validTitles = [];
+    for(var i in titles) {
+      if(dataMap[i]>0 && descriptions.containsKey(i)) {
+        _validTitles.add(i);
+      }
+    }
+    return Dialog(
+      shape: RoundedRectangleBorder(
+          borderRadius:
+              BorderRadius.circular(30.0)),
+      child: Container(
+        height: SizeConfig.screenHeight*0.6,
+        child: Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.only(top : 30.0, left : 15.0, right: 15.0, bottom:30.0),
+              child: ListView.separated(
+                separatorBuilder: (ctx, index) {
+                  return SizedBox(height: SizeConfig.blockSizeVertical*5);
+                },
+                itemCount: _validTitles.length,
+                itemBuilder: (ctx, index) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(_validTitles[index] , style: TextStyle(fontWeight: FontWeight.bold, fontSize: SizeConfig.largeTextSize)),
+                      SizedBox(height: SizeConfig.blockSizeVertical*1),
+                      Text(descriptions[_validTitles[index]], style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.3))
+                    ],
+                  );
+                },
+              ),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: IconButton(splashRadius: SizeConfig.blockSizeVertical*1.5,icon: Icon(Icons.close),onPressed: (){Navigator.of(context).pop();},)
+            ),
+          ],
+        ),
       ),
     );
   }
