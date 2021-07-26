@@ -1478,167 +1478,167 @@ class _UserProfileCardState extends State<UserProfileCard> {
 //     );
 //   }
 // }
-  @override
-  Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    dbProvider = Provider.of<DBModel>(context, listen: false);
-    return Container(
-      width: SizeConfig.screenWidth,
-      height: SizeConfig.screenHeight * 0.24,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(
-            "images/profile-card.png",
-          ),
-          fit: BoxFit.fill,
-        ),
-      ),
-      margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.blockSizeHorizontal * 4,
-      ),
-      padding:
-          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Form(
-            key: _formKey,
-            child: Container(
-              width: SizeConfig.screenWidth,
-              height: SizeConfig.blockSizeVertical * 5,
-              padding: EdgeInsets.only(
-                  left: SizeConfig.blockSizeHorizontal * 2, bottom: 8),
-              child: TextFormField(
-                cursorColor: Colors.white,
-                controller: _nameController,
-                maxLines: 1,
-                style: GoogleFonts.montserrat(
-                  color: Colors.white,
-                  fontSize: SizeConfig.cardTitleTextSize,
-                  fontWeight: FontWeight.w500,
-                ),
-                validator: (val) {
-                  if (val.trim() == "") return "Name cannot be empty";
-                  return null;
-                },
-                decoration: InputDecoration(
-                  border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2),
-                  ),
-                  errorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red, width: 2),
-                  ),
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red, width: 2),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              TextButton(
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    FocusScope.of(context).unfocus();
-                    setState(() {
-                      isUploading = !isUploading;
-                    });
-                    // baseProvider.myUser.name = _nameController.text.trim();
-                    baseProvider.setName(_nameController.text.trim());
-                    dbProvider.updateUser(baseProvider.myUser).then((flag) {
-                      setState(() {
-                        isUploading = false;
-                      });
-                      if (flag) {
-                        cardKey.currentState.toggleCard();
-                        baseProvider.showPositiveAlert('Complete',
-                            'Your details have been updated', context);
-                      } else {
-                        baseProvider.showNegativeAlert(
-                            'Failed',
-                            'Your details could not be updated at the moment',
-                            context);
-                      }
-                    });
-                  }
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: isUploading
-                      ? SpinKitThreeBounce(
-                          color: UiConstants.spinnerColor2,
-                          size: 18.0,
-                        )
-                      : Text(
-                          "Update",
-                          style: GoogleFonts.montserrat(
-                            color: Colors.white,
-                            fontSize: SizeConfig.mediumTextSize,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  FocusScope.of(context).unfocus();
-                  cardKey.currentState.toggleCard();
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Text(
-                    "Cancel",
-                    style: GoogleFonts.montserrat(
-                      color: Colors.white,
-                      fontSize: SizeConfig.mediumTextSize,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              Text('Enable Security', style: TextStyle(color: Colors.white, fontSize: SizeConfig.mediumTextSize,)),
-              Consumer<BaseUtil>(
-                builder: (ctx, bp, child) {
-                  return Switch(
-                    value: baseProvider.isSecurityEnabled,
-                    onChanged: (bool value){
-                      baseProvider.flipSecurityValue(baseProvider.isSecurityEnabled);
-                    },
-                    activeColor: UiConstants.darkPrimaryColor,
-                    inactiveThumbColor: UiConstants.spinnerColor,
-                    inactiveTrackColor: UiConstants.spinnerColor,
-                  );
-                },
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     baseProvider = Provider.of<BaseUtil>(context, listen: false);
+//     dbProvider = Provider.of<DBModel>(context, listen: false);
+//     return Container(
+//       width: SizeConfig.screenWidth,
+//       height: SizeConfig.screenHeight * 0.24,
+//       decoration: BoxDecoration(
+//         image: DecorationImage(
+//           image: AssetImage(
+//             "images/profile-card.png",
+//           ),
+//           fit: BoxFit.fill,
+//         ),
+//       ),
+//       margin: EdgeInsets.symmetric(
+//         horizontal: SizeConfig.blockSizeHorizontal * 4,
+//       ),
+//       padding:
+//           EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
+//       child: Column(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           Form(
+//             key: _formKey,
+//             child: Container(
+//               width: SizeConfig.screenWidth,
+//               height: SizeConfig.blockSizeVertical * 5,
+//               padding: EdgeInsets.only(
+//                   left: SizeConfig.blockSizeHorizontal * 2, bottom: 8),
+//               child: TextFormField(
+//                 cursorColor: Colors.white,
+//                 controller: _nameController,
+//                 maxLines: 1,
+//                 style: GoogleFonts.montserrat(
+//                   color: Colors.white,
+//                   fontSize: SizeConfig.cardTitleTextSize,
+//                   fontWeight: FontWeight.w500,
+//                 ),
+//                 validator: (val) {
+//                   if (val.trim() == "") return "Name cannot be empty";
+//                   return null;
+//                 },
+//                 decoration: InputDecoration(
+//                   border: UnderlineInputBorder(
+//                     borderSide: BorderSide(color: Colors.white, width: 2),
+//                   ),
+//                   enabledBorder: UnderlineInputBorder(
+//                     borderSide: BorderSide(color: Colors.white, width: 2),
+//                   ),
+//                   errorBorder: UnderlineInputBorder(
+//                     borderSide: BorderSide(color: Colors.red, width: 2),
+//                   ),
+//                   focusedErrorBorder: UnderlineInputBorder(
+//                     borderSide: BorderSide(color: Colors.red, width: 2),
+//                   ),
+//                   focusedBorder: UnderlineInputBorder(
+//                     borderSide: BorderSide(color: Colors.white, width: 2),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ),
+//           Row(
+//             children: [
+//               TextButton(
+//                 onPressed: () {
+//                   if (_formKey.currentState.validate()) {
+//                     FocusScope.of(context).unfocus();
+//                     setState(() {
+//                       isUploading = !isUploading;
+//                     });
+//                     // baseProvider.myUser.name = _nameController.text.trim();
+//                     baseProvider.setName(_nameController.text.trim());
+//                     dbProvider.updateUser(baseProvider.myUser).then((flag) {
+//                       setState(() {
+//                         isUploading = false;
+//                       });
+//                       if (flag) {
+//                         cardKey.currentState.toggleCard();
+//                         baseProvider.showPositiveAlert('Complete',
+//                             'Your details have been updated', context);
+//                       } else {
+//                         baseProvider.showNegativeAlert(
+//                             'Failed',
+//                             'Your details could not be updated at the moment',
+//                             context);
+//                       }
+//                     });
+//                   }
+//                 },
+//                 child: Container(
+//                   decoration: BoxDecoration(
+//                     border: Border.all(
+//                       width: 1,
+//                       color: Colors.white,
+//                     ),
+//                     borderRadius: BorderRadius.circular(5),
+//                   ),
+//                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+//                   child: isUploading
+//                       ? SpinKitThreeBounce(
+//                           color: UiConstants.spinnerColor2,
+//                           size: 18.0,
+//                         )
+//                       : Text(
+//                           "Update",
+//                           style: GoogleFonts.montserrat(
+//                             color: Colors.white,
+//                             fontSize: SizeConfig.mediumTextSize,
+//                             fontWeight: FontWeight.w500,
+//                           ),
+//                         ),
+//                 ),
+//               ),
+//               TextButton(
+//                 onPressed: () {
+//                   FocusScope.of(context).unfocus();
+//                   cardKey.currentState.toggleCard();
+//                 },
+//                 child: Container(
+//                   decoration: BoxDecoration(
+//                     border: Border.all(
+//                       width: 1,
+//                       color: Colors.white,
+//                     ),
+//                     borderRadius: BorderRadius.circular(5),
+//                   ),
+//                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+//                   child: Text(
+//                     "Cancel",
+//                     style: GoogleFonts.montserrat(
+//                       color: Colors.white,
+//                       fontSize: SizeConfig.mediumTextSize,
+//                       fontWeight: FontWeight.w500,
+//                     ),
+//                   ),
+//                 ),
+//               )
+//             ],
+//           ),
+//           Row(
+//             children: [
+//               Text('Enable Security', style: TextStyle(color: Colors.white, fontSize: SizeConfig.mediumTextSize,)),
+//               Consumer<BaseUtil>(
+//                 builder: (ctx, bp, child) {
+//                   return Switch(
+//                     value: baseProvider.isSecurityEnabled,
+//                     onChanged: (bool value){
+//                       baseProvider.flipSecurityValue(baseProvider.isSecurityEnabled);
+//                     },
+//                     activeColor: UiConstants.darkPrimaryColor,
+//                     inactiveThumbColor: UiConstants.spinnerColor,
+//                     inactiveTrackColor: UiConstants.spinnerColor,
+//                   );
+//                 },
+//               )
+//             ],
+//           )
+//         ],
+//       ),
+//     );
+//   }
+// }

@@ -263,21 +263,21 @@ class _FundsChartViewState extends State<FundsChartView> {
                   }),
                 ),
               ),
-            ),
-            chartValuesOptions: ChartValuesOptions(
-              showChartValueBackground: true,
-              showChartValues: false,
-              chartValueBackgroundColor: UiConstants.backgroundColor,
-              chartValueStyle: GoogleFonts.montserrat(
-                fontSize: math.min(
-                    SizeConfig.screenWidth /
-                        (widget.userFundWallet
-                                .getEstTotalWealth()
-                                .toStringAsFixed(2)
-                                .length *
-                            1.6),
-                    SizeConfig.largeTextSize * 2),
-                color: UiConstants.textColor,
+            // ),
+            // chartValuesOptions: ChartValuesOptions(
+            //   showChartValueBackground: true,
+            //   showChartValues: false,
+            //   chartValueBackgroundColor: UiConstants.backgroundColor,
+            //   chartValueStyle: GoogleFonts.montserrat(
+            //     fontSize: math.min(
+            //         SizeConfig.screenWidth /
+            //             (widget.userFundWallet
+            //                     .getEstTotalWealth()
+            //                     .toStringAsFixed(2)
+            //                     .length *
+            //                 1.6),
+            //         SizeConfig.largeTextSize * 2),
+            //     color: UiConstants.textColor,
 //               Align(
 //                 alignment: Alignment.topRight,
 //                 child: Container(
@@ -298,7 +298,7 @@ class _FundsChartViewState extends State<FundsChartView> {
 //                     icon: Icon(Icons.info, color: Colors.grey[400],),
 //                   ),
 //                 )
-              ),
+//               ),
             ],
           ),
         )
