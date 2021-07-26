@@ -2,8 +2,10 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/fundPalettes.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -11,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class AugmontWithdrawScreen extends StatefulWidget {
@@ -58,16 +61,42 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
     appState = Provider.of<AppState>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
-        title: Text(
-          "Withdrawal",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        actions: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 5, 5, 0),
+            child: MaterialButton(
+              child: Consumer<BaseUtil>(
+                builder: (ctx, bp, child) {
+                  return Container(
+                    child: Padding(
+                        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                        child: _checkBankInfoMissing
+                            ? Text('Add Bank Info')
+                            : Text('Edit Bank Info')),
+                    decoration: BoxDecoration(
+                      border:
+                          Border.all(color: augmontGoldPalette.primaryColor),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  );
+                },
+              ),
+              onPressed: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (ctx) => EditAugmontBankDetail(),
+                //   ),
+                // );
+                appState.currentAction = PageAction(
+                    state: PageState.addPage,
+                    page: EditAugBankDetailsPageConfig);
+              },
+            ),
+          )
+        ],
       ),
       body: Container(
         padding: EdgeInsets.all(10),
@@ -86,40 +115,40 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 5, 5, 0),
-                  child: MaterialButton(
-                    child: Consumer<BaseUtil>(
-                      builder: (ctx, bp, child) {
-                        return Container(
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                              child: _checkBankInfoMissing
-                                  ? Text('Add Bank Info')
-                                  : Text('Edit Bank Info')),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: UiConstants.primaryColor),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        );
-                      },
-                    ),
-                    onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (ctx) => EditAugmontBankDetail(),
-                      //   ),
-                      // );
-                      appState.currentAction = PageAction(
-                          state: PageState.addPage,
-                          page: EditAugBankDetailsPageConfig);
-                    },
-                  ),
-                ),
-              ),
+              // Align(
+              //   alignment: Alignment.topRight,
+              //   child: Padding(
+              //     padding: EdgeInsets.fromLTRB(0, 5, 5, 0),
+              //     child: MaterialButton(
+              //       child: Consumer<BaseUtil>(
+              //         builder: (ctx, bp, child) {
+              //           return Container(
+              //             child: Padding(
+              //                 padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+              //                 child: _checkBankInfoMissing
+              //                     ? Text('Add Bank Info')
+              //                     : Text('Edit Bank Info')),
+              //             decoration: BoxDecoration(
+              //               border: Border.all(color: UiConstants.primaryColor),
+              //               borderRadius: BorderRadius.circular(10),
+              //             ),
+              //           );
+              //         },
+              //       ),
+              //       onPressed: () {
+              //         // Navigator.push(
+              //         //   context,
+              //         //   MaterialPageRoute(
+              //         //     builder: (ctx) => EditAugmontBankDetail(),
+              //         //   ),
+              //         // );
+              //         appState.currentAction = PageAction(
+              //             state: PageState.addPage,
+              //             page: EditAugBankDetailsPageConfig);
+              //       },
+              //     ),
+              //   ),
+              // ),
               SizedBox(
                 child: Image(
                   image: AssetImage(Assets.onboardingSlide[1]),
@@ -134,7 +163,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                 style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w700,
-                    color: UiConstants.primaryColor),
+                    color: augmontGoldPalette.primaryColor),
               ),
               (_isLoading)
                   ? Padding(
@@ -199,19 +228,24 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                       child: Row(
                         children: <Widget>[
                           Expanded(
-                            child: TextField(
-                              controller: _quantityController,
-                              keyboardType: TextInputType.number,
-                              readOnly: false,
-                              enabled: true,
-                              autofocus: false,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: 'Quantity (in grams)',
+                            child: Theme(
+                              data: ThemeData.light().copyWith(
+                                  textTheme: GoogleFonts.montserratTextTheme(),
+                                  colorScheme: ColorScheme.light(
+                                      primary:
+                                          augmontGoldPalette.primaryColor)),
+                              child: TextField(
+                                controller: _quantityController,
+                                keyboardType: TextInputType.number,
+                                readOnly: false,
+                                enabled: true,
+                                autofocus: false,
+                                decoration: augmontFieldInputDecoration(
+                                    'Quantity (in grams)'),
+                                onChanged: (value) {
+                                  setState(() {});
+                                },
                               ),
-                              onChanged: (value) {
-                                setState(() {});
-                              },
                             ),
                           ),
                         ],
@@ -308,16 +342,13 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
   }
 
   Widget _buildSubmitButton(BuildContext context) {
-    Gradient _gradient = new LinearGradient(colors: [
-      UiConstants.primaryColor,
-      UiConstants.primaryColor.withBlue(190),
+    LinearGradient _gradient = new LinearGradient(colors: [
+      augmontGoldPalette.secondaryColor.withBlue(800),
+      augmontGoldPalette.secondaryColor,
+      //Colors.blueGrey,
+      //Colors.blueGrey[800],
     ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
-    if (widget.withdrawableGoldQnty == 0.0) {
-      _gradient = new LinearGradient(colors: [
-        Colors.blueGrey,
-        Colors.blueGrey.withBlue(150),
-      ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
-    }
+
     return Container(
       width: MediaQuery.of(context).size.width - 40,
       height: 50.0,

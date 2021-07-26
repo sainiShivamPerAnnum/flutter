@@ -188,6 +188,124 @@ class _GamePageState extends State<GamePage> {
                           Spacer(
                             flex: 1,
                           ),
+                          Transform.translate(
+                            offset: Offset(0, -SizeConfig.screenWidth * 0.06),
+                            child: Container(
+                              height: SizeConfig.screenHeight * 0.2,
+                              width: SizeConfig.screenWidth,
+                              child: ListView(
+                                shrinkWrap: true,
+                                itemExtent: SizeConfig.screenWidth * 0.8,
+                                scrollDirection: Axis.horizontal,
+                                physics: BouncingScrollPhysics(),
+                                children: [
+                                  GameCard(
+                                    gradient: [
+                                      Color(0xffACB6E5),
+                                      Color(0xff74EBD5),
+                                    ],
+                                    title: "Want more tickets?",
+                                    action: [
+                                      GameOfferCardButton(
+                                        onPressed: () => delegate
+                                            .parseRoute(Uri.parse("finance")),
+
+                                        ///TODO remove post testing
+                                        // onPressed: () => showDialog(
+                                        //   context: context,
+                                        //   barrierDismissible: false,
+                                        //   builder: (ctx) {
+                                        //     return Center(
+                                        //       child: Material(
+                                        //         color: Colors.transparent,
+                                        //         child: Stack(
+                                        //           children: [
+                                        //             Center(child: FCard()),
+                                        //           ],
+                                        //         ),
+                                        //       ),
+                                        //     );
+                                        //   },
+                                        // ),
+                                        title: "Invest",
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      GameOfferCardButton(
+                                        onPressed: () => delegate
+                                            .parseRoute(Uri.parse("profile")),
+                                        title: "Share",
+                                      ),
+                                    ],
+                                  ),
+                                  GameCard(
+                                    gradient: [
+                                      Color(0xffD4AC5B),
+                                      Color(0xffDECBA4),
+                                    ],
+                                    title: "Share your thoughts",
+                                    action: [
+                                      GameOfferCardButton(
+                                        onPressed: () {
+                                          AppState.screenStack
+                                              .add(ScreenItem.dialog);
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                WillPopScope(
+                                              onWillPop: () {
+                                                backButtonDispatcher
+                                                    .didPopRoute();
+                                                return Future.value(true);
+                                              },
+                                              child: FeedbackDialog(
+                                                title: "Tell us what you think",
+                                                description:
+                                                    "We'd love to hear from you",
+                                                buttonText: "Submit",
+                                                dialogAction: (String fdbk) {
+                                                  if (fdbk != null &&
+                                                      fdbk.isNotEmpty) {
+                                                    //feedback submission allowed even if user not signed in
+                                                    dbProvider
+                                                        .submitFeedback(
+                                                            (baseProvider.firebaseUser ==
+                                                                        null ||
+                                                                    baseProvider
+                                                                            .firebaseUser
+                                                                            .uid ==
+                                                                        null)
+                                                                ? 'UNKNOWN'
+                                                                : baseProvider
+                                                                    .firebaseUser
+                                                                    .uid,
+                                                            fdbk)
+                                                        .then((flag) {
+                                                      backButtonDispatcher
+                                                          .didPopRoute();
+                                                      if (flag) {
+                                                        baseProvider
+                                                            .showPositiveAlert(
+                                                                'Thank You',
+                                                                'We appreciate your feedback!',
+                                                                context);
+                                                      }
+                                                    });
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        title: "Feedback",
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
                           /////////TODO HACKY CODE - WRITTEN TO MANAGE TABLET SIZE DIMENSIONS
                           (SizeConfig.screenWidth >= 1200)?Transform.translate(
                             offset: Offset(0, -SizeConfig.screenWidth * 0.08),

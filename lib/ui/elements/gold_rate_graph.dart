@@ -4,6 +4,7 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/ui/elements/bezier_graph/bezier_chart_custom_config.dart';
 import 'package:felloapp/ui/elements/bezier_graph/bezier_chart_custom_widget.dart';
 import 'package:felloapp/ui/elements/bezier_graph/bezier_custom_line.dart';
+import 'package:felloapp/util/fundPalettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -125,16 +126,17 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(
-                          width: 2,
-                          color: UiConstants.primaryColor,
-                        ),
-                        borderRadius: BorderRadius.circular(100),
+                            width: 2, color: augmontGoldPalette.primaryColor),
+                        borderRadius: BorderRadius.circular(5),
                         color: (_selectedFrequency == 1)
-                            ? UiConstants.primaryColor
+                            ? augmontGoldPalette.primaryColor
                             : Colors.transparent,
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8.0,
+                          horizontal: 16,
+                        ),
                         child: Text(
                           'Monthly',
                           style: TextStyle(
@@ -156,15 +158,18 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
                       decoration: BoxDecoration(
                         border: Border.all(
                           width: 2,
-                          color: UiConstants.primaryColor,
+                          color: augmontGoldPalette.primaryColor,
                         ),
-                        borderRadius: BorderRadius.circular(100),
+                        borderRadius: BorderRadius.circular(5),
                         color: (_selectedFrequency == 0)
-                            ? UiConstants.primaryColor
+                            ? augmontGoldPalette.primaryColor
                             : Colors.transparent,
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8.0,
+                          horizontal: 16,
+                        ),
                         child: Text(
                           'Quarterly',
                           style: TextStyle(
@@ -186,15 +191,18 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
                       decoration: BoxDecoration(
                         border: Border.all(
                           width: 2,
-                          color: UiConstants.primaryColor,
+                          color: augmontGoldPalette.primaryColor,
                         ),
-                        borderRadius: BorderRadius.circular(100),
+                        borderRadius: BorderRadius.circular(5),
                         color: (_selectedFrequency == 2)
-                            ? UiConstants.primaryColor
+                            ? augmontGoldPalette.primaryColor
                             : Colors.transparent,
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8.0,
+                          horizontal: 16,
+                        ),
                         child: Text(
                           'Yearly',
                           style: TextStyle(
@@ -366,7 +374,7 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
               BezierLine(
                   data: _bezierPointsCustom,
                   label: 'Gold Rate(₹/gm)',
-                  lineColor: UiConstants.primaryColor)
+                  lineColor: augmontGoldPalette.primaryColor)
             ],
             config: BezierChartConfig(
                 showVerticalIndicator: true,
@@ -403,7 +411,7 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
               BezierLine(
                   data: _bezierPointsMonthly,
                   label: 'Gold Rate(₹/gm)',
-                  lineColor: UiConstants.primaryColor)
+                  lineColor: augmontGoldPalette.primaryColor)
             ],
             config: BezierChartConfig(
                 showVerticalIndicator: true,
@@ -440,7 +448,7 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
               BezierLine(
                   data: _bezierPointsYearly,
                   label: 'Gold Rate(₹/gm)',
-                  lineColor: UiConstants.primaryColor)
+                  lineColor: augmontGoldPalette.primaryColor)
             ],
             config: BezierChartConfig(
                 showVerticalIndicator: true,

@@ -154,7 +154,7 @@ class BaseUtil extends ChangeNotifier {
       _userCreationTimestamp = firebaseUser.metadata.creationTime;
       //check if there are any icici deposits txns in process
       _payService = locator<PaymentService>();
-
+      augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
       //TODO not required for now
       // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
 
@@ -212,7 +212,6 @@ class BaseUtil extends ChangeNotifier {
           backButtonDispatcher.didPopRoute();
         },
       ),
-
       elevation: 1.0,
       backgroundColor: UiConstants.primaryColor,
       iconTheme: IconThemeData(
@@ -223,28 +222,6 @@ class BaseUtil extends ChangeNotifier {
               color: Colors.white,
               fontWeight: FontWeight.w500,
               fontSize: SizeConfig.largeTextSize)),
-      // bottom: PreferredSize(
-      //     child: Container(
-      //         color: Colors.blueGrey[100],
-      //         height: 25.0,
-      //         child: Padding(
-      //             padding:
-      //                 EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
-      //             child: Row(
-      //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //               children: [
-      //                 Text(
-      //                   'We are currently in Beta',
-      //                   style: TextStyle(color: Colors.black54),
-      //                 ),
-      //                 Icon(
-      //                   Icons.info_outline,
-      //                   size: 20,
-      //                   color: Colors.black54,
-      //                 )
-      //               ],
-      //             ))),
-      //     preferredSize: Size.fromHeight(25.0)),
     );
   }
 
@@ -413,7 +390,7 @@ class BaseUtil extends ChangeNotifier {
       _userCreationTimestamp = null;
 
       isOtpResendCount = 0;
-
+      delegate.appState.setCurrentTabIndex = 0;
       isUserOnboarded = false;
       isLoginNextInProgress = false;
       isEditProfileNextInProgress = false;
@@ -809,6 +786,7 @@ class BaseUtil extends ChangeNotifier {
 
   set augmontDetail(UserAugmontDetail value) {
     _augmontDetail = value;
+    notifyListeners();
   }
 
   bool isSignedIn() => (firebaseUser != null && firebaseUser.uid != null);

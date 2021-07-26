@@ -119,7 +119,7 @@ class _LoginControllerState extends State<LoginController>
         ///this is the first time that the otp was requested
         baseProvider.isLoginNextInProgress = false;
         _controller.animateToPage(OtpInputScreen.index,
-            duration: Duration(seconds: 2), curve: Curves.easeInToLinear);
+            duration: Duration(seconds: 1), curve: Curves.easeInToLinear);
         setState(() {});
       } else {
         ///the otp was requested to be resent
@@ -385,7 +385,7 @@ class _LoginControllerState extends State<LoginController>
             bool flag = await baseProvider.authenticateUser(baseProvider
                 .generateAuthCredential(_augmentedVerificationId, otp));
             if (flag) {
-              AppState.unsavedChanges = true;
+              AppState.isOnboardingInProgress = true;
               _otpScreenKey.currentState.onOtpReceived();
               _onSignInSuccess();
             } else {
@@ -464,7 +464,7 @@ class _LoginControllerState extends State<LoginController>
             baseProvider.isLoginNextInProgress = false;
             setState(() {});
             _controller.animateToPage(Username.index,
-                duration: Duration(seconds: 2), curve: Curves.easeInToLinear);
+                duration: Duration(seconds: 1), curve: Curves.easeInToLinear);
           }
           break;
         }
@@ -569,7 +569,7 @@ class _LoginControllerState extends State<LoginController>
       //set 'tutorial shown' flag to false to ensure tutorial gets shown to the user
       lclDbProvider.saveHomeTutorialComplete = false;
       _controller.animateToPage(NameInputScreen.index,
-          duration: Duration(seconds: 2), curve: Curves.easeInToLinear);
+          duration: Duration(seconds: 1), curve: Curves.easeInToLinear);
       //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user
@@ -595,7 +595,7 @@ class _LoginControllerState extends State<LoginController>
 
   _onChangeNumberRequest() {
     if (!baseProvider.isLoginNextInProgress) {
-      AppState.unsavedChanges = false;
+      AppState.isOnboardingInProgress = false;
       _controller.animateToPage(MobileInputScreen.index,
           duration: Duration(milliseconds: 300), curve: Curves.easeInToLinear);
     }
@@ -608,7 +608,7 @@ class _LoginControllerState extends State<LoginController>
 
     await baseProvider.init();
     await fcmProvider.setupFcm();
-    AppState.unsavedChanges = false;
+    AppState.isOnboardingInProgress = false;
     appStateProvider.currentAction =
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
     baseProvider.showPositiveAlert(

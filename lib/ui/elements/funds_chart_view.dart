@@ -2,6 +2,7 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/ui/dialogs/Fold-Card/card.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
+import 'package:felloapp/util/fundPalettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/gestures.dart';
@@ -11,7 +12,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math' as math;
-
 
 class FundsChartView extends StatefulWidget {
   final UserFundWallet userFundWallet;
@@ -28,13 +28,13 @@ class FundsChartView extends StatefulWidget {
 class _FundsChartViewState extends State<FundsChartView> {
   final List<Color> colorListLight = [
     UiConstants.primaryColor,
-    Color(0xffF18805),
+    augmontGoldPalette.primaryColor,
     Color(0xff03256C),
   ];
 
   final List<Color> colorList = [
     UiConstants.primaryColor,
-    Color(0xffF18805),
+    augmontGoldPalette.primaryColor,
     Color(0xff2e89ba),
     Colors.blueGrey,
   ];
@@ -263,26 +263,41 @@ class _FundsChartViewState extends State<FundsChartView> {
                   }),
                 ),
               ),
-              Align(
-                alignment: Alignment.topRight,
-                child: Container(
-                  child: IconButton(
-                    alignment: Alignment.topRight,
-                    onPressed: (){
-                      HapticFeedback.vibrate();
-                      showDialog(
-                        context: context,
-                        builder: (ctx) {
-                          return Dialog(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-                            child: Text('Container'),
-                          );
-                        }
-                      );
-                    },
-                    icon: Icon(Icons.info, color: Colors.grey[400],),
-                  ),
-                )
+            ),
+            chartValuesOptions: ChartValuesOptions(
+              showChartValueBackground: true,
+              showChartValues: false,
+              chartValueBackgroundColor: UiConstants.backgroundColor,
+              chartValueStyle: GoogleFonts.montserrat(
+                fontSize: math.min(
+                    SizeConfig.screenWidth /
+                        (widget.userFundWallet
+                                .getEstTotalWealth()
+                                .toStringAsFixed(2)
+                                .length *
+                            1.6),
+                    SizeConfig.largeTextSize * 2),
+                color: UiConstants.textColor,
+//               Align(
+//                 alignment: Alignment.topRight,
+//                 child: Container(
+//                   child: IconButton(
+//                     alignment: Alignment.topRight,
+//                     onPressed: (){
+//                       HapticFeedback.vibrate();
+//                       showDialog(
+//                         context: context,
+//                         builder: (ctx) {
+//                           return Dialog(
+//                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+//                             child: Text('Container'),
+//                           );
+//                         }
+//                       );
+//                     },
+//                     icon: Icon(Icons.info, color: Colors.grey[400],),
+//                   ),
+//                 )
               ),
             ],
           ),

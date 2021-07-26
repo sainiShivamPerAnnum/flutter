@@ -8,6 +8,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/funds_chart_view.dart';
+import 'package:felloapp/ui/pages/tabs/finance/augmont-details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
 import 'package:felloapp/util/logger.dart';
