@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
@@ -86,6 +87,9 @@ class _FinancePageState extends State<FinancePage> {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
+    // baseProvider.userFundWallet.prizeBalance = 100;
+    // baseProvider.userFundWallet.lockedPrizeBalance = 300;
+    // baseProvider.userFundWallet.iciciBalance = 500;
     if (!baseProvider.isAugmontRealTimeBalanceFetched) {
       _updateAugmontBalance();
       baseProvider.isAugmontRealTimeBalanceFetched = true;
@@ -286,7 +290,7 @@ class FundWidget extends StatelessWidget {
                       color: Colors.white,
                       height: 1.4,
                       letterSpacing: 1.5,
-                      fontSize: SizeConfig.largeTextSize,
+                      fontSize: math.min(SizeConfig.largeTextSize,30),
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -300,7 +304,7 @@ class FundWidget extends StatelessWidget {
                             'Coming Soon',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: height * 0.020,
+                              fontSize: math.min(height * 0.020,22),
                               fontWeight: FontWeight.w400,
                             ),
                           ),

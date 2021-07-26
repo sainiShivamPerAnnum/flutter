@@ -1227,21 +1227,21 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
                                         onClick: () {
                                           if (baseProvider.isSignedIn() &&
                                               baseProvider.isActiveUser()) {
-                                            dbProvider
-                                                .addCallbackRequest(
-                                                    baseProvider
-                                                        .firebaseUser.uid,
-                                                    baseProvider.myUser.name,
-                                                    baseProvider.myUser.mobile)
-                                                .then((flag) {
-                                              if (flag) {
-                                                Navigator.of(context).pop();
-                                                baseProvider.showPositiveAlert(
-                                                    'Callback placed!',
-                                                    'We\'ll contact you soon on your registered mobile',
-                                                    context);
-                                              }
-                                            });
+                                            // dbProvider
+                                            //     .addCallbackRequest(
+                                            //         baseProvider
+                                            //             .firebaseUser.uid,
+                                            //         baseProvider.myUser.name,
+                                            //         baseProvider.myUser.mobile)
+                                            //     .then((flag) {
+                                            //   if (flag) {
+                                            //     Navigator.of(context).pop();
+                                            //     baseProvider.showPositiveAlert(
+                                            //         'Callback placed!',
+                                            //         'We\'ll contact you soon on your registered mobile',
+                                            //         context);
+                                            //   }
+                                            // });
                                           } else {
                                             baseProvider.showNegativeAlert(
                                                 'Unavailable',

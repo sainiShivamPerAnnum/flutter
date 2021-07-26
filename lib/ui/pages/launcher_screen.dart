@@ -2,13 +2,16 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui show Image, instantiateImageCodec;
 
+import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/breathing_text_widget.dart';
 import 'package:felloapp/ui/elements/logo_canvas.dart';
 import 'package:felloapp/ui/elements/logo_container.dart';
+import 'package:felloapp/ui/pages/update_section/update_screen.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +31,11 @@ class LogoFadeIn extends State<SplashScreen> {
   Timer _timer3;
   LogoStyle _logoStyle = LogoStyle.markOnly;
   ui.Image logo;
+  DeviceUnlock deviceUnlock;
+  BaseUtil baseProvider;
 
-  LogoFadeIn() {
+  @override
+  void initState() {
     _loadImageAsset(Assets.logoMaxSize);
     Timer(const Duration(milliseconds: 700), () {
       setState(() {
@@ -45,24 +51,75 @@ class LogoFadeIn extends State<SplashScreen> {
         _isSlowConnection = true;
       });
     });
+    super.initState();
   }
 
   initialize() async {
-    final baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    deviceUnlock = DeviceUnlock();
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
     final fcmProvider = Provider.of<FcmListener>(context, listen: false);
     final stateProvider = Provider.of<AppState>(context, listen: false);
     stateProvider.setLastTapIndex();
     await baseProvider.init();
     await fcmProvider.setupFcm();
     _timer3.cancel();
-    if (!baseProvider.isUserOnboarded) {
-      log.debug("New user. Moving to Onboarding..");
+    bool isThereBreakingUpdate = await checkBreakingUpdate();
+    // isThereBreakingUpdate = true;
+    isThereBreakingUpdate = false;
+    if (isThereBreakingUpdate) {
       stateProvider.currentAction =
-          PageAction(state: PageState.replaceAll, page: OnboardPageConfig);
+          PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
     } else {
-      log.debug("Existing User. Moving to Home..");
-      stateProvider.currentAction =
-          PageAction(state: PageState.replaceAll, page: RootPageConfig);
+      if (!baseProvider.isUserOnboarded) {
+        log.debug("New user. Moving to Onboarding..");
+        stateProvider.currentAction =
+            PageAction(state: PageState.replaceAll, page: OnboardPageConfig);
+      } else {
+        log.debug("Existing User. Moving to Home..");
+        bool _unlocked;
+        if (baseProvider.isSecurityEnabled) {
+          try {
+            _unlocked = await deviceUnlock.request(
+                localizedReason: 'Please authenticate in order to proceed');
+          } on DeviceUnlockUnavailable {
+            baseProvider.showPositiveAlert(
+                'No Device Authentication Found',
+                'Logging in, please enable device security to add lock',
+                context);
+            _unlocked = true;
+          } on RequestInProgress {
+            _unlocked = false;
+            print('Request in progress');
+          }
+          if (_unlocked) {
+            stateProvider.currentAction =
+                PageAction(state: PageState.replaceAll, page: RootPageConfig);
+          } else {
+            baseProvider.showNegativeAlert(
+                'Authentication Failed', 'Please restart app', context);
+          }
+        } else {
+          stateProvider.currentAction =
+              PageAction(state: PageState.replaceAll, page: RootPageConfig);
+        }
+      }
+    }
+  }
+
+  Future<bool> checkBreakingUpdate() async {
+    String currentBuild = BaseUtil.packageInfo.buildNumber;
+    print('Current Build $currentBuild');
+    String minBuild = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER);
+    print('Min Build Required $minBuild');
+    // minBuild = "0";
+    try {
+      if (int.parse(currentBuild) < int.parse(minBuild)) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return true;
     }
   }
 

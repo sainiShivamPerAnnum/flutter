@@ -21,6 +21,10 @@ const String ReferralPolicyPath = '/refPolicy';
 const String ChatSupportPath = '/chatSupport';
 const String ClaimUsernamePath = '/claimUsername';
 const String VerifyEmailPath = '/verifyEmail';
+const String UpdateRequiredPath = '/updateRequired';
+const String ContactUsPath = '/contactUs';
+const String WalkThroughPath = '/walkThrough';
+const String WalkThroughCompletedPath = '/walkThroughCompleted';
 
 enum Pages {
   Splash,
@@ -42,7 +46,11 @@ enum Pages {
   RefPolicy,
   ChatSupport,
   ClaimUsername,
-  VerifyEmail
+  VerifyEmail,
+  UpdateRequired,
+  ContactUs,
+  WalkThrough,
+  WalkThroughCompleted,
 }
 
 class PageConfiguration {
@@ -162,3 +170,24 @@ PageConfiguration VerifyEmailPageConfig = PageConfiguration(
   path: VerifyEmailPath,
   uiPage: Pages.VerifyEmail,
 );
+PageConfiguration UpdateRequiredConfig = PageConfiguration(
+  key: 'UpdateRequired',
+  path: UpdateRequiredPath,
+  uiPage: Pages.UpdateRequired,
+);
+PageConfiguration ContactUsConfig = PageConfiguration(
+  key: 'ContactUs',
+  path: ContactUsPath,
+  uiPage: Pages.ContactUs,
+);
+PageConfiguration WalkThroughConfig = PageConfiguration(
+  key: 'WalkThrough',
+  path: WalkThroughPath,
+  uiPage: Pages.WalkThrough,
+);
+PageConfiguration WalkThroughCompletedConfig = PageConfiguration(
+  key: 'WalkThroughCompleted',
+  path: WalkThroughCompletedPath,
+  uiPage: Pages.WalkThroughCompleted,
+);
+

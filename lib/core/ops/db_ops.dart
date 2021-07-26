@@ -429,7 +429,7 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<bool> addCallbackRequest(
-      String uid, String name, String mobile) async {
+      String uid, String name, String mobile,int callTime,[int callWindow=2]) async {
     try {
       DateTime today = DateTime.now();
       String year = today.year.toString();
@@ -439,6 +439,8 @@ class DBModel extends ChangeNotifier {
       data['name'] = name;
       data['mobile'] = mobile;
       data['timestamp'] = Timestamp.now();
+      data['call_time'] =  callTime;
+      data['call_window'] = callWindow;
 
       await _api.addCallbackDocument(year, monthCde, data);
       return true;
