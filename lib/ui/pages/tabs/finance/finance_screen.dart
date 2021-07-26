@@ -86,6 +86,9 @@ class _FinancePageState extends State<FinancePage> {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
+    // baseProvider.userFundWallet.prizeBalance = 100;
+    // baseProvider.userFundWallet.lockedPrizeBalance = 300;
+    // baseProvider.userFundWallet.iciciBalance = 500;
     if (!baseProvider.isAugmontRealTimeBalanceFetched) {
       _updateAugmontBalance();
       baseProvider.isAugmontRealTimeBalanceFetched = true;

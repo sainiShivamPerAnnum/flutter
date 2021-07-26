@@ -4,6 +4,7 @@ import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
+import 'package:felloapp/ui/pages/hamburger/contact_us_page.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
 import 'package:felloapp/ui/pages/hamburger/hamburger_screen.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
@@ -11,6 +12,8 @@ import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
+import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_completed.dart';
+import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/root.dart';
 import 'package:felloapp/ui/pages/tabs/finance/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
@@ -21,6 +24,7 @@ import 'package:felloapp/ui/pages/tabs/profile/claim_username.dart';
 import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions.dart';
 import 'package:felloapp/ui/pages/tabs/profile/verify_email.dart';
+import 'package:felloapp/ui/pages/update_section/update_screen.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -182,7 +186,18 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.VerifyEmail:
           _addPageData(VerifyEmail(), VerifyEmailPageConfig);
           break;
-
+        case Pages.UpdateRequired:
+          _addPageData(UpdateRequiredScreen(), UpdateRequiredConfig);
+          break;
+        case Pages.ContactUs:
+          _addPageData(ContactUsPage(), ContactUsConfig);
+          break;
+        case Pages.WalkThrough:
+          _addPageData(WalkThroughPage(), WalkThroughConfig);
+          break;
+        case Pages.WalkThroughCompleted:
+          _addPageData(WalkThroughCompleted(), WalkThroughCompletedConfig);
+          break;
         default:
           break;
       }
@@ -301,6 +316,18 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.VerifyEmail:
         VerifyEmailPageConfig.currentPageAction = action;
+        break;
+      case Pages.UpdateRequired:
+        UpdateRequiredConfig.currentPageAction = action;
+        break;
+      case Pages.ContactUs:
+        ContactUsConfig.currentPageAction = action;
+        break;
+      case Pages.WalkThrough:
+        WalkThroughConfig.currentPageAction = action;
+        break;
+      case Pages.WalkThroughCompleted:
+        WalkThroughCompletedConfig.currentPageAction = action;
         break;
 
       default:

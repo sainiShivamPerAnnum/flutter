@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
@@ -1096,7 +1097,7 @@ class _UserProfileCardState extends State<UserProfileCard> {
               ),
               SizedBox(
                 height: 16,
-              )
+              ),
             ],
           ),
           Positioned(
@@ -1318,6 +1319,24 @@ class _UserEditProfileCardState extends State<UserEditProfileCard> {
                     ),
                   ),
                 ),
+              )
+            ],
+          ),
+          Row(
+            children: [
+              Text('Enable Security', style: TextStyle(color: Colors.white, fontSize: SizeConfig.mediumTextSize,)),
+              Consumer<BaseUtil>(
+                builder: (ctx, bp, child) {
+                  return Switch(
+                    value: baseProvider.isSecurityEnabled,
+                    onChanged: (bool value){
+                      baseProvider.flipSecurityValue(baseProvider.isSecurityEnabled);
+                    },
+                    activeColor: UiConstants.darkPrimaryColor,
+                    inactiveThumbColor: UiConstants.spinnerColor,
+                    inactiveTrackColor: UiConstants.spinnerColor,
+                  );
+                },
               )
             ],
           )
