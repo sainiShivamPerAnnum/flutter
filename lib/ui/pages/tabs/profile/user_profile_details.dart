@@ -272,10 +272,11 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                       Row(
                         children: [
                           cardItem(
-                              "Username",
-                              baseProvider.myUser.username != null
-                                  ? "@${baseProvider.myUser.username}"
-                                  : "unavailable"),
+                                  "Username",
+                                  (baseProvider.myUser.username != ""
+                                      ? "@${baseProvider.myUser.username}"
+                                      : "unavailable")) ??
+                              "N/A",
                           cardItem("Mobile Number",
                               "+91 ${baseProvider.myUser.mobile}" ?? ""),
                         ],
@@ -283,17 +284,17 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                       Row(
                         children: [
                           cardItem(
-                              "Email",
-                              baseProvider.myUser.email != null
-                                  ? baseProvider.myUser.email
-                                  : "unavailable"),
+                                  "Email",
+                                  (baseProvider.myUser.email != ""
+                                      ? baseProvider.myUser.email
+                                      : "unavailable")) ??
+                              "N/A",
                           cardItem(
-                              baseProvider.myUser.dob != null
-                                  ? "Date of Birth"
-                                  : "Age",
-                              baseProvider.myUser.dob ??
-                                  baseProvider.myUser.age ??
-                                  "unavailable"),
+                              (baseProvider.myUser.dob != ""
+                                      ? "Date of Birth"
+                                      : "Age") ??
+                                  "Date of Birth",
+                              getDob()),
                         ],
                       ),
                       Row(
@@ -309,7 +310,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                         .withOpacity(0.5),
                                     fontSize: SizeConfig.mediumTextSize * 0.8),
                               ),
-                              subtitle: baseProvider.myUser.pan != null
+                              subtitle: baseProvider.myUser.pan != null ||
+                                      baseProvider.myUser.pan != ""
                                   ? Text(
                                       baseProvider.myUser.pan,
                                       style: TextStyle(
@@ -448,6 +450,15 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
       return "Female";
     else if (baseProvider.myUser.gender == "O") return "Prefer not say";
     return "unavailable";
+  }
+
+  String getDob() {
+    if (baseProvider.myUser.dob != null)
+      return baseProvider.myUser.dob;
+    else if (baseProvider.myUser.age != null)
+      return baseProvider.myUser.age;
+    else
+      return "N/A";
   }
 
   Widget cardItem(String title, String subTitle) {

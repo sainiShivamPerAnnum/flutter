@@ -129,37 +129,6 @@ class FcmListener extends ChangeNotifier {
         (suffix.isEmpty) ? subId.value() : '${subId.value()}$suffix');
   }
 
-  saveTambolaDrawNotification(bool val) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool("tNotif", val);
-    tambolaDrawNotifications = val;
-  }
-
-  Future getTambolaDrawNotificationStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    tambolaDrawNotifications = prefs.getBool('tNotif') ?? true;
-  }
-
-  Future toggleTambolaDrawNotificationStatus(bool val) async {
-    // isTambolaNotificationLoading = true;
-    // notifyListeners();
-    print("Draw notification val : $val");
-    try {
-      if (val) {
-        await addSubscription(FcmTopic.TAMBOLAPLAYER);
-        print("subscription added");
-      } else {
-        await removeSubscription(FcmTopic.TAMBOLAPLAYER);
-        print("subscription removed");
-      }
-      saveTambolaDrawNotification(val);
-    } catch (e) {
-      log.error(e.toString());
-      _baseUtil.showNegativeAlert(
-          "Snap!", "Please try again", delegate.navigatorKey.currentContext);
-    }
-  }
-
   _manageInitSubscriptions() async {
     if (_baseUtil == null) return;
     if (_baseUtil.isOldCustomer()) {
@@ -174,8 +143,11 @@ class FcmListener extends ChangeNotifier {
 
     if (_baseUtil.userTicketWallet != null &&
         _baseUtil.userTicketWallet.getActiveTickets() > 0) {
-      addSubscription(FcmTopic.TAMBOLAPLAYER);
-      saveTambolaDrawNotification(true);
+      await getTambolaDrawNotificationStatus();
+      if (_tambolaDrawNotifications) {
+        addSubscription(FcmTopic.TAMBOLAPLAYER);
+        saveTambolaDrawNotification(true);
+      }
     }
 
     if (BaseUtil.packageInfo != null) {
@@ -245,5 +217,44 @@ class FcmListener extends ChangeNotifier {
       //       _baseUtil.myUser); //user cache has client token field available
     }
     return flag;
+  }
+
+// TAMBOLA DRAW NOTIFICATION STATUS HANDLE CODE
+
+  // SAVE STATUS TO SHARED PREFS
+  saveTambolaDrawNotification(bool val) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("tNotif", val);
+    tambolaDrawNotifications = val;
+    print("--------------------> $tambolaDrawNotifications");
+    print(prefs.getBool('tNotif'));
+  }
+
+  // SET THE LOCAL SAVED STATUS VALUE TO THE LOCAL VARIABLE
+  Future getTambolaDrawNotificationStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    tambolaDrawNotifications = prefs.getBool("tNotif");
+    print("-----------------------> $tambolaDrawNotifications");
+  }
+
+  // TOGGLE THE SUBSCRIPTION
+  Future toggleTambolaDrawNotificationStatus(bool val) async {
+    // isTambolaNotificationLoading = true;
+    // notifyListeners();
+    print("Draw notification val : $val");
+    try {
+      if (val) {
+        await addSubscription(FcmTopic.TAMBOLAPLAYER);
+        print("subscription added");
+      } else {
+        await removeSubscription(FcmTopic.TAMBOLAPLAYER);
+        print("subscription removed");
+      }
+      saveTambolaDrawNotification(val);
+    } catch (e) {
+      log.error(e.toString());
+      _baseUtil.showNegativeAlert(
+          "Snap!", "Please try again", delegate.navigatorKey.currentContext);
+    }
   }
 }

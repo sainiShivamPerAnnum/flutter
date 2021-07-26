@@ -492,78 +492,151 @@ class ShareCard extends StatelessWidget {
                                   topLeft: Radius.circular(16),
                                   topRight: Radius.circular(16)),
                             ),
+                            // backgroundColor: Colors.transparent,
                             context: context,
                             builder: (ctx) {
                               AppState.screenStack.add(ScreenItem.dialog);
                               return Wrap(
                                 children: [
                                   Container(
-                                    height: SizeConfig.screenHeight * 0.5,
+                                    // margin: EdgeInsets.all(
+                                    //     SizeConfig.blockSizeHorizontal * 2),
+                                    // decoration: BoxDecoration(
+                                    //   borderRadius: BorderRadius.circular(16),
+                                    //   color: Colors.white,
+                                    // ),
+                                    height: SizeConfig.screenHeight * 0.48,
                                     child: Column(
                                       children: [
-                                        SizedBox(height: 8),
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                                width: SizeConfig
-                                                        .blockSizeHorizontal *
-                                                    5),
-                                            Expanded(
-                                              child: FittedBox(
-                                                fit: BoxFit.cover,
-                                                child: Text(
-                                                  "How to make a successful Referral",
-                                                  style: GoogleFonts.montserrat(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: UiConstants
-                                                        .primaryColor,
+                                        Container(
+                                          padding: EdgeInsets.only(
+                                              left: SizeConfig
+                                                      .blockSizeHorizontal *
+                                                  5,
+                                              right: SizeConfig
+                                                      .blockSizeHorizontal *
+                                                  5,
+                                              top: 16,
+                                              bottom: 0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              // SizedBox(
+                                              // width: SizeConfig
+                                              //         .blockSizeHorizontal *
+                                              //     5),
+                                              Expanded(
+                                                child: FittedBox(
+                                                  fit: BoxFit.cover,
+                                                  child: Text(
+                                                    "How to make a successful Referral",
+                                                    textAlign: TextAlign.center,
+                                                    maxLines: 2,
+                                                    style: GoogleFonts
+                                                        .montserratAlternates(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: UiConstants
+                                                          .primaryColor,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                                width: SizeConfig
-                                                        .blockSizeHorizontal *
-                                                    10),
-                                            IconButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              icon: Icon(Icons.close),
-                                            )
-                                          ],
-                                        ),
-                                        Divider(),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: SizeConfig
-                                                      .blockSizeHorizontal *
-                                                  5),
-                                          child: ListView(
-                                            shrinkWrap: true,
-                                            children: [
-                                              referralTile(
-                                                  "Share your personalised link to your friends and family"),
-                                              referralTile(
-                                                  "Prize balance gets credited as soon as they sign up."),
-                                              referralTile(
-                                                  "Prize balance gets unlocked when they make their first investment."),
-                                              referralTile(
-                                                  "you can invest or withdraw that balance afterwards")
+                                              SizedBox(
+                                                  width: SizeConfig
+                                                          .blockSizeHorizontal *
+                                                      5),
+                                              IconButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                icon: Icon(
+                                                  Icons.close,
+                                                  color: Colors.grey,
+                                                ),
+                                              )
                                             ],
                                           ),
                                         ),
-                                        SizedBox(height: 8),
+                                        Divider(),
                                         Expanded(
                                           child: Container(
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: CachedNetworkImageProvider(
-                                                    "https://image.freepik.com/free-vector/customers-earning-money-by-giving-likes_74855-7121.jpg"),
-                                              ),
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: SizeConfig
+                                                      .blockSizeHorizontal *
+                                                  5,
+                                            ),
+                                            child: Stack(
+                                              children: [
+                                                Positioned(
+                                                  bottom: 0,
+                                                  right: -30,
+                                                  child: Opacity(
+                                                    opacity: 1,
+                                                    child: Image.asset(
+                                                      "images/share-bottomsheet.png",
+                                                      width: SizeConfig
+                                                              .screenWidth *
+                                                          0.55,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    referralTile(
+                                                      "Share your personalised link to your friends and family",
+                                                      0,
+                                                    ),
+                                                    referralTile(
+                                                        "Prize balance gets credited as soon as they sign up.",
+                                                        SizeConfig.screenWidth *
+                                                            0.1),
+                                                    referralTile(
+                                                        "Prize balance gets unlocked when they make their first investment.",
+                                                        SizeConfig.screenWidth *
+                                                            0.2),
+                                                    referralTile(
+                                                        "you can invest or withdraw that balance afterwards",
+                                                        SizeConfig.screenWidth *
+                                                            0.3),
+                                                    SizedBox(height: 24),
+                                                    Container(
+                                                      width: SizeConfig
+                                                              .screenWidth *
+                                                          0.4,
+                                                      child: Text(
+                                                        "Want to earn more with Fello ??",
+                                                        style: GoogleFonts
+                                                            .montserrat(
+                                                                color: Colors
+                                                                    .grey),
+                                                      ),
+                                                    ),
+                                                    ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                              primary: UiConstants
+                                                                  .primaryColor),
+                                                      onPressed: () {},
+                                                      child: Text(
+                                                        "Visit our site",
+                                                        style: GoogleFonts
+                                                            .montserrat(
+                                                                color: Colors
+                                                                    .white),
+                                                      ),
+                                                    ),
+                                                    Spacer()
+                                                  ],
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                        )
+                                        ),
+                                        SizedBox(height: 8),
                                       ],
                                     ),
                                   )
@@ -597,9 +670,9 @@ class ShareCard extends StatelessWidget {
     );
   }
 
-  Widget referralTile(String title) {
+  Widget referralTile(String title, double rightPad) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: EdgeInsets.only(bottom: 20.0, right: rightPad),
       child: Row(
         children: [
           Icon(

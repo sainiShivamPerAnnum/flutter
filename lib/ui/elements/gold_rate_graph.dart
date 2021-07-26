@@ -127,7 +127,7 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
                       decoration: BoxDecoration(
                         border: Border.all(
                             width: 2, color: augmontGoldPalette.primaryColor),
-                        borderRadius: BorderRadius.circular(100),
+                        borderRadius: BorderRadius.circular(5),
                         color: (_selectedFrequency == 1)
                             ? augmontGoldPalette.primaryColor
                             : Colors.transparent,
@@ -160,7 +160,7 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
                           width: 2,
                           color: augmontGoldPalette.primaryColor,
                         ),
-                        borderRadius: BorderRadius.circular(100),
+                        borderRadius: BorderRadius.circular(5),
                         color: (_selectedFrequency == 0)
                             ? augmontGoldPalette.primaryColor
                             : Colors.transparent,
@@ -193,7 +193,7 @@ class _GoldRateGraphState extends State<GoldRateGraph> {
                           width: 2,
                           color: augmontGoldPalette.primaryColor,
                         ),
-                        borderRadius: BorderRadius.circular(100),
+                        borderRadius: BorderRadius.circular(5),
                         color: (_selectedFrequency == 2)
                             ? augmontGoldPalette.primaryColor
                             : Colors.transparent,

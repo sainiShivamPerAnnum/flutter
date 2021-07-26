@@ -29,7 +29,7 @@ class _UpdateNameDialogState extends State<UpdateNameDialog> {
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
       child: Dialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(10.0),
         ),
         elevation: 0.0,
         backgroundColor: Colors.white,
