@@ -113,13 +113,13 @@ class _FinancePageState extends State<FinancePage> {
             borderRadius: SizeConfig.homeViewBorder,
             child: Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenHeight * 0.016),
+                  horizontal: SizeConfig.blockSizeHorizontal * 5),
               child: CustomScrollView(
                 slivers: [
                   SliverList(
                       delegate: SliverChildListDelegate([
                     Container(
-                      height: kToolbarHeight * 1.4,
+                      height: kToolbarHeight,
                     ),
                     BaseUtil.buildShowcaseWrapper(_showcaseHeader,
                         'Your savings and investments will show up here. The balances are based on live market rates.',

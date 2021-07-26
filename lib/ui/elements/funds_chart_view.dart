@@ -1,17 +1,19 @@
+import 'dart:collection';
+import 'dart:math';
+
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/ui/dialogs/Fold-Card/card.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'dart:math' as math;
-
 
 class FundsChartView extends StatefulWidget {
   final UserFundWallet userFundWallet;
@@ -28,15 +30,22 @@ class FundsChartView extends StatefulWidget {
 class _FundsChartViewState extends State<FundsChartView> {
   final List<Color> colorListLight = [
     UiConstants.primaryColor,
-    Color(0xffF18805),
+    Color(0xffF5B819),
     Color(0xff03256C),
   ];
 
   final List<Color> colorList = [
-    UiConstants.primaryColor,
-    Color(0xffF18805),
-    Color(0xff2e89ba),
-    Colors.blueGrey,
+    Color(0xff66DE93),
+    Color(0xffF5B819),
+    Color(0xff6389F2),
+    Color(0xff783FF9),
+  ];
+
+  final List<Color> borderColorList = [
+    Color(0xff50CB93),
+    Color(0xffFFA900),
+    Color(0xff185ADB),
+    Color(0xff7952B3),
   ];
 
   final List<bool> shouldHighlight = [
@@ -46,6 +55,7 @@ class _FundsChartViewState extends State<FundsChartView> {
     false,
   ];
   int touchedIndex = -1;
+  int startDegree = 0;
 
   Map<String, double> getChartMap() {
     return {
@@ -54,87 +64,216 @@ class _FundsChartViewState extends State<FundsChartView> {
       "Prize Balance": widget.userFundWallet.prizeBalance,
       "Locked Balance": widget.userFundWallet.lockedPrizeBalance
     };
+    // Map<String, double> res = {
+    //   "ICICI Balance": 500,
+    //   "Gold Balance": 200,
+    //   "Prize Balance": 50,
+    //   "Locked Balance": 100
+    // };
+    //return res;
+  }
+
+  @override
+  void initState() {
+    startDegree = Random().nextInt(360) + 1;
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     Map<String, double> dataMap = getChartMap();
     List<String> title = dataMap.keys.toList();
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.blockSizeHorizontal,
+    return Container(
+      width: SizeConfig.screenWidth,
+      height: SizeConfig.screenHeight * 0.25,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Container(
+          //   child: PieChart(
+          //     dataMap: dataMap,
+          //     animationDuration: Duration(milliseconds: 800),
+          //     chartLegendSpacing: 40,
+          //     chartRadius: SizeConfig.screenWidth / 2,
+          //     colorList: colorList,
+          //     initialAngleInDegree: 0,
+          //     shouldHighlight: shouldHighlight,
+          //     chartType: ChartType.ring,
+          //     ringStrokeWidth: 10,
+          //     centerText:
+          //         "₹ ${widget.userFundWallet.getEstTotalWealth().toStringAsFixed(2)}",
+          //     legendOptions: LegendOptions(
+          //       showLegendsInRow: false,
+          //       legendPosition: LegendPosition.left,
+          //       showLegends: false,
+          //       legendShape: BoxShape.circle,
+          //       legendTextStyle: TextStyle(
+          //         fontWeight: FontWeight.bold,
+          //       ),
+          //     ),
+          //     chartValuesOptions: ChartValuesOptions(
+          //       showChartValueBackground: true,
+          //       showChartValues: false,
+          //       chartValueBackgroundColor: UiConstants.backgroundColor,
+          //       chartValueStyle: GoogleFonts.montserrat(
+          // fontSize: math.min(SizeConfig.screenWidth /
+          //     (widget.userFundWallet
+          //             .getEstTotalWealth()
+          //             .toStringAsFixed(2)
+          //             .length *
+          //         1.6),SizeConfig.largeTextSize*2),
+          //         color: UiConstants.textColor,
+          //       ),
+          //       showChartValuesInPercentage: false,
+          //       showChartValuesOutside: false,
+          //     ),
+          //   ),
+          // ),
+          //  ${widget.userFundWallet.getEstTotalWealth().toStringAsFixed(2)}
+          Expanded(
+            child: Container(
+              alignment: Alignment.center,
+              child: Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      '₹ ${widget.userFundWallet.getEstTotalWealth().toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: math.min(
+                            SizeConfig.screenWidth /
+                                (widget.userFundWallet
+                                        .getEstTotalWealth()
+                                        .toStringAsFixed(2)
+                                        .length *
+                                    2),
+                            SizeConfig.largeTextSize * 2),
+                      ),
+                    ),
+                  ),
+                  PieChart(
+                    PieChartData(
+                      startDegreeOffset: startDegree * 0.1,
+                      sections: _getSections(),
+                      pieTouchData:
+                          PieTouchData(touchCallback: (pieTouchResponse) {
+                        setState(() {
+                          final desiredTouch = pieTouchResponse.touchInput
+                                  is! PointerExitEvent &&
+                              pieTouchResponse.touchInput is! PointerUpEvent;
+                          if (desiredTouch &&
+                              pieTouchResponse.touchedSection != null) {
+                            touchedIndex = pieTouchResponse
+                                .touchedSection.touchedSectionIndex;
+                          } else {
+                            touchedIndex = -1;
+                          }
+                        });
+                      }),
+                    ),
+                  ),
+                  Align(
+                      alignment: Alignment.topRight,
+                      child: Container(
+                        child: IconButton(
+                          alignment: Alignment.topRight,
+                          onPressed: () {
+                            HapticFeedback.vibrate();
+                            showDialog(
+                                context: context,
+                                builder: (ctx) {
+                                  return Dialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30.0)),
+                                    child: Text('Container'),
+                                  );
+                                });
+                          },
+                          icon: Icon(
+                            Icons.info,
+                            color: Colors.grey[400],
+                          ),
+                        ),
+                      )),
+                ],
+              ),
+            ),
           ),
-          height: SizeConfig.screenWidth * 0.65,
-          alignment: Alignment.centerRight,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              (dataMap[title[0]] > 0)
-                  ? Expanded(
-                      child: Legend(
+          SizedBox(width: SizeConfig.blockSizeHorizontal * 5),
+          Container(
+            width: SizeConfig.screenWidth * 0.3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                (dataMap[title[0]] > 0)
+                    ? Legend(
                         title: title[0],
                         amount: "₹ ${dataMap[title[0]].toStringAsFixed(2)}",
                         color: colorList[0],
-                        titleTextStyle: (touchedIndex==0) ? TextStyle(
-                          fontSize: SizeConfig.smallTextSize * 1.2,
-                          color: UiConstants.textColor,
-                          fontWeight: FontWeight.bold
-                        ) : null,
-                        bodyTextStyle: (touchedIndex==0) ? TextStyle(
-                          fontSize: SizeConfig.mediumTextSize,
-                          fontWeight: FontWeight.bold,
-                          color: UiConstants.textColor,
-                        ):null,
-                      ),
-                    )
-                  : Container(),
-              Expanded(
-                child: Legend(
+                        titleTextStyle: (touchedIndex == 0)
+                            ? TextStyle(
+                                fontSize: SizeConfig.smallTextSize * 1.2,
+                                color: UiConstants.textColor,
+                                fontWeight: FontWeight.bold)
+                            : null,
+                        bodyTextStyle: (touchedIndex == 0)
+                            ? TextStyle(
+                                fontSize: SizeConfig.mediumTextSize,
+                                fontWeight: FontWeight.bold,
+                                color: UiConstants.textColor,
+                              )
+                            : null,
+                      )
+                    : Container(),
+                Legend(
                   title: title[1],
                   amount: "₹ ${dataMap[title[1]].toStringAsFixed(2)}",
                   color: colorList[1],
-                  titleTextStyle: (touchedIndex==1) ? TextStyle(
-                    fontSize: SizeConfig.smallTextSize * 1.2,
-                    color: UiConstants.textColor,
-                    fontWeight: FontWeight.bold
-                  ) : null,
-                  bodyTextStyle: (touchedIndex==1) ? TextStyle(
-                      fontSize: SizeConfig.mediumTextSize,
-                      fontWeight: FontWeight.bold,
-                      color: UiConstants.textColor,
-                    ):null,
+                  titleTextStyle: (touchedIndex == 1)
+                      ? TextStyle(
+                          fontSize: SizeConfig.smallTextSize * 1.2,
+                          color: UiConstants.textColor,
+                          fontWeight: FontWeight.bold)
+                      : null,
+                  bodyTextStyle: (touchedIndex == 1)
+                      ? TextStyle(
+                          fontSize: SizeConfig.mediumTextSize,
+                          fontWeight: FontWeight.bold,
+                          color: UiConstants.textColor,
+                        )
+                      : null,
                   onClick: () {
                     HapticFeedback.vibrate();
                     showDialog(
-                        context: context,
-                        builder: (BuildContext context) => MoreInfoDialog(
-                              text: widget.goldMoreInfo,
-                              title: 'Your Gold Balance',
-                            ));
+                      context: context,
+                      builder: (BuildContext context) => MoreInfoDialog(
+                        text: widget.goldMoreInfo,
+                        title: 'Your Gold Balance',
+                      ),
+                    );
                   },
                 ),
-              ),
-              Expanded(
-                child: Legend(
+                Legend(
                   title: title[2],
                   amount: "₹ ${dataMap[title[2]].toStringAsFixed(2)}",
                   color: colorList[2],
-                  titleTextStyle: (touchedIndex==2) ? TextStyle(
-                    fontSize: SizeConfig.smallTextSize * 1.2,
-                    color: UiConstants.textColor,
-                    fontWeight: FontWeight.bold
-                  ) : null,
-                  bodyTextStyle: (touchedIndex==2) ? TextStyle(
-                    fontSize: SizeConfig.mediumTextSize,
-                    fontWeight: FontWeight.bold,
-                    color: UiConstants.textColor,
-                  ):null,
+                  titleTextStyle: (touchedIndex == 2)
+                      ? TextStyle(
+                          fontSize: SizeConfig.smallTextSize * 1.2,
+                          color: UiConstants.textColor,
+                          fontWeight: FontWeight.bold)
+                      : null,
+                  bodyTextStyle: (touchedIndex == 2)
+                      ? TextStyle(
+                          fontSize: SizeConfig.mediumTextSize,
+                          fontWeight: FontWeight.bold,
+                          color: UiConstants.textColor,
+                        )
+                      : null,
                   isHighlighted:
                       widget.userFundWallet.isPrizeBalanceUnclaimed(),
                   onClick: () {
@@ -162,23 +301,24 @@ class _FundsChartViewState extends State<FundsChartView> {
                     );
                   },
                 ),
-              ),
-              (dataMap[title[3]] > 0)
-                  ? Expanded(
-                      child: Legend(
+                (dataMap[title[3]] > 0)
+                    ? Legend(
                         title: title[3],
                         amount: "₹ ${dataMap[title[3]].toStringAsFixed(2)}",
                         color: colorList[3],
-                        titleTextStyle: (touchedIndex==3) ? TextStyle(
-                          fontSize: SizeConfig.smallTextSize * 1.2,
-                          color: UiConstants.textColor,
-                          fontWeight: FontWeight.bold
-                        ) : null,
-                        bodyTextStyle: (touchedIndex==3) ? TextStyle(
-                          fontSize: SizeConfig.mediumTextSize,
-                          fontWeight: FontWeight.bold,
-                          color: UiConstants.textColor,
-                        ):null,
+                        titleTextStyle: (touchedIndex == 3)
+                            ? TextStyle(
+                                fontSize: SizeConfig.smallTextSize * 1.2,
+                                color: UiConstants.textColor,
+                                fontWeight: FontWeight.bold)
+                            : null,
+                        bodyTextStyle: (touchedIndex == 3)
+                            ? TextStyle(
+                                fontSize: SizeConfig.mediumTextSize,
+                                fontWeight: FontWeight.bold,
+                                color: UiConstants.textColor,
+                              )
+                            : null,
                         onClick: () {
                           HapticFeedback.vibrate();
                           showDialog(
@@ -189,130 +329,43 @@ class _FundsChartViewState extends State<FundsChartView> {
                                     title: 'Locked Balance',
                                   ));
                         },
-                      ),
-                    )
-                  : Container(),
-            ],
-          ),
-        ),
-        SizedBox(
-          width: SizeConfig.blockSizeHorizontal * 8,
-        ),
-        // Container(
-        //   child: PieChart(
-        //     dataMap: dataMap,
-        //     animationDuration: Duration(milliseconds: 800),
-        //     chartLegendSpacing: 40,
-        //     chartRadius: SizeConfig.screenWidth / 2,
-        //     colorList: colorList,
-        //     initialAngleInDegree: 0,
-        //     shouldHighlight: shouldHighlight,
-        //     chartType: ChartType.ring,
-        //     ringStrokeWidth: 10,
-        //     centerText:
-        //         "₹ ${widget.userFundWallet.getEstTotalWealth().toStringAsFixed(2)}",
-        //     legendOptions: LegendOptions(
-        //       showLegendsInRow: false,
-        //       legendPosition: LegendPosition.left,
-        //       showLegends: false,
-        //       legendShape: BoxShape.circle,
-        //       legendTextStyle: TextStyle(
-        //         fontWeight: FontWeight.bold,
-        //       ),
-        //     ),
-        //     chartValuesOptions: ChartValuesOptions(
-        //       showChartValueBackground: true,
-        //       showChartValues: false,
-        //       chartValueBackgroundColor: UiConstants.backgroundColor,
-        //       chartValueStyle: GoogleFonts.montserrat(
-        //         fontSize: math.min(SizeConfig.screenWidth /
-        //             (widget.userFundWallet
-        //                     .getEstTotalWealth()
-        //                     .toStringAsFixed(2)
-        //                     .length *
-        //                 1.6),SizeConfig.largeTextSize*2),
-        //         color: UiConstants.textColor,
-        //       ),
-        //       showChartValuesInPercentage: false,
-        //       showChartValuesOutside: false,
-        //     ),
-        //   ),
-        // ),
-        Container(
-          width: SizeConfig.screenWidth*0.5,
-          height: SizeConfig.screenHeight*0.2,
-          child: Stack(
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: Text('₹ ${widget.userFundWallet.getEstTotalWealth().toStringAsFixed(2)}', style: TextStyle(fontSize: SizeConfig.largeTextSize),),
-              ),
-              PieChart(
-                PieChartData(
-                  sections: _getSections(),
-                  pieTouchData: PieTouchData(touchCallback: (pieTouchResponse) {
-                    setState(() {
-                      final desiredTouch = pieTouchResponse.touchInput is! PointerExitEvent &&
-                          pieTouchResponse.touchInput is! PointerUpEvent;
-                      if (desiredTouch && pieTouchResponse.touchedSection != null) {
-                        touchedIndex = pieTouchResponse.touchedSection.touchedSectionIndex;
-                      } else {
-                        touchedIndex = -1;
-                      } 
-                    });
-                  }),
-                ),
-              ),
-              Align(
-                alignment: Alignment.topRight,
-                child: Container(
-                  child: IconButton(
-                    alignment: Alignment.topRight,
-                    onPressed: (){
-                      HapticFeedback.vibrate();
-                      showDialog(
-                        context: context,
-                        builder: (ctx) {
-                          return Dialog(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-                            child: Text('Container'),
-                          );
-                        }
-                      );
-                    },
-                    icon: Icon(Icons.info, color: Colors.grey[400],),
-                  ),
-                )
-              ),
-            ],
-          ),
-        )
-      ],
+                      )
+                    : Container(),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 
   List<PieChartSectionData> _getSections() {
     List<PieChartSectionData> res = [];
-    int _i=0;
+    int _i = 0;
     getChartMap().forEach((key, value) {
-      final isTouched = _i==touchedIndex;
-      final fontSize = isTouched ? SizeConfig.mediumTextSize*1.2 : SizeConfig.mediumTextSize;
-      final radius = isTouched ? 30.0 : 20.0;
-      res.add(
-        PieChartSectionData(
+      final isTouched = _i == touchedIndex;
+      final fontSize = isTouched
+          ? SizeConfig.mediumTextSize * 1.2
+          : SizeConfig.mediumTextSize;
+      final radius = isTouched
+          ? SizeConfig.blockSizeHorizontal * 10
+          : SizeConfig.blockSizeHorizontal * 7;
+      res.add(PieChartSectionData(
+          borderSide: BorderSide(
+            width: 2,
+            color: borderColorList[_i],
+          ),
           color: colorList[_i],
           value: value,
           title: key,
+          titlePositionPercentageOffset: 2,
           showTitle: false,
           radius: radius,
-          titleStyle: TextStyle(fontSize: fontSize)
-        )
-      );
+          titleStyle: TextStyle(fontSize: fontSize, color: Colors.black)));
       _i++;
     });
     return res;
   }
-
 }
 
 class Legend extends StatelessWidget {
@@ -335,38 +388,33 @@ class Legend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        alignment: Alignment.bottomCenter,
-        padding: const EdgeInsets.only(top: 8, bottom: 8),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: GestureDetector(
           onTap: onClick,
           child: Row(
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Stack(
                 fit: StackFit.passthrough,
                 children: [
-                  Container(
-                    height: SizeConfig.screenWidth * 0.06,
-                    width: SizeConfig.screenWidth * 0.06,
-                    alignment: Alignment.center,
-                    child: CircleAvatar(
-                      radius: SizeConfig.screenWidth * 0.016,
-                      backgroundColor: color,
-                    ),
-                  ),
                   (isHighlighted)
-                      ? Container(
-                          height: SizeConfig.screenWidth * 0.06,
-                          width: SizeConfig.screenWidth * 0.06,
+                      ? Align(
                           alignment: Alignment.center,
                           child: SpinKitPulse(
                             color: color,
-                            size: SizeConfig.screenWidth * 0.1,
+                            duration: Duration(seconds: 2),
+                            size: 16,
                           ),
                         )
-                      : Container()
+                      : Align(
+                          alignment: Alignment.center,
+                          child: Icon(
+                            Icons.circle,
+                            color: color,
+                            size: 16,
+                          ),
+                        ),
                 ],
               ),
               SizedBox(
@@ -377,20 +425,24 @@ class Legend extends StatelessWidget {
                 children: [
                   Text(
                     amount,
-                    style: (bodyTextStyle==null)?TextStyle(
-                      fontSize: SizeConfig.mediumTextSize,
-                      fontWeight: FontWeight.w500,
-                      color: UiConstants.textColor,
-                    ):bodyTextStyle,
+                    style: (bodyTextStyle == null)
+                        ? TextStyle(
+                            fontSize: SizeConfig.mediumTextSize,
+                            fontWeight: FontWeight.w500,
+                            color: UiConstants.textColor,
+                          )
+                        : bodyTextStyle,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Text(
                       title,
-                      style: (titleTextStyle==null)?TextStyle(
-                        fontSize: SizeConfig.smallTextSize * 1.2,
-                        color: UiConstants.textColor,
-                      ):titleTextStyle,
+                      style: (titleTextStyle == null)
+                          ? TextStyle(
+                              fontSize: SizeConfig.smallTextSize,
+                              color: Colors.grey,
+                            )
+                          : titleTextStyle,
                     ),
                   ),
                 ],
