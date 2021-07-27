@@ -56,8 +56,8 @@ class _FundsChartViewState extends State<FundsChartView> {
 
   final List<bool> shouldHighlight = [
     false,
-    false,
-    false,
+    true,
+    true,
     false,
   ];
 
@@ -148,7 +148,7 @@ class _FundsChartViewState extends State<FundsChartView> {
                   showChartValues: false,
                   chartValueBackgroundColor: UiConstants.backgroundColor,
                   chartValueStyle: GoogleFonts.montserrat(
-                  fontSize: math.min(SizeConfig.screenWidth /
+                  fontSize: math.min((SizeConfig.screenWidth) /
                       (widget.userFundWallet
                               .getEstTotalWealth()
                               .toStringAsFixed(2)

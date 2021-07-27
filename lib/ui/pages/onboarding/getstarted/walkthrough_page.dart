@@ -5,6 +5,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -18,11 +19,10 @@ class WalkThroughPage extends StatefulWidget {
 
 class _WalkThroughPageState extends State<WalkThroughPage> {
   List<String> _videoURLS = [
-    'images/screen_demo.gif',
-    'images/screen_demo_2.gif',
-    'images/screen_demo_2.gif'
+    'images/sample_video.mp4',
+    'images/sample_video.mp4',
+    'images/sample_video.mp4'
   ];
-  AssetImage _gifImage;
   List<String> _content = [
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
@@ -32,11 +32,36 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
   PageController pageController = PageController(keepPage: false);
   AppState stateProvider;
   BaseUtil baseProvider;
+  VideoPlayerController _videoController;
 
   @override
   void initState() {
-    _gifImage = AssetImage(_videoURLS[0]);
+    _initController(0);
     super.initState();
+  }
+
+  void _initController(int index) {
+    _videoController = VideoPlayerController.asset(_videoURLS[index])
+      ..setLooping(true)..initialize().then((_) {
+        setState(() {
+          _videoController.play();
+        });
+      });
+  }
+
+  Future<void> _onControllerChange(int index) async {
+    if (_videoController == null) {
+      _initController(index);
+    } else {
+      final oldController = _videoController;
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await oldController.dispose();
+        _initController(index);
+      });
+      setState(() {
+        _videoController = null;
+      });
+    }
   }
 
   @override
@@ -61,10 +86,8 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                 controller: pageController,
                 itemCount: _content.length,
                 onPageChanged: (index) {
-                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                    AssetImage _oldImage = _gifImage;
-                    _oldImage.evict();
-                    _gifImage = AssetImage(_videoURLS[index]);
+                  _onControllerChange(index);
+                  setState(() {
                     _currentIndex.value = index;
                   });
                 },
@@ -211,12 +234,18 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
       children: [
         SizedBox(height: kToolbarHeight * 0.8),
         Expanded(
-          child: Container(
-            decoration: BoxDecoration(image: DecorationImage(image: _gifImage)),
-          ),
+          child: (_videoController!=null)?Container(
+          decoration: BoxDecoration(boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.5),spreadRadius: 3, blurRadius: 7)]),
+          child: AspectRatio(
+            aspectRatio: _videoController.value.aspectRatio,
+              child : VideoPlayer(_videoController)
+              )
+            ):
+          SpinKitCircle(color : Colors.grey)
         ),
         Container(
           width: SizeConfig.screenWidth * 0.8,
+          height: SizeConfig.screenHeight * 0.1,
           margin: EdgeInsets.only(
             top: SizeConfig.blockSizeHorizontal * 3,
             bottom: SizeConfig.blockSizeHorizontal * 14,
@@ -235,7 +264,8 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
 
   @override
   void dispose() {
-    _gifImage.evict();
+    // _gifImage.evict();
+    _videoController?.dispose();
     super.dispose();
   }
 }
