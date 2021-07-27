@@ -236,7 +236,44 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _appVersionRow() {
     return Center(
-      child: Row(
+      child:
+          // Row(
+          //   crossAxisAlignment: CrossAxisAlignment.center,
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     Image.asset(
+          //       "images/fello-short-logo.png",
+          //       color: Colors.grey,
+          //       width: SizeConfig.cardTitleTextSize * 0.9,
+          //       height: SizeConfig.cardTitleTextSize * 0.9,
+          //     ),
+          //     SizedBox(width: 4),
+          //     Column(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       crossAxisAlignment: CrossAxisAlignment.start,
+          //       children: [
+          //         Text(
+          //           "Version 1.0.2",
+          //           style: TextStyle(
+          //               fontSize: SizeConfig.mediumTextSize,
+          //               fontWeight: FontWeight.w700,
+          //               color: Colors.grey),
+          //         ),
+          //         SizedBox(
+          //           height: 4,
+          //         ),
+          //         Text(
+          //           "Made for India ❤",
+          //           style: TextStyle(
+          //             fontSize: SizeConfig.smallTextSize,
+          //             color: Colors.black54,
+          //           ),
+          //         ),
+          //       ],
+          //     )
+          //   ],
+          // ),
+          Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -488,6 +525,7 @@ class ShareCard extends StatelessWidget {
                     InkWell(
                       onTap: () {
                         showModalBottomSheet(
+                            isDismissible: false,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(16),
@@ -550,7 +588,8 @@ class ShareCard extends StatelessWidget {
                                                       5),
                                               IconButton(
                                                 onPressed: () {
-                                                  Navigator.pop(context);
+                                                  backButtonDispatcher
+                                                      .didPopRoute();
                                                 },
                                                 icon: Icon(
                                                   Icons.close,
@@ -607,7 +646,7 @@ class ShareCard extends StatelessWidget {
                                                     Container(
                                                       width: SizeConfig
                                                               .screenWidth *
-                                                          0.4,
+                                                          0.5,
                                                       child: Text(
                                                         "Want to earn more with Fello ??",
                                                         style: GoogleFonts
@@ -616,18 +655,25 @@ class ShareCard extends StatelessWidget {
                                                                     .grey),
                                                       ),
                                                     ),
-                                                    ElevatedButton(
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                              primary: UiConstants
-                                                                  .primaryColor),
-                                                      onPressed: () {},
+                                                    InkWell(
+                                                      onTap: () async {
+                                                        String url =
+                                                            "https://www.fello.in";
+                                                        if (await canLaunch(
+                                                            url)) {
+                                                          launchUrl(url);
+                                                        } else {
+                                                          backButtonDispatcher
+                                                              .didPopRoute();
+                                                        }
+                                                      },
                                                       child: Text(
                                                         "Visit our site",
                                                         style: GoogleFonts
                                                             .montserrat(
-                                                                color: Colors
-                                                                    .white),
+                                                          color: UiConstants
+                                                              .primaryColor,
+                                                        ),
                                                       ),
                                                     ),
                                                     Spacer()
@@ -800,11 +846,18 @@ class _ShareOptionsState extends State<ShareOptions> {
             splashColor: Colors.orange.withOpacity(0.5),
           ),
         ),
-        SizedBox(width: 10),
+        (Platform.isIOS)
+            ? SizedBox(width: 10)
+            : Text(
+                "---",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
         (Platform.isIOS)
             ? Text('')
             : Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 decoration: BoxDecoration(
                   border: Border.all(
                     width: 2,
@@ -861,22 +914,35 @@ class _ShareOptionsState extends State<ShareOptions> {
                       return;
                     else
                       log.debug(url);
-
-                    FlutterShareMe()
-                        .shareToWhatsApp(msg: _shareMsg + url)
-                        .then((flag) {
-                      log.debug(flag);
-                    }).catchError((err) {
-                      log.error('Share to whatsapp failed');
-                      log.error(err);
+                    try {
                       FlutterShareMe()
-                          .shareToWhatsApp4Biz(msg: _shareMsg + url)
-                          .then((value) {
-                        log.debug(value);
-                      }).catchError((err) {
-                        log.error('Share to whatsapp biz failed as well');
+                          .shareToWhatsApp(msg: _shareMsg + url)
+                          .then((flag) {
+                        if (flag == "false") {
+                          FlutterShareMe()
+                              .shareToWhatsApp4Biz(msg: _shareMsg + url)
+                              .then((flag) {
+                            log.debug(flag);
+                            if (flag == "false") {
+                              baseProvider.showNegativeAlert(
+                                  "Whatsapp not detected",
+                                  "Please use other option to share.",
+                                  context);
+                            }
+                          });
+                        }
                       });
-                    });
+                    } catch (e) {
+                      log.debug(e.toString());
+                    }
+
+                    // FlutterShareMe()
+                    //     .shareToWhatsApp4Biz(msg: _shareMsg + url)
+                    //     .then((value) {
+                    //   log.debug(value);
+                    // }).catchError((err) {
+                    //   log.error('Share to whatsapp biz failed as well');
+                    // });
                   },
                   highlightColor: Colors.orange.withOpacity(0.5),
                   splashColor: Colors.orange.withOpacity(0.5),
@@ -1244,21 +1310,6 @@ class _UserProfileCardState extends State<UserProfileCard> {
                   fontSize: SizeConfig.smallTextSize,
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Member since ${_getUserMembershipDate()}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: SizeConfig.smallTextSize,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 16,
-              ),
             ],
           ),
           SizedBox(
@@ -1307,338 +1358,5 @@ class _UserProfileCardState extends State<UserProfileCard> {
     } else {
       return '\'Unavailable\'';
     }
-  }
-}
-
-// class UserEditProfileCard extends StatefulWidget {
-//   final String oldname;
-
-//   UserEditProfileCard({this.oldname});
-
-//   @override
-//   _UserEditProfileCardState createState() => _UserEditProfileCardState();
-// }
-
-// class _UserEditProfileCardState extends State<UserEditProfileCard> {
-//   bool isUploading = false;
-//   TextEditingController _nameController;
-//   BaseUtil baseProvider;
-//   DBModel dbProvider;
-//   final _formKey = GlobalKey<FormState>();
-
-//   @override
-//   void initState() {
-//     _nameController = new TextEditingController(text: widget.oldname);
-//     super.initState();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     baseProvider = Provider.of<BaseUtil>(context, listen: false);
-//     dbProvider = Provider.of<DBModel>(context, listen: false);
-//     return Container(
-//       width: SizeConfig.screenWidth,
-//       height: SizeConfig.screenHeight * 0.24,
-//       decoration: BoxDecoration(
-//         image: DecorationImage(
-//           image: AssetImage(
-//             "images/profile-card.png",
-//           ),
-//           fit: BoxFit.fill,
-//         ),
-//       ),
-//       margin: EdgeInsets.symmetric(
-//         horizontal: SizeConfig.blockSizeHorizontal * 4,
-//       ),
-//       padding:
-//           EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           Form(
-//             key: _formKey,
-//             child: Container(
-//               width: SizeConfig.screenWidth,
-//               height: SizeConfig.blockSizeVertical * 5,
-//               padding: EdgeInsets.only(
-//                   left: SizeConfig.blockSizeHorizontal * 2, bottom: 8),
-//               child: TextFormField(
-//                 cursorColor: Colors.white,
-//                 controller: _nameController,
-//                 maxLines: 1,
-//                 style: GoogleFonts.montserrat(
-//                   color: Colors.white,
-//                   fontSize: SizeConfig.cardTitleTextSize,
-//                   fontWeight: FontWeight.w500,
-//                 ),
-//                 validator: (val) {
-//                   if (val.trim() == "") return "Name cannot be empty";
-//                   return null;
-//                 },
-//                 decoration: InputDecoration(
-//                   border: UnderlineInputBorder(
-//                     borderSide: BorderSide(color: Colors.white, width: 2),
-//                   ),
-//                   enabledBorder: UnderlineInputBorder(
-//                     borderSide: BorderSide(color: Colors.white, width: 2),
-//                   ),
-//                   errorBorder: UnderlineInputBorder(
-//                     borderSide: BorderSide(color: Colors.red, width: 2),
-//                   ),
-//                   focusedErrorBorder: UnderlineInputBorder(
-//                     borderSide: BorderSide(color: Colors.red, width: 2),
-//                   ),
-//                   focusedBorder: UnderlineInputBorder(
-//                     borderSide: BorderSide(color: Colors.white, width: 2),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ),
-//           Row(
-//             children: [
-//               TextButton(
-//                 onPressed: () {
-//                   if (_formKey.currentState.validate()) {
-//                     FocusScope.of(context).unfocus();
-//                     setState(() {
-//                       isUploading = !isUploading;
-//                     });
-//                     // baseProvider.myUser.name = _nameController.text.trim();
-//                     baseProvider.setName(_nameController.text.trim());
-//                     dbProvider.updateUser(baseProvider.myUser).then((flag) {
-//                       setState(() {
-//                         isUploading = false;
-//                       });
-//                       if (flag) {
-//                         cardKey.currentState.toggleCard();
-//                         baseProvider.showPositiveAlert('Complete',
-//                             'Your details have been updated', context);
-//                       } else {
-//                         baseProvider.showNegativeAlert(
-//                             'Failed',
-//                             'Your details could not be updated at the moment',
-//                             context);
-//                       }
-//                     });
-//                   }
-//                 },
-//                 child: Container(
-//                   decoration: BoxDecoration(
-//                     border: Border.all(
-//                       width: 1,
-//                       color: Colors.white,
-//                     ),
-//                     borderRadius: BorderRadius.circular(5),
-//                   ),
-//                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-//                   child: isUploading
-//                       ? SpinKitThreeBounce(
-//                           color: UiConstants.spinnerColor2,
-//                           size: 18.0,
-//                         )
-//                       : Text(
-//                           "Update",
-//                           style: GoogleFonts.montserrat(
-//                             color: Colors.white,
-//                             fontSize: SizeConfig.mediumTextSize,
-//                             fontWeight: FontWeight.w500,
-//                           ),
-//                         ),
-//                 ),
-//               ),
-//               TextButton(
-//                 onPressed: () {
-//                   FocusScope.of(context).unfocus();
-//                   cardKey.currentState.toggleCard();
-//                 },
-//                 child: Container(
-//                   decoration: BoxDecoration(
-//                     border: Border.all(
-//                       width: 1,
-//                       color: Colors.white,
-//                     ),
-//                     borderRadius: BorderRadius.circular(5),
-//                   ),
-//                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-//                   child: Text(
-//                     "Cancel",
-//                     style: GoogleFonts.montserrat(
-//                       color: Colors.white,
-//                       fontSize: SizeConfig.mediumTextSize,
-//                       fontWeight: FontWeight.w500,
-//                     ),
-//                   ),
-//                 ),
-//               )
-//             ],
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
-  @override
-  Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    dbProvider = Provider.of<DBModel>(context, listen: false);
-    return Container(
-      width: SizeConfig.screenWidth,
-      height: SizeConfig.screenHeight * 0.24,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(
-            "images/profile-card.png",
-          ),
-          fit: BoxFit.fill,
-        ),
-      ),
-      margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.blockSizeHorizontal * 4,
-      ),
-      padding:
-          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Form(
-            key: _formKey,
-            child: Container(
-              width: SizeConfig.screenWidth,
-              height: SizeConfig.blockSizeVertical * 5,
-              padding: EdgeInsets.only(
-                  left: SizeConfig.blockSizeHorizontal * 2, bottom: 8),
-              child: TextFormField(
-                cursorColor: Colors.white,
-                controller: _nameController,
-                maxLines: 1,
-                style: GoogleFonts.montserrat(
-                  color: Colors.white,
-                  fontSize: SizeConfig.cardTitleTextSize,
-                  fontWeight: FontWeight.w500,
-                ),
-                validator: (val) {
-                  if (val.trim() == "") return "Name cannot be empty";
-                  return null;
-                },
-                decoration: InputDecoration(
-                  border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2),
-                  ),
-                  errorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red, width: 2),
-                  ),
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red, width: 2),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              TextButton(
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    FocusScope.of(context).unfocus();
-                    setState(() {
-                      isUploading = !isUploading;
-                    });
-                    // baseProvider.myUser.name = _nameController.text.trim();
-                    baseProvider.setName(_nameController.text.trim());
-                    dbProvider.updateUser(baseProvider.myUser).then((flag) {
-                      setState(() {
-                        isUploading = false;
-                      });
-                      if (flag) {
-                        cardKey.currentState.toggleCard();
-                        baseProvider.showPositiveAlert('Complete',
-                            'Your details have been updated', context);
-                      } else {
-                        baseProvider.showNegativeAlert(
-                            'Failed',
-                            'Your details could not be updated at the moment',
-                            context);
-                      }
-                    });
-                  }
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: isUploading
-                      ? SpinKitThreeBounce(
-                          color: UiConstants.spinnerColor2,
-                          size: 18.0,
-                        )
-                      : Text(
-                          "Update",
-                          style: GoogleFonts.montserrat(
-                            color: Colors.white,
-                            fontSize: SizeConfig.mediumTextSize,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  FocusScope.of(context).unfocus();
-                  cardKey.currentState.toggleCard();
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Text(
-                    "Cancel",
-                    style: GoogleFonts.montserrat(
-                      color: Colors.white,
-                      fontSize: SizeConfig.mediumTextSize,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              Text('Enable Security', style: TextStyle(color: Colors.white, fontSize: SizeConfig.mediumTextSize,)),
-              Consumer<BaseUtil>(
-                builder: (ctx, bp, child) {
-                  return Switch(
-                    value: baseProvider.isSecurityEnabled,
-                    onChanged: (bool value){
-                      baseProvider.flipSecurityValue(baseProvider.isSecurityEnabled);
-                    },
-                    activeColor: UiConstants.darkPrimaryColor,
-                    inactiveThumbColor: UiConstants.spinnerColor,
-                    inactiveTrackColor: UiConstants.spinnerColor,
-                  );
-                },
-              )
-            ],
-          )
-        ],
-      ),
-    );
   }
 }

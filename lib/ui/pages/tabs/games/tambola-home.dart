@@ -484,6 +484,12 @@ class _TambolaGameScreen extends State<TambolaHome> {
   }
 
   _buildPrizePodium() {
+    List<String> faqLeadIcons = [
+      "images/svgs/howitworks.svg",
+      "images/svgs/cash-distribution.svg",
+      "images/svgs/redeem.svg",
+      "images/svgs/winmore.svg",
+    ];
     return Container(
       width: SizeConfig.screenWidth,
       child: Column(
@@ -520,15 +526,16 @@ class _TambolaGameScreen extends State<TambolaHome> {
           ExpansionPanelList(
             animationDuration: Duration(milliseconds: 600),
             expandedHeaderPadding: EdgeInsets.all(0),
-            dividerColor: Colors.grey.withOpacity(0.3),
+            dividerColor: Colors.grey.withOpacity(0.2),
             elevation: 0,
-            children: [
-              ExpansionPanel(
+            children: List.generate(
+              Assets.tambolaFaqList.length,
+              (index) => ExpansionPanel(
                 canTapOnHeader: true,
                 headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
-                    "images/svgs/howitworks.svg",
-                    Assets.tambolaFaqList[0].keys.first),
-                isExpanded: detStatus[0],
+                    faqLeadIcons[index],
+                    Assets.tambolaFaqList[index].keys.first),
+                isExpanded: detStatus[index],
                 body: Container(
                   child: Column(
                     children: [
@@ -543,70 +550,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
                   ),
                 ),
               ),
-              ExpansionPanel(
-                canTapOnHeader: true,
-                headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
-                    "images/svgs/cash-distribution.svg",
-                    Assets.tambolaFaqList[1].keys.first),
-                isExpanded: detStatus[1],
-                body: Container(
-                  padding: EdgeInsets.only(right: 25),
-                  child: Column(
-                    children: [
-                      Text(
-                        Assets.tambolaFaqList[1].values.first,
-                        style: TextStyle(
-                          height: 1.5,
-                          fontSize: SizeConfig.mediumTextSize,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              ExpansionPanel(
-                canTapOnHeader: true,
-                headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
-                    "images/svgs/redeem.svg",
-                    Assets.tambolaFaqList[2].keys.first),
-                body: Container(
-                  padding: EdgeInsets.only(right: 25),
-                  child: Column(
-                    children: [
-                      Text(
-                        Assets.tambolaFaqList[2].values.first,
-                        style: TextStyle(
-                          height: 1.5,
-                          fontSize: SizeConfig.mediumTextSize,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                isExpanded: detStatus[2],
-              ),
-              ExpansionPanel(
-                canTapOnHeader: true,
-                headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
-                    "images/svgs/winmore.svg",
-                    Assets.tambolaFaqList[3].keys.first),
-                body: Container(
-                  padding: EdgeInsets.only(right: 25),
-                  child: Column(
-                    children: [
-                      Text(
-                        Assets.tambolaFaqList[3].values.first,
-                        style: TextStyle(
-                          height: 1.5,
-                          fontSize: SizeConfig.mediumTextSize,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                isExpanded: detStatus[3],
-              )
-            ],
+            ),
             expansionCallback: (i, isOpen) {
               print("$i th item is $isOpen");
               setState(() {
@@ -1113,7 +1057,8 @@ class _TambolaGameScreen extends State<TambolaHome> {
         picks.add(-1);
       }
     }
-    return picks;
+    return [5, 21, 89, 10, 43];
+    //return picks;
   }
 
   int get _activeTambolaCardCount {

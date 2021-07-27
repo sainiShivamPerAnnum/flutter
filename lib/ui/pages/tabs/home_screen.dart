@@ -102,16 +102,12 @@ class _HomePageState extends State<HomePage> {
             SafeArea(
               child: ClipRRect(
                 borderRadius: SizeConfig.homeViewBorder,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.blockSizeHorizontal * 5),
-                  child: ListView(
-                    controller: AppState.homeCardListController,
-                    physics: BouncingScrollPhysics(),
-                    children: (!baseProvider.isHomeCardsFetched)
-                        ? _buildLoadingFeed()
-                        : _buildHomeFeed(baseProvider.feedCards),
-                  ),
+                child: ListView(
+                  controller: AppState.homeCardListController,
+                  physics: BouncingScrollPhysics(),
+                  children: (!baseProvider.isHomeCardsFetched)
+                      ? _buildLoadingFeed()
+                      : _buildHomeFeed(baseProvider.feedCards),
                 ),
               ),
             )
@@ -173,10 +169,9 @@ class _HomePageState extends State<HomePage> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
       ),
-      margin: EdgeInsets.only(
-        top: SizeConfig.screenWidth * 0.10,
-        bottom: SizeConfig.screenWidth * 0.08,
-      ),
+      margin: EdgeInsets.symmetric(
+          horizontal: SizeConfig.blockSizeHorizontal * 5,
+          vertical: SizeConfig.blockSizeHorizontal * 8),
       width: double.infinity,
       child: Row(
         children: [
@@ -253,8 +248,9 @@ class HomeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-        bottom: 20,
-      ),
+          bottom: 20,
+          left: SizeConfig.blockSizeHorizontal * 5,
+          right: SizeConfig.blockSizeHorizontal * 5),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           gradient: new LinearGradient(

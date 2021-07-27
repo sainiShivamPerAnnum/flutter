@@ -78,7 +78,7 @@ class _ClaimUsernameState extends State<ClaimUsername> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     return Scaffold(
-      appBar: BaseUtil.getAppBar(context),
+      appBar: BaseUtil.getAppBar(context, "Claim Username"),
       body: Stack(
         children: [
           Container(

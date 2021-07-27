@@ -416,10 +416,14 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                       ),
                       SizedBox(height: 8),
                       ListTile(
-                        title: Text("App Lock"),
-                        trailing:
-                            Switch.adaptive(value: true, onChanged: (val) {}),
-                      ),
+                          title: Text("App Lock"),
+                          trailing: Switch.adaptive(
+                            value: baseProvider.isSecurityEnabled,
+                            onChanged: (bool value) {
+                              baseProvider.flipSecurityValue(
+                                  baseProvider.isSecurityEnabled);
+                            },
+                          )),
                       ListTile(
                         title: Text("Tambola Draw Notifications"),
                         trailing: fcmProvider.isTambolaNotificationLoading

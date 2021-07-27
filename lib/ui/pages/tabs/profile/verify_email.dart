@@ -212,7 +212,7 @@ class VerifyEmailState extends State<VerifyEmail> {
     try {
       if (await _gSignIn.isSignedIn()) await _gSignIn.signOut();
       print('Signed out');
-    }catch(e) {
+    } catch (e) {
       print('Failed to signout: $e');
     }
     final GoogleSignInAccount googleUser = await _gSignIn.signIn();
@@ -256,7 +256,7 @@ class VerifyEmailState extends State<VerifyEmail> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     return Scaffold(
-      appBar: BaseUtil.getAppBar(context),
+      appBar: BaseUtil.getAppBar(context, "Verify Email"),
       body: Stack(
         children: [
           Container(

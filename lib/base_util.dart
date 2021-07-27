@@ -125,12 +125,14 @@ class BaseUtil extends ChangeNotifier {
     print('inside init base util');
     //security
     isSecurityEnabled = await getSecurityValue();
+
     ///analytics
     BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
     //remote config for various remote variables
     print('base util remote config');
     await BaseRemoteConfig.init();
+
     ///fetch on-boarding status and User details
     firebaseUser = FirebaseAuth.instance.currentUser;
     if (firebaseUser != null) {
@@ -201,7 +203,7 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  static Widget getAppBar(BuildContext context) {
+  static Widget getAppBar(BuildContext context, String title) {
     return AppBar(
       leading: IconButton(
         icon: Icon(
@@ -217,7 +219,7 @@ class BaseUtil extends ChangeNotifier {
       iconTheme: IconThemeData(
         color: UiConstants.accentColor, //change your color here
       ),
-      title: Text('${Constants.APP_NAME}',
+      title: Text(title ?? '${Constants.APP_NAME}',
           style: GoogleFonts.montserrat(
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -679,7 +681,7 @@ class BaseUtil extends ChangeNotifier {
     try {
       SharedPreferences _prefs = await SharedPreferences.getInstance();
       _prefs.setBool("securityEnabled", newValue);
-    } catch(e) {
+    } catch (e) {
       log.debug("Error while saving security enabled value");
     }
   }
@@ -687,16 +689,15 @@ class BaseUtil extends ChangeNotifier {
   Future<bool> getSecurityValue() async {
     try {
       SharedPreferences _prefs = await SharedPreferences.getInstance();
-      if(_prefs.containsKey("securityEnabled")) {
+      if (_prefs.containsKey("securityEnabled")) {
         bool _savedSecurityValue = _prefs.getBool("securityEnabled");
-        if(_savedSecurityValue!=null) {
+        if (_savedSecurityValue != null) {
           return _savedSecurityValue;
-        }
-        else {
+        } else {
           return false;
         }
-      } 
-    } catch(e) {
+      }
+    } catch (e) {
       log.debug("Error while retrieving security enabled value");
     }
     return false;

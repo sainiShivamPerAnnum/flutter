@@ -10,21 +10,17 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   FelloBackButtonDispatcher(this._routerDelegate) : super();
 
-  Future<bool> _confirmExit() {
+  Future<bool> _confirmExit(
+      String title, String description, Function confirmAction) {
     AppState.screenStack.add(ScreenItem.dialog);
     return showDialog<bool>(
       barrierDismissible: false,
       context: _routerDelegate.navigatorKey.currentContext,
       builder: (ctx) => ConfirmActionDialog(
-        title: "You have unsaved changes",
-        description: "Are you sure you want to exit",
+        title: title,
+        description: description,
         buttonText: "Yes",
-        confirmAction: () {
-          print(AppState.screenStack);
-          AppState.unsavedChanges = false;
-          didPopRoute();
-          return didPopRoute();
-        },
+        confirmAction: confirmAction,
         cancelAction: () {
           didPopRoute();
         },
@@ -39,7 +35,6 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       Navigator.pop(_routerDelegate.navigatorKey.currentContext);
       AppState.screenStack.removeLast();
       print("Current Stack: ${AppState.screenStack}");
-
       return Future.value(true);
     }
     // If the root tab is not 0 at the time of exit
@@ -54,7 +49,13 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       AppState.isOnboardingInProgress = false;
       //return _confirmExit();
     } else if (AppState.unsavedChanges)
-      return _confirmExit();
+      return _confirmExit(
+          "You have unsaved changes", "Are you sure you want to exit", () {
+        print(AppState.screenStack);
+        AppState.unsavedChanges = false;
+        didPopRoute();
+        return didPopRoute();
+      });
     else
       return _routerDelegate.popRoute();
   }

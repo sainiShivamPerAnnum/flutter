@@ -111,7 +111,7 @@ class AppState extends ChangeNotifier {
     });
   }
 
-  int setLastTapIndex() {
+  setLastTapIndex() {
     SharedPreferences.getInstance().then((instance) {
       _rootIndex = instance.getInt('lastTab') ?? 0;
     });

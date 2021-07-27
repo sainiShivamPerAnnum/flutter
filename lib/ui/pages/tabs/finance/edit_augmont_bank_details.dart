@@ -1,4 +1,3 @@
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
@@ -102,7 +101,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: BaseUtil.getAppBar(context),
+        appBar: BaseUtil.getAppBar(context, null),
         body: Padding(
           padding: EdgeInsets.symmetric(
               horizontal: SizeConfig.blockSizeHorizontal * 5, vertical: 20),
