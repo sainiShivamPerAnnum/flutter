@@ -27,11 +27,21 @@ class _ContactUsPageState extends State<ContactUsPage>
   AppState appState;
   DBModel dbProvider;
   TextEditingController _requestCallPhoneController = TextEditingController();
+  bool isInit = false;
+
+  void init() {
+    _requestCallPhoneController.text = baseProvider.myUser.mobile;
+    isInit = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    if(!isInit) {
+      init();
+    }
     return Scaffold(
       // appBar: AppBar(
       //   leading: IconButton(
@@ -425,7 +435,7 @@ class _ContactUsPageState extends State<ContactUsPage>
                                 });
                               },
                               child: Container(
-                                width: SizeConfig.screenWidth * 0.25,
+                                width: MediaQuery.of(context).size.width*0.2,
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: UiConstants.primaryColor),
@@ -458,7 +468,7 @@ class _ContactUsPageState extends State<ContactUsPage>
                                 });
                               },
                               child: Container(
-                                width: SizeConfig.screenWidth * 0.25,
+                                width: MediaQuery.of(context).size.width*0.2,
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: UiConstants.primaryColor),
@@ -491,7 +501,7 @@ class _ContactUsPageState extends State<ContactUsPage>
                                 });
                               },
                               child: Container(
-                                width: SizeConfig.screenWidth * 0.25,
+                                width: MediaQuery.of(context).size.width*0.2,
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: UiConstants.primaryColor),

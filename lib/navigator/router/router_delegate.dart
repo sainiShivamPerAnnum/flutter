@@ -16,6 +16,7 @@ import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_completed.da
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/root.dart';
 import 'package:felloapp/ui/pages/tabs/finance/edit_augmont_bank_details.dart';
+import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
 import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola-cards.dart';
@@ -198,6 +199,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.WalkThroughCompleted:
           _addPageData(WalkThroughCompleted(), WalkThroughCompletedConfig);
           break;
+        case Pages.YourFunds:
+          _addPageData(YourFunds(), YourFundsConfig);
+          break;
         default:
           break;
       }
@@ -328,6 +332,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.WalkThroughCompleted:
         WalkThroughCompletedConfig.currentPageAction = action;
+        break;
+      case Pages.YourFunds:
+        YourFundsConfig.currentPageAction = action;
         break;
 
       default:

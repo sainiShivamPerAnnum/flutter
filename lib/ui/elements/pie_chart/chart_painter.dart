@@ -21,8 +21,9 @@ class PieChartPainter extends CustomPainter {
   final ChartType chartType;
   final String centerText;
   final Function formatChartValues;
-  final double strokeWidth;
+  final List<double> strokeWidth;
   final List<bool> shouldHighlight;
+  final List<double> blurValues;
 
   double _prevAngle = 0;
 
@@ -32,6 +33,7 @@ class PieChartPainter extends CustomPainter {
       this.showChartValuesOutside,
       List<Color> colorList, {
         this.shouldHighlight,
+        this.blurValues,
         this.chartValueStyle,
         this.chartValueBackgroundColor,
         List<double> values,
@@ -47,17 +49,11 @@ class PieChartPainter extends CustomPainter {
       }) {
     for (int i = 0; i < values.length; i++) {
       Paint paint;
-      if(shouldHighlight[i]) {
-        paint = Paint()
+      paint = Paint()
           ..color = getColor(colorList, i);
-      }
-      else {
-        paint = Paint()
-          ..color = getColor(colorList, i);
-      }
       if (chartType == ChartType.ring) {
         paint.style = PaintingStyle.stroke;
-        paint.strokeWidth = (shouldHighlight[i])?strokeWidth+3:strokeWidth;
+        paint.strokeWidth = strokeWidth[i];
       }
       _paintList.add(paint);
     }
@@ -85,7 +81,7 @@ class PieChartPainter extends CustomPainter {
           _prevAngle,
           (((_totalAngle) / _total) * _subParts[i]),
           chartType == ChartType.disc ? true : false,
-          Paint()..color=_paintList[i].color..style=PaintingStyle.stroke..strokeWidth=_paintList[i].strokeWidth..maskFilter=MaskFilter.blur(BlurStyle.outer, 5),
+          Paint()..color=_paintList[i].color..style=PaintingStyle.stroke..strokeWidth=_paintList[i].strokeWidth..maskFilter=MaskFilter.blur(BlurStyle.solid, blurValues[i]),
         );
       }
       else {

@@ -25,6 +25,7 @@ const String UpdateRequiredPath = '/updateRequired';
 const String ContactUsPath = '/contactUs';
 const String WalkThroughPath = '/walkThrough';
 const String WalkThroughCompletedPath = '/walkThroughCompleted';
+const String YourFundsPath = '/yourFunds';
 
 enum Pages {
   Splash,
@@ -51,6 +52,7 @@ enum Pages {
   ContactUs,
   WalkThrough,
   WalkThroughCompleted,
+  YourFunds
 }
 
 class PageConfiguration {
@@ -189,5 +191,10 @@ PageConfiguration WalkThroughCompletedConfig = PageConfiguration(
   key: 'WalkThroughCompleted',
   path: WalkThroughCompletedPath,
   uiPage: Pages.WalkThroughCompleted,
+);
+PageConfiguration YourFundsConfig = PageConfiguration(
+  key: 'YourFunds',
+  path: YourFundsPath,
+  uiPage: Pages.YourFunds,
 );
 
