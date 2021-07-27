@@ -13,11 +13,9 @@ import 'package:http/http.dart' as http;
 class HttpModel extends ChangeNotifier {
   BaseUtil _baseUtil = locator<BaseUtil>(); //required to fetch client token
   final Log log = new Log('HttpModel');
-  static const String _homeuri = 'https://fello-team.web.app';
-  static const String _rzphomeuri =
-      'https://us-central1-fello-d3a9c.cloudfunctions.net/razorpayops';
-  static const String _userTxnOpsUri =
-      'https://us-central1-fello-d3a9c.cloudfunctions.net/userTxnOps';
+  static const String WRAPPED_BASE_URI = 'https://fello-team.web.app';
+  static const String ASIA_BASE_URI = 'https://asia-south1-fello-d3a9c.cloudfunctions.net';
+  static const String US_BASE_URI = 'https://us-central1-fello-d3a9c.cloudfunctions.net';
 
   ///Returns the number of tickets that need to be added to user's balance
   Future<int> postUserReferral(
@@ -27,7 +25,7 @@ class HttpModel extends ChangeNotifier {
     log.debug('Fetched user IDToken: ' + idToken);
     try {
       http.Response _response = await http.post(
-          '$_homeuri/validateUserReferral?uid=$userId&rid=$referee&uname=$userName',
+          '$WRAPPED_BASE_URI/validateUserReferral?uid=$userId&rid=$referee&uname=$userName',
           headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
       log.debug(_response.body);
       if (_response.statusCode == 200) {
@@ -71,7 +69,7 @@ class HttpModel extends ChangeNotifier {
 
     String amx = (amount * 100).round().toString();
     String _stage = Constants.activeRazorpayStage.value();
-    String _uri = '$_rzphomeuri/$_stage/api/orderid?amount=$amx';
+    String _uri = '$US_BASE_URI/razorpayops/$_stage/api/orderid?amount=$amx';
     if (notes != null) _uri = _uri + '&notes=${Uri.encodeComponent(notes)}';
     log.debug('URL: $_uri');
 
@@ -101,7 +99,7 @@ class HttpModel extends ChangeNotifier {
 
     String _stage = Constants.activeRazorpayStage.value();
     String _uri =
-        '$_rzphomeuri/$_stage/api/signature?orderid=$orderId&payid=$paymentId';
+        '$US_BASE_URI/razorpayops/$_stage/api/signature?orderid=$orderId&payid=$paymentId';
     log.debug('URL: $_uri');
 
     try {
@@ -121,7 +119,7 @@ class HttpModel extends ChangeNotifier {
       String userId, double amount, PrizeClaimChoice claimChoice) async {
     if (userId == null || amount == null || claimChoice == null) return null;
     String _uri =
-        '$_userTxnOpsUri/api/registerPrizeClaim?userId=$userId&amount=$amount&redeemType=${claimChoice.value()}';
+        '$US_BASE_URI/userTxnOps/api/registerPrizeClaim?userId=$userId&amount=$amount&redeemType=${claimChoice.value()}';
     log.debug('URL: $_uri');
 
     String idToken;
@@ -141,6 +139,45 @@ class HttpModel extends ChangeNotifier {
         return true;
       }
       return false;
+    } catch (e) {
+      log.error('Http post failed: ' + e.toString());
+      return false;
+    }
+  }
+
+  ///Returns the number of tickets that need to be added to user's balance
+  Future<bool> isEmailNotRegistered(String email) async {
+    if (_baseUtil == null || _baseUtil.firebaseUser == null) return false;
+    //get auth
+    String idToken = await _baseUtil.firebaseUser.getIdToken();
+    log.debug('Fetched user IDToken: ' + idToken);
+
+    //build request
+    String _uri = '$ASIA_BASE_URI/userSearch/dev/api/isemailregd';
+    var headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      HttpHeaders.authorizationHeader: 'Bearer $idToken'
+    };
+    var request = http.Request('POST', Uri.parse(_uri));
+    request.bodyFields = {
+      'email': email
+    };
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse _response = await request.send();
+      log.debug(await _response.stream.bytesToString());
+      if (_response.statusCode == 200) {
+        try {
+          Map<String, dynamic> parsed = jsonDecode(await _response.stream.bytesToString());
+          return (parsed != null && parsed['flag'] != null && parsed['flag']);
+        } catch (err) {
+          log.error('Failed to parse ticket update count');
+          return false;
+        }
+      } else {
+        return false;
+      }
     } catch (e) {
       log.error('Http post failed: ' + e.toString());
       return false;
