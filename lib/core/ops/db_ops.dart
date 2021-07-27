@@ -71,6 +71,16 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<bool> updateUserPreferences(String uid, UserPreferences userPreferences) async {
+    try {
+      await _api.updateUserDocumentPreferenceField(uid, {BaseUser.fldUserPrefs: userPreferences.toJson()});
+      return true;
+    } catch (e) {
+      log.error("Failed to update user preference field: $e");
+      return false;
+    }
+  }
+
   //////////////////ICICI////////////////////////////////
   Future<UserIciciDetail> getUserIciciDetails(String id) async {
     try {

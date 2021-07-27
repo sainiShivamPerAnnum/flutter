@@ -38,6 +38,11 @@ class Api {
     return ref.doc(docId).set(data, SetOptions(merge: true));
   }
 
+  Future<void> updateUserDocumentPreferenceField(String docId, Map data) {
+    ref = _db.collection(Constants.COLN_USERS);
+    return ref.doc(docId).update(data);
+  }
+
   Future<DocumentSnapshot> getUserIciciDetailDocument(String userId) {
     ref = _db
         .collection(Constants.COLN_USERS)
