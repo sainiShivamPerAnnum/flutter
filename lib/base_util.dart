@@ -118,13 +118,8 @@ class BaseUtil extends ChangeNotifier {
   static int atomicTicketGenerationLeftCount = 0;
   static int atomicTicketDeletionLeftCount = 0;
 
-  // app security variables
-  bool isSecurityEnabled = false;
-
   Future init() async {
     print('inside init base util');
-    //security
-    isSecurityEnabled = await getSecurityValue();
     ///analytics
     BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
@@ -670,37 +665,38 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void flipSecurityValue(bool value) {
-    this.isSecurityEnabled = !value;
-    saveSecurityValue(this.isSecurityEnabled);
+    this.myUser.userPreferences.setPreference(Preferences.APPLOCK, (value)?1:0);
+    // saveSecurityValue(this.isSecurityEnabled);
     notifyListeners();
   }
 
-  void saveSecurityValue(bool newValue) async {
-    try {
-      SharedPreferences _prefs = await SharedPreferences.getInstance();
-      _prefs.setBool("securityEnabled", newValue);
-    } catch(e) {
-      log.debug("Error while saving security enabled value");
-    }
-  }
-
-  Future<bool> getSecurityValue() async {
-    try {
-      SharedPreferences _prefs = await SharedPreferences.getInstance();
-      if(_prefs.containsKey("securityEnabled")) {
-        bool _savedSecurityValue = _prefs.getBool("securityEnabled");
-        if(_savedSecurityValue!=null) {
-          return _savedSecurityValue;
-        }
-        else {
-          return false;
-        }
-      } 
-    } catch(e) {
-      log.debug("Error while retrieving security enabled value");
-    }
-    return false;
-  }
+  //Saving and fetching app lock user preference
+  // void saveSecurityValue(bool newValue) async {
+  //   try {
+  //     SharedPreferences _prefs = await SharedPreferences.getInstance();
+  //     _prefs.setBool("securityEnabled", newValue);
+  //   } catch(e) {
+  //     log.debug("Error while saving security enabled value");
+  //   }
+  // }
+  //
+  // Future<bool> getSecurityValue() async {
+  //   try {
+  //     SharedPreferences _prefs = await SharedPreferences.getInstance();
+  //     if(_prefs.containsKey("securityEnabled")) {
+  //       bool _savedSecurityValue = _prefs.getBool("securityEnabled");
+  //       if(_savedSecurityValue!=null) {
+  //         return _savedSecurityValue;
+  //       }
+  //       else {
+  //         return false;
+  //       }
+  //     }
+  //   } catch(e) {
+  //     log.debug("Error while retrieving security enabled value");
+  //   }
+  //   return false;
+  // }
 
   static String getMonthName(int monthNum) {
     switch (monthNum) {

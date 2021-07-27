@@ -318,6 +318,12 @@ class BaseUser {
   set isAugmontOnboarded(bool value) {
     _isAugmontOnboarded = value;
   }
+
+  UserPreferences get userPreferences => _userPreferences;
+
+  set userPreferences(UserPreferences value) {
+    _userPreferences = value;
+  }
 }
 
 enum Preferences { TAMBOLANOTIFICATIONS, APPLOCK }

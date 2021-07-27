@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/fcm_listener.dart';
+import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -417,8 +418,13 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                       SizedBox(height: 8),
                       ListTile(
                         title: Text("App Lock"),
-                        trailing:
-                            Switch.adaptive(value: true, onChanged: (val) {}),
+                        trailing: Switch.adaptive(
+                            value: (baseProvider.myUser.userPreferences
+                                    .getPreference(Preferences.APPLOCK) ==
+                                1),
+                            onChanged: (val) {
+                              baseProvider.flipSecurityValue(!val);
+                            }),
                       ),
                       ListTile(
                         title: Text("Tambola Draw Notifications"),
