@@ -72,39 +72,27 @@ class ShareCard extends StatelessWidget {
                     )
                   : SizedBox(height: 20),
               Container(
-                height: 100,
-                child: Stack(
-                  children: [
-                    // Center(
-                    //   child: Opacity(
-                    //     opacity: 0.3,
-                    //     child: Image.asset(
-                    //       "images/prize-confetti-share.png",
-                    //       fit: BoxFit.fitHeight,
-                    //     ),
-                    //   ),
-                    // ),
-                    Center(
-                      child: Text(
-                        "र $prizeAmount",
-                        style: GoogleFonts.montserrat(
-                          color: Colors.white,
-                          height: 1.3,
-                          shadows: [
-                            Shadow(
-                              offset: Offset(2, 2),
-                              color: Colors.white30,
-                            )
-                          ],
-                          fontWeight: FontWeight.w700,
-                          fontSize: SizeConfig.screenWidth * 0.12,
-                        ),
+                margin: EdgeInsets.symmetric(vertical: 0),
+                child: Expanded(
+                  child: FittedBox(
+                    child: Text(
+                      "र $prizeAmount",
+                      style: GoogleFonts.montserrat(
+                        color: Colors.white,
+                        height: 1.3,
+                        shadows: [
+                          Shadow(
+                            offset: Offset(2, 2),
+                            color: Colors.black26,
+                          )
+                        ],
+                        fontWeight: FontWeight.w700,
+                        fontSize: SizeConfig.cardTitleTextSize * 2.4,
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
-              SizedBox(height: 10),
               Text(
                 "rewarded as",
                 style: GoogleFonts.montserrat(

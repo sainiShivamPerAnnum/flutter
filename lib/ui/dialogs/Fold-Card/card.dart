@@ -231,12 +231,12 @@ class _TicketState extends State<FCard> {
                   shadows: [
                     Shadow(
                       offset: Offset(2, 2),
-                      color: Colors.white30,
+                      color: Colors.black26,
                       blurRadius: 5,
                     )
                   ],
                   fontWeight: FontWeight.w800,
-                  fontSize: SizeConfig.screenWidth * 0.12,
+                  fontSize: SizeConfig.cardTitleTextSize * 2.4,
                 ),
               ),
             ),
@@ -444,31 +444,28 @@ class _CloseCardState extends State<CloseCard> {
 
   Widget _buildBeginCard(BuildContext context) {
     return Container(
-      height: double.infinity,
-      width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: Color(0xfff9f3f3),
+        color: Color(0xffEFFEFB),
       ),
-      child: Stack(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.blockSizeHorizontal * 5,
-              vertical: 8,
-            ),
-            child: Row(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Lottie.asset(
+      child: Container(
+        padding: EdgeInsets.all(
+          SizeConfig.blockSizeHorizontal * 4,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 3,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Lottie.asset(
                       "images/lottie/winner-crown.json",
-                      height: SizeConfig.screenWidth * 0.16,
                     ),
-                    Container(
-                      height: SizeConfig.screenWidth * 0.16,
-                      width: SizeConfig.screenWidth * 0.16,
+                  ),
+                  Expanded(
+                    child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: UiConstants.primaryColor,
@@ -479,93 +476,91 @@ class _CloseCardState extends State<CloseCard> {
                           image: baseProvider.myUserDpUrl != null
                               ? NetworkImage(baseProvider.myUserDpUrl)
                               : AssetImage("images/profile.png"),
-                          fit: BoxFit.cover,
+                          fit: BoxFit.contain,
                         ),
                       ),
                     ),
-                    SizedBox(height: SizeConfig.blockSizeVertical * 3)
-                  ],
-                ),
-                SizedBox(width: SizeConfig.blockSizeHorizontal * 3),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                  SizedBox(height: SizeConfig.blockSizeVertical * 3)
+                ],
+              ),
+            ),
+            SizedBox(width: SizeConfig.blockSizeHorizontal * 3),
+            Expanded(
+              flex: 7,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Spacer(),
-                      FittedBox(
-                        fit: BoxFit.contain,
-                        child: Text(
-                          "Congratulations 🎉  ",
-                          style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xff194350),
-                            fontSize: SizeConfig.cardTitleTextSize,
-                          ),
-                        ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(Icons.clear_rounded,
+                            color: Colors.black, size: 24),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        child: Text(
-                          "You have र${widget.unclaimedPrize} worth of unclaimed rewards!",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.montserrat(
-                            color: Colors.black,
-                            fontSize: SizeConfig.mediumTextSize,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            gradient: new LinearGradient(
-                                colors: [
-                                  UiConstants.primaryColor,
-                                  UiConstants.primaryColor.withBlue(200),
-                                ],
-                                begin: Alignment(0.5, -1.0),
-                                end: Alignment(0.5, 1.0)),
-                            // border: Border.all(
-                            //     color: UiConstants.primaryColor, width: 2),
-                            borderRadius: BorderRadius.circular(5)),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.blockSizeHorizontal * 1,
-                            vertical: SizeConfig.blockSizeHorizontal * 2),
-                        child: FittedBox(
-                          child: Text(
-                            "Claim",
-                            style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: SizeConfig.mediumTextSize,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Spacer(),
                     ],
                   ),
-                ),
-                SizedBox(width: 20)
-              ],
-            ),
-          ),
-          Row(
-            children: [
-              Spacer(),
-              IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  Icons.clear_rounded,
-                  color: Colors.black,
-                  size: SizeConfig.blockSizeHorizontal * 5,
-                ),
+                  SizedBox(height: 20),
+                  FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text(
+                      "Congratulations 🎉",
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xff194350),
+                        fontSize: SizeConfig.cardTitleTextSize,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                      "You have र${widget.unclaimedPrize} worth of unclaimed rewards!",
+                      textAlign: TextAlign.start,
+                      style: GoogleFonts.montserrat(
+                        color: Colors.black,
+                        fontSize: SizeConfig.mediumTextSize,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: SizeConfig.screenWidth * 0.3,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        gradient: new LinearGradient(
+                            colors: [
+                              UiConstants.primaryColor,
+                              UiConstants.primaryColor.withBlue(200),
+                            ],
+                            begin: Alignment(0.5, -1.0),
+                            end: Alignment(0.5, 1.0)),
+                        // border: Border.all(
+                        //     color: UiConstants.primaryColor, width: 2),
+                        borderRadius: BorderRadius.circular(5)),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.blockSizeHorizontal * 1,
+                        vertical: SizeConfig.blockSizeHorizontal * 2),
+                    child: FittedBox(
+                      child: Text(
+                        "Claim",
+                        style: GoogleFonts.montserrat(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: SizeConfig.mediumTextSize,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                ],
               ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
