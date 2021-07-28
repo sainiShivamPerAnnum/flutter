@@ -1,13 +1,16 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
 import 'router_delegate.dart';
 
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate _routerDelegate;
-
+  DBModel _dbModel = locator<DBModel>();
+  BaseUtil _baseUtil = locator<BaseUtil>();
   FelloBackButtonDispatcher(this._routerDelegate) : super();
 
   Future<bool> _confirmExit(
@@ -31,6 +34,15 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   @override
   Future<bool> didPopRoute() {
     // If the top item is anything except a scaffold
+    if (AppState.unsavedPrefs) {
+      _dbModel
+          .updateUserPreferences(
+              _baseUtil.myUser.uid, _baseUtil.myUser.userPreferences)
+          .then((value) {
+        AppState.unsavedPrefs = false;
+        print("Preferences updated");
+      });
+    }
     if (AppState.screenStack.last == ScreenItem.dialog) {
       Navigator.pop(_routerDelegate.navigatorKey.currentContext);
       AppState.screenStack.removeLast();

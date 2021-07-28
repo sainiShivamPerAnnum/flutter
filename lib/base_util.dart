@@ -20,6 +20,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -667,11 +668,16 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void flipSecurityValue(bool value) {
-    this
-        .myUser
-        .userPreferences
-        .setPreference(Preferences.APPLOCK, (value) ? 1 : 0);
+    _myUser.userPreferences.setPreference(Preferences.APPLOCK, (value) ? 1 : 0);
     // saveSecurityValue(this.isSecurityEnabled);
+    AppState.unsavedPrefs = true;
+    notifyListeners();
+  }
+
+  void toggleTambolaNotificationStatus(bool value) {
+    _myUser.userPreferences
+        .setPreference(Preferences.TAMBOLANOTIFICATIONS, (value) ? 1 : 0);
+    AppState.unsavedPrefs = true;
     notifyListeners();
   }
 

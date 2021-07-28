@@ -6,6 +6,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -43,6 +44,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   BaseUtil baseProvider;
   DBModel dbProvider;
+  HttpModel httpProvider;
   AppState appState;
   bool isPanFieldHidden = true;
 
@@ -58,6 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
+    httpProvider = Provider.of<HttpModel>(context, listen: false);
 
     if (!baseProvider.userReferralInfoFetched)
       dbProvider.getUserReferralInfo(baseProvider.myUser.uid).then((value) {
@@ -227,7 +230,19 @@ class _ProfilePageState extends State<ProfilePage> {
             _termsRow(),
             SizedBox(
               height: 20,
-            )
+            ),
+            ElevatedButton(
+                onPressed: () async {
+                  if (await httpProvider
+                      .isEmailNotRegistered("daravathveeranna7800@gmail.com")) {
+                    baseProvider.showPositiveAlert(
+                        "Virgin Email", "You can use this email", context);
+                  } else {
+                    baseProvider.showNegativeAlert("Email already registered",
+                        "Please try with another email", context);
+                  }
+                },
+                child: Text("Check"))
           ],
         ),
       ),

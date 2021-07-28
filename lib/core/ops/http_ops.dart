@@ -14,8 +14,10 @@ class HttpModel extends ChangeNotifier {
   BaseUtil _baseUtil = locator<BaseUtil>(); //required to fetch client token
   final Log log = new Log('HttpModel');
   static const String WRAPPED_BASE_URI = 'https://fello-team.web.app';
-  static const String ASIA_BASE_URI = 'https://asia-south1-fello-d3a9c.cloudfunctions.net';
-  static const String US_BASE_URI = 'https://us-central1-fello-d3a9c.cloudfunctions.net';
+  static const String ASIA_BASE_URI =
+      'https://asia-south1-fello-d3a9c.cloudfunctions.net';
+  static const String US_BASE_URI =
+      'https://us-central1-fello-d3a9c.cloudfunctions.net';
 
   ///Returns the number of tickets that need to be added to user's balance
   Future<int> postUserReferral(
@@ -159,9 +161,7 @@ class HttpModel extends ChangeNotifier {
       HttpHeaders.authorizationHeader: 'Bearer $idToken'
     };
     var request = http.Request('POST', Uri.parse(_uri));
-    request.bodyFields = {
-      'email': email
-    };
+    request.bodyFields = {'email': email};
     request.headers.addAll(headers);
 
     try {
@@ -169,13 +169,16 @@ class HttpModel extends ChangeNotifier {
       log.debug(await _response.stream.bytesToString());
       if (_response.statusCode == 200) {
         try {
-          Map<String, dynamic> parsed = jsonDecode(await _response.stream.bytesToString());
+          Map<String, dynamic> parsed =
+              jsonDecode(await _response.stream.bytesToString());
+          log.debug(parsed['flag']);
           return (parsed != null && parsed['flag'] != null && parsed['flag']);
         } catch (err) {
           log.error('Failed to parse ticket update count');
           return false;
         }
       } else {
+        log.error("Response code: ${_response.statusCode}");
         return false;
       }
     } catch (e) {

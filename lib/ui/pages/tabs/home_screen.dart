@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   DBModel dbProvider;
   AppState appState;
   bool _isInit = false;
+  int homebuildCount = 0;
 
   Future<void> getProfilePicUrl() async {
     baseProvider.myUserDpUrl =
@@ -66,6 +67,7 @@ class _HomePageState extends State<HomePage> {
         _isInit = true;
         baseProvider.isHomeCardsFetched = true;
         setState(() {});
+        homebuildCount = 3;
       });
     }
   }
@@ -79,7 +81,7 @@ class _HomePageState extends State<HomePage> {
       isImageLoading = true;
       getProfilePicUrl();
     }
-    if (!_isInit) {
+    if (!_isInit || baseProvider.feedCards.length == 0) {
       _init();
     }
     return Container(
@@ -105,7 +107,8 @@ class _HomePageState extends State<HomePage> {
                 child: ListView(
                   controller: AppState.homeCardListController,
                   physics: BouncingScrollPhysics(),
-                  children: (!baseProvider.isHomeCardsFetched)
+                  children: (!baseProvider.isHomeCardsFetched ||
+                          baseProvider.feedCards.length == 0)
                       ? _buildLoadingFeed()
                       : _buildHomeFeed(baseProvider.feedCards),
                 ),
@@ -134,12 +137,34 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Widget> _buildHomeFeed(List<FeedCard> cards) {
+    if (cards.length == 0) {
+      return [
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: TextButton.icon(
+            onPressed: _init,
+            icon: Icon(
+              Icons.refresh,
+              color: Colors.white,
+            ),
+            label: Text(
+              "Click to reload",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        )
+      ];
+    }
     List<Widget> _widget = [
       Container(
         height: kToolbarHeight,
       ),
       _buildProfileRow(),
     ];
+
     for (int i = 0; i < cards.length; i++) {
       _widget.add(HomeCard(
         title: cards[i].title,
