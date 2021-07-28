@@ -71,6 +71,18 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<bool> updateUserPreferences(
+      String uid, UserPreferences userPreferences) async {
+    try {
+      await _api.updateUserDocumentPreferenceField(
+          uid, {BaseUser.fldUserPrefs: userPreferences.toJson()});
+      return true;
+    } catch (e) {
+      log.error("Failed to update user preference field: $e");
+      return false;
+    }
+  }
+
   //////////////////ICICI////////////////////////////////
   Future<UserIciciDetail> getUserIciciDetails(String id) async {
     try {
@@ -429,7 +441,8 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<bool> addCallbackRequest(
-      String uid, String name, String mobile,int callTime,[int callWindow=2]) async {
+      String uid, String name, String mobile, int callTime,
+      [int callWindow = 2]) async {
     try {
       DateTime today = DateTime.now();
       String year = today.year.toString();
@@ -439,7 +452,7 @@ class DBModel extends ChangeNotifier {
       data['name'] = name;
       data['mobile'] = mobile;
       data['timestamp'] = Timestamp.now();
-      data['call_time'] =  callTime;
+      data['call_time'] = callTime;
       data['call_window'] = callWindow;
 
       await _api.addCallbackDocument(year, monthCde, data);
@@ -1074,7 +1087,9 @@ class DBModel extends ChangeNotifier {
             _cards.add(FeedCard.fromMap(documentSnapshot.data()));
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      log.error('Error Fetching Home cards: ${e.toString()}');
+    }
     return _cards;
   }
 

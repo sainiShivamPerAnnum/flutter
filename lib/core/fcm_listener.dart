@@ -22,7 +22,7 @@ class FcmListener extends ChangeNotifier {
   DBModel _dbModel = locator<DBModel>();
   FcmHandler _handler = locator<FcmHandler>();
   FirebaseMessaging _fcm;
-  bool _tambolaDrawNotifications;
+  bool _tambolaDrawNotifications = true;  //TODO
   bool isTambolaNotificationLoading = false;
   // /// Create a [AndroidNotificationChannel] for heads up notifications
   // static const AndroidNotificationChannel _androidChannel =
@@ -144,7 +144,8 @@ class FcmListener extends ChangeNotifier {
     if (_baseUtil.userTicketWallet != null &&
         _baseUtil.userTicketWallet.getActiveTickets() > 0) {
       await getTambolaDrawNotificationStatus();
-      if (_tambolaDrawNotifications) {
+      // if (_tambolaDrawNotifications) {
+      if (true) {
         addSubscription(FcmTopic.TAMBOLAPLAYER);
         saveTambolaDrawNotification(true);
       }

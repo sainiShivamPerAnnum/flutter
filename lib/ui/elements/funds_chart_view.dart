@@ -281,7 +281,7 @@ class _FundsChartViewState extends State<FundsChartView> {
                   }),
                 ),
               ),
-
+              // ),
               // chartValuesOptions: ChartValuesOptions(
               //   showChartValueBackground: true,
               //   showChartValues: false,
@@ -296,29 +296,27 @@ class _FundsChartViewState extends State<FundsChartView> {
               //                 1.6),
               //         SizeConfig.largeTextSize * 2),
               //     color: UiConstants.textColor,
-              Align(
-                  alignment: Alignment.topRight,
-                  child: Container(
-                    child: IconButton(
-                      alignment: Alignment.topRight,
-                      onPressed: () {
-                        HapticFeedback.vibrate();
-                        showDialog(
-                            context: context,
-                            builder: (ctx) {
-                              return Dialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0)),
-                                child: Text('Container'),
-                              );
-                            });
-                      },
-                      icon: Icon(
-                        Icons.info,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                  )),
+//               Align(
+//                 alignment: Alignment.topRight,
+//                 child: Container(
+//                   child: IconButton(
+//                     alignment: Alignment.topRight,
+//                     onPressed: (){
+//                       HapticFeedback.vibrate();
+//                       showDialog(
+//                         context: context,
+//                         builder: (ctx) {
+//                           return Dialog(
+//                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+//                             child: Text('Container'),
+//                           );
+//                         }
+//                       );
+//                     },
+//                     icon: Icon(Icons.info, color: Colors.grey[400],),
+//                   ),
+//                 )
+//               ),
             ],
           ),
         )

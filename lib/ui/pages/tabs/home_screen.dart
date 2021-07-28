@@ -140,19 +140,19 @@ class _HomePageState extends State<HomePage> {
       ),
       _buildProfileRow(),
     ];
-    for (FeedCard card in cards) {
+    for (int i = 0; i < cards.length; i++) {
       _widget.add(HomeCard(
-        title: card.title,
-        asset: card.assetLocalLink,
-        subtitle: card.subtitle,
-        buttonText: card.btnText,
+        title: cards[i].title,
+        asset: cards[i].assetLocalLink,
+        subtitle: cards[i].subtitle,
+        buttonText: cards[i].btnText,
         onPressed: () async {
           HapticFeedback.vibrate();
-          delegate.parseRoute(Uri.parse(card.actionUri));
+          delegate.parseRoute(Uri.parse(cards[i].actionUri));
         },
         gradient: [
-          Color(card.clrCodeA),
-          Color(card.clrCodeB),
+          Color(cards[i].clrCodeA),
+          Color(cards[i].clrCodeB),
         ],
         // "0/d-guide"
         //   "3"
@@ -160,6 +160,9 @@ class _HomePageState extends State<HomePage> {
         //   "2/augDetails/editProfile/d-aboutus"
       ));
     }
+    // for (FeedCard card in cards) {
+    //  );
+    // }
 
     return _widget;
   }

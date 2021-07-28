@@ -16,10 +16,10 @@ class OtpInputScreen extends StatefulWidget {
 
   OtpInputScreen(
       {Key key,
-        this.otpEntered,
-        this.resendOtp,
-        this.changeNumber,
-        this.mobileNo})
+      this.otpEntered,
+      this.resendOtp,
+      this.changeNumber,
+      this.mobileNo})
       : super(key: key);
 
   @override
@@ -42,7 +42,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
   void initState() {
     focusNode = new FocusNode();
     focusNode.addListener(
-            () => print('focusNode updated: hasFocus: ${focusNode.hasFocus}'));
+        () => print('focusNode updated: hasFocus: ${focusNode.hasFocus}'));
     super.initState();
   }
 
@@ -142,41 +142,41 @@ class OtpInputScreenState extends State<OtpInputScreen> {
               ),
               (!_autoDetectingOtp && !_isTriesExceeded)
                   ? Row(
-                children: [
-                  Text(
-                    "Didn't get an OTP? ",
-                    style: TextStyle(
-                      color: Colors.black45,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  InkWell(
-                    child: Text(
-                      " Resend",
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    onTap: () {
-                      log.debug("Resend action triggered");
-                      if (!_isResendClicked) {
-                        //ensure that button isnt clicked multiple times
-                        if (widget.resendOtp != null) widget.resendOtp();
-                      }
-                    },
-                  ),
-                ],
-              )
+                      children: [
+                        Text(
+                          "Didn't get an OTP? ",
+                          style: TextStyle(
+                            color: Colors.black45,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        InkWell(
+                          child: Text(
+                            " Resend",
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          onTap: () {
+                            log.debug("Resend action triggered");
+                            if (!_isResendClicked) {
+                              //ensure that button isnt clicked multiple times
+                              if (widget.resendOtp != null) widget.resendOtp();
+                            }
+                          },
+                        ),
+                      ],
+                    )
                   : SizedBox(),
               (_isTriesExceeded)
                   ? Text(
-                "OTP requests exceeded. Please try again in sometime or contact us.",
-                style: TextStyle(
-                  color: Colors.black45,
-                  fontWeight: FontWeight.w500,
-                ),
-              )
+                      "OTP requests exceeded. Please try again in sometime or contact us.",
+                      style: TextStyle(
+                        color: Colors.black45,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
                   : SizedBox(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -184,22 +184,22 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                   Spacer(),
                   (_autoDetectingOtp)
                       ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                            25.0, 25.0, 25.0, 25.0),
-                        child: SpinKitDoubleBounce(
-                          color: UiConstants.spinnerColor,
-                          //controller: AnimationController(vsync: this, duration: const Duration(milliseconds: 1200)),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Text(_loaderMessage)
-                    ],
-                  )
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  25.0, 25.0, 25.0, 25.0),
+                              child: SpinKitDoubleBounce(
+                                color: UiConstants.spinnerColor,
+                                //controller: AnimationController(vsync: this, duration: const Duration(milliseconds: 1200)),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Text(_loaderMessage)
+                          ],
+                        )
                       : Container(),
                   SizedBox(width: SizeConfig.blockSizeHorizontal * 5 + 30),
                   Spacer()
@@ -269,7 +269,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
       _otpFieldEnabled = true;
       _autoDetectingOtp = false;
       _loaderMessage =
-      'OTP requests exceeded. Please try again in sometime or contact us';
+          'OTP requests exceeded. Please try again in sometime or contact us';
       setState(() {});
     }
   }

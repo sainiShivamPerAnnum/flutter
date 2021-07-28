@@ -7,6 +7,7 @@ import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -50,6 +51,7 @@ class _LoginControllerState extends State<LoginController>
   static DBModel dbProvider;
   static FcmListener fcmProvider;
   static LocalDBModel lclDbProvider;
+  static HttpModel httpProvider;
   static AppState appStateProvider;
   AnimationController animationController;
 
@@ -180,6 +182,7 @@ class _LoginControllerState extends State<LoginController>
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     fcmProvider = Provider.of<FcmListener>(context, listen: false);
     appStateProvider = Provider.of<AppState>(context, listen: false);
+    httpProvider = Provider.of<HttpModel>(context, listen: false);
     return Scaffold(
       // appBar: BaseUtil.getAppBar(),
 
@@ -412,6 +415,13 @@ class _LoginControllerState extends State<LoginController>
                   'Email field empty', 'Please enter a valid email', context);
               return false;
             }
+            print(
+                "Email entered is -----------> ${_nameScreenKey.currentState.email}");
+            // if (await httpProvider
+            //     .isEmailNotRegistered(_nameScreenKey.currentState.email))
+            //     {
+
+            //     }
             if (_nameScreenKey.currentState.selectedDate == null) {
               baseProvider.showNegativeAlert('Invalid Date of Birth',
                   'Please enter a valid date of birth', context);
@@ -462,6 +472,7 @@ class _LoginControllerState extends State<LoginController>
             bool isInv = _nameScreenKey.currentState.isInvested;
             if (isInv != null) baseProvider.myUser.isInvested = isInv;
             baseProvider.isLoginNextInProgress = false;
+            FocusScope.of(_nameScreenKey.currentContext).unfocus();
             setState(() {});
             _controller.animateToPage(Username.index,
                 duration: Duration(seconds: 1), curve: Curves.easeInToLinear);
