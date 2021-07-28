@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
+import 'package:felloapp/core/model/chartFundItem.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/Fold-Card/card.dart';
@@ -31,42 +32,27 @@ class FundsChartView extends StatefulWidget {
 
 class _FundsChartViewState extends State<FundsChartView> {
   AppState appState;
-  final List<Color> colorListLight = [
-    UiConstants.primaryColor,
-    Color(0xffF5B819),
-    Color(0xff03256C),
-  ];
 
-  final List<Color> colorList = [
-    Color(0xff66DE93),
-    Color(0xffF5B819),
-    Color(0xff6389F2),
-    Color(0xff783FF9),
-  ];
-
-  final List<Color> borderColorList = [
-    Color(0xff50CB93),
-    Color(0xffFFA900),
-    Color(0xff185ADB),
-    Color(0xff7952B3),
-  ];
-
-  final List<bool> shouldHighlight = [
-    false,
-    true,
-    true,
-    false,
-  ];
-
-  int startDegree = 0;
+  List<bool> getHighlightStatus() {
+    List<bool> shouldHighlight = [];
+    chartData.forEach((element) {
+      shouldHighlight.add(element.isHighlighted);
+    });
+    return shouldHighlight;
+  }
 
   Map<String, double> getChartMap() {
-    return {
-      "ICICI Balance": widget.userFundWallet.iciciBalance,
-      "Gold Balance": widget.userFundWallet.augGoldBalance,
-      "Prize Balance": widget.userFundWallet.prizeBalance,
-      "Locked Balance": widget.userFundWallet.lockedPrizeBalance
-    };
+    Map<String, double> chartMap = {};
+    chartData.forEach((element) {
+      chartMap[element.fundName] = element.fundAmount;
+    });
+    return chartMap;
+    // return {
+    //   "ICICI Balance": widget.userFundWallet.iciciBalance,
+    //   "Gold Balance": widget.userFundWallet.augGoldBalance,
+    //   "Prize Balance": widget.userFundWallet.prizeBalance,
+    //   "Locked Balance": widget.userFundWallet.lockedPrizeBalance
+    // };
     // Map<String, double> res = {
     //   "ICICI Balance": 500,
     //   "Gold Balance": 200,
@@ -76,26 +62,97 @@ class _FundsChartViewState extends State<FundsChartView> {
     //return res;
   }
 
-  Map<String, String> _getDataDescriptions() {
-    return {
-      "Gold Balance" : widget.goldMoreInfo,
-      "Prize Balance" : "This is the amount of money you've earned as prized playing our games!",
-      "Locked Balance" : 'Referral rewards could be locked due to either of the reasons: \n\n• You were referred by your friend but you haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet. \n\n• You referred your friends but they haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet.',
-    };
+  List<Color> getColorList() {
+    List<Color> colorList = [];
+    chartData.forEach((element) {
+      colorList.add(element.color);
+    });
+    return colorList;
   }
 
-  @override
-  void initState() {
-    startDegree = Random().nextInt(360) + 1;
-    super.initState();
+  static List<ChartFundItem> chartData = [];
+  getchartData() {
+    chartData = [
+      ChartFundItem(
+          fundName: "ICICI Balance",
+          buttonText: "",
+          color: Color(0xff66DE93),
+          description: ["Here ICICI Fund balance will be shown"],
+          function: () {},
+          fundAmount: widget.userFundWallet.iciciBalance,
+          logo: "images/icici.png",
+          isHighlighted: false),
+      ChartFundItem(
+          fundName: "Gold Balance",
+          buttonText: "",
+          color: Color(0xffF5B819),
+          description: [widget.goldMoreInfo],
+          function: () {},
+          fundAmount: widget.userFundWallet.augGoldBalance,
+          logo: "images/augmont-logo.jpg",
+          isHighlighted: false),
+      ChartFundItem(
+          fundName: "Prize Balance",
+          buttonText: widget.userFundWallet.isPrizeBalanceUnclaimed()
+              ? "Claim prize"
+              : "Share",
+          color: Color(0xff6389F2),
+          description: [
+            "This is the amount of money you've earned as prized playing our games!"
+          ],
+          function: () {
+            HapticFeedback.vibrate();
+            if (widget.userFundWallet.prizeBalance <= 0) return;
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (ctx) {
+                return Center(
+                  child: Material(
+                    color: Colors.transparent,
+                    child: FCard(
+                        isClaimed:
+                            !widget.userFundWallet.isPrizeBalanceUnclaimed(),
+                        unclaimedPrize: widget.userFundWallet.unclaimedBalance,
+                        onComplete: () async {
+                          print('onComplete called');
+                          widget.doRefresh();
+                        }),
+                  ),
+                );
+              },
+            );
+          },
+          fundAmount: widget.userFundWallet.prizeBalance,
+          logo: "images/fello_logo.png",
+          isHighlighted: widget.userFundWallet.isPrizeBalanceUnclaimed()),
+      ChartFundItem(
+          fundName: "Locked Balance",
+          buttonText: "",
+          color: Color(0xff0A1931),
+          description: [
+            'Referral rewards could be locked due to either of the reasons: \n\n• You were referred by your friend but you haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet. \n\n• You referred your friends but they haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet.'
+          ],
+          function: () {
+            HapticFeedback.vibrate();
+            showDialog(
+                context: context,
+                builder: (BuildContext context) => MoreInfoDialog(
+                      text:
+                          'Referral rewards could be locked due to either of the reasons: \n\n• You were referred by your friend but you haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet. \n\n• You referred your friends but they haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet.',
+                      title: 'Locked Balance',
+                    ));
+          },
+          fundAmount: widget.userFundWallet.lockedPrizeBalance,
+          logo: "images/fello_logo.png",
+          isHighlighted: true),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
     appState = Provider.of<AppState>(context, listen: false);
-    Map<String, double> dataMap = getChartMap();
-    List<String> title = dataMap.keys.toList();
-    Map<String,String> descriptions = _getDataDescriptions();
+    getchartData();
     return Container(
       width: SizeConfig.screenWidth,
       height: SizeConfig.screenHeight * 0.25,
@@ -104,167 +161,88 @@ class _FundsChartViewState extends State<FundsChartView> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           GestureDetector(
-            onTap: (){
-              // showDialog(context: context,builder: (ctx) { return _buildFundInfoDialog(dataMap, title, descriptions);});
-              HapticFeedback.vibrate();
-                      appState.currentAction = PageAction(
-                          state: PageState.addWidget,
-                          widget: YourFunds(
-                            userFundWallet: widget.userFundWallet,
-                            goldMoreInfoStr: widget.goldMoreInfo,
-                            fundsValueMap: dataMap,
-                            fundTitles: title,
-                            fundDescriptions: descriptions,
-                          ),
-                          page: YourFundsConfig);
-            },
-            child: Container(
-              child: PieChart(
-                dataMap: dataMap,
-                animationDuration: Duration(milliseconds: 800),
-                chartLegendSpacing: 40,
-                chartRadius: SizeConfig.screenWidth / 2,
-                colorList: colorList,
-                initialAngleInDegree: 0,
-                shouldHighlight: shouldHighlight,
-                chartType: ChartType.ring,
-                ringStrokeWidth: 10.0,
-                centerText:
-                    "₹ ${widget.userFundWallet.getEstTotalWealth().toStringAsFixed(2)}",
-                legendOptions: LegendOptions(
-                  showLegendsInRow: false,
-                  legendPosition: LegendPosition.left,
-                  showLegends: false,
-                  legendShape: BoxShape.circle,
-                  legendTextStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
+              onTap: () {
+                // showDialog(context: context,builder: (ctx) { return _buildFundInfoDialog(dataMap, title, descriptions);});
+
+                HapticFeedback.vibrate();
+                appState.currentAction = PageAction(
+                    state: PageState.addWidget,
+                    widget: YourFunds(
+                      chartFunds: chartData,
+                      doRefresh: widget.doRefresh,
+                      userFundWallet: widget.userFundWallet,
+                    ),
+                    page: YourFundsConfig);
+              },
+              child: Container(
+                child: PieChart(
+                  dataMap: getChartMap(),
+                  animationDuration: Duration(milliseconds: 800),
+                  chartLegendSpacing: 40,
+                  chartRadius: SizeConfig.screenWidth / 2,
+                  colorList: getColorList(),
+                  initialAngleInDegree: 0,
+                  shouldHighlight: getHighlightStatus(),
+                  chartType: ChartType.ring,
+                  ringStrokeWidth: 10.0,
+                  centerText:
+                      "₹ ${widget.userFundWallet.getEstTotalWealth().toStringAsFixed(2)}",
+                  legendOptions: LegendOptions(
+                    showLegendsInRow: false,
+                    legendPosition: LegendPosition.left,
+                    showLegends: false,
+                    legendShape: BoxShape.circle,
+                    legendTextStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  chartValuesOptions: ChartValuesOptions(
+                    showChartValueBackground: true,
+                    showChartValues: false,
+                    chartValueBackgroundColor: UiConstants.backgroundColor,
+                    chartValueStyle: GoogleFonts.montserrat(
+                      fontSize: math.min(
+                          (SizeConfig.screenWidth) /
+                              (widget.userFundWallet
+                                      .getEstTotalWealth()
+                                      .toStringAsFixed(2)
+                                      .length *
+                                  1.6),
+                          SizeConfig.largeTextSize * 2),
+                      color: UiConstants.textColor,
+                    ),
+                    showChartValuesInPercentage: false,
+                    showChartValuesOutside: false,
                   ),
                 ),
-                chartValuesOptions: ChartValuesOptions(
-                  showChartValueBackground: true,
-                  showChartValues: false,
-                  chartValueBackgroundColor: UiConstants.backgroundColor,
-                  chartValueStyle: GoogleFonts.montserrat(
-                  fontSize: math.min((SizeConfig.screenWidth) /
-                      (widget.userFundWallet
-                              .getEstTotalWealth()
-                              .toStringAsFixed(2)
-                              .length *
-                          1.6),SizeConfig.largeTextSize*2),
-                          color: UiConstants.textColor,
-                        ),
-                  showChartValuesInPercentage: false,
-                  showChartValuesOutside: false,
-                ),
-              ),
-            )
-          ),
+              )),
           SizedBox(width: SizeConfig.blockSizeHorizontal * 5),
           Container(
             width: SizeConfig.screenWidth * 0.3,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                (dataMap[title[0]] > 0)
+              children: List.generate(
+                chartData.length,
+                (i) => chartData[i].fundAmount > 0
                     ? Legend(
-                        title: title[0],
-                        amount: "₹ ${dataMap[title[0]].toStringAsFixed(2)}",
-                        color: colorList[0],
+                        title: chartData[i].fundName,
+                        amount:
+                            "₹ ${chartData[i].fundAmount.toStringAsFixed(2)}",
+                        color: chartData[i].color,
                         titleTextStyle: TextStyle(
                           fontSize: SizeConfig.smallTextSize * 1.2,
-                          color: UiConstants.textColor,),
+                          color: UiConstants.textColor,
+                        ),
                         bodyTextStyle: TextStyle(
                           fontSize: SizeConfig.mediumTextSize,
                           color: UiConstants.textColor,
                         ),
+                        onClick: chartData[i].function,
+                        isHighlighted: chartData[i].isHighlighted,
                       )
                     : Container(),
-                Legend(
-                  title: title[1],
-                  amount: "₹ ${dataMap[title[1]].toStringAsFixed(2)}",
-                  color: colorList[1],
-                  titleTextStyle: TextStyle(
-                    fontSize: SizeConfig.smallTextSize * 1.2,
-                    color: UiConstants.textColor,),
-                  bodyTextStyle: TextStyle(
-                    fontSize: SizeConfig.mediumTextSize,
-                    color: UiConstants.textColor,
-                  ),
-                  onClick: () {
-                    HapticFeedback.vibrate();
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) => MoreInfoDialog(
-                        text: widget.goldMoreInfo,
-                        title: 'Your Gold Balance',
-                      ),
-                    );
-                  },
-                ),
-                Legend(
-                  title: title[2],
-                  amount: "₹ ${dataMap[title[2]].toStringAsFixed(2)}",
-                  color: colorList[2],
-                  titleTextStyle: TextStyle(
-                    fontSize: SizeConfig.smallTextSize * 1.2,
-                    color: UiConstants.textColor,),
-                  bodyTextStyle: TextStyle(
-                    fontSize: SizeConfig.mediumTextSize,
-                    color: UiConstants.textColor,
-                  ),
-                  isHighlighted:
-                      widget.userFundWallet.isPrizeBalanceUnclaimed(),
-                  onClick: () {
-                    HapticFeedback.vibrate();
-                    if (widget.userFundWallet.prizeBalance <= 0) return;
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (ctx) {
-                        return Center(
-                          child: Material(
-                            color: Colors.transparent,
-                            child: FCard(
-                                isClaimed: !widget.userFundWallet
-                                    .isPrizeBalanceUnclaimed(),
-                                unclaimedPrize:
-                                    widget.userFundWallet.unclaimedBalance,
-                                onComplete: () async {
-                                  print('onComplete called');
-                                  widget.doRefresh();
-                                }),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-                (dataMap[title[3]] > 0)
-                    ? Legend(
-                        title: title[3],
-                        amount: "₹ ${dataMap[title[3]].toStringAsFixed(2)}",
-                        color: colorList[3],
-                        titleTextStyle: TextStyle(
-                          fontSize: SizeConfig.smallTextSize * 1.2,
-                          color: UiConstants.textColor,),
-                        bodyTextStyle: TextStyle(
-                          fontSize: SizeConfig.mediumTextSize,
-                          color: UiConstants.textColor,
-                        ),
-                        onClick: () {
-                          HapticFeedback.vibrate();
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => MoreInfoDialog(
-                                    text:
-                                        'Referral rewards could be locked due to either of the reasons: \n\n• You were referred by your friend but you haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet. \n\n• You referred your friends but they haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet.',
-                                    title: 'Locked Balance',
-                                  ));
-                        },
-                      )
-                    : Container(),
-              ],
+              ),
             ),
           )
         ],
@@ -272,7 +250,6 @@ class _FundsChartViewState extends State<FundsChartView> {
     );
   }
 }
-
 
 class Legend extends StatelessWidget {
   final String title, amount;
@@ -304,23 +281,14 @@ class Legend extends StatelessWidget {
               Stack(
                 fit: StackFit.passthrough,
                 children: [
-                  (isHighlighted)
-                      ? Align(
-                          alignment: Alignment.center,
-                          child: SpinKitPulse(
-                            color: color,
-                            duration: Duration(seconds: 2),
-                            size: 16,
-                          ),
-                        )
-                      : Align(
-                          alignment: Alignment.center,
-                          child: Icon(
-                            Icons.circle,
-                            color: color,
-                            size: 16,
-                          ),
-                        ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.circle,
+                      color: color,
+                      size: 16,
+                    ),
+                  ),
                 ],
               ),
               SizedBox(
