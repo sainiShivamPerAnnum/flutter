@@ -146,52 +146,50 @@ class NameInputScreenState extends State<NameInputScreen> {
       final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
       if (googleUser != null) {
         if (await httpProvider.isEmailNotRegistered(googleUser.email)) {
-          baseProvider.showPositiveAlert(
-              "Virgin Email", "You can use this email", context);
+          if (await httpProvider.isEmailNotRegistered(googleUser.email)) {
+            _nameFieldController.text = googleUser.displayName;
+            baseProvider.myUser.isEmailVerified = true;
+            baseProvider.myUserDpUrl = googleUser.photoUrl;
+            Uint8List bytes =
+                (await NetworkAssetBundle(Uri.parse(googleUser.photoUrl))
+                        .load(googleUser.photoUrl))
+                    .buffer
+                    .asUint8List();
+            FirebaseStorage storage = FirebaseStorage.instance;
+
+            Reference ref =
+                storage.ref().child("dps/${baseProvider.myUser.uid}/image");
+            UploadTask uploadTask = ref.putData(bytes);
+            try {
+              var res = await uploadTask;
+              String url = await res.ref.getDownloadURL();
+              if (url != null) {
+                isUploaded = true;
+                baseProvider.isProfilePictureUpdated = true;
+                baseProvider.setDisplayPictureUrl(url);
+                setState(() {
+                  isUploaded = true;
+                  isEmailEntered = true;
+                  _isContinuedWithGoogle = true;
+                  emailText = googleUser.email;
+                });
+              } else {
+                baseProvider.showNegativeAlert("Error getting profile picture",
+                    "Please try again", context);
+              }
+            } catch (e) {
+              baseProvider.showNegativeAlert("Error uploading profile picture",
+                  "Please try again", context);
+            }
+            Navigator.pop(context);
+          } else {
+            baseProvider.showNegativeAlert("Email already registered",
+                "Please try with another email", context);
+          }
         } else {
           baseProvider.showNegativeAlert("Email already registered",
               "Please try with another email", context);
         }
-        // if (await httpProvider.isEmailNotRegistered(googleUser.email)) {
-        //   _nameFieldController.text = googleUser.displayName;
-        //   baseProvider.myUser.isEmailVerified = true;
-        //   baseProvider.myUserDpUrl = googleUser.photoUrl;
-        //   Uint8List bytes =
-        //       (await NetworkAssetBundle(Uri.parse(googleUser.photoUrl))
-        //               .load(googleUser.photoUrl))
-        //           .buffer
-        //           .asUint8List();
-        //   FirebaseStorage storage = FirebaseStorage.instance;
-
-        //   Reference ref =
-        //       storage.ref().child("dps/${baseProvider.myUser.uid}/image");
-        //   UploadTask uploadTask = ref.putData(bytes);
-        //   try {
-        //     var res = await uploadTask;
-        //     String url = await res.ref.getDownloadURL();
-        //     if (url != null) {
-        //       isUploaded = true;
-        //       baseProvider.isProfilePictureUpdated = true;
-        //       baseProvider.setDisplayPictureUrl(url);
-        //       setState(() {
-        //         isUploaded = true;
-        //         isEmailEntered = true;
-        //         _isContinuedWithGoogle = true;
-        //         emailText = googleUser.email;
-        //       });
-        //     } else {
-        //       baseProvider.showNegativeAlert(
-        //           "Issue occurred", "Please try again", context);
-        //     }
-        //   } catch (e) {
-        //     baseProvider.showNegativeAlert(
-        //         "Issue occurred", "Please try again", context);
-        //   }
-        //   Navigator.pop(context);
-        // } else {
-        // baseProvider.showNegativeAlert("Email already registered",
-        //     "Please try with another email", context);
-        // }
       } else {
         baseProvider.showNegativeAlert("No account selected",
             "Please choose an account from the list", context);

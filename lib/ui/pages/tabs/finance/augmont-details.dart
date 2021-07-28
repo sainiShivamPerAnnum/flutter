@@ -14,6 +14,7 @@ import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/fund_appbar.dart';
+import 'package:felloapp/ui/elements/fund_graph.dart';
 import 'package:felloapp/ui/elements/fund_info.dart';
 import 'package:felloapp/ui/elements/gold_profit_calculator.dart';
 import 'package:felloapp/ui/elements/gold_rate_graph.dart';
@@ -151,7 +152,11 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                     "Ranked no 1 bullion in India"
                   ],
                 ),
-                GoldRateGraph(),
+                //GoldRateGraph(),
+                Container(
+                    width: SizeConfig.screenWidth,
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: LineChartWidget()),
                 //FundGraph(),
                 FundDetailsTable(baseProvider.userFundWallet.augGoldQuantity),
                 GoldProfitCalculator(),
