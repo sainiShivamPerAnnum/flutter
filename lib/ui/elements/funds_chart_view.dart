@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'dart:collection';
 import 'dart:math';
 
 import 'package:felloapp/core/base_remote_config.dart';
@@ -13,7 +11,6 @@ import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:provider/provider.dart';
 import 'pie_chart/pie.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -274,78 +271,6 @@ class _FundsChartViewState extends State<FundsChartView> {
       ),
     );
   }
-
-  Widget _buildFundInfoDialog(Map<String,double> dataMap, List<String> titles, Map<String,String> descriptions) {
-    List<String> _validTitles = [];
-    for(var i in titles) {
-      if(dataMap[i]>0 && descriptions.containsKey(i)) {
-        _validTitles.add(i);
-      }
-    }
-    return Dialog(
-      shape: RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.circular(30.0)),
-      child: Container(
-        height: SizeConfig.screenHeight*0.6,
-        child: Stack(
-          children: [
-            Container(
-              padding: EdgeInsets.only(top : 30.0, left : 15.0, right: 15.0, bottom:30.0),
-              child: ListView.separated(
-                separatorBuilder: (ctx, index) {
-                  return SizedBox(height: SizeConfig.blockSizeVertical*5);
-                },
-                itemCount: _validTitles.length,
-                itemBuilder: (ctx, index) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(_validTitles[index] , style: TextStyle(fontWeight: FontWeight.bold, fontSize: SizeConfig.largeTextSize)),
-                      SizedBox(height: SizeConfig.blockSizeVertical*1),
-                      Text(descriptions[_validTitles[index]], style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.3))
-                    ],
-                  );
-                },
-              ),
-            ),
-            Align(
-              alignment: Alignment.topRight,
-              child: IconButton(splashRadius: SizeConfig.blockSizeVertical*1.5,icon: Icon(Icons.close),onPressed: (){Navigator.of(context).pop();},)
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-//   List<PieChartSectionData> _getSections() {
-//     List<PieChartSectionData> res = [];
-//     int _i = 0;
-//     getChartMap().forEach((key, value) {
-//       final isTouched = _i == touchedIndex;
-//       final fontSize = isTouched
-//           ? SizeConfig.mediumTextSize * 1.2
-//           : SizeConfig.mediumTextSize;
-//       final radius = isTouched
-//           ? SizeConfig.blockSizeHorizontal * 10
-//           : SizeConfig.blockSizeHorizontal * 7;
-//       res.add(PieChartSectionData(
-//           borderSide: BorderSide(
-//             width: 2,
-//             color: borderColorList[_i],
-//           ),
-//           color: colorList[_i],
-//           value: value,
-//           title: key,
-//           titlePositionPercentageOffset: 2,
-//           showTitle: false,
-//           radius: radius,
-//           titleStyle: TextStyle(fontSize: fontSize, color: Colors.black)));
-//       _i++;
-//     });
-//     return res;
-//   }
 }
 
 

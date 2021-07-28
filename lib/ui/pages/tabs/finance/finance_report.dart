@@ -1,9 +1,7 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../main.dart';
 
@@ -29,7 +27,6 @@ class _YourFundsState extends State<YourFunds> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: BaseUtil.getAppBar(context),
       body : Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -95,50 +92,6 @@ class _YourFundsState extends State<YourFunds> {
                 SizedBox(height: SizeConfig.blockSizeVertical*3,),
                 Container(height: 2.0,color: Colors.grey[200],),
                 SizedBox(height: SizeConfig.blockSizeVertical*1,),
-                // Container(
-                //   height: SizeConfig.screenHeight*0.55,
-                //   child: PageView.builder(
-                //     scrollDirection: Axis.horizontal,
-                //     onPageChanged: (index) {
-                //       setState(() {
-                //         currIdx = index;
-                //       });
-                //     },
-                //     itemCount: validTitles.length,
-                //     itemBuilder: (ctx, index) {
-                //       return _buildInfoSection(index);
-                //     },
-                //   ),
-                // ),
-                // Align(
-                //   alignment: Alignment.bottomCenter,
-                //   child: Container(
-                //     alignment: Alignment.center,
-                //     width: SizeConfig.screenWidth,
-                //     height: SizeConfig.blockSizeVertical * 6,
-                //     child: ListView.separated(
-                //       shrinkWrap: true,
-                //       scrollDirection: Axis.horizontal,
-                //       separatorBuilder: (ctx, idx) {
-                //         return SizedBox(
-                //           width: SizeConfig.blockSizeHorizontal * 2,
-                //         );
-                //       },
-                //       itemCount: validTitles.length,
-                //       itemBuilder: (ctx, idx) {
-                //         return Container(
-                //           width: SizeConfig.blockSizeHorizontal * 3,
-                //           height: SizeConfig.blockSizeHorizontal * 3,
-                //           decoration: BoxDecoration(
-                //               shape: BoxShape.circle,
-                //               color: (idx == currIdx)
-                //                   ? Colors.grey[500]
-                //                   : Colors.grey[300]),
-                //         );
-                //       },
-                //     ),
-                //   ),
-                // )
                 Expanded(child: SingleChildScrollView(
                   child : Column(
                     children: _buildInfoSections()
@@ -185,7 +138,9 @@ class _YourFundsState extends State<YourFunds> {
     List<String> _validTitles = [];
     for(var i in widget.fundTitles) {
       if(widget.fundsValueMap[i]>0 && widget.fundDescriptions.containsKey(i)) {
-        _validTitles.add(i);
+        if(widget.fundDescriptions[i]!=null) {
+          _validTitles.add(i);
+        }
       }
     }
     return _validTitles;

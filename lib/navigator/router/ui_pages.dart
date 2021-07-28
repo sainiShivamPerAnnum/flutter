@@ -21,7 +21,6 @@ const String ReferralPolicyPath = '/refPolicy';
 const String ChatSupportPath = '/chatSupport';
 const String ClaimUsernamePath = '/claimUsername';
 const String VerifyEmailPath = '/verifyEmail';
-const String UpdateRequiredPath = '/updateRequired';
 const String ContactUsPath = '/contactUs';
 const String WalkThroughPath = '/walkThrough';
 const String WalkThroughCompletedPath = '/walkThroughCompleted';
@@ -48,7 +47,6 @@ enum Pages {
   ChatSupport,
   ClaimUsername,
   VerifyEmail,
-  UpdateRequired,
   ContactUs,
   WalkThrough,
   WalkThroughCompleted,
@@ -171,11 +169,6 @@ PageConfiguration VerifyEmailPageConfig = PageConfiguration(
   key: 'VerifyEmail',
   path: VerifyEmailPath,
   uiPage: Pages.VerifyEmail,
-);
-PageConfiguration UpdateRequiredConfig = PageConfiguration(
-  key: 'UpdateRequired',
-  path: UpdateRequiredPath,
-  uiPage: Pages.UpdateRequired,
 );
 PageConfiguration ContactUsConfig = PageConfiguration(
   key: 'ContactUs',

@@ -1,7 +1,6 @@
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +20,7 @@ class ContactUsPage extends StatefulWidget {
   _ContactUsPageState createState() => _ContactUsPageState();
 }
 
-class _ContactUsPageState extends State<ContactUsPage>
-    with TickerProviderStateMixin {
+class _ContactUsPageState extends State<ContactUsPage> {
   BaseUtil baseProvider;
   AppState appState;
   DBModel dbProvider;
@@ -43,28 +41,6 @@ class _ContactUsPageState extends State<ContactUsPage>
       init();
     }
     return Scaffold(
-      // appBar: AppBar(
-      //   leading: IconButton(
-      //     icon: Icon(
-      //       Icons.arrow_back_rounded,
-      //       color: Colors.white,
-      //     ),
-      //     onPressed: () {
-      //       Navigator.pop(context);
-      //       // backButtonDispatcher.didPopRoute();
-      //     },
-      //   ),
-      //   elevation: 1.0,
-      //   backgroundColor: UiConstants.primaryColor,
-      //   iconTheme: IconThemeData(
-      //     color: UiConstants.accentColor, //change your color here
-      //   ),
-      //   title: Text('Support',
-      //       style: GoogleFonts.montserrat(
-      //           color: Colors.white,
-      //           fontWeight: FontWeight.w500,
-      //           fontSize: SizeConfig.largeTextSize)),
-      // ),
       body: Column(
         children: [
           Container(
@@ -144,13 +120,6 @@ class _ContactUsPageState extends State<ContactUsPage>
                           )
                         ],
                       ),
-                      // Text(
-                      //   "24 x 7",
-                      //   style: TextStyle(
-                      //     color: Colors.white,
-                      //     fontWeight: FontWeight.w700,
-                      //   ),
-                      // ),
                       Text(
                         "We'd love to assist you with any kind of problem you face in the app.",
                         style: TextStyle(
@@ -196,13 +165,6 @@ class _ContactUsPageState extends State<ContactUsPage>
                 ),
               ],
             ),
-            // decoration: BoxDecoration(
-            //   image: DecorationImage(
-            //     colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.6), BlendMode.dstATop),
-            //     alignment: Alignment.bottomRight,
-            //     image: AssetImage('images/contact_bg.png')
-            //   )
-            // ),
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -234,7 +196,11 @@ class _ContactUsPageState extends State<ContactUsPage>
                     ),
                     onTap: () {
                       HapticFeedback.vibrate();
-                      _launchEmail();
+                      try {
+                        _launchEmail();
+                      } catch(e) {
+                        baseProvider.showNegativeAlert('Error', 'Something went wrong, could not launch email right now. Please try again later', context);
+                      }
                     },
                   ),
                   ListTile(

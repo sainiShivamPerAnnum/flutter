@@ -264,7 +264,6 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
 
   @override
   void dispose() {
-    // _gifImage.evict();
     _videoController?.dispose();
     super.dispose();
   }
