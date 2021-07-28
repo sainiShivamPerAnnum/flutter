@@ -21,7 +21,7 @@ class PieChart extends StatefulWidget {
     this.initialAngleInDegree = 0.0,
     this.formatChartValues,
     this.centerText,
-    this.ringStrokeWidth = 20.0,
+    this.ringStrokeWidth,
     this.legendOptions = const LegendOptions(),
     this.chartValuesOptions = const ChartValuesOptions(),
     this.shouldHighlight,
@@ -47,9 +47,15 @@ class PieChart extends StatefulWidget {
 }
 
 class _PieChartState extends State<PieChart>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   Animation<double> animation;
   AnimationController controller;
+  AnimationController blurController;
+  Animation<double> blurAnimation;
+  AnimationController ringWidthController;
+  Animation<double> ringWidthAnimation;
+  List<double> blurs;
+  List<double> ringWidths;
   double _animFraction = 0.0;
 
   List<String> legendTitles;
@@ -72,14 +78,50 @@ class _PieChartState extends State<PieChart>
     initValues();
   }
 
+  bool checkIfShouldHighlight() {
+    bool res = false;
+    for(var i in widget.shouldHighlight) {
+      if(i) {
+        res =true;
+      }
+    }
+    return res;
+  }
+
   @override
   void initState() {
     super.initState();
     initData();
+    blurs = List.filled(widget.shouldHighlight.length, 0);
+    ringWidths = List.filled(widget.shouldHighlight.length, widget.ringStrokeWidth);
     controller = AnimationController(
       duration: widget.animationDuration ?? Duration(milliseconds: 800),
       vsync: this,
     );
+    if(checkIfShouldHighlight()){
+      blurController = AnimationController(vsync: this, duration: widget.animationDuration ?? Duration(milliseconds: 1000),);
+      ringWidthController = AnimationController(vsync: this, duration: widget.animationDuration ?? Duration(milliseconds: 1000),);
+      blurController.repeat(reverse:true);
+      ringWidthController.repeat(reverse:true);
+      blurAnimation = Tween<double>(begin: 0, end: 5).animate(blurController)..addListener(() {
+        setState(() {
+          for(int i=0;i<blurs.length;i++) {
+            if(widget.shouldHighlight[i]){
+              blurs[i] = blurAnimation.value;
+            }
+          }
+        });
+      });
+      ringWidthAnimation = Tween<double>(begin: widget.ringStrokeWidth, end: widget.ringStrokeWidth+3).animate(ringWidthController)..addListener(() {
+        setState(() {
+          for(int i=0;i<ringWidths.length;i++) {
+            if(widget.shouldHighlight[i]){
+              ringWidths[i] = ringWidthAnimation.value;
+            }
+          }
+        });
+      });
+    }
     final Animation curve = CurvedAnimation(
       parent: controller,
       curve: Curves.decelerate,
@@ -114,6 +156,7 @@ class _PieChartState extends State<PieChart>
               shouldHighlight: widget.shouldHighlight,
               values: legendValues,
               titles: legendTitles,
+              blurValues: blurs,
               initialAngle: widget.initialAngleInDegree,
               showValuesInPercentage:
               widget.chartValuesOptions.showChartValuesInPercentage,
@@ -123,7 +166,7 @@ class _PieChartState extends State<PieChart>
               chartType: widget.chartType,
               centerText: widget.centerText,
               formatChartValues: widget.formatChartValues,
-              strokeWidth: widget.ringStrokeWidth,
+              strokeWidth: ringWidths,
             ),
             child: AspectRatio(aspectRatio: 1),
           ),
@@ -248,6 +291,8 @@ class _PieChartState extends State<PieChart>
   @override
   void dispose() {
     controller?.dispose();
+    blurController?.dispose();
+    ringWidthController?.dispose();
     super.dispose();
   }
 }

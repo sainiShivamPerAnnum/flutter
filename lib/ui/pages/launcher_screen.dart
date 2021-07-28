@@ -11,7 +11,6 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/breathing_text_widget.dart';
 import 'package:felloapp/ui/elements/logo_canvas.dart';
 import 'package:felloapp/ui/elements/logo_container.dart';
-import 'package:felloapp/ui/pages/update_section/update_screen.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
@@ -62,64 +61,49 @@ class LogoFadeIn extends State<SplashScreen> {
     await baseProvider.init();
     await fcmProvider.setupFcm();
     _timer3.cancel();
-    bool isThereBreakingUpdate = await checkBreakingUpdate();
-    // isThereBreakingUpdate = true;
-    isThereBreakingUpdate = false;
-    if (isThereBreakingUpdate) {
+    if (!baseProvider.isUserOnboarded) {
+      log.debug("New user. Moving to Onboarding..");
       stateProvider.currentAction =
-          PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
+          PageAction(state: PageState.replaceAll, page: OnboardPageConfig);
     } else {
-      if (!baseProvider.isUserOnboarded) {
-        log.debug("New user. Moving to Onboarding..");
-        stateProvider.currentAction =
-            PageAction(state: PageState.replaceAll, page: OnboardPageConfig);
-      } else {
-        log.debug("Existing User. Moving to Home..");
-        bool _unlocked;
-        if (baseProvider.isSecurityEnabled) {
-          try {
-            _unlocked = await deviceUnlock.request(
-                localizedReason: 'Please authenticate in order to proceed');
-          } on DeviceUnlockUnavailable {
-            baseProvider.showPositiveAlert(
-                'No Device Authentication Found',
-                'Logging in, please enable device security to add lock',
-                context);
-            _unlocked = true;
-          } on RequestInProgress {
-            _unlocked = false;
-            print('Request in progress');
-          }
-          if (_unlocked) {
-            stateProvider.currentAction =
-                PageAction(state: PageState.replaceAll, page: RootPageConfig);
-          } else {
-            baseProvider.showNegativeAlert(
-                'Authentication Failed', 'Please restart app', context);
-          }
-        } else {
+      log.debug("Existing User. Moving to Home..");
+      if (baseProvider.isSecurityEnabled) {
+        bool _unlocked = await authenticateDevice();
+        if (_unlocked) {
           stateProvider.currentAction =
               PageAction(state: PageState.replaceAll, page: RootPageConfig);
+        } else {
+          baseProvider.showNegativeAlert(
+              'Authentication Failed', 'Please restart app', context);
         }
+      } else {
+        stateProvider.currentAction =
+            PageAction(state: PageState.replaceAll, page: RootPageConfig);
       }
-    }
+    } 
   }
 
-  Future<bool> checkBreakingUpdate() async {
-    String currentBuild = BaseUtil.packageInfo.buildNumber;
-    print('Current Build $currentBuild');
-    String minBuild = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER);
-    print('Min Build Required $minBuild');
-    // minBuild = "0";
+  Future<bool> authenticateDevice() async {
+    bool _res = false;
     try {
-      if (int.parse(currentBuild) < int.parse(minBuild)) {
-        return true;
-      }
-      return false;
-    } catch (e) {
-      return true;
+      _res = await deviceUnlock.request(
+          localizedReason: 'Please authenticate in order to proceed');
+    } on DeviceUnlockUnavailable {
+      baseProvider.showPositiveAlert(
+          'No Device Authentication Found',
+          'Logging in, please enable device security to add lock',
+          context);
+      _res = true;
+    } on RequestInProgress {
+      _res = false;
+      print('Request in progress');
+    } catch(e) {
+      baseProvider.showNegativeAlert(
+          'Authentication Failed',
+          'Please restart the application to try again.',
+          context);
     }
+    return _res;
   }
 
   @override
