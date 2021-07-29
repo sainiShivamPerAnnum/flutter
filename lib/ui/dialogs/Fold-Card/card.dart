@@ -92,12 +92,12 @@ class _TicketState extends State<FCard> {
 
   List<FoldEntry> _getEntries() {
     return [
-      FoldEntry(height: SizeConfig.screenHeight * 0.24, front: topCard),
+      FoldEntry(height: SizeConfig.screenHeight * 0.26, front: topCard),
       FoldEntry(
-          height: SizeConfig.screenHeight * 0.24,
+          height: SizeConfig.screenHeight * 0.26,
           front: middleCard,
           back: frontCard),
-      FoldEntry(height: 80.0, front: bottomCard, back: backCard)
+      FoldEntry(height: 100.0, front: bottomCard, back: backCard)
     ];
   }
 
@@ -117,7 +117,9 @@ class _TicketState extends State<FCard> {
         // gradient: cardGradient,
         image: DecorationImage(
             image: AssetImage("images/prize-share-bg.png"), fit: BoxFit.cover),
-        borderRadius: BorderRadius.all(Radius.circular(15)),
+        borderRadius: BorderRadius.all(
+          Radius.circular(15),
+        ),
       ),
       child: Stack(
         children: [
@@ -174,7 +176,7 @@ class _TicketState extends State<FCard> {
                 Row(
                   children: [
                     Image.asset(
-                      "images/fello_logo.png",
+                      "images/fello-dark.png",
                       width: SizeConfig.screenWidth * 0.12,
                     ),
                     Spacer(),
@@ -205,7 +207,6 @@ class _TicketState extends State<FCard> {
       height: double.infinity,
       width: double.infinity,
       decoration: BoxDecoration(
-        // gradient: cardGradient,
         image: DecorationImage(
             image: AssetImage("images/prize-share-bg.png"), fit: BoxFit.cover),
         borderRadius: BorderRadius.only(
@@ -221,36 +222,23 @@ class _TicketState extends State<FCard> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
-            child: Stack(
-              children: [
-                Center(
-                  child: Opacity(
-                    opacity: 0.3,
-                    child: Image.asset(
-                      "images/prize-confetti-share.png",
-                      fit: BoxFit.fitHeight,
-                    ),
-                  ),
+            child: Center(
+              child: Text(
+                "र ${widget.unclaimedPrize}",
+                style: GoogleFonts.montserrat(
+                  color: Colors.white,
+                  height: 1.3,
+                  shadows: [
+                    Shadow(
+                      offset: Offset(2, 2),
+                      color: Colors.black26,
+                      blurRadius: 5,
+                    )
+                  ],
+                  fontWeight: FontWeight.w800,
+                  fontSize: SizeConfig.cardTitleTextSize * 2.4,
                 ),
-                Center(
-                  child: Text(
-                    "र ${widget.unclaimedPrize}",
-                    style: GoogleFonts.montserrat(
-                      color: Colors.white,
-                      height: 1.3,
-                      shadows: [
-                        Shadow(
-                          offset: Offset(2, 2),
-                          color: Colors.white30,
-                          blurRadius: 5,
-                        )
-                      ],
-                      fontWeight: FontWeight.w800,
-                      fontSize: SizeConfig.screenWidth * 0.12,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
           SizedBox(
@@ -300,7 +288,6 @@ class _TicketState extends State<FCard> {
       height: double.infinity,
       width: double.infinity,
       decoration: BoxDecoration(
-        // gradient: cardGradient,
         image: DecorationImage(
             image: AssetImage("images/prize-share-bg.png"), fit: BoxFit.cover),
         borderRadius: BorderRadius.only(
@@ -457,28 +444,28 @@ class _CloseCardState extends State<CloseCard> {
 
   Widget _buildBeginCard(BuildContext context) {
     return Container(
-      height: double.infinity,
-      width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: Color(0xfff9f3f3),
+        color: Color(0xffEFFEFB),
       ),
-      child: Stack(
-        children: [
-          Container(
-            padding: EdgeInsets.all(10),
-            child: Row(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Lottie.asset(
+      child: Container(
+        padding: EdgeInsets.all(
+          SizeConfig.blockSizeHorizontal * 4,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 3,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Lottie.asset(
                       "images/lottie/winner-crown.json",
-                      height: SizeConfig.screenWidth * 0.16,
                     ),
-                    Container(
-                      height: SizeConfig.screenWidth * 0.16,
-                      width: SizeConfig.screenWidth * 0.16,
+                  ),
+                  Expanded(
+                    child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: UiConstants.primaryColor,
@@ -489,88 +476,91 @@ class _CloseCardState extends State<CloseCard> {
                           image: baseProvider.myUserDpUrl != null
                               ? NetworkImage(baseProvider.myUserDpUrl)
                               : AssetImage("images/profile.png"),
-                          fit: BoxFit.cover,
+                          fit: BoxFit.contain,
                         ),
                       ),
                     ),
-                    Spacer()
-                  ],
-                ),
-                SizedBox(width: SizeConfig.blockSizeHorizontal * 5),
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                  SizedBox(height: SizeConfig.blockSizeVertical * 3)
+                ],
+              ),
+            ),
+            SizedBox(width: SizeConfig.blockSizeHorizontal * 3),
+            Expanded(
+              flex: 7,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Spacer(),
-                      FittedBox(
-                        fit: BoxFit.contain,
-                        child: Text(
-                          "Congratulations 🎉  ",
-                          style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xff194350),
-                            fontSize: SizeConfig.cardTitleTextSize,
-                          ),
-                        ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(Icons.clear_rounded,
+                            color: Colors.black, size: 24),
                       ),
-                      SizedBox(height: 10),
-                      Text(
-                        "You have र${widget.unclaimedPrize} worth of unclaimed rewards!",
-                        textAlign: TextAlign.center,
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text(
+                      "Congratulations 🎉",
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xff194350),
+                        fontSize: SizeConfig.cardTitleTextSize,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                      "You have र${widget.unclaimedPrize} worth of unclaimed rewards!",
+                      textAlign: TextAlign.start,
+                      style: GoogleFonts.montserrat(
+                        color: Colors.black,
+                        fontSize: SizeConfig.mediumTextSize,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: SizeConfig.screenWidth * 0.3,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        gradient: new LinearGradient(
+                            colors: [
+                              UiConstants.primaryColor,
+                              UiConstants.primaryColor.withBlue(200),
+                            ],
+                            begin: Alignment(0.5, -1.0),
+                            end: Alignment(0.5, 1.0)),
+                        // border: Border.all(
+                        //     color: UiConstants.primaryColor, width: 2),
+                        borderRadius: BorderRadius.circular(5)),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.blockSizeHorizontal * 1,
+                        vertical: SizeConfig.blockSizeHorizontal * 2),
+                    child: FittedBox(
+                      child: Text(
+                        "Claim",
                         style: GoogleFonts.montserrat(
-                          color: Colors.black,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
                           fontSize: SizeConfig.mediumTextSize,
                         ),
                       ),
-                      Spacer(
-                        flex: 1,
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: UiConstants.primaryColor, width: 2),
-                            borderRadius: BorderRadius.circular(10)),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.blockSizeHorizontal * 2,
-                            vertical: SizeConfig.blockSizeHorizontal),
-                        child: FittedBox(
-                          child: Text(
-                            "Claim",
-                            style: GoogleFonts.montserrat(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: SizeConfig.mediumTextSize,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Spacer(),
-                    ],
+                    ),
                   ),
-                ),
-                SizedBox(width: 20)
-              ],
-            ),
-          ),
-          Row(
-            children: [
-              Spacer(),
-              IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  Icons.clear_rounded,
-                  color: Colors.black,
-                  size: SizeConfig.blockSizeHorizontal * 5,
-                ),
+                  Spacer(),
+                ],
               ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -579,12 +569,15 @@ class _CloseCardState extends State<CloseCard> {
     return Container(
       padding: const EdgeInsets.only(top: 10.0, left: 20, right: 10),
       decoration: BoxDecoration(
-        color: Colors.black,
-        // gradient: new LinearGradient(colors: [
-        //   Color(0xffFEAC5E),
-        //   Color(0xffC779D0),
-        //   Color(0xff4BC0C8),
-        // ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+        gradient: widget.claimtype == PrizeClaimChoice.AMZ_VOUCHER
+            ? new LinearGradient(
+                colors: [Colors.black, Colors.black],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight)
+            : new LinearGradient(colors: [
+                Color(0xffC3902C),
+                Color(0xffD7B56D),
+              ], begin: Alignment.topLeft, end: Alignment.bottomRight),
         borderRadius: BorderRadius.circular(15),
       ),
       child: Stack(
@@ -711,6 +704,94 @@ class _CloseCardState extends State<CloseCard> {
       return 'Your prize shall be credited to you soon!';
   }
 
+  // _buildShareCard() async {
+  //   showDialog(
+  //     context: context,
+  //     builder: (ctx) => Material(
+  //       child: Container(
+  //         color: Colors.black.withOpacity(0.5),
+  //         child: Column(
+  //           children: [
+  //             Expanded(
+  //               child: SingleChildScrollView(
+  //                 child: Column(
+  //                   children: [
+  //                     SizedBox(height: kToolbarHeight),
+  //                     ShareCard(
+  //                       dpUrl: baseProvider.myUserDpUrl,
+  //                       claimChoice: widget.claimtype,
+  //                       prizeAmount: baseProvider.userFundWallet.prizeBalance,
+  //                       username: baseProvider.myUser.name,
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //             Container(
+  //               width: SizeConfig.screenWidth,
+  //               child: Row(
+  //                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //                 children: [
+  //                   Column(
+  //                     children: [
+  //                       IconButton(
+  //                           onPressed: () => Navigator.pop(context),
+  //                           icon: Icon(Icons.ios_share_rounded,
+  //                               color: Colors.white)),
+  //                       SizedBox(height: 8),
+  //                       Text(
+  //                         "Share",
+  //                         style: GoogleFonts.montserrat(
+  //                           color: Colors.white,
+  //                           fontSize: SizeConfig.mediumTextSize,
+  //                         ),
+  //                       ),
+  //                       SizedBox(height: 8)
+  //                     ],
+  //                   ),
+  //                   // Expanded(
+  //                   //   child: Column(
+  //                   //     children: [
+  //                   //       IconButton(
+  //                   //           onPressed: () => Navigator.pop(context),
+  //                   //           icon: Icon(Icons.save_alt_rounded,
+  //                   //               color: Colors.white)),
+  //                   //       SizedBox(height: 8),
+  //                   //       Text(
+  //                   //         "Save",
+  //                   //         style: GoogleFonts.montserrat(
+  //                   //           color: Colors.white,
+  //                   //           fontSize: SizeConfig.mediumTextSize,
+  //                   //         ),
+  //                   //       )
+  //                   //     ],
+  //                   //   ),
+  //                   //),
+  //                   Column(
+  //                     children: [
+  //                       IconButton(
+  //                           onPressed: () => Navigator.pop(context),
+  //                           icon:
+  //                               Icon(Icons.close_rounded, color: Colors.white)),
+  //                       Text(
+  //                         "Cancel",
+  //                         style: GoogleFonts.montserrat(
+  //                           color: Colors.white,
+  //                           fontSize: SizeConfig.mediumTextSize,
+  //                         ),
+  //                       )
+  //                     ],
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
   _buildShareCard() async {
     //////ADDING A PRE_CALL DUE TO SCREENSHOT PACKAGE BUG
     await screenshotController.captureFromWidget(ShareCard(
@@ -726,7 +807,9 @@ class _CloseCardState extends State<CloseCard> {
               dpUrl: baseProvider.myUserDpUrl,
               claimChoice: widget.claimtype,
               prizeAmount:
-                  baseProvider.userFundWallet.processingRedemptionBalance,
+                  baseProvider.userFundWallet.processingRedemptionBalance == 0
+                      ? baseProvider.userFundWallet.prizeBalance
+                      : baseProvider.userFundWallet.processingRedemptionBalance,
               username: baseProvider.myUser.name,
             ),
             delay: const Duration(seconds: 1))
