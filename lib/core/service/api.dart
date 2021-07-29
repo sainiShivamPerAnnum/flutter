@@ -456,6 +456,16 @@ class Api {
     return _storage.ref('dps/$uid/$path').getDownloadURL();
   }
 
+  Future<List<String>> getWalkthroughFiles() async {
+    ListResult _allVideos =  await _storage.ref('walkthrough').listAll();
+    List<String> _res = [];
+    for(Reference ref in _allVideos.items) {
+      var value = await ref.getDownloadURL();
+      _res.add(value);
+    }
+    return _res;
+  }
+
   Future<bool> deleteUserTicketsBeforeWeekCode(String uid, int weekCde) async {
     bool flag = true;
     Query _query = _db
