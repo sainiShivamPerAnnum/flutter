@@ -86,8 +86,25 @@ class _TicketState extends State<FCard> {
     bottomCard = buildBottomCard();
     middleCard = buildMiddleCard();
 
-    return FoldingCard(
-        entries: _getEntries(), isOpen: _isOpen, onClick: _handleOnTap);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        FoldingCard(
+            entries: _getEntries(), isOpen: _isOpen, onClick: _handleOnTap),
+        CircleAvatar(
+          backgroundColor: Colors.white,
+          child: IconButton(
+              icon: Icon(Icons.close, color: Colors.grey),
+              onPressed: () {
+                _isOpen
+                    ? setState(() {
+                        _isOpen = false;
+                      })
+                    : Navigator.pop(context);
+              }),
+        )
+      ],
+    );
   }
 
   List<FoldEntry> _getEntries() {
@@ -248,6 +265,7 @@ class _TicketState extends State<FCard> {
             "How would you like to redeem it?",
             style: GoogleFonts.montserrat(
               color: Colors.white,
+              fontWeight: FontWeight.w500,
               fontSize: SizeConfig.mediumTextSize,
             ),
           ),
@@ -446,7 +464,7 @@ class _CloseCardState extends State<CloseCard> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: Color(0xffEFFEFB),
+        color: Color(0xffF1F1F1),
       ),
       child: Container(
         padding: EdgeInsets.all(
@@ -519,7 +537,7 @@ class _CloseCardState extends State<CloseCard> {
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: Text(
-                      "You have र${widget.unclaimedPrize} worth of unclaimed rewards!",
+                      "You have र ${widget.unclaimedPrize} worth of unclaimed rewards!",
                       textAlign: TextAlign.start,
                       style: GoogleFonts.montserrat(
                         color: Colors.black,
