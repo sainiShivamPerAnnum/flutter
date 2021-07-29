@@ -4,12 +4,10 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../base_util.dart';
@@ -41,7 +39,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   ];
-  ValueNotifier<int> _currentIndex = ValueNotifier<int>(0);
+  int _currentIndex = 0;
   PageController pageController = PageController(keepPage: false);
   AppState stateProvider;
   BaseUtil baseProvider;
@@ -117,21 +115,18 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
               ),
               Align(
                 alignment: Alignment.center,
-                child: PageView.builder(
+                child: PageView(
                   controller: pageController,
-                  itemCount: _content.length,
+                  children: [
+                    _buildWalkthroughPage(0),
+                    _buildWalkthroughPage(1),
+                    _buildWalkthroughPage(2)
+                  ],
                   onPageChanged: (index) {
                     _onControllerChange(index);
                     setState(() {
-                      _currentIndex.value = index;
+                      _currentIndex = index;
                     });
-                  },
-                  itemBuilder: (ctx, index) {
-                    return ValueListenableBuilder(
-                        valueListenable: _currentIndex,
-                        builder: (ctx, currIdx, child) {
-                          return _buildWalkthroughPage(currIdx);
-                        });
                   }),
               ),
               Align(
@@ -140,37 +135,29 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                     alignment: Alignment.center,
                     width: SizeConfig.screenWidth,
                     height: SizeConfig.blockSizeVertical * 6,
-                    child: ValueListenableBuilder(
-                      valueListenable: _currentIndex,
-                      builder: (ctx, currIdx, child) {
-                        return ListView.separated(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          separatorBuilder: (ctx, idx) {
-                            return SizedBox(
-                              width: SizeConfig.blockSizeHorizontal * 2,
-                            );
-                          },
-                          itemCount: _content.length,
-                          itemBuilder: (ctx, idx) {
-                            return Container(
-                              width: SizeConfig.blockSizeHorizontal * 3,
-                              height: SizeConfig.blockSizeHorizontal * 3,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: (idx == currIdx)
-                                      ? Colors.grey[500]
-                                      : Colors.grey[300]),
-                            );
-                          },
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      separatorBuilder: (ctx, idx) {
+                        return SizedBox(
+                          width: SizeConfig.blockSizeHorizontal * 2,
                         );
                       },
-                    )),
+                      itemCount: _content.length,
+                      itemBuilder: (ctx, idx) {
+                        return Container(
+                          width: SizeConfig.blockSizeHorizontal * 3,
+                          height: SizeConfig.blockSizeHorizontal * 3,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: (idx == _currentIndex)
+                                  ? Colors.grey[500]
+                                  : Colors.grey[300]),
+                        );
+                      },
+                    ),)
               ),
-              ValueListenableBuilder(
-                  valueListenable: _currentIndex,
-                  builder: (ctx, val, child) {
-                    return SafeArea(
+              SafeArea(
                       child: Container(
                         width: SizeConfig.screenWidth,
                         height: SizeConfig.screenHeight,
@@ -180,7 +167,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                               height: kToolbarHeight * 0.8,
                               alignment: Alignment.centerRight,
                               width: SizeConfig.screenWidth * 0.95,
-                              child: (_currentIndex.value != _content.length - 1)
+                              child: (_currentIndex != _content.length - 1)
                                   ? GestureDetector(
                                       onTap: () {
                                         backButtonDispatcher.didPopRoute();
@@ -202,7 +189,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                                 child: Padding(
                                   padding: EdgeInsets.all(
                                       SizeConfig.blockSizeHorizontal * 5),
-                                  child: (_currentIndex.value ==
+                                  child: (_currentIndex ==
                                           _content.length - 1)
                                       ? Container(
                                           width: SizeConfig.screenWidth * 0.3,
@@ -257,8 +244,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                           ],
                         ),
                       ),
-                    );
-                  })
+                    )
             ],
           ),
         ),
@@ -277,12 +263,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                 child : VideoPlayer(_videoController)
                 )
               ):
-            Shimmer.fromColors(
-              baseColor: Colors.black,
-              loop: 10,
-              highlightColor: Colors.white,
-              child: Container()
-            )
+              Lottie.asset('images/lottie/shimmer.json', fit: BoxFit.cover,repeat: true, frameRate: FrameRate(30))
           ),
           Container(
             width: SizeConfig.screenWidth * 0.8,
