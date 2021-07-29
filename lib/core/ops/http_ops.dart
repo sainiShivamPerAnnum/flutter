@@ -163,16 +163,14 @@ class HttpModel extends ChangeNotifier {
     var request = http.Request('POST', Uri.parse(_uri));
     request.bodyFields = {'email': email};
     request.headers.addAll(headers);
-
     try {
       http.StreamedResponse _response = await request.send();
-      log.debug(await _response.stream.bytesToString());
       if (_response.statusCode == 200) {
         try {
           Map<String, dynamic> parsed =
               jsonDecode(await _response.stream.bytesToString());
-          log.debug(parsed['flag']);
-          return (parsed != null && parsed['flag'] != null && parsed['flag']);
+          bool flag = (parsed != null)?parsed['flag']:null;
+          return (flag != null && flag);
         } catch (err) {
           log.error('Failed to parse ticket update count');
           return false;
