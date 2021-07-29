@@ -130,19 +130,6 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                     return ValueListenableBuilder(
                         valueListenable: _currentIndex,
                         builder: (ctx, currIdx, child) {
-                          if(_videoController==null) {
-                            print('in shimmer');
-                            return Shimmer.fromColors(
-                              period: Duration(microseconds: 100),
-                              baseColor: Colors.black,
-                              loop: 10,
-                              highlightColor: Colors.white,
-                              child: Container(
-                                height: SizeConfig.screenHeight*0.6,
-                                width: SizeConfig.screenWidth*0.8,
-                              ),
-                            );
-                          }
                           return _buildWalkthroughPage(currIdx);
                         });
                   }),
@@ -294,10 +281,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
               baseColor: Colors.black,
               loop: 10,
               highlightColor: Colors.white,
-              child: SizedBox(
-                height: SizeConfig.screenHeight*0.6,
-                width: SizeConfig.screenWidth*0.8,
-              ),
+              child: Container()
             )
           ),
           Container(
