@@ -86,7 +86,7 @@ class WeeklyDrawDialog extends StatelessWidget {
         balls.add(_getDrawBall(element.toString()));
       });
     } else {
-      for (int i = 0; i < 5; i++) {
+      for (int i = 0; i < draws.mon.length; i++) {
         balls.add(_getDrawBall('-'));
       }
     }

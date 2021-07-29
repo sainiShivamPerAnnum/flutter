@@ -960,7 +960,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
     DateTime date = DateTime.now();
     return Roulette(
         dailyPickTextList: dailyPickTextList,
-        digits: _getDailyPickData(baseProvider.weeklyDigits, date.weekday));
+        digits: _getDailyPickData(baseProvider.weeklyDigits, date.weekday, 5));
   }
 
   Widget _buildPrizeTabView() {
@@ -1046,19 +1046,19 @@ class _TambolaGameScreen extends State<TambolaHome> {
     );
   }
 
-  List<int> _getDailyPickData(DailyPick draws, int day) {
+  List<int> _getDailyPickData(DailyPick draws, int day, int pickSize) {
     List<int> picks = [];
     if (draws != null && draws.getWeekdayDraws(day - 1) != null) {
       draws.getWeekdayDraws(day - 1).forEach((element) {
         picks.add(element);
       });
     } else {
-      for (int i = 0; i < 5; i++) {
+      for (int i = 0; i < pickSize; i++) {
         picks.add(-1);
       }
     }
-    return [5, 21, 89, 10, 43];
-    //return picks;
+    //return [5, 21, 89, 10, 43, 56];
+    return picks;
   }
 
   int get _activeTambolaCardCount {

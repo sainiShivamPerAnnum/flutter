@@ -231,18 +231,6 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(
               height: 20,
             ),
-            ElevatedButton(
-                onPressed: () async {
-                  if (await httpProvider
-                      .isEmailNotRegistered("daravathveeranna7800@gmail.com")) {
-                    baseProvider.showPositiveAlert(
-                        "Virgin Email", "You can use this email", context);
-                  } else {
-                    baseProvider.showNegativeAlert("Email already registered",
-                        "Please try with another email", context);
-                  }
-                },
-                child: Text("Check"))
           ],
         ),
       ),
