@@ -11,53 +11,48 @@ class Roulette extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: double.infinity,
-        margin: EdgeInsets.symmetric(
-            horizontal: SizeConfig.blockSizeHorizontal * 4),
-        padding: EdgeInsets.all(10),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: Colors.blueGrey[400],
-          boxShadow: [
-            new BoxShadow(
-              color: Colors.black26,
-              offset: Offset.fromDirection(20, 7),
-              blurRadius: 5.0,
-            )
-          ],
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            stops: [0.1, 0.4],
-            colors: [Colors.blueGrey[500], Colors.blueGrey[400]],
-          ),
+      margin:
+          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 4),
+      padding: EdgeInsets.all(10),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Colors.blueGrey[400],
+        boxShadow: [
+          new BoxShadow(
+            color: Colors.black26,
+            offset: Offset.fromDirection(20, 7),
+            blurRadius: 5.0,
+          )
+        ],
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          stops: [0.1, 0.4],
+          colors: [Colors.blueGrey[500], Colors.blueGrey[400]],
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 0, bottom: 3),
-                child: DPTextSlider(
-                  infoList: dailyPickTextList,
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(bottom: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: List.generate(
-                    digits.length,
-                    (index) => Holes(
-                      pick: digits[index],
-                    ),
-                  ),
-                ),
-              )
-            ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 0, bottom: 5),
+            child: DPTextSlider(
+              infoList: dailyPickTextList,
+            ),
           ),
-        ));
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: List.generate(
+              digits.length,
+              (index) => Holes(
+                pick: digits[index],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
 

@@ -1,22 +1,39 @@
+import 'dart:ui';
+
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class WeeklyDrawDialog extends StatelessWidget {
   final Log log = new Log('WeeklyDrawDialog');
   DailyPick weeklyDraws;
+  BaseUtil baseProvider;
 
   WeeklyDrawDialog(this.weeklyDraws);
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    return WillPopScope(
+      onWillPop: () async {
+        backButtonDispatcher.didPopRoute();
+        return true;
+      },
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+        child: Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          elevation: 0.0,
+          backgroundColor: Colors.white70,
+          child: dialogContent(context),
+        ),
       ),
-      elevation: 0.0,
-      backgroundColor: Colors.white70,
-      child: dialogContent(context),
     );
   }
 
@@ -48,14 +65,17 @@ class WeeklyDrawDialog extends StatelessWidget {
       }
     }
 
-    return Padding(
-        padding: EdgeInsets.only(top: 30, bottom: 30),
+    return Container(
+      padding: EdgeInsets.only(top: 30, bottom: 30),
+      child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: colElems,
-        ));
+        ),
+      ),
+    );
   }
 
   String getDayName(int weekday) {
@@ -98,8 +118,8 @@ class WeeklyDrawDialog extends StatelessWidget {
 
   Widget _getDrawBall(String digit) {
     return Container(
-      width: 40,
-      height: 40,
+      width: SizeConfig.screenWidth * 0.09,
+      height: SizeConfig.screenWidth * 0.09,
       decoration: new BoxDecoration(
         color: Colors.white,
         shape: BoxShape.circle,
@@ -107,7 +127,7 @@ class WeeklyDrawDialog extends StatelessWidget {
       child: Center(
           child: Text(
         digit,
-        style: TextStyle(fontSize: 22),
+        style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
         textAlign: TextAlign.center,
       )),
     );

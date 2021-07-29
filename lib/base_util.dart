@@ -52,6 +52,7 @@ class BaseUtil extends ChangeNotifier {
   FirebaseAnalytics baseAnalytics;
   PaymentService _payService;
   List<FeedCard> feedCards;
+  int _dailyPickCount;
 
   ///Tambola global objects
   DailyPick weeklyDigits;
@@ -162,6 +163,18 @@ class BaseUtil extends ChangeNotifier {
         Freshchat.init(freshchatKeys['app_id'], freshchatKeys['app_key'],
             freshchatKeys['app_domain'],
             gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
+      }
+
+      // Fetch Dailypicks count
+      String _dpc = BaseRemoteConfig.remoteConfig
+          .getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT);
+      if (_dpc == null || _dpc.isEmpty) _dpc = '5';
+      _dailyPickCount = 5;
+      try {
+        _dailyPickCount = int.parse(_dpc);
+      } catch (e) {
+        log.error('key parsing failed: ' + e.toString());
+        _dailyPickCount = 5;
       }
     }
   }
@@ -813,4 +826,6 @@ class BaseUtil extends ChangeNotifier {
   set userTicketWallet(UserTicketWallet value) {
     _userTicketWallet = value;
   }
+
+  int get dailyPicksCount => _dailyPickCount;
 }
