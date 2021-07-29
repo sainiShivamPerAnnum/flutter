@@ -18,21 +18,6 @@ class WalkThroughPage extends StatefulWidget {
 }
 
 class _WalkThroughPageState extends State<WalkThroughPage> {
-    final shimmerGradient = LinearGradient(
-    colors: [
-      Color(0xFFEBEBF4),
-      Color(0xFFF4F4F4),
-      Color(0xFFEBEBF4),
-    ],
-    stops: [
-      0.1,
-      0.3,
-      0.4,
-    ],
-    begin: Alignment(-1.0, -0.3),
-    end: Alignment(1.0, 0.3),
-    tileMode: TileMode.clamp,
-  );
   List<String> _videoURLS;
   List<String> _content = [
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
@@ -51,13 +36,13 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
     dbProvider.getWalkthroughUrls().then((value) {
       print(value.length);
       _videoURLS = value;
-      if(_videoURLS.length<=3) {
+      if (_videoURLS.length <= 3) {
         var temp = _videoURLS;
         var value = temp[0];
         _videoURLS.clear();
-        int i =0;
+        int i = 0;
         _videoURLS = [];
-        while(i<3) {
+        while (i < 3) {
           _videoURLS.add(value);
           i++;
         }
@@ -69,7 +54,8 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
 
   void _initController(int index) {
     _videoController = VideoPlayerController.network(_videoURLS[index])
-      ..setLooping(true)..initialize().then((_) {
+      ..setLooping(true)
+      ..initialize().then((_) {
         setState(() {
           _videoController.play();
         });
@@ -96,26 +82,26 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
     stateProvider = Provider.of<AppState>(context, listen: false);
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    if(!isInit) {
+    if (!isInit) {
       init();
     }
     return Scaffold(
       body: SafeArea(
-          child: Stack(
-            children: [
-              Align(
-                child: SvgPicture.asset('images/svgs/walkthrough_ellipse_bg.svg',
-                    height: SizeConfig.screenHeight * 0.2),
-                alignment: Alignment.topLeft,
-              ),
-              Align(
-                child: SvgPicture.asset('images/svgs/walkthrough_ellipse_bg.svg',
-                    height: SizeConfig.screenHeight * 0.2),
-                alignment: Alignment.centerRight,
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: PageView(
+        child: Stack(
+          children: [
+            Align(
+              child: SvgPicture.asset('images/svgs/walkthrough_ellipse_bg.svg',
+                  height: SizeConfig.screenHeight * 0.2),
+              alignment: Alignment.topLeft,
+            ),
+            Align(
+              child: SvgPicture.asset('images/svgs/walkthrough_ellipse_bg.svg',
+                  height: SizeConfig.screenHeight * 0.2),
+              alignment: Alignment.centerRight,
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: PageView(
                   controller: pageController,
                   children: [
                     _buildWalkthroughPage(0),
@@ -128,160 +114,159 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                       _currentIndex = index;
                     });
                   }),
-              ),
-              Align(
+            ),
+            Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                    alignment: Alignment.center,
-                    width: SizeConfig.screenWidth,
-                    height: SizeConfig.blockSizeVertical * 6,
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      separatorBuilder: (ctx, idx) {
-                        return SizedBox(
-                          width: SizeConfig.blockSizeHorizontal * 2,
-                        );
-                      },
-                      itemCount: _content.length,
-                      itemBuilder: (ctx, idx) {
-                        return Container(
-                          width: SizeConfig.blockSizeHorizontal * 3,
-                          height: SizeConfig.blockSizeHorizontal * 3,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: (idx == _currentIndex)
-                                  ? Colors.grey[500]
-                                  : Colors.grey[300]),
-                        );
-                      },
-                    ),)
-              ),
-              SafeArea(
-                      child: Container(
-                        width: SizeConfig.screenWidth,
-                        height: SizeConfig.screenHeight,
-                        child: Stack(
-                          children: [
-                            Container(
-                              height: kToolbarHeight * 0.8,
-                              alignment: Alignment.centerRight,
-                              width: SizeConfig.screenWidth * 0.95,
-                              child: (_currentIndex != _content.length - 1)
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        backButtonDispatcher.didPopRoute();
-                                      },
-                                      child: Text(
-                                        'Skip Tutorial >>',
-                                        style: TextStyle(
-                                            color: UiConstants.primaryColor,
-                                            fontSize:
-                                                SizeConfig.largeTextSize * 0.65),
-                                      ))
-                                  : SizedBox(
-                                      width: 0,
-                                    ),
+                  alignment: Alignment.center,
+                  width: SizeConfig.screenWidth,
+                  height: SizeConfig.blockSizeVertical * 6,
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    separatorBuilder: (ctx, idx) {
+                      return SizedBox(
+                        width: SizeConfig.blockSizeHorizontal * 2,
+                      );
+                    },
+                    itemCount: _content.length,
+                    itemBuilder: (ctx, idx) {
+                      return Container(
+                        width: SizeConfig.blockSizeHorizontal * 3,
+                        height: SizeConfig.blockSizeHorizontal * 3,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: (idx == _currentIndex)
+                                ? Colors.grey[500]
+                                : Colors.grey[300]),
+                      );
+                    },
+                  ),
+                )),
+            SafeArea(
+              child: Container(
+                width: SizeConfig.screenWidth,
+                height: SizeConfig.screenHeight,
+                child: Stack(
+                  children: [
+                    Container(
+                      height: kToolbarHeight * 0.8,
+                      alignment: Alignment.centerRight,
+                      width: SizeConfig.screenWidth * 0.95,
+                      child: (_currentIndex != _content.length - 1)
+                          ? GestureDetector(
+                              onTap: () {
+                                backButtonDispatcher.didPopRoute();
+                              },
+                              child: Text(
+                                'Skip Tutorial >>',
+                                style: TextStyle(
+                                    color: UiConstants.primaryColor,
+                                    fontSize: SizeConfig.largeTextSize * 0.65),
+                              ))
+                          : SizedBox(
+                              width: 0,
                             ),
-                            Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: Padding(
-                                  padding: EdgeInsets.all(
-                                      SizeConfig.blockSizeHorizontal * 5),
-                                  child: (_currentIndex ==
-                                          _content.length - 1)
-                                      ? Container(
-                                          width: SizeConfig.screenWidth * 0.3,
-                                          height:
-                                              SizeConfig.blockSizeVertical * 5,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(100.0),
-                                            gradient: new LinearGradient(
-                                                colors: [
-                                                  UiConstants.primaryColor,
-                                                  UiConstants.primaryColor
-                                                      .withBlue(200),
-                                                ],
-                                                begin: Alignment(0.5, -1.0),
-                                                end: Alignment(0.5, 1.0)),
-                                          ),
-                                          child: new Material(
-                                            child: MaterialButton(
-                                              child: Text(
-                                                'Complete',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .button
-                                                    .copyWith(
-                                                        color: Colors.white,
-                                                        fontSize: SizeConfig
-                                                                .largeTextSize *
-                                                            0.7,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                              ),
-                                              highlightColor: Colors.white30,
-                                              splashColor: Colors.white30,
-                                              onPressed: () {
-                                                stateProvider.currentAction =
-                                                    PageAction(
-                                                        state: PageState.addPage,
-                                                        page:
-                                                            WalkThroughCompletedConfig);
-                                              },
-                                            ),
-                                            color: Colors.transparent,
-                                            borderRadius:
-                                                new BorderRadius.circular(30.0),
-                                          ),
-                                        )
-                                      : SizedBox(
-                                          width: 0,
-                                        ),
-                                )),
-                          ],
-                        ),
-                      ),
-                    )
-            ],
-          ),
+                    ),
+                    Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Padding(
+                          padding: EdgeInsets.all(
+                              SizeConfig.blockSizeHorizontal * 5),
+                          child: (_currentIndex == _content.length - 1)
+                              ? Container(
+                                  width: SizeConfig.screenWidth * 0.3,
+                                  height: SizeConfig.blockSizeVertical * 5,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100.0),
+                                    gradient: new LinearGradient(
+                                        colors: [
+                                          UiConstants.primaryColor,
+                                          UiConstants.primaryColor
+                                              .withBlue(200),
+                                        ],
+                                        begin: Alignment(0.5, -1.0),
+                                        end: Alignment(0.5, 1.0)),
+                                  ),
+                                  child: new Material(
+                                    child: MaterialButton(
+                                      child: Text(
+                                        'Complete',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .button
+                                            .copyWith(
+                                                color: Colors.white,
+                                                fontSize:
+                                                    SizeConfig.largeTextSize *
+                                                        0.7,
+                                                fontWeight: FontWeight.bold),
+                                      ),
+                                      highlightColor: Colors.white30,
+                                      splashColor: Colors.white30,
+                                      onPressed: () {
+                                        stateProvider.currentAction =
+                                            PageAction(
+                                                state: PageState.addPage,
+                                                page:
+                                                    WalkThroughCompletedConfig);
+                                      },
+                                    ),
+                                    color: Colors.transparent,
+                                    borderRadius:
+                                        new BorderRadius.circular(30.0),
+                                  ),
+                                )
+                              : SizedBox(
+                                  width: 0,
+                                ),
+                        )),
+                  ],
+                ),
+              ),
+            )
+          ],
         ),
+      ),
     );
   }
 
   Widget _buildWalkthroughPage(int index) {
     return Column(
       children: [
-          SizedBox(height: kToolbarHeight * 0.8),
-          Expanded(
-            child: (_videoController!=null)?Container(
-            decoration: BoxDecoration(boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.5),spreadRadius: 3, blurRadius: 7)]),
-            child: AspectRatio(
-              aspectRatio: _videoController.value.aspectRatio,
-                child : VideoPlayer(_videoController)
-                )
-              ):
-              Lottie.asset('images/lottie/shimmer.json', fit: BoxFit.cover,repeat: true, frameRate: FrameRate(30))
+        SizedBox(height: kToolbarHeight * 0.8),
+        Expanded(
+            child: (_videoController != null)
+                ? Container(
+                    decoration: BoxDecoration(boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 3,
+                          blurRadius: 7)
+                    ]),
+                    child: AspectRatio(
+                        aspectRatio: _videoController.value.aspectRatio,
+                        child: VideoPlayer(_videoController)))
+                : Lottie.asset('images/lottie/shimmer.json',
+                    fit: BoxFit.cover, repeat: true, frameRate: FrameRate(30))),
+        Container(
+          width: SizeConfig.screenWidth * 0.8,
+          height: SizeConfig.screenHeight * 0.1,
+          margin: EdgeInsets.only(
+            top: SizeConfig.blockSizeHorizontal * 3,
+            bottom: SizeConfig.blockSizeHorizontal * 14,
           ),
-          Container(
-            width: SizeConfig.screenWidth * 0.8,
-            height: SizeConfig.screenHeight * 0.1,
-            margin: EdgeInsets.only(
-              top: SizeConfig.blockSizeHorizontal * 3,
-              bottom: SizeConfig.blockSizeHorizontal * 14,
-            ),
-            child: Center(
-              child: Text(
-                _content[index],
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
-              ),
+          child: Center(
+            child: Text(
+              _content[index],
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
             ),
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 
   @override
