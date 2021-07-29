@@ -61,6 +61,11 @@ class Api {
         .set(data, SetOptions(merge: true));
   }
 
+  Future<DocumentSnapshot> getUserPrtdDocPan(String userId) {
+    ref = _db.collection(Constants.COLN_USERS).doc(userId).collection(Constants.SUBCOLN_USER_PRTD);
+    return ref.doc('pan').get();
+  }
+
   Future<DocumentSnapshot> getUserAugmontDetailDocument(String userId) {
     ref = _db
         .collection(Constants.COLN_USERS)

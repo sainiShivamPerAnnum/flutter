@@ -24,6 +24,7 @@ class Constants {
   static final String SUBCOLN_USER_ICICI_DETAILS = "icici";
   static final String SUBCOLN_USER_AUGMONT_DETAILS = "augmont";
   static final String SUBCOLN_USER_KYC_DETAILS = "kyc";
+  static final String SUBCOLN_USER_PRTD = "prtd";
   static final String SUBCOLN_USER_TXNS = "txns";
   static final String SUBCOLN_USER_WALLET = "wallet";
   static final String SUBCOLN_USER_POLL_RESPONSES = "poll";

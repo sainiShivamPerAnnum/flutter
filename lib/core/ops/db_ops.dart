@@ -81,6 +81,23 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  /// return obj:
+  /// {value: GHexqwio123==, enid:2}
+  Future<Map<String, dynamic>> getEncodedUserPan(String uid) async {
+    try{
+      var doc = await _api.getUserPrtdDocPan(uid);
+      if(doc.exists && doc.data() != null) {
+        String val = doc.data()['value'];
+        int enid = doc.data()['enid'];
+        if(val == null || val.isEmpty || enid == 0) return null;
+        else return {'value': val, 'enid': enid};
+      }
+    }catch(e) {
+      log.error(e.toString());
+      return null;
+    }
+  }
+
   //////////////////ICICI////////////////////////////////
   Future<UserIciciDetail> getUserIciciDetails(String id) async {
     try {
