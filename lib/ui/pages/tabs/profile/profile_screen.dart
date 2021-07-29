@@ -1322,24 +1322,24 @@ class _UserEditProfileCardState extends State<UserEditProfileCard> {
               )
             ],
           ),
-          Row(
-            children: [
-              Text('Enable Security', style: TextStyle(color: Colors.white, fontSize: SizeConfig.mediumTextSize,)),
-              Consumer<BaseUtil>(
-                builder: (ctx, bp, child) {
-                  return Switch(
-                    value: baseProvider.isSecurityEnabled,
-                    onChanged: (bool value){
-                      baseProvider.flipSecurityValue(baseProvider.isSecurityEnabled);
-                    },
-                    activeColor: UiConstants.darkPrimaryColor,
-                    inactiveThumbColor: UiConstants.spinnerColor,
-                    inactiveTrackColor: UiConstants.spinnerColor,
-                  );
-                },
-              )
-            ],
-          )
+          // Row(
+          //   children: [
+          //     Text('Enable Security', style: TextStyle(color: Colors.white, fontSize: SizeConfig.mediumTextSize,)),
+          //     Consumer<BaseUtil>(
+          //       builder: (ctx, bp, child) {
+          //         return Switch(
+          //           value: baseProvider.isSecurityEnabled,
+          //           onChanged: (bool value){
+          //             baseProvider.flipSecurityValue(baseProvider.isSecurityEnabled);
+          //           },
+          //           activeColor: UiConstants.darkPrimaryColor,
+          //           inactiveThumbColor: UiConstants.spinnerColor,
+          //           inactiveTrackColor: UiConstants.spinnerColor,
+          //         );
+          //       },
+          //     )
+          //   ],
+          // )
         ],
       ),
     );

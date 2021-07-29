@@ -266,9 +266,9 @@ class _ContactUsPageState extends State<ContactUsPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Version 1.0.2",
+                              'v${BaseUtil.packageInfo.version}(${BaseUtil.packageInfo.buildNumber})',
                               style: TextStyle(
-                                  fontSize: SizeConfig.mediumTextSize,
+                                  fontSize: SizeConfig.mediumTextSize * 1.2,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.grey),
                             ),
