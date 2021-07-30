@@ -17,6 +17,7 @@ import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/root.dart';
 import 'package:felloapp/ui/pages/tabs/finance/augmont-details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/edit_augmont_bank_details.dart';
+import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
 import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola-cards.dart';
@@ -26,7 +27,6 @@ import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions.dart';
 import 'package:felloapp/ui/pages/tabs/profile/user_profile_details.dart';
 import 'package:felloapp/ui/pages/tabs/profile/verify_email.dart';
-import 'package:felloapp/ui/pages/update_section/update_screen.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -188,9 +188,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.VerifyEmail:
           _addPageData(VerifyEmail(), VerifyEmailPageConfig);
           break;
-        case Pages.UpdateRequired:
-          _addPageData(UpdateRequiredScreen(), UpdateRequiredConfig);
-          break;
         case Pages.ContactUs:
           _addPageData(ContactUsPage(), ContactUsConfig);
           break;
@@ -199,6 +196,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.WalkThroughCompleted:
           _addPageData(WalkThroughCompleted(), WalkThroughCompletedConfig);
+          break;
+        case Pages.YourFunds:
+          _addPageData(YourFunds(), YourFundsConfig);
           break;
         default:
           break;
@@ -319,9 +319,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.VerifyEmail:
         VerifyEmailPageConfig.currentPageAction = action;
         break;
-      case Pages.UpdateRequired:
-        UpdateRequiredConfig.currentPageAction = action;
-        break;
       case Pages.ContactUs:
         ContactUsConfig.currentPageAction = action;
         break;
@@ -330,6 +327,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.WalkThroughCompleted:
         WalkThroughCompletedConfig.currentPageAction = action;
+        break;
+      case Pages.YourFunds:
+        YourFundsConfig.currentPageAction = action;
         break;
 
       default:

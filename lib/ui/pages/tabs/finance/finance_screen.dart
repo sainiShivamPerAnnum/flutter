@@ -34,16 +34,7 @@ class _FinancePageState extends State<FinancePage> {
   GlobalKey _showcaseFooter = GlobalKey();
 
   Future<void> _onFundsRefresh() async {
-    //TODO ADD LOADER
-
-    ///////HEY NIMIT THIS IS TEST CODE TO FETCH GOLD RATES BETWEEN A FROM AND TO DATE////////////////
-    // DateTime dt = new DateTime(2019,1,1);
-    // DateTime dt2 = DateTime.now();
-    // augmontProvider.getGoldRateChart(dt, dt2).then((value) {
-    //   log.debug(value);
-    //   log.debug('tester');
-    // });
-    ////////////////////////////////////////////////////////////////////////////////////
+    //TODO: ADD LOADER
     return dbProvider.getUserFundWallet(baseProvider.myUser.uid).then((aValue) {
       if (aValue != null) {
         baseProvider.userFundWallet = aValue;
@@ -87,9 +78,6 @@ class _FinancePageState extends State<FinancePage> {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
-    // baseProvider.userFundWallet.prizeBalance = 100;
-    // baseProvider.userFundWallet.lockedPrizeBalance = 300;
-    // baseProvider.userFundWallet.iciciBalance = 500;
     if (!baseProvider.isAugmontRealTimeBalanceFetched) {
       _updateAugmontBalance();
       baseProvider.isAugmontRealTimeBalanceFetched = true;
@@ -115,13 +103,13 @@ class _FinancePageState extends State<FinancePage> {
             borderRadius: SizeConfig.homeViewBorder,
             child: Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenHeight * 0.016),
+                  horizontal: SizeConfig.blockSizeHorizontal * 5),
               child: CustomScrollView(
                 slivers: [
                   SliverList(
                       delegate: SliverChildListDelegate([
                     Container(
-                      height: kToolbarHeight * 1.4,
+                      height: kToolbarHeight,
                     ),
                     BaseUtil.buildShowcaseWrapper(_showcaseHeader,
                         'Your savings and investments will show up here. The balances are based on live market rates.',
@@ -172,17 +160,6 @@ class _FinancePageState extends State<FinancePage> {
                             isAvailable: (AugmontDetailsPage.checkAugmontStatus(
                                     baseProvider.myUser) !=
                                 AugmontDetailsPage.STATUS_UNAVAILABLE),
-                            // onPressed: () async {
-                            //   bool res = await Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder: (ctx) => AugmontDetailsPage(),
-                            //     ),
-                            //   );
-                            //   if (res) {
-                            //     setState(() {});
-                            //   }
-                            // },
                             onPressed: () => appState.currentAction =
                                 PageAction(
                                     state: PageState.addPage,

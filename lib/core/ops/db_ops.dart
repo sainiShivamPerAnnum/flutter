@@ -826,6 +826,15 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<List<String>> getWalkthroughUrls() async {
+    try {
+      return await _api.getWalkthroughFiles();
+    } catch(e) {
+      log.error('Failed to fetch walkthrough files');
+      return null;
+    }
+  }
+
   Future<bool> submitFeedback(String userId, String fdbk) async {
     try {
       Map<String, dynamic> fdbkMap = {

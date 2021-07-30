@@ -1,7 +1,6 @@
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -21,40 +20,27 @@ class ContactUsPage extends StatefulWidget {
   _ContactUsPageState createState() => _ContactUsPageState();
 }
 
-class _ContactUsPageState extends State<ContactUsPage>
-    with TickerProviderStateMixin {
+class _ContactUsPageState extends State<ContactUsPage> {
   BaseUtil baseProvider;
   AppState appState;
   DBModel dbProvider;
   TextEditingController _requestCallPhoneController = TextEditingController();
+  bool isInit = false;
+
+  void init() {
+    _requestCallPhoneController.text = baseProvider.myUser.mobile;
+    isInit = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    if(!isInit) {
+      init();
+    }
     return Scaffold(
-      // appBar: AppBar(
-      //   leading: IconButton(
-      //     icon: Icon(
-      //       Icons.arrow_back_rounded,
-      //       color: Colors.white,
-      //     ),
-      //     onPressed: () {
-      //       Navigator.pop(context);
-      //       // backButtonDispatcher.didPopRoute();
-      //     },
-      //   ),
-      //   elevation: 1.0,
-      //   backgroundColor: UiConstants.primaryColor,
-      //   iconTheme: IconThemeData(
-      //     color: UiConstants.accentColor, //change your color here
-      //   ),
-      //   title: Text('Support',
-      //       style: GoogleFonts.montserrat(
-      //           color: Colors.white,
-      //           fontWeight: FontWeight.w500,
-      //           fontSize: SizeConfig.largeTextSize)),
-      // ),
       body: Column(
         children: [
           Container(
@@ -109,14 +95,22 @@ class _ContactUsPageState extends State<ContactUsPage>
                                 ),
                               ),
                             ),
-                            // Text(
-                            //   "( 24 x 7 )",
-                            //   style: GoogleFonts.montserrat(
-                            //     fontWeight: FontWeight.w300,
-                            //     color: Colors.white,
-                            //   ),
-                            // )
-                          ],
+                          ),
+                          Text(
+                            "( 24 x 7 )",
+                            style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
+                      Text(
+                        "We'd love to assist you with any kind of problem you face in the app.",
+                        style: TextStyle(
+                          color: Colors.white,
+                          height: 1.4,
+                          fontSize: SizeConfig.mediumTextSize,
                         ),
                         // Text(
                         //   "24 x 7",
@@ -218,7 +212,11 @@ class _ContactUsPageState extends State<ContactUsPage>
                     ),
                     onTap: () {
                       HapticFeedback.vibrate();
-                      _launchEmail();
+                      try {
+                        _launchEmail();
+                      } catch(e) {
+                        baseProvider.showNegativeAlert('Error', 'Something went wrong, could not launch email right now. Please try again later', context);
+                      }
                     },
                   ),
                   ListTile(
@@ -279,6 +277,47 @@ class _ContactUsPageState extends State<ContactUsPage>
                           state: PageState.addPage, page: FaqPageConfig);
                     },
                   ),
+                  Container(
+                    height: SizeConfig.screenHeight * 0.3,
+                    width: SizeConfig.screenWidth,
+                    alignment: Alignment.center,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "images/fello-short-logo.png",
+                          color: Colors.grey,
+                          width: SizeConfig.cardTitleTextSize,
+                          height: SizeConfig.cardTitleTextSize,
+                        ),
+                        SizedBox(width: 4),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'v${BaseUtil.packageInfo.version}(${BaseUtil.packageInfo.buildNumber})',
+                              style: TextStyle(
+                                  fontSize: SizeConfig.mediumTextSize * 1.2,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              "Made for India ❤",
+                              style: TextStyle(
+                                fontSize: SizeConfig.smallTextSize,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
@@ -393,7 +432,7 @@ class _ContactUsPageState extends State<ContactUsPage>
                                 });
                               },
                               child: Container(
-                                width: SizeConfig.screenWidth * 0.25,
+                                width: MediaQuery.of(context).size.width*0.2,
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: UiConstants.primaryColor),
@@ -426,7 +465,7 @@ class _ContactUsPageState extends State<ContactUsPage>
                                 });
                               },
                               child: Container(
-                                width: SizeConfig.screenWidth * 0.25,
+                                width: MediaQuery.of(context).size.width*0.2,
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: UiConstants.primaryColor),
@@ -459,7 +498,7 @@ class _ContactUsPageState extends State<ContactUsPage>
                                 });
                               },
                               child: Container(
-                                width: SizeConfig.screenWidth * 0.25,
+                                width: MediaQuery.of(context).size.width*0.2,
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: UiConstants.primaryColor),

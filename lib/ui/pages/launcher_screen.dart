@@ -12,7 +12,6 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/breathing_text_widget.dart';
 import 'package:felloapp/ui/elements/logo_canvas.dart';
 import 'package:felloapp/ui/elements/logo_container.dart';
-import 'package:felloapp/ui/pages/update_section/update_screen.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +63,6 @@ class LogoFadeIn extends State<SplashScreen> {
     await baseProvider.init();
     await fcmProvider.setupFcm();
     _timer3.cancel();
-
     ///TODO tbt check if an important update is pending
     //bool isThereBreakingUpdate = await checkBreakingUpdate();
     // isThereBreakingUpdate = true;
@@ -110,21 +108,27 @@ class LogoFadeIn extends State<SplashScreen> {
     }
   }
 
-  Future<bool> checkBreakingUpdate() async {
-    String currentBuild = BaseUtil.packageInfo.buildNumber;
-    print('Current Build $currentBuild');
-    String minBuild = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER);
-    print('Min Build Required $minBuild');
-    // minBuild = "0";
+  Future<bool> authenticateDevice() async {
+    bool _res = false;
     try {
-      if (int.parse(currentBuild) < int.parse(minBuild)) {
-        return true;
-      }
-      return false;
-    } catch (e) {
-      return true;
+      _res = await deviceUnlock.request(
+          localizedReason: 'Please authenticate in order to proceed');
+    } on DeviceUnlockUnavailable {
+      baseProvider.showPositiveAlert(
+          'No Device Authentication Found',
+          'Logging in, please enable device security to add lock',
+          context);
+      _res = true;
+    } on RequestInProgress {
+      _res = false;
+      print('Request in progress');
+    } catch(e) {
+      baseProvider.showNegativeAlert(
+          'Authentication Failed',
+          'Please restart the application to try again.',
+          context);
     }
+    return _res;
   }
 
   @override
