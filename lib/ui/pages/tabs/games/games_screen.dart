@@ -162,14 +162,13 @@ class _GamePageState extends State<GamePage> {
                           InkWell(
                             onTap: () async{
                               HapticFeedback.vibrate();
-                              bool flag = await httpProvider.isEmailNotRegistered(baseProvider.myUser.uid, 'shouryalala@gmail.com');
-                              print(flag);
-                              // showDialog(
-                              //   context: context,
-                              //   builder: (BuildContext context) =>
-                              //       TicketDetailsDialog(
-                              //           baseProvider.userTicketWallet),
-                              // );
+                              AppState.screenStack.add(ScreenItem.dialog);
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    TicketDetailsDialog(
+                                        baseProvider.userTicketWallet),
+                              );
                             },
                             child: BaseUtil.buildShowcaseWrapper(
                               _showcaseHeader,

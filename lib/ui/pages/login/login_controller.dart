@@ -437,6 +437,7 @@ class _LoginControllerState extends State<LoginController>
                   'Invalid details', 'Please enter all the fields', context);
               return false;
             }
+            FocusScope.of(_nameScreenKey.currentContext).unfocus();
             baseProvider.isLoginNextInProgress = true;
             setState(() {});
             if (baseProvider.myUser == null) {
@@ -471,11 +472,14 @@ class _LoginControllerState extends State<LoginController>
 
             bool isInv = _nameScreenKey.currentState.isInvested;
             if (isInv != null) baseProvider.myUser.isInvested = isInv;
-            baseProvider.isLoginNextInProgress = false;
-            FocusScope.of(_nameScreenKey.currentContext).unfocus();
-            setState(() {});
-            _controller.animateToPage(Username.index,
-                duration: Duration(seconds: 1), curve: Curves.easeInToLinear);
+
+            Future.delayed(Duration(seconds: 1), () {
+              baseProvider.isLoginNextInProgress = false;
+              setState(() {});
+            }).then((value) {
+              _controller.animateToPage(Username.index,
+                  duration: Duration(seconds: 1), curve: Curves.easeInToLinear);
+            });
           }
           break;
         }

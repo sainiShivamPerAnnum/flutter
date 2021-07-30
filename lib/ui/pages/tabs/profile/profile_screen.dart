@@ -541,13 +541,6 @@ class ShareCard extends StatelessWidget {
                               return Wrap(
                                 children: [
                                   Container(
-                                    // margin: EdgeInsets.all(
-                                    //     SizeConfig.blockSizeHorizontal * 2),
-                                    // decoration: BoxDecoration(
-                                    //   borderRadius: BorderRadius.circular(16),
-                                    //   color: Colors.white,
-                                    // ),
-                                    height: SizeConfig.screenHeight * 0.48,
                                     child: Column(
                                       children: [
                                         Container(
@@ -572,7 +565,7 @@ class ShareCard extends StatelessWidget {
                                                 child: FittedBox(
                                                   fit: BoxFit.cover,
                                                   child: Text(
-                                                    "How to make a successful Referral",
+                                                    "How to make a successful Referral ",
                                                     textAlign: TextAlign.center,
                                                     maxLines: 2,
                                                     style: GoogleFonts
@@ -603,90 +596,100 @@ class ShareCard extends StatelessWidget {
                                           ),
                                         ),
                                         Divider(),
-                                        Expanded(
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: SizeConfig
-                                                      .blockSizeHorizontal *
-                                                  5,
-                                            ),
-                                            child: Stack(
-                                              children: [
-                                                Positioned(
-                                                  bottom: 0,
-                                                  right: -30,
-                                                  child: Opacity(
-                                                    opacity: 1,
-                                                    child: Image.asset(
-                                                      "images/share-bottomsheet.png",
-                                                      width: SizeConfig
-                                                              .screenWidth *
-                                                          0.55,
-                                                    ),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                                SizeConfig.blockSizeHorizontal *
+                                                    5,
+                                          ),
+                                          child: Stack(
+                                            children: [
+                                              Positioned(
+                                                bottom: 0,
+                                                right: -30,
+                                                child: Opacity(
+                                                  opacity: 0.6,
+                                                  child: Image.asset(
+                                                    "images/share-bottomsheet.png",
+                                                    width:
+                                                        SizeConfig.screenWidth *
+                                                            0.45,
                                                   ),
                                                 ),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    referralTile(
-                                                      "Share your personalised link to your friends and family",
-                                                      0,
-                                                    ),
-                                                    referralTile(
-                                                        "Prize balance gets credited as soon as they sign up.",
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  referralTile(
+                                                    "Share your personalised link to your friends and family",
+                                                    0,
+                                                  ),
+                                                  referralTile(
+                                                      "Prize balance gets credited as soon as they sign up.",
+                                                      SizeConfig.screenWidth *
+                                                          0.1),
+                                                  referralTile(
+                                                      "Prize balance gets unlocked when they make their first investment.",
+                                                      SizeConfig.screenWidth *
+                                                          0.2),
+                                                  referralTile(
+                                                      "you can invest or withdraw that balance afterwards",
+                                                      SizeConfig.screenWidth *
+                                                          0.3),
+                                                  SizedBox(height: 20),
+                                                  Container(
+                                                    width:
                                                         SizeConfig.screenWidth *
-                                                            0.1),
-                                                    referralTile(
-                                                        "Prize balance gets unlocked when they make their first investment.",
-                                                        SizeConfig.screenWidth *
-                                                            0.2),
-                                                    referralTile(
-                                                        "you can invest or withdraw that balance afterwards",
-                                                        SizeConfig.screenWidth *
-                                                            0.3),
-                                                    SizedBox(height: 24),
-                                                    Container(
-                                                      width: SizeConfig
-                                                              .screenWidth *
-                                                          0.5,
-                                                      child: Text(
-                                                        "Want to earn more with Fello ??",
-                                                        style: GoogleFonts
-                                                            .montserrat(
-                                                                color: Colors
-                                                                    .grey),
-                                                      ),
-                                                    ),
-                                                    InkWell(
-                                                      onTap: () async {
-                                                        String url =
-                                                            "https://www.fello.in";
-                                                        if (await canLaunch(
-                                                            url)) {
-                                                          launchUrl(url);
-                                                        } else {
-                                                          backButtonDispatcher
-                                                              .didPopRoute();
-                                                        }
-                                                      },
-                                                      child: Text(
-                                                        "Visit our site",
-                                                        style: GoogleFonts
-                                                            .montserrat(
-                                                          color: UiConstants
-                                                              .primaryColor,
+                                                            0.5,
+                                                    height: SizeConfig
+                                                            .screenHeight *
+                                                        0.1,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          "Want to earn more with Fello ??",
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                                  color: Colors
+                                                                      .grey),
                                                         ),
-                                                      ),
+                                                        InkWell(
+                                                          onTap: () async {
+                                                            String url =
+                                                                "https://www.fello.in";
+                                                            if (await canLaunch(
+                                                                url)) {
+                                                              launchUrl(url);
+                                                            } else {
+                                                              backButtonDispatcher
+                                                                  .didPopRoute();
+                                                            }
+                                                          },
+                                                          child: Text(
+                                                            "Visit our site",
+                                                            style: GoogleFonts
+                                                                .montserrat(
+                                                              color: UiConstants
+                                                                  .primaryColor,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    Spacer()
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        SizedBox(height: 8),
+                                        SizedBox(height: 20),
                                       ],
                                     ),
                                   )
