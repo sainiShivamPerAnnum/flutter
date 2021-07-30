@@ -890,11 +890,12 @@ class _CloseCardState extends State<CloseCard> {
       if (!await directory.exists()) await directory.create(recursive: true);
       if (await directory.exists()) {
         File imageFile = new File('${directory.path}/fello-reward-$dt.png');
+        print('image path : ${imageFile.path}');
         await imageFile.writeAsBytes(image);
         if (Platform.isAndroid) {
           ImageGallerySaver.saveFile(imageFile.path);
         } else {
-          ImageGallerySaver.saveFile(imageFile.path, isReturnPathOfIOS: true);
+          ImageGallerySaver.saveFile(imageFile.path);
         }
         backButtonDispatcher.didPopRoute();
         baseProvider.showPositiveAlert("Saved Successfulyy",
