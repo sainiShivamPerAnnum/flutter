@@ -91,7 +91,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     payService = Provider.of<PaymentService>(context, listen: false);
 
     return Scaffold(
-      appBar: BaseUtil.getAppBar(context),
+      appBar: BaseUtil.getAppBar(context, null),
       body: Column(
         children: [
           Expanded(
@@ -104,7 +104,8 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                     FundGraph(),
                     FundDetailsTable(),
                     ProfitCalculator(),
-                    FAQCard(Assets.mfFaqHeaders, Assets.mfFaqAnswers),
+                    FAQCard(
+                        Assets.mfFaqHeaders, Assets.mfFaqAnswers, Colors.white),
                     _buildBetaWithdrawButton(),
                   ],
                 ),

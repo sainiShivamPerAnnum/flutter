@@ -23,8 +23,8 @@ class FelloParser extends RouteInformationParser<PageConfiguration> {
         return RootPageConfig;
       case OnboardPath:
         return OnboardPageConfig;
-      case EditProfilePath:
-        return EditProfileConfig;
+      case UserProfileDetailsPath:
+        return UserProfileDetailsConfig;
       default:
         return SplashPageConfig;
     }
@@ -41,8 +41,8 @@ class FelloParser extends RouteInformationParser<PageConfiguration> {
         return const RouteInformation(location: RootPath);
       case Pages.Onboard:
         return const RouteInformation(location: OnboardPath);
-      case Pages.EditProfile:
-        return const RouteInformation(location: EditProfilePath);
+      case Pages.UserProfileDetails:
+        return const RouteInformation(location: UserProfileDetailsPath);
       default:
         return const RouteInformation(location: SplashPath);
     }

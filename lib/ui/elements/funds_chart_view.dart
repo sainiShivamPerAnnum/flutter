@@ -8,6 +8,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/Fold-Card/card.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
+import 'package:felloapp/util/fundPalettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +33,18 @@ class FundsChartView extends StatefulWidget {
 
 class _FundsChartViewState extends State<FundsChartView> {
   AppState appState;
+  final List<Color> colorListLight = [
+    UiConstants.primaryColor,
+    augmontGoldPalette.primaryColor,
+    Color(0xff03256C),
+  ];
+
+  final List<Color> colorList = [
+    UiConstants.primaryColor,
+    augmontGoldPalette.primaryColor,
+    Color(0xff2e89ba),
+    Colors.blueGrey,
+  ];
 
   List<bool> getHighlightStatus() {
     List<bool> shouldHighlight = [];
@@ -313,8 +326,8 @@ class Legend extends StatelessWidget {
                       title,
                       style: (titleTextStyle == null)
                           ? TextStyle(
-                              fontSize: SizeConfig.smallTextSize,
-                              color: Colors.grey,
+                              fontSize: SizeConfig.smallTextSize * 1.2,
+                              color: UiConstants.textColor,
                             )
                           : titleTextStyle,
                     ),

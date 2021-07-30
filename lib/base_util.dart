@@ -20,6 +20,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -51,6 +52,7 @@ class BaseUtil extends ChangeNotifier {
   FirebaseAnalytics baseAnalytics;
   PaymentService _payService;
   List<FeedCard> feedCards;
+  int _dailyPickCount;
 
   ///Tambola global objects
   DailyPick weeklyDigits;
@@ -118,19 +120,16 @@ class BaseUtil extends ChangeNotifier {
   static int atomicTicketGenerationLeftCount = 0;
   static int atomicTicketDeletionLeftCount = 0;
 
-  // app security variables
-  bool isSecurityEnabled = false;
-
   Future init() async {
     print('inside init base util');
-    //security
-    isSecurityEnabled = await getSecurityValue();
+
     ///analytics
     BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
     //remote config for various remote variables
     print('base util remote config');
     await BaseRemoteConfig.init();
+
     ///fetch on-boarding status and User details
     firebaseUser = FirebaseAuth.instance.currentUser;
     if (firebaseUser != null) {
@@ -154,7 +153,7 @@ class BaseUtil extends ChangeNotifier {
       _userCreationTimestamp = firebaseUser.metadata.creationTime;
       //check if there are any icici deposits txns in process
       _payService = locator<PaymentService>();
-
+      augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
       //TODO not required for now
       // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
 
@@ -164,6 +163,18 @@ class BaseUtil extends ChangeNotifier {
         Freshchat.init(freshchatKeys['app_id'], freshchatKeys['app_key'],
             freshchatKeys['app_domain'],
             gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
+      }
+
+      // Fetch Dailypicks count
+      String _dpc = BaseRemoteConfig.remoteConfig
+          .getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT);
+      if (_dpc == null || _dpc.isEmpty) _dpc = '5';
+      _dailyPickCount = 5;
+      try {
+        _dailyPickCount = int.parse(_dpc);
+      } catch (e) {
+        log.error('key parsing failed: ' + e.toString());
+        _dailyPickCount = 5;
       }
     }
   }
@@ -201,7 +212,7 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  static Widget getAppBar(BuildContext context) {
+  static Widget getAppBar(BuildContext context, String title) {
     return AppBar(
       leading: IconButton(
         icon: Icon(
@@ -212,39 +223,16 @@ class BaseUtil extends ChangeNotifier {
           backButtonDispatcher.didPopRoute();
         },
       ),
-
       elevation: 1.0,
       backgroundColor: UiConstants.primaryColor,
       iconTheme: IconThemeData(
         color: UiConstants.accentColor, //change your color here
       ),
-      title: Text('${Constants.APP_NAME}',
+      title: Text(title ?? '${Constants.APP_NAME}',
           style: GoogleFonts.montserrat(
               color: Colors.white,
               fontWeight: FontWeight.w500,
               fontSize: SizeConfig.largeTextSize)),
-      // bottom: PreferredSize(
-      //     child: Container(
-      //         color: Colors.blueGrey[100],
-      //         height: 25.0,
-      //         child: Padding(
-      //             padding:
-      //                 EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
-      //             child: Row(
-      //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //               children: [
-      //                 Text(
-      //                   'We are currently in Beta',
-      //                   style: TextStyle(color: Colors.black54),
-      //                 ),
-      //                 Icon(
-      //                   Icons.info_outline,
-      //                   size: 20,
-      //                   color: Colors.black54,
-      //                 )
-      //               ],
-      //             ))),
-      //     preferredSize: Size.fromHeight(25.0)),
     );
   }
 
@@ -413,7 +401,7 @@ class BaseUtil extends ChangeNotifier {
       _userCreationTimestamp = null;
 
       isOtpResendCount = 0;
-
+      delegate.appState.setCurrentTabIndex = 0;
       isUserOnboarded = false;
       isLoginNextInProgress = false;
       isEditProfileNextInProgress = false;
@@ -693,37 +681,46 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void flipSecurityValue(bool value) {
-    this.isSecurityEnabled = !value;
-    saveSecurityValue(this.isSecurityEnabled);
+    _myUser.userPreferences.setPreference(Preferences.APPLOCK, (value) ? 1 : 0);
+    // saveSecurityValue(this.isSecurityEnabled);
+    AppState.unsavedPrefs = true;
     notifyListeners();
   }
 
-  void saveSecurityValue(bool newValue) async {
-    try {
-      SharedPreferences _prefs = await SharedPreferences.getInstance();
-      _prefs.setBool("securityEnabled", newValue);
-    } catch(e) {
-      log.debug("Error while saving security enabled value");
-    }
+  void toggleTambolaNotificationStatus(bool value) {
+    _myUser.userPreferences
+        .setPreference(Preferences.TAMBOLANOTIFICATIONS, (value) ? 1 : 0);
+    AppState.unsavedPrefs = true;
+    notifyListeners();
   }
 
-  Future<bool> getSecurityValue() async {
-    try {
-      SharedPreferences _prefs = await SharedPreferences.getInstance();
-      if(_prefs.containsKey("securityEnabled")) {
-        bool _savedSecurityValue = _prefs.getBool("securityEnabled");
-        if(_savedSecurityValue!=null) {
-          return _savedSecurityValue;
-        }
-        else {
-          return false;
-        }
-      } 
-    } catch(e) {
-      log.debug("Error while retrieving security enabled value");
-    }
-    return false;
-  }
+  //Saving and fetching app lock user preference
+  // void saveSecurityValue(bool newValue) async {
+  //   try {
+  //     SharedPreferences _prefs = await SharedPreferences.getInstance();
+  //     _prefs.setBool("securityEnabled", newValue);
+  //   } catch(e) {
+  //     log.debug("Error while saving security enabled value");
+  //   }
+  // }
+  //
+  // Future<bool> getSecurityValue() async {
+  //   try {
+  //     SharedPreferences _prefs = await SharedPreferences.getInstance();
+  //     if(_prefs.containsKey("securityEnabled")) {
+  //       bool _savedSecurityValue = _prefs.getBool("securityEnabled");
+  //       if(_savedSecurityValue!=null) {
+  //         return _savedSecurityValue;
+  //       }
+  //       else {
+  //         return false;
+  //       }
+  //     }
+  //   } catch(e) {
+  //     log.debug("Error while retrieving security enabled value");
+  //   }
+  //   return false;
+  // }
 
   static String getMonthName(int monthNum) {
     switch (monthNum) {
@@ -809,6 +806,7 @@ class BaseUtil extends ChangeNotifier {
 
   set augmontDetail(UserAugmontDetail value) {
     _augmontDetail = value;
+    notifyListeners();
   }
 
   bool isSignedIn() => (firebaseUser != null && firebaseUser.uid != null);
@@ -828,4 +826,6 @@ class BaseUtil extends ChangeNotifier {
   set userTicketWallet(UserTicketWallet value) {
     _userTicketWallet = value;
   }
+
+  int get dailyPicksCount => _dailyPickCount;
 }

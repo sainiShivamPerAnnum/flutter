@@ -2,8 +2,11 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
+import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -12,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FcmListener extends ChangeNotifier {
   Log log = new Log("FcmListener");
@@ -20,7 +24,8 @@ class FcmListener extends ChangeNotifier {
   DBModel _dbModel = locator<DBModel>();
   FcmHandler _handler = locator<FcmHandler>();
   FirebaseMessaging _fcm;
-
+  bool _tambolaDrawNotifications = true; //TODO
+  bool isTambolaNotificationLoading = false;
   // /// Create a [AndroidNotificationChannel] for heads up notifications
   // static const AndroidNotificationChannel _androidChannel =
   //     AndroidNotificationChannel(
@@ -112,6 +117,11 @@ class FcmListener extends ChangeNotifier {
         (suffix.isEmpty) ? subId.value() : '${subId.value()}$suffix');
   }
 
+  Future removeSubscription(FcmTopic subId, {String suffix = ''}) async {
+    await _fcm.unsubscribeFromTopic(
+        (suffix.isEmpty) ? subId.value() : '${subId.value()}$suffix');
+  }
+
   _manageInitSubscriptions() async {
     if (_baseUtil == null) return;
     if (_baseUtil.isOldCustomer()) {
@@ -125,7 +135,11 @@ class FcmListener extends ChangeNotifier {
     }
 
     if (_baseUtil.userTicketWallet != null &&
-        _baseUtil.userTicketWallet.getActiveTickets() > 0) {
+        _baseUtil.userTicketWallet.getActiveTickets() > 0 &&
+        _baseUtil.myUser.userPreferences
+                .getPreference(Preferences.TAMBOLANOTIFICATIONS) ==
+            1) {
+      // if (_tambolaDrawNotifications) {
       addSubscription(FcmTopic.TAMBOLAPLAYER);
     }
 
@@ -196,5 +210,31 @@ class FcmListener extends ChangeNotifier {
       //       _baseUtil.myUser); //user cache has client token field available
     }
     return flag;
+  }
+
+// TAMBOLA DRAW NOTIFICATION STATUS HANDLE CODE
+
+  // SAVE STATUS TO SHARED PREFS
+  saveTambolaDrawNotification(bool val) async {}
+
+  // TOGGLE THE SUBSCRIPTION
+  Future toggleTambolaDrawNotificationStatus(bool val) async {
+    // isTambolaNotificationLoading = true;
+    // notifyListeners();
+    print("Draw notification val : $val");
+    try {
+      if (val) {
+        await addSubscription(FcmTopic.TAMBOLAPLAYER);
+        print("subscription added");
+      } else {
+        await removeSubscription(FcmTopic.TAMBOLAPLAYER);
+        print("subscription removed");
+      }
+      _baseUtil.toggleTambolaNotificationStatus(val);
+    } catch (e) {
+      log.error(e.toString());
+      _baseUtil.showNegativeAlert(
+          "Snap!", "Please try again", delegate.navigatorKey.currentContext);
+    }
   }
 }

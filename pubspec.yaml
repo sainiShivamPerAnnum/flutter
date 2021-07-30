@@ -43,6 +43,7 @@ dependencies:
   device_unlock : ^1.1.0
   # local_auth : ^1.1.6
   in_app_update: ^2.0.0
+  image_gallery_saver: ^1.6.9
   #ui packages
   camera: ^0.7.0+2
   cached_network_image: ^2.0.0

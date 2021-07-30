@@ -15,6 +15,7 @@ import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_completed.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/root.dart';
+import 'package:felloapp/ui/pages/tabs/finance/augmont-details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
 import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
@@ -24,6 +25,7 @@ import 'package:felloapp/ui/pages/tabs/games/tambola-home.dart';
 import 'package:felloapp/ui/pages/tabs/profile/claim_username.dart';
 import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions.dart';
+import 'package:felloapp/ui/pages/tabs/profile/user_profile_details.dart';
 import 'package:felloapp/ui/pages/tabs/profile/verify_email.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:flutter/cupertino.dart';
@@ -144,9 +146,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Onboard:
           _addPageData(GetStartedPage(), OnboardPageConfig);
           break;
-        // case Pages.EditProfile:
-        //   _addPageData(EditProfile(), EditProfileConfig);
-        //   break;
+        case Pages.UserProfileDetails:
+          _addPageData(UserProfileDetails(), UserProfileDetailsConfig);
+          break;
         case Pages.MfDetails:
           _addPageData(MFDetailsPage(), MfDetailsPageConfig);
           break;
@@ -269,8 +271,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.Root:
         RootPageConfig.currentPageAction = action;
         break;
-      case Pages.EditProfile:
-        EditProfileConfig.currentPageAction = action;
+      case Pages.UserProfileDetails:
+        UserProfileDetailsConfig.currentPageAction = action;
         break;
       case Pages.MfDetails:
         MfDetailsPageConfig.currentPageAction = action;
@@ -455,7 +457,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         appState.setCurrentTabIndex = 3;
         break;
       case 'editProfile':
-        pageConfiguration = EditProfileConfig;
+        pageConfiguration = UserProfileDetailsConfig;
         break;
       case 'mfDetails':
         pageConfiguration = MfDetailsPageConfig;
@@ -499,75 +501,3 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     }
   }
 }
-
-// Push screen with data
-// pushWidget(Details(int.parse(uri.pathSegments[1])), DetailsPageConfig);
-
-//  else if (uri.pathSegments.length == 1) {
-//   final path = uri.pathSegments[0];
-//   switch (path) {
-//     case 'splash':
-//       replaceAll(SplashPageConfig);
-//       showDialog(
-//           context: navigatorKey.currentContext,
-//           builder: (ctx) => GuideDialog());
-//       break;
-//     case 'login':
-//       replaceAll(LoginPageConfig);
-//       break;
-//     case 'onboard':
-//       replaceAll(OnboardPageConfig);
-//       break;
-//     case 'root':
-//       replaceAll(RootPageConfig);
-//       break;
-//     case 'editProfile':
-//       setPath([
-//         _createPage(Root(), RootPageConfig),
-//         _createPage(EditProfile(), EditProfileConfig),
-//       ]);
-//       break;
-//     case 'mfDetails':
-//       setPath([
-//         _createPage(Root(), RootPageConfig),
-//         _createPage(MFDetailsPage(), EditProfileConfig),
-//       ]);
-//       break;
-//     case 'augDetails':
-//       setPath([
-//         _createPage(Root(), RootPageConfig),
-//         _createPage(AugmontDetailsPage(), EditProfileConfig),
-//       ]);
-//       break;
-//     case 'tran':
-//       setPath([
-//         _createPage(Root(), RootPageConfig),
-//         _createPage(Transactions(), EditProfileConfig),
-//       ]);
-//       break;
-//     case 'referral':
-//       setPath([
-//         _createPage(Root(), RootPageConfig),
-//         _createPage(ReferralsPage(), EditProfileConfig),
-//       ]);
-//       break;
-//     case 'tambolaHome':
-//       setPath([
-//         _createPage(Root(), RootPageConfig),
-//         _createPage(TambolaHome(), EditProfileConfig),
-//       ]);
-//       break;
-//     case 'tnc':
-//       setPath([
-//         _createPage(Root(), RootPageConfig),
-//         _createPage(TnC(), TncPageConfig),
-//       ]);
-//       break;
-//     case 'faq':
-//       setPath([
-//         _createPage(Root(), RootPageConfig),
-//         _createPage(FAQPage(), FaqPageConfig),
-//       ]);
-//       break;
-//   }
-// }

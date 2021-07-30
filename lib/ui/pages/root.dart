@@ -8,8 +8,9 @@ import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
+import 'package:felloapp/ui/modals/security_modal_sheet.dart';
+import 'package:felloapp/ui/modals/walkthrough_modal_sheet.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
@@ -70,6 +71,9 @@ class _RootState extends State<Root> {
           baseProvider.show_game_tutorial = false;
           _navBarItems[1].showFocus = false;
           lclDbProvider.saveHomeTutorialComplete = true;
+
+          _showSecurityBottomSheet();
+
           setState(() {});
         },
       ),
@@ -105,14 +109,6 @@ class _RootState extends State<Root> {
     }
   }
 
-  // String getBurgerImage() {
-  //   if (appState.getCurrentTabIndex == 0 || appState.getCurrentTabIndex == 1) {
-  //     return "images/menu-white.png";
-  //   } else {
-  //     return "images/menu.png";
-  //   }
-  // }
-
   _initAdhocNotifications() {
     if (fcmProvider != null && baseProvider != null) {
       fcmProvider.addIncomingMessageListener((valueMap) {
@@ -134,114 +130,11 @@ class _RootState extends State<Root> {
                 topRight: Radius.circular(30.0))),
         backgroundColor: UiConstants.bottomNavBarColor,
         builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.only(
-                top: 25.0, bottom: 25.0, left: 45.0, right: 45.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: SizeConfig.blockSizeVertical * 1.5,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          'Security',
-                          style: Theme.of(context).textTheme.headline5.copyWith(
-                              color: UiConstants.primaryColor,
-                              fontSize: SizeConfig.largeTextSize * 1.2,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: SizeConfig.blockSizeVertical * 2.5,
-                ),
-                Text(
-                    'We recommend you enable security to keep your investments safe.\n\nYou can change this later in the profile section.',
-                    style: TextStyle(
-                        color: UiConstants.textColor,
-                        fontSize: SizeConfig.mediumTextSize * 1.4)),
-                SizedBox(height: SizeConfig.blockSizeVertical * 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: SizeConfig.screenWidth * 0.35,
-                      height: SizeConfig.blockSizeVertical * 5,
-                      decoration: BoxDecoration(
-                          borderRadius: new BorderRadius.circular(100.0),
-                          color: UiConstants.primaryColor),
-                      child: new Material(
-                        child: MaterialButton(
-                          child: Text(
-                            'Enable',
-                            style: Theme.of(context).textTheme.button.copyWith(
-                                color: Colors.white,
-                                fontSize: SizeConfig.largeTextSize,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          highlightColor: Colors.white30,
-                          splashColor: Colors.white30,
-                          onPressed: () {
-                            baseProvider.flipSecurityValue(false);
-                            Navigator.of(context).pop();
-                            if (baseProvider.show_finance_tutorial) {
-                              _walkthroughBottomSheet();
-                            }
-                          },
-                        ),
-                        color: Colors.transparent,
-                        borderRadius: new BorderRadius.circular(100.0),
-                      ),
-                    ),
-                    Container(
-                      width: SizeConfig.screenWidth * 0.35,
-                      height: SizeConfig.blockSizeVertical * 5,
-                      // decoration: BoxDecoration(
-                      //   borderRadius: new BorderRadius.circular(100.0),
-                      //   border: Border.all(color : UiConstants.accentColor)
-                      // ),
-                      child: new Material(
-                        child: MaterialButton(
-                          child: Text(
-                            'Not now',
-                            style: Theme.of(context).textTheme.button.copyWith(
-                                color: UiConstants.accentColor,
-                                fontSize: SizeConfig.largeTextSize,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          highlightColor: Colors.grey[300],
-                          splashColor: Colors.grey[300],
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            if (baseProvider.show_finance_tutorial) {
-                              _walkthroughBottomSheet();
-                            }
-                          },
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(100.0),
-                              side: BorderSide(color: UiConstants.accentColor)),
-                        ),
-                        color: Colors.transparent,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: SizeConfig.blockSizeVertical * 5,
-                ),
-              ],
-            ),
-          );
+          return const SecurityModalSheet();
         });
   }
 
-  void _walkthroughBottomSheet() {
+  _showWalkthroughBottomSheet() {
     showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
@@ -250,106 +143,7 @@ class _RootState extends State<Root> {
                 topRight: Radius.circular(30.0))),
         backgroundColor: UiConstants.bottomNavBarColor,
         builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.only(
-                top: 25.0, bottom: 25.0, left: 45.0, right: 45.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: SizeConfig.blockSizeVertical * 1.5,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          'Walkthrough',
-                          style: Theme.of(context).textTheme.headline5.copyWith(
-                              color: UiConstants.primaryColor,
-                              fontSize: SizeConfig.largeTextSize * 1.2,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: SizeConfig.blockSizeVertical * 2.5,
-                ),
-                Text(
-                    'Do you want to watch a quick walkthrough to understand how Fello works? \n This can be viewed later in the help section as well.',
-                    style: TextStyle(
-                        color: UiConstants.textColor,
-                        fontSize: SizeConfig.mediumTextSize * 1.4)),
-                SizedBox(height: SizeConfig.blockSizeVertical * 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: SizeConfig.screenWidth * 0.35,
-                      height: SizeConfig.blockSizeVertical * 5,
-                      decoration: BoxDecoration(
-                          borderRadius: new BorderRadius.circular(100.0),
-                          color: UiConstants.primaryColor),
-                      child: new Material(
-                        child: MaterialButton(
-                          child: Text(
-                            'Yes, I do',
-                            style: Theme.of(context).textTheme.button.copyWith(
-                                color: Colors.white,
-                                fontSize: SizeConfig.largeTextSize,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          highlightColor: Colors.white30,
-                          splashColor: Colors.white30,
-                          onPressed: () {
-                            appState.currentAction = PageAction(
-                                state: PageState.addPage,
-                                page: WalkThroughConfig);
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        color: Colors.transparent,
-                        borderRadius: new BorderRadius.circular(100.0),
-                      ),
-                    ),
-                    Container(
-                      width: SizeConfig.screenWidth * 0.35,
-                      height: SizeConfig.blockSizeVertical * 5,
-                      // decoration: BoxDecoration(
-                      //   borderRadius: new BorderRadius.circular(100.0),
-                      //   border: Border.all(color : UiConstants.accentColor)
-                      // ),
-                      child: new Material(
-                        child: MaterialButton(
-                          child: Text(
-                            'Not now',
-                            style: Theme.of(context).textTheme.button.copyWith(
-                                color: UiConstants.accentColor,
-                                fontSize: SizeConfig.largeTextSize,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          highlightColor: Colors.grey[300],
-                          splashColor: Colors.grey[300],
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(100.0),
-                              side: BorderSide(color: UiConstants.accentColor)),
-                        ),
-                        color: Colors.transparent,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: SizeConfig.blockSizeVertical * 5,
-                ),
-              ],
-            ),
-          );
+          return const WalkthroughModalSheet();
         });
   }
 
@@ -361,11 +155,6 @@ class _RootState extends State<Root> {
           //show tutorial
           baseProvider.show_finance_tutorial = true;
           _navBarItems[2].showFocus = true;
-          bool show_security = baseProvider.show_finance_tutorial;
-          // show_security = true;
-          if (show_security && !baseProvider.isSecurityEnabled) {
-            _showSecurityBottomSheet();
-          }
           setState(() {});
         }
       });
@@ -432,7 +221,7 @@ class _RootState extends State<Root> {
                 width: SizeConfig.blockSizeVertical * 5,
                 margin: EdgeInsets.symmetric(
                   horizontal: SizeConfig.blockSizeHorizontal * 5,
-                  vertical: kToolbarHeight * 0.4,
+                  vertical: kToolbarHeight * 0.2,
                 ),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,

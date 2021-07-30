@@ -1,11 +1,15 @@
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 
 class TambolaBoard {
   static Log log = new Log('TambolaBoard');
+  BaseUtil _baseUtil = locator<BaseUtil>(); //required to fetch client token
+
   final String doc_key;
   final Timestamp assigned_time;
   final String val;
@@ -99,7 +103,8 @@ class TambolaBoard {
         tambolaBoard.isEmpty ||
         calledDigits == null ||
         calledDigits.isEmpty) return 5;
-    int digitsLeftToBeAnnounced = Constants.TOTAL_DRAWS - calledDigits.length;
+    int digitsLeftToBeAnnounced =
+        _baseUtil.dailyPicksCount * 7 - calledDigits.length;
     int rowCalledCount = 0;
     for (int i = 0; i < boardLength; i++) {
       if (tambolaBoard[rowIndex][i] != 0 &&
@@ -137,7 +142,8 @@ class TambolaBoard {
     if (calledDigits.contains(cornerB)) cornerCount++;
     if (calledDigits.contains(cornerC)) cornerCount++;
     if (calledDigits.contains(cornerD)) cornerCount++;
-    int digitsLeftToBeAnnounced = Constants.TOTAL_DRAWS - calledDigits.length;
+    int digitsLeftToBeAnnounced =
+        _baseUtil.dailyPicksCount * 7 - calledDigits.length;
     int cornerLeftCount = 4 - cornerCount;
 
     // if(cornerLeftCount==0) return 'HIT!';
@@ -152,7 +158,8 @@ class TambolaBoard {
         calledDigits == null ||
         calledDigits.isEmpty) return 15;
     int fullHouseCount = 0;
-    int digitsLeftToBeAnnounced = Constants.TOTAL_DRAWS - calledDigits.length;
+    int digitsLeftToBeAnnounced =
+        _baseUtil.dailyPicksCount * 7 - calledDigits.length;
     for (int i = 0; i < boardHeight; i++) {
       for (int j = 0; j < boardLength; j++) {
         if (tambolaBoard[i][j] != 0) {
@@ -182,7 +189,7 @@ class TambolaBoard {
     return 'NA';
   }
 
-  get generatedDayCode {
+  int get generatedDayCode {
     if (this.assigned_time == null) return DateTime.monday;
     return this.assigned_time.toDate().weekday;
   }

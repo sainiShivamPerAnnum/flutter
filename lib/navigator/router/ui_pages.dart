@@ -5,7 +5,7 @@ const String SplashPath = '/splash';
 const String LoginPath = '/login';
 const String OnboardPath = '/onboard';
 const String RootPath = '/approot';
-const String EditProfilePath = '/editProfile';
+const String UserProfileDetailsPath = '/userProfileDetails';
 const String MfDetailsPath = '/mfDetails';
 const String AugDetailsPath = '/augDetails';
 const String TransactionPath = '/tran';
@@ -31,7 +31,7 @@ enum Pages {
   Login,
   Onboard,
   Root,
-  EditProfile,
+  UserProfileDetails,
   MfDetails,
   AugDetails,
   Transaction,
@@ -86,10 +86,10 @@ PageConfiguration OnboardPageConfig = PageConfiguration(
   path: OnboardPath,
   uiPage: Pages.Onboard,
 );
-PageConfiguration EditProfileConfig = PageConfiguration(
+PageConfiguration UserProfileDetailsConfig = PageConfiguration(
   key: 'EditProfile',
-  path: EditProfilePath,
-  uiPage: Pages.EditProfile,
+  path: UserProfileDetailsPath,
+  uiPage: Pages.UserProfileDetails,
 );
 PageConfiguration MfDetailsPageConfig = PageConfiguration(
   key: 'MfDetails',

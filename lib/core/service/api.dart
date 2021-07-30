@@ -38,6 +38,12 @@ class Api {
     return ref.doc(docId).set(data, SetOptions(merge: true));
   }
 
+  Future<void> updateUserDocumentPreferenceField(
+      String docId, Map<String, dynamic> data) {
+    ref = _db.collection(Constants.COLN_USERS);
+    return ref.doc(docId).update(data);
+  }
+
   Future<DocumentSnapshot> getUserIciciDetailDocument(String userId) {
     ref = _db
         .collection(Constants.COLN_USERS)
@@ -54,6 +60,16 @@ class Api {
     return ref
         .doc(Constants.DOC_USER_ICICI_DETAIL)
         .set(data, SetOptions(merge: true));
+  }
+
+  Future<DocumentSnapshot> getUserPrtdDocPan(String userId) {
+    ref = _db.collection(Constants.COLN_USERS).doc(userId).collection(Constants.SUBCOLN_USER_PRTD);
+    return ref.doc('pan').get();
+  }
+
+  Future<void> addUserPrtdDocPan(String userId, Map data) {
+    ref = _db.collection(Constants.COLN_USERS).doc(userId).collection(Constants.SUBCOLN_USER_PRTD);
+    return ref.doc('pan').set(data, SetOptions(merge: false));
   }
 
   Future<DocumentSnapshot> getUserAugmontDetailDocument(String userId) {
@@ -529,8 +545,8 @@ class Api {
 
   Future<bool> createEmailVerificationDocument(String email, String otp) async {
     // String htmlCode = OTPEmail().getEmailCode(otp);
-    String htmlCode = await rootBundle
-        .loadString('resources/fello-email-verification.html');
+    String htmlCode =
+        await rootBundle.loadString('resources/fello-email-verification.html');
     htmlCode = htmlCode.replaceAll('\$otp', otp);
     Map<String, dynamic> data = {
       'to': [email],
