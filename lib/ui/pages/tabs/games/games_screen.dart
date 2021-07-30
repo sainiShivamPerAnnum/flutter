@@ -6,6 +6,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
@@ -307,10 +308,12 @@ class _GamePageState extends State<GamePage> {
                             ),
                           ),
                           /////////TODO HACKY CODE - WRITTEN TO MANAGE TABLET SIZE DIMENSIONS
-                          (SizeConfig.screenWidth >= 1200)?Transform.translate(
-                            offset: Offset(0, -SizeConfig.screenWidth * 0.08),
-                            child: const IdeaSection()
-                          ):const IdeaSection(),
+                          (SizeConfig.screenWidth >= 1200)
+                              ? Transform.translate(
+                                  offset:
+                                      Offset(0, -SizeConfig.screenWidth * 0.08),
+                                  child: const IdeaSection())
+                              : const IdeaSection(),
                           /////////////////////////////////////////////////////////////
                           Spacer(
                             flex: 1,
@@ -383,7 +386,7 @@ class _GamePageState extends State<GamePage> {
   }
 }
 
-class IdeaSection extends StatelessWidget{
+class IdeaSection extends StatelessWidget {
   const IdeaSection();
 
   @override
@@ -445,12 +448,12 @@ class IdeaSection extends StatelessWidget{
                             //feedback submission allowed even if user not signed in
                             dbProvider
                                 .submitFeedback(
-                                (baseProvider.firebaseUser == null ||
-                                    baseProvider.firebaseUser.uid ==
-                                        null)
-                                    ? 'UNKNOWN'
-                                    : baseProvider.firebaseUser.uid,
-                                fdbk)
+                                    (baseProvider.firebaseUser == null ||
+                                            baseProvider.firebaseUser.uid ==
+                                                null)
+                                        ? 'UNKNOWN'
+                                        : baseProvider.firebaseUser.uid,
+                                    fdbk)
                                 .then((flag) {
                               backButtonDispatcher.didPopRoute();
                               if (flag) {

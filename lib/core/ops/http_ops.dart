@@ -14,8 +14,10 @@ class HttpModel extends ChangeNotifier {
   BaseUtil _baseUtil = locator<BaseUtil>(); //required to fetch client token
   final Log log = new Log('HttpModel');
   static const String WRAPPED_BASE_URI = 'https://fello-team.web.app';
-  static const String ASIA_BASE_URI = 'https://asia-south1-fello-d3a9c.cloudfunctions.net';
-  static const String US_BASE_URI = 'https://us-central1-fello-d3a9c.cloudfunctions.net';
+  static const String ASIA_BASE_URI =
+      'https://asia-south1-fello-d3a9c.cloudfunctions.net';
+  static const String US_BASE_URI =
+      'https://us-central1-fello-d3a9c.cloudfunctions.net';
 
   ///Returns the number of tickets that need to be added to user's balance
   Future<int> postUserReferral(
@@ -159,9 +161,7 @@ class HttpModel extends ChangeNotifier {
       HttpHeaders.authorizationHeader: 'Bearer $idToken'
     };
     var request = http.Request('POST', Uri.parse(_uri));
-    request.bodyFields = {
-      'email': email
-    };
+    request.bodyFields = {'email': email};
     request.headers.addAll(headers);
 
     try {
@@ -169,10 +169,11 @@ class HttpModel extends ChangeNotifier {
       log.debug(await _response.stream.bytesToString());
       if (_response.statusCode == 200) {
         try {
-          Map<String, dynamic> parsed = jsonDecode(await _response.stream.bytesToString());
+          Map<String, dynamic> parsed =
+              jsonDecode(await _response.stream.bytesToString());
           return (parsed != null && parsed['flag'] != null && parsed['flag']);
         } catch (err) {
-          log.error('Failed to parse ticket update count');
+          log.error('Failed to parse email regd boolean field');
           return false;
         }
       } else {
@@ -181,6 +182,120 @@ class HttpModel extends ChangeNotifier {
     } catch (e) {
       log.error('Http post failed: ' + e.toString());
       return false;
+    }
+  }
+
+  ///Returns the number of tickets that need to be added to user's balance
+  Future<bool> isPanNotRegistered(String pan) async {
+    if (_baseUtil == null || _baseUtil.firebaseUser == null) return false;
+    //get auth
+    String idToken = await _baseUtil.firebaseUser.getIdToken();
+    log.debug('Fetched user IDToken: ' + idToken);
+
+    //build request
+    String _uri = '$ASIA_BASE_URI/userSearch/dev/api/ispanregd';
+    var headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      HttpHeaders.authorizationHeader: 'Bearer $idToken'
+    };
+    var request = http.Request('POST', Uri.parse(_uri));
+    request.bodyFields = {'pan': pan};
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse _response = await request.send();
+      log.debug(await _response.stream.bytesToString());
+      if (_response.statusCode == 200) {
+        try {
+          Map<String, dynamic> parsed =
+              jsonDecode(await _response.stream.bytesToString());
+          return (parsed != null && parsed['flag'] != null && parsed['flag']);
+        } catch (err) {
+          log.error('Failed to parse pan regd booleand field');
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } catch (e) {
+      log.error('Http post failed: ' + e.toString());
+      return false;
+    }
+  }
+
+  ///encrypt text - used for pan
+  Future<String> encryptText(String encText, int encVersion) async {
+    if (_baseUtil == null || _baseUtil.firebaseUser == null) return '';
+    //get auth
+    String idToken = await _baseUtil.firebaseUser.getIdToken();
+    log.debug('Fetched user IDToken: ' + idToken);
+
+    //build request
+    String _uri = '$ASIA_BASE_URI/encoderops/api/encrypt';
+    var headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      HttpHeaders.authorizationHeader: 'Bearer $idToken'
+    };
+    var request = http.Request('POST', Uri.parse(_uri));
+    request.bodyFields = {'etext': encText, 'eversion': encVersion.toString()};
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse _response = await request.send();
+      if (_response.statusCode == 200) {
+        try {
+          Map<String, dynamic> parsed =
+              jsonDecode(await _response.stream.bytesToString());
+          String resText = (parsed != null) ? parsed['value'] : '';
+          return (resText != null) ? resText : '';
+        } catch (err) {
+          log.error('Failed to encryption $err');
+          return '';
+        }
+      } else {
+        return '';
+      }
+    } catch (e) {
+      log.error('Http GET failed: ' + e.toString());
+      return '';
+    }
+  }
+
+  ///decrypt text - used for pan
+  Future<String> decryptText(String decText, int decVersion) async {
+    if (_baseUtil == null || _baseUtil.firebaseUser == null) return '';
+    //get auth
+    String idToken = await _baseUtil.firebaseUser.getIdToken();
+    log.debug('Fetched user IDToken: ' + idToken);
+
+    //build request
+    String _uri = '$ASIA_BASE_URI/encoderops/api/decrypt';
+    var headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      HttpHeaders.authorizationHeader: 'Bearer $idToken'
+    };
+    var request = http.Request('POST', Uri.parse(_uri));
+    request.bodyFields = {'dtext': decText, 'dversion': decVersion.toString()};
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse _response = await request.send();
+      if (_response.statusCode == 200) {
+        try {
+          Map<String, dynamic> parsed =
+              jsonDecode(await _response.stream.bytesToString());
+          String resText = (parsed != null) ? parsed['value'] : '';
+          return (resText != null) ? resText : '';
+        } catch (err) {
+          log.error('Failed to decryption $err');
+          return '';
+        }
+      } else {
+        return '';
+      }
+    } catch (e) {
+      log.error('Http GET failed: ' + e.toString());
+      return '';
     }
   }
 }
