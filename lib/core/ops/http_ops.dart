@@ -7,6 +7,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:flat_icons_flutter/flat_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -148,7 +149,7 @@ class HttpModel extends ChangeNotifier {
   }
 
   ///Returns the number of tickets that need to be added to user's balance
-  Future<bool> isEmailNotRegistered(String email) async {
+  Future<bool> isEmailNotRegistered(String userId, String email) async {
     if (_baseUtil == null || _baseUtil.firebaseUser == null) return false;
     //get auth
     String idToken = await _baseUtil.firebaseUser.getIdToken();
@@ -161,17 +162,16 @@ class HttpModel extends ChangeNotifier {
       HttpHeaders.authorizationHeader: 'Bearer $idToken'
     };
     var request = http.Request('POST', Uri.parse(_uri));
-    request.bodyFields = {'email': email};
+    request.bodyFields = {'uid': userId, 'email': email};
     request.headers.addAll(headers);
 
     try {
       http.StreamedResponse _response = await request.send();
-      log.debug(await _response.stream.bytesToString());
       if (_response.statusCode == 200) {
         try {
           Map<String, dynamic> parsed =
               jsonDecode(await _response.stream.bytesToString());
-          return (parsed != null && parsed['flag'] != null && parsed['flag']);
+          return !(parsed != null && parsed['flag'] != null && parsed['flag']);
         } catch (err) {
           log.error('Failed to parse email regd boolean field');
           return false;

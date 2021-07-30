@@ -913,7 +913,7 @@ class PaymentService extends ChangeNotifier {
       Map<String, dynamic> withdrawalMap, double amount) async {
     final redemptionMap = await iProvider.submitNonInstantWithdrawal(
         baseProvider.iciciDetail.folioNo,
-        baseProvider.myUser.pan,
+        baseProvider.userRegdPan,
         amount.toString(),
         withdrawalMap['bankCode'],
         withdrawalMap['bankName'],

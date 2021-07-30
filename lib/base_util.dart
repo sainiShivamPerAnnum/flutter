@@ -18,6 +18,7 @@ import 'package:felloapp/core/model/UserTicketWallet.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -53,6 +54,7 @@ class BaseUtil extends ChangeNotifier {
   PaymentService _payService;
   List<FeedCard> feedCards;
   int _dailyPickCount;
+  String userRegdPan;
 
   ///Tambola global objects
   DailyPick weeklyDigits;
@@ -62,6 +64,7 @@ class BaseUtil extends ChangeNotifier {
   UserIciciDetail _iciciDetail;
   UserTransaction _currentICICITxn;
   UserTransaction _currentICICINonInstantWthrlTxn;
+  PanService panService;
 
   ///Augmont global objects
   UserAugmontDetail _augmontDetail;
@@ -152,11 +155,15 @@ class BaseUtil extends ChangeNotifier {
       //get user creation time
       _userCreationTimestamp = firebaseUser.metadata.creationTime;
       //check if there are any icici deposits txns in process
-      _payService = locator<PaymentService>();
-      augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
       //TODO not required for now
       // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
+      // _payService = locator<PaymentService>();
 
+      if(myUser.isAugmontOnboarded) {
+        augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
+        panService = new PanService();
+        userRegdPan = await panService.getUserPan();
+      }
       ///Freshchat utils
       freshchatKeys = await _dbModel.getActiveFreshchatKey();
       if (freshchatKeys != null && freshchatKeys.isNotEmpty) {

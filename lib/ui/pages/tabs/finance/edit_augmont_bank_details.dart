@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
+import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/util/icici_api_util.dart';
@@ -308,7 +309,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
     ///NOW CHECK IF IFSC IS VALID
     if (!iProvider.isInit()) await iProvider.init();
     var bankDetail =
-        await iProvider.getBankInfo(baseProvider.myUser.pan, pBankIfsc);
+        await iProvider.getBankInfo(baseProvider.userRegdPan, pBankIfsc);
     if (bankDetail == null ||
         bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
         bankDetail[GetBankDetail.resBankName] == null) {

@@ -37,7 +37,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    if(!isInit) {
+    if (!isInit) {
       init();
     }
     return Scaffold(
@@ -95,30 +95,15 @@ class _ContactUsPageState extends State<ContactUsPage> {
                                 ),
                               ),
                             ),
-                          ),
-                          Text(
-                            "( 24 x 7 )",
-                            style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w300,
-                              color: Colors.white,
-                            ),
-                          )
-                        ],
-                      ),
-                      Text(
-                        "We'd love to assist you with any kind of problem you face in the app.",
-                        style: TextStyle(
-                          color: Colors.white,
-                          height: 1.4,
-                          fontSize: SizeConfig.mediumTextSize,
+                            Text(
+                              "( 24 x 7 )",
+                              style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w300,
+                                color: Colors.white,
+                              ),
+                            )
+                          ],
                         ),
-                        // Text(
-                        //   "24 x 7",
-                        //   style: TextStyle(
-                        //     color: Colors.white,
-                        //     fontWeight: FontWeight.w700,
-                        //   ),
-                        // ),
                         Text(
                           "We'd love to assist you with any kind of problem you face in the app.",
                           style: TextStyle(
@@ -214,8 +199,11 @@ class _ContactUsPageState extends State<ContactUsPage> {
                       HapticFeedback.vibrate();
                       try {
                         _launchEmail();
-                      } catch(e) {
-                        baseProvider.showNegativeAlert('Error', 'Something went wrong, could not launch email right now. Please try again later', context);
+                      } catch (e) {
+                        baseProvider.showNegativeAlert(
+                            'Error',
+                            'Something went wrong, could not launch email right now. Please try again later',
+                            context);
                       }
                     },
                   ),
@@ -432,7 +420,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                                 });
                               },
                               child: Container(
-                                width: MediaQuery.of(context).size.width*0.2,
+                                width: MediaQuery.of(context).size.width * 0.2,
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: UiConstants.primaryColor),
@@ -465,7 +453,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                                 });
                               },
                               child: Container(
-                                width: MediaQuery.of(context).size.width*0.2,
+                                width: MediaQuery.of(context).size.width * 0.2,
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: UiConstants.primaryColor),
@@ -498,7 +486,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                                 });
                               },
                               child: Container(
-                                width: MediaQuery.of(context).size.width*0.2,
+                                width: MediaQuery.of(context).size.width * 0.2,
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: UiConstants.primaryColor),
