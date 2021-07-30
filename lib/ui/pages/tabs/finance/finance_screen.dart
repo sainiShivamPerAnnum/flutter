@@ -35,6 +35,7 @@ class _FinancePageState extends State<FinancePage> {
 
   Future<void> _onFundsRefresh() async {
     //TODO: ADD LOADER
+    print("-----------------> I got called");
     return dbProvider.getUserFundWallet(baseProvider.myUser.uid).then((aValue) {
       if (aValue != null) {
         baseProvider.userFundWallet = aValue;
@@ -267,7 +268,7 @@ class FundWidget extends StatelessWidget {
                       color: Colors.white,
                       height: 1.4,
                       letterSpacing: 1.5,
-                      fontSize: math.min(SizeConfig.largeTextSize,30),
+                      fontSize: math.min(SizeConfig.largeTextSize, 30),
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -281,7 +282,7 @@ class FundWidget extends StatelessWidget {
                             'Coming Soon',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: math.min(height * 0.020,22),
+                              fontSize: math.min(height * 0.020, 22),
                               fontWeight: FontWeight.w400,
                             ),
                           ),

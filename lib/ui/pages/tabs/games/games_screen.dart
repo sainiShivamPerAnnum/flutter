@@ -160,7 +160,7 @@ class _GamePageState extends State<GamePage> {
                             flex: 2,
                           ),
                           InkWell(
-                            onTap: () async{
+                            onTap: () async {
                               HapticFeedback.vibrate();
                               AppState.screenStack.add(ScreenItem.dialog);
                               showDialog(

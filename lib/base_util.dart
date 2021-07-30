@@ -159,11 +159,12 @@ class BaseUtil extends ChangeNotifier {
       // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
       // _payService = locator<PaymentService>();
 
-      if(myUser.isAugmontOnboarded) {
+      if (myUser.isAugmontOnboarded) {
         augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
         panService = new PanService();
         userRegdPan = await panService.getUserPan();
       }
+
       ///Freshchat utils
       freshchatKeys = await _dbModel.getActiveFreshchatKey();
       if (freshchatKeys != null && freshchatKeys.isNotEmpty) {
@@ -217,6 +218,20 @@ class BaseUtil extends ChangeNotifier {
       log.error('Error reading unread count variable: $e');
       return false;
     }
+  }
+
+  Future<void> refreshFunds() async {
+    //TODO: ADD LOADER
+    print("-----------------> I got called");
+    return _dbModel.getUserFundWallet(myUser.uid).then((aValue) {
+      if (aValue != null) {
+        userFundWallet = aValue;
+        if (userFundWallet.augGoldQuantity > 0)
+          _updateAugmontBalance(); //setstate call in method
+        else
+          notifyListeners();
+      }
+    });
   }
 
   static Widget getAppBar(BuildContext context, String title) {

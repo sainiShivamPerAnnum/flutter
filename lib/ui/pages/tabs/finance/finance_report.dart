@@ -1,9 +1,13 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/model/chartFundItem.dart';
+import 'package:felloapp/ui/dialogs/Fold-Card/card.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../main.dart';
 
@@ -22,6 +26,7 @@ class YourFunds extends StatefulWidget {
 class _YourFundsState extends State<YourFunds> {
   List<double> breakdownWidth = [0, 0, 0, 0];
 
+  BaseUtil baseProvider;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -44,6 +49,8 @@ class _YourFundsState extends State<YourFunds> {
 
   @override
   Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context);
+
     return Scaffold(
         body: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,8 +113,8 @@ class _YourFundsState extends State<YourFunds> {
                     Spacer(),
                     Container(
                       padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.blockSizeHorizontal * 5,
-                          vertical: 8),
+                        horizontal: SizeConfig.blockSizeHorizontal * 5,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -142,11 +149,9 @@ class _YourFundsState extends State<YourFunds> {
               physics: BouncingScrollPhysics(),
               child: Column(
                 children: List.generate(
-                    widget.chartFunds.length,
-                    (index) =>
-                        // widget.chartFunds[index].fundAmount > 0
-                        //     ?
-                        Container(
+                  widget.chartFunds.length,
+                  (index) => widget.chartFunds[index].fundAmount > 0
+                      ? Container(
                           padding: EdgeInsets.symmetric(
                               horizontal: SizeConfig.blockSizeHorizontal * 3,
                               vertical: 8),
@@ -206,7 +211,7 @@ class _YourFundsState extends State<YourFunds> {
                                     height: 1.5),
                               ),
                               SizedBox(height: 12),
-                              widget.chartFunds[index].buttonText != ""
+                              baseProvider.userFundWallet.prizeBalance > 0
                                   ? ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                           primary:
@@ -214,7 +219,11 @@ class _YourFundsState extends State<YourFunds> {
                                       onPressed:
                                           widget.chartFunds[index].function,
                                       child: Text(
-                                        widget.chartFunds[index].buttonText,
+                                        //widget.chartFunds[index].buttonText,
+                                        !baseProvider.userFundWallet
+                                                .isPrizeBalanceUnclaimed()
+                                            ? "Share"
+                                            : "Claim Prize",
                                         style: TextStyle(color: Colors.white),
                                       ),
                                     )
@@ -222,8 +231,8 @@ class _YourFundsState extends State<YourFunds> {
                             ],
                           ),
                         )
-                    //   : SizedBox(),
-                    ),
+                      : SizedBox(),
+                ),
               ),
             ),
           ),
