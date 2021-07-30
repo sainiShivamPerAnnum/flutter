@@ -153,10 +153,10 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                   ],
                 ),
                 //GoldRateGraph(),
-                Container(
-                    width: SizeConfig.screenWidth,
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    child: LineChartWidget()),
+                // Container(
+                //     width: SizeConfig.screenWidth,
+                //     padding: EdgeInsets.symmetric(vertical: 20),
+                //     child: LineChartWidget()),
                 //FundGraph(),
                 FundDetailsTable(baseProvider.userFundWallet.augGoldQuantity),
                 GoldProfitCalculator(),

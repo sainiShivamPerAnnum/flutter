@@ -5,8 +5,8 @@ import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
@@ -102,6 +102,7 @@ class _GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
+    final httpProvider = Provider.of<HttpModel>(context, listen: false);
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
@@ -159,14 +160,16 @@ class _GamePageState extends State<GamePage> {
                             flex: 2,
                           ),
                           InkWell(
-                            onTap: () {
+                            onTap: () async{
                               HapticFeedback.vibrate();
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    TicketDetailsDialog(
-                                        baseProvider.userTicketWallet),
-                              );
+                              bool flag = await httpProvider.isEmailNotRegistered(baseProvider.myUser.uid, 'shouryalala@gmail.com');
+                              print(flag);
+                              // showDialog(
+                              //   context: context,
+                              //   builder: (BuildContext context) =>
+                              //       TicketDetailsDialog(
+                              //           baseProvider.userTicketWallet),
+                              // );
                             },
                             child: BaseUtil.buildShowcaseWrapper(
                               _showcaseHeader,

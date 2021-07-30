@@ -155,7 +155,8 @@ class VerifyEmailState extends State<VerifyEmail> {
   }
 
   sendEmail() async {
-    if (!await httpProvider.isEmailNotRegistered(email.text.trim())) {
+    if (!await httpProvider.isEmailNotRegistered(
+        baseProvider.myUser.uid, email.text.trim())) {
       setState(() {
         _isProcessing = false;
       });
@@ -228,7 +229,8 @@ class VerifyEmailState extends State<VerifyEmail> {
     }
     final GoogleSignInAccount googleUser = await _gSignIn.signIn();
     if (googleUser != null) {
-      if (await httpProvider.isEmailNotRegistered(googleUser.email)) {
+      if (await httpProvider.isEmailNotRegistered(
+          baseProvider.myUser.uid, googleUser.email)) {
         email.text = googleUser.email;
         baseProvider.myUser.email = googleUser.email;
         baseProvider.setEmailVerified();

@@ -67,7 +67,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
     if (!_isInit) {
-      _panInput.text = baseProvider.myUser.pan ?? '';
+      _panInput.text = baseProvider.userRegdPan ?? '';
       _isInit = true;
     }
     return Scaffold(

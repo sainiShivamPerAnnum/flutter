@@ -14,10 +14,10 @@ import 'package:felloapp/ui/elements/logo_canvas.dart';
 import 'package:felloapp/ui/elements/logo_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:provider/provider.dart';
-import 'package:felloapp/util/size_config.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -64,14 +64,12 @@ class LogoFadeIn extends State<SplashScreen> {
     await fcmProvider.setupFcm();
     _timer3.cancel();
     ///TODO tbt check if an important update is pending
-    //bool isThereBreakingUpdate = await checkBreakingUpdate();
-    // isThereBreakingUpdate = true;
-    bool isThereBreakingUpdate = false;
-    if (isThereBreakingUpdate) {
-      stateProvider.currentAction =
-          PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
-      return;
-    }
+    // bool isThereBreakingUpdate = false;
+    // if (isThereBreakingUpdate) {
+    //   stateProvider.currentAction =
+    //       PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
+    //   return;
+    // }
 
     ///check if user is onboarded
     if (!baseProvider.isUserOnboarded) {
