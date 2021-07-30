@@ -33,6 +33,7 @@ import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcase.dart';
 
 import 'core/base_remote_config.dart';
@@ -90,73 +91,41 @@ class BaseUtil extends ChangeNotifier {
   int isOtpResendCount = 0;
 
   ///Flags in various screens defined as global variables
-  bool isUserOnboarded,
-      isLoginNextInProgress,
-      isEditProfileNextInProgress,
-      isRedemptionOtpInProgress,
-      isAugmontRegnInProgress,
-      isAugmontRegnCompleteAnimateInProgress,
-      isIciciDepositRouteLogicInProgress,
-      isEditAugmontBankDetailInProgress,
-      isAugDepositRouteLogicInProgress,
-      isAugWithdrawRouteLogicInProgress,
-      isAugmontRealTimeBalanceFetched,
-      isWeekWinnersFetched,
-      isPrizeLeadersFetched,
-      isReferralLeadersFetched,
-      weeklyDrawFetched,
-      weeklyTicksFetched,
-      referralsFetched,
-      userReferralInfoFetched,
-      isProfilePictureUpdated,
-      isReferralLinkBuildInProgressWhatsapp,
-      isReferralLinkBuildInProgressOther,
-      isHomeCardsFetched,
-      show_game_tutorial,
-      show_finance_tutorial;
-  static bool isDeviceOffline, ticketRequestSent, playScreenFirst;
-  static int ticketCountBeforeRequest,
-      infoSliderIndex,
-      atomicTicketGenerationLeftCount,
-      atomicTicketDeletionLeftCount;
-
-  _setRuntimeDefaults() {
-    isUserOnboarded = false;
-    isLoginNextInProgress = false;
-    isEditProfileNextInProgress = false;
-    isRedemptionOtpInProgress = false;
-    isAugmontRegnInProgress = false;
-    isAugmontRegnCompleteAnimateInProgress = false;
-    isIciciDepositRouteLogicInProgress = false;
-    isEditAugmontBankDetailInProgress = false;
-    isAugDepositRouteLogicInProgress = false;
-    isAugWithdrawRouteLogicInProgress = false;
-    isAugmontRealTimeBalanceFetched = false;
-    isWeekWinnersFetched = false;
-    isPrizeLeadersFetched = false;
-    isReferralLeadersFetched = false;
-    weeklyDrawFetched = false;
-    weeklyTicksFetched = false;
-    referralsFetched = false;
-    userReferralInfoFetched = false;
-    isProfilePictureUpdated = false;
-    isReferralLinkBuildInProgressWhatsapp = false;
-    isReferralLinkBuildInProgressOther = false;
-    isHomeCardsFetched = false;
-    show_game_tutorial = false;
-    show_finance_tutorial = false;
-    isDeviceOffline = false;
-    ticketRequestSent = false;
-    ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
-    infoSliderIndex = 0;
-    playScreenFirst = true;
-    atomicTicketGenerationLeftCount = 0;
-    atomicTicketDeletionLeftCount = 0;
-  }
+  bool isUserOnboarded = false;
+  bool isLoginNextInProgress = false;
+  bool isEditProfileNextInProgress = false;
+  bool isRedemptionOtpInProgress = false;
+  bool isAugmontRegnInProgress = false;
+  bool isAugmontRegnCompleteAnimateInProgress = false;
+  bool isIciciDepositRouteLogicInProgress = false;
+  bool isEditAugmontBankDetailInProgress = false;
+  bool isAugDepositRouteLogicInProgress = false;
+  bool isAugWithdrawRouteLogicInProgress = false;
+  bool isAugmontRealTimeBalanceFetched = false;
+  bool isWeekWinnersFetched = false;
+  bool isPrizeLeadersFetched = false;
+  bool isReferralLeadersFetched = false;
+  bool weeklyDrawFetched = false;
+  bool weeklyTicksFetched = false;
+  bool referralsFetched = false;
+  bool userReferralInfoFetched = false;
+  bool isProfilePictureUpdated = false;
+  bool isReferralLinkBuildInProgressWhatsapp = false;
+  bool isReferralLinkBuildInProgressOther = false;
+  bool isHomeCardsFetched = false;
+  bool show_game_tutorial = false;
+  bool show_finance_tutorial = false;
+  int app_open_count = 0;
+  static bool isDeviceOffline = false;
+  static bool ticketRequestSent = false;
+  static int ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
+  static int infoSliderIndex = 0;
+  static bool playScreenFirst = true;
+  static int atomicTicketGenerationLeftCount = 0;
+  static int atomicTicketDeletionLeftCount = 0;
 
   Future init() async {
     print('inside init base util');
-    _setRuntimeDefaults();
 
     ///analytics
     BaseAnalytics.init();
@@ -175,6 +144,9 @@ class BaseUtil extends ChangeNotifier {
     isUserOnboarded =
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
     if (isUserOnboarded) {
+      //getting app open count
+      await updateAppOpenCount();
+      app_open_count = await getAppOpenCount();
       //get user wallet
       _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
       if (_userFundWallet == null) _compileUserWallet();
@@ -191,12 +163,11 @@ class BaseUtil extends ChangeNotifier {
       // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
       // _payService = locator<PaymentService>();
 
-      panService = new PanService();
-      if (myUser.isAugmontOnboarded) {
+      if(myUser.isAugmontOnboarded) {
         augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
+        panService = new PanService();
         userRegdPan = await panService.getUserPan();
       }
-
       ///Freshchat utils
       freshchatKeys = await _dbModel.getActiveFreshchatKey();
       if (freshchatKeys != null && freshchatKeys.isNotEmpty) {
@@ -442,7 +413,33 @@ class BaseUtil extends ChangeNotifier {
 
       isOtpResendCount = 0;
       delegate.appState.setCurrentTabIndex = 0;
-      _setRuntimeDefaults();
+      isUserOnboarded = false;
+      isLoginNextInProgress = false;
+      isEditProfileNextInProgress = false;
+      isRedemptionOtpInProgress = false;
+      isAugmontRegnInProgress = false;
+      isAugmontRegnCompleteAnimateInProgress = false;
+      isIciciDepositRouteLogicInProgress = false;
+      isEditAugmontBankDetailInProgress = false;
+      isAugDepositRouteLogicInProgress = false;
+      isAugWithdrawRouteLogicInProgress = false;
+      isAugmontRealTimeBalanceFetched = false;
+      weeklyDrawFetched = false;
+      weeklyTicksFetched = false;
+      referralsFetched = false;
+      userReferralInfoFetched = false;
+      isProfilePictureUpdated = false;
+      isReferralLinkBuildInProgressWhatsapp = false;
+      isReferralLinkBuildInProgressOther = false;
+      isHomeCardsFetched = false;
+      isDeviceOffline = false;
+      ticketRequestSent = false;
+      ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
+      infoSliderIndex = 0;
+      playScreenFirst = true;
+      atomicTicketGenerationLeftCount = 0;
+      atomicTicketDeletionLeftCount = 0;
+
       return true;
     } catch (e) {
       log.error('Failed to clear data/sign out user: ' + e.toString());
@@ -706,6 +703,37 @@ class BaseUtil extends ChangeNotifier {
         .setPreference(Preferences.TAMBOLANOTIFICATIONS, (value) ? 1 : 0);
     AppState.unsavedPrefs = true;
     notifyListeners();
+  }
+
+  Future<void> updateAppOpenCount() async {
+    try {
+      SharedPreferences _prefs = await SharedPreferences.getInstance();
+      if(_prefs.containsKey("APP_OPEN_COUNT")) {
+        int currentValue = await getAppOpenCount();
+        currentValue+=1;
+        print('updating to $currentValue');
+        _prefs.setInt("APP_OPEN_COUNT", currentValue);
+      } else {
+        _prefs.setInt("APP_OPEN_COUNT", 1);
+      }
+    } catch(e) {
+      log.debug("Error while updating app open count");
+    }
+  }
+
+  Future<int> getAppOpenCount() async {
+    try {
+      SharedPreferences _prefs = await SharedPreferences.getInstance();
+      int res;
+      if(_prefs.containsKey("APP_OPEN_COUNT")) {
+        res = _prefs.getInt("APP_OPEN_COUNT");
+      } else {
+        res = 1;
+      }
+      return res;
+    } catch(e) {
+      log.debug("Error while fetching app open count.");
+    }
   }
 
   //Saving and fetching app lock user preference

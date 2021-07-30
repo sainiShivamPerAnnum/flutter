@@ -59,7 +59,6 @@ class _RootState extends State<Root> {
       NavBarItemData("Profile", Icons.verified_user, 115,
           "images/svgs/profile.svg", _showFocuses[3]),
     ];
-
     //Create the views which will be mapped to the indices for our nav btns
     _viewsByIndex = <Widget>[
       HomePage(),
@@ -72,7 +71,7 @@ class _RootState extends State<Root> {
           _navBarItems[1].showFocus = false;
           lclDbProvider.saveHomeTutorialComplete = true;
 
-          _showSecurityBottomSheet();
+          // _showSecurityBottomSheet();
 
           setState(() {});
         },
@@ -159,6 +158,16 @@ class _RootState extends State<Root> {
         }
       });
       _initAdhocNotifications();
+      if(baseProvider.app_open_count==1) {
+        WidgetsBinding.instance.addPostFrameCallback((_){
+          _showWalkthroughBottomSheet();
+        });
+      } 
+      if(baseProvider.app_open_count==2) {
+        WidgetsBinding.instance.addPostFrameCallback((_){
+          _showSecurityBottomSheet();
+        });
+      }
       baseProvider.isUnreadFreshchatSupportMessages().then((flag) {
         if (flag) {
           baseProvider.showPositiveAlert('You have unread support messages',
