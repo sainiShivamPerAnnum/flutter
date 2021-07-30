@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   DBModel dbProvider;
   AppState appState;
   bool _isInit = false;
+  int homebuildCount = 0;
 
   Future<void> getProfilePicUrl() async {
     baseProvider.myUserDpUrl =
@@ -66,6 +67,7 @@ class _HomePageState extends State<HomePage> {
         _isInit = true;
         baseProvider.isHomeCardsFetched = true;
         setState(() {});
+        homebuildCount = 3;
       });
     }
   }
@@ -79,7 +81,7 @@ class _HomePageState extends State<HomePage> {
       isImageLoading = true;
       getProfilePicUrl();
     }
-    if (!_isInit) {
+    if (!_isInit || baseProvider.feedCards.length == 0) {
       _init();
     }
     return Container(
@@ -102,16 +104,13 @@ class _HomePageState extends State<HomePage> {
             SafeArea(
               child: ClipRRect(
                 borderRadius: SizeConfig.homeViewBorder,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.blockSizeHorizontal * 5),
-                  child: ListView(
-                    controller: AppState.homeCardListController,
-                    physics: BouncingScrollPhysics(),
-                    children: (!baseProvider.isHomeCardsFetched)
-                        ? _buildLoadingFeed()
-                        : _buildHomeFeed(baseProvider.feedCards),
-                  ),
+                child: ListView(
+                  controller: AppState.homeCardListController,
+                  physics: BouncingScrollPhysics(),
+                  children: (!baseProvider.isHomeCardsFetched ||
+                          baseProvider.feedCards.length == 0)
+                      ? _buildLoadingFeed()
+                      : _buildHomeFeed(baseProvider.feedCards),
                 ),
               ),
             )
@@ -138,25 +137,47 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Widget> _buildHomeFeed(List<FeedCard> cards) {
+    if (cards.length == 0) {
+      return [
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: TextButton.icon(
+            onPressed: _init,
+            icon: Icon(
+              Icons.refresh,
+              color: Colors.white,
+            ),
+            label: Text(
+              "Click to reload",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        )
+      ];
+    }
     List<Widget> _widget = [
       Container(
         height: kToolbarHeight,
       ),
       _buildProfileRow(),
     ];
-    for (FeedCard card in cards) {
+
+    for (int i = 0; i < cards.length; i++) {
       _widget.add(HomeCard(
-        title: card.title,
-        asset: card.assetLocalLink,
-        subtitle: card.subtitle,
-        buttonText: card.btnText,
+        title: cards[i].title,
+        asset: cards[i].assetLocalLink,
+        subtitle: cards[i].subtitle,
+        buttonText: cards[i].btnText,
         onPressed: () async {
           HapticFeedback.vibrate();
-          delegate.parseRoute(Uri.parse(card.actionUri));
+          delegate.parseRoute(Uri.parse(cards[i].actionUri));
         },
         gradient: [
-          Color(card.clrCodeA),
-          Color(card.clrCodeB),
+          Color(cards[i].clrCodeA),
+          Color(cards[i].clrCodeB),
         ],
         // "0/d-guide"
         //   "3"
@@ -164,6 +185,9 @@ class _HomePageState extends State<HomePage> {
         //   "2/augDetails/editProfile/d-aboutus"
       ));
     }
+    // for (FeedCard card in cards) {
+    //  );
+    // }
 
     return _widget;
   }
@@ -173,10 +197,9 @@ class _HomePageState extends State<HomePage> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
       ),
-      margin: EdgeInsets.only(
-        top: SizeConfig.screenWidth * 0.10,
-        bottom: SizeConfig.screenWidth * 0.08,
-      ),
+      margin: EdgeInsets.symmetric(
+          horizontal: SizeConfig.blockSizeHorizontal * 5,
+          vertical: SizeConfig.blockSizeHorizontal * 8),
       width: double.infinity,
       child: Row(
         children: [
@@ -253,8 +276,9 @@ class HomeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-        bottom: 20,
-      ),
+          bottom: 20,
+          left: SizeConfig.blockSizeHorizontal * 5,
+          right: SizeConfig.blockSizeHorizontal * 5),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           gradient: new LinearGradient(

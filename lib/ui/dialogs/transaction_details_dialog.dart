@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -43,183 +44,189 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     _width = MediaQuery.of(context).size.width;
-    return Dialog(
-      insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      elevation: 0.0,
-      backgroundColor: Colors.transparent,
-      child: dialogContent2(context),
-    );
-  }
-
-  dialogContent(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Stack(
-          overflow: Overflow.visible,
-          alignment: Alignment.topCenter,
-          children: <Widget>[
-            SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Padding(
-                  padding:
-                      EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Transaction Details',
-                        style: TextStyle(
-                            fontSize: SizeConfig.largeTextSize,
-                            color: UiConstants.accentColor),
-                      ),
-                      Divider(),
-                      _addListField('Fund Name:',
-                          _getTileTitle(widget._transaction.subType)),
-                      _addListField(
-                          'Transaction Type:', widget._transaction.type),
-                      _addListField('Transaction Amount:',
-                          '₹${widget._transaction.amount.toStringAsFixed(2)}'),
-                      (widget._transaction.closingBalance > 0)
-                          ? _addListField('Overall Closing Balance:',
-                              '₹${widget._transaction.closingBalance.toStringAsFixed(2)}')
-                          : Container(),
-                      (widget._transaction.type !=
-                              UserTransaction.TRAN_TYPE_WITHDRAW)
-                          ? _addListField('Tickets Added:',
-                              '${widget._transaction.ticketUpCount}')
-                          : _addListField('Tickets Reduced:',
-                              '${widget._transaction.ticketUpCount}'),
-                      // _addListField('Transaction ID:',
-                      //     '${widget._transaction.docKey}'),
-                      (widget._transaction.subType ==
-                                  UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                              widget._transaction.type ==
-                                  UserTransaction.TRAN_TYPE_DEPOSIT)
-                          ? _addListField('Purchase Rate:',
-                              '₹${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm')
-                          : Container(),
-                      (widget._transaction.subType ==
-                                  UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                              widget._transaction.type ==
-                                  UserTransaction.TRAN_TYPE_WITHDRAW)
-                          ? _addListField('Sell Rate:',
-                              '₹${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm')
-                          : Container(),
-                      (widget._transaction.subType ==
-                                  UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                              widget._transaction.type ==
-                                  UserTransaction.TRAN_TYPE_DEPOSIT)
-                          ? _addListField('Gold Purchased:',
-                              '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm])} grams')
-                          : Container(),
-                      (widget._transaction.subType ==
-                                  UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                              widget._transaction.type ==
-                                  UserTransaction.TRAN_TYPE_WITHDRAW)
-                          ? _addListField('Gold Sold:',
-                              '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm])} grams')
-                          : Container(),
-                      (widget._transaction.subType ==
-                              UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
-                          ? _addListField('Closing Gold Balance:',
-                              '${widget._transaction.augmnt[UserTransaction.subFldAugTotalGoldGm]} grams')
-                          : Container(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      (_showInvoiceButton && !_isInvoiceLoading)
-                          ? InkWell(
-                              child: Padding(
-                                padding: EdgeInsets.all(20),
-                                child: Text(
-                                  'Download Invoice',
-                                  style: TextStyle(
-                                      color: UiConstants.primaryColor,
-                                      fontSize: SizeConfig.mediumTextSize),
-                                ),
-                              ),
-                              onTap: () async {
-                                if (widget._transaction.augmnt[
-                                        UserTransaction.subFldAugTranId] !=
-                                    null) {
-                                  _isInvoiceLoading = true;
-
-                                  setState(() {});
-                                  String trnId = widget._transaction
-                                      .augmnt[UserTransaction.subFldAugTranId];
-                                  augmontProvider
-                                      .generatePurchaseInvoicePdf(trnId)
-                                      .then((generatedPdfFilePath) {
-                                    _isInvoiceLoading = false;
-                                    setState(() {});
-                                    if (generatedPdfFilePath != null) {
-                                      OpenFile.open(generatedPdfFilePath);
-                                    } else {
-                                      baseProvider.showNegativeAlert(
-                                          'Invoice could\'nt be loaded',
-                                          'Please try again in some time',
-                                          context);
-                                    }
-                                  });
-                                } else {
-                                  baseProvider.showNegativeAlert(
-                                      'Invoice could\'nt be loaded',
-                                      'Please try again in some time',
-                                      context);
-                                }
-                              },
-                            )
-                          : Container(),
-                      (_showInvoiceButton && _isInvoiceLoading)
-                          ? Padding(
-                              padding: EdgeInsets.all(20),
-                              child: SpinKitThreeBounce(
-                                color: UiConstants.spinnerColor2,
-                                size: 18.0,
-                              ))
-                          : Container()
-                    ],
-                  )),
-            )
-          ]),
-    );
-  }
-
-  Widget _addListField(String title, String value) {
-    return ListTile(
-      contentPadding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.blockSizeHorizontal * 8,
-        vertical: SizeConfig.blockSizeVertical * 0.4,
-      ),
-      title: Container(
-        width: SizeConfig.screenWidth * 0.2,
-        child: Text(
-          title,
-          style: TextStyle(
-            color: UiConstants.accentColor,
-            fontSize: SizeConfig.mediumTextSize,
-          ),
+    return WillPopScope(
+      onWillPop: () async {
+        backButtonDispatcher.didPopRoute();
+        return true;
+      },
+      child: Dialog(
+        insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
         ),
-      ),
-      trailing: Container(
-        width: SizeConfig.screenWidth * 0.3,
-        child: Text(
-          value,
-          overflow: TextOverflow.clip,
-          style: TextStyle(
-            color: Colors.black54,
-            fontSize: SizeConfig.largeTextSize,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        child: dialogContent2(context),
       ),
     );
   }
+
+  // dialogContent(BuildContext context) {
+  //   return Container(
+  //     color: Colors.white,
+  //     child: Stack(
+  //         overflow: Overflow.visible,
+  //         alignment: Alignment.topCenter,
+  //         children: <Widget>[
+  //           SingleChildScrollView(
+  //             physics: BouncingScrollPhysics(),
+  //             child: Padding(
+  //                 padding:
+  //                     EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
+  //                 child: Column(
+  //                   mainAxisSize: MainAxisSize.min,
+  //                   mainAxisAlignment: MainAxisAlignment.center,
+  //                   crossAxisAlignment: CrossAxisAlignment.center,
+  //                   children: [
+  //                     Text(
+  //                       'Transaction Details',
+  //                       style: TextStyle(
+  //                           fontSize: SizeConfig.largeTextSize,
+  //                           color: UiConstants.accentColor),
+  //                     ),
+  //                     Divider(),
+  //                     _addListField('Fund Name:',
+  //                         _getTileTitle(widget._transaction.subType)),
+  //                     _addListField(
+  //                         'Transaction Type:', widget._transaction.type),
+  //                     _addListField('Transaction Amount:',
+  //                         '₹${widget._transaction.amount.toStringAsFixed(2)}'),
+  //                     (widget._transaction.closingBalance > 0)
+  //                         ? _addListField('Overall Closing Balance:',
+  //                             '₹${widget._transaction.closingBalance.toStringAsFixed(2)}')
+  //                         : Container(),
+  //                     (widget._transaction.type !=
+  //                             UserTransaction.TRAN_TYPE_WITHDRAW)
+  //                         ? _addListField('Tickets Added:',
+  //                             '${widget._transaction.ticketUpCount}')
+  //                         : _addListField('Tickets Reduced:',
+  //                             '${widget._transaction.ticketUpCount}'),
+  //                     // _addListField('Transaction ID:',
+  //                     //     '${widget._transaction.docKey}'),
+  //                     (widget._transaction.subType ==
+  //                                 UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
+  //                             widget._transaction.type ==
+  //                                 UserTransaction.TRAN_TYPE_DEPOSIT)
+  //                         ? _addListField('Purchase Rate:',
+  //                             '₹${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm')
+  //                         : Container(),
+  //                     (widget._transaction.subType ==
+  //                                 UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
+  //                             widget._transaction.type ==
+  //                                 UserTransaction.TRAN_TYPE_WITHDRAW)
+  //                         ? _addListField('Sell Rate:',
+  //                             '₹${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm')
+  //                         : Container(),
+  //                     (widget._transaction.subType ==
+  //                                 UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
+  //                             widget._transaction.type ==
+  //                                 UserTransaction.TRAN_TYPE_DEPOSIT)
+  //                         ? _addListField('Gold Purchased:',
+  //                             '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm])} grams')
+  //                         : Container(),
+  //                     (widget._transaction.subType ==
+  //                                 UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
+  //                             widget._transaction.type ==
+  //                                 UserTransaction.TRAN_TYPE_WITHDRAW)
+  //                         ? _addListField('Gold Sold:',
+  //                             '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm])} grams')
+  //                         : Container(),
+  //                     (widget._transaction.subType ==
+  //                             UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
+  //                         ? _addListField('Closing Gold Balance:',
+  //                             '${widget._transaction.augmnt[UserTransaction.subFldAugTotalGoldGm]} grams')
+  //                         : Container(),
+  //                     SizedBox(
+  //                       height: 10,
+  //                     ),
+  //                     (_showInvoiceButton && !_isInvoiceLoading)
+  //                         ? InkWell(
+  //                             child: Padding(
+  //                               padding: EdgeInsets.all(20),
+  //                               child: Text(
+  //                                 'Download Invoice',
+  //                                 style: TextStyle(
+  //                                     color: UiConstants.primaryColor,
+  //                                     fontSize: SizeConfig.mediumTextSize),
+  //                               ),
+  //                             ),
+  //                             onTap: () async {
+  //                               if (widget._transaction.augmnt[
+  //                                       UserTransaction.subFldAugTranId] !=
+  //                                   null) {
+  //                                 _isInvoiceLoading = true;
+
+  //                                 setState(() {});
+  //                                 String trnId = widget._transaction
+  //                                     .augmnt[UserTransaction.subFldAugTranId];
+  //                                 augmontProvider
+  //                                     .generatePurchaseInvoicePdf(trnId)
+  //                                     .then((generatedPdfFilePath) {
+  //                                   _isInvoiceLoading = false;
+  //                                   setState(() {});
+  //                                   if (generatedPdfFilePath != null) {
+  //                                     OpenFile.open(generatedPdfFilePath);
+  //                                   } else {
+  //                                     baseProvider.showNegativeAlert(
+  //                                         'Invoice could\'nt be loaded',
+  //                                         'Please try again in some time',
+  //                                         context);
+  //                                   }
+  //                                 });
+  //                               } else {
+  //                                 baseProvider.showNegativeAlert(
+  //                                     'Invoice could\'nt be loaded',
+  //                                     'Please try again in some time',
+  //                                     context);
+  //                               }
+  //                             },
+  //                           )
+  //                         : Container(),
+  //                     (_showInvoiceButton && _isInvoiceLoading)
+  //                         ? Padding(
+  //                             padding: EdgeInsets.all(20),
+  //                             child: SpinKitThreeBounce(
+  //                               color: UiConstants.spinnerColor2,
+  //                               size: 18.0,
+  //                             ))
+  //                         : Container()
+  //                   ],
+  //                 )),
+  //           )
+  //         ]),
+  //   );
+  // }
+
+  // Widget _addListField(String title, String value) {
+  //   return ListTile(
+  //     contentPadding: EdgeInsets.symmetric(
+  //       horizontal: SizeConfig.blockSizeHorizontal * 8,
+  //       vertical: SizeConfig.blockSizeVertical * 0.4,
+  //     ),
+  //     title: Container(
+  //       width: SizeConfig.screenWidth * 0.2,
+  //       child: Text(
+  //         title,
+  //         style: TextStyle(
+  //           color: UiConstants.accentColor,
+  //           fontSize: SizeConfig.mediumTextSize,
+  //         ),
+  //       ),
+  //     ),
+  //     trailing: Container(
+  //       width: SizeConfig.screenWidth * 0.3,
+  //       child: Text(
+  //         value,
+  //         overflow: TextOverflow.clip,
+  //         style: TextStyle(
+  //           color: Colors.black54,
+  //           fontSize: SizeConfig.largeTextSize,
+  //           fontWeight: FontWeight.w500,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   String _getTileTitle(String type) {
     if (type == UserTransaction.TRAN_SUBTYPE_ICICI) {

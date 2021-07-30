@@ -201,10 +201,8 @@ class HttpModel extends ChangeNotifier {
     var request = http.Request('POST', Uri.parse(_uri));
     request.bodyFields = {'pan': pan};
     request.headers.addAll(headers);
-
     try {
       http.StreamedResponse _response = await request.send();
-      log.debug(await _response.stream.bytesToString());
       if (_response.statusCode == 200) {
         try {
           Map<String, dynamic> parsed =
@@ -215,6 +213,7 @@ class HttpModel extends ChangeNotifier {
           return false;
         }
       } else {
+        log.error("Response code: ${_response.statusCode}");
         return false;
       }
     } catch (e) {

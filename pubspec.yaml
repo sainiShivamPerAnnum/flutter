@@ -42,6 +42,7 @@ dependencies:
   url_launcher: ^5.7.0
   device_unlock : ^1.1.2
   in_app_update: ^2.0.0
+  image_gallery_saver: ^1.6.9
   #ui packages
   camera: ^0.7.0+2
   cached_network_image: ^2.0.0

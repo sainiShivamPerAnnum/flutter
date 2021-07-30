@@ -1123,7 +1123,9 @@ class DBModel extends ChangeNotifier {
             _cards.add(FeedCard.fromMap(documentSnapshot.data()));
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      log.error('Error Fetching Home cards: ${e.toString()}');
+    }
     return _cards;
   }
 

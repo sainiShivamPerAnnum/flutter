@@ -344,7 +344,7 @@ class UserPreferences {
   //current values
   Map<String, int> _activePrefs = {};
 
-  UserPreferences(Map<String, dynamic> remValues) {
+  UserPreferences(Map<dynamic, dynamic> remValues) {
     for (Preferences p in Preferences.values) {
       String _fKey = _index[p];
       int _defValue = _defValues[p];

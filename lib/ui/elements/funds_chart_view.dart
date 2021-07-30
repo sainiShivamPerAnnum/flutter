@@ -81,16 +81,19 @@ class _FundsChartViewState extends State<FundsChartView> {
                         title: title[0],
                         amount: "₹ ${dataMap[title[0]].toStringAsFixed(2)}",
                         color: colorList[0],
-                        titleTextStyle: (touchedIndex==0) ? TextStyle(
-                          fontSize: SizeConfig.smallTextSize * 1.2,
-                          color: UiConstants.textColor,
-                          fontWeight: FontWeight.bold
-                        ) : null,
-                        bodyTextStyle: (touchedIndex==0) ? TextStyle(
-                          fontSize: SizeConfig.mediumTextSize,
-                          fontWeight: FontWeight.bold,
-                          color: UiConstants.textColor,
-                        ):null,
+                        titleTextStyle: (touchedIndex == 0)
+                            ? TextStyle(
+                                fontSize: SizeConfig.smallTextSize * 1.2,
+                                color: UiConstants.textColor,
+                                fontWeight: FontWeight.bold)
+                            : null,
+                        bodyTextStyle: (touchedIndex == 0)
+                            ? TextStyle(
+                                fontSize: SizeConfig.mediumTextSize,
+                                fontWeight: FontWeight.bold,
+                                color: UiConstants.textColor,
+                              )
+                            : null,
                       ),
                     )
                   : Container(),
@@ -99,16 +102,19 @@ class _FundsChartViewState extends State<FundsChartView> {
                   title: title[1],
                   amount: "₹ ${dataMap[title[1]].toStringAsFixed(2)}",
                   color: colorList[1],
-                  titleTextStyle: (touchedIndex==1) ? TextStyle(
-                    fontSize: SizeConfig.smallTextSize * 1.2,
-                    color: UiConstants.textColor,
-                    fontWeight: FontWeight.bold
-                  ) : null,
-                  bodyTextStyle: (touchedIndex==1) ? TextStyle(
-                      fontSize: SizeConfig.mediumTextSize,
-                      fontWeight: FontWeight.bold,
-                      color: UiConstants.textColor,
-                    ):null,
+                  titleTextStyle: (touchedIndex == 1)
+                      ? TextStyle(
+                          fontSize: SizeConfig.smallTextSize * 1.2,
+                          color: UiConstants.textColor,
+                          fontWeight: FontWeight.bold)
+                      : null,
+                  bodyTextStyle: (touchedIndex == 1)
+                      ? TextStyle(
+                          fontSize: SizeConfig.mediumTextSize,
+                          fontWeight: FontWeight.bold,
+                          color: UiConstants.textColor,
+                        )
+                      : null,
                   onClick: () {
                     HapticFeedback.vibrate();
                     showDialog(
@@ -125,16 +131,19 @@ class _FundsChartViewState extends State<FundsChartView> {
                   title: title[2],
                   amount: "₹ ${dataMap[title[2]].toStringAsFixed(2)}",
                   color: colorList[2],
-                  titleTextStyle: (touchedIndex==2) ? TextStyle(
-                    fontSize: SizeConfig.smallTextSize * 1.2,
-                    color: UiConstants.textColor,
-                    fontWeight: FontWeight.bold
-                  ) : null,
-                  bodyTextStyle: (touchedIndex==2) ? TextStyle(
-                    fontSize: SizeConfig.mediumTextSize,
-                    fontWeight: FontWeight.bold,
-                    color: UiConstants.textColor,
-                  ):null,
+                  titleTextStyle: (touchedIndex == 2)
+                      ? TextStyle(
+                          fontSize: SizeConfig.smallTextSize * 1.2,
+                          color: UiConstants.textColor,
+                          fontWeight: FontWeight.bold)
+                      : null,
+                  bodyTextStyle: (touchedIndex == 2)
+                      ? TextStyle(
+                          fontSize: SizeConfig.mediumTextSize,
+                          fontWeight: FontWeight.bold,
+                          color: UiConstants.textColor,
+                        )
+                      : null,
                   isHighlighted:
                       widget.userFundWallet.isPrizeBalanceUnclaimed(),
                   onClick: () {
@@ -169,16 +178,19 @@ class _FundsChartViewState extends State<FundsChartView> {
                         title: title[3],
                         amount: "₹ ${dataMap[title[3]].toStringAsFixed(2)}",
                         color: colorList[3],
-                        titleTextStyle: (touchedIndex==3) ? TextStyle(
-                          fontSize: SizeConfig.smallTextSize * 1.2,
-                          color: UiConstants.textColor,
-                          fontWeight: FontWeight.bold
-                        ) : null,
-                        bodyTextStyle: (touchedIndex==3) ? TextStyle(
-                          fontSize: SizeConfig.mediumTextSize,
-                          fontWeight: FontWeight.bold,
-                          color: UiConstants.textColor,
-                        ):null,
+                        titleTextStyle: (touchedIndex == 3)
+                            ? TextStyle(
+                                fontSize: SizeConfig.smallTextSize * 1.2,
+                                color: UiConstants.textColor,
+                                fontWeight: FontWeight.bold)
+                            : null,
+                        bodyTextStyle: (touchedIndex == 3)
+                            ? TextStyle(
+                                fontSize: SizeConfig.mediumTextSize,
+                                fontWeight: FontWeight.bold,
+                                color: UiConstants.textColor,
+                              )
+                            : null,
                         onClick: () {
                           HapticFeedback.vibrate();
                           showDialog(
@@ -239,45 +251,51 @@ class _FundsChartViewState extends State<FundsChartView> {
         //   ),
         // ),
         Container(
-          width: SizeConfig.screenWidth*0.5,
-          height: SizeConfig.screenHeight*0.2,
+          width: SizeConfig.screenWidth * 0.5,
+          height: SizeConfig.screenHeight * 0.2,
           child: Stack(
             children: [
               Align(
                 alignment: Alignment.center,
-                child: Text('₹ ${widget.userFundWallet.getEstTotalWealth().toStringAsFixed(2)}', style: TextStyle(fontSize: SizeConfig.largeTextSize),),
+                child: Text(
+                  '₹ ${widget.userFundWallet.getEstTotalWealth().toStringAsFixed(2)}',
+                  style: TextStyle(fontSize: SizeConfig.largeTextSize),
+                ),
               ),
               PieChart(
                 PieChartData(
                   sections: _getSections(),
                   pieTouchData: PieTouchData(touchCallback: (pieTouchResponse) {
                     setState(() {
-                      final desiredTouch = pieTouchResponse.touchInput is! PointerExitEvent &&
-                          pieTouchResponse.touchInput is! PointerUpEvent;
-                      if (desiredTouch && pieTouchResponse.touchedSection != null) {
-                        touchedIndex = pieTouchResponse.touchedSection.touchedSectionIndex;
+                      final desiredTouch =
+                          pieTouchResponse.touchInput is! PointerExitEvent &&
+                              pieTouchResponse.touchInput is! PointerUpEvent;
+                      if (desiredTouch &&
+                          pieTouchResponse.touchedSection != null) {
+                        touchedIndex =
+                            pieTouchResponse.touchedSection.touchedSectionIndex;
                       } else {
                         touchedIndex = -1;
-                      } 
+                      }
                     });
                   }),
                 ),
               ),
-            // ),
-            // chartValuesOptions: ChartValuesOptions(
-            //   showChartValueBackground: true,
-            //   showChartValues: false,
-            //   chartValueBackgroundColor: UiConstants.backgroundColor,
-            //   chartValueStyle: GoogleFonts.montserrat(
-            //     fontSize: math.min(
-            //         SizeConfig.screenWidth /
-            //             (widget.userFundWallet
-            //                     .getEstTotalWealth()
-            //                     .toStringAsFixed(2)
-            //                     .length *
-            //                 1.6),
-            //         SizeConfig.largeTextSize * 2),
-            //     color: UiConstants.textColor,
+              // ),
+              // chartValuesOptions: ChartValuesOptions(
+              //   showChartValueBackground: true,
+              //   showChartValues: false,
+              //   chartValueBackgroundColor: UiConstants.backgroundColor,
+              //   chartValueStyle: GoogleFonts.montserrat(
+              //     fontSize: math.min(
+              //         SizeConfig.screenWidth /
+              //             (widget.userFundWallet
+              //                     .getEstTotalWealth()
+              //                     .toStringAsFixed(2)
+              //                     .length *
+              //                 1.6),
+              //         SizeConfig.largeTextSize * 2),
+              //     color: UiConstants.textColor,
 //               Align(
 //                 alignment: Alignment.topRight,
 //                 child: Container(
@@ -308,26 +326,24 @@ class _FundsChartViewState extends State<FundsChartView> {
 
   List<PieChartSectionData> _getSections() {
     List<PieChartSectionData> res = [];
-    int _i=0;
+    int _i = 0;
     getChartMap().forEach((key, value) {
-      final isTouched = _i==touchedIndex;
-      final fontSize = isTouched ? SizeConfig.mediumTextSize*1.2 : SizeConfig.mediumTextSize;
+      final isTouched = _i == touchedIndex;
+      final fontSize = isTouched
+          ? SizeConfig.mediumTextSize * 1.2
+          : SizeConfig.mediumTextSize;
       final radius = isTouched ? 30.0 : 20.0;
-      res.add(
-        PieChartSectionData(
+      res.add(PieChartSectionData(
           color: colorList[_i],
           value: value,
           title: key,
           showTitle: false,
           radius: radius,
-          titleStyle: TextStyle(fontSize: fontSize)
-        )
-      );
+          titleStyle: TextStyle(fontSize: fontSize)));
       _i++;
     });
     return res;
   }
-
 }
 
 class Legend extends StatelessWidget {
@@ -392,20 +408,24 @@ class Legend extends StatelessWidget {
                 children: [
                   Text(
                     amount,
-                    style: (bodyTextStyle==null)?TextStyle(
-                      fontSize: SizeConfig.mediumTextSize,
-                      fontWeight: FontWeight.w500,
-                      color: UiConstants.textColor,
-                    ):bodyTextStyle,
+                    style: (bodyTextStyle == null)
+                        ? TextStyle(
+                            fontSize: SizeConfig.mediumTextSize,
+                            fontWeight: FontWeight.w500,
+                            color: UiConstants.textColor,
+                          )
+                        : bodyTextStyle,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Text(
                       title,
-                      style: (titleTextStyle==null)?TextStyle(
-                        fontSize: SizeConfig.smallTextSize * 1.2,
-                        color: UiConstants.textColor,
-                      ):titleTextStyle,
+                      style: (titleTextStyle == null)
+                          ? TextStyle(
+                              fontSize: SizeConfig.smallTextSize * 1.2,
+                              color: UiConstants.textColor,
+                            )
+                          : titleTextStyle,
                     ),
                   ),
                 ],

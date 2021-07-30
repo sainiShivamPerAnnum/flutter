@@ -41,7 +41,6 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
     final temp = await ImagePicker().getImage(source: ImageSource.gallery);
     if (temp != null) {
       HapticFeedback.vibrate();
-      print("--------------------------------->" + temp.path);
       showDialog(
         context: context,
         builder: (BuildContext context) => ChangeProfilePicture(
@@ -311,7 +310,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                         .withOpacity(0.5),
                                     fontSize: SizeConfig.mediumTextSize * 0.8),
                               ),
-                              subtitle: baseProvider.myUser.pan != null ||
+                              subtitle: baseProvider.myUser.pan != null &&
                                       baseProvider.myUser.pan != ""
                                   ? Text(
                                       baseProvider.myUser.pan,
@@ -423,7 +422,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                     .getPreference(Preferences.APPLOCK) ==
                                 1),
                             onChanged: (val) {
-                              baseProvider.flipSecurityValue(!val);
+                              baseProvider.flipSecurityValue(val);
                             }),
                       ),
                       ListTile(
@@ -431,7 +430,10 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                         trailing: fcmProvider.isTambolaNotificationLoading
                             ? CircularProgressIndicator()
                             : Switch.adaptive(
-                                value: fcmProvider.tambolaDrawNotifications,
+                                value: (baseProvider.myUser.userPreferences
+                                        .getPreference(
+                                            Preferences.TAMBOLANOTIFICATIONS) ==
+                                    1),
                                 onChanged: (val) {
                                   fcmProvider
                                       .toggleTambolaDrawNotificationStatus(val);

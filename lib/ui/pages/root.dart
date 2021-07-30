@@ -221,7 +221,7 @@ class _RootState extends State<Root> {
                 width: SizeConfig.blockSizeVertical * 5,
                 margin: EdgeInsets.symmetric(
                   horizontal: SizeConfig.blockSizeHorizontal * 5,
-                  vertical: kToolbarHeight * 0.4,
+                  vertical: kToolbarHeight * 0.2,
                 ),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,

@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
+import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -22,7 +24,7 @@ class FcmListener extends ChangeNotifier {
   DBModel _dbModel = locator<DBModel>();
   FcmHandler _handler = locator<FcmHandler>();
   FirebaseMessaging _fcm;
-  bool _tambolaDrawNotifications = true;  //TODO
+  bool _tambolaDrawNotifications = true; //TODO
   bool isTambolaNotificationLoading = false;
   // /// Create a [AndroidNotificationChannel] for heads up notifications
   // static const AndroidNotificationChannel _androidChannel =
@@ -32,13 +34,6 @@ class FcmListener extends ChangeNotifier {
   //   'This channel is used for important notifications.', // description
   //   importance: Importance.high,
   // );
-
-  bool get tambolaDrawNotifications => _tambolaDrawNotifications;
-
-  set tambolaDrawNotifications(bool val) {
-    _tambolaDrawNotifications = val;
-    notifyListeners();
-  }
 
   /// Initialize the [FlutterLocalNotificationsPlugin] package.
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -114,8 +109,6 @@ class FcmListener extends ChangeNotifier {
     if (_baseUtil.myUser != null && _baseUtil.myUser.mobile != null)
       await _saveDeviceToken();
 
-    await getTambolaDrawNotificationStatus();
-
     return _fcm;
   }
 
@@ -142,13 +135,12 @@ class FcmListener extends ChangeNotifier {
     }
 
     if (_baseUtil.userTicketWallet != null &&
-        _baseUtil.userTicketWallet.getActiveTickets() > 0) {
-      await getTambolaDrawNotificationStatus();
+        _baseUtil.userTicketWallet.getActiveTickets() > 0 &&
+        _baseUtil.myUser.userPreferences
+                .getPreference(Preferences.TAMBOLANOTIFICATIONS) ==
+            1) {
       // if (_tambolaDrawNotifications) {
-      if (true) {
-        addSubscription(FcmTopic.TAMBOLAPLAYER);
-        saveTambolaDrawNotification(true);
-      }
+      addSubscription(FcmTopic.TAMBOLAPLAYER);
     }
 
     if (BaseUtil.packageInfo != null) {
@@ -223,20 +215,7 @@ class FcmListener extends ChangeNotifier {
 // TAMBOLA DRAW NOTIFICATION STATUS HANDLE CODE
 
   // SAVE STATUS TO SHARED PREFS
-  saveTambolaDrawNotification(bool val) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool("tNotif", val);
-    tambolaDrawNotifications = val;
-    print("--------------------> $tambolaDrawNotifications");
-    print(prefs.getBool('tNotif'));
-  }
-
-  // SET THE LOCAL SAVED STATUS VALUE TO THE LOCAL VARIABLE
-  Future getTambolaDrawNotificationStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    tambolaDrawNotifications = prefs.getBool("tNotif");
-    print("-----------------------> $tambolaDrawNotifications");
-  }
+  saveTambolaDrawNotification(bool val) async {}
 
   // TOGGLE THE SUBSCRIPTION
   Future toggleTambolaDrawNotificationStatus(bool val) async {
@@ -251,7 +230,7 @@ class FcmListener extends ChangeNotifier {
         await removeSubscription(FcmTopic.TAMBOLAPLAYER);
         print("subscription removed");
       }
-      saveTambolaDrawNotification(val);
+      _baseUtil.toggleTambolaNotificationStatus(val);
     } catch (e) {
       log.error(e.toString());
       _baseUtil.showNegativeAlert(

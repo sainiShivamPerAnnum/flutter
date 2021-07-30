@@ -84,72 +84,57 @@ class _ContactUsPageState extends State<ContactUsPage>
                     ),
                   ),
                 ),
-                Container(
-                  height: SizeConfig.screenHeight * 0.3,
-                  width: SizeConfig.screenWidth * 0.6,
-                  alignment: Alignment.center,
-                  padding:
-                      EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: MediaQuery.of(context).padding.top),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: FittedBox(
-                              child: RichText(
-                                text: TextSpan(
-                                  text: "Su",
+                SafeArea(
+                  child: Container(
+                    height: double.infinity,
+                    width: SizeConfig.screenWidth * 0.6,
+                    padding: EdgeInsets.only(
+                        left: SizeConfig.blockSizeHorizontal * 5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: FittedBox(
+                                child: Text(
+                                  "Support 👩🏼‍🔧",
                                   style: GoogleFonts.montserrat(
                                       fontSize:
                                           SizeConfig.cardTitleTextSize * 2,
                                       fontWeight: FontWeight.w500,
                                       color: Colors.white),
-                                  children: [
-                                    TextSpan(
-                                      text: 'pp',
-                                      style: GoogleFonts.montserrat(
-                                          fontSize:
-                                              SizeConfig.cardTitleTextSize * 2,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black),
-                                    ),
-                                    TextSpan(
-                                      text: 'ort ',
-                                    ),
-                                  ],
                                 ),
                               ),
                             ),
-                          ),
-                          Text(
-                            "( 24 x 7 )",
-                            style: GoogleFonts.montserrat(
-                              fontWeight: FontWeight.w300,
-                              color: Colors.white,
-                            ),
-                          )
-                        ],
-                      ),
-                      // Text(
-                      //   "24 x 7",
-                      //   style: TextStyle(
-                      //     color: Colors.white,
-                      //     fontWeight: FontWeight.w700,
-                      //   ),
-                      // ),
-                      Text(
-                        "We'd love to assist you with any kind of problem you face in the app.",
-                        style: TextStyle(
-                          color: Colors.white,
-                          height: 1.4,
-                          fontSize: SizeConfig.mediumTextSize,
+                            // Text(
+                            //   "( 24 x 7 )",
+                            //   style: GoogleFonts.montserrat(
+                            //     fontWeight: FontWeight.w300,
+                            //     color: Colors.white,
+                            //   ),
+                            // )
+                          ],
                         ),
-                      )
-                    ],
+                        // Text(
+                        //   "24 x 7",
+                        //   style: TextStyle(
+                        //     color: Colors.white,
+                        //     fontWeight: FontWeight.w700,
+                        //   ),
+                        // ),
+                        Text(
+                          "We'd love to assist you with any kind of problem you face in the app.",
+                          style: TextStyle(
+                            color: Colors.white,
+                            height: 1.4,
+                            fontSize: SizeConfig.mediumTextSize,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 SafeArea(
@@ -186,19 +171,28 @@ class _ContactUsPageState extends State<ContactUsPage>
                 ),
               ],
             ),
-            // decoration: BoxDecoration(
-            //   image: DecorationImage(
-            //     colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.6), BlendMode.dstATop),
-            //     alignment: Alignment.bottomRight,
-            //     image: AssetImage('images/contact_bg.png')
-            //   )
-            // ),
           ),
           Expanded(
             child: SingleChildScrollView(
               physics: BouncingScrollPhysics(),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: 16,
+                      left: SizeConfig.blockSizeHorizontal * 4,
+                    ),
+                    child: Text(
+                      "Instant Support",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: UiConstants.primaryColor.withOpacity(0.5),
+                        fontSize: SizeConfig.largeTextSize,
+                      ),
+                    ),
+                  ),
+                  Divider(),
                   ListTile(
                     title: Text('Chat with Us',
                         style: TextStyle(color: UiConstants.textColor)),
@@ -242,6 +236,21 @@ class _ContactUsPageState extends State<ContactUsPage>
                       _showRequestCallSheet();
                     },
                   ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: 16,
+                      left: SizeConfig.blockSizeHorizontal * 4,
+                    ),
+                    child: Text(
+                      "Guide Support",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: UiConstants.primaryColor.withOpacity(0.5),
+                        fontSize: SizeConfig.largeTextSize,
+                      ),
+                    ),
+                  ),
+                  Divider(),
                   ListTile(
                     title: Text('Play Walkthrough',
                         style: TextStyle(color: UiConstants.textColor)),
@@ -270,47 +279,6 @@ class _ContactUsPageState extends State<ContactUsPage>
                           state: PageState.addPage, page: FaqPageConfig);
                     },
                   ),
-                  Container(
-                    height: SizeConfig.screenHeight * 0.3,
-                    width: SizeConfig.screenWidth,
-                    alignment: Alignment.center,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "images/fello-short-logo.png",
-                          color: Colors.grey,
-                          width: SizeConfig.cardTitleTextSize,
-                          height: SizeConfig.cardTitleTextSize,
-                        ),
-                        SizedBox(width: 4),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Version 1.0.2",
-                              style: TextStyle(
-                                  fontSize: SizeConfig.mediumTextSize,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.grey),
-                            ),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            Text(
-                              "Made for India ❤",
-                              style: TextStyle(
-                                fontSize: SizeConfig.smallTextSize,
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  )
                 ],
               ),
             ),
