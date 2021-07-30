@@ -90,19 +90,25 @@ class AugmontModel extends ChangeNotifier {
       log.debug(resMap[CreateUser.resStatusCode].toString());
       resMap["flag"] = QUERY_PASSED;
 
+      ///create augmont detail object
       _baseProvider.augmontDetail = UserAugmontDetail.newUser(
           _uid, _uname, stateId, bankHolderName, bankAccNo, ifsc);
-      // _baseProvider.myUser.isAugmontOnboarded = true;
-      _baseProvider.updateAugmontOnboarded(true);
+      bool _p = false,_a = false;
+      ///add the pan number
       if (_baseProvider.userRegdPan == null ||
           _baseProvider.userRegdPan.isEmpty ||
           _baseProvider.userRegdPan != pan) {
         _baseProvider.userRegdPan = pan;
-        await _baseProvider.panService.saveUserPan(_baseProvider.userRegdPan);
+        _p = await _baseProvider.panService.saveUserPan(_baseProvider.userRegdPan);
       }
-      await _dbModel.updateUserAugmontDetails(
+      ///push the augmont detail object
+      _a = await _dbModel.updateUserAugmontDetails(
           _baseProvider.myUser.uid, _baseProvider.augmontDetail);
-      await _dbModel.updateUser(_baseProvider.myUser);
+      ///switch augmont onboarding to true and notify listeners if everything goes in order
+      if(_p && _a) {
+        _baseProvider.updateAugmontOnboarded(true);
+        await _dbModel.updateUser(_baseProvider.myUser);
+      }
 
       return _baseProvider.augmontDetail;
     }

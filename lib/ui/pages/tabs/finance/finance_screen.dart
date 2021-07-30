@@ -9,7 +9,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/funds_chart_view.dart';
 import 'package:felloapp/ui/pages/tabs/finance/augmont-details.dart';
-import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -267,7 +266,7 @@ class FundWidget extends StatelessWidget {
                       color: Colors.white,
                       height: 1.4,
                       letterSpacing: 1.5,
-                      fontSize: math.min(SizeConfig.largeTextSize,30),
+                      fontSize: math.min(SizeConfig.largeTextSize, 30),
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -281,7 +280,7 @@ class FundWidget extends StatelessWidget {
                             'Coming Soon',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: math.min(height * 0.020,22),
+                              fontSize: math.min(height * 0.020, 22),
                               fontWeight: FontWeight.w400,
                             ),
                           ),
