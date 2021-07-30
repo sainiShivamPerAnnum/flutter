@@ -78,7 +78,6 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
             children: [
               Container(
                 width: SizeConfig.screenWidth,
-                height: SizeConfig.screenHeight / 2.4,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                       image:
@@ -88,8 +87,6 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                 child: Stack(
                   children: [
                     Container(
-                      width: SizeConfig.screenWidth,
-                      height: SizeConfig.screenHeight / 2.4,
                       decoration: BoxDecoration(
                         gradient: new LinearGradient(
                             colors: [
@@ -99,31 +96,43 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             begin: Alignment(0.5, -1.0),
                             end: Alignment(0.5, 1.0)),
                       ),
-                    ),
-                    SafeArea(
-                      child: Container(
-                        width: SizeConfig.screenWidth,
-                        height: SizeConfig.screenHeight / 2.4,
+                      child: SafeArea(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(height: kToolbarHeight),
+                            Container(
+                              height: kToolbarHeight,
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.arrow_back_rounded,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () =>
+                                        backButtonDispatcher.didPopRoute(),
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    "My Profile",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: SizeConfig.largeTextSize,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  SizedBox(width: 40)
+                                ],
+                              ),
+                            ),
                             Container(
                               height: picSize,
                               width: picSize,
+                              margin: EdgeInsets.symmetric(vertical: 8),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border:
                                     Border.all(color: Colors.white, width: 8),
-                                // boxShadow: [
-                                //   BoxShadow(
-                                //       color: UiConstants.primaryColor
-                                //           .withBlue(900)
-                                //           .withOpacity(0.5),
-                                //       offset: Offset(0, 10),
-                                //       blurRadius: 30,
-                                //       spreadRadius: 2)
-                                // ],
                                 image: DecorationImage(
                                     image: baseProvider.myUserDpUrl == null ||
                                             baseProvider.myUserDpUrl == ""
@@ -189,77 +198,56 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                 ),
                               ),
                             ),
-                            Container(
-                              margin: EdgeInsets.only(
-                                  left: SizeConfig.blockSizeHorizontal * 5,
-                                  right: SizeConfig.blockSizeHorizontal * 5,
-                                  top: 16,
-                                  bottom: SizeConfig.blockSizeHorizontal * 4),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: SizedBox(),
+                            FittedBox(
+                              child: TextButton.icon(
+                                onPressed: () {
+                                  AppState.screenStack.add(ScreenItem.dialog);
+                                  showDialog(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (ctx) => UpdateNameDialog());
+                                },
+                                icon: Icon(
+                                  Icons.edit_outlined,
+                                  color: Colors.white,
+                                  size: SizeConfig.cardTitleTextSize,
+                                ),
+                                label: Text(
+                                  baseProvider.myUser.name,
+                                  overflow: TextOverflow.clip,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: SizeConfig.cardTitleTextSize,
+                                    color: Colors.white,
                                   ),
-                                  FittedBox(
-                                    child: Text(
-                                      baseProvider.myUser.name,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: SizeConfig.cardTitleTextSize,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      AppState.screenStack
-                                          .add(ScreenItem.dialog);
-                                      showDialog(
-                                          barrierDismissible: false,
-                                          context: context,
-                                          builder: (ctx) => UpdateNameDialog());
-                                    },
-                                    icon: Icon(
-                                      Icons.edit_outlined,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                ],
+                                ),
                               ),
                             ),
+                            SizedBox(
+                              height: 10,
+                            )
                           ],
                         ),
                       ),
                     ),
-                    SafeArea(
-                      child: Container(
-                        height: kToolbarHeight,
-                        child: Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                Icons.arrow_back_rounded,
-                                color: Colors.white,
-                              ),
-                              onPressed: () =>
-                                  backButtonDispatcher.didPopRoute(),
-                            ),
-                            Spacer(),
-                            Text(
-                              "My Profile",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: SizeConfig.largeTextSize,
-                              ),
-                            ),
-                            Spacer(),
-                            SizedBox(width: 40)
-                          ],
-                        ),
-                      ),
-                    )
+                    // Positioned(
+                    //     bottom: 0,
+                    //     right: 0,
+                    //     child: IconButton(
+                    //       onPressed: () {
+                    //         AppState.screenStack.add(ScreenItem.dialog);
+                    //         showDialog(
+                    //             barrierDismissible: false,
+                    //             context: context,
+                    //             builder: (ctx) => UpdateNameDialog());
+                    //       },
+                    //       icon: Icon(
+                    //         Icons.edit_outlined,
+                    //         color: Colors.white,
+                    //         size: SizeConfig.largeTextSize,
+                    //       ),
+                    //     ))
                   ],
                 ),
               ),

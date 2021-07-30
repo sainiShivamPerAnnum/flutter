@@ -161,6 +161,7 @@ class _GamePageState extends State<GamePage> {
                           InkWell(
                             onTap: () {
                               HapticFeedback.vibrate();
+                              AppState.screenStack.add(ScreenItem.dialog);
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) =>

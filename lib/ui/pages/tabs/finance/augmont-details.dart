@@ -330,6 +330,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
             'The current rates couldn\'t be loaded. Please try again', context);
         return false;
       } else {
+        AppState.screenStack.add(ScreenItem.dialog);
         showModalBottomSheet(
             isDismissible: false,
             // backgroundColor: Colors.transparent,

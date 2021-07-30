@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/dialogs/success-dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
@@ -115,7 +116,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                       Icons.clear_rounded,
                       size: 30,
                     ),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => backButtonDispatcher.didPopRoute(),
                   )
                 ],
               ),
@@ -402,7 +403,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
   onDepositComplete(bool flag) {
     _isDepositInProgress = false;
     setState(() {});
-    Navigator.of(context).pop();
+
     if (flag) {
       // baseProvider.showPositiveAlert(
       //     'SUCCESS', 'You gold deposit was confirmed!', context);
