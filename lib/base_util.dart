@@ -89,7 +89,7 @@ class BaseUtil extends ChangeNotifier {
 
   DateTime _userCreationTimestamp;
   int isOtpResendCount = 0;
-
+  int app_open_count = 0;
   ///Flags in various screens defined as global variables
   bool isUserOnboarded,
       isLoginNextInProgress,
@@ -155,11 +155,12 @@ class BaseUtil extends ChangeNotifier {
     playScreenFirst = true;
     atomicTicketGenerationLeftCount = 0;
     atomicTicketDeletionLeftCount = 0;
+    app_open_count = 0;
   }
 
   Future init() async {
     print('inside init base util');
-
+    _setRuntimeDefaults();
     ///analytics
     BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
@@ -177,30 +178,33 @@ class BaseUtil extends ChangeNotifier {
     isUserOnboarded =
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
     if (isUserOnboarded) {
-      //getting app open count
+      ///get app open count
       await _lModel.updateAppOpenCount();
       app_open_count = await _lModel.getAppOpenCount();
-      //get user wallet
+      ///get user wallet
       _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
       if (_userFundWallet == null) _compileUserWallet();
 
-      //get user ticket balance
+      ///get user ticket balance
       _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
       if (_userTicketWallet == null) {
         await _initiateNewTicketWallet();
       }
-      //get user creation time
+      ///get user creation time
       _userCreationTimestamp = firebaseUser.metadata.creationTime;
+
       //check if there are any icici deposits txns in process
       //TODO not required for now
       // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
       // _payService = locator<PaymentService>();
 
+      ///prefill augmont and pan details if available
+      panService = new PanService();
       if(myUser.isAugmontOnboarded) {
         augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
-        panService = new PanService();
         userRegdPan = await panService.getUserPan();
       }
+
       ///Freshchat utils
       freshchatKeys = await _dbModel.getActiveFreshchatKey();
       if (freshchatKeys != null && freshchatKeys.isNotEmpty) {
@@ -209,7 +213,7 @@ class BaseUtil extends ChangeNotifier {
             gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
       }
 
-      // Fetch Dailypicks count
+      /// Fetch this weeks' Dailypicks count
       String _dpc = BaseRemoteConfig.remoteConfig
           .getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT);
       if (_dpc == null || _dpc.isEmpty) _dpc = '5';
@@ -224,7 +228,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   acceptNotificationsIfAny(BuildContext context) {
-    //if payment completed in the background:
+    ///if payment completed in the background:
     if (_payService != null && myUser.pendingTxnId != null) {
       _payService.addPaymentStatusListener((value) {
         if (value == PaymentService.TRANSACTION_COMPLETE) {
@@ -460,32 +464,7 @@ class BaseUtil extends ChangeNotifier {
 
       isOtpResendCount = 0;
       delegate.appState.setCurrentTabIndex = 0;
-      isUserOnboarded = false;
-      isLoginNextInProgress = false;
-      isEditProfileNextInProgress = false;
-      isRedemptionOtpInProgress = false;
-      isAugmontRegnInProgress = false;
-      isAugmontRegnCompleteAnimateInProgress = false;
-      isIciciDepositRouteLogicInProgress = false;
-      isEditAugmontBankDetailInProgress = false;
-      isAugDepositRouteLogicInProgress = false;
-      isAugWithdrawRouteLogicInProgress = false;
-      isAugmontRealTimeBalanceFetched = false;
-      weeklyDrawFetched = false;
-      weeklyTicksFetched = false;
-      referralsFetched = false;
-      userReferralInfoFetched = false;
-      isProfilePictureUpdated = false;
-      isReferralLinkBuildInProgressWhatsapp = false;
-      isReferralLinkBuildInProgressOther = false;
-      isHomeCardsFetched = false;
-      isDeviceOffline = false;
-      ticketRequestSent = false;
-      ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
-      infoSliderIndex = 0;
-      playScreenFirst = true;
-      atomicTicketGenerationLeftCount = 0;
-      atomicTicketDeletionLeftCount = 0;
+      _setRuntimeDefaults();
 
       return true;
     } catch (e) {
