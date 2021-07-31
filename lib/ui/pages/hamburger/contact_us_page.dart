@@ -265,47 +265,47 @@ class _ContactUsPageState extends State<ContactUsPage> {
                           state: PageState.addPage, page: FaqPageConfig);
                     },
                   ),
-                  Container(
-                    height: SizeConfig.screenHeight * 0.3,
-                    width: SizeConfig.screenWidth,
-                    alignment: Alignment.center,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "images/fello-short-logo.png",
-                          color: Colors.grey,
-                          width: SizeConfig.cardTitleTextSize,
-                          height: SizeConfig.cardTitleTextSize,
-                        ),
-                        SizedBox(width: 4),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'v${BaseUtil.packageInfo.version}(${BaseUtil.packageInfo.buildNumber})',
-                              style: TextStyle(
-                                  fontSize: SizeConfig.mediumTextSize * 1.2,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.grey),
-                            ),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            Text(
-                              "Made for India ❤",
-                              style: TextStyle(
-                                fontSize: SizeConfig.smallTextSize,
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  )
+                  // Container(
+                  //   height: SizeConfig.screenHeight * 0.3,
+                  //   width: SizeConfig.screenWidth,
+                  //   alignment: Alignment.center,
+                  //   child: Row(
+                  //     crossAxisAlignment: CrossAxisAlignment.center,
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: [
+                  //       Image.asset(
+                  //         "images/fello-short-logo.png",
+                  //         color: Colors.grey,
+                  //         width: SizeConfig.cardTitleTextSize,
+                  //         height: SizeConfig.cardTitleTextSize,
+                  //       ),
+                  //       SizedBox(width: 4),
+                  //       Column(
+                  //         mainAxisAlignment: MainAxisAlignment.center,
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           Text(
+                  //             'v${BaseUtil.packageInfo.version}(${BaseUtil.packageInfo.buildNumber})',
+                  //             style: TextStyle(
+                  //                 fontSize: SizeConfig.mediumTextSize * 1.2,
+                  //                 fontWeight: FontWeight.w700,
+                  //                 color: Colors.grey),
+                  //           ),
+                  //           SizedBox(
+                  //             height: 4,
+                  //           ),
+                  //           Text(
+                  //             "Made for India ❤",
+                  //             style: TextStyle(
+                  //               fontSize: SizeConfig.smallTextSize,
+                  //               color: Colors.black54,
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       )
+                  //     ],
+                  //   ),
+                  // )
                 ],
               ),
             ),

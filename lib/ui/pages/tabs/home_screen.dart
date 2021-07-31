@@ -12,6 +12,7 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -63,11 +64,14 @@ class _HomePageState extends State<HomePage> {
   _init() {
     if (!baseProvider.isHomeCardsFetched) {
       dbProvider.getHomeCards().then((cards) {
-        baseProvider.feedCards = cards;
-        _isInit = true;
-        baseProvider.isHomeCardsFetched = true;
-        setState(() {});
-        homebuildCount = 3;
+        if (cards.length > 0) {
+          baseProvider.feedCards = cards;
+          _isInit = true;
+          baseProvider.isHomeCardsFetched = true;
+          setState(() {});
+        } else {
+          setState(() {});
+        }
       });
     }
   }
@@ -149,7 +153,7 @@ class _HomePageState extends State<HomePage> {
             ),
             label: Text(
               "Click to reload",
-              style: TextStyle(
+              style: GoogleFonts.montserrat(
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
               ),
@@ -166,28 +170,27 @@ class _HomePageState extends State<HomePage> {
     ];
 
     for (int i = 0; i < cards.length; i++) {
-      _widget.add(HomeCard(
-        title: cards[i].title,
-        asset: cards[i].assetLocalLink,
-        subtitle: cards[i].subtitle,
-        buttonText: cards[i].btnText,
-        onPressed: () async {
-          HapticFeedback.vibrate();
-          delegate.parseRoute(Uri.parse(cards[i].actionUri));
-        },
-        gradient: [
-          Color(cards[i].clrCodeA),
-          Color(cards[i].clrCodeB),
-        ],
-        // "0/d-guide"
-        //   "3"
-        //   "1/d-gamePoll"
-        //   "2/augDetails/editProfile/d-aboutus"
-      ));
+      _widget.add(
+        HomeCard(
+          title: cards[i].title,
+          asset: cards[i].assetLocalLink,
+          subtitle: cards[i].subtitle,
+          buttonText: cards[i].btnText,
+          onPressed: () async {
+            HapticFeedback.vibrate();
+            delegate.parseRoute(Uri.parse(cards[i].actionUri));
+          },
+          gradient: [
+            Color(cards[i].clrCodeA),
+            Color(cards[i].clrCodeB),
+          ],
+          // "0/d-guide"
+          //   "3"
+          //   "1/d-gamePoll"
+          //   "2/augDetails/editProfile/d-aboutus"
+        ),
+      );
     }
-    // for (FeedCard card in cards) {
-    //  );
-    // }
 
     return _widget;
   }

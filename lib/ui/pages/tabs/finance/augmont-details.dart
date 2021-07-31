@@ -11,14 +11,10 @@ import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
-import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
-import 'package:felloapp/ui/elements/fund_appbar.dart';
 import 'package:felloapp/ui/elements/fund_graph.dart';
 import 'package:felloapp/ui/elements/fund_info.dart';
 import 'package:felloapp/ui/elements/gold_profit_calculator.dart';
-import 'package:felloapp/ui/elements/gold_rate_graph.dart';
-import 'package:felloapp/ui/elements/marquee_widget.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/augmont_withdraw_screen.dart';
@@ -29,9 +25,6 @@ import 'package:felloapp/util/fundPalettes.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:fl_animated_linechart/chart/area_line_chart.dart';
-import 'package:fl_animated_linechart/chart/line_chart.dart';
-import 'package:fl_animated_linechart/common/pair.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -152,12 +145,10 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                     "Ranked no 1 bullion in India"
                   ],
                 ),
-                //GoldRateGraph(),
-                // Container(
-                //     width: SizeConfig.screenWidth,
-                //     padding: EdgeInsets.symmetric(vertical: 20),
-                //     child: LineChartWidget()),
-                //FundGraph(),
+                Container(
+                    width: SizeConfig.screenWidth,
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: LineChartWidget()),
                 FundDetailsTable(baseProvider.userFundWallet.augGoldQuantity),
                 GoldProfitCalculator(),
                 FAQCard(Assets.goldFaqHeaders, Assets.goldFaqAnswers,
@@ -677,67 +668,6 @@ class FundDetailsTable extends StatelessWidget {
                 'Current Gold Balance: ${_goldBalance.toStringAsFixed(4)} grams'),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class FundGraph extends StatelessWidget {
-  final Map<DateTime, double> line1 = {
-    DateTime.utc(2018, 03, 19): 3130,
-    DateTime.utc(2018, 04, 29): 3199,
-    DateTime.utc(2018, 05, 30): 3205,
-    DateTime.utc(2018, 06, 10): 3152,
-    DateTime.utc(2018, 07, 18): 3053,
-    DateTime.utc(2018, 08, 03): 3118,
-    DateTime.utc(2018, 09, 02): 3138,
-    DateTime.utc(2018, 10, 04): 3281,
-    DateTime.utc(2018, 12, 10): 3142,
-    DateTime.utc(2019, 01, 25): 3223,
-    DateTime.utc(2019, 02, 17): 3223,
-    DateTime.utc(2019, 03, 12): 3443,
-    DateTime.utc(2019, 04, 14): 3280,
-    DateTime.utc(2019, 05, 18): 3279,
-    DateTime.utc(2019, 06, 10): 3294,
-    DateTime.utc(2019, 07, 18): 3466,
-    DateTime.utc(2019, 08, 03): 3590,
-    DateTime.utc(2019, 09, 02): 3994,
-    DateTime.utc(2019, 10, 04): 3877,
-    DateTime.utc(2019, 12, 10): 4008,
-    DateTime.utc(2020, 01, 25): 3925,
-    DateTime.utc(2020, 02, 17): 4026,
-    DateTime.utc(2020, 03, 12): 4221,
-    DateTime.utc(2020, 04, 14): 4347,
-    DateTime.utc(2020, 05, 18): 4473,
-    DateTime.utc(2020, 06, 10): 4650,
-    DateTime.utc(2020, 07, 18): 4848,
-    DateTime.utc(2020, 08, 03): 5050,
-    DateTime.utc(2020, 09, 02): 5530,
-    DateTime.utc(2020, 10, 04): 5340,
-    DateTime.utc(2020, 12, 10): 5225,
-    DateTime.utc(2021, 01, 25): 5141,
-    DateTime.utc(2021, 02, 17): 4702,
-    DateTime.utc(2021, 03, 12): 4588,
-  };
-
-  @override
-  Widget build(BuildContext context) {
-    double _height = MediaQuery.of(context).size.height;
-    LineChart chart = AreaLineChart.fromDateTimeMaps(
-      [line1],
-      //[UiConstants.primaryColor],
-      [Color(0xffC3902C)],
-
-      ['₹'],
-      gradients: [Pair(Colors.white, Color(0xffD7B56D))],
-    );
-    return Container(
-      margin: EdgeInsets.symmetric(
-          horizontal: SizeConfig.blockSizeHorizontal * 5, vertical: 16),
-      height: _height * 0.3,
-      width: SizeConfig.screenWidth,
-      child: CustomAnimatedLineChart(
-        chart,
       ),
     );
   }

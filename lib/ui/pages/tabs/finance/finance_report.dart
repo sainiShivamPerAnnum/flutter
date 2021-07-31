@@ -15,10 +15,14 @@ class YourFunds extends StatefulWidget {
   final List<ChartFundItem> chartFunds;
 
   final UserFundWallet userFundWallet;
-  final VoidCallback doRefresh;
+  //final VoidCallback doRefresh;
 
-  YourFunds({Key key, this.chartFunds, this.userFundWallet, this.doRefresh})
-      : super(key: key);
+  YourFunds({
+    Key key,
+    this.chartFunds,
+    this.userFundWallet,
+    //this.doRefresh
+  }) : super(key: key);
   @override
   _YourFundsState createState() => _YourFundsState();
 }
@@ -29,6 +33,7 @@ class _YourFundsState extends State<YourFunds> {
   BaseUtil baseProvider;
   @override
   void initState() {
+    widget.chartFunds.sort((a, b) => b.fundAmount.compareTo(a.fundAmount));
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Future.delayed(
           Duration(milliseconds: 100), () => getFundBreakdownWidth());
@@ -149,9 +154,11 @@ class _YourFundsState extends State<YourFunds> {
               physics: BouncingScrollPhysics(),
               child: Column(
                 children: List.generate(
-                  widget.chartFunds.length,
-                  (index) => widget.chartFunds[index].fundAmount > 0
-                      ? Container(
+                    widget.chartFunds.length,
+                    (index) =>
+                        // widget.chartFunds[index].fundAmount > 0
+                        //     ?
+                        Container(
                           padding: EdgeInsets.symmetric(
                               horizontal: SizeConfig.blockSizeHorizontal * 3,
                               vertical: 8),
@@ -211,7 +218,8 @@ class _YourFundsState extends State<YourFunds> {
                                     height: 1.5),
                               ),
                               SizedBox(height: 12),
-                              baseProvider.userFundWallet.prizeBalance > 0
+                              baseProvider.userFundWallet.prizeBalance > 0 &&
+                                      widget.chartFunds[index].action
                                   ? ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                           primary:
@@ -231,8 +239,8 @@ class _YourFundsState extends State<YourFunds> {
                             ],
                           ),
                         )
-                      : SizedBox(),
-                ),
+                    // : SizedBox(),
+                    ),
               ),
             ),
           ),

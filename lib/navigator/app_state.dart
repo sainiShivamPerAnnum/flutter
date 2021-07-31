@@ -107,9 +107,11 @@ class AppState extends ChangeNotifier {
   }
 
   _saveLastTapIndex(int index) {
-    SharedPreferences.getInstance().then((instance) {
-      instance.setInt('lastTab', index);
-    });
+    if (index == 1 || index == 2) {
+      SharedPreferences.getInstance().then((instance) {
+        instance.setInt('lastTab', index);
+      });
+    }
   }
 
   setLastTapIndex() {

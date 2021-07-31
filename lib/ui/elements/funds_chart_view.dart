@@ -23,9 +23,13 @@ class FundsChartView extends StatefulWidget {
   final UserFundWallet userFundWallet;
   final String
       goldMoreInfo; //should be altered to a more info array for all assets
-  final VoidCallback doRefresh;
+  //final VoidCallback doRefresh;
 
-  FundsChartView({this.userFundWallet, this.goldMoreInfo, this.doRefresh});
+  FundsChartView({
+    this.userFundWallet,
+    this.goldMoreInfo,
+    //this.doRefresh
+  });
 
   @override
   State createState() => _FundsChartViewState();
@@ -75,7 +79,7 @@ class _FundsChartViewState extends State<FundsChartView> {
     chartData = [
       ChartFundItem(
           fundName: "ICICI Balance",
-          buttonText: "",
+          action: false,
           color: Color(0xff66DE93),
           description: ["Here ICICI Fund balance will be shown"],
           function: () {},
@@ -84,7 +88,7 @@ class _FundsChartViewState extends State<FundsChartView> {
           isHighlighted: false),
       ChartFundItem(
           fundName: "Gold Balance",
-          buttonText: "",
+          action: false,
           color: Color(0xffF5B819),
           description: [widget.goldMoreInfo],
           function: () {},
@@ -93,9 +97,7 @@ class _FundsChartViewState extends State<FundsChartView> {
           isHighlighted: false),
       ChartFundItem(
           fundName: "Prize Balance",
-          buttonText: widget.userFundWallet.isPrizeBalanceUnclaimed()
-              ? "Claim prize"
-              : "Share",
+          action: widget.userFundWallet.prizeBalance > 0,
           color: Color(0xff6389F2),
           description: [
             "This is the amount of money you've earned as prized playing our games!"
@@ -125,7 +127,7 @@ class _FundsChartViewState extends State<FundsChartView> {
           isHighlighted: widget.userFundWallet.isPrizeBalanceUnclaimed()),
       ChartFundItem(
           fundName: "Locked Balance",
-          buttonText: "",
+          action: false,
           color: Color(0xff0A1931),
           description: [
             'Referral rewards could be locked due to either of the reasons: \n\n• You were referred by your friend but you haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet. \n\n• You referred your friends but they haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet.'
@@ -149,7 +151,7 @@ class _FundsChartViewState extends State<FundsChartView> {
               state: PageState.addWidget,
               widget: YourFunds(
                 chartFunds: chartData,
-                doRefresh: widget.doRefresh,
+                //doRefresh: widget.doRefresh,
                 userFundWallet: widget.userFundWallet,
               ),
               page: YourFundsConfig);

@@ -107,6 +107,14 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                     _buildWalkthroughPage(0),
                     _buildWalkthroughPage(1),
                     _buildWalkthroughPage(2)
+                    // WalkThroughSlide(
+                    //     content: _content[0],
+                    //     videoController: _videoController),
+                    // WalkThroughSlide(
+                    //     content: _content[1],
+                    //     videoController: _videoController),
+                    // WalkThroughSlide(
+                    //     content: _content[2], videoController: _videoController)
                   ],
                   onPageChanged: (index) {
                     _onControllerChange(index);
@@ -275,3 +283,71 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
     super.dispose();
   }
 }
+
+// class WalkThroughSlide extends StatefulWidget {
+//   final String content;
+//   final VideoPlayerController videoController;
+
+//   WalkThroughSlide({this.content, this.videoController});
+//   @override
+//   _WalkThroughSlideState createState() => _WalkThroughSlideState();
+// }
+
+// class _WalkThroughSlideState extends State<WalkThroughSlide>
+//     with AutomaticKeepAliveClientMixin {
+//   @override
+//   bool get wantKeepAlive => true;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: [
+//         SizedBox(height: kToolbarHeight * 0.8),
+//         Expanded(
+//           child: Stack(
+//             children: [
+//               AspectRatio(
+//                 aspectRatio: widget.videoController.value.aspectRatio,
+//                 child: Lottie.asset(
+//                   'images/lottie/shimmer.json',
+//                   fit: BoxFit.cover,
+//                   repeat: true,
+//                   frameRate: FrameRate(30),
+//                 ),
+//               ),
+//               (widget.videoController != null)
+//                   ? Container(
+//                       decoration: BoxDecoration(boxShadow: [
+//                         BoxShadow(
+//                             color: Colors.grey.withOpacity(0.5),
+//                             spreadRadius: 3,
+//                             blurRadius: 7)
+//                       ]),
+//                       child: AspectRatio(
+//                         aspectRatio: widget.videoController.value.aspectRatio,
+//                         child: VideoPlayer(widget.videoController),
+//                       ),
+//                     )
+//                   : SizedBox(),
+//             ],
+//           ),
+//         ),
+//         Container(
+//           width: SizeConfig.screenWidth * 0.8,
+//           height: SizeConfig.screenHeight * 0.1,
+//           margin: EdgeInsets.only(
+//             top: SizeConfig.blockSizeHorizontal * 3,
+//             bottom: SizeConfig.blockSizeHorizontal * 14,
+//           ),
+//           child: Center(
+//             child: Text(
+//               widget.content,
+//               textAlign: TextAlign.center,
+//               style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
