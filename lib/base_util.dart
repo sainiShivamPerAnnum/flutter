@@ -252,6 +252,20 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
+  Future<void> refreshFunds() async {
+    //TODO: ADD LOADER
+    print("-----------------> I got called");
+    return _dbModel.getUserFundWallet(myUser.uid).then((aValue) {
+      if (aValue != null) {
+        userFundWallet = aValue;
+        if (userFundWallet.augGoldQuantity > 0)
+          _updateAugmontBalance(); //setstate call in method
+        else
+          notifyListeners();
+      }
+    });
+  }
+
   static Widget getAppBar(BuildContext context, String title) {
     return AppBar(
       leading: IconButton(

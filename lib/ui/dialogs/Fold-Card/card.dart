@@ -6,6 +6,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
+import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/Fold-Card/fold-card.dart';
@@ -31,13 +32,11 @@ class FCard extends StatefulWidget {
   static const double nominalClosedHeight = 160;
   final bool isClaimed;
   final double unclaimedPrize;
-  final Function onComplete;
 
   const FCard({
     Key key,
     this.isClaimed,
     this.unclaimedPrize,
-    this.onComplete,
   }) : super(key: key);
 
   @override
@@ -53,6 +52,7 @@ class _TicketState extends State<FCard> {
   PrizeClaimChoice claimtype;
   BaseUtil baseProvider;
   HttpModel httpProvider;
+  LocalDBModel localDBModel;
   bool _isPrizeProcessing = false;
   bool _tChoice;
 
@@ -81,13 +81,13 @@ class _TicketState extends State<FCard> {
       unclaimedPrize: widget.unclaimedPrize,
       claimtype: claimtype,
       isClaimed: widget.isClaimed,
-      onClose: widget.onComplete,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
+    localDBModel = Provider.of<LocalDBModel>(context, listen: false);
     httpProvider = Provider.of<HttpModel>(context);
     bottomCard = buildBottomCard();
     middleCard = buildMiddleCard();
@@ -322,7 +322,6 @@ class _TicketState extends State<FCard> {
                               claimtype: claimtype,
                               unclaimedPrize: widget.unclaimedPrize,
                               isClaimed: true,
-                              onClose: widget.onComplete,
                             );
                             _isOpen = false;
                           });
@@ -369,7 +368,6 @@ class _TicketState extends State<FCard> {
                               claimtype: claimtype,
                               unclaimedPrize: widget.unclaimedPrize,
                               isClaimed: true,
-                              onClose: widget.onComplete,
                             );
 
                             _isOpen = false;
@@ -407,6 +405,8 @@ class _TicketState extends State<FCard> {
     if (choice == PrizeClaimChoice.NA) return false;
     bool flag = await httpProvider.registerPrizeClaim(
         baseProvider.myUser.uid, widget.unclaimedPrize, choice);
+    if (flag) baseProvider.refreshFunds();
+    if (flag) await localDBModel.savePrizeClaimChoice(choice);
     print('Claim choice saved: $flag');
     return flag;
   }
@@ -428,6 +428,7 @@ class CloseCard extends StatefulWidget {
 class _CloseCardState extends State<CloseCard> {
   BaseUtil baseProvider;
   DBModel dbProvider;
+  LocalDBModel localDBModel;
 
   bool isCapturing = false;
   bool isSaving = false;
@@ -443,6 +444,24 @@ class _CloseCardState extends State<CloseCard> {
         await boxImage.toByteData(format: ui.ImageByteFormat.png);
     Uint8List uint8list = byteData.buffer.asUint8List();
     return uint8list;
+  }
+
+  bool isClaimChoiceLoading = true;
+  String claimText = "";
+  PrizeClaimChoice choice;
+  getClaimChoice() async {
+    choice = await localDBModel.getPrizeClaimChoice();
+    if (choice == PrizeClaimChoice.AMZ_VOUCHER)
+      claimText =
+          'Your amazon gift card shall be sent to your registered email and mobile shortly!';
+    else if (choice == PrizeClaimChoice.GOLD_CREDIT)
+      claimText =
+          'Your digital gold shall be credited to your Fello wallet shortly!';
+    else
+      claimText = "Your reward will be credited soon to your account";
+
+    isClaimChoiceLoading = false;
+    setState(() {});
   }
 
   Widget _buildBeginCard(BuildContext context) {
@@ -558,7 +577,7 @@ class _CloseCardState extends State<CloseCard> {
     return Container(
       padding: const EdgeInsets.only(top: 10.0, left: 20, right: 10),
       decoration: BoxDecoration(
-        gradient: widget.claimtype == PrizeClaimChoice.AMZ_VOUCHER
+        gradient: choice == PrizeClaimChoice.AMZ_VOUCHER
             ? new LinearGradient(
                 colors: [Colors.black, Colors.black],
                 begin: Alignment.topLeft,
@@ -596,13 +615,15 @@ class _CloseCardState extends State<CloseCard> {
                 SizedBox(
                   height: 10,
                 ),
-                Text(
-                  _getEndCardTitleText(widget.claimtype),
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.montserrat(
-                    color: Colors.white,
-                  ),
-                ),
+                isClaimChoiceLoading
+                    ? CircularProgressIndicator()
+                    : Text(
+                        claimText,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.montserrat(
+                          color: Colors.white,
+                        ),
+                      ),
                 SizedBox(
                   height: 20,
                 ),
@@ -688,6 +709,10 @@ class _CloseCardState extends State<CloseCard> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    localDBModel = Provider.of<LocalDBModel>(context, listen: false);
+    if (claimText.isEmpty && widget.isClaimed) {
+      getClaimChoice();
+    }
 
     print(widget.claimtype);
     return widget.isClaimed ? _buildEndCard(context) : _buildBeginCard(context);
@@ -791,119 +816,141 @@ class _CloseCardState extends State<CloseCard> {
   // }
 
   _buildShareCard() async {
-    //////ADDING A PRE_CALL DUE TO SCREENSHOT PACKAGE BUG
-    baseProvider.myUserDpUrl =
-        await dbProvider.getUserDP(baseProvider.myUser.uid);
-    await screenshotController.captureFromWidget(ShareCard(
-      dpUrl: baseProvider.myUserDpUrl,
-      claimChoice: widget.claimtype,
-      prizeAmount: baseProvider.userFundWallet.processingRedemptionBalance,
-      username: baseProvider.myUser.name,
-    ));
-    ////////////////////////////////////////////
-    screenshotController
-        .captureFromWidget(
-            ShareCard(
-              dpUrl: baseProvider.myUserDpUrl,
-              claimChoice: widget.claimtype,
-              prizeAmount:
-                  baseProvider.userFundWallet.processingRedemptionBalance == 0
-                      ? baseProvider.userFundWallet.prizeBalance
-                      : baseProvider.userFundWallet.processingRedemptionBalance,
-              username: baseProvider.myUser.name,
-            ),
-            delay: const Duration(seconds: 1))
-        .then((Uint8List image) async {
-      setState(() {
-        isCapturing = false;
+    try {
+      //////ADDING A PRE_CALL DUE TO SCREENSHOT PACKAGE BUG
+      baseProvider.myUserDpUrl =
+          await dbProvider.getUserDP(baseProvider.myUser.uid);
+      await screenshotController.captureFromWidget(ShareCard(
+        dpUrl: baseProvider.myUserDpUrl,
+        claimChoice: widget.claimtype,
+        prizeAmount: baseProvider.userFundWallet.processingRedemptionBalance,
+        username: baseProvider.myUser.name,
+      ));
+      ////////////////////////////////////////////
+      screenshotController
+          .captureFromWidget(
+              ShareCard(
+                dpUrl: baseProvider.myUserDpUrl,
+                claimChoice: widget.claimtype,
+                prizeAmount:
+                    baseProvider.userFundWallet.processingRedemptionBalance == 0
+                        ? baseProvider.userFundWallet.prizeBalance
+                        : baseProvider
+                            .userFundWallet.processingRedemptionBalance,
+                username: baseProvider.myUser.name,
+              ),
+              delay: const Duration(seconds: 1))
+          .then((Uint8List image) async {
+        setState(() {
+          isCapturing = false;
+        });
+        final directory = (await getExternalStorageDirectory()).path;
+        String dt = DateTime.now().toString();
+        File imgg = new File('$directory/fello-reward-$dt.png');
+        imgg.writeAsBytesSync(image);
+        Share.shareFiles(
+          ['$directory/fello-reward-$dt.png'],
+          subject: 'Fello Rewards',
+          text:
+              'Fello really is a very rewarding way to invest in assets and play games! You should try it out too: https://fello.in/download/android',
+        );
+      }).catchError((onError) {
+        print(onError);
       });
-      final directory = (await getExternalStorageDirectory()).path;
-      String dt = DateTime.now().toString();
-      File imgg = new File('$directory/fello-reward-$dt.png');
-      imgg.writeAsBytesSync(image);
-      Share.shareFiles(
-        ['$directory/fello-reward-$dt.png'],
-        subject: 'Fello Rewards',
-        text:
-            'Fello really is a very rewarding way to invest in assets and play games! You should try it out too: https://fello.in/download/android',
-      );
-    }).catchError((onError) {
-      print(onError);
-    });
-  }
-
-  _saveShareCard() async {
-    //////ADDING A PRE_CALL DUE TO SCREENSHOT PACKAGE BUG
-    baseProvider.myUserDpUrl =
-        await dbProvider.getUserDP(baseProvider.myUser.uid);
-    await screenshotController.captureFromWidget(ShareCard(
-      dpUrl: baseProvider.myUserDpUrl,
-      claimChoice: widget.claimtype,
-      prizeAmount: baseProvider.userFundWallet.processingRedemptionBalance,
-      username: baseProvider.myUser.name,
-    ));
-    ////////////////////////////////////////////
-    screenshotController
-        .captureFromWidget(
-            ShareCard(
-              dpUrl: baseProvider.myUserDpUrl,
-              claimChoice: widget.claimtype,
-              prizeAmount:
-                  baseProvider.userFundWallet.processingRedemptionBalance == 0
-                      ? baseProvider.userFundWallet.prizeBalance
-                      : baseProvider.userFundWallet.processingRedemptionBalance,
-              username: baseProvider.myUser.name,
-            ),
-            delay: const Duration(seconds: 2))
-        .then((Uint8List image) async {
+    } catch (e) {
       setState(() {
         isSaving = false;
       });
-      String dt = DateTime.now().toString();
-      Directory directory;
-      if (Platform.isAndroid) {
-        if (await _requestPermission(Permission.storage)) {
-          directory = await getExternalStorageDirectory();
-          print(directory.path);
-          String newPath = "";
-          List<String> folders = directory.path.split('/');
-          for (int i = 1; i < folders.length; i++) {
-            String folder = folders[i];
-            if (folder != "Android")
-              newPath += '/' + folder;
-            else
-              break;
-          }
-          newPath = newPath + "/Fello";
-          print(newPath);
-          directory = Directory(newPath);
-        } else {
-          return false;
-        }
-      } else {
-        if (await _requestPermission(Permission.photos)) {
-          directory = await getTemporaryDirectory();
-        } else
-          return false;
-      }
+      backButtonDispatcher.didPopRoute();
+      print(e.toString());
+      baseProvider.showNegativeAlert(
+          "Task Failed", "Unable to share the picture at the moment", context);
+    }
+  }
 
-      if (!await directory.exists()) await directory.create(recursive: true);
-      if (await directory.exists()) {
-        File imageFile = new File('${directory.path}/fello-reward-$dt.png');
-        print('image path : ${imageFile.path}');
-        await imageFile.writeAsBytes(image);
+  _saveShareCard() async {
+    try {
+      //////ADDING A PRE_CALL DUE TO SCREENSHOT PACKAGE BUG
+      baseProvider.myUserDpUrl =
+          await dbProvider.getUserDP(baseProvider.myUser.uid);
+      await screenshotController.captureFromWidget(ShareCard(
+        dpUrl: baseProvider.myUserDpUrl,
+        claimChoice: widget.claimtype,
+        prizeAmount: baseProvider.userFundWallet.processingRedemptionBalance,
+        username: baseProvider.myUser.name,
+      ));
+      ////////////////////////////////////////////
+      screenshotController
+          .captureFromWidget(
+              ShareCard(
+                dpUrl: baseProvider.myUserDpUrl,
+                claimChoice: widget.claimtype,
+                prizeAmount:
+                    baseProvider.userFundWallet.processingRedemptionBalance == 0
+                        ? baseProvider.userFundWallet.prizeBalance
+                        : baseProvider
+                            .userFundWallet.processingRedemptionBalance,
+                username: baseProvider.myUser.name,
+              ),
+              delay: const Duration(seconds: 2))
+          .then((Uint8List image) async {
+        setState(() {
+          isSaving = false;
+        });
+        String dt = DateTime.now().toString();
+        Directory directory;
         if (Platform.isAndroid) {
-          ImageGallerySaver.saveFile(imageFile.path);
+          if (await _requestPermission(Permission.storage)) {
+            directory = await getExternalStorageDirectory();
+            print(directory.path);
+            String newPath = "";
+            List<String> folders = directory.path.split('/');
+            for (int i = 1; i < folders.length; i++) {
+              String folder = folders[i];
+              if (folder != "Android")
+                newPath += '/' + folder;
+              else
+                break;
+            }
+            newPath = newPath + "/Fello";
+            print(newPath);
+            directory = Directory(newPath);
+          } else {
+            return false;
+          }
         } else {
-          ImageGallerySaver.saveFile(imageFile.path);
+          if (await _requestPermission(Permission.photos)) {
+            directory = await getTemporaryDirectory();
+          } else
+            return false;
         }
-        backButtonDispatcher.didPopRoute();
-        baseProvider.showPositiveAlert("Saved Successfulyy",
-            "Share card saved successfully to the gallery", context);
-      }
-    }).catchError((onError) {
-      print(onError);
-    });
+
+        if (!await directory.exists()) await directory.create(recursive: true);
+        if (await directory.exists()) {
+          File imageFile = new File('${directory.path}/fello-reward-$dt.png');
+          print('image path : ${imageFile.path}');
+          await imageFile.writeAsBytes(image);
+          if (Platform.isAndroid) {
+            ImageGallerySaver.saveFile(imageFile.path);
+          } else {
+            ImageGallerySaver.saveFile(imageFile.path);
+          }
+          backButtonDispatcher.didPopRoute();
+          baseProvider.showPositiveAlert("Saved Successfulyy",
+              "Share card saved successfully to the gallery", context);
+        }
+      }).catchError((onError) {
+        print(onError);
+      });
+    } catch (e) {
+      setState(() {
+        isSaving = false;
+      });
+      backButtonDispatcher.didPopRoute();
+      print(e.toString());
+      baseProvider.showNegativeAlert(
+          "Task Failed", "Unable to save the picture at the moment", context);
+    }
   }
 
   Future<bool> _requestPermission(Permission permission) async {

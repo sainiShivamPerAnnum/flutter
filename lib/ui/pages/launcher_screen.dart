@@ -63,13 +63,14 @@ class LogoFadeIn extends State<SplashScreen> {
     await baseProvider.init();
     await fcmProvider.setupFcm();
     _timer3.cancel();
+
     ///TODO tbt check if an important update is pending
-    // bool isThereBreakingUpdate = false;
-    // if (isThereBreakingUpdate) {
-    //   stateProvider.currentAction =
-    //       PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
-    //   return;
-    // }
+    //bool isThereBreakingUpdate = await checkBreakingUpdate();
+    //if (isThereBreakingUpdate) {
+    // stateProvider.currentAction =
+    //     PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
+    //return;
+    //}
 
     ///check if user is onboarded
     if (!baseProvider.isUserOnboarded) {
@@ -81,15 +82,14 @@ class LogoFadeIn extends State<SplashScreen> {
 
     ///now check if app needs to be open securely
     bool _unlocked = true;
-    if (baseProvider.myUser.userPreferences.getPreference(Preferences.APPLOCK) == 1) {
+    if (baseProvider.myUser.userPreferences
+            .getPreference(Preferences.APPLOCK) ==
+        1) {
       try {
-        _unlocked = await deviceUnlock.request(
-            localizedReason: 'Unlock Fello');
+        _unlocked = await deviceUnlock.request(localizedReason: 'Unlock Fello');
       } on DeviceUnlockUnavailable {
-        baseProvider.showPositiveAlert(
-            'No Device Authentication Found',
-            'Logging in, please enable device security to add lock',
-            context);
+        baseProvider.showPositiveAlert('No Device Authentication Found',
+            'Logging in, please enable device security to add lock', context);
         _unlocked = true;
       } on RequestInProgress {
         _unlocked = false;
@@ -112,19 +112,15 @@ class LogoFadeIn extends State<SplashScreen> {
       _res = await deviceUnlock.request(
           localizedReason: 'Please authenticate in order to proceed');
     } on DeviceUnlockUnavailable {
-      baseProvider.showPositiveAlert(
-          'No Device Authentication Found',
-          'Logging in, please enable device security to add lock',
-          context);
+      baseProvider.showPositiveAlert('No Device Authentication Found',
+          'Logging in, please enable device security to add lock', context);
       _res = true;
     } on RequestInProgress {
       _res = false;
       print('Request in progress');
-    } catch(e) {
-      baseProvider.showNegativeAlert(
-          'Authentication Failed',
-          'Please restart the application to try again.',
-          context);
+    } catch (e) {
+      baseProvider.showNegativeAlert('Authentication Failed',
+          'Please restart the application to try again.', context);
     }
     return _res;
   }
