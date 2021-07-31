@@ -13,12 +13,9 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
 import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
-import 'package:felloapp/ui/elements/fund_appbar.dart';
 import 'package:felloapp/ui/elements/fund_graph.dart';
 import 'package:felloapp/ui/elements/fund_info.dart';
 import 'package:felloapp/ui/elements/gold_profit_calculator.dart';
-import 'package:felloapp/ui/elements/gold_rate_graph.dart';
-import 'package:felloapp/ui/elements/marquee_widget.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
 import 'package:felloapp/ui/pages/tabs/finance/augmont_withdraw_screen.dart';
@@ -153,10 +150,10 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                   ],
                 ),
                 //GoldRateGraph(),
-                // Container(
-                //     width: SizeConfig.screenWidth,
-                //     padding: EdgeInsets.symmetric(vertical: 20),
-                //     child: LineChartWidget()),
+                Container(
+                    width: SizeConfig.screenWidth,
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: LineChartWidget()),
                 //FundGraph(),
                 FundDetailsTable(baseProvider.userFundWallet.augGoldQuantity),
                 GoldProfitCalculator(),

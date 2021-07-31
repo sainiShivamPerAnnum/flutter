@@ -33,7 +33,6 @@ import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcase.dart';
 
 import 'core/base_remote_config.dart';
@@ -91,40 +90,73 @@ class BaseUtil extends ChangeNotifier {
   int isOtpResendCount = 0;
 
   ///Flags in various screens defined as global variables
-  bool isUserOnboarded = false;
-  bool isLoginNextInProgress = false;
-  bool isEditProfileNextInProgress = false;
-  bool isRedemptionOtpInProgress = false;
-  bool isAugmontRegnInProgress = false;
-  bool isAugmontRegnCompleteAnimateInProgress = false;
-  bool isIciciDepositRouteLogicInProgress = false;
-  bool isEditAugmontBankDetailInProgress = false;
-  bool isAugDepositRouteLogicInProgress = false;
-  bool isAugWithdrawRouteLogicInProgress = false;
-  bool isAugmontRealTimeBalanceFetched = false;
-  bool isWeekWinnersFetched = false;
-  bool isPrizeLeadersFetched = false;
-  bool isReferralLeadersFetched = false;
-  bool weeklyDrawFetched = false;
-  bool weeklyTicksFetched = false;
-  bool referralsFetched = false;
-  bool userReferralInfoFetched = false;
-  bool isProfilePictureUpdated = false;
-  bool isReferralLinkBuildInProgressWhatsapp = false;
-  bool isReferralLinkBuildInProgressOther = false;
-  bool isHomeCardsFetched = false;
-  bool show_game_tutorial = false;
-  bool show_finance_tutorial = false;
-  static bool isDeviceOffline = false;
-  static bool ticketRequestSent = false;
-  static int ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
-  static int infoSliderIndex = 0;
-  static bool playScreenFirst = true;
-  static int atomicTicketGenerationLeftCount = 0;
-  static int atomicTicketDeletionLeftCount = 0;
+  bool isUserOnboarded,
+      isLoginNextInProgress,
+      isEditProfileNextInProgress,
+      isRedemptionOtpInProgress,
+      isAugmontRegnInProgress,
+      isAugmontRegnCompleteAnimateInProgress,
+      isIciciDepositRouteLogicInProgress,
+      isEditAugmontBankDetailInProgress,
+      isAugDepositRouteLogicInProgress,
+      isAugWithdrawRouteLogicInProgress,
+      isAugmontRealTimeBalanceFetched,
+      isWeekWinnersFetched,
+      isPrizeLeadersFetched,
+      isReferralLeadersFetched,
+      weeklyDrawFetched,
+      weeklyTicksFetched,
+      referralsFetched,
+      userReferralInfoFetched,
+      isProfilePictureUpdated,
+      isReferralLinkBuildInProgressWhatsapp,
+      isReferralLinkBuildInProgressOther,
+      isHomeCardsFetched,
+      show_game_tutorial,
+      show_finance_tutorial;
+  static bool isDeviceOffline, ticketRequestSent, playScreenFirst;
+  static int ticketCountBeforeRequest,
+      infoSliderIndex,
+      atomicTicketGenerationLeftCount,
+      atomicTicketDeletionLeftCount;
+
+  _setRuntimeDefaults() {
+    isUserOnboarded = false;
+    isLoginNextInProgress = false;
+    isEditProfileNextInProgress = false;
+    isRedemptionOtpInProgress = false;
+    isAugmontRegnInProgress = false;
+    isAugmontRegnCompleteAnimateInProgress = false;
+    isIciciDepositRouteLogicInProgress = false;
+    isEditAugmontBankDetailInProgress = false;
+    isAugDepositRouteLogicInProgress = false;
+    isAugWithdrawRouteLogicInProgress = false;
+    isAugmontRealTimeBalanceFetched = false;
+    isWeekWinnersFetched = false;
+    isPrizeLeadersFetched = false;
+    isReferralLeadersFetched = false;
+    weeklyDrawFetched = false;
+    weeklyTicksFetched = false;
+    referralsFetched = false;
+    userReferralInfoFetched = false;
+    isProfilePictureUpdated = false;
+    isReferralLinkBuildInProgressWhatsapp = false;
+    isReferralLinkBuildInProgressOther = false;
+    isHomeCardsFetched = false;
+    show_game_tutorial = false;
+    show_finance_tutorial = false;
+    isDeviceOffline = false;
+    ticketRequestSent = false;
+    ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
+    infoSliderIndex = 0;
+    playScreenFirst = true;
+    atomicTicketGenerationLeftCount = 0;
+    atomicTicketDeletionLeftCount = 0;
+  }
 
   Future init() async {
     print('inside init base util');
+    _setRuntimeDefaults();
 
     ///analytics
     BaseAnalytics.init();
@@ -159,9 +191,9 @@ class BaseUtil extends ChangeNotifier {
       // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
       // _payService = locator<PaymentService>();
 
+      panService = new PanService();
       if (myUser.isAugmontOnboarded) {
         augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
-        panService = new PanService();
         userRegdPan = await panService.getUserPan();
       }
 
@@ -424,33 +456,7 @@ class BaseUtil extends ChangeNotifier {
 
       isOtpResendCount = 0;
       delegate.appState.setCurrentTabIndex = 0;
-      isUserOnboarded = false;
-      isLoginNextInProgress = false;
-      isEditProfileNextInProgress = false;
-      isRedemptionOtpInProgress = false;
-      isAugmontRegnInProgress = false;
-      isAugmontRegnCompleteAnimateInProgress = false;
-      isIciciDepositRouteLogicInProgress = false;
-      isEditAugmontBankDetailInProgress = false;
-      isAugDepositRouteLogicInProgress = false;
-      isAugWithdrawRouteLogicInProgress = false;
-      isAugmontRealTimeBalanceFetched = false;
-      weeklyDrawFetched = false;
-      weeklyTicksFetched = false;
-      referralsFetched = false;
-      userReferralInfoFetched = false;
-      isProfilePictureUpdated = false;
-      isReferralLinkBuildInProgressWhatsapp = false;
-      isReferralLinkBuildInProgressOther = false;
-      isHomeCardsFetched = false;
-      isDeviceOffline = false;
-      ticketRequestSent = false;
-      ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
-      infoSliderIndex = 0;
-      playScreenFirst = true;
-      atomicTicketGenerationLeftCount = 0;
-      atomicTicketDeletionLeftCount = 0;
-
+      _setRuntimeDefaults();
       return true;
     } catch (e) {
       log.error('Failed to clear data/sign out user: ' + e.toString());
