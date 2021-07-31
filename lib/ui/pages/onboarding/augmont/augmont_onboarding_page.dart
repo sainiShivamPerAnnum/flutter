@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -41,6 +42,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
   AugmontModel augmontProvider;
   ICICIModel iProvider;
   DBModel dbProvider;
+  HttpModel httpProvider;
   AppState appState;
   double _width;
 
@@ -65,6 +67,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     iProvider = Provider.of<ICICIModel>(context, listen: false);
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
+    httpProvider = Provider.of<HttpModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
     if (!_isInit) {
       _panInput.text = baseProvider.userRegdPan ?? '';
@@ -341,15 +344,15 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                         );
                       } else {
                         print('inside failed name');
-                        showDialog(
+                        if(veriDetails['fail_code'] == 0)showDialog(
                             context: context,
                             builder: (BuildContext context) => MoreInfoDialog(
                                   text: veriDetails['reason'],
                                   imagePath: Assets.dummyPanCardShowNumber,
                                   title: 'Invalid Details',
                                 ));
-                        baseProvider.showNegativeAlert(
-                            'Invalid Details',
+                        else baseProvider.showNegativeAlert(
+                            'Registration failed',
                             veriDetails['reason'] ?? 'Please try again',
                             context);
                         baseProvider.isAugmontRegnInProgress = false;
@@ -421,40 +424,51 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     if (enteredPan == null || enteredPan.isEmpty)
       return {'flag': false, 'reason': 'Invalid Details'};
     bool _flag = true;
+    int _failCode = 0;
     String _reason = '';
     if (!iProvider.isInit()) await iProvider.init();
 
-    ///test pan number using icici api and verify if the name entered by user matches name fetched
-    var kObj = await iProvider.getKycStatus(enteredPan);
-    if (kObj == null ||
-        kObj[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
-        kObj[GetKycStatus.resStatus] == null ||
-        kObj[GetKycStatus.resName] == null ||
-        kObj[GetKycStatus.resName] == '') {
-      log.error('Couldnt fetch an appropriate response');
+    bool registeredFlag = await httpProvider.isPanRegistered(enteredPan);
+    if(registeredFlag) {
+      _flag = false;
+      _failCode = 1;
+      _reason = 'This PAN number is already associated with a different account';
+    }
+    var kObj;
+    if(_flag) {
+      ///test pan number using icici api and verify if the name entered by user matches name fetched
+      kObj = await iProvider.getKycStatus(enteredPan);
+      if (kObj == null ||
+          kObj[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
+          kObj[GetKycStatus.resStatus] == null ||
+          kObj[GetKycStatus.resName] == null ||
+          kObj[GetKycStatus.resName] == '') {
+        log.error('Couldnt fetch an appropriate response');
 
-      ///set name test to true as we couldnt find it in the cams database
-      _flag = true;
-    } else {
-      ///remove all whitespaces before comparing as icici apis returns poorly spaced name values
-      String recvdPanName = kObj[GetKycStatus.resName];
-      String _r = recvdPanName.replaceAll(new RegExp(r"\s"), "");
-      String _e = enteredPanName.replaceAll(new RegExp(r"\s"), "");
-      if (_r.toUpperCase() != _e.toUpperCase()) {
-        await dbProvider.logFailure(
-            baseProvider.myUser.uid, FailType.UserAugmontRegnFailed, {
-          'entered_pan_name': enteredPanName,
-          'recvd_pan_name': recvdPanName,
-          'pan_number': enteredPan
-        });
-        _flag = false;
-        _reason =
-            'The name on your PAN card does not match with the entered name. Please try again.';
+        ///set name test to true as we couldnt find it in the cams database
+        _flag = true;
+      } else {
+        ///remove all whitespaces before comparing as icici apis returns poorly spaced name values
+        String recvdPanName = kObj[GetKycStatus.resName];
+        String _r = recvdPanName.replaceAll(new RegExp(r"\s"), "");
+        String _e = enteredPanName.replaceAll(new RegExp(r"\s"), "");
+        if (_r.toUpperCase() != _e.toUpperCase()) {
+          await dbProvider.logFailure(
+              baseProvider.myUser.uid, FailType.UserAugmontRegnFailed, {
+            'entered_pan_name': enteredPanName,
+            'recvd_pan_name': recvdPanName,
+            'pan_number': enteredPan
+          });
+          _flag = false;
+          _reason =
+          'The name on your PAN card does not match with the entered name. Please try again.';
+          _failCode = 0;
+        }
       }
     }
     if (!_flag) {
       print('returning false flag');
-      return {'flag': _flag, 'reason': _reason};
+      return {'flag': _flag, 'fail_code': _failCode, 'reason': _reason};
     }
 
     ///test ifsc code using icici api

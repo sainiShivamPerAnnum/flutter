@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
@@ -12,7 +11,6 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/change_profile_picture_dialog.dart';
-import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/marquee_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -20,7 +18,6 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:flip_card/flip_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,12 +26,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -1366,6 +1360,7 @@ class _UserProfileCardState extends State<UserProfileCard> {
     }
   }
 }
+
 class UserEditProfileCard extends StatefulWidget {
   final String oldname;
 
@@ -1467,7 +1462,6 @@ class _UserEditProfileCardState extends State<UserEditProfileCard> {
                         isUploading = false;
                       });
                       if (flag) {
-                        cardKey.currentState.toggleCard();
                         baseProvider.showPositiveAlert('Complete',
                             'Your details have been updated', context);
                       } else {
@@ -1506,7 +1500,6 @@ class _UserEditProfileCardState extends State<UserEditProfileCard> {
               TextButton(
                 onPressed: () {
                   FocusScope.of(context).unfocus();
-                  cardKey.currentState.toggleCard();
                 },
                 child: Container(
                   decoration: BoxDecoration(

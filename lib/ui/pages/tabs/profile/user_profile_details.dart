@@ -309,17 +309,19 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                         children: [
                           cardItem("Gender", getGender()),
                           Expanded(
-                            child: ListTile(
-                                title: Text(
-                                  "PAN",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: UiConstants.primaryColor
-                                          .withOpacity(0.5),
-                                      fontSize:
-                                          SizeConfig.mediumTextSize * 0.8),
-                                ),
-                                subtitle: getPanContent()),
+                            child: InkWell(
+                                onTap: showHidePan,
+                                child: ListTile(
+                                    title: Text(
+                                      "PAN",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: UiConstants.primaryColor
+                                              .withOpacity(0.5),
+                                          fontSize:
+                                              SizeConfig.mediumTextSize * 0.8),
+                                    ),
+                                    subtitle: getPanContent())),
                           )
                         ],
                       ),
@@ -419,17 +421,14 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
             ),
           ),
           SizedBox(width: 4),
-          InkWell(
-            onTap: showHidePan,
-            child: !isPanVisible
-                ? Lottie.asset("images/lottie/eye.json",
-                    height: SizeConfig.largeTextSize, repeat: false)
-                : Icon(
-                    Icons.remove_red_eye_outlined,
-                    color: UiConstants.primaryColor,
-                    size: SizeConfig.largeTextSize,
-                  ),
-          )
+          !isPanVisible
+              ? Lottie.asset("images/lottie/eye.json",
+                  height: SizeConfig.largeTextSize, repeat: false)
+              : Icon(
+                  Icons.remove_red_eye_outlined,
+                  color: UiConstants.primaryColor,
+                  size: SizeConfig.largeTextSize,
+                ),
         ],
       );
     } else

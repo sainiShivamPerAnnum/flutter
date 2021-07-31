@@ -184,8 +184,7 @@ class HttpModel extends ChangeNotifier {
     }
   }
 
-  ///Returns the number of tickets that need to be added to user's balance
-  Future<bool> isPanNotRegistered(String pan) async {
+  Future<bool> isPanRegistered(String pan) async {
     if (_baseUtil == null || _baseUtil.firebaseUser == null) return false;
     //get auth
     String idToken = await _baseUtil.firebaseUser.getIdToken();

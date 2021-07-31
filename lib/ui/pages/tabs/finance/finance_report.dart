@@ -1,12 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/model/chartFundItem.dart';
-import 'package:felloapp/ui/dialogs/Fold-Card/card.dart';
-import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../main.dart';
@@ -19,6 +15,7 @@ class YourFunds extends StatefulWidget {
 
   YourFunds({Key key, this.chartFunds, this.userFundWallet, this.doRefresh})
       : super(key: key);
+
   @override
   _YourFundsState createState() => _YourFundsState();
 }
@@ -27,6 +24,7 @@ class _YourFundsState extends State<YourFunds> {
   List<double> breakdownWidth = [0, 0, 0, 0];
 
   BaseUtil baseProvider;
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
