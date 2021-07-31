@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -13,17 +12,16 @@ import 'package:felloapp/ui/elements/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/update_name.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
-import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+
 import '../../../../base_util.dart';
 
 class UserProfileDetails extends StatefulWidget {

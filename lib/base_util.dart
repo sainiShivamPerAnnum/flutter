@@ -33,7 +33,6 @@ import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcase.dart';
 
 import 'core/base_remote_config.dart';
@@ -91,6 +90,7 @@ class BaseUtil extends ChangeNotifier {
   int isOtpResendCount = 0;
   int app_open_count = 0;
   String zeroBalanceAssetUri;
+
   ///Flags in various screens defined as global variables
   bool isUserOnboarded,
       isLoginNextInProgress,
@@ -162,6 +162,7 @@ class BaseUtil extends ChangeNotifier {
   Future init() async {
     print('inside init base util');
     _setRuntimeDefaults();
+
     ///analytics
     BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
@@ -182,6 +183,7 @@ class BaseUtil extends ChangeNotifier {
       ///get app open count
       await _lModel.updateAppOpenCount();
       app_open_count = await _lModel.getAppOpenCount();
+
       ///get user wallet
       _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
       if (_userFundWallet == null) _compileUserWallet();
@@ -191,6 +193,7 @@ class BaseUtil extends ChangeNotifier {
       if (_userTicketWallet == null) {
         await _initiateNewTicketWallet();
       }
+
       ///get user creation time
       _userCreationTimestamp = firebaseUser.metadata.creationTime;
 
@@ -201,7 +204,7 @@ class BaseUtil extends ChangeNotifier {
 
       ///prefill augmont and pan details if available
       panService = new PanService();
-      if(myUser.isAugmontOnboarded) {
+      if (myUser.isAugmontOnboarded) {
         augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
         userRegdPan = await panService.getUserPan();
       }
@@ -228,7 +231,7 @@ class BaseUtil extends ChangeNotifier {
 
       ///pick zerobalance asset
       Random rnd = new Random();
-      zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4)+1}';
+      zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
     }
   }
 
@@ -448,26 +451,35 @@ class BaseUtil extends ChangeNotifier {
       _myUser = null;
       _userFundWallet = null;
       _userTicketWallet = null;
+      firebaseUser = null;
+      baseAnalytics = null;
       _payService = null;
       feedCards = null;
+      _dailyPickCount = null;
+      userRegdPan = null;
       weeklyDigits = null;
       userWeeklyBoards = null;
       _iciciDetail = null;
       _currentICICITxn = null;
       _currentICICINonInstantWthrlTxn = null;
+      panService = null;
       _augmontDetail = null;
+      augmontGoldRates = null;
       _currentAugmontTxn = null;
       _kycDetail = null;
       tambolaWinnersDetail = null;
-      prizeLeaders = null;
-      referralLeaders = null;
+      prizeLeaders = [];
+      referralLeaders = [];
       myUserDpUrl = null;
       userMiniTxnList = null;
       userReferralsList = null;
       myReferralInfo = null;
+      packageInfo = null;
+      freshchatKeys = null;
       _userCreationTimestamp = null;
-
+      lastTransactionListDocument = null;
       isOtpResendCount = 0;
+      app_open_count = 0;
       delegate.appState.setCurrentTabIndex = 0;
       _setRuntimeDefaults();
 

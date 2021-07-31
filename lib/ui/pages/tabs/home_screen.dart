@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   bool _isInit = false;
 
   Future<void> getProfilePicUrl() async {
+    if(baseProvider == null || baseProvider.myUser == null)return;
     baseProvider.myUserDpUrl =
         await dbProvider.getUserDP(baseProvider.myUser.uid);
     if (baseProvider.myUserDpUrl != null) {

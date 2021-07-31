@@ -5,7 +5,6 @@ import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -15,7 +14,6 @@ import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'package:felloapp/ui/elements/Parallax-card/game_card_list.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
 import 'package:felloapp/ui/elements/week-winners.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,7 +22,6 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcase_widget.dart';
 
 class GamePage extends StatefulWidget {
   // final ValueChanged<int> tabChange;
@@ -169,7 +166,7 @@ class _GamePageState extends State<GamePage> {
                                         baseProvider.userTicketWallet),
                               );
                             },
-                            child:TicketCount(baseProvider.userTicketWallet
+                            child: TicketCount(baseProvider.userTicketWallet
                                 .getActiveTickets()),
                             // BaseUtil.buildShowcaseWrapper(
                             //   _showcaseHeader,

@@ -1,6 +1,5 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
-import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class TambolaCardsList extends StatelessWidget {

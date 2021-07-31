@@ -6,7 +6,6 @@ import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:video_player/video_player.dart';
@@ -246,19 +245,24 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
       children: [
         SizedBox(height: kToolbarHeight * 0.8),
         Expanded(
-          child: (_videoController != null)
-              ? Container(
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 3,
-                        blurRadius: 7)
-                  ]),
-                  child: AspectRatio(
-                      aspectRatio: _videoController.value.aspectRatio,
-                      child: VideoPlayer(_videoController)))
-              : Shimmer(child: Container(width: SizeConfig.screenWidth*0.6,color: Colors.grey.withOpacity(0.4),), color: Colors.white,)
-        ),
+            child: (_videoController != null)
+                ? Container(
+                    decoration: BoxDecoration(boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 3,
+                          blurRadius: 7)
+                    ]),
+                    child: AspectRatio(
+                        aspectRatio: _videoController.value.aspectRatio,
+                        child: VideoPlayer(_videoController)))
+                : Shimmer(
+                    child: Container(
+                      width: SizeConfig.screenWidth * 0.6,
+                      color: Colors.grey.withOpacity(0.4),
+                    ),
+                    color: Colors.white,
+                  )),
         Container(
           width: SizeConfig.screenWidth * 0.8,
           height: SizeConfig.screenHeight * 0.1,
