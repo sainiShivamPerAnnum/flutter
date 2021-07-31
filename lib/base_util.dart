@@ -33,6 +33,7 @@ import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcase.dart';
 
 import 'core/base_remote_config.dart';
@@ -158,7 +159,6 @@ class BaseUtil extends ChangeNotifier {
 
   Future init() async {
     print('inside init base util');
-    _setRuntimeDefaults();
 
     ///analytics
     BaseAnalytics.init();
@@ -177,6 +177,9 @@ class BaseUtil extends ChangeNotifier {
     isUserOnboarded =
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
     if (isUserOnboarded) {
+      //getting app open count
+      await _lModel.updateAppOpenCount();
+      app_open_count = await _lModel.getAppOpenCount();
       //get user wallet
       _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
       if (_userFundWallet == null) _compileUserWallet();
@@ -193,12 +196,11 @@ class BaseUtil extends ChangeNotifier {
       // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
       // _payService = locator<PaymentService>();
 
-      panService = new PanService();
-      if (myUser.isAugmontOnboarded) {
+      if(myUser.isAugmontOnboarded) {
         augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
+        panService = new PanService();
         userRegdPan = await panService.getUserPan();
       }
-
       ///Freshchat utils
       freshchatKeys = await _dbModel.getActiveFreshchatKey();
       if (freshchatKeys != null && freshchatKeys.isNotEmpty) {
@@ -458,7 +460,33 @@ class BaseUtil extends ChangeNotifier {
 
       isOtpResendCount = 0;
       delegate.appState.setCurrentTabIndex = 0;
-      _setRuntimeDefaults();
+      isUserOnboarded = false;
+      isLoginNextInProgress = false;
+      isEditProfileNextInProgress = false;
+      isRedemptionOtpInProgress = false;
+      isAugmontRegnInProgress = false;
+      isAugmontRegnCompleteAnimateInProgress = false;
+      isIciciDepositRouteLogicInProgress = false;
+      isEditAugmontBankDetailInProgress = false;
+      isAugDepositRouteLogicInProgress = false;
+      isAugWithdrawRouteLogicInProgress = false;
+      isAugmontRealTimeBalanceFetched = false;
+      weeklyDrawFetched = false;
+      weeklyTicksFetched = false;
+      referralsFetched = false;
+      userReferralInfoFetched = false;
+      isProfilePictureUpdated = false;
+      isReferralLinkBuildInProgressWhatsapp = false;
+      isReferralLinkBuildInProgressOther = false;
+      isHomeCardsFetched = false;
+      isDeviceOffline = false;
+      ticketRequestSent = false;
+      ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
+      infoSliderIndex = 0;
+      playScreenFirst = true;
+      atomicTicketGenerationLeftCount = 0;
+      atomicTicketDeletionLeftCount = 0;
+
       return true;
     } catch (e) {
       log.error('Failed to clear data/sign out user: ' + e.toString());

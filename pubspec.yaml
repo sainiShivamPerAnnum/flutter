@@ -41,7 +41,6 @@ dependencies:
   synchronized: ^3.0.0
   url_launcher: ^5.7.0
   device_unlock : ^1.1.0
-  # local_auth : ^1.1.6
   in_app_update: ^2.0.0
   image_gallery_saver: ^1.6.9
   #ui packages
@@ -65,6 +64,7 @@ dependencies:
   screenshot: ^1.2.1
   scratcher: ^1.4.0
   showcaseview: ^0.1.6
+  shimmer_animation : ^2.1.0+1
   signature: ^3.2.0
   slider_button: ^0.6.0
   sms_autofill: ^2.0.0
