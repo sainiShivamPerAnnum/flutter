@@ -125,7 +125,7 @@ class _FinancePageState extends State<FinancePage> {
                                     _onFundsRefresh();
                                   },
                                 )
-                              : ZeroBalView(),
+                              : ZeroBalView(baseProvider.zeroBalanceAssetUri),
                         );
                       },
                     ),
@@ -205,6 +205,9 @@ class _FinancePageState extends State<FinancePage> {
 }
 
 class ZeroBalView extends StatelessWidget {
+  final String uri;
+  ZeroBalView(this.uri);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -215,7 +218,7 @@ class ZeroBalView extends StatelessWidget {
           Expanded(
             child: Center(
               child: Image.asset(
-                "images/zero-balance.png",
+                "images/$uri.png",
                 fit: BoxFit.contain,
               ),
             ),

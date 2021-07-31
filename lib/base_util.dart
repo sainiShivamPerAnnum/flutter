@@ -83,13 +83,14 @@ class BaseUtil extends ChangeNotifier {
   static PackageInfo packageInfo;
   Map<String, dynamic> freshchatKeys;
 
-  // Objects for Transaction list Pagination
+  /// Objects for Transaction list Pagination
   DocumentSnapshot lastTransactionListDocument;
   bool hasMoreTransactionListDocuments = true;
 
   DateTime _userCreationTimestamp;
   int isOtpResendCount = 0;
   int app_open_count = 0;
+  String zeroBalanceAssetUri;
   ///Flags in various screens defined as global variables
   bool isUserOnboarded,
       isLoginNextInProgress,
@@ -200,10 +201,10 @@ class BaseUtil extends ChangeNotifier {
 
       ///prefill augmont and pan details if available
       panService = new PanService();
-      if(myUser.isAugmontOnboarded) {
+      // if(myUser.isAugmontOnboarded) {
         augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
         userRegdPan = await panService.getUserPan();
-      }
+      // }
 
       ///Freshchat utils
       freshchatKeys = await _dbModel.getActiveFreshchatKey();
@@ -224,6 +225,10 @@ class BaseUtil extends ChangeNotifier {
         log.error('key parsing failed: ' + e.toString());
         _dailyPickCount = 5;
       }
+
+      ///pick zerobalance asset
+      Random rnd = new Random();
+      zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4)+1}';
     }
   }
 

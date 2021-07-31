@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -41,6 +42,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
   AugmontModel augmontProvider;
   ICICIModel iProvider;
   DBModel dbProvider;
+  HttpModel httpProvider;
   AppState appState;
   double _width;
 
@@ -65,6 +67,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     iProvider = Provider.of<ICICIModel>(context, listen: false);
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
+    httpProvider = Provider.of<HttpModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
     if (!_isInit) {
       _panInput.text = baseProvider.userRegdPan ?? '';
@@ -423,6 +426,12 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     bool _flag = true;
     String _reason = '';
     if (!iProvider.isInit()) await iProvider.init();
+
+    bool registeredFlag = await httpProvider.isPanNotRegistered(enteredPan);
+    if(!registeredFlag) {
+      _flag = false;
+      _reason = 'This PAN number is already associated with a different account';
+    }
 
     ///test pan number using icici api and verify if the name entered by user matches name fetched
     var kObj = await iProvider.getKycStatus(enteredPan);
