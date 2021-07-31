@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:felloapp/util/size_config.dart';
@@ -46,7 +47,7 @@ class NavBar extends StatelessWidget {
       ),
       height: 64,
       padding:
-          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
+          (Platform.isIOS)?EdgeInsets.only(left : SizeConfig.blockSizeHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5, bottom: MediaQuery.of(context).padding.bottom*0.15):EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
       //Clip the row of widgets, to suppress any overflow errors that might occur during animation
       child: SizedBox(
         child: Row(

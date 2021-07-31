@@ -76,7 +76,7 @@ class KYCModel extends ChangeNotifier {
     String email = baseProvider.myUser.email ?? '';
     String phone = baseProvider.myUser.mobile;
     String name = baseProvider.myUser.name;
-    String panNumber = baseProvider.myUser.pan;
+    String panNumber = baseProvider.userRegdPan;
 
     //create a new document for the investor details
     var onboardObj = await _createOnboardingObj(

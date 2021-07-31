@@ -1,3 +1,4 @@
+import 'package:felloapp/util/fundPalettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -31,11 +32,10 @@ class _GoldProfitCalculatorState extends State<GoldProfitCalculator> {
 
   @override
   Widget build(BuildContext context) {
-    double _height = MediaQuery.of(context).size.height;
     outputprice = price + price * (0.17 / 12) * months;
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: _height * 0.02,
+        horizontal: SizeConfig.blockSizeHorizontal * 5,
       ),
       width: double.infinity,
       padding: EdgeInsets.all(16),
@@ -72,8 +72,8 @@ class _GoldProfitCalculatorState extends State<GoldProfitCalculator> {
                     Text("Investment Amount"),
                     CalculatorCapsule(
                       gradColors: [
-                        UiConstants.primaryColor.withGreen(190),
-                        UiConstants.primaryColor
+                        augmontGoldPalette.secondaryColor.withBlue(800),
+                        augmontGoldPalette.secondaryColor
                       ],
                       child: TextField(
                         controller: inputPrice,
@@ -107,8 +107,10 @@ class _GoldProfitCalculatorState extends State<GoldProfitCalculator> {
                     Text("Return Amount"),
                     CalculatorCapsule(
                       gradColors: [
-                        Colors.blueGrey[600],
-                        Colors.blueGrey,
+                        // Colors.blueGrey[600],
+                        // Colors.blueGrey,
+                        augmontGoldPalette.primaryColor,
+                        augmontGoldPalette.primaryColor2
                       ],
                       child: Padding(
                         padding: const EdgeInsets.only(left: 16.0),
@@ -149,8 +151,10 @@ class _GoldProfitCalculatorState extends State<GoldProfitCalculator> {
             max: 36,
             min: 0,
             divisions: 18,
-            activeColor: UiConstants.primaryColor,
-            inactiveColor: UiConstants.primaryColor,
+            activeColor:
+                augmontGoldPalette.primaryColor, // UiConstants.primaryColor,
+            inactiveColor:
+                augmontGoldPalette.primaryColor2, //  UiConstants.primaryColor,
           ),
           Text(
             '*Projected returns based on past 3 year performance',

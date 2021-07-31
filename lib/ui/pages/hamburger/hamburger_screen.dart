@@ -7,6 +7,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
 import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
+import 'package:felloapp/ui/pages/hamburger/contact_us_page.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
@@ -132,11 +133,8 @@ class HamburgerMenu extends StatelessWidget {
         }
       case 'contUs':
         {
-          // Navigator.push(
-          //     context, MaterialPageRoute(builder: (ctx) => ChatSupport()));
           appstate.currentAction =
-              PageAction(state: PageState.addPage, page: ChatSupportPageConfig);
-
+              PageAction(state: PageState.addPage, page: ContactUsConfig);
           break;
         }
       // case 'kyc':
@@ -235,8 +233,8 @@ class HamburgerMenu extends StatelessWidget {
       new OptionDetail(
           key: 'abUs', value: 'About ${Constants.APP_NAME}', isEnabled: true),
       new OptionDetail(key: 'fdbk', value: 'Feedback', isEnabled: true),
-      new OptionDetail(key: 'faq', value: 'FAQs', isEnabled: true),
-      new OptionDetail(key: 'contUs', value: 'Contact Us', isEnabled: true),
+      // new OptionDetail(key: 'faq', value: 'FAQs', isEnabled: true),
+      new OptionDetail(key: 'contUs', value: 'Support', isEnabled: true),
       new OptionDetail(
           key: 'signOut',
           value: 'Sign Out',

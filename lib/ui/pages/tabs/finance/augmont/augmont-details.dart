@@ -11,28 +11,28 @@ import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
-import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
+import 'package:felloapp/ui/elements/fund_graph.dart';
+import 'package:felloapp/ui/elements/fund_info.dart';
 import 'package:felloapp/ui/elements/gold_profit_calculator.dart';
-import 'package:felloapp/ui/elements/gold_rate_graph.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
-import 'package:felloapp/ui/pages/tabs/finance/augmont_withdraw_screen.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
+import 'package:felloapp/util/fundPalettes.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:fl_animated_linechart/chart/area_line_chart.dart';
-import 'package:fl_animated_linechart/chart/line_chart.dart';
-import 'package:fl_animated_linechart/common/pair.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
+import 'augmont_withdraw_screen.dart';
 
 class AugmontDetailsPage extends StatefulWidget {
   static const int STATUS_UNAVAILABLE = 0;
@@ -99,49 +99,82 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
     iProvider = Provider.of<ICICIModel>(context, listen: false);
     fcmProvider = Provider.of<FcmListener>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.pop(context, true);
-        return true;
-      },
-      child: Scaffold(
-        appBar: BaseUtil.getAppBar(context),
-        body: Column(
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: augmontGoldPalette.secondaryColor,
+        iconTheme: IconThemeData(color: Colors.white),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-              child: Container(
-                child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      FundInfo(),
-                      GoldRateGraph(),
-                      // FundGraph(),
-                      FundDetailsTable(
-                          baseProvider.userFundWallet.augGoldQuantity),
-                      GoldProfitCalculator(),
-                      FAQCard(Assets.goldFaqHeaders, Assets.goldFaqAnswers),
-                      _buildBetaWithdrawButton(),
-                    ],
-                  ),
+            Image.asset("images/augmont-share.png",
+                height: kToolbarHeight * 0.4),
+            SizedBox(width: 5),
+            FittedBox(
+              child: Text(
+                "Augmont Gold",
+                style: GoogleFonts.montserrat(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
-            _buildSaveButton(),
           ],
         ),
+        actions: [IconButton(onPressed: () {}, icon: SizedBox())],
       ),
+      // body: NestedScrollView(
+      //   headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+      //     return <Widget>[
+      //       FundAppBar(
+      //           logo: "images/augmont-share.png",
+      //           title: "Augmont Gold",
+      //           backgroundImage:
+      //               "https://www.augmont.in/wp-content/uploads/2017/04/augmont-dia-470x480.png"),
+      //     ];
+      //   },
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                FundInfo(
+                  infoList: [
+                    "24k Digital Gold",
+                    "99.99% Purity",
+                    "17% growth rate in 3 years",
+                    "Ranked no 1 bullion in India"
+                  ],
+                ),
+                Container(
+                    width: SizeConfig.screenWidth,
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: LineChartWidget()),
+                FundDetailsTable(baseProvider.userFundWallet.augGoldQuantity),
+                GoldProfitCalculator(),
+                FAQCard(Assets.goldFaqHeaders, Assets.goldFaqAnswers,
+                    augmontGoldPalette.primaryColor),
+                _buildBetaWithdrawButton(),
+              ],
+            ),
+          ),
+          Positioned(bottom: 0, child: _buildSaveButton()),
+        ],
+      ),
+      // ),
     );
   }
 
   Widget _buildSaveButton() {
     return Container(
-      width: double.infinity,
+      width: SizeConfig.screenWidth,
       height: MediaQuery.of(context).size.height * 0.07,
       decoration: BoxDecoration(
         gradient: new LinearGradient(colors: [
-          UiConstants.primaryColor,
-          UiConstants.primaryColor.withBlue(200),
+          // UiConstants.primaryColor,
+          // UiConstants.primaryColor.withBlue(200),
+          augmontGoldPalette.primaryColor,
+          augmontGoldPalette.primaryColor2
         ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
       ),
       child: new Material(
@@ -190,18 +223,21 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
 
   Widget _buildBetaWithdrawButton() {
     return Container(
-      margin: EdgeInsets.symmetric(
-        vertical: 16,
-        horizontal: MediaQuery.of(context).size.height * 0.02,
-      ),
+      margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).size.height * 0.1,
+          left: SizeConfig.blockSizeHorizontal * 5,
+          right: SizeConfig.blockSizeHorizontal * 5,
+          top: 8),
       width: double.infinity,
       height: MediaQuery.of(context).size.height * 0.05,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         gradient: new LinearGradient(
           colors: [
-            Colors.blueGrey,
-            Colors.blueGrey[800],
+            augmontGoldPalette.secondaryColor.withBlue(800),
+            augmontGoldPalette.secondaryColor,
+            //Colors.blueGrey,
+            //Colors.blueGrey[800],
           ],
           begin: Alignment(0.5, -1.0),
           end: Alignment(0.5, 1.0),
@@ -286,10 +322,13 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
             'The current rates couldn\'t be loaded. Please try again', context);
         return false;
       } else {
+        AppState.screenStack.add(ScreenItem.dialog);
         showModalBottomSheet(
             isDismissible: false,
             // backgroundColor: Colors.transparent,
-
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
             context: context,
             isScrollControlled: true,
             builder: (context) {
@@ -593,10 +632,12 @@ class FundDetailsTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double _height = MediaQuery.of(context).size.height;
     return Container(
-      margin: EdgeInsets.all(
-        _height * 0.02,
+      margin: EdgeInsets.only(
+        left: SizeConfig.blockSizeHorizontal * 5,
+        right: SizeConfig.blockSizeHorizontal * 5,
+        bottom: 24,
+        top: 16,
       ),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -629,122 +670,6 @@ class FundDetailsTable extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class FundGraph extends StatelessWidget {
-  final Map<DateTime, double> line1 = {
-    DateTime.utc(2018, 03, 19): 3130,
-    DateTime.utc(2018, 04, 29): 3199,
-    DateTime.utc(2018, 05, 30): 3205,
-    DateTime.utc(2018, 06, 10): 3152,
-    DateTime.utc(2018, 07, 18): 3053,
-    DateTime.utc(2018, 08, 03): 3118,
-    DateTime.utc(2018, 09, 02): 3138,
-    DateTime.utc(2018, 10, 04): 3281,
-    DateTime.utc(2018, 12, 10): 3142,
-    DateTime.utc(2019, 01, 25): 3223,
-    DateTime.utc(2019, 02, 17): 3223,
-    DateTime.utc(2019, 03, 12): 3443,
-    DateTime.utc(2019, 04, 14): 3280,
-    DateTime.utc(2019, 05, 18): 3279,
-    DateTime.utc(2019, 06, 10): 3294,
-    DateTime.utc(2019, 07, 18): 3466,
-    DateTime.utc(2019, 08, 03): 3590,
-    DateTime.utc(2019, 09, 02): 3994,
-    DateTime.utc(2019, 10, 04): 3877,
-    DateTime.utc(2019, 12, 10): 4008,
-    DateTime.utc(2020, 01, 25): 3925,
-    DateTime.utc(2020, 02, 17): 4026,
-    DateTime.utc(2020, 03, 12): 4221,
-    DateTime.utc(2020, 04, 14): 4347,
-    DateTime.utc(2020, 05, 18): 4473,
-    DateTime.utc(2020, 06, 10): 4650,
-    DateTime.utc(2020, 07, 18): 4848,
-    DateTime.utc(2020, 08, 03): 5050,
-    DateTime.utc(2020, 09, 02): 5530,
-    DateTime.utc(2020, 10, 04): 5340,
-    DateTime.utc(2020, 12, 10): 5225,
-    DateTime.utc(2021, 01, 25): 5141,
-    DateTime.utc(2021, 02, 17): 4702,
-    DateTime.utc(2021, 03, 12): 4588,
-  };
-
-  @override
-  Widget build(BuildContext context) {
-    double _height = MediaQuery.of(context).size.height;
-    LineChart chart = AreaLineChart.fromDateTimeMaps(
-      [line1],
-      [UiConstants.primaryColor],
-      ['₹'],
-      gradients: [
-        Pair(Colors.white, UiConstants.primaryColor.withOpacity(0.1))
-      ],
-    );
-    return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: _height * 0.02,
-      ),
-      height: _height * 0.3,
-      width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: CustomAnimatedLineChart(
-          chart,
-        ), //Unique key to force animations
-      ),
-    );
-  }
-}
-
-class FundInfo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    double _height = MediaQuery.of(context).size.height;
-    double _width = MediaQuery.of(context).size.width;
-    return Column(
-      children: [
-        Row(
-          children: [
-            Container(
-              margin: EdgeInsets.only(
-                left: _height * 0.02,
-                top: _height * 0.02,
-                bottom: _height * 0.02,
-              ),
-              width: _width * 0.2,
-              child: Image.asset(Assets.augmontLogo, fit: BoxFit.contain),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: Text(
-                "Augmont Digital Gold",
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: SizeConfig.largeTextSize),
-              ),
-            ),
-            SizedBox(
-              width: _height * 0.02,
-            )
-          ],
-        ),
-        Padding(
-          padding: EdgeInsets.only(bottom: _height * 0.02, left: 20, right: 30),
-          child: Text(
-            'A strong asset with a 17% growth rate over the past 3 years. Augmont is the leading ' +
-                'gold bullion of India. Invest in 24K digital gold ' +
-                'with 999 purity.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: UiConstants.accentColor, fontStyle: FontStyle.italic),
-          ),
-        ),
-      ],
     );
   }
 }

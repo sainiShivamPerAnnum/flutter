@@ -5,12 +5,12 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/change_profile_picture_dialog.dart';
-import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/marquee_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -18,7 +18,6 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:flip_card/flip_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,12 +26,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -42,6 +38,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   BaseUtil baseProvider;
   DBModel dbProvider;
+  HttpModel httpProvider;
   AppState appState;
   bool isPanFieldHidden = true;
 
@@ -57,6 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
+    httpProvider = Provider.of<HttpModel>(context, listen: false);
 
     if (!baseProvider.userReferralInfoFetched)
       dbProvider.getUserReferralInfo(baseProvider.myUser.uid).then((value) {
@@ -86,21 +84,22 @@ class _ProfilePageState extends State<ProfilePage> {
           physics: BouncingScrollPhysics(),
           children: [
             Container(
-              height: SizeConfig.screenHeight * 0.1,
+              height: SizeConfig.screenHeight * 0.08,
             ),
             Consumer<BaseUtil>(
               builder: (ctx, bp, child) {
-                return FlipCard(
-                  key: cardKey,
-                  direction: FlipDirection.VERTICAL,
-                  // default
-                  speed: 800,
-                  flipOnTouch: false,
-                  front: UserProfileCard(),
-                  back: UserEditProfileCard(
-                    oldname: baseProvider.myUser.name,
-                  ),
-                );
+                return UserProfileCard();
+                // return FlipCard(
+                //   key: cardKey,
+                //   direction: FlipDirection.VERTICAL,
+                //   // default
+                //   speed: 800,
+                //   flipOnTouch: false,
+                //   front: UserProfileCard(),
+                //   back: UserEditProfileCard(
+                //     oldname: baseProvider.myUser.name,
+                //   ),
+                // );
               },
             ),
             Consumer<BaseUtil>(
@@ -152,24 +151,39 @@ class _ProfilePageState extends State<ProfilePage> {
                           : SizedBox();
                     },
                   ),
-                  ProfileTabTilePan(
-                    logo: "images/contact-book.png",
-                    title: "PAN Number",
-                    value: baseProvider.myUser.pan,
-                    isHidden: isPanFieldHidden,
-                    isAvailable: (baseProvider.myUser.pan != null &&
-                        baseProvider.myUser.pan.isNotEmpty),
-                    onPress: () {
-                      HapticFeedback.vibrate();
-                      if (baseProvider.myUser.pan != null &&
-                          baseProvider.myUser.pan.isNotEmpty) {
-                        isPanFieldHidden = !isPanFieldHidden;
-                        setState(() {});
-                      } else {
-                        delegate.parseRoute(Uri.parse("d-panInfo"));
-                      }
-                    },
+                  ProfileTabTile(
+                    leadWidget: Image.asset(
+                      "images/contact-book.png",
+                      height: SizeConfig.blockSizeHorizontal * 5,
+                    ),
+                    onPress: () => appState.currentAction = PageAction(
+                        state: PageState.addPage,
+                        page: UserProfileDetailsConfig),
+                    title: "Account",
+                    trailWidget: Icon(
+                      Icons.arrow_forward_ios,
+                      color: UiConstants.primaryColor,
+                      size: SizeConfig.blockSizeHorizontal * 4,
+                    ),
                   ),
+                  // ProfileTabTilePan(
+                  //   logo: "images/contact-book.png",
+                  //   title: "PAN Number",
+                  //   value: baseProvider.myUser.pan,
+                  //   isHidden: isPanFieldHidden,
+                  //   isAvailable: (baseProvider.myUser.pan != null &&
+                  //       baseProvider.myUser.pan.isNotEmpty),
+                  //   onPress: () {
+                  //     HapticFeedback.vibrate();
+                  //     if (baseProvider.myUser.pan != null &&
+                  //         baseProvider.myUser.pan.isNotEmpty) {
+                  //       isPanFieldHidden = !isPanFieldHidden;
+                  //       setState(() {});
+                  //     } else {
+                  //       delegate.parseRoute(Uri.parse("d-panInfo"));
+                  //     }
+                  //   },
+                  // ),
                   ProfileTabTile(
                       leadWidget: Image.asset(
                         "images/transaction.png",
@@ -187,20 +201,23 @@ class _ProfilePageState extends State<ProfilePage> {
                           state: PageState.addPage,
                           page: TransactionPageConfig)),
                   ProfileTabTile(
-                      leadWidget: Image.asset(
-                        "images/referrals.png",
-                        height: SizeConfig.blockSizeHorizontal * 5,
+                    leadWidget: Image.asset(
+                      "images/referrals.png",
+                      height: SizeConfig.blockSizeHorizontal * 5,
+                    ),
+                    title: "Referrals",
+                    trailWidget: Text(
+                      _myReferralCount.toString(),
+                      style: GoogleFonts.montserrat(
+                        color: UiConstants.primaryColor,
+                        fontSize: SizeConfig.mediumTextSize,
                       ),
-                      title: "Referrals",
-                      trailWidget: Text(
-                        _myReferralCount.toString(),
-                        style: GoogleFonts.montserrat(
-                          color: UiConstants.primaryColor,
-                          fontSize: SizeConfig.mediumTextSize,
-                        ),
-                      ),
-                      onPress: () => appState.currentAction = PageAction(
-                          state: PageState.addPage, page: ReferralPageConfig)),
+                    ),
+                    onPress: () => _myReferralCount > 0
+                        ? appState.currentAction = PageAction(
+                            state: PageState.addPage, page: ReferralPageConfig)
+                        : () {},
+                  ),
                 ],
               ),
             ),
@@ -210,7 +227,7 @@ class _ProfilePageState extends State<ProfilePage> {
             _termsRow(),
             SizedBox(
               height: 20,
-            )
+            ),
           ],
         ),
       ),
@@ -219,7 +236,44 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _appVersionRow() {
     return Center(
-      child: Row(
+      child:
+          // Row(
+          //   crossAxisAlignment: CrossAxisAlignment.center,
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     Image.asset(
+          //       "images/fello-short-logo.png",
+          //       color: Colors.grey,
+          //       width: SizeConfig.cardTitleTextSize * 0.9,
+          //       height: SizeConfig.cardTitleTextSize * 0.9,
+          //     ),
+          //     SizedBox(width: 4),
+          //     Column(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       crossAxisAlignment: CrossAxisAlignment.start,
+          //       children: [
+          //         Text(
+          //           "Version 1.0.2",
+          //           style: TextStyle(
+          //               fontSize: SizeConfig.mediumTextSize,
+          //               fontWeight: FontWeight.w700,
+          //               color: Colors.grey),
+          //         ),
+          //         SizedBox(
+          //           height: 4,
+          //         ),
+          //         Text(
+          //           "Made for India ❤",
+          //           style: TextStyle(
+          //             fontSize: SizeConfig.smallTextSize,
+          //             color: Colors.black54,
+          //           ),
+          //         ),
+          //       ],
+          //     )
+          //   ],
+          // ),
+          Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -449,25 +503,210 @@ class ShareCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Both get ₹ 25 on every referral",
-                  style: TextStyle(
-                      color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          offset: Offset(5, 5),
-                          color: Colors.black26,
-                          blurRadius: 10,
-                        )
-                      ],
-                      fontWeight: FontWeight.w700,
-                      fontSize: SizeConfig.cardTitleTextSize),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Get ₹ 25 on every referral",
+                        style: TextStyle(
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                offset: Offset(5, 5),
+                                color: Colors.black26,
+                                blurRadius: 10,
+                              )
+                            ],
+                            fontWeight: FontWeight.w700,
+                            fontSize: SizeConfig.cardTitleTextSize),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        showModalBottomSheet(
+                            isDismissible: false,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  topRight: Radius.circular(16)),
+                            ),
+                            // backgroundColor: Colors.transparent,
+                            context: context,
+                            builder: (ctx) {
+                              AppState.screenStack.add(ScreenItem.dialog);
+                              return Wrap(
+                                children: [
+                                  Container(
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.only(
+                                              left: SizeConfig
+                                                      .blockSizeHorizontal *
+                                                  5,
+                                              right: SizeConfig
+                                                      .blockSizeHorizontal *
+                                                  5,
+                                              top: 16,
+                                              bottom: 0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              // SizedBox(
+                                              // width: SizeConfig
+                                              //         .blockSizeHorizontal *
+                                              //     5),
+                                              Expanded(
+                                                child: FittedBox(
+                                                  fit: BoxFit.cover,
+                                                  child: Text(
+                                                    "How to make a successful Referral ",
+                                                    textAlign: TextAlign.center,
+                                                    maxLines: 2,
+                                                    style: GoogleFonts
+                                                        .montserratAlternates(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: UiConstants
+                                                          .primaryColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                  width: SizeConfig
+                                                          .blockSizeHorizontal *
+                                                      5),
+                                              IconButton(
+                                                onPressed: () {
+                                                  backButtonDispatcher
+                                                      .didPopRoute();
+                                                },
+                                                icon: Icon(
+                                                  Icons.close,
+                                                  color: Colors.grey,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Divider(),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                                SizeConfig.blockSizeHorizontal *
+                                                    5,
+                                          ),
+                                          child: Stack(
+                                            children: [
+                                              Positioned(
+                                                bottom: 0,
+                                                right: -30,
+                                                child: Opacity(
+                                                  opacity: 0.6,
+                                                  child: Image.asset(
+                                                    "images/share-bottomsheet.png",
+                                                    width:
+                                                        SizeConfig.screenWidth *
+                                                            0.45,
+                                                  ),
+                                                ),
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  referralTile(
+                                                    "Share your personalised link to your friends and family",
+                                                    0,
+                                                  ),
+                                                  referralTile(
+                                                      "Prize balance gets credited as soon as they sign up.",
+                                                      SizeConfig.screenWidth *
+                                                          0.1),
+                                                  referralTile(
+                                                      "Prize balance gets unlocked when they make their first investment.",
+                                                      SizeConfig.screenWidth *
+                                                          0.2),
+                                                  referralTile(
+                                                      "you can invest or withdraw that balance afterwards",
+                                                      SizeConfig.screenWidth *
+                                                          0.3),
+                                                  SizedBox(height: 20),
+                                                  Container(
+                                                    width:
+                                                        SizeConfig.screenWidth *
+                                                            0.5,
+                                                    height: SizeConfig
+                                                            .screenHeight *
+                                                        0.1,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          "Want to earn more with Fello ??",
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                                  color: Colors
+                                                                      .grey),
+                                                        ),
+                                                        InkWell(
+                                                          onTap: () async {
+                                                            String url =
+                                                                "https://www.fello.in";
+                                                            if (await canLaunch(
+                                                                url)) {
+                                                              launchUrl(url);
+                                                            } else {
+                                                              backButtonDispatcher
+                                                                  .didPopRoute();
+                                                            }
+                                                          },
+                                                          child: Text(
+                                                            "Visit our site",
+                                                            style: GoogleFonts
+                                                                .montserrat(
+                                                              color: UiConstants
+                                                                  .primaryColor,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(height: 20),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              );
+                            });
+                      },
+                      child: Icon(
+                        Icons.info_outline,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                    )
+                  ],
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 Text(
-                  "You and your friend also receive 10 game tickets that week!",
+                  "Invite friends and get ₹ 25 each when your friend makes their first investment.",
                   style: TextStyle(
                       color: Colors.white, fontSize: SizeConfig.mediumTextSize),
                 ),
@@ -476,6 +715,28 @@ class ShareCard extends StatelessWidget {
               ],
             ),
           )
+        ],
+      ),
+    );
+  }
+
+  Widget referralTile(String title, double rightPad) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 20.0, right: rightPad),
+      child: Row(
+        children: [
+          Icon(
+            Icons.brightness_1,
+            size: 12,
+            color: UiConstants.primaryColor,
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              title,
+              style: GoogleFonts.montserrat(),
+            ),
+          ),
         ],
       ),
     );
@@ -588,11 +849,18 @@ class _ShareOptionsState extends State<ShareOptions> {
             splashColor: Colors.orange.withOpacity(0.5),
           ),
         ),
-        SizedBox(width: 10),
+        (Platform.isIOS)
+            ? SizedBox(width: 10)
+            : Text(
+                "---",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
         (Platform.isIOS)
             ? Text('')
             : Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 decoration: BoxDecoration(
                   border: Border.all(
                     width: 2,
@@ -606,16 +874,16 @@ class _ShareOptionsState extends State<ShareOptions> {
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              'SHARE ON WHATSAPP',
-                              style: GoogleFonts.montserrat(
-                                fontSize: SizeConfig.mediumTextSize * 0.9,
-                                color: Colors.white,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
+                            // Text(
+                            //   'WHATSAPP',
+                            //   style: GoogleFonts.montserrat(
+                            //     fontSize: SizeConfig.mediumTextSize * 0.9,
+                            //     color: Colors.white,
+                            //   ),
+                            // ),
+                            // SizedBox(
+                            //   width: 5,
+                            // ),
                             SvgPicture.asset(
                               "images/svgs/whatsapp.svg",
                               color: Colors.white,
@@ -649,22 +917,35 @@ class _ShareOptionsState extends State<ShareOptions> {
                       return;
                     else
                       log.debug(url);
-
-                    FlutterShareMe()
-                        .shareToWhatsApp(msg: _shareMsg + url)
-                        .then((flag) {
-                      log.debug(flag);
-                    }).catchError((err) {
-                      log.error('Share to whatsapp failed');
-                      log.error(err);
+                    try {
                       FlutterShareMe()
-                          .shareToWhatsApp4Biz(msg: _shareMsg + url)
-                          .then((value) {
-                        log.debug(value);
-                      }).catchError((err) {
-                        log.error('Share to whatsapp biz failed as well');
+                          .shareToWhatsApp(msg: _shareMsg + url)
+                          .then((flag) {
+                        if (flag == "false") {
+                          FlutterShareMe()
+                              .shareToWhatsApp4Biz(msg: _shareMsg + url)
+                              .then((flag) {
+                            log.debug(flag);
+                            if (flag == "false") {
+                              baseProvider.showNegativeAlert(
+                                  "Whatsapp not detected",
+                                  "Please use other option to share.",
+                                  context);
+                            }
+                          });
+                        }
                       });
-                    });
+                    } catch (e) {
+                      log.debug(e.toString());
+                    }
+
+                    // FlutterShareMe()
+                    //     .shareToWhatsApp4Biz(msg: _shareMsg + url)
+                    //     .then((value) {
+                    //   log.debug(value);
+                    // }).catchError((err) {
+                    //   log.error('Share to whatsapp biz failed as well');
+                    // });
                   },
                   highlightColor: Colors.orange.withOpacity(0.5),
                   splashColor: Colors.orange.withOpacity(0.5),
@@ -936,7 +1217,7 @@ class _UserProfileCardState extends State<UserProfileCard> {
     }
     return Container(
       width: SizeConfig.screenWidth,
-      height: SizeConfig.screenHeight * 0.24,
+      height: SizeConfig.screenWidth * 0.52,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(
@@ -948,169 +1229,94 @@ class _UserProfileCardState extends State<UserProfileCard> {
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.blockSizeHorizontal * 4,
       ),
-      child: Stack(
+      child: Column(
         children: [
-          Column(
-            children: [
-              SizedBox(
-                height: 12,
-              ),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: SizeConfig.blockSizeHorizontal * 5,
-                    ),
-                    Container(
-                      height: picSize,
-                      width: picSize,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                      child: Stack(
-                        children: [
-                          isImageLoading
-                              ? Image.asset(
-                                  "images/profile.png",
-                                  height: picSize,
-                                  width: picSize,
-                                  fit: BoxFit.cover,
-                                )
-                              : ClipOval(
-                                  child: CachedNetworkImage(
-                                    imageUrl: baseProvider.myUserDpUrl,
-                                    height: picSize,
-                                    width: picSize,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: InkWell(
-                              onTap: () async {
-                                var _status = await Permission.photos.status;
-                                if (_status.isUndetermined ||
-                                    _status.isRestricted ||
-                                    _status.isLimited ||
-                                    _status.isDenied) {
-                                  showDialog(
-                                      context: context,
-                                      builder: (ctx) {
-                                        return ConfirmActionDialog(
-                                            title: "Request Permission",
-                                            description:
-                                                "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
-                                            buttonText: "Continue",
-                                            asset: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 8),
-                                              child: Image.asset(
-                                                  "images/gallery.png",
-                                                  height:
-                                                      SizeConfig.screenWidth *
-                                                          0.24),
-                                            ),
-                                            confirmAction: () {
-                                              Navigator.pop(context);
-                                              chooseprofilePicture();
-                                            },
-                                            cancelAction: () =>
-                                                Navigator.pop(context));
-                                      });
-                                } else if (_status.isGranted) {
-                                  chooseprofilePicture();
-                                } else {
-                                  baseProvider.showNegativeAlert(
-                                      'Permission Unavailable',
-                                      'Please enable permission from settings to continue',
-                                      context);
-                                }
-                              },
-                              child: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                radius: SizeConfig.blockSizeHorizontal * 4,
-                                child: Icon(
-                                  Icons.photo_camera_rounded,
-                                  color: UiConstants.primaryColor,
-                                  size: SizeConfig.blockSizeHorizontal * 4,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.blockSizeHorizontal * 5,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: SizeConfig.screenWidth * 0.5,
-                          child: Text(
-                            baseProvider.myUser.name,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: SizeConfig.cardTitleTextSize,
-                              fontWeight: FontWeight.w500,
-                            ),
+          SizedBox(
+            height: 12,
+          ),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: SizeConfig.blockSizeHorizontal * 5,
+                ),
+                Container(
+                  height: picSize,
+                  width: picSize,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 2),
+                  ),
+                  child: isImageLoading
+                      ? Image.asset(
+                          "images/profile.png",
+                          height: picSize,
+                          width: picSize,
+                          fit: BoxFit.cover,
+                        )
+                      : ClipOval(
+                          child: CachedNetworkImage(
+                            imageUrl: baseProvider.myUserDpUrl,
+                            height: picSize,
+                            width: picSize,
+                            fit: BoxFit.cover,
                           ),
                         ),
-                        baseProvider.myUser.username != null
-                            ? Padding(
-                                padding: EdgeInsets.only(top: 4),
-                                child: Text(
-                                  "@${baseProvider.myUser.username.replaceAll('@', '.')}",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: SizeConfig.mediumTextSize,
-                                  ),
-                                ),
-                              )
-                            : SizedBox(
-                                height: 8,
+                ),
+                SizedBox(
+                  width: SizeConfig.blockSizeHorizontal * 5,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: SizeConfig.screenWidth * 0.5,
+                      child: Text(
+                        baseProvider.myUser.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: SizeConfig.cardTitleTextSize,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    baseProvider.myUser.username != null
+                        ? Padding(
+                            padding: EdgeInsets.only(top: 4),
+                            child: Text(
+                              "@${baseProvider.myUser.username.replaceAll('@', '.')}",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: SizeConfig.mediumTextSize,
                               ),
-                      ],
-                    )
+                            ),
+                          )
+                        : SizedBox(
+                            height: 8,
+                          ),
                   ],
+                )
+              ],
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Member since ${_getUserMembershipDate()}',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: SizeConfig.smallTextSize,
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Member since ${_getUserMembershipDate()}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: SizeConfig.smallTextSize,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 16,
-              )
             ],
           ),
-          Positioned(
-            top: 4,
-            right: 4,
-            child: IconButton(
-              onPressed: () {
-                cardKey.currentState.toggleCard();
-              },
-              icon: Icon(
-                Icons.edit_outlined,
-                color: Colors.white,
-              ),
-            ),
+          SizedBox(
+            height: 16,
           )
         ],
       ),
@@ -1158,171 +1364,3 @@ class _UserProfileCardState extends State<UserProfileCard> {
   }
 }
 
-class UserEditProfileCard extends StatefulWidget {
-  final String oldname;
-
-  UserEditProfileCard({this.oldname});
-
-  @override
-  _UserEditProfileCardState createState() => _UserEditProfileCardState();
-}
-
-class _UserEditProfileCardState extends State<UserEditProfileCard> {
-  bool isUploading = false;
-  TextEditingController _nameController;
-  BaseUtil baseProvider;
-  DBModel dbProvider;
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    _nameController = new TextEditingController(text: widget.oldname);
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    dbProvider = Provider.of<DBModel>(context, listen: false);
-    return Container(
-      width: SizeConfig.screenWidth,
-      height: SizeConfig.screenHeight * 0.24,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(
-            "images/profile-card.png",
-          ),
-          fit: BoxFit.fill,
-        ),
-      ),
-      margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.blockSizeHorizontal * 4,
-      ),
-      padding:
-          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Form(
-            key: _formKey,
-            child: Container(
-              width: SizeConfig.screenWidth,
-              height: SizeConfig.blockSizeVertical * 5,
-              padding: EdgeInsets.only(
-                  left: SizeConfig.blockSizeHorizontal * 2, bottom: 8),
-              child: TextFormField(
-                cursorColor: Colors.white,
-                controller: _nameController,
-                maxLines: 1,
-                style: GoogleFonts.montserrat(
-                  color: Colors.white,
-                  fontSize: SizeConfig.cardTitleTextSize,
-                  fontWeight: FontWeight.w500,
-                ),
-                validator: (val) {
-                  if (val.trim() == "") return "Name cannot be empty";
-                  return null;
-                },
-                decoration: InputDecoration(
-                  border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2),
-                  ),
-                  errorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red, width: 2),
-                  ),
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red, width: 2),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              TextButton(
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    FocusScope.of(context).unfocus();
-                    setState(() {
-                      isUploading = !isUploading;
-                    });
-                    // baseProvider.myUser.name = _nameController.text.trim();
-                    baseProvider.setName(_nameController.text.trim());
-                    dbProvider.updateUser(baseProvider.myUser).then((flag) {
-                      setState(() {
-                        isUploading = false;
-                      });
-                      if (flag) {
-                        cardKey.currentState.toggleCard();
-                        baseProvider.showPositiveAlert('Complete',
-                            'Your details have been updated', context);
-                      } else {
-                        baseProvider.showNegativeAlert(
-                            'Failed',
-                            'Your details could not be updated at the moment',
-                            context);
-                      }
-                    });
-                  }
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: isUploading
-                      ? SpinKitThreeBounce(
-                          color: UiConstants.spinnerColor2,
-                          size: 18.0,
-                        )
-                      : Text(
-                          "Update",
-                          style: GoogleFonts.montserrat(
-                            color: Colors.white,
-                            fontSize: SizeConfig.mediumTextSize,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  FocusScope.of(context).unfocus();
-                  cardKey.currentState.toggleCard();
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Text(
-                    "Cancel",
-                    style: GoogleFonts.montserrat(
-                      color: Colors.white,
-                      fontSize: SizeConfig.mediumTextSize,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-}

@@ -69,7 +69,7 @@ class _ReferralPolicyState extends State<ReferralPolicy> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: BaseUtil.getAppBar(context),
+        appBar: BaseUtil.getAppBar(context, "Referral Policy"),
         body: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,

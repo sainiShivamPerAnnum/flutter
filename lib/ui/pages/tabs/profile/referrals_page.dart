@@ -50,17 +50,7 @@ class _ReferralsPageState extends State<ReferralsPage> {
       });
     }
     return Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(
-            color: Colors.white, //change your color here
-          ),
-          title: Text(
-            "Your Referrals",
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
+        appBar: BaseUtil.getAppBar(context, "My Referrals"),
         body: Container(
             width: SizeConfig.screenWidth,
             height: SizeConfig.screenHeight * 0.9,

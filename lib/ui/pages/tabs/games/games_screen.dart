@@ -5,6 +5,7 @@ import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -105,14 +106,14 @@ class _GamePageState extends State<GamePage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
-    if (baseProvider.show_game_tutorial) {
-      Timer(const Duration(milliseconds: 2100), () {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          ShowCaseWidget.of(context)
-              .startShowCase([_showcaseHeader, _showcaseFooter]);
-        });
-      });
-    }
+    // if (baseProvider.show_game_tutorial) {
+    //   Timer(const Duration(milliseconds: 2100), () {
+    //     WidgetsBinding.instance.addPostFrameCallback((_) {
+    //       ShowCaseWidget.of(context)
+    //           .startShowCase([_showcaseHeader, _showcaseFooter]);
+    //     });
+    //   });
+    // }
     return RefreshIndicator(
       onRefresh: () async {
         await _onTicketsRefresh();
@@ -158,8 +159,9 @@ class _GamePageState extends State<GamePage> {
                             flex: 2,
                           ),
                           InkWell(
-                            onTap: () {
+                            onTap: () async {
                               HapticFeedback.vibrate();
+                              AppState.screenStack.add(ScreenItem.dialog);
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) =>
@@ -167,32 +169,37 @@ class _GamePageState extends State<GamePage> {
                                         baseProvider.userTicketWallet),
                               );
                             },
-                            child: BaseUtil.buildShowcaseWrapper(
-                              _showcaseHeader,
-                              'Your game tickets appear here. You receive 1 game ticket for every ₹${Constants.INVESTMENT_AMOUNT_FOR_TICKET} you save. You can also click here to see a further breakdown.',
-                              TicketCount(baseProvider.userTicketWallet
-                                  .getActiveTickets()),
-                            ),
+                            child:TicketCount(baseProvider.userTicketWallet
+                                .getActiveTickets()),
+                            // BaseUtil.buildShowcaseWrapper(
+                            //   _showcaseHeader,
+                            //   'Your game tickets appear here. You receive 1 game ticket for every ₹${Constants.INVESTMENT_AMOUNT_FOR_TICKET} you save. You can also click here to see a further breakdown.',
+                            //
+                            // ),
                           ),
                           Spacer(
                             flex: 1,
                           ),
-                          BaseUtil.buildShowcaseWrapper(
-                            _showcaseFooter,
-                            'Use the tickets to play exciting weekly games and win fun prizes!',
-                            GameCardList(
-                              games: _gameList,
-                              onGameChange: _handleGameChange,
-                            ),
+                          GameCardList(
+                            games: _gameList,
+                            onGameChange: _handleGameChange,
                           ),
+                          // BaseUtil.buildShowcaseWrapper(
+                          //   _showcaseFooter,
+                          //   'Use the tickets to play exciting weekly games and win fun prizes!',
+                          //
+                          // ),
                           Spacer(
                             flex: 1,
                           ),
+
                           /////////TODO HACKY CODE - WRITTEN TO MANAGE TABLET SIZE DIMENSIONS
-                          (SizeConfig.screenWidth >= 1200)?Transform.translate(
-                            offset: Offset(0, -SizeConfig.screenWidth * 0.08),
-                            child: const IdeaSection()
-                          ):const IdeaSection(),
+                          (SizeConfig.screenWidth >= 1200)
+                              ? Transform.translate(
+                                  offset:
+                                      Offset(0, -SizeConfig.screenWidth * 0.08),
+                                  child: const IdeaSection())
+                              : const IdeaSection(),
                           /////////////////////////////////////////////////////////////
                           Spacer(
                             flex: 1,
@@ -265,7 +272,7 @@ class _GamePageState extends State<GamePage> {
   }
 }
 
-class IdeaSection extends StatelessWidget{
+class IdeaSection extends StatelessWidget {
   const IdeaSection();
 
   @override
@@ -327,12 +334,12 @@ class IdeaSection extends StatelessWidget{
                             //feedback submission allowed even if user not signed in
                             dbProvider
                                 .submitFeedback(
-                                (baseProvider.firebaseUser == null ||
-                                    baseProvider.firebaseUser.uid ==
-                                        null)
-                                    ? 'UNKNOWN'
-                                    : baseProvider.firebaseUser.uid,
-                                fdbk)
+                                    (baseProvider.firebaseUser == null ||
+                                            baseProvider.firebaseUser.uid ==
+                                                null)
+                                        ? 'UNKNOWN'
+                                        : baseProvider.firebaseUser.uid,
+                                    fdbk)
                                 .then((flag) {
                               backButtonDispatcher.didPopRoute();
                               if (flag) {

@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -83,7 +84,7 @@ class SuccessDialog extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.pop(context);
+                      backButtonDispatcher.didPopRoute();
                     },
                   ),
                 ),
@@ -113,8 +114,8 @@ class SuccessDialog extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pop(context);
+                      backButtonDispatcher.didPopRoute();
+                      backButtonDispatcher.didPopRoute();
                       // baseProvider.showRefreshIndicator(context);
                     },
                   ),

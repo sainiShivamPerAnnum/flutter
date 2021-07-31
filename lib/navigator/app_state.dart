@@ -1,6 +1,7 @@
 import 'package:felloapp/main.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'router/ui_pages.dart';
 
@@ -33,6 +34,8 @@ class AppState extends ChangeNotifier {
   static String _fcmData;
   static bool isRootLoaded = false;
   static bool unsavedChanges = false;
+  static bool unsavedPrefs = false;
+  static bool isOnboardingInProgress = false;
   static List<ScreenItem> screenStack = [];
 
   PageAction _currentAction = PageAction();
@@ -66,7 +69,13 @@ class AppState extends ChangeNotifier {
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
+    _saveLastTapIndex(index);
     print(_rootIndex);
+    notifyListeners();
+  }
+
+  returnHome() {
+    _rootIndex = 0;
     notifyListeners();
   }
 
@@ -95,5 +104,19 @@ class AppState extends ChangeNotifier {
 
   void resetCurrentAction() {
     _currentAction = PageAction();
+  }
+
+  _saveLastTapIndex(int index) {
+    if (index == 1 || index == 2) {
+      SharedPreferences.getInstance().then((instance) {
+        instance.setInt('lastTab', index);
+      });
+    }
+  }
+
+  setLastTapIndex() {
+    SharedPreferences.getInstance().then((instance) {
+      _rootIndex = instance.getInt('lastTab') ?? 0;
+    });
   }
 }

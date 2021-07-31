@@ -31,20 +31,20 @@ class ContactUsBtn extends StatelessWidget {
                       }
                       if (baseProvider.isSignedIn() &&
                           baseProvider.isActiveUser()) {
-                        reqProvider
-                            .addCallbackRequest(
-                                baseProvider.firebaseUser.uid,
-                                baseProvider.myUser.name,
-                                baseProvider.myUser.mobile)
-                            .then((flag) {
-                          if (flag) {
-                            Navigator.of(context).pop();
-                            baseProvider.showPositiveAlert(
-                                'Callback placed!',
-                                'We\'ll contact you soon on your registered mobile',
-                                context);
-                          }
-                        });
+                        // reqProvider
+                        //     .addCallbackRequest(
+                        //         baseProvider.firebaseUser.uid,
+                        //         baseProvider.myUser.name,
+                        //         baseProvider.myUser.mobile)
+                        //     .then((flag) {
+                        //   if (flag) {
+                        //     Navigator.of(context).pop();
+                        //     baseProvider.showPositiveAlert(
+                        //         'Callback placed!',
+                        //         'We\'ll contact you soon on your registered mobile',
+                        //         context);
+                        //   }
+                        // });
                       } else {
                         baseProvider.showNegativeAlert('Unavailable',
                             'Callbacks are reserved for active users', context);

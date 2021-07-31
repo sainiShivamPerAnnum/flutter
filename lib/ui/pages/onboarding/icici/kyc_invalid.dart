@@ -15,7 +15,7 @@ class KYCInvalid extends StatelessWidget {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
     return Scaffold(
-        appBar: BaseUtil.getAppBar(context),
+        appBar: BaseUtil.getAppBar(context, null),
         bottomSheet: Container(
           width: double.infinity,
           height: MediaQuery.of(context).size.height * 0.07,

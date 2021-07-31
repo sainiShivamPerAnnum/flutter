@@ -40,7 +40,7 @@ class _SignatureScreenState extends State<SignatureScreen> {
     final SignatureScreen pod = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
-      appBar: BaseUtil.getAppBar(context),
+      appBar: BaseUtil.getAppBar(context, null),
       body: ModalProgressHUD(
         inAsyncCall: loading,
         // color: myColors.homeColor,

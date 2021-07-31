@@ -2,10 +2,12 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/dialogs/success-dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/fundPalettes.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -14,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:slider_button/slider_button.dart';
 
@@ -70,25 +73,14 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     _width = MediaQuery.of(context).size.width;
     if (!_isInitialized) _initFields();
-    return Container(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      margin: EdgeInsets.only(left: 18, right: 18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(18),
-          topRight: Radius.circular(18),
+    return new Wrap(
+      children: <Widget>[
+        new Padding(
+          padding: EdgeInsets.fromLTRB(
+              25.0, 15.0, 25.0, 25 + MediaQuery.of(context).viewInsets.bottom),
+          child: _depositDialog(),
         ),
-      ),
-      child: new Wrap(
-        children: <Widget>[
-          new Padding(
-            padding: const EdgeInsets.fromLTRB(25.0, 25.0, 25.0, 25.0),
-            child: _depositDialog(),
-          ),
-        ],
-      ),
+      ],
     );
   }
 
@@ -124,7 +116,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                       Icons.clear_rounded,
                       size: 30,
                     ),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => backButtonDispatcher.didPopRoute(),
                   )
                 ],
               ),
@@ -133,31 +125,39 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
               endIndent: SizeConfig.screenWidth * 0.3,
             ),
             _buildRateCard(),
-            InputField(
-              child: TextFormField(
-                autofocus: false,
-                controller: _amtController,
-                keyboardType: TextInputType.number,
-                decoration: inputFieldDecoration("Enter an amount"),
-                validator: (value) {
-                  Pattern pattern = "^[0-9]*\$";
-                  RegExp amRegex = RegExp(pattern);
-                  if (value.isEmpty)
-                    return 'Please enter an amount';
-                  else if (!amRegex.hasMatch(value))
-                    return 'Please enter a valid amount';
+            Theme(
+              data: ThemeData.light().copyWith(
+                  textTheme: GoogleFonts.montserratTextTheme(),
+                  colorScheme: ColorScheme.light(
+                      primary: augmontGoldPalette.primaryColor)),
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 8),
+                child: TextFormField(
+                  autofocus: false,
+                  controller: _amtController,
+                  keyboardType: TextInputType.number,
+                  cursorColor: augmontGoldPalette.primaryColor,
+                  decoration: augmontFieldInputDecoration("Enter an amount"),
+                  validator: (value) {
+                    Pattern pattern = "^[0-9]*\$";
+                    RegExp amRegex = RegExp(pattern);
+                    if (value.isEmpty)
+                      return 'Please enter an amount';
+                    else if (!amRegex.hasMatch(value))
+                      return 'Please enter a valid amount';
 
-                  int amount = int.parse(value);
-                  if (amount < 10)
-                    return 'Minimum deposit amount is ₹10 per transaction';
-                  else if (amount > 20000)
-                    return 'Max deposit of ₹20000 allowed per transaction';
-                  else
-                    return null;
-                },
-                onChanged: (String val) {
-                  setState(() {});
-                },
+                    int amount = int.parse(value);
+                    if (amount < 10)
+                      return 'Minimum deposit amount is ₹10 per transaction';
+                    else if (amount > 20000)
+                      return 'Max deposit of ₹20000 allowed per transaction';
+                    else
+                      return null;
+                  },
+                  onChanged: (String val) {
+                    setState(() {});
+                  },
+                ),
               ),
             ),
             _buildPurchaseDescriptionCard(_getDouble(_amtController.text)),
@@ -239,7 +239,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                       dismissThresholds: 0.8,
                       icon: Icon(
                         Icons.arrow_forward_ios,
-                        color: UiConstants.primaryColor,
+                        color: augmontGoldPalette.primaryColor,
                       ),
                     ),
                   )
@@ -248,7 +248,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                 ? Padding(
                     padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
                     child: SpinKitRing(
-                      color: UiConstants.primaryColor,
+                      color: augmontGoldPalette.primaryColor,
                       size: 38.0,
                     ),
                   )
@@ -329,7 +329,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
           Expanded(
             child: Text(
               title,
-              style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),
+              style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
             ),
           ),
           Expanded(
@@ -337,7 +337,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
             children: [
               Text(
                 value,
-                style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),
+                style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
               ),
               SizedBox(
                 width: 4,
@@ -346,7 +346,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                 child: Icon(
                   Icons.info_outline,
                   color: Colors.grey,
-                  size: SizeConfig.mediumTextSize*1.4,
+                  size: SizeConfig.mediumTextSize * 1.4,
                 ),
                 onTap: () {
                   HapticFeedback.vibrate();
@@ -403,7 +403,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
   onDepositComplete(bool flag) {
     _isDepositInProgress = false;
     setState(() {});
-    Navigator.of(context).pop();
+
     if (flag) {
       // baseProvider.showPositiveAlert(
       //     'SUCCESS', 'You gold deposit was confirmed!', context);

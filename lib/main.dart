@@ -91,7 +91,6 @@ class _MyAppState extends State<MyApp> {
           visualDensity: VisualDensity.adaptivePlatformDensity,
           textTheme: GoogleFonts.montserratTextTheme(),
           inputDecorationTheme: InputDecorationTheme(
-            //labelStyle: TextStyle(color: UiConstants.primaryColor),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
                   color: UiConstants.primaryColor.withOpacity(0.3), width: 1),

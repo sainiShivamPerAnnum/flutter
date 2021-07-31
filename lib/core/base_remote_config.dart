@@ -12,6 +12,9 @@ class BaseRemoteConfig {
   static const Map<String, String> _TAMBOLA_HEADER_SECOND = {
     'tambola_header_2': 'Click to see the other picks'
   };
+  static const Map<String, String> _TAMBOLA_DAILY_PICK_COUNT = {
+    'tambola_daily_pick_count':'5'
+  };
   static const Map<String, String> _DEPOSIT_UPI_ADDRESS = {
     'deposit_upi_address': '9769637379@okbizaxis'
   };
@@ -66,6 +69,7 @@ class BaseRemoteConfig {
     ..._DRAW_PICK_TIME,
     ..._TAMBOLA_HEADER_FIRST,
     ..._TAMBOLA_HEADER_SECOND,
+    ..._TAMBOLA_DAILY_PICK_COUNT,
     ..._DEPOSIT_UPI_ADDRESS,
     ..._PLAY_SCREEN_FIRST,
     ..._TAMBOLA_WIN_CORNER,
@@ -86,6 +90,7 @@ class BaseRemoteConfig {
   };
 
   static Future<bool> init() async {
+    print('initializing remote config');
     remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(DEFAULTS);
     try {
@@ -141,6 +146,8 @@ class BaseRemoteConfig {
   static String get TAMBOLA_WIN_TOP => _TAMBOLA_WIN_TOP.keys.first;
 
   static String get TAMBOLA_WIN_CORNER => _TAMBOLA_WIN_CORNER.keys.first;
+
+  static String get TAMBOLA_DAILY_PICK_COUNT => _TAMBOLA_DAILY_PICK_COUNT.keys.first;
 
   static String get PLAY_SCREEN_FIRST => _PLAY_SCREEN_FIRST.keys.first;
 

@@ -9,6 +9,8 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
+import 'package:felloapp/ui/modals/security_modal_sheet.dart';
+import 'package:felloapp/ui/modals/walkthrough_modal_sheet.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
@@ -57,33 +59,37 @@ class _RootState extends State<Root> {
       NavBarItemData("Profile", Icons.verified_user, 115,
           "images/svgs/profile.svg", _showFocuses[3]),
     ];
-
     //Create the views which will be mapped to the indices for our nav btns
     _viewsByIndex = <Widget>[
       HomePage(),
-      ShowCaseWidget(
-        builder: Builder(
-          builder: (context) => GamePage(),
-        ),
-        onFinish: () {
-          baseProvider.show_game_tutorial = false;
-          _navBarItems[1].showFocus = false;
-          lclDbProvider.saveHomeTutorialComplete = true;
-          setState(() {});
-        },
-      ),
-      ShowCaseWidget(
-        builder: Builder(
-          builder: (context) => FinancePage(),
-        ),
-        onFinish: () {
-          baseProvider.show_finance_tutorial = false;
-          _navBarItems[2].showFocus = false;
-          baseProvider.show_game_tutorial = true;
-          _navBarItems[1].showFocus = true;
-          setState(() {});
-        },
-      ),
+      GamePage(),
+      FinancePage(),
+      // ShowCaseWidget(
+      //   builder: Builder(
+      //     builder: (context) => GamePage(),
+      //   ),
+      //   onFinish: () {
+      //     baseProvider.show_game_tutorial = false;
+      //     _navBarItems[1].showFocus = false;
+      //     lclDbProvider.saveHomeTutorialComplete = true;
+      //
+      //     _showSecurityBottomSheet();
+      //
+      //     setState(() {});
+      //   },
+      // ),
+      // ShowCaseWidget(
+      //   builder: Builder(
+      //     builder: (context) => FinancePage(),
+      //   ),
+      //   onFinish: () {
+      //     baseProvider.show_finance_tutorial = false;
+      //     _navBarItems[2].showFocus = false;
+      //     baseProvider.show_game_tutorial = true;
+      //     _navBarItems[1].showFocus = true;
+      //     setState(() {});
+      //   },
+      // ),
       ProfilePage(),
     ];
     super.initState();
@@ -104,14 +110,6 @@ class _RootState extends State<Root> {
     }
   }
 
-  // String getBurgerImage() {
-  //   if (appState.getCurrentTabIndex == 0 || appState.getCurrentTabIndex == 1) {
-  //     return "images/menu-white.png";
-  //   } else {
-  //     return "images/menu.png";
-  //   }
-  // }
-
   _initAdhocNotifications() {
     if (fcmProvider != null && baseProvider != null) {
       fcmProvider.addIncomingMessageListener((valueMap) {
@@ -124,18 +122,49 @@ class _RootState extends State<Root> {
     }
   }
 
+  void _showSecurityBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0))),
+        backgroundColor: UiConstants.bottomNavBarColor,
+        builder: (context) {
+          return const SecurityModalSheet();
+        });
+  }
+
+  _showWalkthroughBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0))),
+        backgroundColor: UiConstants.bottomNavBarColor,
+        builder: (context) {
+          return const WalkthroughModalSheet();
+        });
+  }
+
   _initialize() {
     if (!_isInitialized) {
       _isInitialized = true;
       lclDbProvider.isHomeTutorialComplete.then((value) {
         if (value == 0) {
           //show tutorial
-          baseProvider.show_finance_tutorial = true;
-          _navBarItems[2].showFocus = true;
+          baseProvider.show_home_tutorial = true;
+          // _navBarItems[2].showFocus = true;
           setState(() {});
         }
       });
       _initAdhocNotifications();
+      if(baseProvider.app_open_count==2) {
+        WidgetsBinding.instance.addPostFrameCallback((_){
+          _showSecurityBottomSheet();
+        });
+      }
       baseProvider.isUnreadFreshchatSupportMessages().then((flag) {
         if (flag) {
           baseProvider.showPositiveAlert('You have unread support messages',
@@ -198,7 +227,7 @@ class _RootState extends State<Root> {
                 width: SizeConfig.blockSizeVertical * 5,
                 margin: EdgeInsets.symmetric(
                   horizontal: SizeConfig.blockSizeHorizontal * 5,
-                  vertical: kToolbarHeight * 0.4,
+                  vertical: kToolbarHeight * 0.2,
                 ),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -220,7 +249,7 @@ class _RootState extends State<Root> {
           )
         ],
       ),
-      bottomNavigationBar: navBar, //Pass our custom navBar into the scaffold
+      bottomNavigationBar: navBar //Pass our custom navBar into the scaffold
     );
   }
 

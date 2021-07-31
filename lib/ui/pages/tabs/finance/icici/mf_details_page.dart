@@ -4,30 +4,32 @@ import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/ui/dialogs/integrated_icici_disabled_dialog.dart';
-import 'package:felloapp/ui/elements/animated_line_chrt.dart';
 import 'package:felloapp/ui/elements/deposit_modal_sheet.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
-import 'package:felloapp/ui/pages/tabs/finance/deposit_verification.dart';
-import 'package:felloapp/ui/pages/tabs/finance/icici_withdrawal_screen.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:fl_animated_linechart/chart/area_line_chart.dart';
-import 'package:fl_animated_linechart/chart/line_chart.dart';
-import 'package:fl_animated_linechart/common/pair.dart';
+// import 'package:fl_animated_linechart/chart/area_line_chart.dart';
+// import 'package:fl_animated_linechart/chart/line_chart.dart';
+// import 'package:fl_animated_linechart/common/pair.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'deposit_verification.dart';
+import 'icici_withdrawal_screen.dart';
 
 class MFDetailsPage extends StatefulWidget {
   static const int STATUS_UNAVAILABLE = 0;
@@ -91,7 +93,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
     payService = Provider.of<PaymentService>(context, listen: false);
 
     return Scaffold(
-      appBar: BaseUtil.getAppBar(context),
+      appBar: BaseUtil.getAppBar(context, null),
       body: Column(
         children: [
           Expanded(
@@ -104,7 +106,8 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                     FundGraph(),
                     FundDetailsTable(),
                     ProfitCalculator(),
-                    FAQCard(Assets.mfFaqHeaders, Assets.mfFaqAnswers),
+                    FAQCard(
+                        Assets.mfFaqHeaders, Assets.mfFaqAnswers, Colors.white),
                     _buildBetaWithdrawButton(),
                   ],
                 ),
@@ -430,45 +433,186 @@ class FundDetailsTable extends StatelessWidget {
 }
 
 class FundGraph extends StatelessWidget {
-  final Map<DateTime, double> line1 = {
-    DateTime.utc(2018, 02, 19): 255.088,
-    DateTime.utc(2018, 06, 04): 260.479,
-    DateTime.utc(2018, 10, 01): 266.677,
-    DateTime.utc(2018, 12, 10): 270.567,
-    DateTime.utc(2019, 02, 18): 274.292,
-    DateTime.utc(2019, 06, 03): 280.168,
-    DateTime.utc(2019, 08, 02): 284.682,
-    DateTime.utc(2019, 11, 04): 287.417,
-    DateTime.utc(2020, 01, 10): 292.637,
-    DateTime.utc(2020, 05, 25): 296.341,
-    DateTime.utc(2020, 08, 17): 298.870,
-    DateTime.utc(2020, 10, 12): 300.374,
-    DateTime.utc(2020, 12, 14): 301.983,
-    DateTime.utc(2021, 01, 18): 302.761,
+  final Map<int, DateTime> dates = {
+    1: DateTime.utc(2018, 02, 19),
+    2: DateTime.utc(2018, 06, 04),
+    3: DateTime.utc(2018, 10, 01),
+    4: DateTime.utc(2018, 12, 10),
+    5: DateTime.utc(2019, 02, 18),
+    6: DateTime.utc(2019, 06, 03),
+    7: DateTime.utc(2019, 08, 02),
+    8: DateTime.utc(2019, 11, 04),
+    9: DateTime.utc(2020, 01, 10),
+    10: DateTime.utc(2020, 05, 25),
+    11: DateTime.utc(2020, 08, 17),
+    12: DateTime.utc(2020, 10, 12),
+    13: DateTime.utc(2020, 12, 14),
+    14: DateTime.utc(2021, 01, 18),
   };
+
+  final Map<int, double> line1 = {
+    1: 255.088,
+    2: 260.479,
+    3: 266.677,
+    4: 270.567,
+    5: 274.292,
+    6: 280.168,
+    7: 284.682,
+    8: 287.417,
+    9: 292.637,
+    10: 296.341,
+    11: 298.870,
+    12: 300.374,
+    13: 301.983,
+    14: 302.761,
+  };
+  List<FlSpot> dataItems = [];
+
+  getChartPoints() {
+    for (int i = 0; i < line1.length; i++) {
+      dataItems.add(FlSpot(i.toDouble(), line1[i + 1]));
+    }
+  }
+
+  List<Color> gradientColors = [UiConstants.primaryColor, Colors.white];
+  getValue(int val) {
+    DateTime time = dates[val];
+    String showText;
+
+    return val % 2 != 0
+        ? time.day.toString() + "\n" + showText + "\n" + time.year.toString()
+        : "";
+  }
 
   @override
   Widget build(BuildContext context) {
-    double _height = MediaQuery.of(context).size.height;
-    LineChart chart = AreaLineChart.fromDateTimeMaps(
-      [line1],
-      [UiConstants.primaryColor],
-      ['₹'],
-      gradients: [
-        Pair(Colors.white, UiConstants.primaryColor.withOpacity(0.1))
-      ],
-    );
+    getChartPoints();
+
     return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: _height * 0.02,
-      ),
-      height: _height * 0.3,
-      width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: CustomAnimatedLineChart(
-          chart,
-        ), //Unique key to force animations
+      margin: EdgeInsets.symmetric(vertical: 20),
+      height: SizeConfig.screenHeight * 0.24,
+      child: LineChart(
+        LineChartData(
+          minX: 0,
+          maxX: 13,
+          minY: 0,
+          maxY: 350,
+          lineTouchData: LineTouchData(
+            enabled: true,
+          ),
+          gridData: FlGridData(
+            show: false,
+            getDrawingHorizontalLine: (value) {
+              return FlLine(
+                color: const Color(0xff37434d).withOpacity(0.2),
+                strokeWidth: 1,
+              );
+            },
+          ),
+          axisTitleData: FlAxisTitleData(
+            show: true,
+            topTitle: AxisTitle(
+                showTitle: true, titleText: "FUND HISTORY FOR LAST 3 YEARS"),
+          ),
+          borderData: FlBorderData(
+              show: false,
+              border: Border(
+                  bottom: BorderSide(color: Colors.grey.withOpacity(0.4)))),
+          titlesData: FlTitlesData(
+              show: true,
+              bottomTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 35,
+                getTextStyles: (value) => GoogleFonts.montserrat(
+                  color: Colors.grey,
+                  fontSize: SizeConfig.smallTextSize,
+                ),
+                getTitles: (value) {
+                  String showText = "";
+                  DateTime date = dates[value.toInt() + 1];
+                  switch (date.month) {
+                    case 1:
+                      showText = "Jan";
+                      break;
+                    case 2:
+                      showText = "Feb";
+                      break;
+                    case 3:
+                      showText = "Mar";
+                      break;
+                    case 4:
+                      showText = "Apr";
+                      break;
+                    case 5:
+                      showText = "May";
+                      break;
+                    case 6:
+                      showText = "Jun";
+                      break;
+                    case 7:
+                      showText = "July";
+                      break;
+                    case 8:
+                      showText = "Aug";
+                      break;
+                    case 9:
+                      showText = "Sep";
+                      break;
+                    case 10:
+                      showText = "Oct";
+                      break;
+                    case 11:
+                      showText = "Nov";
+                      break;
+                    case 12:
+                      showText = "Dec";
+                      break;
+                  }
+                  return value % 2 != 0
+                      ? date.day.toString() +
+                          " " +
+                          showText +
+                          "\n" +
+                          date.year.toString()
+                      : "";
+                },
+              ),
+              leftTitles: SideTitles(margin: 0)),
+          lineBarsData: [
+            LineChartBarData(
+              spots: dataItems,
+              isCurved: true,
+              isStrokeCapRound: false,
+              colors: gradientColors,
+              gradientFrom: Offset(SizeConfig.screenWidth * 0.5, 0),
+              gradientTo:
+                  Offset(SizeConfig.screenWidth * 0.5, SizeConfig.screenHeight),
+              barWidth: 2,
+              dotData: FlDotData(
+                  show: false,
+                  getDotPainter: (spot, d, data, i) {
+                    return FlDotCirclePainter(
+                      radius: 1,
+                      color: UiConstants.primaryColor,
+                      strokeColor: Colors.red,
+                      strokeWidth: 2,
+                    );
+                  },
+                  checkToShowDot: (spot, data) {
+                    return true;
+                  }),
+              belowBarData: BarAreaData(
+                show: true,
+                gradientColorStops: [0.6, 1],
+                gradientFrom: Offset(0.5, 0),
+                gradientTo: Offset(0.5, 1),
+                colors: gradientColors
+                    .map((color) => color.withOpacity(0.2))
+                    .toList(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

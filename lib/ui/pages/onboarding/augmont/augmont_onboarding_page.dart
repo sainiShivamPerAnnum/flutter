@@ -4,17 +4,18 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
 import 'package:felloapp/ui/dialogs/augmont_regn_security_dialog.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
-import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/augmont_state_list.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/fundPalettes.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -23,6 +24,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -40,8 +42,10 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
   AugmontModel augmontProvider;
   ICICIModel iProvider;
   DBModel dbProvider;
+  HttpModel httpProvider;
   AppState appState;
   double _width;
+
   static TextEditingController _panInput = new TextEditingController();
   static TextEditingController _panHolderNameInput =
       new TextEditingController();
@@ -63,471 +67,314 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     iProvider = Provider.of<ICICIModel>(context, listen: false);
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
+    httpProvider = Provider.of<HttpModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
     if (!_isInit) {
-      _panInput.text = baseProvider.myUser.pan ?? '';
+      _panInput.text = baseProvider.userRegdPan ?? '';
       _isInit = true;
     }
     return Scaffold(
-      appBar: BaseUtil.getAppBar(context),
-      body: SafeArea(child: _bodyContent(context)),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Image(
+          image: AssetImage('images/aug-logo.png'),
+          height: SizeConfig.blockSizeVertical * 3,
+          fit: BoxFit.contain,
+        ),
+        shadowColor: augmontGoldPalette.primaryColor.withOpacity(0.5),
+        centerTitle: true,
+      ),
+      body: _bodyContent(context),
     );
   }
 
   _bodyContent(BuildContext context) {
-    return Stack(alignment: Alignment.topCenter, children: <Widget>[
-      Opacity(
-        child: _formContent(context),
-        opacity: (baseProvider.isAugmontRegnInProgress ||
-                baseProvider.isAugmontRegnCompleteAnimateInProgress)
-            ? 0.3
-            : 1,
-      ),
-      (baseProvider.isAugmontRegnCompleteAnimateInProgress)
-          ? Align(
-              alignment: Alignment.center,
-              child: Container(
-                height: 100,
-                width: 100,
-                child: Lottie.asset(Assets.checkmarkLottie),
-              ),
-            )
-          : Container(),
-      (baseProvider.isAugmontRegnInProgress)
-          ? Align(
-              alignment: Alignment.center,
-              child: Padding(
-                  padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                          height: 4,
-                          width: double.infinity,
-                          child: LinearProgressIndicator(
-                            backgroundColor: Colors.blueGrey[200],
-                            valueColor: AlwaysStoppedAnimation(
-                                UiConstants.primaryColor),
-                            minHeight: 4,
-                          )),
-                      Padding(
-                          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                          child: Text(
-                            'Processing',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: UiConstants.accentColor, fontSize: 20),
-                          ))
-                    ],
-                  )),
-            )
-          : Container()
-    ]);
+    return Theme(
+      data: ThemeData.light().copyWith(
+          textTheme: GoogleFonts.montserratTextTheme(),
+          colorScheme:
+              ColorScheme.light(primary: augmontGoldPalette.primaryColor)),
+      child: Stack(alignment: Alignment.topCenter, children: <Widget>[
+        AugInfoTiles(),
+        Opacity(
+          child: _formContent(context),
+          opacity: (baseProvider.isAugmontRegnInProgress ||
+                  baseProvider.isAugmontRegnCompleteAnimateInProgress)
+              ? 0.3
+              : 1,
+        ),
+        // Row(
+        //   children: [
+        //     IconButton(
+        //       onPressed: () => backButtonDispatcher.didPopRoute(),
+        //       icon: Icon(Icons.arrow_back_rounded),
+        //     ),
+        //   ],
+        // ),
+        (baseProvider.isAugmontRegnCompleteAnimateInProgress)
+            ? Align(
+                alignment: Alignment.center,
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  child: Lottie.asset(Assets.checkmarkLottie),
+                ),
+              )
+            : Container(),
+        (baseProvider.isAugmontRegnInProgress)
+            ? Align(
+                alignment: Alignment.center,
+                child: Padding(
+                    padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                            height: 4,
+                            width: double.infinity,
+                            child: LinearProgressIndicator(
+                              backgroundColor: Colors.blueGrey[200],
+                              valueColor: AlwaysStoppedAnimation(
+                                  augmontGoldPalette.primaryColor),
+                              minHeight: 4,
+                            )),
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                            child: Text(
+                              'Processing',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: UiConstants.accentColor, fontSize: 20),
+                            ))
+                      ],
+                    )),
+              )
+            : Container()
+      ]),
+    );
   }
 
   Widget _formContent(BuildContext context) {
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Padding(
-          padding: EdgeInsets.only(top: 20, bottom: 40, left: 35, right: 35),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                  child: SizedBox(
-                child: Image(
-                  image: AssetImage('images/aug-logo.png'),
-                  fit: BoxFit.contain,
-                ),
-                width: 180,
-                height: 60,
-              )),
-              Center(
-                  child: Text(
+        padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
                 'Digital Gold Registration',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xffFFD700)),
-              )),
-              SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text("Mobile No"),
-              ),
-              Container(
-                margin: EdgeInsets.only(
-                  bottom: 20,
-                  top: 5,
-                ),
-                padding:
-                    EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 15),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 11, top: 11, right: 15),
-                  child: Text(
-                    baseProvider.myUser.mobile,
-                    style: TextStyle(
-                      color: Colors.black54,
-                    ),
-                  ),
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
+                  color: augmontGoldPalette.primaryColor,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text("PAN Card Number"),
+            ),
+            SizedBox(
+              height: 24,
+            ),
+
+            TextFormField(
+              decoration:
+                  augmontFieldInputDecoration(baseProvider.myUser.mobile),
+              enabled: false,
+            ),
+
+            SizedBox(height: 16),
+            TextFormField(
+              cursorColor: augmontGoldPalette.primaryColor,
+              decoration: augmontFieldInputDecoration("PAN Card Number"),
+              controller: _panInput,
+              autofocus: false,
+              textCapitalization: TextCapitalization.characters,
+              enabled: true,
+            ),
+
+            SizedBox(height: 16),
+
+            TextFormField(
+              decoration:
+                  augmontFieldInputDecoration('Your name as per your PAN Card'),
+              controller: _panHolderNameInput,
+              keyboardType: TextInputType.name,
+              textCapitalization: TextCapitalization.characters,
+              enabled: true,
+              autofocus: false,
+              validator: (value) {
+                return null;
+              },
+            ),
+            SizedBox(height: 16),
+            // Padding(
+            //   padding: EdgeInsets.only(left: 10),
+            //   child: Text("Residential State"),
+            // ),
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 4,
               ),
-              InputField(
-                child: TextFormField(
-                  decoration: inputFieldDecoration('PAN Number'),
-                  controller: _panInput,
-                  autofocus: false,
-                  textCapitalization: TextCapitalization.characters,
-                  enabled: true,
+              decoration: BoxDecoration(
+                border: Border.all(color: augmontGoldPalette.primaryColor),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: DropdownButtonFormField(
+                decoration: InputDecoration(
+                  border: InputBorder.none,
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10, left: 10),
-                child: Text("Name on PAN Card"),
-              ),
-              InputField(
-                child: TextFormField(
-                  decoration:
-                      inputFieldDecoration('Your name as per your PAN Card'),
-                  controller: _panHolderNameInput,
-                  keyboardType: TextInputType.name,
-                  textCapitalization: TextCapitalization.characters,
-                  enabled: true,
-                  autofocus: false,
-                  validator: (value) {
-                    return null;
-                  },
-                ),
-              ),
-              SizedBox(height: 10),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text("Residential State"),
-              ),
-              InputField(
-                child: DropdownButtonFormField(
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none),
-                  iconEnabledColor: UiConstants.primaryColor,
-                  hint: Text("Which state do you live in?"),
-                  value: stateChosenValue,
-                  onChanged: (String newVal) {
-                    setState(() {
-                      stateChosenValue = newVal;
-                      print(newVal);
-                    });
-                  },
-                  items: AugmontResources.augmontStateList
-                      .map(
-                        (e) => DropdownMenuItem(
-                          value: e["id"],
-                          child: Text(
-                            e["name"],
-                          ),
+                menuMaxHeight: SizeConfig.screenHeight * 0.5,
+                iconEnabledColor: augmontGoldPalette.primaryColor,
+                hint: Text("Which state do you live in?"),
+                value: stateChosenValue,
+                onChanged: (String newVal) {
+                  setState(() {
+                    stateChosenValue = newVal;
+                    print(newVal);
+                  });
+                },
+                items: AugmontResources.augmontStateList
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e["id"],
+                        child: Text(
+                          e["name"],
                         ),
-                      )
-                      .toList(),
-                ),
+                      ),
+                    )
+                    .toList(),
               ),
-              // Padding(
-              //   padding: EdgeInsets.only(top: 10, left: 10),
-              //   child: Text(
-              //     "Bank Details",
-              //     style: TextStyle(color: Colors.blueGrey[600]),
-              //   ),
-              // ),
-              // Divider(
-              //   indent: 10,
-              //   endIndent: 10,
-              // ),
-              // Padding(
-              //   padding: EdgeInsets.only(top: 10, left: 10),
-              //   child: Text("Account Holder Name"),
-              // ),
-              // InputField(
-              //   child: TextFormField(
-              //     decoration:
-              //         inputFieldDecoration('Your name as per your bank'),
-              //     controller: _bankHolderNameInput,
-              //     keyboardType: TextInputType.name,
-              //     textCapitalization: TextCapitalization.characters,
-              //     enabled: true,
-              //     autofocus: false,
-              //     validator: (value) {
-              //       return null;
-              //     },
-              //   ),
-              // ),
-              // SizedBox(height: 10),
-              // Padding(
-              //   padding: EdgeInsets.only(left: 10),
-              //   child: Text("Bank Account Number"),
-              // ),
-              // InputField(
-              //   child: TextFormField(
-              //     decoration: inputFieldDecoration('Your bank account number'),
-              //     controller: _bankAccountNumberInput,
-              //     autofocus: false,
-              //     keyboardType: TextInputType.number,
-              //     enabled: true,
-              //     validator: (value) => null,
-              //   ),
-              // ),
-              // SizedBox(height: 10),
-              // Padding(
-              //   padding: EdgeInsets.only(left: 10),
-              //   child: Text("Confirm Bank Account Number"),
-              // ),
-              // InputField(
-              //   child: TextFormField(
-              //     decoration:
-              //         inputFieldDecoration('Re-enter bank account number'),
-              //     controller: _reenterbankAccountNumberInput,
-              //     autofocus: false,
-              //     obscureText: true,
-              //     keyboardType: TextInputType.number,
-              //     enabled: true,
-              //     validator: (value) => null,
-              //   ),
-              // ),
-              // SizedBox(height: 10),
-              // Padding(
-              //   padding: EdgeInsets.only(left: 10),
-              //   child: Text("Bank IFSC"),
-              // ),
-              // InputField(
-              //   child: TextFormField(
-              //     decoration: inputFieldDecoration('Your bank\'s IFSC code'),
-              //     controller: _bankIfscInput,
-              //     autofocus: false,
-              //     keyboardType: TextInputType.streetAddress,
-              //     textCapitalization: TextCapitalization.characters,
-              //     enabled: true,
-              //     validator: (value) => null,
-              //   ),
-              // ),
-              SizedBox(height: 10),
-              Container(
-                width: MediaQuery.of(context).size.width - 50,
-                height: 50.0,
-                decoration: BoxDecoration(
-                  gradient: new LinearGradient(colors: [
-                    UiConstants.primaryColor,
-                    UiConstants.primaryColor.withBlue(200),
-                  ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
-                  borderRadius: new BorderRadius.circular(10.0),
-                ),
-                child: new Material(
-                  child: MaterialButton(
-                    child: (!baseProvider.isAugmontRegnInProgress &&
-                            !baseProvider
-                                .isAugmontRegnCompleteAnimateInProgress)
-                        ? Text(
-                            'REGISTER',
-                            style: Theme.of(context)
-                                .textTheme
-                                .button
-                                .copyWith(color: Colors.white),
-                          )
-                        : SpinKitThreeBounce(
-                            color: UiConstants.spinnerColor2,
-                            size: 18.0,
-                          ),
-                    onPressed: () async {
-                      ///check if all fields are valid
-                      if (_preVerifyInputs()) {
-                        baseProvider.isAugmontRegnInProgress = true;
-                        setState(() {});
+            ),
 
-                        ///next get all details required for registration
-                        Map<String, dynamic> veriDetails =
-                            await _getVerifiedDetails(
-                                _panInput.text, _panHolderNameInput.text);
-                        //  _bankIfscInput.text);
+            SizedBox(height: 24),
+            Container(
+              width: SizeConfig.screenWidth,
+              height: 50.0,
+              decoration: BoxDecoration(
+                gradient: new LinearGradient(colors: [
+                  augmontGoldPalette.primaryColor,
+                  augmontGoldPalette.primaryColor2
+                  // UiConstants.primaryColor,
+                  // UiConstants.primaryColor.withBlue(200),
+                ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
+                borderRadius: new BorderRadius.circular(10.0),
+              ),
+              child: new Material(
+                child: MaterialButton(
+                  child: (!baseProvider.isAugmontRegnInProgress &&
+                          !baseProvider.isAugmontRegnCompleteAnimateInProgress)
+                      ? Text(
+                          'REGISTER',
+                          style: Theme.of(context)
+                              .textTheme
+                              .button
+                              .copyWith(color: Colors.white),
+                        )
+                      : SpinKitThreeBounce(
+                          color: UiConstants.spinnerColor2,
+                          size: 18.0,
+                        ),
+                  onPressed: () async {
+                    ///check if all fields are valid
+                    if (_preVerifyInputs()) {
+                      baseProvider.isAugmontRegnInProgress = true;
+                      setState(() {});
 
-                        if (veriDetails != null &&
-                            veriDetails['flag'] != null &&
-                            veriDetails['flag']) {
-                          AppState.screenStack.add(ScreenItem.dialog);
+                      ///next get all details required for registration
+                      Map<String, dynamic> veriDetails =
+                          await _getVerifiedDetails(
+                              _panInput.text, _panHolderNameInput.text);
+                      //  _bankIfscInput.text);
 
-                          ///show confirmation dialog to user
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) =>
-                                AugmontConfirmRegnDialog(
-                              panNumber: _panInput.text,
-                              panName: _panHolderNameInput.text,
-                              bankHolderName: "",
-                              bankBranchName: "",
-                              bankAccNo: "",
-                              bankIfsc: "",
-                              bankName: "",
-                              onAccept: () async {
-                                ///finally now register the augmont user
-                                UserAugmontDetail detail =
-                                    await augmontProvider.createUser(
-                                        baseProvider.myUser.mobile,
-                                        _panInput.text,
-                                        stateChosenValue,
-                                        "",
-                                        "",
-                                        "");
-                                if (detail == null) {
-                                  baseProvider.showNegativeAlert(
-                                      'Registration Failed',
-                                      'Failed to regsiter at the moment. Please try again.',
-                                      context);
-                                  baseProvider.isAugmontRegnInProgress = false;
-                                  setState(() {});
-                                  return;
-                                } else {
-                                  ///show completion animation
-                                  _regnComplete();
-                                }
-                              },
-                              onReject: () {
+                      if (veriDetails != null &&
+                          veriDetails['flag'] != null &&
+                          veriDetails['flag']) {
+                        AppState.screenStack.add(ScreenItem.dialog);
+
+                        ///show confirmation dialog to user
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) =>
+                              AugmontConfirmRegnDialog(
+                            panNumber: _panInput.text,
+                            panName: _panHolderNameInput.text,
+                            bankHolderName: "",
+                            bankBranchName: "",
+                            bankAccNo: "",
+                            bankIfsc: "",
+                            bankName: "",
+                            onAccept: () async {
+                              ///finally now register the augmont user
+                              UserAugmontDetail detail =
+                                  await augmontProvider.createUser(
+                                      baseProvider.myUser.mobile,
+                                      _panInput.text,
+                                      stateChosenValue,
+                                      "",
+                                      "",
+                                      "");
+                              if (detail == null) {
                                 baseProvider.showNegativeAlert(
-                                    'Registration Cancelled',
-                                    'Please try again',
+                                    'Registration Failed',
+                                    'Failed to regsiter at the moment. Please try again.',
                                     context);
                                 baseProvider.isAugmontRegnInProgress = false;
                                 setState(() {});
                                 return;
-                              },
-                            ),
-                          );
-                        } else {
-                          print('inside failed name');
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => MoreInfoDialog(
-                                text: veriDetails['reason'],
-                                imagePath: Assets.dummyPanCardShowNumber,
-                                title: 'Invalid Details',
-                              ));
-                          baseProvider.showNegativeAlert(
-                              'Invalid Details',
-                              veriDetails['reason'] ?? 'Please try again',
-                              context);
-                          baseProvider.isAugmontRegnInProgress = false;
-                          setState(() {});
-                          return;
-                        }
-                      } else
+                              } else {
+                                ///show completion animation
+                                _regnComplete();
+                              }
+                            },
+                            onReject: () {
+                              baseProvider.showNegativeAlert(
+                                  'Registration Cancelled',
+                                  'Please try again',
+                                  context);
+                              baseProvider.isAugmontRegnInProgress = false;
+                              setState(() {});
+                              return;
+                            },
+                          ),
+                        );
+                      } else {
+                        print('inside failed name');
+                        if(veriDetails['fail_code'] == 0)showDialog(
+                            context: context,
+                            builder: (BuildContext context) => MoreInfoDialog(
+                                  text: veriDetails['reason'],
+                                  imagePath: Assets.dummyPanCardShowNumber,
+                                  title: 'Invalid Details',
+                                ));
+                        else baseProvider.showNegativeAlert(
+                            'Registration failed',
+                            veriDetails['reason'] ?? 'Please try again',
+                            context);
+                        baseProvider.isAugmontRegnInProgress = false;
+                        setState(() {});
                         return;
-                    },
-                    highlightColor: Colors.white30,
-                    splashColor: Colors.white30,
-                  ),
-                  color: Colors.transparent,
-                  borderRadius: new BorderRadius.circular(30.0),
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
-                child: InkWell(
-                  onTap: () {
-                    HapticFeedback.vibrate();
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) => AugmontRegnSecurityDialog(
-                          text: Assets.infoAugmontRegnSecurity,
-                          imagePath: 'images/aes256.png',
-                          title: 'Security > Rest',
-                        ));
+                      }
+                    } else
+                      return;
                   },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
-                          spreadRadius: 1,
-                          blurRadius: 1,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(6),
-                        child: Text(
-                          'Note on Security 🔒',
-                          style: TextStyle(
-                              fontSize: SizeConfig.smallTextSize*1.3,
-                              color: Colors.black54
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  highlightColor: Colors.white30,
+                  splashColor: Colors.white30,
                 ),
+                color: Colors.transparent,
+                borderRadius: new BorderRadius.circular(30.0),
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
-                child: InkWell(
-                  onTap: () async{
-                    HapticFeedback.vibrate();
-                    const url = "https://www.augmont.com/about-us";
-                    if (await canLaunch(url))
-                      await launch(url);
-                    else
-                     baseProvider.showNegativeAlert('Failed to launch URL', 'Please try again in sometime', context);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
-                          spreadRadius: 1,
-                          blurRadius: 1,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(6),
-                        child: Text(
-                          'More about Augmont 💰',
-                          style: TextStyle(
-                              fontSize: SizeConfig.smallTextSize*1.3,
-                              color: Colors.black54
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          )),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -577,39 +424,51 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     if (enteredPan == null || enteredPan.isEmpty)
       return {'flag': false, 'reason': 'Invalid Details'};
     bool _flag = true;
+    int _failCode = 0;
     String _reason = '';
     if (!iProvider.isInit()) await iProvider.init();
 
-    ///test pan number using icici api and verify if the name entered by user matches name fetched
-    var kObj = await iProvider.getKycStatus(enteredPan);
-    if (kObj == null ||
-        kObj[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
-        kObj[GetKycStatus.resStatus] == null ||
-        kObj[GetKycStatus.resName] == null ||
-        kObj[GetKycStatus.resName] == '') {
-      log.error('Couldnt fetch an appropriate response');
+    bool registeredFlag = await httpProvider.isPanRegistered(enteredPan);
+    if(registeredFlag) {
+      _flag = false;
+      _failCode = 1;
+      _reason = 'This PAN number is already associated with a different account';
+    }
+    var kObj;
+    if(_flag) {
+      ///test pan number using icici api and verify if the name entered by user matches name fetched
+      kObj = await iProvider.getKycStatus(enteredPan);
+      if (kObj == null ||
+          kObj[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
+          kObj[GetKycStatus.resStatus] == null ||
+          kObj[GetKycStatus.resName] == null ||
+          kObj[GetKycStatus.resName] == '') {
+        log.error('Couldnt fetch an appropriate response');
 
-      ///set name test to true as we couldnt find it in the cams database
-      _flag = true;
-    } else {
-      ///remove all whitespaces before comparing as icici apis returns poorly spaced name values
-      String recvdPanName = kObj[GetKycStatus.resName];
-      String _r = recvdPanName.replaceAll(new RegExp(r"\s"), "");
-      String _e = enteredPanName.replaceAll(new RegExp(r"\s"), "");
-      if (_r.toUpperCase() != _e.toUpperCase()) {
-        await dbProvider.logFailure(baseProvider.myUser.uid, FailType.UserAugmontRegnFailed, {
-          'entered_pan_name': enteredPanName,
-          'recvd_pan_name': recvdPanName,
-          'pan_number': enteredPan
-        });
-        _flag = false;
-        _reason =
-            'The name on your PAN card does not match with the entered name. Please try again.';
+        ///set name test to true as we couldnt find it in the cams database
+        _flag = true;
+      } else {
+        ///remove all whitespaces before comparing as icici apis returns poorly spaced name values
+        String recvdPanName = kObj[GetKycStatus.resName];
+        String _r = recvdPanName.replaceAll(new RegExp(r"\s"), "");
+        String _e = enteredPanName.replaceAll(new RegExp(r"\s"), "");
+        if (_r.toUpperCase() != _e.toUpperCase()) {
+          await dbProvider.logFailure(
+              baseProvider.myUser.uid, FailType.UserAugmontRegnFailed, {
+            'entered_pan_name': enteredPanName,
+            'recvd_pan_name': recvdPanName,
+            'pan_number': enteredPan
+          });
+          _flag = false;
+          _reason =
+          'The name on your PAN card does not match with the entered name. Please try again.';
+          _failCode = 0;
+        }
       }
     }
     if (!_flag) {
       print('returning false flag');
-      return {'flag': _flag, 'reason': _reason};
+      return {'flag': _flag, 'fail_code': _failCode, 'reason': _reason};
     }
 
     ///test ifsc code using icici api
@@ -644,5 +503,71 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
       baseProvider.showPositiveAlert(
           'Registration Successful', 'You can now make a deposit!', context);
     });
+  }
+}
+
+class AugInfoTiles extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    BaseUtil baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    return Positioned(
+      bottom: 0,
+      child: Container(
+        width: SizeConfig.screenWidth,
+        padding: EdgeInsets.symmetric(vertical: 10),
+        child: IntrinsicHeight(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton.icon(
+                icon: Text("🔒"),
+                onPressed: () {
+                  HapticFeedback.vibrate();
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          AugmontRegnSecurityDialog(
+                            text: Assets.infoAugmontRegnSecurity,
+                            imagePath: 'images/aes256.png',
+                            title: 'Security > Rest',
+                          ));
+                },
+                label: Text(
+                  'Note on Security',
+                  style: TextStyle(
+                      fontSize: SizeConfig.smallTextSize * 1.3,
+                      decoration: TextDecoration.underline,
+                      color:
+                          augmontGoldPalette.secondaryColor.withOpacity(0.8)),
+                ),
+              ),
+              VerticalDivider(
+                color: Colors.black45,
+              ),
+              TextButton.icon(
+                icon: Text("💰"),
+                onPressed: () async {
+                  HapticFeedback.vibrate();
+                  const url = "https://www.augmont.com/about-us";
+                  if (await canLaunch(url))
+                    await launch(url);
+                  else
+                    baseProvider.showNegativeAlert('Failed to launch URL',
+                        'Please try again in sometime', context);
+                },
+                label: Text(
+                  'More about Augmont',
+                  style: TextStyle(
+                      fontSize: SizeConfig.smallTextSize * 1.3,
+                      decoration: TextDecoration.underline,
+                      color:
+                          augmontGoldPalette.secondaryColor.withOpacity(0.8)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

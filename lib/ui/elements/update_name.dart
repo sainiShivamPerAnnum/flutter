@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -15,17 +17,23 @@ class UpdateNameDialog extends StatefulWidget {
 
 class _UpdateNameDialogState extends State<UpdateNameDialog> {
   BaseUtil baseProvider;
+  DBModel dbProvider;
   bool isUploading = false;
+  TextEditingController _nameController = new TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
-
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    if (_nameController.text == "") {
+      _nameController.text = baseProvider.myUser.name;
+    }
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
       child: Dialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(10.0),
         ),
         elevation: 0.0,
         backgroundColor: Colors.white,
@@ -55,81 +63,95 @@ class _UpdateNameDialogState extends State<UpdateNameDialog> {
                   ),
                 ),
               ),
-              TextField(
-                autofocus: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: UiConstants.primaryColor,
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: UiConstants.primaryColor,
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    autofocus: true,
+                    controller: _nameController,
+                    validator: (val) {
+                      if (val.isEmpty) {
+                        return "Name cannot be empty";
+                      }
+                      return null;
+                    },
                   ),
                 ),
               ),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    isUploading = true;
-                  });
-                },
-                child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 24),
-                  width: double.infinity,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: UiConstants.primaryColor,
-                  ),
-                  alignment: Alignment.center,
-                  child: isUploading
-                      ? SpinKitThreeBounce(
-                          color: UiConstants.spinnerColor2,
-                          size: 18.0,
-                        )
-                      : Text(
-                          "Update",
-                          style: GoogleFonts.montserrat(
-                            color: Colors.white,
-                            fontSize: SizeConfig.mediumTextSize,
-                            fontWeight: FontWeight.w500,
+              isUploading
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SpinKitThreeBounce(
+                        color: UiConstants.primaryColor,
+                        size: 24.0,
+                      ),
+                    )
+                  : Column(
+                      children: [
+                        Container(
+                          width: SizeConfig.screenWidth * 0.7,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: UiConstants.primaryColor),
+                            onPressed: () {
+                              if (_formKey.currentState.validate()) {
+                                FocusScope.of(context).unfocus();
+                                setState(() {
+                                  isUploading = !isUploading;
+                                });
+                                // baseProvider.myUser.name = _nameController.text.trim();
+                                baseProvider
+                                    .setName(_nameController.text.trim());
+                                dbProvider
+                                    .updateUser(baseProvider.myUser)
+                                    .then((flag) {
+                                  setState(() {
+                                    isUploading = false;
+                                  });
+                                  if (flag) {
+                                    baseProvider.showPositiveAlert(
+                                        'Update Succesful',
+                                        'Your name has been updated',
+                                        context);
+                                    backButtonDispatcher.didPopRoute();
+                                  } else {
+                                    baseProvider.showNegativeAlert(
+                                        'Update failed',
+                                        'Your name could not be updated at the moment',
+                                        context);
+                                  }
+                                });
+                              }
+                            },
+                            child: Text(
+                              "Update",
+                              style: GoogleFonts.montserrat(
+                                color: Colors.white,
+                                fontSize: SizeConfig.mediumTextSize,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
                         ),
-                ),
-              ),
-              InkWell(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 24),
-                  width: double.infinity,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: UiConstants.primaryColor),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  alignment: Alignment.center,
-                  child: isUploading
-                      ? SpinKitThreeBounce(
-                          color: UiConstants.spinnerColor2,
-                          size: 18.0,
-                        )
-                      : Text(
-                          "Cancle",
-                          style: GoogleFonts.montserrat(
-                            color: UiConstants.primaryColor,
-                            fontSize: SizeConfig.mediumTextSize,
-                            fontWeight: FontWeight.w500,
+                        Container(
+                          width: SizeConfig.screenWidth * 0.7,
+                          child: ElevatedButton(
+                            style:
+                                ElevatedButton.styleFrom(primary: Colors.white),
+                            onPressed: () => backButtonDispatcher.didPopRoute(),
+                            child: Text(
+                              "Cancel",
+                              style: GoogleFonts.montserrat(
+                                color: Colors.black,
+                                fontSize: SizeConfig.mediumTextSize,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
                         ),
-                ),
-              ),
+                      ],
+                    ),
             ],
           ),
         ),
