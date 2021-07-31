@@ -160,11 +160,6 @@ class _RootState extends State<Root> {
         }
       });
       _initAdhocNotifications();
-      if(baseProvider.app_open_count==1) {
-        WidgetsBinding.instance.addPostFrameCallback((_){
-          _showWalkthroughBottomSheet();
-        });
-      } 
       if(baseProvider.app_open_count==2) {
         WidgetsBinding.instance.addPostFrameCallback((_){
           _showSecurityBottomSheet();
@@ -188,7 +183,9 @@ class _RootState extends State<Root> {
     fcmProvider = Provider.of<FcmHandler>(context, listen: false);
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
-    _initialize();
+    if(!_isInitialized) {
+      _initialize();
+    }
     var accentColor = UiConstants.primaryColor;
 
     //Create custom navBar, pass in a list of buttons, and listen for tap event

@@ -249,7 +249,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                   child: AspectRatio(
                       aspectRatio: _videoController.value.aspectRatio,
                       child: VideoPlayer(_videoController)))
-              : Shimmer(child: Container(width: SizeConfig.screenWidth*0.6,), color: Colors.grey,)
+              : Shimmer(child: Container(width: SizeConfig.screenWidth*0.6,color: Colors.grey.withOpacity(0.4),), color: Colors.white,)
         ),
         Container(
           width: SizeConfig.screenWidth * 0.8,

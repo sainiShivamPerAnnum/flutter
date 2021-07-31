@@ -3,6 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/model/FeedCard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
@@ -265,7 +266,8 @@ class HomeCard extends StatelessWidget {
   final String asset, title, subtitle, buttonText;
   final Function onPressed;
   final List<Color> gradient;
-  final bool isHighlighted;
+  LocalDBModel localDbProvider;
+  bool isHighlighted;
 
   HomeCard(
       {this.asset,
@@ -278,6 +280,7 @@ class HomeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    localDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     return Container(
       margin: EdgeInsets.only(
           bottom: 20,
@@ -357,13 +360,19 @@ class HomeCard extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                (buttonText=='Learn how Fello works')?ClipRRect(
+                (isHighlighted)?ClipRRect(
                   borderRadius : BorderRadius.circular(100),
                   child : Shimmer(
                   enabled : true,
                   direction: ShimmerDirection.fromLeftToRight(),
                   child: GestureDetector(
-                  onTap: onPressed,
+                  onTap: (){
+                    if(isHighlighted==true) {
+                      isHighlighted = false;
+                      localDbProvider.saveHomeTutorialComplete = true;
+                      onPressed();
+                    }
+                  },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(

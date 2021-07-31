@@ -89,6 +89,7 @@ class BaseUtil extends ChangeNotifier {
 
   DateTime _userCreationTimestamp;
   int isOtpResendCount = 0;
+  int app_open_count = 0;
 
   ///Flags in various screens defined as global variables
   bool isUserOnboarded,
@@ -159,7 +160,7 @@ class BaseUtil extends ChangeNotifier {
 
   Future init() async {
     print('inside init base util');
-
+    _setRuntimeDefaults();
     ///analytics
     BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
