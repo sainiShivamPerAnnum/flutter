@@ -201,10 +201,10 @@ class BaseUtil extends ChangeNotifier {
 
       ///prefill augmont and pan details if available
       panService = new PanService();
-      // if(myUser.isAugmontOnboarded) {
+      if(myUser.isAugmontOnboarded) {
         augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
         userRegdPan = await panService.getUserPan();
-      // }
+      }
 
       ///Freshchat utils
       freshchatKeys = await _dbModel.getActiveFreshchatKey();
