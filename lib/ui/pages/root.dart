@@ -22,7 +22,6 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcase_widget.dart';
 
 class Root extends StatefulWidget {
   @override
@@ -160,8 +159,8 @@ class _RootState extends State<Root> {
         }
       });
       _initAdhocNotifications();
-      if(baseProvider.app_open_count==2) {
-        WidgetsBinding.instance.addPostFrameCallback((_){
+      if (baseProvider.app_open_count == 2) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           _showSecurityBottomSheet();
         });
       }
@@ -200,57 +199,57 @@ class _RootState extends State<Root> {
     // final GlobalKey<ScaffoldState> _scaffoldKey =
     //     new GlobalKey<ScaffoldState>();
     return Scaffold(
-      backgroundColor: UiConstants.bottomNavBarColor,
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          Container(
-            width: double.infinity,
-            //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
-            child: AnimatedSwitcher(
-              duration: Duration(milliseconds: 350),
-              //Pass the current accent color down as a theme, so our overscroll indicator matches the btn color
-              child: Theme(
-                data: ThemeData(accentColor: accentColor),
-                child: contentView,
+        backgroundColor: UiConstants.bottomNavBarColor,
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [
+            Container(
+              width: double.infinity,
+              //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
+              child: AnimatedSwitcher(
+                duration: Duration(milliseconds: 350),
+                //Pass the current accent color down as a theme, so our overscroll indicator matches the btn color
+                child: Theme(
+                  data: ThemeData(accentColor: accentColor),
+                  child: contentView,
+                ),
               ),
             ),
-          ),
-          SafeArea(
-            child: GestureDetector(
-              onTap: () {
-                HapticFeedback.vibrate();
-                delegate.parseRoute(Uri.parse("d-ham"));
-              },
-              child: Container(
-                height: SizeConfig.blockSizeVertical * 5,
-                width: SizeConfig.blockSizeVertical * 5,
-                margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.blockSizeHorizontal * 5,
-                  vertical: kToolbarHeight * 0.2,
-                ),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: getBurgerBorder(), width: 2),
-                ),
-                alignment: Alignment.center,
+            SafeArea(
+              child: GestureDetector(
+                onTap: () {
+                  HapticFeedback.vibrate();
+                  delegate.parseRoute(Uri.parse("d-ham"));
+                },
                 child: Container(
-                  height: SizeConfig.blockSizeVertical * 1.4,
-                  child: Image.asset(
-                    "images/menu.png",
-                    color: (appState.getCurrentTabIndex == 0 ||
-                            appState.getCurrentTabIndex == 1)
-                        ? Colors.white
-                        : Colors.black,
+                  height: SizeConfig.blockSizeVertical * 5,
+                  width: SizeConfig.blockSizeVertical * 5,
+                  margin: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.blockSizeHorizontal * 5,
+                    vertical: kToolbarHeight * 0.2,
+                  ),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: getBurgerBorder(), width: 2),
+                  ),
+                  alignment: Alignment.center,
+                  child: Container(
+                    height: SizeConfig.blockSizeVertical * 1.4,
+                    child: Image.asset(
+                      "images/menu.png",
+                      color: (appState.getCurrentTabIndex == 0 ||
+                              appState.getCurrentTabIndex == 1)
+                          ? Colors.white
+                          : Colors.black,
+                    ),
                   ),
                 ),
               ),
-            ),
-          )
-        ],
-      ),
-      bottomNavigationBar: navBar //Pass our custom navBar into the scaffold
-    );
+            )
+          ],
+        ),
+        bottomNavigationBar: navBar //Pass our custom navBar into the scaffold
+        );
   }
 
   void _handleNavBtnTapped(int index) {

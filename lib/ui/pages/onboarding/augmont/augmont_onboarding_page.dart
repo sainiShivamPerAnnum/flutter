@@ -344,17 +344,19 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                         );
                       } else {
                         print('inside failed name');
-                        if(veriDetails['fail_code'] == 0)showDialog(
-                            context: context,
-                            builder: (BuildContext context) => MoreInfoDialog(
-                                  text: veriDetails['reason'],
-                                  imagePath: Assets.dummyPanCardShowNumber,
-                                  title: 'Invalid Details',
-                                ));
-                        else baseProvider.showNegativeAlert(
-                            'Registration failed',
-                            veriDetails['reason'] ?? 'Please try again',
-                            context);
+                        if (veriDetails['fail_code'] == 0)
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => MoreInfoDialog(
+                                    text: veriDetails['reason'],
+                                    imagePath: Assets.dummyPanCardShowNumber,
+                                    title: 'Invalid Details',
+                                  ));
+                        else
+                          baseProvider.showNegativeAlert(
+                              'Registration failed',
+                              veriDetails['reason'] ?? 'Please try again',
+                              context);
                         baseProvider.isAugmontRegnInProgress = false;
                         setState(() {});
                         return;
@@ -429,13 +431,14 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     if (!iProvider.isInit()) await iProvider.init();
 
     bool registeredFlag = await httpProvider.isPanRegistered(enteredPan);
-    if(registeredFlag) {
+    if (registeredFlag) {
       _flag = false;
       _failCode = 1;
-      _reason = 'This PAN number is already associated with a different account';
+      _reason =
+          'This PAN number is already associated with a different account';
     }
     var kObj;
-    if(_flag) {
+    if (_flag) {
       ///test pan number using icici api and verify if the name entered by user matches name fetched
       kObj = await iProvider.getKycStatus(enteredPan);
       if (kObj == null ||
@@ -461,7 +464,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
           });
           _flag = false;
           _reason =
-          'The name on your PAN card does not match with the entered name. Please try again.';
+              'The name on your PAN card does not match with the entered name. Please try again.';
           _failCode = 0;
         }
       }

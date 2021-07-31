@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
@@ -208,6 +207,7 @@ class _FinancePageState extends State<FinancePage> {
 
 class ZeroBalView extends StatelessWidget {
   final String uri;
+
   ZeroBalView(this.uri);
 
   @override

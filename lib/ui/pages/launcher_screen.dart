@@ -4,7 +4,6 @@ import 'dart:ui' as ui show Image, instantiateImageCodec;
 
 import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/navigator/app_state.dart';

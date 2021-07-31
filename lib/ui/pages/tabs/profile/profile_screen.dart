@@ -1363,4 +1363,3 @@ class _UserProfileCardState extends State<UserProfileCard> {
     }
   }
 }
-

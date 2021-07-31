@@ -176,6 +176,7 @@ class LocalDBModel extends ChangeNotifier {
       }
     } catch(e) {
       log.debug("Error while updating app open count");
+      print(e.toString());
     }
   }
 

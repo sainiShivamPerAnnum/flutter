@@ -190,8 +190,10 @@ class TambolaBoard {
   }
 
   int get generatedDayCode {
-    if (this.assigned_time == null) return DateTime.monday;
-    return this.assigned_time.toDate().weekday;
+    //TODO disabling this logic of crossing numbers based on date of generation
+    return DateTime.monday;
+    // if (this.assigned_time == null) return DateTime.monday;
+    // return this.assigned_time.toDate().weekday;
   }
 }
 

@@ -33,7 +33,6 @@ import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcase.dart';
 
 import 'core/base_remote_config.dart';
@@ -454,26 +453,35 @@ class BaseUtil extends ChangeNotifier {
       _myUser = null;
       _userFundWallet = null;
       _userTicketWallet = null;
+      firebaseUser = null;
+      baseAnalytics = null;
       _payService = null;
       feedCards = null;
+      _dailyPickCount = null;
+      userRegdPan = null;
       weeklyDigits = null;
       userWeeklyBoards = null;
       _iciciDetail = null;
       _currentICICITxn = null;
       _currentICICINonInstantWthrlTxn = null;
+      panService = null;
       _augmontDetail = null;
+      augmontGoldRates = null;
       _currentAugmontTxn = null;
       _kycDetail = null;
       tambolaWinnersDetail = null;
-      prizeLeaders = null;
-      referralLeaders = null;
+      prizeLeaders = [];
+      referralLeaders = [];
       myUserDpUrl = null;
       userMiniTxnList = null;
       userReferralsList = null;
       myReferralInfo = null;
+      packageInfo = null;
+      freshchatKeys = null;
       _userCreationTimestamp = null;
-
+      lastTransactionListDocument = null;
       isOtpResendCount = 0;
+      app_open_count = 0;
       delegate.appState.setCurrentTabIndex = 0;
       _setRuntimeDefaults();
 
