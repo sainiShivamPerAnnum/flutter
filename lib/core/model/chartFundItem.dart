@@ -6,13 +6,13 @@ class ChartFundItem {
   final String logo;
   final Color color;
   final List<String> description;
-  final String buttonText;
+  final bool action;
   final Function function;
   final bool isHighlighted;
 
   ChartFundItem({
     @required this.fundName,
-    @required this.buttonText,
+    @required this.action,
     @required this.color,
     @required this.description,
     @required this.function,

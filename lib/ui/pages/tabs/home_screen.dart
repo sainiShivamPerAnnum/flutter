@@ -14,6 +14,7 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
@@ -65,10 +66,14 @@ class _HomePageState extends State<HomePage> {
   _init() {
     if (!baseProvider.isHomeCardsFetched) {
       dbProvider.getHomeCards().then((cards) {
-        baseProvider.feedCards = cards;
-        _isInit = true;
-        baseProvider.isHomeCardsFetched = true;
-        setState(() {});
+        if (cards.length > 0) {
+          baseProvider.feedCards = cards;
+          _isInit = true;
+          baseProvider.isHomeCardsFetched = true;
+          setState(() {});
+        } else {
+          setState(() {});
+        }
       });
     }
   }
@@ -150,7 +155,7 @@ class _HomePageState extends State<HomePage> {
             ),
             label: Text(
               "Click to reload",
-              style: TextStyle(
+              style: GoogleFonts.montserrat(
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
               ),
@@ -188,9 +193,6 @@ class _HomePageState extends State<HomePage> {
         //   "2/augDetails/editProfile/d-aboutus"
       ));
     }
-    // for (FeedCard card in cards) {
-    //  );
-    // }
 
     return _widget;
   }

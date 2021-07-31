@@ -33,38 +33,38 @@ class _FinancePageState extends State<FinancePage> {
   // GlobalKey _showcaseHeader = GlobalKey();
   // GlobalKey _showcaseFooter = GlobalKey();
 
-  Future<void> _onFundsRefresh() async {
-    //TODO: ADD LOADER
-    print("-----------------> I got called");
-    return dbProvider.getUserFundWallet(baseProvider.myUser.uid).then((aValue) {
-      if (aValue != null) {
-        baseProvider.userFundWallet = aValue;
-        if (baseProvider.userFundWallet.augGoldQuantity > 0)
-          _updateAugmontBalance(); //setstate call in method
-        else
-          setState(() {});
-      }
-    });
-  }
+  // Future<void> _onFundsRefresh() async {
+  //   //TODO: ADD LOADER
+  //   print("-----------------> I got called");
+  //   return dbProvider.getUserFundWallet(baseProvider.myUser.uid).then((aValue) {
+  //     if (aValue != null) {
+  //       baseProvider.userFundWallet = aValue;
+  //       if (baseProvider.userFundWallet.augGoldQuantity > 0)
+  //         _updateAugmontBalance(); //setstate call in method
+  //       else
+  //         setState(() {});
+  //     }
+  //   });
+  // }
 
-  Future<void> _updateAugmontBalance() async {
-    if (augmontProvider == null ||
-        (baseProvider.userFundWallet.augGoldQuantity == 0 &&
-            baseProvider.userFundWallet.augGoldBalance == 0)) return;
-    augmontProvider.getRates().then((currRates) {
-      if (currRates == null ||
-          currRates.goldSellPrice == null ||
-          baseProvider.userFundWallet.augGoldQuantity == 0) return;
+  // Future<void> _updateAugmontBalance() async {
+  //   if (augmontProvider == null ||
+  //       (baseProvider.userFundWallet.augGoldQuantity == 0 &&
+  //           baseProvider.userFundWallet.augGoldBalance == 0)) return;
+  //   augmontProvider.getRates().then((currRates) {
+  //     if (currRates == null ||
+  //         currRates.goldSellPrice == null ||
+  //         baseProvider.userFundWallet.augGoldQuantity == 0) return;
 
-      baseProvider.augmontGoldRates = currRates;
-      double gSellRate = baseProvider.augmontGoldRates.goldSellPrice;
-      baseProvider.userFundWallet.augGoldBalance = BaseUtil.digitPrecision(
-          baseProvider.userFundWallet.augGoldQuantity * gSellRate);
-      setState(() {}); //might cause ui error if screen no longer active
-    }).catchError((err) {
-      print('$err');
-    });
-  }
+  //     baseProvider.augmontGoldRates = currRates;
+  //     double gSellRate = baseProvider.augmontGoldRates.goldSellPrice;
+  //     baseProvider.userFundWallet.augGoldBalance = BaseUtil.digitPrecision(
+  //         baseProvider.userFundWallet.augGoldQuantity * gSellRate);
+  //     setState(() {}); //might cause ui error if screen no longer active
+  //   }).catchError((err) {
+  //     print('$err');
+  //   });
+  // }
 
   @override
   void initState() {
@@ -80,7 +80,8 @@ class _FinancePageState extends State<FinancePage> {
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
     if (!baseProvider.isAugmontRealTimeBalanceFetched) {
-      _updateAugmontBalance();
+      baseProvider.refreshFunds();
+      //_updateAugmontBalance();
       baseProvider.isAugmontRealTimeBalanceFetched = true;
     }
     // if (baseProvider.show_finance_tutorial) {
@@ -91,7 +92,8 @@ class _FinancePageState extends State<FinancePage> {
     // }
     return RefreshIndicator(
       onRefresh: () async {
-        await _onFundsRefresh();
+        await baseProvider.refreshFunds();
+        //_onFundsRefresh();
       },
       child: Container(
         height: SizeConfig.screenHeight,
@@ -121,9 +123,9 @@ class _FinancePageState extends State<FinancePage> {
                               ? FundsChartView(
                                   userFundWallet: baseProvider.userFundWallet,
                                   goldMoreInfo: goldMoreInfoStr,
-                                  doRefresh: () {
-                                    _onFundsRefresh();
-                                  },
+                                  // doRefresh: () {
+                                  //   _onFundsRefresh();
+                                  // },
                                 )
                               : ZeroBalView(baseProvider.zeroBalanceAssetUri),
                         );

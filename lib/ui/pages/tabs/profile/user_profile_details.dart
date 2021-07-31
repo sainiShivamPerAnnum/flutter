@@ -16,7 +16,6 @@ import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dar
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:flat_icons_flutter/flat_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';

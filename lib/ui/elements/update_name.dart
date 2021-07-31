@@ -21,10 +21,14 @@ class _UpdateNameDialogState extends State<UpdateNameDialog> {
   bool isUploading = false;
   TextEditingController _nameController = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    if (_nameController.text == "") {
+      _nameController.text = baseProvider.myUser.name;
+    }
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
       child: Dialog(
@@ -66,6 +70,12 @@ class _UpdateNameDialogState extends State<UpdateNameDialog> {
                   child: TextFormField(
                     autofocus: true,
                     controller: _nameController,
+                    validator: (val) {
+                      if (val.isEmpty) {
+                        return "Name cannot be empty";
+                      }
+                      return null;
+                    },
                   ),
                 ),
               ),
@@ -131,7 +141,7 @@ class _UpdateNameDialogState extends State<UpdateNameDialog> {
                                 ElevatedButton.styleFrom(primary: Colors.white),
                             onPressed: () => backButtonDispatcher.didPopRoute(),
                             child: Text(
-                              "Cancle",
+                              "Cancel",
                               style: GoogleFonts.montserrat(
                                 color: Colors.black,
                                 fontSize: SizeConfig.mediumTextSize,

@@ -491,6 +491,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'verifyEmail':
         pageConfiguration = VerifyEmailPageConfig;
         break;
+      case 'walkthrough':
+        pageConfiguration = WalkThroughConfig;
       // case 'tambolaTickets':
       //   pageConfiguration = TambolaTicketsPageConfig;
       //   break;

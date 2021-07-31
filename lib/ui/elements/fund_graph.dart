@@ -85,10 +85,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 maxX: maxX,
                 minY: 0,
                 maxY: 5000,
-                // axisTitleData: FlAxisTitleData(
-                //   show: false,
-                //   topTitle: AxisTitle(showTitle: true, titleText: "Hello"),
-                // ),
                 lineTouchData: LineTouchData(
                     enabled: true,
                     touchTooltipData: LineTouchTooltipData(
@@ -239,7 +235,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   }
 
   List<String> segmentList = ['1M', '3M', '6M', '1Y', '3Y'];
-
   getSplitedChartData(int index) {
     switch (index) {
       case 0:
