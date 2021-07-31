@@ -122,12 +122,14 @@ class _HolesState extends State<Holes> {
                         width: SizeConfig.screenWidth * 0.1,
                         alignment: Alignment.center,
                         padding: EdgeInsets.all(8),
-                        child: Text(
-                          "${pickList[i]}",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black54,
-                              fontSize: SizeConfig.largeTextSize),
+                        child: FittedBox(
+                          child: Text(
+                            "${pickList[i]}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black54,
+                                fontSize: SizeConfig.largeTextSize),
+                          ),
                         ),
                       )),
             )

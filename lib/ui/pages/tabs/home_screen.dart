@@ -362,72 +362,75 @@ class HomeCard extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                (isHighlighted)?ClipRRect(
-                  borderRadius : BorderRadius.circular(100),
-                  child : Shimmer(
-                  enabled : true,
-                  direction: ShimmerDirection.fromLeftToRight(),
-                  child: GestureDetector(
-                  onTap: (){
-                    if(isHighlighted==true) {
-                      isHighlighted = false;
-                      localDbProvider.saveHomeTutorialComplete = true;
-                      onPressed();
-                    }
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 2,
-                        color: Colors.white,
-                      ),
-                      color: Colors.transparent,
-                      boxShadow: [
-                        BoxShadow(
-                            color: gradient[0].withOpacity(0.2),
-                            blurRadius: 20,
-                            offset: Offset(5, 5),
-                            spreadRadius: 10),
-                      ],
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: Text(
-                      buttonText,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: SizeConfig.mediumTextSize * 1.3),
-                    ),
-                  ),
-                ),
-                )
-                ):GestureDetector(
-                  onTap: onPressed,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 2,
-                        color: Colors.white,
-                      ),
-                      color: Colors.transparent,
-                      boxShadow: [
-                        BoxShadow(
-                            color: gradient[0].withOpacity(0.2),
-                            blurRadius: 20,
-                            offset: Offset(5, 5),
-                            spreadRadius: 10),
-                      ],
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: Text(
-                      buttonText,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: SizeConfig.mediumTextSize * 1.3),
-                    ),
-                  ),
-                )
+                (isHighlighted)
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Shimmer(
+                          enabled: true,
+                          direction: ShimmerDirection.fromLeftToRight(),
+                          child: GestureDetector(
+                            onTap: () {
+                              if (isHighlighted == true) {
+                                isHighlighted = false;
+                                localDbProvider.saveHomeTutorialComplete = true;
+                                onPressed();
+                              }
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 2,
+                                  color: Colors.white,
+                                ),
+                                color: Colors.transparent,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: gradient[0].withOpacity(0.2),
+                                      blurRadius: 20,
+                                      offset: Offset(5, 5),
+                                      spreadRadius: 10),
+                                ],
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: Text(
+                                buttonText,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: SizeConfig.mediumTextSize * 1.3),
+                              ),
+                            ),
+                          ),
+                        ))
+                    : GestureDetector(
+                        onTap: onPressed,
+                        child: Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 2,
+                              color: Colors.white,
+                            ),
+                            color: Colors.transparent,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: gradient[0].withOpacity(0.2),
+                                  blurRadius: 20,
+                                  offset: Offset(5, 5),
+                                  spreadRadius: 10),
+                            ],
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: Text(
+                            buttonText,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: SizeConfig.mediumTextSize * 1.3),
+                          ),
+                        ),
+                      )
               ],
             ),
           )

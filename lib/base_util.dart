@@ -46,6 +46,7 @@ class BaseUtil extends ChangeNotifier {
   final Log log = new Log("BaseUtil");
   DBModel _dbModel = locator<DBModel>();
   LocalDBModel _lModel = locator<LocalDBModel>();
+  AppState _appState = locator<AppState>();
   BaseUser _myUser;
   UserFundWallet _userFundWallet;
   UserTicketWallet _userTicketWallet;
@@ -91,6 +92,7 @@ class BaseUtil extends ChangeNotifier {
   int isOtpResendCount = 0;
   int app_open_count = 0;
   String zeroBalanceAssetUri;
+
   ///Flags in various screens defined as global variables
   bool isUserOnboarded,
       isLoginNextInProgress,
@@ -162,6 +164,7 @@ class BaseUtil extends ChangeNotifier {
   Future init() async {
     print('inside init base util');
     _setRuntimeDefaults();
+
     ///analytics
     BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
@@ -182,6 +185,7 @@ class BaseUtil extends ChangeNotifier {
       ///get app open count
       await _lModel.updateAppOpenCount();
       app_open_count = await _lModel.getAppOpenCount();
+
       ///get user wallet
       _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
       if (_userFundWallet == null) _compileUserWallet();
@@ -191,6 +195,7 @@ class BaseUtil extends ChangeNotifier {
       if (_userTicketWallet == null) {
         await _initiateNewTicketWallet();
       }
+
       ///get user creation time
       _userCreationTimestamp = firebaseUser.metadata.creationTime;
 
@@ -201,7 +206,7 @@ class BaseUtil extends ChangeNotifier {
 
       ///prefill augmont and pan details if available
       panService = new PanService();
-      if(myUser.isAugmontOnboarded) {
+      if (myUser.isAugmontOnboarded) {
         augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
         userRegdPan = await panService.getUserPan();
       }
@@ -228,7 +233,7 @@ class BaseUtil extends ChangeNotifier {
 
       ///pick zerobalance asset
       Random rnd = new Random();
-      zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4)+1}';
+      zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
     }
   }
 
@@ -439,6 +444,7 @@ class BaseUtil extends ChangeNotifier {
       log.debug('Signed Out Firebase User');
       await _lModel.deleteLocalAppData();
       log.debug('Cleared local cache');
+      _appState.setCurrentTabIndex = 0;
 
       //TODO better fix required
       ///IMP: When a user signs out and attempts

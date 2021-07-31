@@ -99,8 +99,15 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                 width: SizeConfig.screenWidth,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                      image:
-                          CachedNetworkImageProvider(baseProvider.myUserDpUrl),
+                      image: baseProvider.myUserDpUrl == null ||
+                              baseProvider.myUserDpUrl == ""
+                          ? AssetImage(
+                              "images/profile.png",
+                            )
+                          : CachedNetworkImageProvider(
+                              baseProvider.myUserDpUrl,
+                            ),
+                      // CachedNetworkImageProvider(baseProvider.myUserDpUrl),
                       fit: BoxFit.cover),
                 ),
                 child: Stack(
@@ -279,11 +286,11 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                       Row(
                         children: [
                           cardItem(
-                                  "Username",
-                                  (baseProvider.myUser.username != ""
+                              "Username",
+                              (baseProvider.myUser.username != ""
                                       ? "@${baseProvider.myUser.username}"
-                                      : "unavailable")) ??
-                              "N/A",
+                                      : "unavailable") ??
+                                  "N/A"),
                           cardItem("Mobile Number",
                               "+91 ${baseProvider.myUser.mobile}" ?? ""),
                         ],
@@ -291,11 +298,11 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                       Row(
                         children: [
                           cardItem(
-                                  "Email",
-                                  (baseProvider.myUser.email != ""
+                              "Email",
+                              (baseProvider.myUser.email != ""
                                       ? baseProvider.myUser.email
-                                      : "unavailable")) ??
-                              "N/A",
+                                      : "unavailable") ??
+                                  "N/A"),
                           cardItem(
                               (baseProvider.myUser.dob != ""
                                       ? "Date of Birth"
@@ -308,19 +315,17 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                         children: [
                           cardItem("Gender", getGender()),
                           Expanded(
-                            child: InkWell(
-                                onTap: showHidePan,
-                                child: ListTile(
-                                    title: Text(
-                                      "PAN",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: UiConstants.primaryColor
-                                              .withOpacity(0.5),
-                                          fontSize:
-                                              SizeConfig.mediumTextSize * 0.8),
-                                    ),
-                                    subtitle: getPanContent())),
+                            child: ListTile(
+                                title: Text(
+                                  "PAN",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: UiConstants.primaryColor
+                                          .withOpacity(0.5),
+                                      fontSize:
+                                          SizeConfig.mediumTextSize * 0.8),
+                                ),
+                                subtitle: getPanContent()),
                           )
                         ],
                       ),
@@ -410,25 +415,28 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
 
   Widget getPanContent() {
     if (baseProvider.userRegdPan != null && baseProvider.userRegdPan != "") {
-      return Row(
-        children: [
-          Text(
-            pan,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: SizeConfig.mediumTextSize,
+      return InkWell(
+        onTap: showHidePan,
+        child: Row(
+          children: [
+            Text(
+              pan,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: SizeConfig.mediumTextSize,
+              ),
             ),
-          ),
-          SizedBox(width: 4),
-          !isPanVisible
-              ? Lottie.asset("images/lottie/eye.json",
-                  height: SizeConfig.largeTextSize, repeat: false)
-              : Icon(
-                  Icons.remove_red_eye_outlined,
-                  color: UiConstants.primaryColor,
-                  size: SizeConfig.largeTextSize,
-                ),
-        ],
+            SizedBox(width: 4),
+            !isPanVisible
+                ? Lottie.asset("images/lottie/eye.json",
+                    height: SizeConfig.largeTextSize, repeat: false)
+                : Icon(
+                    Icons.remove_red_eye_outlined,
+                    color: UiConstants.primaryColor,
+                    size: SizeConfig.largeTextSize,
+                  ),
+          ],
+        ),
       );
     } else
       return Wrap(
