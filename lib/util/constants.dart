@@ -45,6 +45,8 @@ class Constants {
 
   static const String POLL_NEXTGAME_ID = "nextgame";
 
+  static const int LEARN_FEED_CARD_ID = 108;
+
   static const int REFERRAL_TICKET_BONUS = 10;
   static const int REFERRAL_AMT_BONUS = 25;
   // static const int TOTAL_DRAWS = 35;
