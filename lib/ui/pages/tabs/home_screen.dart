@@ -7,6 +7,7 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,6 @@ class _HomePageState extends State<HomePage> {
   DBModel dbProvider;
   AppState appState;
   bool _isInit = false;
-  int homebuildCount = 0;
 
   Future<void> getProfilePicUrl() async {
     baseProvider.myUserDpUrl =
@@ -67,7 +67,6 @@ class _HomePageState extends State<HomePage> {
         _isInit = true;
         baseProvider.isHomeCardsFetched = true;
         setState(() {});
-        homebuildCount = 3;
       });
     }
   }
@@ -171,6 +170,8 @@ class _HomePageState extends State<HomePage> {
         asset: cards[i].assetLocalLink,
         subtitle: cards[i].subtitle,
         buttonText: cards[i].btnText,
+        isHighlighted: (baseProvider.show_home_tutorial &&
+            cards[i].id == Constants.LEARN_FEED_CARD_ID),
         onPressed: () async {
           HapticFeedback.vibrate();
           delegate.parseRoute(Uri.parse(cards[i].actionUri));
@@ -263,6 +264,7 @@ class HomeCard extends StatelessWidget {
   final String asset, title, subtitle, buttonText;
   final Function onPressed;
   final List<Color> gradient;
+  final bool isHighlighted;
 
   HomeCard(
       {this.asset,
@@ -270,7 +272,8 @@ class HomeCard extends StatelessWidget {
       this.onPressed,
       this.subtitle,
       this.title,
-      this.gradient});
+      this.gradient,
+      this.isHighlighted = false});
 
   @override
   Widget build(BuildContext context) {

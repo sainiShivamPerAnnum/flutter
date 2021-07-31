@@ -29,8 +29,9 @@ class _FinancePageState extends State<FinancePage> {
   AugmontModel augmontProvider;
   DBModel dbProvider;
   AppState appState;
-  GlobalKey _showcaseHeader = GlobalKey();
-  GlobalKey _showcaseFooter = GlobalKey();
+
+  // GlobalKey _showcaseHeader = GlobalKey();
+  // GlobalKey _showcaseFooter = GlobalKey();
 
   Future<void> _onFundsRefresh() async {
     //TODO: ADD LOADER
@@ -82,12 +83,12 @@ class _FinancePageState extends State<FinancePage> {
       _updateAugmontBalance();
       baseProvider.isAugmontRealTimeBalanceFetched = true;
     }
-    if (baseProvider.show_finance_tutorial) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ShowCaseWidget.of(context)
-            .startShowCase([_showcaseFooter, _showcaseHeader]);
-      });
-    }
+    // if (baseProvider.show_finance_tutorial) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     ShowCaseWidget.of(context)
+    //         .startShowCase([_showcaseFooter, _showcaseHeader]);
+    //   });
+    // }
     return RefreshIndicator(
       onRefresh: () async {
         await _onFundsRefresh();
@@ -111,9 +112,7 @@ class _FinancePageState extends State<FinancePage> {
                     Container(
                       height: kToolbarHeight,
                     ),
-                    BaseUtil.buildShowcaseWrapper(_showcaseHeader,
-                        'Your savings and investments will show up here. The balances are based on live market rates.',
-                        Consumer<BaseUtil>(
+                    Consumer<BaseUtil>(
                       builder: (context, baseUtil, child) {
                         return Container(
                           child: baseProvider.userFundWallet
@@ -129,7 +128,11 @@ class _FinancePageState extends State<FinancePage> {
                               : ZeroBalView(),
                         );
                       },
-                    )),
+                    ),
+                    // BaseUtil.buildShowcaseWrapper(_showcaseHeader,
+                    //     'Your savings and investments will show up here. The balances are based on live market rates.',
+                    //
+                    // ),
                     Divider(
                       color: Colors.black38,
                     ),
@@ -152,19 +155,19 @@ class _FinancePageState extends State<FinancePage> {
                     ),
                     delegate: SliverChildListDelegate(
                       [
-                        BaseUtil.buildShowcaseWrapper(
-                          _showcaseFooter,
-                          'Choose any of the assets to deposit in. Fello lists strong proven assets with great historical returns.',
-                          FundWidget(
-                            fund: fundList[1],
-                            isAvailable: (AugmontDetailsPage.checkAugmontStatus(
-                                    baseProvider.myUser) !=
-                                AugmontDetailsPage.STATUS_UNAVAILABLE),
-                            onPressed: () => appState.currentAction =
-                                PageAction(
-                                    state: PageState.addPage,
-                                    page: AugDetailsPageConfig),
-                          ),
+                        // BaseUtil.buildShowcaseWrapper(
+                        //   _showcaseFooter,
+                        //   'Choose any of the assets to deposit in. Fello lists strong proven assets with great historical returns.',
+                        //
+                        // ),
+                        FundWidget(
+                          fund: fundList[1],
+                          isAvailable: (AugmontDetailsPage.checkAugmontStatus(
+                                  baseProvider.myUser) !=
+                              AugmontDetailsPage.STATUS_UNAVAILABLE),
+                          onPressed: () => appState.currentAction = PageAction(
+                              state: PageState.addPage,
+                              page: AugDetailsPageConfig),
                         ),
                         FundWidget(
                             fund: fundList[0],

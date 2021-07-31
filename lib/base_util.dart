@@ -112,6 +112,7 @@ class BaseUtil extends ChangeNotifier {
       isReferralLinkBuildInProgressWhatsapp,
       isReferralLinkBuildInProgressOther,
       isHomeCardsFetched,
+      show_home_tutorial,
       show_game_tutorial,
       show_finance_tutorial;
   static bool isDeviceOffline, ticketRequestSent, playScreenFirst;
@@ -143,6 +144,7 @@ class BaseUtil extends ChangeNotifier {
     isReferralLinkBuildInProgressWhatsapp = false;
     isReferralLinkBuildInProgressOther = false;
     isHomeCardsFetched = false;
+    show_home_tutorial = false;
     show_game_tutorial = false;
     show_finance_tutorial = false;
     isDeviceOffline = false;
