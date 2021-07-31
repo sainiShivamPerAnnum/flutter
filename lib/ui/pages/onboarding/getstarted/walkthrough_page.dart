@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../base_util.dart';
@@ -237,19 +238,19 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
       children: [
         SizedBox(height: kToolbarHeight * 0.8),
         Expanded(
-            child: (_videoController != null)
-                ? Container(
-                    decoration: BoxDecoration(boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 3,
-                          blurRadius: 7)
-                    ]),
-                    child: AspectRatio(
-                        aspectRatio: _videoController.value.aspectRatio,
-                        child: VideoPlayer(_videoController)))
-                : Lottie.asset('images/lottie/shimmer.json',
-                    fit: BoxFit.cover, repeat: true, frameRate: FrameRate(30))),
+          child: (_videoController != null)
+              ? Container(
+                  decoration: BoxDecoration(boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 3,
+                        blurRadius: 7)
+                  ]),
+                  child: AspectRatio(
+                      aspectRatio: _videoController.value.aspectRatio,
+                      child: VideoPlayer(_videoController)))
+              : Shimmer(child: Container(width: SizeConfig.screenWidth*0.6,), color: Colors.grey,)
+        ),
         Container(
           width: SizeConfig.screenWidth * 0.8,
           height: SizeConfig.screenHeight * 0.1,

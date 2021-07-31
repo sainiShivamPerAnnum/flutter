@@ -58,7 +58,7 @@ class _YourFundsState extends State<YourFunds> {
         Container(
           decoration: BoxDecoration(color: Colors.black),
           width: SizeConfig.screenWidth,
-          height: SizeConfig.screenHeight * 0.24,
+          height: SizeConfig.screenHeight * 0.25,
           child: Stack(
             children: [
               ListView(
