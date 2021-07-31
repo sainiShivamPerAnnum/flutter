@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/util/fundPalettes.dart';
 import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
