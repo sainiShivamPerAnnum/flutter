@@ -48,7 +48,6 @@ dependencies:
   camera: ^0.7.0+2
   cached_network_image: ^2.0.0
   confetti: ^0.5.4+1
-  flip_card: ^0.5.0
   flat_icons_flutter: ^1.0.2
   flutter_spinkit: ^4.0.0
   flutter_share_me: ^0.9.2

@@ -11,8 +11,6 @@ import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
-import 'package:felloapp/ui/pages/tabs/finance/deposit_verification.dart';
-import 'package:felloapp/ui/pages/tabs/finance/icici_withdrawal_screen.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
@@ -28,6 +26,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'deposit_verification.dart';
+import 'icici_withdrawal_screen.dart';
 
 class MFDetailsPage extends StatefulWidget {
   static const int STATUS_UNAVAILABLE = 0;
