@@ -233,7 +233,7 @@ class HamburgerMenu extends StatelessWidget {
       new OptionDetail(
           key: 'abUs', value: 'About ${Constants.APP_NAME}', isEnabled: true),
       new OptionDetail(key: 'fdbk', value: 'Feedback', isEnabled: true),
-      new OptionDetail(key: 'faq', value: 'FAQs', isEnabled: true),
+      // new OptionDetail(key: 'faq', value: 'FAQs', isEnabled: true),
       new OptionDetail(key: 'contUs', value: 'Support', isEnabled: true),
       new OptionDetail(
           key: 'signOut',

@@ -105,7 +105,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                           ],
                         ),
                         Text(
-                          "We'd love to assist you with any kind of problem you face in the app.",
+                          "We are always here to assist you in any way!",
                           style: TextStyle(
                             color: Colors.white,
                             height: 1.4,
@@ -163,7 +163,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                       left: SizeConfig.blockSizeHorizontal * 4,
                     ),
                     child: Text(
-                      "Instant Support",
+                      "Reach Out",
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         color: UiConstants.primaryColor.withOpacity(0.5),
@@ -228,7 +228,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                       left: SizeConfig.blockSizeHorizontal * 4,
                     ),
                     child: Text(
-                      "Guide Support",
+                      "Self-serve",
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         color: UiConstants.primaryColor.withOpacity(0.5),
@@ -265,47 +265,47 @@ class _ContactUsPageState extends State<ContactUsPage> {
                           state: PageState.addPage, page: FaqPageConfig);
                     },
                   ),
-                  Container(
-                    height: SizeConfig.screenHeight * 0.3,
-                    width: SizeConfig.screenWidth,
-                    alignment: Alignment.center,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "images/fello-short-logo.png",
-                          color: Colors.grey,
-                          width: SizeConfig.cardTitleTextSize,
-                          height: SizeConfig.cardTitleTextSize,
-                        ),
-                        SizedBox(width: 4),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'v${BaseUtil.packageInfo.version}(${BaseUtil.packageInfo.buildNumber})',
-                              style: TextStyle(
-                                  fontSize: SizeConfig.mediumTextSize * 1.2,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.grey),
-                            ),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            Text(
-                              "Made for India ❤",
-                              style: TextStyle(
-                                fontSize: SizeConfig.smallTextSize,
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  )
+                  // Container(
+                  //   height: SizeConfig.screenHeight * 0.3,
+                  //   width: SizeConfig.screenWidth,
+                  //   alignment: Alignment.center,
+                  //   child: Row(
+                  //     crossAxisAlignment: CrossAxisAlignment.center,
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: [
+                  //       Image.asset(
+                  //         "images/fello-short-logo.png",
+                  //         color: Colors.grey,
+                  //         width: SizeConfig.cardTitleTextSize,
+                  //         height: SizeConfig.cardTitleTextSize,
+                  //       ),
+                  //       SizedBox(width: 4),
+                  //       Column(
+                  //         mainAxisAlignment: MainAxisAlignment.center,
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           Text(
+                  //             'v${BaseUtil.packageInfo.version}(${BaseUtil.packageInfo.buildNumber})',
+                  //             style: TextStyle(
+                  //                 fontSize: SizeConfig.mediumTextSize * 1.2,
+                  //                 fontWeight: FontWeight.w700,
+                  //                 color: Colors.grey),
+                  //           ),
+                  //           SizedBox(
+                  //             height: 4,
+                  //           ),
+                  //           Text(
+                  //             "Made for India ❤",
+                  //             style: TextStyle(
+                  //               fontSize: SizeConfig.smallTextSize,
+                  //               color: Colors.black54,
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       )
+                  //     ],
+                  //   ),
+                  // )
                 ],
               ),
             ),

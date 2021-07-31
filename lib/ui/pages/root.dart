@@ -183,9 +183,7 @@ class _RootState extends State<Root> {
     fcmProvider = Provider.of<FcmHandler>(context, listen: false);
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
-    if(!_isInitialized) {
-      _initialize();
-    }
+    _initialize();
     var accentColor = UiConstants.primaryColor;
 
     //Create custom navBar, pass in a list of buttons, and listen for tap event
