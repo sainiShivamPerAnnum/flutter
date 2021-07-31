@@ -252,7 +252,7 @@ class _RootState extends State<Root> {
           )
         ],
       ),
-      bottomNavigationBar: navBar, //Pass our custom navBar into the scaffold
+      bottomNavigationBar: navBar //Pass our custom navBar into the scaffold
     );
   }
 

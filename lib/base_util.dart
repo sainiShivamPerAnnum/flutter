@@ -145,8 +145,8 @@ class BaseUtil extends ChangeNotifier {
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
     if (isUserOnboarded) {
       //getting app open count
-      await updateAppOpenCount();
-      app_open_count = await getAppOpenCount();
+      await _lModel.updateAppOpenCount();
+      app_open_count = await _lModel.getAppOpenCount();
       //get user wallet
       _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
       if (_userFundWallet == null) _compileUserWallet();
@@ -717,37 +717,6 @@ class BaseUtil extends ChangeNotifier {
         .setPreference(Preferences.TAMBOLANOTIFICATIONS, (value) ? 1 : 0);
     AppState.unsavedPrefs = true;
     notifyListeners();
-  }
-
-  Future<void> updateAppOpenCount() async {
-    try {
-      SharedPreferences _prefs = await SharedPreferences.getInstance();
-      if(_prefs.containsKey("APP_OPEN_COUNT")) {
-        int currentValue = await getAppOpenCount();
-        currentValue+=1;
-        print('updating to $currentValue');
-        _prefs.setInt("APP_OPEN_COUNT", currentValue);
-      } else {
-        _prefs.setInt("APP_OPEN_COUNT", 1);
-      }
-    } catch(e) {
-      log.debug("Error while updating app open count");
-    }
-  }
-
-  Future<int> getAppOpenCount() async {
-    try {
-      SharedPreferences _prefs = await SharedPreferences.getInstance();
-      int res;
-      if(_prefs.containsKey("APP_OPEN_COUNT")) {
-        res = _prefs.getInt("APP_OPEN_COUNT");
-      } else {
-        res = 1;
-      }
-      return res;
-    } catch(e) {
-      log.debug("Error while fetching app open count.");
-    }
   }
 
   //Saving and fetching app lock user preference

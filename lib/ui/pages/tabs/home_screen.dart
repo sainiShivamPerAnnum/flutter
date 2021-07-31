@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -167,23 +168,23 @@ class _HomePageState extends State<HomePage> {
 
     for (int i = 0; i < cards.length; i++) {
       _widget.add(HomeCard(
-        title: cards[i].title,
-        asset: cards[i].assetLocalLink,
-        subtitle: cards[i].subtitle,
-        buttonText: cards[i].btnText,
-        onPressed: () async {
-          HapticFeedback.vibrate();
-          delegate.parseRoute(Uri.parse(cards[i].actionUri));
-        },
-        gradient: [
-          Color(cards[i].clrCodeA),
-          Color(cards[i].clrCodeB),
-        ],
-        // "0/d-guide"
-        //   "3"
-        //   "1/d-gamePoll"
-        //   "2/augDetails/editProfile/d-aboutus"
-      ));
+          title: cards[i].title,
+          asset: cards[i].assetLocalLink,
+          subtitle: cards[i].subtitle,
+          buttonText: cards[i].btnText,
+          onPressed: () async {
+            HapticFeedback.vibrate();
+            delegate.parseRoute(Uri.parse(cards[i].actionUri));
+          },
+          gradient: [
+            Color(cards[i].clrCodeA),
+            Color(cards[i].clrCodeB),
+          ],
+          // "0/d-guide"
+          //   "3"
+          //   "1/d-gamePoll"
+          //   "2/augDetails/editProfile/d-aboutus"
+        ));
     }
     // for (FeedCard card in cards) {
     //  );
@@ -353,7 +354,40 @@ class HomeCard extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                GestureDetector(
+                (buttonText=='Learn how Fello works')?ClipRRect(
+                  borderRadius : BorderRadius.circular(100),
+                  child : Shimmer(
+                  enabled : true,
+                  direction: ShimmerDirection.fromLeftToRight(),
+                  child: GestureDetector(
+                  onTap: onPressed,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 2,
+                        color: Colors.white,
+                      ),
+                      color: Colors.transparent,
+                      boxShadow: [
+                        BoxShadow(
+                            color: gradient[0].withOpacity(0.2),
+                            blurRadius: 20,
+                            offset: Offset(5, 5),
+                            spreadRadius: 10),
+                      ],
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Text(
+                      buttonText,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: SizeConfig.mediumTextSize * 1.3),
+                    ),
+                  ),
+                ),
+                )
+                ):GestureDetector(
                   onTap: onPressed,
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),

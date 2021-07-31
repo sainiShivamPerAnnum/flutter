@@ -162,4 +162,36 @@ class LocalDBModel extends ChangeNotifier {
       return false;
     }
   }
+
+  Future<void> updateAppOpenCount() async {
+    try {
+      SharedPreferences _prefs = await SharedPreferences.getInstance();
+      if(_prefs.containsKey("APP_OPEN_COUNT")) {
+        int currentValue = await getAppOpenCount();
+        currentValue+=1;
+        print('updating to $currentValue');
+        _prefs.setInt("APP_OPEN_COUNT", currentValue);
+      } else {
+        _prefs.setInt("APP_OPEN_COUNT", 1);
+      }
+    } catch(e) {
+      log.debug("Error while updating app open count");
+    }
+  }
+
+  Future<int> getAppOpenCount() async {
+    try {
+      SharedPreferences _prefs = await SharedPreferences.getInstance();
+      int res;
+      if(_prefs.containsKey("APP_OPEN_COUNT")) {
+        res = _prefs.getInt("APP_OPEN_COUNT");
+      } else {
+        res = 1;
+      }
+      return res;
+    } catch(e) {
+      log.debug("Error while fetching app open count.");
+    }
+  }
+
 }
