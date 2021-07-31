@@ -244,20 +244,21 @@ class VerifyEmailState extends State<VerifyEmail> {
           Navigator.pop(context);
           backButtonDispatcher.didPopRoute();
         } else {
+          _isGoogleLoginInProcess = false;
           baseProvider.showNegativeAlert("Oops! we ran into problem",
               "Email cannot be verified at the moment", context);
         }
       } else {
+        _isGoogleLoginInProcess = false;
         baseProvider.showNegativeAlert("Email already registered",
             "Please try with another email", context);
       }
     } else {
-      setState(() {
-        _isGoogleLoginInProcess = false;
-      });
+      _isGoogleLoginInProcess = false;
       baseProvider.showNegativeAlert("No account selected",
           "Please choose an account from the list", context);
     }
+    setState(() {});
   }
 
   confirmAction() async {

@@ -22,6 +22,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../../../../base_util.dart';
@@ -36,6 +37,9 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
   DBModel dbProvider;
   FcmListener fcmProvider;
   double picSize;
+  String defaultPan = "**********";
+  String pan = "**********";
+  bool isPanVisible = false;
 
   chooseprofilePicture() async {
     final temp = await ImagePicker().getImage(source: ImageSource.gallery);
@@ -47,6 +51,22 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
           image: File(temp.path),
         ),
       );
+    }
+  }
+
+  showHidePan() {
+    if (isPanVisible) {
+      //Hide the pan
+      setState(() {
+        pan = defaultPan;
+        isPanVisible = false;
+      });
+    } else {
+      //show pan
+      setState(() {
+        pan = baseProvider.userRegdPan;
+        isPanVisible = true;
+      });
     }
   }
 
@@ -290,43 +310,16 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                           cardItem("Gender", getGender()),
                           Expanded(
                             child: ListTile(
-                              title: Text(
-                                "PAN",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: UiConstants.primaryColor
-                                        .withOpacity(0.5),
-                                    fontSize: SizeConfig.mediumTextSize * 0.8),
-                              ),
-                              subtitle: baseProvider.myUser.pan != null &&
-                                      baseProvider.myUser.pan != ""
-                                  ? Text(
-                                      baseProvider.myUser.pan,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: SizeConfig.mediumTextSize,
-                                      ),
-                                    )
-                                  : Wrap(
-                                      children: [
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            delegate.appState.currentAction =
-                                                PageAction(
-                                              state: PageState.addWidget,
-                                              widget: AugmontOnboarding(),
-                                              page: AugOnboardPageConfig,
-                                            );
-                                          },
-                                          child: Text(
-                                            "Register",
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                            ),
+                                title: Text(
+                                  "PAN",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: UiConstants.primaryColor
+                                          .withOpacity(0.5),
+                                      fontSize:
+                                          SizeConfig.mediumTextSize * 0.8),
+                                ),
+                                subtitle: getPanContent()),
                           )
                         ],
                       ),
@@ -338,48 +331,23 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                 baseProvider: baseProvider,
                 title: "Bank Details",
                 content: Container(
-                    width: SizeConfig.screenWidth,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            cardItem(
-                                "Account Number", getBankDetail()["number"]),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            cardItem("Account Name", getBankDetail()["name"]),
-                            cardItem("IFSC Code", getBankDetail()["ifsc"]),
-                          ],
-                        ),
-                      ],
-                    )
-                    // : Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.center,
-                    //     children: [
-                    //       SizedBox(height: 16),
-                    //       Text(
-                    //           "Your bank account details will be shown here",
-                    //           style: TextStyle(
-                    //             color: Colors.grey,
-                    //           )),
-                    //       ElevatedButton.icon(
-                    //         icon: Icon(Icons.add, color: Colors.white),
-                    //         onPressed: () {
-                    //           delegate.appState.currentAction = PageAction(
-                    //               state: PageState.addPage,
-                    //               page: EditAugBankDetailsPageConfig);
-                    //         },
-                    //         label: Text(
-                    //           "Add bank  ",
-                    //           style: TextStyle(color: Colors.white),
-                    //         ),
-                    //       ),
-                    //       SizedBox(height: 16),
-                    //     ],
-                    //   ),
-                    ),
+                  width: SizeConfig.screenWidth,
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          cardItem("Account Number", getBankDetail()["number"]),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          cardItem("Account Name", getBankDetail()["name"]),
+                          cardItem("IFSC Code", getBankDetail()["ifsc"]),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
               Card(
                 color: Theme.of(context).scaffoldBackgroundColor,
@@ -437,6 +405,51 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
         ),
       ),
     );
+  }
+
+  Widget getPanContent() {
+    if (baseProvider.userRegdPan != null && baseProvider.userRegdPan != "") {
+      return Row(
+        children: [
+          Text(
+            pan,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: SizeConfig.mediumTextSize,
+            ),
+          ),
+          SizedBox(width: 4),
+          InkWell(
+            onTap: showHidePan,
+            child: !isPanVisible
+                ? Lottie.asset("images/lottie/eye.json",
+                    height: SizeConfig.largeTextSize, repeat: false)
+                : Icon(
+                    Icons.remove_red_eye_outlined,
+                    color: UiConstants.primaryColor,
+                    size: SizeConfig.largeTextSize,
+                  ),
+          )
+        ],
+      );
+    } else
+      return Wrap(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              delegate.appState.currentAction = PageAction(
+                state: PageState.addWidget,
+                widget: AugmontOnboarding(),
+                page: AugOnboardPageConfig,
+              );
+            },
+            child: Text(
+              "Register",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      );
   }
 
   String getGender() {

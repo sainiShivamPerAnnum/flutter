@@ -1,7 +1,9 @@
+import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalDBModel extends ChangeNotifier {
   LocalApi _api = locator<LocalApi>();
@@ -96,6 +98,38 @@ class LocalDBModel extends ChangeNotifier {
   set saveHomeTutorialComplete(bool flag) {
     int status = (flag) ? 1 : 0;
     _api.writeFreshHomeTutorialFile('$status');
+  }
+
+  Future<bool> savePrizeClaimChoice(PrizeClaimChoice choice) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      if (choice == PrizeClaimChoice.AMZ_VOUCHER) {
+        prefs.setString("claimChoice", 'agv');
+      } else if (choice == PrizeClaimChoice.GOLD_CREDIT) {
+        prefs.setString("claimChoice", "adg");
+      } else {
+        prefs.setString("claimChoice", "na");
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<PrizeClaimChoice> getPrizeClaimChoice() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String data = prefs.getString("claimChoice");
+      if (data == "agv") {
+        return PrizeClaimChoice.AMZ_VOUCHER;
+      } else if (data == "adg") {
+        return PrizeClaimChoice.GOLD_CREDIT;
+      }
+
+      return PrizeClaimChoice.NA;
+    } catch (e) {
+      return PrizeClaimChoice.NA;
+    }
   }
 
   Future<bool> deleteLocalAppData() async {

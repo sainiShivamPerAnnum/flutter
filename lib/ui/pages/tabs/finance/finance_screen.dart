@@ -34,6 +34,7 @@ class _FinancePageState extends State<FinancePage> {
 
   Future<void> _onFundsRefresh() async {
     //TODO: ADD LOADER
+    print("-----------------> I got called");
     return dbProvider.getUserFundWallet(baseProvider.myUser.uid).then((aValue) {
       if (aValue != null) {
         baseProvider.userFundWallet = aValue;
