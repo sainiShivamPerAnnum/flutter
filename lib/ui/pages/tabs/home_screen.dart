@@ -182,7 +182,14 @@ class _HomePageState extends State<HomePage> {
             cards[i].id == Constants.LEARN_FEED_CARD_ID),
         onPressed: () async {
           HapticFeedback.vibrate();
-          delegate.parseRoute(Uri.parse(cards[i].actionUri));
+          // delegate.parseRoute(Uri.parse(cards[i].actionUri));
+
+          /////////test code
+          if(cards[i].id == Constants.LEARN_FEED_CARD_ID) {
+            delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
+          }else{
+            delegate.parseRoute(Uri.parse(cards[i].actionUri));
+          }
         },
         gradient: [
           Color(cards[i].clrCodeA),

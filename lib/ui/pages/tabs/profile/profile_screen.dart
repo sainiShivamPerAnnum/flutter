@@ -508,7 +508,7 @@ class ShareCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        "Get ₹ 25 on every referral",
+                        "Invite your friends to Fello",
                         style: TextStyle(
                             color: Colors.white,
                             shadows: [
@@ -651,7 +651,7 @@ class ShareCard extends StatelessWidget {
                                                               .start,
                                                       children: [
                                                         Text(
-                                                          "Want to earn more with Fello ??",
+                                                          "Want to earn even more with Fello?",
                                                           style: GoogleFonts
                                                               .montserrat(
                                                                   color: Colors
@@ -670,7 +670,7 @@ class ShareCard extends StatelessWidget {
                                                             }
                                                           },
                                                           child: Text(
-                                                            "Visit our site",
+                                                            "Visit our CFO page",
                                                             style: GoogleFonts
                                                                 .montserrat(
                                                               color: UiConstants
@@ -705,10 +705,36 @@ class ShareCard extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                Text(
-                  "Invite friends and get ₹ 25 each when your friend makes their first investment.",
-                  style: TextStyle(
-                      color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+                RichText(
+                  text: new TextSpan(
+                    children: [
+                      new TextSpan(
+                        text: 'Both you and your friend receive ',
+                        style: TextStyle(
+                            color: Colors.white, fontSize: SizeConfig.mediumTextSize*1.2),
+                      ),
+                      new TextSpan(
+                        text: '₹ 25',
+                        style: TextStyle(fontWeight: FontWeight.w700,
+                            color: Colors.white, fontSize: SizeConfig.mediumTextSize*1.2),
+                      ),
+                      new TextSpan(
+                        text: ' and ',
+                        style: TextStyle(
+                            color: Colors.white, fontSize: SizeConfig.mediumTextSize*1.2),
+                      ),
+                      new TextSpan(
+                        text: '10 gaming tickets',
+                        style: TextStyle(fontWeight: FontWeight.w700,
+                            color: Colors.white, fontSize: SizeConfig.mediumTextSize*1.2),
+                      ),
+                      new TextSpan(
+                        text: ' for every successful referral!',
+                        style: TextStyle(
+                            color: Colors.white, fontSize: SizeConfig.mediumTextSize*1.2),
+                      )
+                    ],
+                  ),
                 ),
                 SizedBox(height: 20),
                 ShareOptions(),

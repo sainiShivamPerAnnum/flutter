@@ -193,13 +193,18 @@ class _FinancePageState extends State<FinancePage> {
   }
 
   String get goldMoreInfoStr {
-    String _s =
-        'The balance shown here is based on the current live selling rate of gold';
+    String _s = '';
     String _t = '.';
+    if (baseProvider.userFundWallet.augGoldQuantity == 0) {
+      _s = 'This is your current digital Gold balance';
+    } else {
+      _s =
+          'You currently own ${baseProvider.userFundWallet.augGoldQuantity} grams of digital Gold.\n\nThe balance shown here is based on the current selling rate of gold';
+    }
     if (baseProvider.userFundWallet.augGoldQuantity > 0 &&
         baseProvider.augmontGoldRates != null) {
       _t =
-          ', which is ₹${baseProvider.augmontGoldRates.goldSellPrice} per gram';
+          ', which is ₹${baseProvider.augmontGoldRates.goldSellPrice} per gram.';
     }
     return '$_s$_t';
   }

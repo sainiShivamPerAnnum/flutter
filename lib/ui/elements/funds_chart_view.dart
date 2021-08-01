@@ -81,7 +81,7 @@ class _FundsChartViewState extends State<FundsChartView> {
           fundName: "ICICI Balance",
           action: false,
           color: Color(0xff66DE93),
-          description: ["Here ICICI Fund balance will be shown"],
+          description: ["This is your current ICICI Balance."],
           function: () {},
           fundAmount: widget.userFundWallet.iciciBalance,
           logo: "images/icici.png",
@@ -100,7 +100,7 @@ class _FundsChartViewState extends State<FundsChartView> {
           action: widget.userFundWallet.prizeBalance > 0,
           color: Color(0xff6389F2),
           description: [
-            "This is the amount of money you've earned as prized playing our games!"
+            "This is the amount you've earned as rewards playing games and through successful referrals!"
           ],
           function: () {
             if (widget.userFundWallet.prizeBalance <= 0) return;

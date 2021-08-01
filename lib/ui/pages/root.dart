@@ -145,10 +145,17 @@ class _RootState extends State<Root> {
           setState(() {});
         }
       });
-      _initAdhocNotifications();      
-      if(baseProvider.app_open_count==3 && baseProvider.myUser.userPreferences.getPreference(Preferences.APPLOCK)==0) {
-        WidgetsBinding.instance.addPostFrameCallback((_){
+      _initAdhocNotifications();
+
+      // show security modal
+      if (baseProvider.show_security_prompt &&
+          baseProvider.myUser.isAugmontOnboarded &&
+          baseProvider.myUser.userPreferences
+                  .getPreference(Preferences.APPLOCK) ==
+              0) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           _showSecurityBottomSheet();
+          lclDbProvider.updateSecurityPrompt(false);
         });
       }
       baseProvider.isUnreadFreshchatSupportMessages().then((flag) {

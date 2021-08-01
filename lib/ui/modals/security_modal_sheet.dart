@@ -19,12 +19,19 @@ class SecurityModalSheet extends StatelessWidget {
           SizedBox(
             height: SizeConfig.blockSizeVertical * 1.5,
           ),
+          Image.asset(
+            "images/safe-small.png",
+            width: SizeConfig.screenHeight * 0.2,
+          ),
+          SizedBox(
+            height: SizeConfig.blockSizeVertical * 1.5,
+          ),
           Row(
             children: [
               Expanded(
                 child: Center(
                   child: Text(
-                    'Security',
+                    'Secure Fello',
                     style: Theme.of(context).textTheme.headline5.copyWith(
                         color: UiConstants.primaryColor,
                         fontSize: SizeConfig.largeTextSize * 1.2,
@@ -38,7 +45,8 @@ class SecurityModalSheet extends StatelessWidget {
             height: SizeConfig.blockSizeVertical * 2.5,
           ),
           Text(
-              'We recommend you enable security to keep your investments safe.\n\nYou can change this later in the profile section.',
+              'Protect your Fello account by using your phone\'s default security.',
+              textAlign: TextAlign.center,
               style: TextStyle(
                   color: UiConstants.textColor,
                   fontSize: SizeConfig.mediumTextSize * 1.4)),

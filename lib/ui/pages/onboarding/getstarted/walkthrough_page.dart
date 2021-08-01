@@ -214,11 +214,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                                       highlightColor: Colors.white30,
                                       splashColor: Colors.white30,
                                       onPressed: () {
-                                        stateProvider.currentAction =
-                                            PageAction(
-                                                state: PageState.addPage,
-                                                page:
-                                                    WalkThroughCompletedConfig);
+                                        backButtonDispatcher.didPopRoute();
                                       },
                                     ),
                                     color: Colors.transparent,
