@@ -1,6 +1,7 @@
 import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ShareCard extends StatelessWidget {
@@ -122,6 +123,29 @@ class ShareCard extends StatelessWidget {
               ),
               SizedBox(
                 height: 20,
+              ),
+              Padding(
+                padding: EdgeInsets.all(12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      "images/svgs/web.svg",
+                      height: SizeConfig.mediumTextSize,
+                      width: SizeConfig.mediumTextSize,
+                      color: Colors.white,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      "fello.in",
+                      style: GoogleFonts.montserrat(
+                        color: Colors.white,
+                        fontSize: SizeConfig.smallTextSize * 1.2,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  ],
+                ),
               )
             ],
           ),

@@ -182,7 +182,6 @@ class BaseUtil extends ChangeNotifier {
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
     if (isUserOnboarded) {
       ///get app open count
-      await _lModel.updateAppOpenCount();
       app_open_count = await _lModel.getAppOpenCount();
 
       ///get user wallet

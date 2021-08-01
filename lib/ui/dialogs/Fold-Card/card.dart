@@ -852,7 +852,7 @@ class _CloseCardState extends State<CloseCard> {
           ['$directory/fello-reward-$dt.png'],
           subject: 'Fello Rewards',
           text:
-              'Fello really is a very rewarding way to invest in assets and play games! You should try it out too: https://fello.in/download/android',
+              'Fello really is a very rewarding way to invest in assets and play games! You should try it out too: https://fello.in/download/app',
         );
       }).catchError((onError) {
         print(onError);
