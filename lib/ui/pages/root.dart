@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
+import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
@@ -10,7 +11,6 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/modals/security_modal_sheet.dart';
-import 'package:felloapp/ui/modals/walkthrough_modal_sheet.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
@@ -134,19 +134,6 @@ class _RootState extends State<Root> {
         });
   }
 
-  _showWalkthroughBottomSheet() {
-    showModalBottomSheet(
-        context: context,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30.0),
-                topRight: Radius.circular(30.0))),
-        backgroundColor: UiConstants.bottomNavBarColor,
-        builder: (context) {
-          return const WalkthroughModalSheet();
-        });
-  }
-
   _initialize() {
     if (!_isInitialized) {
       _isInitialized = true;
@@ -158,9 +145,9 @@ class _RootState extends State<Root> {
           setState(() {});
         }
       });
-      _initAdhocNotifications();
-      if (baseProvider.app_open_count == 2) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initAdhocNotifications();      
+      if(baseProvider.app_open_count==2 && baseProvider.myUser.userPreferences.getPreference(Preferences.APPLOCK)==0) {
+        WidgetsBinding.instance.addPostFrameCallback((_){
           _showSecurityBottomSheet();
         });
       }
