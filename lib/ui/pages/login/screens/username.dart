@@ -28,8 +28,8 @@ class UsernameState extends State<Username> {
   final _formKey = GlobalKey<FormState>();
 
   Future<bool> validate() async {
+    username = usernameController.text.trim();
     setState(() {
-      username = usernameController.text.trim().replaceAll('.', '@');
       isLoading = true;
     });
     if (username == "" || username == null)
@@ -37,7 +37,8 @@ class UsernameState extends State<Username> {
         isValid = null;
       });
     else if (regex.hasMatch(username)) {
-      bool res = await dbProvider.checkIfUsernameIsAvailable(username);
+      bool res = await dbProvider
+          .checkIfUsernameIsAvailable(username.replaceAll('.', '@'));
       setState(() {
         isValid = res;
       });
