@@ -146,7 +146,7 @@ class _RootState extends State<Root> {
         }
       });
       _initAdhocNotifications();      
-      if(baseProvider.app_open_count==2 && baseProvider.myUser.userPreferences.getPreference(Preferences.APPLOCK)==0) {
+      if(baseProvider.app_open_count==3 && baseProvider.myUser.userPreferences.getPreference(Preferences.APPLOCK)==0) {
         WidgetsBinding.instance.addPostFrameCallback((_){
           _showSecurityBottomSheet();
         });

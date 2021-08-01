@@ -16,7 +16,7 @@
         android:name="in.fello.felloapp.Application"
         android:label="Fello"
         android:requestLegacyExternalStorage="true"
-        android:icon="@mipmap/ic_fello">
+        android:icon="@mipmap/ic_circle">
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="in.fello.felloapp"

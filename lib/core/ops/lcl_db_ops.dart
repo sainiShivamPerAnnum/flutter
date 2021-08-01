@@ -86,12 +86,12 @@ class LocalDBModel extends ChangeNotifier {
       final file = await _api.homeTutorialFile;
       if (file == null) return 1;
       String contents = await file.readAsString();
-      if (contents == null || contents.isEmpty) return 1; //default to true
+      if (contents == null || contents.isEmpty) return 0; //default to true
 
       return int.parse(contents);
     } catch (e) {
       log.error("Didnt find fresh home tutorial flag. Defaulting to 1.");
-      return 1;
+      return 0;
     }
   }
 
@@ -171,7 +171,7 @@ class LocalDBModel extends ChangeNotifier {
         print('updating to $curr');
         _prefs.setInt("APP_OPEN_COUNT", curr);
       } else {
-        _prefs.setInt("APP_OPEN_COUNT", 2);
+        _prefs.setInt("APP_OPEN_COUNT", 3);
       }
     } catch(e) {
       log.debug("Error while updating app open count");
