@@ -69,7 +69,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
 
   Map<String, String> getBankDetail() {
     Map<String, String> bankCreds = {};
-    if (baseProvider.augmontDetail != null) {
+    if (baseProvider.augmontDetail != null &&
+        baseProvider.augmontDetail.bankAccNo != "") {
       bankCreds["name"] = baseProvider.augmontDetail.bankHolderName;
       bankCreds["number"] = baseProvider.augmontDetail.bankAccNo;
       bankCreds["ifsc"] = baseProvider.augmontDetail.ifsc;
@@ -286,7 +287,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                           cardItem(
                               "Username",
                               (baseProvider.myUser.username != ""
-                                      ? "@${baseProvider.myUser.username}"
+                                      ? "@${baseProvider.myUser.username.replaceAll('@', '.')}"
                                       : "unavailable") ??
                                   "N/A"),
                           cardItem("Mobile Number",
