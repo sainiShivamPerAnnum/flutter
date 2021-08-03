@@ -190,4 +190,3 @@ PageConfiguration YourFundsConfig = PageConfiguration(
   path: YourFundsPath,
   uiPage: Pages.YourFunds,
 );
-

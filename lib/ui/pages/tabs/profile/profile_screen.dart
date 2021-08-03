@@ -711,27 +711,34 @@ class ShareCard extends StatelessWidget {
                       new TextSpan(
                         text: 'Both you and your friend receive ',
                         style: TextStyle(
-                            color: Colors.white, fontSize: SizeConfig.mediumTextSize*1.2),
+                            color: Colors.white,
+                            fontSize: SizeConfig.mediumTextSize * 1.2),
                       ),
                       new TextSpan(
                         text: '₹ 25',
-                        style: TextStyle(fontWeight: FontWeight.w700,
-                            color: Colors.white, fontSize: SizeConfig.mediumTextSize*1.2),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            fontSize: SizeConfig.mediumTextSize * 1.2),
                       ),
                       new TextSpan(
                         text: ' and ',
                         style: TextStyle(
-                            color: Colors.white, fontSize: SizeConfig.mediumTextSize*1.2),
+                            color: Colors.white,
+                            fontSize: SizeConfig.mediumTextSize * 1.2),
                       ),
                       new TextSpan(
                         text: '10 gaming tickets',
-                        style: TextStyle(fontWeight: FontWeight.w700,
-                            color: Colors.white, fontSize: SizeConfig.mediumTextSize*1.2),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            fontSize: SizeConfig.mediumTextSize * 1.2),
                       ),
                       new TextSpan(
                         text: ' for every successful referral!',
                         style: TextStyle(
-                            color: Colors.white, fontSize: SizeConfig.mediumTextSize*1.2),
+                            color: Colors.white,
+                            fontSize: SizeConfig.mediumTextSize * 1.2),
                       )
                     ],
                   ),

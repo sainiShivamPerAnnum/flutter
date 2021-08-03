@@ -1,7 +1,4 @@
-enum AWSIciciStage{
-  DEV,
-  PROD
-}
+enum AWSIciciStage { DEV, PROD }
 
 extension ParseAwsIciciToString on AWSIciciStage {
   String value() {
@@ -9,10 +6,7 @@ extension ParseAwsIciciToString on AWSIciciStage {
   }
 }
 
-enum AWSAugmontStage{
-  DEV,
-  PROD
-}
+enum AWSAugmontStage { DEV, PROD }
 
 extension ParseAugmontIciciToString on AWSAugmontStage {
   String value() {
@@ -20,10 +14,7 @@ extension ParseAugmontIciciToString on AWSAugmontStage {
   }
 }
 
-enum SignzyStage{
-  DEV,
-  PROD
-}
+enum SignzyStage { DEV, PROD }
 
 extension ParseSignzyToString on SignzyStage {
   String value() {
@@ -31,10 +22,7 @@ extension ParseSignzyToString on SignzyStage {
   }
 }
 
-enum RazorpayStage{
-  DEV,
-  PROD
-}
+enum RazorpayStage { DEV, PROD }
 
 extension ParseRazorpayToString on RazorpayStage {
   String value() {
@@ -42,11 +30,7 @@ extension ParseRazorpayToString on RazorpayStage {
   }
 }
 
-
-enum FreshchatStage{
-  DEV,
-  PROD
-}
+enum FreshchatStage { DEV, PROD }
 
 extension ParseFreshchatToString on FreshchatStage {
   String value() {

@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   bool _isInit = false;
 
   Future<void> getProfilePicUrl() async {
-    if(baseProvider == null || baseProvider.myUser == null)return;
+    if (baseProvider == null || baseProvider.myUser == null) return;
     baseProvider.myUserDpUrl =
         await dbProvider.getUserDP(baseProvider.myUser.uid);
     if (baseProvider.myUserDpUrl != null) {
@@ -185,9 +185,9 @@ class _HomePageState extends State<HomePage> {
           // delegate.parseRoute(Uri.parse(cards[i].actionUri));
 
           /////////test code
-          if(cards[i].id == Constants.LEARN_FEED_CARD_ID) {
+          if (cards[i].id == Constants.LEARN_FEED_CARD_ID) {
             delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
-          }else{
+          } else {
             delegate.parseRoute(Uri.parse(cards[i].actionUri));
           }
         },

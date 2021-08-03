@@ -8,7 +8,6 @@
 
 // import 'package:intl/intl.dart' as intl;
 
-
 // typedef FooterValueBuilder = String Function(double value);
 // typedef FooterDateTimeBuilder = String Function(
 //     DateTime value, BezierChartScale scaleType);

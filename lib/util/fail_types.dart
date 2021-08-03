@@ -1,4 +1,4 @@
-enum FailType{
+enum FailType {
   UserLoginOtpFailed,
   UserKYCFlagFetchFailed,
   UserICICAppCreationFailed,

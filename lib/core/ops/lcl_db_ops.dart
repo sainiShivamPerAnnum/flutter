@@ -163,11 +163,11 @@ class LocalDBModel extends ChangeNotifier {
     }
   }
 
-  Future<void> updateSecurityPrompt(bool flag) async{
+  Future<void> updateSecurityPrompt(bool flag) async {
     try {
       SharedPreferences _prefs = await SharedPreferences.getInstance();
       await _prefs.setBool("SECURITY_PROMPT", flag);
-    } catch(e) {
+    } catch (e) {
       log.debug("Error while updating app open count");
       print(e.toString());
     }
@@ -177,16 +177,15 @@ class LocalDBModel extends ChangeNotifier {
     bool flag = false;
     try {
       SharedPreferences _prefs = await SharedPreferences.getInstance();
-      if(_prefs.containsKey("SECURITY_PROMPT")) {
+      if (_prefs.containsKey("SECURITY_PROMPT")) {
         flag = _prefs.getBool("SECURITY_PROMPT");
       } else {
         flag = false;
       }
       return flag;
-    } catch(e) {
+    } catch (e) {
       log.debug("Error while fetching app open count.");
       return flag;
     }
   }
-
 }

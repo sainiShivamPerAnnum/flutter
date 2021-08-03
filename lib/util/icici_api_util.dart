@@ -6,7 +6,7 @@ const String INTERNAL_FAIL_FLAG = "fello_flag";
 const String PAYMODE = "UPI";
 const int ICICI_OTP_LEN = 5;
 
-class GetTaxStatus{
+class GetTaxStatus {
   static final String path = 'api/getTaxStatus';
   static final String resTaxCode = 'TAX_CODE';
   static final String resTaxDescription = 'TAX_DESC';
@@ -36,13 +36,13 @@ class GetTaxStatus{
     "T_PAN_STATUS":"","APP_KYC_MODE":"0","APP_UPDT_STATUS":"","FATCA_FLAG_1":"NN"}
  * */
 
-class GetKycStatus{
+class GetKycStatus {
   static final String path = 'api/getKycStatus';
   static final String fldPan = 'firstpan';
   static final String resName = 'F_PAN_NAME';
   static final String resStatus = 'STATUS';
   static final String resFatcaStatus = 'FATCA_FLAG_1';
-  static final String resPanStatus = 'F_PAN_STATUS';//should be 'OK'
+  static final String resPanStatus = 'F_PAN_STATUS'; //should be 'OK'
   static final String resAppMode = 'APP_KYC_MODE';
 
   static const String KYC_STATUS_INVALID = '0';
@@ -56,13 +56,12 @@ class GetKycStatus{
   static const String FATCA_FLAG_YN = 'YN';
   static const String FATCA_FLAG_PC = 'PC';
   static const String FATCA_FLAG_UC = 'UC';
-
 }
 
 /**
  * Sample output: {"STATUS":"Y","ID":"752828","A_STATUS":"N"}
  * */
-class SubmitPanDetail{
+class SubmitPanDetail {
   static final String path = 'api/submitPanDetails';
   static final String fldPan = 'firstpan';
   static final String fldName = 'panname';
@@ -74,7 +73,7 @@ class SubmitPanDetail{
 /**
  * Sample output: {"STATUS":"Y"}
  * */
-class SubmitInvoiceDetail{
+class SubmitInvoiceDetail {
   static final String path = 'api/submitInvoiceDetails';
   static final String fldId = 'appid';
   static final String fldDob = 'dob'; //format= '29-Aug-1996'
@@ -85,7 +84,7 @@ class SubmitInvoiceDetail{
   static final String resStatus = 'STATUS';
 }
 
-class SubmitFatca{
+class SubmitFatca {
   static final String path = 'api/submitFatca';
   static final String fldId = 'appid';
   static final String fldPan = 'firstpan';
@@ -93,8 +92,8 @@ class SubmitFatca{
   static final String fldIdType = 'idtype';
   static final String fldFatcaOption = 'fatcaop';
   static final String fldBirthplace = 'birthplace';
-  static final String fldTinResn = 'tinresn';//'A'
-  static final String fldTinResnText = 'tinresntext';//no idea
+  static final String fldTinResn = 'tinresn'; //'A'
+  static final String fldTinResnText = 'tinresntext'; //no idea
 
   static final String resStatus = 'STATUS';
 }
@@ -102,7 +101,7 @@ class SubmitFatca{
 /**
  * Sample output: {"STATUS":"Y"}
  * */
-class SubmitInvKYCDetail{
+class SubmitInvKYCDetail {
   static final String path = 'api/submitInvoiceKycDetails';
   static final String fldId = 'appid';
   static final String fldOccpCde = 'occpcde';
@@ -114,7 +113,6 @@ class SubmitInvKYCDetail{
   static final String resStatus = 'STATUS';
 }
 
-
 /**
  * Sample Output:
  * {"BANK_CODE":"14","BANK_NAME":"INDUSIND BANK LTD","STATUS":"Y","LIQUID_ALLOWED":"N","BRANCHNAME":"DWARKA NEW
@@ -123,7 +121,7 @@ class SubmitInvKYCDetail{
 
     if not found: returns {}
  * */
-class GetBankDetail{
+class GetBankDetail {
   static final String path = 'api/getBankDetail';
   static final String fldPan = 'firstpan';
   static final String fldIFSC = 'ifsc';
@@ -140,7 +138,7 @@ class GetBankDetail{
  * Sample output: [{"BANK_ACT_TYPE":"Savings Account","BANK_ACT_VALUE":"SB"},
  * {"BANK_ACT_TYPE":"Current Account","BANK_ACT_VALUE":"CA"}]
  * */
-class GetBankActType{
+class GetBankActType {
   static final String path = 'api/getBankActType';
   static final String fldPan = 'firstpan';
 
@@ -152,7 +150,7 @@ class GetBankActType{
  * Sample output: {"STATUS":"Y"}
  * or if failed: {}
  * */
-class SubmitBankDetails{
+class SubmitBankDetails {
   static final String path = 'api/submitBankDetails';
   static final String fldId = 'appid';
   static final String fldPayMode = 'paymode';
@@ -169,7 +167,7 @@ class SubmitBankDetails{
   static final String resStatus = 'STATUS';
 }
 
-class GetSavedDetail{
+class GetSavedDetail {
   static final String path = 'api/getSavedDetail';
   static final String fldPan = 'firstpan';
   static final String fldId = 'appid';
@@ -187,7 +185,7 @@ class GetSavedDetail{
 /**
  * Sample output: {"STATUS":"1","OTPID":"185103"}
  * */
-class SendOtp{
+class SendOtp {
   static final String path = 'api/requestSendOtp';
   static final String fldEmail = 'email';
   static final String fldMobile = 'mobile';
@@ -204,7 +202,7 @@ class SendOtp{
 /**
  * Sample output: {"STATUS":"1","OTPID":"185103"}
  * */
-class ResendOtp{
+class ResendOtp {
   static final String path = 'api/requestSendOtp';
   static final String fldEmail = 'email';
   static final String fldMobile = 'mobile';
@@ -222,7 +220,7 @@ class ResendOtp{
 /**
  * Sample output: {"STATUS":"1","OTPID":"185103"}
  * */
-class VerifyOtp{
+class VerifyOtp {
   static final String path = 'api/verifyOtp';
   static final String fldOtpId = 'otpid';
   static final String fldOtp = 'otp';
@@ -245,7 +243,7 @@ class VerifyOtp{
     successfully","Exp_Date":"22-Apr-2021","Folio_No":"16042280","Chk_Digit_No":"01","AMC_Ref_No":"IPRU752990","Payout_ID":"3010208"}]
     or [{"Return_Code":"237","Return_Msg":"Duplicate transaction - Folio_No: (16042281) already created for this AMC Ref No.","Category":"F"}]
  * */
-class CreatePortfolio{
+class CreatePortfolio {
   static final String path = 'api/createPortfolio';
   static final String fldId = 'appid';
   static final String fldOtpId = 'otpid';
@@ -279,7 +277,7 @@ class CreatePortfolio{
  * "AMOUNT":100,"UPI_DATE_TIME":"01/02/2021 12:50 PM","TRIG_SCHEME":null,"USERNAME":null,"TRAN_ID":"3433599",
  * "DISPLAY_NAME":null,"IS_TAX":"N","LTEF_URL":null}]
  * */
-class SubmitUpiNewInvestor{
+class SubmitUpiNewInvestor {
   //static final String path = 'api/submitUpiPurchase';
   static final String path = 'api/submitIBankUpiPurchase';
   static final String fldId = 'appid';
@@ -306,7 +304,7 @@ class SubmitUpiNewInvestor{
  *  "MINOR_FOLIO":"N","OperationCode":"92","OperationErrorMessage":"Transaction initiated successfully.
  *  Please accept the request in your bank UPI App within 3 minutes to complete the transaction."}]
  * */
-class SubmitUpiExistingInvestor{
+class SubmitUpiExistingInvestor {
   static final String path = 'api/submitIBankUpiPurchaseExt';
   static final String fldFolioNo = 'foliono';
   static final String fldChkDigit = 'chkdigit';
@@ -327,7 +325,7 @@ class SubmitUpiExistingInvestor{
  * {"STATUS":"0","ERR_DESCRIPTION":""}
  * [{"STATUS":"","ERR_DESCRIPTION":"Reference No does not exist"}]
  * */
-class GetPaidStatus{
+class GetPaidStatus {
   static final String path = 'api/getPaidStatus';
   static final String fldTranId = 'tranid';
   static final String fldPan = 'firstpan';
@@ -349,7 +347,7 @@ class GetPaidStatus{
     "TAMOUNT":87.8033427,"SESSIONID":"FL178407",":B2":"Y",":B1":"N"}]
  *
  */
-class CheckFolioBalance{
+class CheckFolioBalance {
   static final String path = 'api/checkIMPSAllowed';
   static final String fldFolioNo = 'foliono';
 
@@ -379,14 +377,14 @@ class CheckFolioBalance{
     "BAL":172.352,"AUM":48986.9023168,"NAV":284.2259,"NAVDATE":"2019-09-22T00:00:00","ALLOW_IMPS":"Y"}],"REDEEMABLEAMOUNT":1011.17,
     "TAMOUNT":31933.3483168,"SESSIONID":"FL1670",":B2":"Y",":B1":"N"}]
  * */
-class CheckIMPSStatus{
+class CheckIMPSStatus {
   static final String path = 'api/checkIMPSAllowed';
   static final String fldFolioNo = 'foliono';
   static final String fldAmount = 'amount';
 
   static final String resReturnCode = "RETURNCODE";
   static final String resReturnMsg = "MESSAGE";
-  static final String resAllowIMPSFlag =  "ALLOWIMPS";
+  static final String resAllowIMPSFlag = "ALLOWIMPS";
   static final String resInstantBalance = "REDEEMABLEAMOUNT";
   static final String resTotalBalance = "TAMOUNT";
 
@@ -404,7 +402,7 @@ class CheckIMPSStatus{
 /**
  * {"ApproxLoadAmt": "0.00","PopUpFlag": "N"}
  * */
-class GetExitLoad{
+class GetExitLoad {
   static final String path = 'api/getExitLoad';
   static final String fldFolioNo = 'foliono';
   static final String fldAmount = 'amount';
@@ -436,22 +434,22 @@ class GetExitLoad{
     [{"BANK_NAME":"IndusInd Bank Ltd","BANK_DETAILS":"159986643444#INDB0001394#234","REDEEM_BANK_DETAILS":"IndusInd Bank
     Ltd#159986643444#SB#DWARKA NEW DELHI##NEFT"}]
  * */
-class GetBankRedemptionDetail{
+class GetBankRedemptionDetail {
   static final String path = 'api/getRedeemBankDetails';
   static final String fldFolioNo = 'foliono';
 
   static final String resBankName = "BANK_NAME";
   static final String resCombinedAccountDetails = "BANK_DETAILS";
   static final String resCombinedBankDetails = "REDEEM_BANK_DETAILS";
-  
-  static String getBankAccNo(String rawStr) =>  rawStr.split('#')[0];
-  static String getBankIfsc(String rawStr) =>  rawStr.split('#')[1];
-  static String getBankCode(String rawStr) =>  rawStr.split('#')[2];
 
-  static String getBankAccType(String rawStr) =>  rawStr.split('#')[2];
-  static String getBankBranch(String rawStr) =>  rawStr.split('#')[3];
-  static String getBankCity(String rawStr) =>  rawStr.split('#')[4];
-  static String getRedeemMode(String rawStr) =>  rawStr.split('#')[5];
+  static String getBankAccNo(String rawStr) => rawStr.split('#')[0];
+  static String getBankIfsc(String rawStr) => rawStr.split('#')[1];
+  static String getBankCode(String rawStr) => rawStr.split('#')[2];
+
+  static String getBankAccType(String rawStr) => rawStr.split('#')[2];
+  static String getBankBranch(String rawStr) => rawStr.split('#')[3];
+  static String getBankCity(String rawStr) => rawStr.split('#')[4];
+  static String getRedeemMode(String rawStr) => rawStr.split('#')[5];
 }
 
 /**
@@ -462,7 +460,7 @@ class GetBankRedemptionDetail{
     {"TRANID":"16338811","TRXN_DATE":"11/02/2021","TRXN_TIME":"08:06:23
     PM","BANK_RRN":"104220778133","IMPS_CODE":"0","IMPS_STATUS":"Transaction Successful"}
  * */
-class SubmitRedemption{
+class SubmitRedemption {
   static final String path = 'api/submitRedemption';
   static final String fldFolioNo = 'foliono';
   static final String fldAmount = 'amount';
@@ -487,7 +485,7 @@ class SubmitRedemption{
   static const String IMPS_TRANSACTION_SUCCESS = '0';
 }
 
-class SubmitRedemptionNonInstant{
+class SubmitRedemptionNonInstant {
   static final String path = 'api/submitRedemptionNonInstant';
   static final String fldFolioNo = 'foliono';
   static final String fldPan = 'firstpan';
@@ -510,7 +508,7 @@ class SubmitRedemptionNonInstant{
   static const String IMPS_TRANSACTION_SUCCESS = '0';
 }
 
-class SendRedemptionOtp{
+class SendRedemptionOtp {
   static final String path = 'api/sendRedemptionOtp';
   static final String fldFolioNo = 'foliono';
   static final String fldTranId = 'tranid';
@@ -518,7 +516,7 @@ class SendRedemptionOtp{
   static final String resOtpId = 'OTP_ID';
 }
 
-class VerifyRedemptionOtp{
+class VerifyRedemptionOtp {
   static final String path = 'api/verifyRedemptionOtp';
   static final String fldFolioNo = 'foliono';
   static final String fldTranId = 'tranid';
