@@ -209,6 +209,8 @@ class BaseUtil extends ChangeNotifier {
         userRegdPan = await panService.getUserPan();
       }
 
+      await getProfilePicUrl();
+
       ///Freshchat utils
       freshchatKeys = await _dbModel.getActiveFreshchatKey();
       if (freshchatKeys != null && freshchatKeys.isNotEmpty) {
@@ -553,6 +555,18 @@ class BaseUtil extends ChangeNotifier {
         ),
         overlayOpacity: 0.6,
         child: body);
+  }
+
+  Future<void> getProfilePicUrl() async {
+    try {
+      if (myUser != null) myUserDpUrl = await _dbModel.getUserDP(myUser.uid);
+      if (myUserDpUrl != null) {
+        print("got the image");
+        notifyListeners();
+      }
+    } catch (e) {
+      log.error(e.toString());
+    }
   }
 
   bool isOldCustomer() {

@@ -1,4 +1,4 @@
-import 'package:felloapp/ui/elements/daily_pick_text_slider.dart';
+import 'package:felloapp/ui/elements/Texts/daily_pick_text_slider.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +13,7 @@ class Roulette extends StatelessWidget {
     return Container(
       margin:
           EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 4),
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: Colors.blueGrey[400],
@@ -133,26 +133,6 @@ class _HolesState extends State<Holes> {
                         ),
                       )),
             )
-          // ListView.builder(
-          //     physics: NeverScrollableScrollPhysics(),
-          //     itemCount: pickList.length,
-          //
-          //     shrinkWrap: true,
-          //     itemBuilder: (ctx, i) {
-          //       return Container(
-          //         height: SizeConfig.screenWidth * 0.1,
-          //         width: SizeConfig.screenWidth * 0.1,
-          //         alignment: Alignment.center,
-          //         padding: EdgeInsets.all(8),
-          //         child: Text(
-          //           "${pickList[i]}",
-          //           style: TextStyle(
-          //               fontWeight: FontWeight.w700,
-          //               fontSize: SizeConfig.largeTextSize),
-          //         ),
-          //       );
-          //     },
-          //   )
           : Center(
               child: Text(
                 "-",

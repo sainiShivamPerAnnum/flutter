@@ -6,7 +6,7 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
-import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
@@ -212,7 +212,7 @@ class HamburgerMenu extends StatelessWidget {
                                 : baseProvider.firebaseUser.uid,
                             fdbk)
                         .then((flag) {
-                      Navigator.of(context).pop();
+                      backButtonDispatcher.didPopRoute();
                       if (flag) {
                         baseProvider.showPositiveAlert('Thank You',
                             'We appreciate your feedback!', context);

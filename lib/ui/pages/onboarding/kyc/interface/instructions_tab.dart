@@ -1,4 +1,4 @@
-import 'package:felloapp/ui/elements/contact_us_button.dart';
+import 'package:felloapp/ui/elements/buttons/contact_us_button.dart';
 import 'package:felloapp/ui/pages/onboarding/kyc/interface/kyc_onboard_data.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:flutter/material.dart';

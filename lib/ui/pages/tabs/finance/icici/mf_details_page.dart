@@ -4,7 +4,7 @@ import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/ui/dialogs/integrated_icici_disabled_dialog.dart';
-import 'package:felloapp/ui/elements/deposit_modal_sheet.dart';
+import 'package:felloapp/ui/bottomsheets/deposit_modal_sheet.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
@@ -15,9 +15,6 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-// import 'package:fl_animated_linechart/chart/area_line_chart.dart';
-// import 'package:fl_animated_linechart/chart/line_chart.dart';
-// import 'package:fl_animated_linechart/common/pair.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -104,8 +101,18 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                   children: [
                     FundInfo(),
                     FundGraph(),
-                    FundDetailsTable(),
-                    ProfitCalculator(),
+                    const FundDetailsTable(),
+                    ProfitCalculator(
+                      calFactor: (0.06 / 12),
+                      invGradient: [
+                        Colors.blueGrey[600],
+                        Colors.blueGrey,
+                      ],
+                      retGradient: [
+                        UiConstants.primaryColor.withGreen(190),
+                        UiConstants.primaryColor
+                      ],
+                    ),
                     FAQCard(
                         Assets.mfFaqHeaders, Assets.mfFaqAnswers, Colors.white),
                     _buildBetaWithdrawButton(),
@@ -338,6 +345,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
 }
 
 class FundDetailsTable extends StatelessWidget {
+  const FundDetailsTable();
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
@@ -433,6 +441,8 @@ class FundDetailsTable extends StatelessWidget {
 }
 
 class FundGraph extends StatelessWidget {
+  FundGraph();
+
   final Map<int, DateTime> dates = {
     1: DateTime.utc(2018, 02, 19),
     2: DateTime.utc(2018, 06, 04),
@@ -466,15 +476,8 @@ class FundGraph extends StatelessWidget {
     13: 301.983,
     14: 302.761,
   };
-  List<FlSpot> dataItems = [];
 
-  getChartPoints() {
-    for (int i = 0; i < line1.length; i++) {
-      dataItems.add(FlSpot(i.toDouble(), line1[i + 1]));
-    }
-  }
-
-  List<Color> gradientColors = [UiConstants.primaryColor, Colors.white];
+  final List<Color> gradientColors = [UiConstants.primaryColor, Colors.white];
   getValue(int val) {
     DateTime time = dates[val];
     String showText;
@@ -486,8 +489,10 @@ class FundGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    getChartPoints();
-
+    List<FlSpot> dataItems = [];
+    for (int i = 0; i < line1.length; i++) {
+      dataItems.add(FlSpot(i.toDouble(), line1[i + 1]));
+    }
     return Container(
       margin: EdgeInsets.symmetric(vertical: 20),
       height: SizeConfig.screenHeight * 0.24,

@@ -4,7 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
-import 'package:felloapp/ui/elements/contact_dialog.dart';
+import 'package:felloapp/ui/dialogs/contact_dialog.dart';
 import 'package:felloapp/ui/elements/milestone_progress.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/data_provider.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/error_dialog.dart';
@@ -581,7 +581,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
           baseProvider.myUser.uid, baseProvider.iciciDetail);
       //update flags in user document
       baseProvider.myUser.isKycVerified = Constants.KYC_VALID;
-      baseProvider.myUser.pan = panNumber;  //TODO change pan field to vX
+      baseProvider.myUser.pan = panNumber; //TODO change pan field to vX
       bool userFlagUpdated = await dbProvider.updateUser(baseProvider.myUser);
       log.debug(
           'Flags for icici update and user update: $iciciUpdated, $userFlagUpdated');

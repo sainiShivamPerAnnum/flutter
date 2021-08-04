@@ -10,8 +10,9 @@ import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/change_profile_picture_dialog.dart';
-import 'package:felloapp/ui/elements/marquee_widget.dart';
+import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
+import 'package:felloapp/ui/elements/Texts/marquee_text.dart';
+import 'package:felloapp/ui/elements/custom-art/profile-card.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
@@ -89,22 +90,11 @@ class _ProfilePageState extends State<ProfilePage> {
             Consumer<BaseUtil>(
               builder: (ctx, bp, child) {
                 return UserProfileCard();
-                // return FlipCard(
-                //   key: cardKey,
-                //   direction: FlipDirection.VERTICAL,
-                //   // default
-                //   speed: 800,
-                //   flipOnTouch: false,
-                //   front: UserProfileCard(),
-                //   back: UserEditProfileCard(
-                //     oldname: baseProvider.myUser.name,
-                //   ),
-                // );
               },
             ),
             Consumer<BaseUtil>(
               builder: (ctx, bp, child) {
-                return showEmailVerifyLink();
+                return const ShowEmailVerifyLink();
               },
             ),
             SizedBox(height: 16),
@@ -114,39 +104,50 @@ class _ProfilePageState extends State<ProfilePage> {
                   Consumer<BaseUtil>(
                     builder: (ctx, bp, child) {
                       return baseProvider.myUser.username == null
-                          ? ProfileTabTile(
-                              leadWidget: Icon(
-                                Icons.account_circle_outlined,
-                                size: SizeConfig.blockSizeHorizontal * 5,
-                                color: UiConstants.primaryColor,
-                              ),
-                              title: "Username",
-                              onPress: () {},
-                              trailWidget: Container(
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  border: Border.all(
-                                      color: Colors.orange, width: 2),
-                                ),
-                                padding: EdgeInsets.symmetric(horizontal: 16),
-                                alignment: Alignment.center,
-                                child: GestureDetector(
+                          ? Column(
+                              children: [
+                                ListTile(
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          SizeConfig.blockSizeHorizontal * 5),
+                                  leading: Icon(
+                                    Icons.account_circle_outlined,
+                                    size: SizeConfig.blockSizeHorizontal * 5,
+                                    color: UiConstants.primaryColor,
+                                  ),
+                                  title: Text(
+                                    "Username",
+                                    style: GoogleFonts.montserrat(),
+                                  ),
                                   onTap: () {
                                     if (baseProvider.myUser.username == null)
                                       appState.currentAction = PageAction(
                                           state: PageState.addPage,
                                           page: ClaimUsernamePageConfig);
                                   },
-                                  child: Text(
-                                    "Claim",
-                                    style: GoogleFonts.montserrat(
-                                        color: Colors.orange,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: SizeConfig.mediumTextSize),
+                                  trailing: Wrap(
+                                    children: [
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            primary: UiConstants.primaryColor),
+                                        onPressed: () {
+                                          if (baseProvider.myUser.username ==
+                                              null)
+                                            appState.currentAction = PageAction(
+                                                state: PageState.addPage,
+                                                page: ClaimUsernamePageConfig);
+                                        },
+                                        child: Text(
+                                          "Claim",
+                                          style: GoogleFonts.montserrat(
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
+                                Divider()
+                              ],
                             )
                           : SizedBox();
                     },
@@ -166,24 +167,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       size: SizeConfig.blockSizeHorizontal * 4,
                     ),
                   ),
-                  // ProfileTabTilePan(
-                  //   logo: "images/contact-book.png",
-                  //   title: "PAN Number",
-                  //   value: baseProvider.myUser.pan,
-                  //   isHidden: isPanFieldHidden,
-                  //   isAvailable: (baseProvider.myUser.pan != null &&
-                  //       baseProvider.myUser.pan.isNotEmpty),
-                  //   onPress: () {
-                  //     HapticFeedback.vibrate();
-                  //     if (baseProvider.myUser.pan != null &&
-                  //         baseProvider.myUser.pan.isNotEmpty) {
-                  //       isPanFieldHidden = !isPanFieldHidden;
-                  //       setState(() {});
-                  //     } else {
-                  //       delegate.parseRoute(Uri.parse("d-panInfo"));
-                  //     }
-                  //   },
-                  // ),
                   ProfileTabTile(
                       leadWidget: Image.asset(
                         "images/transaction.png",
@@ -221,10 +204,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
             ),
-            ShareCard(),
-            Social(),
-            _appVersionRow(),
-            _termsRow(),
+            const ShareCard(),
+            const Social(),
+            const AppVersionRow(),
+            const TermsRow(),
             SizedBox(
               height: 20,
             ),
@@ -234,7 +217,160 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _appVersionRow() {
+  int get _myReferralCount {
+    if (baseProvider == null ||
+        baseProvider.myReferralInfo == null ||
+        baseProvider.myReferralInfo.refCount == null) return 0;
+    return baseProvider.myReferralInfo.refCount;
+  }
+}
+
+class ShowEmailVerifyLink extends StatelessWidget {
+  const ShowEmailVerifyLink({Key key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    BaseUtil baseProvider = Provider.of<BaseUtil>(context);
+    return baseProvider.myUser.isEmailVerified == null ||
+            baseProvider.myUser.isEmailVerified == false
+        ? InkWell(
+            onTap: () {
+              delegate.appState.currentAction = PageAction(
+                  state: PageState.addPage, page: VerifyEmailPageConfig);
+            },
+            child: const MarqueeText(
+              infoList: [
+                "Your email needs to be verified. Click here to complete this step."
+              ],
+              showBullet: false,
+              textColor: Colors.red,
+            ),
+          )
+        : SizedBox();
+  }
+}
+
+class Social extends StatelessWidget {
+  const Social();
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: EdgeInsets.symmetric(vertical: 50),
+        width: SizeConfig.screenWidth,
+        child: Column(children: [
+          Text(
+            "Connect With Us",
+            style: TextStyle(
+              color: UiConstants.textColor,
+              fontSize: SizeConfig.screenHeight * 0.02,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            socialButton("images/svgs/instagram.svg",
+                "https://www.instagram.com/fellofinance/"),
+            socialButton("images/svgs/linkedin.svg",
+                "https://www.linkedin.com/company/fellofinance/"),
+            socialButton(
+                "images/svgs/whatsapp.svg",
+                Platform.isAndroid
+                    ? "https://wa.me/${917993252690}/?text=Hello Fello"
+                    : "https://api.whatsapp.com/send?phone=${917993252690}=Hello Fello"),
+            socialButton("images/svgs/mail.svg", "mailto:hello@fello.in"),
+            socialButton("images/svgs/web.svg", "https://fello.in"),
+          ])
+        ]));
+  }
+
+  Widget socialButton(String asset, String url) {
+    return GestureDetector(
+      onTap: () async => launchUrl(url),
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: UiConstants.primaryColor,
+        ),
+        padding: EdgeInsets.all(12),
+        margin: EdgeInsets.symmetric(horizontal: 6),
+        child: SvgPicture.asset(
+          asset,
+          color: Colors.white,
+          fit: BoxFit.contain,
+          height: SizeConfig.blockSizeVertical * 1.5,
+          width: SizeConfig.blockSizeVertical * 1.5,
+        ),
+      ),
+    );
+  }
+}
+
+void launchUrl(String url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
+class TermsRow extends StatelessWidget {
+  const TermsRow();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          child: InkWell(
+            child: Text(
+              'Terms of Service',
+              style: TextStyle(
+                  color: Colors.grey, decoration: TextDecoration.underline),
+            ),
+            onTap: () {
+              HapticFeedback.vibrate();
+              delegate.appState.currentAction =
+                  PageAction(state: PageState.addPage, page: TncPageConfig);
+            },
+          ),
+        ),
+        Text(
+          '•',
+          style: TextStyle(color: Colors.grey),
+        ),
+        Padding(
+          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          child: InkWell(
+            child: Text(
+              'Referral Policy',
+              style: TextStyle(
+                  color: Colors.grey, decoration: TextDecoration.underline),
+            ),
+            onTap: () {
+              HapticFeedback.vibrate();
+              // Navigator.of(context).pushNamed('/faq').then(
+              //       (value) => Navigator.pushNamed(
+              //         context,
+              //         ('/refpolicy'),
+              //       ),
+              //     );
+              delegate.appState.currentAction = PageAction(
+                  state: PageState.addPage, page: RefPolicyPageConfig);
+            },
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class AppVersionRow extends StatelessWidget {
+  const AppVersionRow();
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child:
           // Row(
@@ -300,160 +436,10 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-
-  Widget _termsRow() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
-          child: InkWell(
-            child: Text(
-              'Terms of Service',
-              style: TextStyle(
-                  color: Colors.grey, decoration: TextDecoration.underline),
-            ),
-            onTap: () {
-              HapticFeedback.vibrate();
-              appState.currentAction =
-                  PageAction(state: PageState.addPage, page: TncPageConfig);
-            },
-          ),
-        ),
-        Text(
-          '•',
-          style: TextStyle(color: Colors.grey),
-        ),
-        Padding(
-          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
-          child: InkWell(
-            child: Text(
-              'Referral Policy',
-              style: TextStyle(
-                  color: Colors.grey, decoration: TextDecoration.underline),
-            ),
-            onTap: () {
-              HapticFeedback.vibrate();
-              // Navigator.of(context).pushNamed('/faq').then(
-              //       (value) => Navigator.pushNamed(
-              //         context,
-              //         ('/refpolicy'),
-              //       ),
-              //     );
-              appState.currentAction = PageAction(
-                  state: PageState.addPage, page: RefPolicyPageConfig);
-            },
-          ),
-        )
-      ],
-    );
-  }
-
-  int get _myReferralCount {
-    if (baseProvider == null ||
-        baseProvider.myReferralInfo == null ||
-        baseProvider.myReferralInfo.refCount == null) return 0;
-    return baseProvider.myReferralInfo.refCount;
-  }
-
-  Widget showEmailVerifyLink() {
-    return baseProvider.myUser.isEmailVerified == null ||
-            baseProvider.myUser.isEmailVerified == false
-        ? InkWell(
-            onTap: () {
-              appState.currentAction = PageAction(
-                  state: PageState.addPage, page: VerifyEmailPageConfig);
-            },
-            child: Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.symmetric(
-                  vertical: 16, horizontal: SizeConfig.blockSizeHorizontal * 5),
-              width:
-                  SizeConfig.screenWidth - SizeConfig.blockSizeHorizontal * 16,
-              child: MarqueeWidget(
-                pauseDuration: Duration(seconds: 1),
-                animationDuration: Duration(seconds: 2),
-                backDuration: Duration(seconds: 2),
-                direction: Axis.horizontal,
-                child: Text(
-                  "Your email needs to be verified. Click here to complete this step.",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    color: Colors.red[300],
-                    fontSize: SizeConfig.mediumTextSize,
-                  ),
-                ),
-              ),
-            ),
-          )
-        : SizedBox();
-  }
-}
-
-class Social extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        margin: EdgeInsets.symmetric(vertical: 50),
-        width: SizeConfig.screenWidth,
-        child: Column(children: [
-          Text(
-            "Connect With Us",
-            style: TextStyle(
-              color: UiConstants.textColor,
-              fontSize: SizeConfig.screenHeight * 0.02,
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            socialButton("images/svgs/instagram.svg",
-                "https://www.instagram.com/fellofinance/"),
-            socialButton("images/svgs/linkedin.svg",
-                "https://www.linkedin.com/company/fellofinance/"),
-            socialButton(
-                "images/svgs/whatsapp.svg",
-                Platform.isAndroid
-                    ? "https://wa.me/${917993252690}/?text=Hello Fello"
-                    : "https://api.whatsapp.com/send?phone=${917993252690}=Hello Fello"),
-            socialButton("images/svgs/mail.svg", "mailto:hello@fello.in"),
-            socialButton("images/svgs/web.svg", "https://fello.in"),
-          ])
-        ]));
-  }
-
-  Widget socialButton(String asset, String url) {
-    return GestureDetector(
-      onTap: () async => launchUrl(url),
-      child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: UiConstants.primaryColor,
-        ),
-        padding: EdgeInsets.all(12),
-        margin: EdgeInsets.symmetric(horizontal: 6),
-        child: SvgPicture.asset(
-          asset,
-          color: Colors.white,
-          fit: BoxFit.contain,
-          height: SizeConfig.blockSizeVertical * 1.5,
-          width: SizeConfig.blockSizeVertical * 1.5,
-        ),
-      ),
-    );
-  }
-}
-
-void launchUrl(String url) async {
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
-  }
 }
 
 class ShareCard extends StatelessWidget {
+  const ShareCard();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -996,63 +982,13 @@ class _ShareOptionsState extends State<ShareOptions> {
   }
 }
 
-class CardButton extends StatelessWidget {
-  final Function onPressed;
-  final String text;
-  final IconData icon;
-  final List<Color> gradient;
-
-  CardButton({this.gradient, this.icon, this.onPressed, this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(
-          border: Border.all(
-            width: 2,
-            color: Colors.white,
-          ),
-          color: Colors.transparent,
-          boxShadow: [
-            BoxShadow(
-                color: gradient[0].withOpacity(0.2),
-                blurRadius: 20,
-                offset: Offset(5, 5),
-                spreadRadius: 10),
-          ],
-          borderRadius: BorderRadius.circular(100),
-        ),
-        child: Row(
-          children: [
-            Text(
-              text,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: SizeConfig.screenWidth * 0.035),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Icon(
-              icon,
-              color: Colors.white,
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class ProfileTabTile extends StatelessWidget {
   final String title;
   final Widget leadWidget, trailWidget;
   final Function onPress;
 
-  ProfileTabTile({this.leadWidget, this.onPress, this.title, this.trailWidget});
+  const ProfileTabTile(
+      {this.leadWidget, this.onPress, this.title, this.trailWidget});
 
   @override
   Widget build(BuildContext context) {
@@ -1087,254 +1023,125 @@ class ProfileTabTile extends StatelessWidget {
   }
 }
 
-class ProfileTabTilePan extends StatelessWidget {
-  final String logo, title, value;
-  final bool isHidden;
-  final bool isAvailable;
-  final Function onPress;
-
-  ProfileTabTilePan(
-      {this.logo,
-      this.onPress,
-      this.title,
-      this.value,
-      this.isHidden,
-      this.isAvailable});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.blockSizeHorizontal * 5,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(height: SizeConfig.blockSizeHorizontal * 4),
-          Row(
-            children: [
-              Image.asset(
-                logo,
-                height: SizeConfig.blockSizeHorizontal * 5,
-              ),
-              SizedBox(
-                width: SizeConfig.blockSizeHorizontal * 5,
-              ),
-              Text(
-                title,
-                style: GoogleFonts.montserrat(
-                  color: UiConstants.textColor,
-                  fontSize: SizeConfig.mediumTextSize,
-                ),
-              ),
-              Spacer(),
-              isAvailable
-                  ? Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          isHidden ? '**********' : value,
-                          style: GoogleFonts.montserrat(
-                            color: UiConstants.primaryColor,
-                            fontSize: SizeConfig.mediumTextSize,
-                          ),
-                        ),
-                        InkWell(
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
-                              child: Icon(
-                                Icons.remove_red_eye_outlined,
-                                color: UiConstants.primaryColor,
-                              )),
-                          onTap: onPress,
-                        )
-                      ],
-                    )
-                  : Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          ' - ',
-                          style: GoogleFonts.montserrat(
-                            color: UiConstants.primaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: SizeConfig.mediumTextSize,
-                          ),
-                        ),
-                        InkWell(
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
-                              child: Icon(
-                                Icons.info_outline,
-                                size: SizeConfig.largeTextSize,
-                                color: UiConstants.primaryColor,
-                              )),
-                          onTap: onPress,
-                        )
-                      ],
-                    ),
-            ],
-          ),
-          SizedBox(height: SizeConfig.blockSizeHorizontal * 4),
-          Divider()
-        ],
-      ),
-    );
-  }
-}
-
-class UserProfileCard extends StatefulWidget {
-  @override
-  _UserProfileCardState createState() => _UserProfileCardState();
-}
-
-class _UserProfileCardState extends State<UserProfileCard> {
+class UserProfileCard extends StatelessWidget {
   BaseUtil baseProvider;
   DBModel dbProvider;
-  bool isImageLoading = false;
-  double picSize = SizeConfig.screenWidth * 0.24;
-
-  Future<void> getProfilePicUrl() async {
-    try {
-      baseProvider.myUserDpUrl =
-          await dbProvider.getUserDP(baseProvider.myUser.uid);
-      if (baseProvider.myUserDpUrl != null) {
-        setState(() {
-          isImageLoading = false;
-        });
-        print("got the image");
-      }
-    } catch (e) {}
-  }
+  final double picSize = SizeConfig.screenWidth * 0.24;
 
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    if (baseProvider.myUserDpUrl == null) {
-      isImageLoading = true;
-      getProfilePicUrl();
-    }
     return Container(
       width: SizeConfig.screenWidth,
       height: SizeConfig.screenWidth * 0.52,
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(
-            "images/profile-card.png",
-          ),
-          fit: BoxFit.fill,
+        gradient: new LinearGradient(
+          colors: [Color(0xff299F8F), UiConstants.primaryColor],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topCenter,
         ),
+        borderRadius: BorderRadius.circular(16),
       ),
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.blockSizeHorizontal * 4,
       ),
-      child: Column(
-        children: [
-          SizedBox(
-            height: 12,
-          ),
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: CustomPaint(
+          painter: ShapePainter(),
+          child: Container(
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.blockSizeHorizontal * 4,
+                vertical: SizeConfig.blockSizeHorizontal * 2.5),
+            child: Column(
               children: [
-                SizedBox(
-                  width: SizeConfig.blockSizeHorizontal * 5,
-                ),
-                Container(
-                  height: picSize,
-                  width: picSize,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
-                  ),
-                  child: isImageLoading
-                      ? Image.asset(
-                          "images/profile.png",
-                          height: picSize,
-                          width: picSize,
-                          fit: BoxFit.cover,
-                        )
-                      : ClipOval(
-                          child: CachedNetworkImage(
-                            imageUrl: baseProvider.myUserDpUrl,
-                            height: picSize,
-                            width: picSize,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                ),
-                SizedBox(
-                  width: SizeConfig.blockSizeHorizontal * 5,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Spacer(),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      width: SizeConfig.screenWidth * 0.5,
-                      child: Text(
-                        baseProvider.myUser.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: SizeConfig.cardTitleTextSize,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      height: picSize,
+                      width: picSize,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
                       ),
-                    ),
-                    baseProvider.myUser.username != null
-                        ? Padding(
-                            padding: EdgeInsets.only(top: 4),
-                            child: Text(
-                              "@${baseProvider.myUser.username.replaceAll('@', '.')}",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: SizeConfig.mediumTextSize,
+                      child: baseProvider.myUserDpUrl == null
+                          ? Image.asset(
+                              "images/profile.png",
+                              height: picSize,
+                              width: picSize,
+                              fit: BoxFit.cover,
+                            )
+                          : ClipOval(
+                              child: CachedNetworkImage(
+                                imageUrl: baseProvider.myUserDpUrl,
+                                height: picSize,
+                                width: picSize,
+                                fit: BoxFit.cover,
                               ),
                             ),
-                          )
-                        : SizedBox(
-                            height: 8,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.blockSizeHorizontal * 5,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: SizeConfig.screenWidth * 0.5,
+                            child: Text(
+                              baseProvider.myUser.name,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: SizeConfig.cardTitleTextSize,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
+                          baseProvider.myUser.username != null
+                              ? Padding(
+                                  padding: EdgeInsets.only(top: 4),
+                                  child: Text(
+                                    "@${baseProvider.myUser.username.replaceAll('@', '.')}",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: SizeConfig.mediumTextSize,
+                                    ),
+                                  ),
+                                )
+                              : SizedBox(
+                                  height: 8,
+                                ),
+                        ],
+                      ),
+                    )
                   ],
-                )
+                ),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Member since ${_getUserMembershipDate()}',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: SizeConfig.smallTextSize,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Member since ${_getUserMembershipDate()}',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: SizeConfig.smallTextSize,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 16,
-          )
-        ],
+        ),
       ),
     );
-  }
-
-  chooseprofilePicture() async {
-    final temp = await ImagePicker().getImage(source: ImageSource.gallery);
-    if (temp != null) {
-      HapticFeedback.vibrate();
-      print("--------------------------------->" + temp.path);
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => ChangeProfilePicture(
-          image: File(temp.path),
-        ),
-      );
-    }
   }
 
   String _getUserMembershipDate() {

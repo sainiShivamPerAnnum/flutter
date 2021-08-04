@@ -6,7 +6,7 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/funds_chart_view.dart';
+import 'package:felloapp/ui/elements/plots/funds_chart_view.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -31,39 +31,6 @@ class _FinancePageState extends State<FinancePage> {
 
   // GlobalKey _showcaseHeader = GlobalKey();
   // GlobalKey _showcaseFooter = GlobalKey();
-
-  // Future<void> _onFundsRefresh() async {
-  //   //TODO: ADD LOADER
-  //   print("-----------------> I got called");
-  //   return dbProvider.getUserFundWallet(baseProvider.myUser.uid).then((aValue) {
-  //     if (aValue != null) {
-  //       baseProvider.userFundWallet = aValue;
-  //       if (baseProvider.userFundWallet.augGoldQuantity > 0)
-  //         _updateAugmontBalance(); //setstate call in method
-  //       else
-  //         setState(() {});
-  //     }
-  //   });
-  // }
-
-  // Future<void> _updateAugmontBalance() async {
-  //   if (augmontProvider == null ||
-  //       (baseProvider.userFundWallet.augGoldQuantity == 0 &&
-  //           baseProvider.userFundWallet.augGoldBalance == 0)) return;
-  //   augmontProvider.getRates().then((currRates) {
-  //     if (currRates == null ||
-  //         currRates.goldSellPrice == null ||
-  //         baseProvider.userFundWallet.augGoldQuantity == 0) return;
-
-  //     baseProvider.augmontGoldRates = currRates;
-  //     double gSellRate = baseProvider.augmontGoldRates.goldSellPrice;
-  //     baseProvider.userFundWallet.augGoldBalance = BaseUtil.digitPrecision(
-  //         baseProvider.userFundWallet.augGoldQuantity * gSellRate);
-  //     setState(() {}); //might cause ui error if screen no longer active
-  //   }).catchError((err) {
-  //     print('$err');
-  //   });
-  // }
 
   @override
   void initState() {
@@ -122,9 +89,6 @@ class _FinancePageState extends State<FinancePage> {
                               ? FundsChartView(
                                   userFundWallet: baseProvider.userFundWallet,
                                   goldMoreInfo: goldMoreInfoStr,
-                                  // doRefresh: () {
-                                  //   _onFundsRefresh();
-                                  // },
                                 )
                               : ZeroBalView(baseProvider.zeroBalanceAssetUri),
                         );
@@ -251,15 +215,12 @@ class FundWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
     return GestureDetector(
         onTap: onPressed,
         child: Opacity(
-          opacity: (isAvailable) ? 1 : 0.75,
+          opacity: (isAvailable) ? 1 : 0.6,
           child: Container(
-            padding: EdgeInsets.all(
-              height * 0.02,
-            ),
+            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(fund.assetName),
@@ -272,9 +233,10 @@ class FundWidget extends StatelessWidget {
                   child: Text(
                     fund.title,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: isAvailable
+                          ? Colors.white
+                          : Colors.white.withOpacity(0.5),
                       height: 1.4,
-                      letterSpacing: 1.5,
                       fontSize: math.min(SizeConfig.largeTextSize, 30),
                       fontWeight: FontWeight.w700,
                     ),
@@ -284,13 +246,23 @@ class FundWidget extends StatelessWidget {
                     ? Align(
                         alignment: Alignment.bottomCenter,
                         child: Padding(
-                          padding: EdgeInsets.only(bottom: height * 0.022),
+                          padding: EdgeInsets.only(
+                              bottom: SizeConfig.blockSizeHorizontal * 10),
                           child: Text(
-                            'Coming Soon',
+                            'Coming\nSoon',
+                            textAlign: TextAlign.center,
                             style: TextStyle(
+                              shadows: [
+                                BoxShadow(
+                                    color: Colors.black.withOpacity(0.4),
+                                    blurRadius: 2,
+                                    offset: Offset(2, 2),
+                                    spreadRadius: 2)
+                              ],
                               color: Colors.white,
-                              fontSize: math.min(height * 0.020, 22),
-                              fontWeight: FontWeight.w400,
+                              fontSize:
+                                  math.max(SizeConfig.cardTitleTextSize, 22),
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ))

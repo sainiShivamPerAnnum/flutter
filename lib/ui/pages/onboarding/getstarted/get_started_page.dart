@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/circles_with_image.dart';
+import 'package:felloapp/ui/elements/custom-art/circles_with_image.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';

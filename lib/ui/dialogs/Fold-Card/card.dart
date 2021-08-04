@@ -498,7 +498,7 @@ class _CloseCardState extends State<CloseCard> {
                           image: baseProvider.myUserDpUrl != null
                               ? NetworkImage(baseProvider.myUserDpUrl)
                               : AssetImage("images/profile.png"),
-                          fit: BoxFit.contain,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),

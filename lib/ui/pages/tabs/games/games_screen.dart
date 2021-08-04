@@ -13,7 +13,7 @@ import 'package:felloapp/ui/dialogs/ticket_details_dialog.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'package:felloapp/ui/elements/Parallax-card/game_card_list.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
-import 'package:felloapp/ui/elements/week-winners.dart';
+import 'package:felloapp/ui/elements/week-winners_board.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,10 +24,6 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class GamePage extends StatefulWidget {
-  // final ValueChanged<int> tabChange;
-
-  // GamePage({this.tabChange});
-
   @override
   _GamePageState createState() => _GamePageState();
 }
@@ -521,13 +517,6 @@ class GameOfferCardButton extends StatelessWidget {
               color: Colors.white,
             ),
             color: Colors.transparent,
-            // boxShadow: [
-            //   BoxShadow(
-            //       color: gradient[0].withOpacity(0.2),
-            //       blurRadius: 20,
-            //       offset: Offset(5, 5),
-            //       spreadRadius: 10),
-            // ],
             borderRadius: BorderRadius.circular(100),
           ),
           child: Text(
