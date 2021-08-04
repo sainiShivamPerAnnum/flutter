@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/elements/Buttons/large_button.dart';
 import 'package:felloapp/ui/elements/custom-art/circles_with_image.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -89,33 +90,17 @@ class _GetStartedPageState extends State<GetStartedPage> {
     return AnimatedContainer(
       duration: animDuration,
       width: (isVisible[3]) ? SizeConfig.screenWidth - 50 : 0,
-      height: 50.0,
-      decoration: BoxDecoration(
-        gradient: new LinearGradient(colors: [
-          UiConstants.primaryColor,
-          UiConstants.primaryColor.withBlue(190),
-        ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
-        borderRadius: new BorderRadius.circular(10.0),
-      ),
-      child: new Material(
-        child: MaterialButton(
-          child: Text(
-            'GET STARTED',
-            style: Theme.of(context)
-                .textTheme
-                .button
-                .copyWith(color: Colors.white),
-          ),
-          onPressed: () {
-            HapticFeedback.vibrate();
-            appState.currentAction =
-                PageAction(state: PageState.replaceAll, page: LoginPageConfig);
-          },
-          highlightColor: Colors.orange.withOpacity(0.5),
-          splashColor: Colors.orange.withOpacity(0.5),
+      child: new LargeButton(
+        child: Text(
+          'GET STARTED',
+          style:
+              Theme.of(context).textTheme.button.copyWith(color: Colors.white),
         ),
-        color: Colors.transparent,
-        borderRadius: new BorderRadius.circular(20.0),
+        onTap: () {
+          HapticFeedback.vibrate();
+          appState.currentAction =
+              PageAction(state: PageState.replaceAll, page: LoginPageConfig);
+        },
       ),
     );
   }

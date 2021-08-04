@@ -13,7 +13,7 @@ class BaseRemoteConfig {
     'tambola_header_2': 'Click to see the other picks'
   };
   static const Map<String, String> _TAMBOLA_DAILY_PICK_COUNT = {
-    'tambola_daily_pick_count':'5'
+    'tambola_daily_pick_count': '5'
   };
   static const Map<String, String> _DEPOSIT_UPI_ADDRESS = {
     'deposit_upi_address': '9769637379@okbizaxis'
@@ -147,7 +147,8 @@ class BaseRemoteConfig {
 
   static String get TAMBOLA_WIN_CORNER => _TAMBOLA_WIN_CORNER.keys.first;
 
-  static String get TAMBOLA_DAILY_PICK_COUNT => _TAMBOLA_DAILY_PICK_COUNT.keys.first;
+  static String get TAMBOLA_DAILY_PICK_COUNT =>
+      _TAMBOLA_DAILY_PICK_COUNT.keys.first;
 
   static String get PLAY_SCREEN_FIRST => _PLAY_SCREEN_FIRST.keys.first;
 

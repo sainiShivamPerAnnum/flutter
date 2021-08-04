@@ -90,7 +90,7 @@ class _FinancePageState extends State<FinancePage> {
                                   userFundWallet: baseProvider.userFundWallet,
                                   goldMoreInfo: goldMoreInfoStr,
                                 )
-                              : ZeroBalView(baseProvider.zeroBalanceAssetUri),
+                              : const ZeroBalView(),
                         );
                       },
                     ),
@@ -157,25 +157,29 @@ class _FinancePageState extends State<FinancePage> {
   }
 
   String get goldMoreInfoStr {
-    String _s =
-        'The balance shown here is based on the current live selling rate of gold';
+    String _s = '';
     String _t = '.';
+    if (baseProvider.userFundWallet.augGoldQuantity == 0) {
+      _s = 'This is your current digital Gold balance';
+    } else {
+      _s =
+          'You currently own ${baseProvider.userFundWallet.augGoldQuantity} grams of digital Gold.\n\nThe balance shown here is based on the current selling rate of gold';
+    }
     if (baseProvider.userFundWallet.augGoldQuantity > 0 &&
         baseProvider.augmontGoldRates != null) {
       _t =
-          ', which is ₹${baseProvider.augmontGoldRates.goldSellPrice} per gram';
+          ', which is ₹${baseProvider.augmontGoldRates.goldSellPrice} per gram.';
     }
     return '$_s$_t';
   }
 }
 
 class ZeroBalView extends StatelessWidget {
-  final String uri;
-
-  ZeroBalView(this.uri);
+  const ZeroBalView();
 
   @override
   Widget build(BuildContext context) {
+    BaseUtil baseProvider = Provider.of<BaseUtil>(context);
     return Container(
       height: SizeConfig.screenHeight * 0.3,
       padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
@@ -184,7 +188,7 @@ class ZeroBalView extends StatelessWidget {
           Expanded(
             child: Center(
               child: Image.asset(
-                "images/$uri.png",
+                "images/${baseProvider.zeroBalanceAssetUri}.png",
                 fit: BoxFit.contain,
               ),
             ),
@@ -211,7 +215,7 @@ class FundWidget extends StatelessWidget {
   final Function onPressed;
   final bool isAvailable;
 
-  FundWidget({this.fund, this.onPressed, this.isAvailable = true});
+  const FundWidget({this.fund, this.onPressed, this.isAvailable = true});
 
   @override
   Widget build(BuildContext context) {

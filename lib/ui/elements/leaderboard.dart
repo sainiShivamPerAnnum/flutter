@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Leaderboard extends StatefulWidget {
+  const Leaderboard();
   @override
   _LeaderboardState createState() => _LeaderboardState();
 }

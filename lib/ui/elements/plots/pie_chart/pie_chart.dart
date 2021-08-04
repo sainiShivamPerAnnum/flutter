@@ -46,8 +46,7 @@ class PieChart extends StatefulWidget {
   _PieChartState createState() => _PieChartState();
 }
 
-class _PieChartState extends State<PieChart>
-    with TickerProviderStateMixin {
+class _PieChartState extends State<PieChart> with TickerProviderStateMixin {
   Animation<double> animation;
   AnimationController controller;
   AnimationController blurController;
@@ -71,8 +70,8 @@ class _PieChartState extends State<PieChart>
 
   void initData() {
     assert(
-    widget.dataMap != null && widget.dataMap.isNotEmpty,
-    "dataMap passed to pie chart cant be null or empty",
+      widget.dataMap != null && widget.dataMap.isNotEmpty,
+      "dataMap passed to pie chart cant be null or empty",
     );
     initLegends();
     initValues();
@@ -80,9 +79,9 @@ class _PieChartState extends State<PieChart>
 
   bool checkIfShouldHighlight() {
     bool res = false;
-    for(var i in widget.shouldHighlight) {
-      if(i) {
-        res =true;
+    for (var i in widget.shouldHighlight) {
+      if (i) {
+        res = true;
       }
     }
     return res;
@@ -93,34 +92,45 @@ class _PieChartState extends State<PieChart>
     super.initState();
     initData();
     blurs = List.filled(widget.shouldHighlight.length, 0);
-    ringWidths = List.filled(widget.shouldHighlight.length, widget.ringStrokeWidth);
+    ringWidths =
+        List.filled(widget.shouldHighlight.length, widget.ringStrokeWidth);
     controller = AnimationController(
       duration: widget.animationDuration ?? Duration(milliseconds: 800),
       vsync: this,
     );
-    if(checkIfShouldHighlight()){
-      blurController = AnimationController(vsync: this, duration: widget.animationDuration ?? Duration(milliseconds: 1000),);
-      ringWidthController = AnimationController(vsync: this, duration: widget.animationDuration ?? Duration(milliseconds: 1000),);
-      blurController.repeat(reverse:true);
-      ringWidthController.repeat(reverse:true);
-      blurAnimation = Tween<double>(begin: 0, end: 5).animate(blurController)..addListener(() {
-        setState(() {
-          for(int i=0;i<blurs.length;i++) {
-            if(widget.shouldHighlight[i]){
-              blurs[i] = blurAnimation.value;
+    if (checkIfShouldHighlight()) {
+      blurController = AnimationController(
+        vsync: this,
+        duration: widget.animationDuration ?? Duration(milliseconds: 1000),
+      );
+      ringWidthController = AnimationController(
+        vsync: this,
+        duration: widget.animationDuration ?? Duration(milliseconds: 1000),
+      );
+      blurController.repeat(reverse: true);
+      ringWidthController.repeat(reverse: true);
+      blurAnimation = Tween<double>(begin: 0, end: 5).animate(blurController)
+        ..addListener(() {
+          setState(() {
+            for (int i = 0; i < blurs.length; i++) {
+              if (widget.shouldHighlight[i]) {
+                blurs[i] = blurAnimation.value;
+              }
             }
-          }
+          });
         });
-      });
-      ringWidthAnimation = Tween<double>(begin: widget.ringStrokeWidth, end: widget.ringStrokeWidth+3).animate(ringWidthController)..addListener(() {
-        setState(() {
-          for(int i=0;i<ringWidths.length;i++) {
-            if(widget.shouldHighlight[i]){
-              ringWidths[i] = ringWidthAnimation.value;
-            }
-          }
-        });
-      });
+      ringWidthAnimation = Tween<double>(
+              begin: widget.ringStrokeWidth, end: widget.ringStrokeWidth + 3)
+          .animate(ringWidthController)
+            ..addListener(() {
+              setState(() {
+                for (int i = 0; i < ringWidths.length; i++) {
+                  if (widget.shouldHighlight[i]) {
+                    ringWidths[i] = ringWidthAnimation.value;
+                  }
+                }
+              });
+            });
     }
     final Animation curve = CurvedAnimation(
       parent: controller,
@@ -141,8 +151,8 @@ class _PieChartState extends State<PieChart>
         builder: (_, c) => Container(
           height: widget.chartRadius != null
               ? c.maxWidth < widget.chartRadius
-              ? c.maxWidth
-              : widget.chartRadius
+                  ? c.maxWidth
+                  : widget.chartRadius
               : null,
           child: CustomPaint(
             painter: PieChartPainter(
@@ -152,17 +162,17 @@ class _PieChartState extends State<PieChart>
               widget.colorList,
               chartValueStyle: widget.chartValuesOptions.chartValueStyle,
               chartValueBackgroundColor:
-              widget.chartValuesOptions.chartValueBackgroundColor,
+                  widget.chartValuesOptions.chartValueBackgroundColor,
               shouldHighlight: widget.shouldHighlight,
               values: legendValues,
               titles: legendTitles,
               blurValues: blurs,
               initialAngle: widget.initialAngleInDegree,
               showValuesInPercentage:
-              widget.chartValuesOptions.showChartValuesInPercentage,
+                  widget.chartValuesOptions.showChartValuesInPercentage,
               decimalPlaces: widget.chartValuesOptions.decimalPlaces,
               showChartValueLabel:
-              widget.chartValuesOptions.showChartValueBackground,
+                  widget.chartValuesOptions.showChartValueBackground,
               chartType: widget.chartType,
               centerText: widget.centerText,
               formatChartValues: widget.formatChartValues,
@@ -254,15 +264,15 @@ class _PieChartState extends State<PieChart>
           children: legendTitles
               .map(
                 (item) => Legend(
-              title: item,
-              color: getColor(
-                widget.colorList,
-                legendTitles.indexOf(item),
-              ),
-              style: widget.legendOptions.legendTextStyle,
-              legendShape: widget.legendOptions.legendShape,
-            ),
-          )
+                  title: item,
+                  color: getColor(
+                    widget.colorList,
+                    legendTitles.indexOf(item),
+                  ),
+                  style: widget.legendOptions.legendTextStyle,
+                  legendShape: widget.legendOptions.legendShape,
+                ),
+              )
               .toList(),
         ),
       );

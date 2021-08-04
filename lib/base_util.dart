@@ -89,7 +89,7 @@ class BaseUtil extends ChangeNotifier {
 
   DateTime _userCreationTimestamp;
   int isOtpResendCount = 0;
-  int app_open_count = 0;
+  bool show_security_prompt = false;
   String zeroBalanceAssetUri;
 
   ///Flags in various screens defined as global variables
@@ -157,7 +157,7 @@ class BaseUtil extends ChangeNotifier {
     playScreenFirst = true;
     atomicTicketGenerationLeftCount = 0;
     atomicTicketDeletionLeftCount = 0;
-    app_open_count = 0;
+    show_security_prompt = false;
   }
 
   Future init() async {
@@ -181,8 +181,8 @@ class BaseUtil extends ChangeNotifier {
     isUserOnboarded =
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
     if (isUserOnboarded) {
-      ///get app open count
-      app_open_count = await _lModel.getAppOpenCount();
+      ///see if security needs to be shown
+      show_security_prompt = await _lModel.showSecurityPrompt();
 
       ///get user wallet
       _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
@@ -482,7 +482,7 @@ class BaseUtil extends ChangeNotifier {
       _userCreationTimestamp = null;
       lastTransactionListDocument = null;
       isOtpResendCount = 0;
-      app_open_count = 0;
+      show_security_prompt = false;
       delegate.appState.setCurrentTabIndex = 0;
       _setRuntimeDefaults();
 

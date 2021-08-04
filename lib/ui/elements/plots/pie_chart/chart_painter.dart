@@ -28,29 +28,28 @@ class PieChartPainter extends CustomPainter {
   double _prevAngle = 0;
 
   PieChartPainter(
-      double angleFactor,
-      this.showChartValues,
-      this.showChartValuesOutside,
-      List<Color> colorList, {
-        this.shouldHighlight,
-        this.blurValues,
-        this.chartValueStyle,
-        this.chartValueBackgroundColor,
-        List<double> values,
-        List<String> titles,
-        this.initialAngle,
-        this.showValuesInPercentage,
-        this.decimalPlaces,
-        this.showChartValueLabel,
-        this.chartType,
-        this.centerText,
-        this.formatChartValues,
-        this.strokeWidth,
-      }) {
+    double angleFactor,
+    this.showChartValues,
+    this.showChartValuesOutside,
+    List<Color> colorList, {
+    this.shouldHighlight,
+    this.blurValues,
+    this.chartValueStyle,
+    this.chartValueBackgroundColor,
+    List<double> values,
+    List<String> titles,
+    this.initialAngle,
+    this.showValuesInPercentage,
+    this.decimalPlaces,
+    this.showChartValueLabel,
+    this.chartType,
+    this.centerText,
+    this.formatChartValues,
+    this.strokeWidth,
+  }) {
     for (int i = 0; i < values.length; i++) {
       Paint paint;
-      paint = Paint()
-          ..color = getColor(colorList, i);
+      paint = Paint()..color = getColor(colorList, i);
       if (chartType == ChartType.ring) {
         paint.style = PaintingStyle.stroke;
         paint.strokeWidth = strokeWidth[i];
@@ -66,9 +65,9 @@ class PieChartPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final side = size.width < size.height ? size.width : size.height;
-    _prevAngle = this.initialAngle*math.pi/180;
+    _prevAngle = this.initialAngle * math.pi / 180;
     for (int i = 0; i < _subParts.length; i++) {
-      if(shouldHighlight[i]) {
+      if (shouldHighlight[i]) {
         canvas.drawArc(
           new Rect.fromLTWH(0.0, 0.0, side, size.height),
           _prevAngle,
@@ -81,10 +80,13 @@ class PieChartPainter extends CustomPainter {
           _prevAngle,
           (((_totalAngle) / _total) * _subParts[i]),
           chartType == ChartType.disc ? true : false,
-          Paint()..color=_paintList[i].color..style=PaintingStyle.stroke..strokeWidth=_paintList[i].strokeWidth..maskFilter=MaskFilter.blur(BlurStyle.solid, blurValues[i]),
+          Paint()
+            ..color = _paintList[i].color
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = _paintList[i].strokeWidth
+            ..maskFilter = MaskFilter.blur(BlurStyle.solid, blurValues[i]),
         );
-      }
-      else {
+      } else {
         canvas.drawArc(
           new Rect.fromLTWH(0.0, 0.0, side, size.height),
           _prevAngle,
@@ -112,15 +114,15 @@ class PieChartPainter extends CustomPainter {
 //            : value;
         final name = showValuesInPercentage
             ? (((_subParts.elementAt(i) / _total) * 100)
-            .toStringAsFixed(this.decimalPlaces) +
-            '%')
+                    .toStringAsFixed(this.decimalPlaces) +
+                '%')
             : _subTitles.elementAt(i);
 
         if (showChartValues) {
           final name = showValuesInPercentage
               ? (((_subParts.elementAt(i) / _total) * 100)
-              .toStringAsFixed(this.decimalPlaces) +
-              '%')
+                      .toStringAsFixed(this.decimalPlaces) +
+                  '%')
               : value;
 
           _drawName(canvas, name, x, y, side);

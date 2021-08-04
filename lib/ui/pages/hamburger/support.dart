@@ -1,6 +1,7 @@
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/elements/Buttons/large_button.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -9,18 +10,17 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../../base_util.dart';
 import '../../../main.dart';
 
-class ContactUsPage extends StatefulWidget {
-  ContactUsPage({Key key}) : super(key: key);
+class SupportPage extends StatefulWidget {
+  const SupportPage({Key key}) : super(key: key);
 
   @override
-  _ContactUsPageState createState() => _ContactUsPageState();
+  _SupportPageState createState() => _SupportPageState();
 }
 
-class _ContactUsPageState extends State<ContactUsPage> {
+class _SupportPageState extends State<SupportPage> {
   BaseUtil baseProvider;
   AppState appState;
   DBModel dbProvider;
@@ -265,47 +265,6 @@ class _ContactUsPageState extends State<ContactUsPage> {
                           state: PageState.addPage, page: FaqPageConfig);
                     },
                   ),
-                  // Container(
-                  //   height: SizeConfig.screenHeight * 0.3,
-                  //   width: SizeConfig.screenWidth,
-                  //   alignment: Alignment.center,
-                  //   child: Row(
-                  //     crossAxisAlignment: CrossAxisAlignment.center,
-                  //     mainAxisAlignment: MainAxisAlignment.center,
-                  //     children: [
-                  //       Image.asset(
-                  //         "images/fello-short-logo.png",
-                  //         color: Colors.grey,
-                  //         width: SizeConfig.cardTitleTextSize,
-                  //         height: SizeConfig.cardTitleTextSize,
-                  //       ),
-                  //       SizedBox(width: 4),
-                  //       Column(
-                  //         mainAxisAlignment: MainAxisAlignment.center,
-                  //         crossAxisAlignment: CrossAxisAlignment.start,
-                  //         children: [
-                  //           Text(
-                  //             'v${BaseUtil.packageInfo.version}(${BaseUtil.packageInfo.buildNumber})',
-                  //             style: TextStyle(
-                  //                 fontSize: SizeConfig.mediumTextSize * 1.2,
-                  //                 fontWeight: FontWeight.w700,
-                  //                 color: Colors.grey),
-                  //           ),
-                  //           SizedBox(
-                  //             height: 4,
-                  //           ),
-                  //           Text(
-                  //             "Made for India ❤",
-                  //             style: TextStyle(
-                  //               fontSize: SizeConfig.smallTextSize,
-                  //               color: Colors.black54,
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       )
-                  //     ],
-                  //   ),
-                  // )
                 ],
               ),
             ),
@@ -334,16 +293,14 @@ class _ContactUsPageState extends State<ContactUsPage> {
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom),
               child: Container(
-                padding: const EdgeInsets.only(
-                    top: 25.0, bottom: 25.0, left: 35.0, right: 35.0),
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.blockSizeHorizontal * 5,
+                    vertical: 20),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: SizeConfig.blockSizeVertical * 1.5,
-                    ),
                     ListTile(
                         title: Center(
                             child: Text(
@@ -405,111 +362,113 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     Container(
                       height: SizeConfig.blockSizeVertical * 6.5,
                       width: SizeConfig.screenWidth,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: timeSlots.length,
-                        separatorBuilder: (ctx, index) {
-                          return SizedBox(width: 0);
-                        },
-                        itemBuilder: (ctx, index) {
+                      child: Row(
+                        children: List.generate(timeSlots.length, (index) {
                           if (index == 0) {
-                            return GestureDetector(
-                              onTap: () {
-                                setBottomSheetState(() {
-                                  _selectedTimeSlotIndex = index;
-                                });
-                              },
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * 0.2,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: UiConstants.primaryColor),
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(20.0),
-                                      bottomLeft: Radius.circular(20.0)),
-                                  color: (_selectedTimeSlotIndex == index)
-                                      ? UiConstants.primaryColor
-                                      : Colors.transparent,
-                                ),
-                                padding: EdgeInsets.all(5.0),
-                                child: (_selectedTimeSlotIndex == index)
-                                    ? Center(
-                                        child: Text(
+                            return Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  setBottomSheetState(() {
+                                    _selectedTimeSlotIndex = index;
+                                  });
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: UiConstants.primaryColor),
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(8.0),
+                                      bottomLeft: Radius.circular(8.0),
+                                    ),
+                                    color: (_selectedTimeSlotIndex == index)
+                                        ? UiConstants.primaryColor
+                                        : Colors.transparent,
+                                  ),
+                                  padding: EdgeInsets.all(5.0),
+                                  child: (_selectedTimeSlotIndex == index)
+                                      ? Center(
+                                          child: Text(
+                                            timeSlots[index],
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        )
+                                      : Center(
+                                          child: Text(
                                           timeSlots[index],
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      )
-                                    : Center(
-                                        child: Text(
-                                        timeSlots[index],
-                                      )),
+                                        )),
+                                ),
                               ),
                             );
                           } else if (index == timeSlots.length - 1) {
-                            return GestureDetector(
-                              onTap: () {
-                                setBottomSheetState(() {
-                                  _selectedTimeSlotIndex = index;
-                                });
-                              },
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * 0.2,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: UiConstants.primaryColor),
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(20.0),
-                                      bottomRight: Radius.circular(20.0)),
-                                  color: (_selectedTimeSlotIndex == index)
-                                      ? UiConstants.primaryColor
-                                      : Colors.transparent,
-                                ),
-                                padding: EdgeInsets.all(5.0),
-                                child: (_selectedTimeSlotIndex == index)
-                                    ? Center(
-                                        child: Text(
+                            return Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  setBottomSheetState(() {
+                                    _selectedTimeSlotIndex = index;
+                                  });
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: UiConstants.primaryColor),
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(8.0),
+                                        bottomRight: Radius.circular(8.0)),
+                                    color: (_selectedTimeSlotIndex == index)
+                                        ? UiConstants.primaryColor
+                                        : Colors.transparent,
+                                  ),
+                                  padding: EdgeInsets.all(5.0),
+                                  child: (_selectedTimeSlotIndex == index)
+                                      ? Center(
+                                          child: Text(
+                                            timeSlots[index],
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        )
+                                      : Center(
+                                          child: Text(
                                           timeSlots[index],
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      )
-                                    : Center(
-                                        child: Text(
-                                        timeSlots[index],
-                                      )),
+                                        )),
+                                ),
                               ),
                             );
                           } else {
-                            return GestureDetector(
-                              onTap: () {
-                                setBottomSheetState(() {
-                                  _selectedTimeSlotIndex = index;
-                                });
-                              },
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * 0.2,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: UiConstants.primaryColor),
-                                  color: (_selectedTimeSlotIndex == index)
-                                      ? UiConstants.primaryColor
-                                      : Colors.transparent,
-                                ),
-                                padding: EdgeInsets.all(5.0),
-                                child: (_selectedTimeSlotIndex == index)
-                                    ? Center(
-                                        child: Text(
+                            return Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  setBottomSheetState(() {
+                                    _selectedTimeSlotIndex = index;
+                                  });
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: UiConstants.primaryColor),
+                                    color: (_selectedTimeSlotIndex == index)
+                                        ? UiConstants.primaryColor
+                                        : Colors.transparent,
+                                  ),
+                                  padding: EdgeInsets.all(5.0),
+                                  child: (_selectedTimeSlotIndex == index)
+                                      ? Center(
+                                          child: Text(
+                                            timeSlots[index],
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        )
+                                      : Center(
+                                          child: Text(
                                           timeSlots[index],
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      )
-                                    : Center(
-                                        child: Text(
-                                        timeSlots[index],
-                                      )),
+                                        )),
+                                ),
                               ),
                             );
                           }
-                        },
+                        }),
                       ),
                     ),
                     SizedBox(
@@ -517,66 +476,57 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     ),
                     Center(
                       child: Container(
-                        width: SizeConfig.screenWidth * 0.4,
+                        width: SizeConfig.screenWidth,
                         height: SizeConfig.blockSizeVertical * 6,
-                        decoration: BoxDecoration(
-                            borderRadius: new BorderRadius.circular(100.0),
-                            color: UiConstants.primaryColor),
-                        child: new Material(
-                          child: MaterialButton(
-                            child: Text(
-                              'Confirm',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .button
-                                  .copyWith(
-                                      color: Colors.white,
-                                      fontSize: SizeConfig.mediumTextSize * 1.4,
-                                      fontWeight: FontWeight.bold),
-                            ),
-                            highlightColor: Colors.white30,
-                            splashColor: Colors.white30,
-                            onPressed: () async {
-                              try {
-                                if (_requestCallPhoneController.text
-                                        .trim()
-                                        .length !=
-                                    10) {
-                                  baseProvider.showNegativeAlert(
-                                      'Incorrect',
-                                      'Please enter a valid phone number',
-                                      context);
-                                  return;
-                                }
-                                bool res = await dbProvider.addCallbackRequest(
-                                    baseProvider.myUser.uid,
-                                    baseProvider.myUser.name,
-                                    _requestCallPhoneController.text.trim(),
-                                    callTimes[_selectedTimeSlotIndex]);
-                                if (res) {
-                                  baseProvider.showPositiveAlert(
-                                      'Callback Placed',
-                                      'Thank you for letting us know, we will call you soon!',
-                                      context);
-                                  Navigator.of(context).pop();
-                                } else {
-                                  baseProvider.showPositiveAlert(
-                                      'Error',
-                                      'Something went wrong while placing a request, please try again later.',
-                                      context);
-                                  Navigator.of(context).pop();
-                                }
-                              } catch (e) {
+                        // decoration: BoxDecoration(
+                        //     borderRadius: new BorderRadius.circular(100.0),
+                        //     color: UiConstants.primaryColor),
+                        child: LargeButton(
+                          child: Text(
+                            'Confirm',
+                            style: Theme.of(context).textTheme.button.copyWith(
+                                color: Colors.white,
+                                fontSize: SizeConfig.mediumTextSize * 1.4,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          onTap: () async {
+                            try {
+                              if (_requestCallPhoneController.text
+                                      .trim()
+                                      .length !=
+                                  10) {
+                                baseProvider.showNegativeAlert(
+                                    'Incorrect',
+                                    'Please enter a valid phone number',
+                                    context);
+                                return;
+                              }
+                              bool res = await dbProvider.addCallbackRequest(
+                                  baseProvider.myUser.uid,
+                                  baseProvider.myUser.name,
+                                  _requestCallPhoneController.text.trim(),
+                                  callTimes[_selectedTimeSlotIndex]);
+                              if (res) {
+                                baseProvider.showPositiveAlert(
+                                    'Callback Placed',
+                                    'Thank you for letting us know, we will call you soon!',
+                                    context);
+                                Navigator.of(context).pop();
+                              } else {
                                 baseProvider.showPositiveAlert(
                                     'Error',
                                     'Something went wrong while placing a request, please try again later.',
                                     context);
                                 Navigator.of(context).pop();
                               }
-                            },
-                          ),
-                          color: Colors.transparent,
-                          borderRadius: new BorderRadius.circular(30.0),
+                            } catch (e) {
+                              baseProvider.showPositiveAlert(
+                                  'Error',
+                                  'Something went wrong while placing a request, please try again later.',
+                                  context);
+                              Navigator.of(context).pop();
+                            }
+                          },
                         ),
                       ),
                     ),

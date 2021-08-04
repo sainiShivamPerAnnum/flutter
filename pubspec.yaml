@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: 'none'
 
-version: 2.4.0+17
+version: 2.4.5+21
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -44,6 +44,7 @@ dependencies:
   in_app_update: ^2.0.0
   image_gallery_saver: ^1.6.9
   #ui packages
+  flutter_card_swipper: ^0.4.0
   camera: ^0.7.0+2
   cached_network_image: ^2.0.0
   confetti: ^0.5.4+1

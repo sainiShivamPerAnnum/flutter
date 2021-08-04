@@ -163,36 +163,29 @@ class LocalDBModel extends ChangeNotifier {
     }
   }
 
-  Future<void> updateAppOpenCount(int curr) async{
+  Future<void> updateSecurityPrompt(bool flag) async {
     try {
       SharedPreferences _prefs = await SharedPreferences.getInstance();
-      if(_prefs.containsKey("APP_OPEN_COUNT")) {
-        curr+=1;
-        print('updating to $curr');
-        _prefs.setInt("APP_OPEN_COUNT", curr);
-      } else {
-        _prefs.setInt("APP_OPEN_COUNT", 3);
-      }
-    } catch(e) {
+      await _prefs.setBool("SECURITY_PROMPT", flag);
+    } catch (e) {
       log.debug("Error while updating app open count");
       print(e.toString());
     }
   }
 
-  Future<int> getAppOpenCount() async {
+  Future<bool> showSecurityPrompt() async {
+    bool flag = false;
     try {
       SharedPreferences _prefs = await SharedPreferences.getInstance();
-      int res;
-      if(_prefs.containsKey("APP_OPEN_COUNT")) {
-        res = _prefs.getInt("APP_OPEN_COUNT");
+      if (_prefs.containsKey("SECURITY_PROMPT")) {
+        flag = _prefs.getBool("SECURITY_PROMPT");
       } else {
-        res = 1;
+        flag = false;
       }
-      updateAppOpenCount(res);
-      return res;
-    } catch(e) {
+      return flag;
+    } catch (e) {
       log.debug("Error while fetching app open count.");
+      return flag;
     }
   }
-
 }

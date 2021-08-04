@@ -36,7 +36,7 @@ class LogoFadeIn extends State<SplashScreen> {
   @override
   void initState() {
     _loadImageAsset(Assets.logoMaxSize);
-    Timer(const Duration(milliseconds: 600), () {
+    Timer(const Duration(milliseconds: 300), () {
       setState(() {
         _logoStyle = LogoStyle.stacked;
       });

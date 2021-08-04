@@ -5,7 +5,7 @@ import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/model/chartFundItem.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/dialogs/Fold-Card/card.dart';
+import 'package:felloapp/ui/dialogs/Prize-Card/card.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/chart_values_options.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/legend_options.dart';
@@ -83,7 +83,7 @@ class _FundsChartViewState extends State<FundsChartView> {
           fundName: "ICICI Balance",
           action: false,
           color: Color(0xff66DE93),
-          description: ["Here ICICI Fund balance will be shown"],
+          description: ["This is your current ICICI Balance."],
           function: () {},
           fundAmount: widget.userFundWallet.iciciBalance,
           logo: "images/icici.png",
@@ -102,7 +102,7 @@ class _FundsChartViewState extends State<FundsChartView> {
           action: widget.userFundWallet.prizeBalance > 0,
           color: Color(0xff6389F2),
           description: [
-            "This is the amount of money you've earned as prized playing our games!"
+            "This is the amount you've earned as rewards playing games and through successful referrals!"
           ],
           function: () {
             if (widget.userFundWallet.prizeBalance <= 0) return;

@@ -30,21 +30,6 @@ class _HomePageState extends State<HomePage> {
   AppState appState;
   bool _isInit = false;
 
-  // Future<void> getProfilePicUrl() async {
-  //   if (baseProvider == null || baseProvider.myUser == null) return;
-  //   baseProvider.myUserDpUrl =
-  //       await dbProvider.getUserDP(baseProvider.myUser.uid);
-  //   if (baseProvider.myUserDpUrl != null) {
-  //     try {
-  //       setState(() {
-  //         isImageLoading = false;
-  //       });
-  //     } catch (e) {
-  //       print('HomeScreen: SetState called after dispose');
-  //     }
-  //   }
-  // }
-
   String getGreeting() {
     int hour = DateTime.now().hour;
     if (hour >= 5 && hour <= 12) {
@@ -182,7 +167,14 @@ class _HomePageState extends State<HomePage> {
             cards[i].id == Constants.LEARN_FEED_CARD_ID),
         onPressed: () async {
           HapticFeedback.vibrate();
-          delegate.parseRoute(Uri.parse(cards[i].actionUri));
+          // delegate.parseRoute(Uri.parse(cards[i].actionUri));
+
+          /////////test code
+          if (cards[i].id == Constants.LEARN_FEED_CARD_ID) {
+            delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
+          } else {
+            delegate.parseRoute(Uri.parse(cards[i].actionUri));
+          }
         },
         gradient: [
           Color(cards[i].clrCodeA),

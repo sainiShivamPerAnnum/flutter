@@ -2,6 +2,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/elements/Buttons/large_button.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -177,59 +178,36 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                             ),
                     ),
                     Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Padding(
-                          padding: EdgeInsets.all(
-                              SizeConfig.blockSizeHorizontal * 5),
-                          child: (_currentIndex == _content.length - 1)
-                              ? Container(
-                                  width: SizeConfig.screenWidth * 0.3,
-                                  height: SizeConfig.blockSizeVertical * 5,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100.0),
-                                    gradient: new LinearGradient(
-                                        colors: [
-                                          UiConstants.primaryColor,
-                                          UiConstants.primaryColor
-                                              .withBlue(200),
-                                        ],
-                                        begin: Alignment(0.5, -1.0),
-                                        end: Alignment(0.5, 1.0)),
+                      bottom: 0,
+                      right: 0,
+                      child: Padding(
+                        padding:
+                            EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5),
+                        child: (_currentIndex == _content.length - 1)
+                            ? Container(
+                                width: SizeConfig.screenWidth * 0.3,
+                                height: SizeConfig.blockSizeVertical * 5,
+                                child: LargeButton(
+                                  child: Text(
+                                    'Complete',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .button
+                                        .copyWith(
+                                            color: Colors.white,
+                                            fontSize:
+                                                SizeConfig.largeTextSize * 0.7,
+                                            fontWeight: FontWeight.bold),
                                   ),
-                                  child: new Material(
-                                    child: MaterialButton(
-                                      child: Text(
-                                        'Complete',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .button
-                                            .copyWith(
-                                                color: Colors.white,
-                                                fontSize:
-                                                    SizeConfig.largeTextSize *
-                                                        0.7,
-                                                fontWeight: FontWeight.bold),
-                                      ),
-                                      highlightColor: Colors.white30,
-                                      splashColor: Colors.white30,
-                                      onPressed: () {
-                                        stateProvider.currentAction =
-                                            PageAction(
-                                                state: PageState.addPage,
-                                                page:
-                                                    WalkThroughCompletedConfig);
-                                      },
-                                    ),
-                                    color: Colors.transparent,
-                                    borderRadius:
-                                        new BorderRadius.circular(30.0),
-                                  ),
-                                )
-                              : SizedBox(
-                                  width: 0,
-                                ),
-                        )),
+                                  onTap: () {
+                                    backButtonDispatcher.didPopRoute();
+                                  },
+                                ))
+                            : SizedBox(
+                                width: 0,
+                              ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -245,24 +223,25 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
       children: [
         SizedBox(height: kToolbarHeight * 0.8),
         Expanded(
-            child: (_videoController != null)
-                ? Container(
-                    decoration: BoxDecoration(boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 3,
-                          blurRadius: 7)
-                    ]),
-                    child: AspectRatio(
-                        aspectRatio: _videoController.value.aspectRatio,
-                        child: VideoPlayer(_videoController)))
-                : Shimmer(
-                    child: Container(
-                      width: SizeConfig.screenWidth * 0.6,
-                      color: Colors.grey.withOpacity(0.4),
-                    ),
-                    color: Colors.white,
-                  )),
+          child: (_videoController != null)
+              ? Container(
+                  decoration: BoxDecoration(boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 3,
+                        blurRadius: 7)
+                  ]),
+                  child: AspectRatio(
+                      aspectRatio: _videoController.value.aspectRatio,
+                      child: VideoPlayer(_videoController)))
+              : Shimmer(
+                  child: Container(
+                    width: SizeConfig.screenWidth * 0.6,
+                    color: Colors.grey.withOpacity(0.4),
+                  ),
+                  color: Colors.white,
+                ),
+        ),
         Container(
           width: SizeConfig.screenWidth * 0.8,
           height: SizeConfig.screenHeight * 0.1,
@@ -288,71 +267,3 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
     super.dispose();
   }
 }
-
-// class WalkThroughSlide extends StatefulWidget {
-//   final String content;
-//   final VideoPlayerController videoController;
-
-//   WalkThroughSlide({this.content, this.videoController});
-//   @override
-//   _WalkThroughSlideState createState() => _WalkThroughSlideState();
-// }
-
-// class _WalkThroughSlideState extends State<WalkThroughSlide>
-//     with AutomaticKeepAliveClientMixin {
-//   @override
-//   bool get wantKeepAlive => true;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: [
-//         SizedBox(height: kToolbarHeight * 0.8),
-//         Expanded(
-//           child: Stack(
-//             children: [
-//               AspectRatio(
-//                 aspectRatio: widget.videoController.value.aspectRatio,
-//                 child: Lottie.asset(
-//                   'images/lottie/shimmer.json',
-//                   fit: BoxFit.cover,
-//                   repeat: true,
-//                   frameRate: FrameRate(30),
-//                 ),
-//               ),
-//               (widget.videoController != null)
-//                   ? Container(
-//                       decoration: BoxDecoration(boxShadow: [
-//                         BoxShadow(
-//                             color: Colors.grey.withOpacity(0.5),
-//                             spreadRadius: 3,
-//                             blurRadius: 7)
-//                       ]),
-//                       child: AspectRatio(
-//                         aspectRatio: widget.videoController.value.aspectRatio,
-//                         child: VideoPlayer(widget.videoController),
-//                       ),
-//                     )
-//                   : SizedBox(),
-//             ],
-//           ),
-//         ),
-//         Container(
-//           width: SizeConfig.screenWidth * 0.8,
-//           height: SizeConfig.screenHeight * 0.1,
-//           margin: EdgeInsets.only(
-//             top: SizeConfig.blockSizeHorizontal * 3,
-//             bottom: SizeConfig.blockSizeHorizontal * 14,
-//           ),
-//           child: Center(
-//             child: Text(
-//               widget.content,
-//               textAlign: TextAlign.center,
-//               style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
-//             ),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }

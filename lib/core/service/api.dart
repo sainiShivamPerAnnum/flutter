@@ -63,12 +63,18 @@ class Api {
   }
 
   Future<DocumentSnapshot> getUserPrtdDocPan(String userId) {
-    ref = _db.collection(Constants.COLN_USERS).doc(userId).collection(Constants.SUBCOLN_USER_PRTD);
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_PRTD);
     return ref.doc('pan').get();
   }
 
   Future<void> addUserPrtdDocPan(String userId, Map data) {
-    ref = _db.collection(Constants.COLN_USERS).doc(userId).collection(Constants.SUBCOLN_USER_PRTD);
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_PRTD);
     return ref.doc('pan').set(data, SetOptions(merge: false));
   }
 
@@ -473,9 +479,9 @@ class Api {
   }
 
   Future<List<String>> getWalkthroughFiles() async {
-    ListResult _allVideos =  await _storage.ref('walkthrough').listAll();
+    ListResult _allVideos = await _storage.ref('walkthrough').listAll();
     List<String> _res = [];
-    for(Reference ref in _allVideos.items) {
+    for (Reference ref in _allVideos.items) {
       var value = await ref.getDownloadURL();
       _res.add(value);
     }

@@ -4,7 +4,7 @@ import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/ui/dialogs/integrated_icici_disabled_dialog.dart';
-import 'package:felloapp/ui/bottomsheets/deposit_modal_sheet.dart';
+import 'package:felloapp/ui/modals/icici_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';

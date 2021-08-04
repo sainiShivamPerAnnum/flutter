@@ -1,4 +1,3 @@
-
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -6,7 +5,7 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class WalkthroughModalSheet extends StatelessWidget{
+class WalkthroughModalSheet extends StatelessWidget {
   const WalkthroughModalSheet();
 
   @override
@@ -67,8 +66,7 @@ class WalkthroughModalSheet extends StatelessWidget{
                     splashColor: Colors.white30,
                     onPressed: () {
                       appState.currentAction = PageAction(
-                          state: PageState.addPage,
-                          page: WalkThroughConfig);
+                          state: PageState.addPage, page: WalkThroughConfig);
                       Navigator.of(context).pop();
                     },
                   ),

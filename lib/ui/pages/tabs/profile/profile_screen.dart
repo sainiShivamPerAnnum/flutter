@@ -13,6 +13,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/elements/Texts/marquee_text.dart';
 import 'package:felloapp/ui/elements/custom-art/profile-card.dart';
+import 'package:felloapp/ui/modals/share_info_modal.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
@@ -350,12 +351,7 @@ class TermsRow extends StatelessWidget {
             ),
             onTap: () {
               HapticFeedback.vibrate();
-              // Navigator.of(context).pushNamed('/faq').then(
-              //       (value) => Navigator.pushNamed(
-              //         context,
-              //         ('/refpolicy'),
-              //       ),
-              //     );
+
               delegate.appState.currentAction = PageAction(
                   state: PageState.addPage, page: RefPolicyPageConfig);
             },
@@ -494,7 +490,7 @@ class ShareCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        "Get ₹ 25 on every referral",
+                        "Invite your friends to Fello",
                         style: TextStyle(
                             color: Colors.white,
                             shadows: [
@@ -521,163 +517,7 @@ class ShareCard extends StatelessWidget {
                             context: context,
                             builder: (ctx) {
                               AppState.screenStack.add(ScreenItem.dialog);
-                              return Wrap(
-                                children: [
-                                  Container(
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.only(
-                                              left: SizeConfig
-                                                      .blockSizeHorizontal *
-                                                  5,
-                                              right: SizeConfig
-                                                      .blockSizeHorizontal *
-                                                  5,
-                                              top: 16,
-                                              bottom: 0),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              // SizedBox(
-                                              // width: SizeConfig
-                                              //         .blockSizeHorizontal *
-                                              //     5),
-                                              Expanded(
-                                                child: FittedBox(
-                                                  fit: BoxFit.cover,
-                                                  child: Text(
-                                                    "How to make a successful Referral ",
-                                                    textAlign: TextAlign.center,
-                                                    maxLines: 2,
-                                                    style: GoogleFonts
-                                                        .montserratAlternates(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: UiConstants
-                                                          .primaryColor,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                  width: SizeConfig
-                                                          .blockSizeHorizontal *
-                                                      5),
-                                              IconButton(
-                                                onPressed: () {
-                                                  backButtonDispatcher
-                                                      .didPopRoute();
-                                                },
-                                                icon: Icon(
-                                                  Icons.close,
-                                                  color: Colors.grey,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        Divider(),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal:
-                                                SizeConfig.blockSizeHorizontal *
-                                                    5,
-                                          ),
-                                          child: Stack(
-                                            children: [
-                                              Positioned(
-                                                bottom: 0,
-                                                right: -30,
-                                                child: Opacity(
-                                                  opacity: 0.6,
-                                                  child: Image.asset(
-                                                    "images/share-bottomsheet.png",
-                                                    width:
-                                                        SizeConfig.screenWidth *
-                                                            0.45,
-                                                  ),
-                                                ),
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  referralTile(
-                                                    "Share your personalised link to your friends and family",
-                                                    0,
-                                                  ),
-                                                  referralTile(
-                                                      "Prize balance gets credited as soon as they sign up.",
-                                                      SizeConfig.screenWidth *
-                                                          0.1),
-                                                  referralTile(
-                                                      "Prize balance gets unlocked when they make their first investment.",
-                                                      SizeConfig.screenWidth *
-                                                          0.2),
-                                                  referralTile(
-                                                      "you can invest or withdraw that balance afterwards",
-                                                      SizeConfig.screenWidth *
-                                                          0.3),
-                                                  SizedBox(height: 20),
-                                                  Container(
-                                                    width:
-                                                        SizeConfig.screenWidth *
-                                                            0.5,
-                                                    height: SizeConfig
-                                                            .screenHeight *
-                                                        0.1,
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          "Want to earn more with Fello ??",
-                                                          style: GoogleFonts
-                                                              .montserrat(
-                                                                  color: Colors
-                                                                      .grey),
-                                                        ),
-                                                        InkWell(
-                                                          onTap: () async {
-                                                            String url =
-                                                                "https://www.fello.in";
-                                                            if (await canLaunch(
-                                                                url)) {
-                                                              launchUrl(url);
-                                                            } else {
-                                                              backButtonDispatcher
-                                                                  .didPopRoute();
-                                                            }
-                                                          },
-                                                          child: Text(
-                                                            "Visit our site",
-                                                            style: GoogleFonts
-                                                                .montserrat(
-                                                              color: UiConstants
-                                                                  .primaryColor,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(height: 20),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              );
+                              return ShareInfoModalSheet();
                             });
                       },
                       child: Icon(
@@ -691,13 +531,36 @@ class ShareCard extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                Text(
-                  "Invite friends and get ₹ 25 each when your friend makes their first investment.",
-                  style: TextStyle(
-                      color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+                RichText(
+                  text: new TextSpan(
+                    children: [
+                      new TextSpan(
+                          text: 'Both you and your friend receive ',
+                          style: GoogleFonts.montserrat(
+                              color: Colors.white,
+                              fontSize: SizeConfig.mediumTextSize * 1.12,
+                              height: 1.5),
+                          children: [
+                            new TextSpan(
+                              text: '₹ 25',
+                              style: TextStyle(fontWeight: FontWeight.w700),
+                            ),
+                            new TextSpan(
+                              text: ' and ',
+                            ),
+                            new TextSpan(
+                              text: '10 gaming tickets',
+                              style: TextStyle(fontWeight: FontWeight.w700),
+                            ),
+                            new TextSpan(
+                              text: ' for every successful referral!',
+                            )
+                          ]),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 20),
-                ShareOptions(),
+                const SizedBox(height: 20),
+                const ShareOptions(),
               ],
             ),
           )
@@ -705,31 +568,10 @@ class ShareCard extends StatelessWidget {
       ),
     );
   }
-
-  Widget referralTile(String title, double rightPad) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 20.0, right: rightPad),
-      child: Row(
-        children: [
-          Icon(
-            Icons.brightness_1,
-            size: 12,
-            color: UiConstants.primaryColor,
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              title,
-              style: GoogleFonts.montserrat(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 class ShareOptions extends StatefulWidget {
+  const ShareOptions();
   @override
   _ShareOptionsState createState() => _ShareOptionsState();
 }

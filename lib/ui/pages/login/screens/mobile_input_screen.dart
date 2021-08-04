@@ -23,12 +23,6 @@ class MobileInputScreenState extends State<MobileInputScreen> {
   static final GlobalKey<FormFieldState<String>> _phoneFieldKey =
       GlobalKey<FormFieldState<String>>();
 
-  // @override
-  // void initState() {
-  //   Future.delayed(Duration(seconds: 2), showAvailablePhoneNumbers);
-  //   super.initState();
-  // }
-
   void showAvailablePhoneNumbers() async {
     if (Platform.isAndroid && showAvailableMobileNos) {
       final SmsAutoFill _autoFill = SmsAutoFill();
@@ -92,8 +86,8 @@ class MobileInputScreenState extends State<MobileInputScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 24),
-            Text(
+            const SizedBox(height: 24),
+            const Text(
                 "For verification purposes, an OTP shall be sent to this number."),
           ],
           //)

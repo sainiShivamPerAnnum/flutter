@@ -9,7 +9,7 @@ import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/elements/bottom_navbar.dart';
+import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/modals/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
@@ -146,12 +146,16 @@ class _RootState extends State<Root> {
         }
       });
       _initAdhocNotifications();
-      if (baseProvider.app_open_count == 3 &&
+
+      // show security modal
+      if (baseProvider.show_security_prompt &&
+          baseProvider.myUser.isAugmontOnboarded &&
           baseProvider.myUser.userPreferences
                   .getPreference(Preferences.APPLOCK) ==
               0) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _showSecurityBottomSheet();
+          lclDbProvider.updateSecurityPrompt(false);
         });
       }
       baseProvider.isUnreadFreshchatSupportMessages().then((flag) {

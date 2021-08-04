@@ -7,7 +7,8 @@ class AugmontRegnSecurityDialog extends StatelessWidget {
   final String imagePath;
   double _height, _width;
 
-  AugmontRegnSecurityDialog({@required this.title, @required this.text, this.imagePath});
+  AugmontRegnSecurityDialog(
+      {@required this.title, @required this.text, this.imagePath});
 
   @override
   Widget build(BuildContext context) {
@@ -38,19 +39,18 @@ class AugmontRegnSecurityDialog extends StatelessWidget {
                 ),
                 (imagePath != null && imagePath.isNotEmpty)
                     ? Image.asset(
-                  imagePath,
-                  alignment: Alignment.center,
-                  fit: BoxFit.contain,
-                  height: 150,
-                  width: 150,
-                )
+                        imagePath,
+                        alignment: Alignment.center,
+                        fit: BoxFit.contain,
+                        height: 150,
+                        width: 150,
+                      )
                     : Container(),
                 Text(
                   text,
                   textAlign: TextAlign.justify,
                   style: TextStyle(
-                      fontSize: SizeConfig.smallTextSize*1.4,
-
+                    fontSize: SizeConfig.smallTextSize * 1.4,
                   ),
                 ),
                 SizedBox(
