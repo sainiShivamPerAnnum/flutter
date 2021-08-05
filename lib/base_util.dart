@@ -23,6 +23,7 @@ import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -226,6 +227,8 @@ class BaseUtil extends ChangeNotifier {
         _dailyPickCount = int.parse(_dpc);
       } catch (e) {
         log.error('key parsing failed: ' + e.toString());
+        Map<String,String> errorDetails = {'User number': _myUser.mobile, 'Error message' : e.toString()};
+        _dbModel.logFailure(_myUser.uid, FailType.DailyPickParseFailed, errorDetails);
         _dailyPickCount = 5;
       }
 
@@ -264,6 +267,8 @@ class BaseUtil extends ChangeNotifier {
       return (unreadCount['count'] > 0);
     } catch (e) {
       log.error('Error reading unread count variable: $e');
+      var errorDetails = {'User number' : _myUser.mobile, 'Error Type' : 'Unread message count failed', 'Error message' : e.toString()};
+      _dbModel.logFailure(_myUser.uid, FailType.FreshchatFail, errorDetails);
       return false;
     }
   }
@@ -718,6 +723,10 @@ class BaseUtil extends ChangeNotifier {
           BaseUtil.digitPrecision(userFundWallet.augGoldQuantity * gSellRate);
       notifyListeners(); //might cause ui error if screen no longer active
     }).catchError((err) {
+      if(_myUser.uid!=null) {
+        var errorDetails = {'Error message': err.toString()};
+        _dbModel.logFailure(_myUser.uid, FailType.UserAugmontBalanceUpdateFailed,errorDetails);
+      }
       print('$err');
     });
   }

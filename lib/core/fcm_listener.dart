@@ -7,6 +7,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -233,6 +234,10 @@ class FcmListener extends ChangeNotifier {
       _baseUtil.toggleTambolaNotificationStatus(val);
     } catch (e) {
       log.error(e.toString());
+      if(_baseUtil.myUser.uid!=null) {
+        var errorDetails = {'Error Message' : e.toString()};
+        _dbModel.logFailure(_baseUtil.myUser.uid, FailType.TambolaDrawNotificationSettingFailed, errorDetails);
+      }
       _baseUtil.showNegativeAlert(
           "Snap!", "Please try again", delegate.navigatorKey.currentContext);
     }
