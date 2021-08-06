@@ -174,18 +174,18 @@ class Api {
     return _db
         .runTransaction((transaction) async {
           DocumentSnapshot snapshot = await transaction.get(_rRef);
-          if (!snapshot.exists) {
+          Map<String, dynamic> snapData = (snapshot.exists)?snapshot.data():null;
+          if (!snapshot.exists && snapData == null) {
             //did not sign up via referral
             throw Exception('No referral found');
-          } else if (snapshot.data() == null ||
-              snapshot.data()[ReferralDetail.fldUsrBonusFlag] == null ||
-              snapshot.data()[ReferralDetail.fldRefereeBonusFlag] == null) {
+          } else if (snapData[ReferralDetail.fldUsrBonusFlag] == null ||
+              snapData[ReferralDetail.fldRefereeBonusFlag] == null) {
             throw Exception('Empty/invalid data');
           } else {
             bool _uFlag, _rFlag;
             try {
-              _uFlag = snapshot.data()[ReferralDetail.fldUsrBonusFlag];
-              _rFlag = snapshot.data()[ReferralDetail.fldRefereeBonusFlag];
+              _uFlag = snapData[ReferralDetail.fldUsrBonusFlag];
+              _rFlag = snapData[ReferralDetail.fldRefereeBonusFlag];
             } catch (e) {
               throw Exception('Failed to create bool flags');
             }

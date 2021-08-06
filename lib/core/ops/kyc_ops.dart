@@ -122,7 +122,7 @@ class KYCModel extends ChangeNotifier {
     String jsonBody = json.encode(body);
 
     http.Response response = await http.post(
-      KycUrls.createOnboardingObject,
+      Uri.https(KycUrls.defaultBaseUri, KycUrls.createOnboardingObject),
       body: jsonBody,
       headers: rHeaders,
     );
@@ -160,7 +160,7 @@ class KYCModel extends ChangeNotifier {
 
     String jsonBody = json.encode(body);
     http.Response response = await http.post(
-      KycUrls.login,
+      Uri.https(KycUrls.defaultBaseUri, KycUrls.login),
       body: jsonBody,
       headers: rHeaders,
     );

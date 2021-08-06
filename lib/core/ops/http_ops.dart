@@ -13,11 +13,11 @@ import 'package:http/http.dart' as http;
 class HttpModel extends ChangeNotifier {
   BaseUtil _baseUtil = locator<BaseUtil>(); //required to fetch client token
   final Log log = new Log('HttpModel');
-  static const String WRAPPED_BASE_URI = 'https://fello-team.web.app';
+  static const String WRAPPED_BASE_URI = 'fello-team.web.app';
   static const String ASIA_BASE_URI =
-      'https://asia-south1-fello-d3a9c.cloudfunctions.net';
+      'asia-south1-fello-d3a9c.cloudfunctions.net';
   static const String US_BASE_URI =
-      'https://us-central1-fello-d3a9c.cloudfunctions.net';
+      'us-central1-fello-d3a9c.cloudfunctions.net';
 
   ///Returns the number of tickets that need to be added to user's balance
   Future<int> postUserReferral(
@@ -26,8 +26,9 @@ class HttpModel extends ChangeNotifier {
     String idToken = await _baseUtil.firebaseUser.getIdToken();
     log.debug('Fetched user IDToken: ' + idToken);
     try {
-      http.Response _response = await http.post(
-          '$WRAPPED_BASE_URI/validateUserReferral?uid=$userId&rid=$referee&uname=$userName',
+      Uri _uri = Uri.https(WRAPPED_BASE_URI, '/validateUserReferral',
+          {'uid': userId, 'rid': referee, 'uname': userName});
+      http.Response _response = await http.post(_uri,
           headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
       log.debug(_response.body);
       if (_response.statusCode == 200) {
@@ -71,8 +72,11 @@ class HttpModel extends ChangeNotifier {
 
     String amx = (amount * 100).round().toString();
     String _stage = Constants.activeRazorpayStage.value();
-    String _uri = '$US_BASE_URI/razorpayops/$_stage/api/orderid?amount=$amx';
-    if (notes != null) _uri = _uri + '&notes=${Uri.encodeComponent(notes)}';
+    Map<String, dynamic> queryMap = {'amount': amx};
+    if (notes != null) queryMap['notes'] = Uri.encodeComponent(notes);
+
+    final Uri _uri =
+        Uri.https(US_BASE_URI, '/razorpayops/$_stage/api/orderid', queryMap);
     log.debug('URL: $_uri');
 
     try {
@@ -100,8 +104,10 @@ class HttpModel extends ChangeNotifier {
     log.debug('Fetched user IDToken: ' + idToken);
 
     String _stage = Constants.activeRazorpayStage.value();
-    String _uri =
-        '$US_BASE_URI/razorpayops/$_stage/api/signature?orderid=$orderId&payid=$paymentId';
+    final Uri _uri = Uri.https(
+        US_BASE_URI,
+        '/razorpayops/$_stage/api/signature',
+        {'orderid': orderId, 'payid': paymentId});
     log.debug('URL: $_uri');
 
     try {
@@ -120,8 +126,14 @@ class HttpModel extends ChangeNotifier {
   Future<bool> registerPrizeClaim(
       String userId, double amount, PrizeClaimChoice claimChoice) async {
     if (userId == null || amount == null || claimChoice == null) return null;
-    String _uri =
-        '$US_BASE_URI/userTxnOps/api/registerPrizeClaim?userId=$userId&amount=$amount&redeemType=${claimChoice.value()}';
+
+    ///    '$US_BASE_URI/userTxnOps/api/registerPrizeClaim?userId=$userId&amount=$amount&redeemType=${claimChoice.value()}';
+    final Uri _uri = Uri.https(
+        US_BASE_URI, '/userTxnOps/api/registerPrizeClaim', {
+      'userId': userId,
+      'amount': amount,
+      'redeemType': claimChoice.value()
+    });
     log.debug('URL: $_uri');
 
     String idToken;
@@ -155,12 +167,13 @@ class HttpModel extends ChangeNotifier {
     log.debug('Fetched user IDToken: ' + idToken);
 
     //build request
-    String _uri = '$ASIA_BASE_URI/userSearch/dev/api/isemailregd';
+    final Uri _uri =
+        Uri.https(ASIA_BASE_URI, '/userSearch/dev/api/isemailregd');
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
       HttpHeaders.authorizationHeader: 'Bearer $idToken'
     };
-    var request = http.Request('POST', Uri.parse(_uri));
+    var request = http.Request('POST', _uri);
     request.bodyFields = {'uid': userId, 'email': email};
     request.headers.addAll(headers);
 
@@ -191,12 +204,12 @@ class HttpModel extends ChangeNotifier {
     log.debug('Fetched user IDToken: ' + idToken);
 
     //build request
-    String _uri = '$ASIA_BASE_URI/userSearch/dev/api/ispanregd';
+    final Uri _uri = Uri.https(ASIA_BASE_URI, '/userSearch/dev/api/ispanregd');
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
       HttpHeaders.authorizationHeader: 'Bearer $idToken'
     };
-    var request = http.Request('POST', Uri.parse(_uri));
+    var request = http.Request('POST', _uri);
     request.bodyFields = {'pan': pan};
     request.headers.addAll(headers);
     try {
@@ -228,12 +241,12 @@ class HttpModel extends ChangeNotifier {
     log.debug('Fetched user IDToken: ' + idToken);
 
     //build request
-    String _uri = '$ASIA_BASE_URI/encoderops/api/encrypt';
+    final Uri _uri = Uri.https(ASIA_BASE_URI, '/encoderops/api/encrypt');
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
       HttpHeaders.authorizationHeader: 'Bearer $idToken'
     };
-    var request = http.Request('POST', Uri.parse(_uri));
+    var request = http.Request('POST', _uri);
     request.bodyFields = {'etext': encText, 'eversion': encVersion.toString()};
     request.headers.addAll(headers);
 
@@ -266,12 +279,12 @@ class HttpModel extends ChangeNotifier {
     log.debug('Fetched user IDToken: ' + idToken);
 
     //build request
-    String _uri = '$ASIA_BASE_URI/encoderops/api/decrypt';
+    final Uri _uri = Uri.https(ASIA_BASE_URI, '/encoderops/api/decrypt');
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
       HttpHeaders.authorizationHeader: 'Bearer $idToken'
     };
-    var request = http.Request('POST', Uri.parse(_uri));
+    var request = http.Request('POST', _uri);
     request.bodyFields = {'dtext': decText, 'dversion': decVersion.toString()};
     request.headers.addAll(headers);
 
