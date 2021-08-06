@@ -22,7 +22,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
+// import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share/share.dart';
@@ -900,29 +900,31 @@ class _CloseCardState extends State<CloseCard> {
         String dt = DateTime.now().toString();
         Directory directory;
         if (Platform.isAndroid) {
-          if (await _requestPermission(Permission.storage)) {
-            directory = await getExternalStorageDirectory();
-            print(directory.path);
-            String newPath = "";
-            List<String> folders = directory.path.split('/');
-            for (int i = 1; i < folders.length; i++) {
-              String folder = folders[i];
-              if (folder != "Android")
-                newPath += '/' + folder;
-              else
-                break;
-            }
-            newPath = newPath + "/Fello";
-            print(newPath);
-            directory = Directory(newPath);
-          } else {
-            return false;
+          directory = await getExternalStorageDirectory();
+          print(directory.path);
+          String newPath = "";
+          List<String> folders = directory.path.split('/');
+          for (int i = 1; i < folders.length; i++) {
+            String folder = folders[i];
+            if (folder != "Android")
+              newPath += '/' + folder;
+            else
+              break;
           }
+          newPath = newPath + "/Fello";
+          print(newPath);
+          directory = Directory(newPath);
+          ///TODO: permission_handler not working
+          // if (await _requestPermission(Permission.storage)) {
+          //
+          // } else {
+          //   return false;
+          // }
         } else {
-          if (await _requestPermission(Permission.photos)) {
-            directory = await getTemporaryDirectory();
-          } else
-            return false;
+          directory = await getTemporaryDirectory();
+          // if (await _requestPermission(Permission.photos)) {
+          // } else
+          //   return false;
         }
 
         if (!await directory.exists()) await directory.create(recursive: true);
@@ -953,15 +955,15 @@ class _CloseCardState extends State<CloseCard> {
     }
   }
 
-  Future<bool> _requestPermission(Permission permission) async {
-    if (await permission.isGranted) {
-      return true;
-    } else {
-      var res = await permission.request();
-      if (res == PermissionStatus.granted)
-        return true;
-      else
-        return false;
-    }
-  }
+  // Future<bool> _requestPermission(Permission permission) async {
+  //   if (await permission.isGranted) {
+  //     return true;
+  //   } else {
+  //     var res = await permission.request();
+  //     if (res == PermissionStatus.granted)
+  //       return true;
+  //     else
+  //       return false;
+  //   }
+  // }
 }

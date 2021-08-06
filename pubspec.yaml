@@ -29,7 +29,7 @@ dependencies:
   freshchat_sdk: ^0.6.0
   path: ^1.8.0
   path_provider: ^2.0.2
-  permission_handler: ^8.1.4+2
+#  permission_handler: ^7.2.0
   provider: ^5.0.0
   get_it: ^7.2.0
   geolocator: ^7.4.0
