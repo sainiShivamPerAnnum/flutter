@@ -181,8 +181,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                   onPressed: () async {
                                     var _status =
                                         await Permission.photos.status;
-                                    if (_status.isUndetermined ||
-                                        _status.isRestricted ||
+                                    if (_status.isRestricted ||
                                         _status.isLimited ||
                                         _status.isDenied) {
                                       showDialog(
