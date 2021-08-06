@@ -22,9 +22,9 @@ if (flutterVersionName == null) {
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-apply plugin: 'com.google.gms.google-services'
 
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
@@ -33,7 +33,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 29
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -46,7 +46,7 @@ android {
     defaultConfig {
         applicationId "in.fello.felloapp"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 29
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
