@@ -13,7 +13,6 @@ import 'package:felloapp/core/model/ReferralLeader.dart';
 import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
-import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTicketWallet.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -72,7 +71,6 @@ class BaseUtil extends ChangeNotifier {
   AugmontRates augmontGoldRates;
 
   ///KYC global object
-  UserKycDetail _kycDetail;
   TambolaWinnersDetail tambolaWinnersDetail;
   List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
@@ -467,7 +465,6 @@ class BaseUtil extends ChangeNotifier {
       _augmontDetail = null;
       augmontGoldRates = null;
       _currentAugmontTxn = null;
-      _kycDetail = null;
       tambolaWinnersDetail = null;
       prizeLeaders = [];
       referralLeaders = [];
@@ -836,12 +833,6 @@ class BaseUtil extends ChangeNotifier {
 
   set iciciDetail(UserIciciDetail value) {
     _iciciDetail = value;
-  }
-
-  UserKycDetail get kycDetail => _kycDetail;
-
-  set kycDetail(UserKycDetail value) {
-    _kycDetail = value;
   }
 
   UserTransaction get currentICICITxn => _currentICICITxn;

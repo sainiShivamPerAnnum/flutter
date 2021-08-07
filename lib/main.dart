@@ -5,7 +5,6 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
-import 'package:felloapp/core/ops/kyc_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
@@ -74,7 +73,6 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => locator<LocalDBModel>()),
         ChangeNotifierProvider(create: (_) => locator<HttpModel>()),
         ChangeNotifierProvider(create: (_) => locator<ICICIModel>()),
-        ChangeNotifierProvider(create: (_) => locator<KYCModel>()),
         ChangeNotifierProvider(create: (_) => locator<RazorpayModel>()),
         ChangeNotifierProvider(create: (_) => locator<AugmontModel>()),
         ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
