@@ -11,6 +11,7 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
+import 'package:felloapp/ui/dialogs/tambola_user_results_dialog.dart';
 import 'package:felloapp/ui/elements/Texts/marquee_text.dart';
 import 'package:felloapp/ui/elements/custom-art/profile-card.dart';
 import 'package:felloapp/ui/modals/share_info_modal.dart';
@@ -331,9 +332,16 @@ class TermsRow extends StatelessWidget {
                   color: Colors.grey, decoration: TextDecoration.underline),
             ),
             onTap: () {
-              HapticFeedback.vibrate();
-              delegate.appState.currentAction =
-                  PageAction(state: PageState.addPage, page: TncPageConfig);
+              // HapticFeedback.vibrate();
+              // delegate.appState.currentAction =
+              //     PageAction(state: PageState.addPage, page: TncPageConfig);
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => TambolaResultsDialog(
+                  winningsMap: {"23453": 1, "324325": 2},
+                  isEligible: false,
+                ),
+              );
             },
           ),
         ),

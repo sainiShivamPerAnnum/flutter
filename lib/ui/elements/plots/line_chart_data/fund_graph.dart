@@ -1,9 +1,13 @@
 import 'package:felloapp/core/ops/augmont_ops.dart';
+import 'package:felloapp/ui/elements/plots/line_chart_data/axis_chart/axis_chart_data.dart';
+import 'package:felloapp/ui/elements/plots/line_chart_data/base_chart/base_chart_data.dart';
+import 'package:felloapp/ui/elements/plots/line_chart_data/line_chart/line_chart.dart';
+import 'package:felloapp/ui/elements/plots/line_chart_data/line_chart/line_chart_data.dart';
 import 'package:felloapp/util/fundPalettes.dart';
 import 'package:felloapp/util/size_config.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
