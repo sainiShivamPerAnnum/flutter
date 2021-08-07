@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -19,10 +20,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
-import 'package:permission_handler/permission_handler.dart';
+// import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../base_util.dart';
 
 class UserProfileDetails extends StatefulWidget {
   @override
@@ -179,44 +179,44 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                 ),
                                 child: IconButton(
                                   onPressed: () async {
-                                    var _status =
-                                        await Permission.photos.status;
-                                    if (_status.isUndetermined ||
-                                        _status.isRestricted ||
-                                        _status.isLimited ||
-                                        _status.isDenied) {
-                                      showDialog(
-                                          context: context,
-                                          builder: (ctx) {
-                                            return ConfirmActionDialog(
-                                                title: "Request Permission",
-                                                description:
-                                                    "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
-                                                buttonText: "Continue",
-                                                asset: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: 8),
-                                                  child: Image.asset(
-                                                      "images/gallery.png",
-                                                      height: SizeConfig
-                                                              .screenWidth *
-                                                          0.24),
-                                                ),
-                                                confirmAction: () {
-                                                  Navigator.pop(context);
-                                                  chooseprofilePicture();
-                                                },
-                                                cancelAction: () =>
-                                                    Navigator.pop(context));
-                                          });
-                                    } else if (_status.isGranted) {
-                                      chooseprofilePicture();
-                                    } else {
-                                      baseProvider.showNegativeAlert(
-                                          'Permission Unavailable',
-                                          'Please enable permission from settings to continue',
-                                          context);
-                                    }
+                                    ///TODO:: permission_handler not working
+                                    chooseprofilePicture();
+                                    // var _status =
+                                    //     await Permission.photos.status;
+                                    // if (_status.isRestricted ||
+                                    //     _status.isLimited ||
+                                    //     _status.isDenied) {
+                                    //   showDialog(
+                                    //       context: context,
+                                    //       builder: (ctx) {
+                                    //         return ConfirmActionDialog(
+                                    //             title: "Request Permission",
+                                    //             description:
+                                    //                 "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
+                                    //             buttonText: "Continue",
+                                    //             asset: Padding(
+                                    //               padding: EdgeInsets.symmetric(
+                                    //                   vertical: 8),
+                                    //               child: Image.asset(
+                                    //                   "images/gallery.png",
+                                    //                   height: SizeConfig
+                                    //                           .screenWidth *
+                                    //                       0.24),
+                                    //             ),
+                                    //             confirmAction: () {
+                                    //               Navigator.pop(context);
+                                    //               chooseprofilePicture();
+                                    //             },
+                                    //             cancelAction: () =>
+                                    //                 Navigator.pop(context));
+                                    //       });
+                                    // } else if (_status.isGranted) {
+                                    // } else {
+                                    //   baseProvider.showNegativeAlert(
+                                    //       'Permission Unavailable',
+                                    //       'Please enable permission from settings to continue',
+                                    //       context);
+                                    // }
                                   },
                                   icon: Icon(Icons.camera),
                                   color: UiConstants.primaryColor,

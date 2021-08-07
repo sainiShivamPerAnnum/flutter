@@ -28,7 +28,11 @@ FelloBackButtonDispatcher backButtonDispatcher;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  try {
+    await Firebase.initializeApp();
+  }catch(e) {
+    print(e.toString());
+  }
   FirebaseMessaging.onBackgroundMessage(FcmListener.backgroundMessageHandler);
   setupLocator();
   runApp(MyApp());

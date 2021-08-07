@@ -88,8 +88,9 @@ class DBModel extends ChangeNotifier {
     try {
       var doc = await _api.getUserPrtdDocPan(uid);
       if (doc.exists && doc.data() != null) {
-        String val = doc.data()['value'];
-        int enid = doc.data()['enid'];
+        Map<String, dynamic> _snapshotData = doc.data();
+        String val = _snapshotData['value'];
+        int enid = _snapshotData['enid'];
         if (val == null || val.isEmpty || enid == 0)
           return null;
         else
@@ -274,7 +275,7 @@ class DBModel extends ChangeNotifier {
 
       List<TambolaBoard> _requestedBoards = [];
       for (QueryDocumentSnapshot _docSnapshot in _querySnapshot.docs) {
-        if (!_docSnapshot.exists || _docSnapshot.data().isEmpty) continue;
+        if (!_docSnapshot.exists || _docSnapshot.data() == null) continue;
         TambolaBoard _board =
             TambolaBoard.fromMap(_docSnapshot.data(), _docSnapshot.id);
         if (_board.isValid()) _requestedBoards.add(_board);
@@ -314,7 +315,7 @@ class DBModel extends ChangeNotifier {
       //there should only be one document for a week
       if (querySnapshot != null && querySnapshot.docs.length == 1) {
         DocumentSnapshot snapshot = querySnapshot.docs[0];
-        if (snapshot.exists && snapshot.data().isNotEmpty) {
+        if (snapshot.exists && snapshot.data() == null) {
           _detail = TambolaWinnersDetail.fromMap(snapshot.data(), snapshot.id);
         }
       }
@@ -376,11 +377,12 @@ class DBModel extends ChangeNotifier {
         'aws-icici', Constants.activeAwsIciciStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
-      if (snapshot.exists && snapshot.data()['apiKey'] != null) {
-        log.debug('Found apiKey: ' + snapshot.data()['apiKey']);
+      Map<String, dynamic> _doc = snapshot.data();
+      if (snapshot.exists && _doc != null && _doc['apiKey'] != null) {
+        log.debug('Found apiKey: ' + _doc['apiKey']);
         return {
-          'baseuri': snapshot.data()['base_url'],
-          'key': snapshot.data()['apiKey']
+          'baseuri': _doc['base_url'],
+          'key': _doc['apiKey']
         };
       }
     }
@@ -403,11 +405,12 @@ class DBModel extends ChangeNotifier {
         'aws-augmont', Constants.activeAwsAugmontStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
-      if (snapshot.exists && snapshot.data()['apiKey'] != null) {
-        log.debug('Found apiKey: ' + snapshot.data()['apiKey']);
+      Map<String, dynamic> _doc = snapshot.data();
+      if (snapshot.exists && _doc != null && _doc['apiKey'] != null) {
+        log.debug('Found apiKey: ' + _doc['apiKey']);
         return {
-          'baseuri': snapshot.data()['base_url'],
-          'key': snapshot.data()['apiKey']
+          'baseuri': _doc['base_url'],
+          'key': _doc['apiKey']
         };
       }
     }
@@ -421,11 +424,12 @@ class DBModel extends ChangeNotifier {
         'signzy', Constants.activeSignzyStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
-      if (snapshot.exists && snapshot.data()['apiKey'] != null) {
-        log.debug('Found apiKey: ' + snapshot.data()['apiKey']);
+      Map<String, dynamic> _doc = snapshot.data();
+      if (snapshot.exists && _doc != null && _doc['apiKey'] != null) {
+        log.debug('Found apiKey: ' + _doc['apiKey']);
         return {
-          'baseuri': snapshot.data()['base_url'],
-          'key': snapshot.data()['apiKey']
+          'baseuri': _doc['base_url'],
+          'key': _doc['apiKey']
         };
       }
     }
@@ -530,7 +534,8 @@ class DBModel extends ChangeNotifier {
       [String pollId = Constants.POLL_NEXTGAME_ID]) async {
     try {
       DocumentSnapshot snapshot = await _api.getPollDocument(pollId);
-      if (snapshot.exists && snapshot.data().length > 0) {
+      Map<String, dynamic> _doc = snapshot.data();
+      if (snapshot.exists && _doc.length > 0) {
         return snapshot.data();
       }
     } catch (e) {
@@ -599,9 +604,10 @@ class DBModel extends ChangeNotifier {
       if (_querySnapshot == null || _querySnapshot.size != 1) return [];
 
       DocumentSnapshot _docSnapshot = _querySnapshot.docs[0];
-      if (!_docSnapshot.exists || _docSnapshot.data()['leaders'] == [])
+      Map<String, dynamic> _doc = _docSnapshot.data();
+      if (!_docSnapshot.exists || _doc == null || _doc['leaders'] == [])
         return null;
-      Map<String, dynamic> leaderMap = _docSnapshot.data()['leaders'];
+      Map<String, dynamic> leaderMap = _doc['leaders'];
       log.debug('Referral Leader Map: $leaderMap');
 
       List<ReferralLeader> leaderList = [];
@@ -633,9 +639,10 @@ class DBModel extends ChangeNotifier {
       if (_querySnapshot == null || _querySnapshot.size != 1) return [];
 
       DocumentSnapshot _docSnapshot = _querySnapshot.docs[0];
-      if (!_docSnapshot.exists || _docSnapshot.data()['leaders'] == [])
+      Map<String, dynamic> _doc = _docSnapshot.data();
+      if (!_docSnapshot.exists || _doc == null || _doc['leaders'] == [])
         return null;
-      Map<String, dynamic> leaderMap = _docSnapshot.data()['leaders'];
+      Map<String, dynamic> leaderMap = _doc['leaders'];
       log.debug('Prize Leader Map: $leaderMap');
 
       List<PrizeLeader> leaderList = [];
@@ -668,7 +675,8 @@ class DBModel extends ChangeNotifier {
     try {
       DocumentSnapshot snapshot = await _api.getUserReferDoc(uid);
       // .getReferralDocs(uid);
-      if (snapshot.exists && snapshot.data().isNotEmpty) {
+      Map<String, dynamic> _doc = snapshot.data();
+      if (snapshot.exists && _doc != null && _doc.isNotEmpty) {
         return ReferralDetail.fromMap(snapshot.data());
       }
     } catch (e) {
@@ -683,7 +691,8 @@ class DBModel extends ChangeNotifier {
       List<ReferralDetail> _refDetail = [];
       if (querySnapshot.size > 0) {
         for (QueryDocumentSnapshot snapshot in querySnapshot.docs) {
-          if (snapshot.exists && snapshot.data().isNotEmpty) {
+          Map<String, dynamic> _doc = snapshot.data();
+          if (snapshot.exists && _doc != null && _doc.isNotEmpty) {
             ReferralDetail _detail = ReferralDetail.fromMap(snapshot.data());
             _refDetail.add(_detail);
           }
@@ -976,7 +985,8 @@ class DBModel extends ChangeNotifier {
       else {
         double _netQuantity = 0.0;
         for (QueryDocumentSnapshot snapshot in querySnapshot.docs) {
-          if (snapshot.exists && snapshot.data().isNotEmpty) {
+          Map<String, dynamic> _doc = snapshot.data();
+          if (snapshot.exists && _doc != null && _doc.isNotEmpty) {
             UserTransaction _txn =
                 UserTransaction.fromMap(snapshot.data(), snapshot.id);
             if (_txn != null &&
@@ -1102,9 +1112,10 @@ class DBModel extends ChangeNotifier {
       QuerySnapshot querySnapshot = await _api.getHomeCardCollection();
       if (querySnapshot != null && querySnapshot.docs.length > 0) {
         for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+          Map<String, dynamic> _doc = documentSnapshot.data();
           if (documentSnapshot != null &&
-              documentSnapshot.exists &&
-              documentSnapshot.data().length > 0)
+              documentSnapshot.exists && _doc != null &&
+              _doc.length > 0)
             _cards.add(FeedCard.fromMap(documentSnapshot.data()));
         }
       }
