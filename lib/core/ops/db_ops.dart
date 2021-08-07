@@ -15,7 +15,6 @@ import 'package:felloapp/core/model/TicketRequest.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
-import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTicketWallet.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/service/api.dart';
@@ -137,29 +136,6 @@ class DBModel extends ChangeNotifier {
       return true;
     } catch (e) {
       log.error("Failed to update user icici detail object: " + e.toString());
-      return false;
-    }
-  }
-
-  /////////////////////KYC/////////////////////////////////
-  Future<UserKycDetail> getUserKycDetails(String id) async {
-    try {
-      var doc = await _api.getUserKycDetailDocument(id);
-      // print(UserKycDetail.fromMap(doc.data()));
-      return UserKycDetail.fromMap(doc.data());
-    } catch (e) {
-      log.error('Failed to fetch user kyc details: $e');
-      return null;
-    }
-  }
-
-  Future<bool> updateUserKycDetails(
-      String userId, UserKycDetail kycDetail) async {
-    try {
-      await _api.updateUserKycDetailDocument(userId, kycDetail.toJson());
-      return true;
-    } catch (e) {
-      log.error("Failed to update user kyc detail object: " + e.toString());
       return false;
     }
   }

@@ -6,7 +6,6 @@ import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -15,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class FcmListener extends ChangeNotifier {
   Log log = new Log("FcmListener");

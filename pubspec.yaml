@@ -21,7 +21,6 @@ dependencies:
   firebase_database: ^6.0.0
   google_sign_in: ^4.5.9
   #core packages
-  connectivity: ^0.4.6+2
   encrypt: ^4.1.0
   flutter_local_notifications: ^4.0.1+2
   flutter_html_to_pdf: ^0.6.0
@@ -31,7 +30,6 @@ dependencies:
   permission_handler: ^5.1.0+2
   provider: ^5.0.0
   get_it: ^6.0.0
-  geolocator: ^6.1.14
   http: ^0.12.0+3
   open_file: ^3.1.0 #for opening pdfs
   package_info: ^2.0.0
@@ -58,16 +56,11 @@ dependencies:
   google_fonts: ^1.1.1
   image_picker: ^0.6.7+21
   lottie: ^0.7.0+1
-  modal_progress_hud: ^0.1.3
   screenshot: ^1.2.1
-  scratcher: ^1.4.0
   showcaseview: ^0.1.6
   shimmer_animation : ^2.1.0+1
-  signature: ^3.2.0
   slider_button: ^0.6.0
   sms_autofill: ^2.0.0
-  video_player: ^1.0.1
-  webview_flutter: ^1.0.7
 
   flutter:
     sdk: flutter
