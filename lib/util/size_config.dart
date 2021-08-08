@@ -6,14 +6,11 @@ class SizeConfig {
   static double screenHeight;
   static double blockSizeHorizontal;
   static double blockSizeVertical;
-
   static double smallTextSize;
   static double mediumTextSize;
   static double largeTextSize;
   static double cardTitleTextSize;
-
   static BorderRadius homeViewBorder;
-
   static bool isGamefirstTime;
 
   void init(BuildContext context) {

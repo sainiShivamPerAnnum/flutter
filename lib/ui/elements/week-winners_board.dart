@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class WeekWinnerBoard extends StatefulWidget {
+  const WeekWinnerBoard();
   @override
   _WeekWinnerBoardState createState() => _WeekWinnerBoardState();
 }

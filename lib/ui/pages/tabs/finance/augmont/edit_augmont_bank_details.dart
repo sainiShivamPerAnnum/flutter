@@ -2,7 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
-import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';

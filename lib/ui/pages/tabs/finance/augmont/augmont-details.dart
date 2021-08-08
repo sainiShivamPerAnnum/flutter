@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/fcm_listener.dart';
@@ -12,9 +11,9 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
-import 'package:felloapp/ui/elements/fund_graph.dart';
-import 'package:felloapp/ui/elements/fund_info.dart';
-import 'package:felloapp/ui/elements/gold_profit_calculator.dart';
+import 'package:felloapp/ui/elements/plots/fund_graph.dart';
+import 'package:felloapp/ui/elements/Texts/marquee_text.dart';
+import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
 import 'package:felloapp/util/assets.dart';
@@ -138,20 +137,32 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
           SingleChildScrollView(
             child: Column(
               children: [
-                FundInfo(
+                MarqueeText(
                   infoList: [
                     "24k Digital Gold",
                     "99.99% Purity",
                     "17% growth rate in 3 years",
                     "Ranked no 1 bullion in India"
                   ],
+                  showBullet: true,
                 ),
                 Container(
                     width: SizeConfig.screenWidth,
                     padding: EdgeInsets.symmetric(vertical: 20),
                     child: LineChartWidget()),
                 FundDetailsTable(baseProvider.userFundWallet.augGoldQuantity),
-                GoldProfitCalculator(),
+                // GoldProfitCalculator(),
+                ProfitCalculator(
+                  calFactor: (0.17 / 12),
+                  invGradient: [
+                    augmontGoldPalette.secondaryColor.withBlue(800),
+                    augmontGoldPalette.secondaryColor
+                  ],
+                  retGradient: [
+                    augmontGoldPalette.primaryColor,
+                    augmontGoldPalette.primaryColor2
+                  ],
+                ),
                 FAQCard(Assets.goldFaqHeaders, Assets.goldFaqAnswers,
                     augmontGoldPalette.primaryColor),
                 _buildBetaWithdrawButton(),

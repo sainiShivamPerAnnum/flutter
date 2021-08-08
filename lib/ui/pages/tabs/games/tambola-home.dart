@@ -16,7 +16,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/tambola_dialog.dart';
 import 'package:felloapp/ui/dialogs/tambola_user_results_dialog.dart';
 import 'package:felloapp/ui/dialogs/weekly_draw_dialog.dart';
-import 'package:felloapp/ui/elements/board_selector.dart';
+import 'package:felloapp/ui/elements/unused/board_selector.dart';
 import 'package:felloapp/ui/elements/roulette.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola-cards.dart';
@@ -28,6 +28,7 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_card_swipper/flutter_card_swiper.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -54,6 +55,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
   FcmHandler fcmProvider;
   LocalDBModel localDBModel;
   AppState appState;
+  SwiperController ticketsController;
 
   bool ticketsBeingGenerated = true;
   bool dailyPickHeaderWithTimings = false;
@@ -73,6 +75,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
   void initState() {
     super.initState();
     initDailyPickFlags();
+    ticketsController = SwiperController();
     BaseAnalytics.analytics
         .setCurrentScreen(screenName: BaseAnalytics.PAGE_TAMBOLA);
     _tambolaTicketService = new TambolaGenerationService();
@@ -910,21 +913,35 @@ class _TambolaGameScreen extends State<TambolaHome> {
             baseProvider.userWeeklyBoards[i], baseProvider.weeklyDigits));
       }
 
-      _widget = BaseUtil.buildShowcaseWrapper(
-          _showcaseThree,
-          Assets.showCaseDesc[2],
-          CardSelector(
-              cards: _tambolaBoardViews.toList(),
-              mainCardWidth: SizeConfig.screenWidth * 0.8,
-              mainCardHeight: SizeConfig.screenHeight * 0.16,
-              mainCardPadding: 4.0,
-              dropTargetWidth: 0,
-              cardAnimationDurationMs: 500,
-              onChanged: (i) {
-                _currentBoard = baseProvider.userWeeklyBoards[i];
-                _currentBoardView = _tambolaBoardViews[i];
-                setState(() {});
-              }));
+      _widget = Container(
+        width: SizeConfig.screenWidth,
+        height: SizeConfig.screenHeight * 0.16,
+        child: Swiper(
+          controller: ticketsController,
+          itemBuilder: (BuildContext context, int index) {
+            return _tambolaBoardViews[index];
+          },
+          itemCount: _tambolaBoardViews.length,
+          itemWidth: SizeConfig.screenWidth * 0.78,
+          physics: BouncingScrollPhysics(),
+          layout: SwiperLayout.STACK,
+        ),
+      );
+      // BaseUtil.buildShowcaseWrapper(
+      //     _showcaseThree,
+      //     Assets.showCaseDesc[2],
+      //     CardSelector(
+      //         cards: _tambolaBoardViews.toList(),
+      //         mainCardWidth: SizeConfig.screenWidth * 0.8,
+      //         mainCardHeight: SizeConfig.screenHeight * 0.16,
+      //         mainCardPadding: 4.0,
+      //         dropTargetWidth: 0,
+      //         cardAnimationDurationMs: 500,
+      //         onChanged: (i) {
+      //           _currentBoard = baseProvider.userWeeklyBoards[i];
+      //           _currentBoardView = _tambolaBoardViews[i];
+      //           setState(() {});
+      //         }));
       if (_currentBoardView == null) _currentBoardView = _tambolaBoardViews[0];
       if (_currentBoard == null)
         _currentBoard = baseProvider.userWeeklyBoards[0];
@@ -943,9 +960,12 @@ class _TambolaGameScreen extends State<TambolaHome> {
       _calledDigits = picks.getPicksPostDate(board.generatedDayCode);
     }
     return TambolaBoardView(
-        tambolaBoard: board.tambolaBoard,
-        calledDigits: _calledDigits,
-        boardColor: UiConstants.primaryColor.withGreen(200));
+      tambolaBoard: board.tambolaBoard,
+      calledDigits: _calledDigits,
+      boardColor: UiConstants.primaryColor,
+      ticketColor1: Color(0xff55C595),
+      ticketColor2: Color(0xffEEEEEE),
+    );
   }
 
   Widget _buildTodaysPicksWidget() {
@@ -955,89 +975,6 @@ class _TambolaGameScreen extends State<TambolaHome> {
       digits: _getDailyPickData(baseProvider.weeklyDigits, date.weekday),
     );
   }
-
-  // Widget _buildPrizeTabView() {
-  //   String win_corner = BaseRemoteConfig.remoteConfig
-  //       .getString(BaseRemoteConfig.TAMBOLA_WIN_CORNER);
-  //   String win_top = BaseRemoteConfig.remoteConfig
-  //       .getString(BaseRemoteConfig.TAMBOLA_WIN_TOP);
-  //   String win_middle = BaseRemoteConfig.remoteConfig
-  //       .getString(BaseRemoteConfig.TAMBOLA_WIN_MIDDLE);
-  //   String win_bottom = BaseRemoteConfig.remoteConfig
-  //       .getString(BaseRemoteConfig.TAMBOLA_WIN_BOTTOM);
-  //   String win_full = BaseRemoteConfig.remoteConfig
-  //       .getString(BaseRemoteConfig.TAMBOLA_WIN_FULL);
-  //   String referral_bonus = BaseRemoteConfig.remoteConfig
-  //       .getString(BaseRemoteConfig.REFERRAL_BONUS);
-  //   return Padding(
-  //     padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
-  //     child: Column(
-  //       mainAxisAlignment: MainAxisAlignment.start,
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         _getPrizeRow(
-  //             'Referral',
-  //             (referral_bonus == null || referral_bonus.isEmpty)
-  //                 ? '₹25'
-  //                 : '₹$referral_bonus'),
-  //         _getPrizeRow(
-  //             'Corners',
-  //             (win_corner == null || win_corner.isEmpty)
-  //                 ? '₹500'
-  //                 : '₹$win_corner'),
-  //         _getPrizeRow('First Row',
-  //             (win_top == null || win_top.isEmpty) ? '₹1500' : '₹$win_top'),
-  //         _getPrizeRow(
-  //             'Second Row',
-  //             (win_middle == null || win_middle.isEmpty)
-  //                 ? '₹1500'
-  //                 : '₹$win_middle'),
-  //         _getPrizeRow(
-  //             'Third Row',
-  //             (win_bottom == null || win_bottom.isEmpty)
-  //                 ? '₹1500'
-  //                 : '₹$win_bottom'),
-  //         _getPrizeRow(
-  //             'Full House',
-  //             (win_full == null || win_full.isEmpty)
-  //                 ? '₹10,000'
-  //                 : '₹$win_full'),
-  //       ],
-  //     ),
-  //   );
-  //   // );
-  // }
-
-  // Widget _getPrizeRow(String title, String prize) {
-  //   return Container(
-  //     margin: EdgeInsets.only(bottom: 8),
-  //     padding: EdgeInsets.symmetric(
-  //         horizontal: SizeConfig.blockSizeHorizontal * 1.6,
-  //         vertical: SizeConfig.blockSizeVertical * 0.5),
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //       children: [
-  //         Expanded(
-  //           child: Text(title,
-  //               textAlign: TextAlign.left,
-  //               style: TextStyle(
-  //                   fontSize: SizeConfig.mediumTextSize,
-  //                   height: 1.6,
-  //                   color: UiConstants.accentColor)),
-  //         ),
-  //         Expanded(
-  //           child: Text(prize,
-  //               textAlign: TextAlign.end,
-  //               style: TextStyle(
-  //                   fontSize: SizeConfig.mediumTextSize,
-  //                   height: 1.6,
-  //                   fontWeight: FontWeight.bold,
-  //                   color: UiConstants.primaryColor)),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   List<int> _getDailyPickData(DailyPick draws, int day) {
     List<int> picks = [];
@@ -1183,78 +1120,81 @@ class Odds extends StatelessWidget {
     var pd = EdgeInsets.symmetric(
         vertical: SizeConfig.blockSizeVertical * 0.8, horizontal: 24.0);
     return Padding(
-        padding: pd,
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                child: Row(
-                  children: [
-                    Icon(_i, size: 24.0, color: Colors.blueGrey),
-                    SizedBox(width: 9.0),
-                    Text(
-                      _title,
-                      style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontSize: SizeConfig.smallTextSize),
-                    ),
-                  ],
+      padding: pd,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: Row(
+              children: [
+                Icon(_i, size: 24.0, color: Colors.blueGrey),
+                SizedBox(width: 9.0),
+                Text(
+                  _title,
+                  style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: SizeConfig.smallTextSize),
                 ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  _tOdd,
+                  style: TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: SizeConfig.mediumTextSize,
+                  ),
+                ),
+                Text(
+                  'This ticket',
+                  style: TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: SizeConfig.smallTextSize,
+                  ),
+                )
+              ],
+            ),
+          ),
+          Expanded(
+            child: InkWell(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Text(
+                    _oOdd,
+                    style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: SizeConfig.mediumTextSize,
+                    ),
+                  ),
+                  Text(
+                    'Best ticket',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.blue[900],
+                      fontSize: SizeConfig.smallTextSize,
+                    ),
+                  )
+                ],
               ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      _tOdd,
-                      style: TextStyle(
-                        color: Colors.blueGrey,
-                        fontSize: SizeConfig.mediumTextSize,
-                      ),
-                    ),
-                    Text(
-                      'This ticket',
-                      style: TextStyle(
-                        color: Colors.blueGrey,
-                        fontSize: SizeConfig.smallTextSize,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Expanded(
-                  child: InkWell(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Text(
-                      _oOdd,
-                      style: TextStyle(
-                        color: Colors.blueGrey,
-                        fontSize: SizeConfig.mediumTextSize,
-                      ),
-                    ),
-                    Text(
-                      'Best ticket',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.blue[900],
-                        fontSize: SizeConfig.smallTextSize,
-                      ),
-                    )
-                  ],
-                ),
-                onTap: () {
-                  HapticFeedback.vibrate();
-                  showDialog(
-                      context: cx,
-                      builder: (BuildContext context) => TambolaDialog(
-                            board: _bestBoard,
-                            digits: _digits,
-                          ));
-                },
-              )),
-            ]));
+              onTap: () {
+                HapticFeedback.vibrate();
+                showDialog(
+                    context: cx,
+                    builder: (BuildContext context) => TambolaDialog(
+                          board: _bestBoard,
+                          digits: _digits,
+                        ));
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

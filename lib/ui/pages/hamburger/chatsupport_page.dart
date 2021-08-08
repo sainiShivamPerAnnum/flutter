@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../base_util.dart';
 
 class ChatSupport extends StatefulWidget {
-  ChatSupport({Key key}) : super(key: key);
+  const ChatSupport({Key key}) : super(key: key);
 
   @override
   _ChatSupportState createState() => _ChatSupportState();
@@ -24,23 +24,6 @@ class _ChatSupportState extends State<ChatSupport> {
   bool isInit = false;
   String isFreshchatLoaded = "waiting";
 
-  // @override
-  // void didChangeDependencies() {
-  //   _setupFreshchat().then((value) {
-  //     if (value) {
-  //       backButtonDispatcher.didPopRoute();
-  //       Freshchat.showConversations();
-  //     } else {
-  //       backButtonDispatcher.didPopRoute();
-  //       baseProvider.showNegativeAlert(
-  //         'Error',
-  //         'Something went wrong, please try again!',
-  //         context,
-  //       );
-  //     }
-  //   });
-  //   super.didChangeDependencies();
-  // }
   @override
   void initState() {
     super.initState();
@@ -68,17 +51,20 @@ class _ChatSupportState extends State<ChatSupport> {
           seconds: 3);
     }
     return Container(
-        color: Colors.white24,
-        child: Center(
-            child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(40)),
-                child: Padding(
-                  padding: EdgeInsets.all(5),
-                  child: SpinKitFadingCircle(
-                    size: SizeConfig.screenWidth * 0.2,
-                    color: UiConstants.primaryColor,
-                  ),
-                ))));
+      color: Colors.white24,
+      child: Center(
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(40)),
+          child: Padding(
+            padding: EdgeInsets.all(5),
+            child: SpinKitFadingCircle(
+              size: SizeConfig.screenWidth * 0.2,
+              color: UiConstants.primaryColor,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Future<bool> _setUser() async {

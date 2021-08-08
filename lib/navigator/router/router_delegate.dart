@@ -4,7 +4,7 @@ import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
-import 'package:felloapp/ui/pages/hamburger/contact_us_page.dart';
+import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
 import 'package:felloapp/ui/pages/hamburger/hamburger_screen.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
@@ -12,7 +12,7 @@ import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
-import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_completed.dart';
+import 'package:felloapp/ui/elements/unused/walkthrough_completed.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/root.dart';
 import '../../ui/pages/tabs/finance/augmont/augmont-details.dart';
@@ -187,15 +187,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.VerifyEmail:
           _addPageData(VerifyEmail(), VerifyEmailPageConfig);
           break;
-        case Pages.ContactUs:
-          _addPageData(ContactUsPage(), ContactUsConfig);
+        case Pages.Support:
+          _addPageData(SupportPage(), SupportConfig);
           break;
         case Pages.WalkThrough:
           _addPageData(WalkThroughPage(), WalkThroughConfig);
           break;
-        case Pages.WalkThroughCompleted:
-          _addPageData(WalkThroughCompleted(), WalkThroughCompletedConfig);
-          break;
+        // case Pages.WalkThroughCompleted:
+        //   _addPageData(WalkThroughCompleted(), WalkThroughCompletedConfig);
+        //   break;
         case Pages.YourFunds:
           _addPageData(YourFunds(), YourFundsConfig);
           break;
@@ -318,15 +318,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.VerifyEmail:
         VerifyEmailPageConfig.currentPageAction = action;
         break;
-      case Pages.ContactUs:
-        ContactUsConfig.currentPageAction = action;
+      case Pages.Support:
+        SupportConfig.currentPageAction = action;
         break;
       case Pages.WalkThrough:
         WalkThroughConfig.currentPageAction = action;
         break;
-      case Pages.WalkThroughCompleted:
-        WalkThroughCompletedConfig.currentPageAction = action;
-        break;
+      // case Pages.WalkThroughCompleted:
+      //   WalkThroughCompletedConfig.currentPageAction = action;
+      //   break;
       case Pages.YourFunds:
         YourFundsConfig.currentPageAction = action;
         break;
@@ -405,7 +405,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         dialogWidget = GamePoll();
         break;
       case "aboutUs":
-        dialogWidget = AboutUsDialog();
+        dialogWidget = const AboutUsDialog();
         break;
 
       case "ham":
