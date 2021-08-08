@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
@@ -8,14 +7,14 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/funds_chart_view.dart';
-import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
-import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcase_widget.dart';
+
+import 'augmont/augmont-details.dart';
+import 'icici/mf_details_page.dart';
 
 class FinancePage extends StatefulWidget {
   @override
@@ -29,49 +28,42 @@ class _FinancePageState extends State<FinancePage> {
   AugmontModel augmontProvider;
   DBModel dbProvider;
   AppState appState;
-  GlobalKey _showcaseHeader = GlobalKey();
-  GlobalKey _showcaseFooter = GlobalKey();
 
-  Future<void> _onFundsRefresh() async {
-    //TODO ADD LOADER
+  // GlobalKey _showcaseHeader = GlobalKey();
+  // GlobalKey _showcaseFooter = GlobalKey();
 
-    ///////HEY NIMIT THIS IS TEST CODE TO FETCH GOLD RATES BETWEEN A FROM AND TO DATE////////////////
-    // DateTime dt = new DateTime(2019,1,1);
-    // DateTime dt2 = DateTime.now();
-    // augmontProvider.getGoldRateChart(dt, dt2).then((value) {
-    //   log.debug(value);
-    //   log.debug('tester');
-    // });
-    ////////////////////////////////////////////////////////////////////////////////////
-    return dbProvider.getUserFundWallet(baseProvider.myUser.uid).then((aValue) {
-      if (aValue != null) {
-        baseProvider.userFundWallet = aValue;
-        if (baseProvider.userFundWallet.augGoldQuantity > 0)
-          _updateAugmontBalance(); //setstate call in method
-        else
-          setState(() {});
-      }
-    });
-  }
+  // Future<void> _onFundsRefresh() async {
+  //   //TODO: ADD LOADER
+  //   print("-----------------> I got called");
+  //   return dbProvider.getUserFundWallet(baseProvider.myUser.uid).then((aValue) {
+  //     if (aValue != null) {
+  //       baseProvider.userFundWallet = aValue;
+  //       if (baseProvider.userFundWallet.augGoldQuantity > 0)
+  //         _updateAugmontBalance(); //setstate call in method
+  //       else
+  //         setState(() {});
+  //     }
+  //   });
+  // }
 
-  Future<void> _updateAugmontBalance() async {
-    if (augmontProvider == null ||
-        (baseProvider.userFundWallet.augGoldQuantity == 0 &&
-            baseProvider.userFundWallet.augGoldBalance == 0)) return;
-    augmontProvider.getRates().then((currRates) {
-      if (currRates == null ||
-          currRates.goldSellPrice == null ||
-          baseProvider.userFundWallet.augGoldQuantity == 0) return;
+  // Future<void> _updateAugmontBalance() async {
+  //   if (augmontProvider == null ||
+  //       (baseProvider.userFundWallet.augGoldQuantity == 0 &&
+  //           baseProvider.userFundWallet.augGoldBalance == 0)) return;
+  //   augmontProvider.getRates().then((currRates) {
+  //     if (currRates == null ||
+  //         currRates.goldSellPrice == null ||
+  //         baseProvider.userFundWallet.augGoldQuantity == 0) return;
 
-      baseProvider.augmontGoldRates = currRates;
-      double gSellRate = baseProvider.augmontGoldRates.goldSellPrice;
-      baseProvider.userFundWallet.augGoldBalance = BaseUtil.digitPrecision(
-          baseProvider.userFundWallet.augGoldQuantity * gSellRate);
-      setState(() {}); //might cause ui error if screen no longer active
-    }).catchError((err) {
-      print('$err');
-    });
-  }
+  //     baseProvider.augmontGoldRates = currRates;
+  //     double gSellRate = baseProvider.augmontGoldRates.goldSellPrice;
+  //     baseProvider.userFundWallet.augGoldBalance = BaseUtil.digitPrecision(
+  //         baseProvider.userFundWallet.augGoldQuantity * gSellRate);
+  //     setState(() {}); //might cause ui error if screen no longer active
+  //   }).catchError((err) {
+  //     print('$err');
+  //   });
+  // }
 
   @override
   void initState() {
@@ -87,18 +79,20 @@ class _FinancePageState extends State<FinancePage> {
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
     if (!baseProvider.isAugmontRealTimeBalanceFetched) {
-      _updateAugmontBalance();
+      baseProvider.refreshFunds();
+      //_updateAugmontBalance();
       baseProvider.isAugmontRealTimeBalanceFetched = true;
     }
-    if (baseProvider.show_finance_tutorial) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ShowCaseWidget.of(context)
-            .startShowCase([_showcaseFooter, _showcaseHeader]);
-      });
-    }
+    // if (baseProvider.show_finance_tutorial) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     ShowCaseWidget.of(context)
+    //         .startShowCase([_showcaseFooter, _showcaseHeader]);
+    //   });
+    // }
     return RefreshIndicator(
       onRefresh: () async {
-        await _onFundsRefresh();
+        await baseProvider.refreshFunds();
+        //_onFundsRefresh();
       },
       child: Container(
         height: SizeConfig.screenHeight,
@@ -111,17 +105,15 @@ class _FinancePageState extends State<FinancePage> {
             borderRadius: SizeConfig.homeViewBorder,
             child: Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenHeight * 0.016),
+                  horizontal: SizeConfig.blockSizeHorizontal * 5),
               child: CustomScrollView(
                 slivers: [
                   SliverList(
                       delegate: SliverChildListDelegate([
                     Container(
-                      height: kToolbarHeight * 1.4,
+                      height: kToolbarHeight,
                     ),
-                    BaseUtil.buildShowcaseWrapper(_showcaseHeader,
-                        'Your savings and investments will show up here. The balances are based on live market rates.',
-                        Consumer<BaseUtil>(
+                    Consumer<BaseUtil>(
                       builder: (context, baseUtil, child) {
                         return Container(
                           child: baseProvider.userFundWallet
@@ -130,14 +122,18 @@ class _FinancePageState extends State<FinancePage> {
                               ? FundsChartView(
                                   userFundWallet: baseProvider.userFundWallet,
                                   goldMoreInfo: goldMoreInfoStr,
-                                  doRefresh: () {
-                                    _onFundsRefresh();
-                                  },
+                                  // doRefresh: () {
+                                  //   _onFundsRefresh();
+                                  // },
                                 )
-                              : ZeroBalView(),
+                              : ZeroBalView(baseProvider.zeroBalanceAssetUri),
                         );
                       },
-                    )),
+                    ),
+                    // BaseUtil.buildShowcaseWrapper(_showcaseHeader,
+                    //     'Your savings and investments will show up here. The balances are based on live market rates.',
+                    //
+                    // ),
                     Divider(
                       color: Colors.black38,
                     ),
@@ -160,30 +156,19 @@ class _FinancePageState extends State<FinancePage> {
                     ),
                     delegate: SliverChildListDelegate(
                       [
-                        BaseUtil.buildShowcaseWrapper(
-                          _showcaseFooter,
-                          'Choose any of the assets to deposit in. Fello lists strong proven assets with great historical returns.',
-                          FundWidget(
-                            fund: fundList[1],
-                            isAvailable: (AugmontDetailsPage.checkAugmontStatus(
-                                    baseProvider.myUser) !=
-                                AugmontDetailsPage.STATUS_UNAVAILABLE),
-                            // onPressed: () async {
-                            //   bool res = await Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder: (ctx) => AugmontDetailsPage(),
-                            //     ),
-                            //   );
-                            //   if (res) {
-                            //     setState(() {});
-                            //   }
-                            // },
-                            onPressed: () => appState.currentAction =
-                                PageAction(
-                                    state: PageState.addPage,
-                                    page: AugDetailsPageConfig),
-                          ),
+                        // BaseUtil.buildShowcaseWrapper(
+                        //   _showcaseFooter,
+                        //   'Choose any of the assets to deposit in. Fello lists strong proven assets with great historical returns.',
+                        //
+                        // ),
+                        FundWidget(
+                          fund: fundList[1],
+                          isAvailable: (AugmontDetailsPage.checkAugmontStatus(
+                                  baseProvider.myUser) !=
+                              AugmontDetailsPage.STATUS_UNAVAILABLE),
+                          onPressed: () => appState.currentAction = PageAction(
+                              state: PageState.addPage,
+                              page: AugDetailsPageConfig),
                         ),
                         FundWidget(
                             fund: fundList[0],
@@ -208,19 +193,28 @@ class _FinancePageState extends State<FinancePage> {
   }
 
   String get goldMoreInfoStr {
-    String _s =
-        'The balance shown here is based on the current live selling rate of gold';
+    String _s = '';
     String _t = '.';
+    if (baseProvider.userFundWallet.augGoldQuantity == 0) {
+      _s = 'This is your current digital Gold balance';
+    } else {
+      _s =
+          'You currently own ${baseProvider.userFundWallet.augGoldQuantity} grams of digital Gold.\n\nThe balance shown here is based on the current selling rate of gold';
+    }
     if (baseProvider.userFundWallet.augGoldQuantity > 0 &&
         baseProvider.augmontGoldRates != null) {
       _t =
-          ', which is ₹${baseProvider.augmontGoldRates.goldSellPrice} per gram';
+          ', which is ₹${baseProvider.augmontGoldRates.goldSellPrice} per gram.';
     }
     return '$_s$_t';
   }
 }
 
 class ZeroBalView extends StatelessWidget {
+  final String uri;
+
+  ZeroBalView(this.uri);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -231,7 +225,7 @@ class ZeroBalView extends StatelessWidget {
           Expanded(
             child: Center(
               child: Image.asset(
-                "images/zero-balance.png",
+                "images/$uri.png",
                 fit: BoxFit.contain,
               ),
             ),
@@ -286,7 +280,7 @@ class FundWidget extends StatelessWidget {
                       color: Colors.white,
                       height: 1.4,
                       letterSpacing: 1.5,
-                      fontSize: math.min(SizeConfig.largeTextSize,30),
+                      fontSize: math.min(SizeConfig.largeTextSize, 30),
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -300,7 +294,7 @@ class FundWidget extends StatelessWidget {
                             'Coming Soon',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: math.min(height * 0.020,22),
+                              fontSize: math.min(height * 0.020, 22),
                               fontWeight: FontWeight.w400,
                             ),
                           ),

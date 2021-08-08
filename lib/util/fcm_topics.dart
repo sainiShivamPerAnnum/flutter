@@ -1,4 +1,4 @@
-enum FcmTopic{
+enum FcmTopic {
   OLDCUSTOMER,
   NEVERINVESTEDBEFORE,
   GOLDINVESTOR,

@@ -3,16 +3,21 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/model/FeedCard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -27,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   bool _isInit = false;
 
   Future<void> getProfilePicUrl() async {
+    if (baseProvider == null || baseProvider.myUser == null) return;
     baseProvider.myUserDpUrl =
         await dbProvider.getUserDP(baseProvider.myUser.uid);
     if (baseProvider.myUserDpUrl != null) {
@@ -62,10 +68,14 @@ class _HomePageState extends State<HomePage> {
   _init() {
     if (!baseProvider.isHomeCardsFetched) {
       dbProvider.getHomeCards().then((cards) {
-        baseProvider.feedCards = cards;
-        _isInit = true;
-        baseProvider.isHomeCardsFetched = true;
-        setState(() {});
+        if (cards.length > 0) {
+          baseProvider.feedCards = cards;
+          _isInit = true;
+          baseProvider.isHomeCardsFetched = true;
+          setState(() {});
+        } else {
+          setState(() {});
+        }
       });
     }
   }
@@ -75,11 +85,12 @@ class _HomePageState extends State<HomePage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
+    // FirebaseCrashlytics.instance.crash();
     if (baseProvider.myUserDpUrl == null) {
       isImageLoading = true;
       getProfilePicUrl();
     }
-    if (!_isInit) {
+    if (!_isInit || baseProvider.feedCards.length == 0) {
       _init();
     }
     return Container(
@@ -102,16 +113,13 @@ class _HomePageState extends State<HomePage> {
             SafeArea(
               child: ClipRRect(
                 borderRadius: SizeConfig.homeViewBorder,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.blockSizeHorizontal * 5),
-                  child: ListView(
-                    controller: AppState.homeCardListController,
-                    physics: BouncingScrollPhysics(),
-                    children: (!baseProvider.isHomeCardsFetched)
-                        ? _buildLoadingFeed()
-                        : _buildHomeFeed(baseProvider.feedCards),
-                  ),
+                child: ListView(
+                  controller: AppState.homeCardListController,
+                  physics: BouncingScrollPhysics(),
+                  children: (!baseProvider.isHomeCardsFetched ||
+                          baseProvider.feedCards.length == 0)
+                      ? _buildLoadingFeed()
+                      : _buildHomeFeed(baseProvider.feedCards),
                 ),
               ),
             )
@@ -138,25 +146,56 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Widget> _buildHomeFeed(List<FeedCard> cards) {
+    if (cards.length == 0) {
+      return [
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: TextButton.icon(
+            onPressed: _init,
+            icon: Icon(
+              Icons.refresh,
+              color: Colors.white,
+            ),
+            label: Text(
+              "Click to reload",
+              style: GoogleFonts.montserrat(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        )
+      ];
+    }
     List<Widget> _widget = [
       Container(
         height: kToolbarHeight,
       ),
       _buildProfileRow(),
     ];
-    for (FeedCard card in cards) {
+
+    for (int i = 0; i < cards.length; i++) {
       _widget.add(HomeCard(
-        title: card.title,
-        asset: card.assetLocalLink,
-        subtitle: card.subtitle,
-        buttonText: card.btnText,
+        title: cards[i].title,
+        asset: cards[i].assetLocalLink,
+        subtitle: cards[i].subtitle,
+        buttonText: cards[i].btnText,
+        isHighlighted: (baseProvider.show_home_tutorial &&
+            cards[i].id == Constants.LEARN_FEED_CARD_ID),
         onPressed: () async {
           HapticFeedback.vibrate();
-          delegate.parseRoute(Uri.parse(card.actionUri));
+          // delegate.parseRoute(Uri.parse(cards[i].actionUri));
+
+          /////////test code
+          if (cards[i].id == Constants.LEARN_FEED_CARD_ID) {
+            delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
+          } else {
+            delegate.parseRoute(Uri.parse(cards[i].actionUri));
+          }
         },
         gradient: [
-          Color(card.clrCodeA),
-          Color(card.clrCodeB),
+          Color(cards[i].clrCodeA),
+          Color(cards[i].clrCodeB),
         ],
         // "0/d-guide"
         //   "3"
@@ -173,10 +212,9 @@ class _HomePageState extends State<HomePage> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
       ),
-      margin: EdgeInsets.only(
-        top: SizeConfig.screenWidth * 0.10,
-        bottom: SizeConfig.screenWidth * 0.08,
-      ),
+      margin: EdgeInsets.symmetric(
+          horizontal: SizeConfig.blockSizeHorizontal * 5,
+          vertical: SizeConfig.blockSizeHorizontal * 8),
       width: double.infinity,
       child: Row(
         children: [
@@ -240,6 +278,8 @@ class HomeCard extends StatelessWidget {
   final String asset, title, subtitle, buttonText;
   final Function onPressed;
   final List<Color> gradient;
+  LocalDBModel localDbProvider;
+  bool isHighlighted;
 
   HomeCard(
       {this.asset,
@@ -247,14 +287,17 @@ class HomeCard extends StatelessWidget {
       this.onPressed,
       this.subtitle,
       this.title,
-      this.gradient});
+      this.gradient,
+      this.isHighlighted = false});
 
   @override
   Widget build(BuildContext context) {
+    localDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     return Container(
       margin: EdgeInsets.only(
-        bottom: 20,
-      ),
+          bottom: 20,
+          left: SizeConfig.blockSizeHorizontal * 5,
+          right: SizeConfig.blockSizeHorizontal * 5),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           gradient: new LinearGradient(
@@ -329,33 +372,75 @@ class HomeCard extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                GestureDetector(
-                  onTap: onPressed,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 2,
-                        color: Colors.white,
-                      ),
-                      color: Colors.transparent,
-                      boxShadow: [
-                        BoxShadow(
-                            color: gradient[0].withOpacity(0.2),
-                            blurRadius: 20,
-                            offset: Offset(5, 5),
-                            spreadRadius: 10),
-                      ],
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: Text(
-                      buttonText,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: SizeConfig.mediumTextSize * 1.3),
-                    ),
-                  ),
-                )
+                (isHighlighted)
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Shimmer(
+                          enabled: true,
+                          direction: ShimmerDirection.fromLeftToRight(),
+                          child: GestureDetector(
+                            onTap: () {
+                              if (isHighlighted == true) {
+                                isHighlighted = false;
+                                localDbProvider.saveHomeTutorialComplete = true;
+                                onPressed();
+                              }
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 2,
+                                  color: Colors.white,
+                                ),
+                                color: Colors.transparent,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: gradient[0].withOpacity(0.2),
+                                      blurRadius: 20,
+                                      offset: Offset(5, 5),
+                                      spreadRadius: 10),
+                                ],
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: Text(
+                                buttonText,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: SizeConfig.mediumTextSize * 1.3),
+                              ),
+                            ),
+                          ),
+                        ))
+                    : GestureDetector(
+                        onTap: onPressed,
+                        child: Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 2,
+                              color: Colors.white,
+                            ),
+                            color: Colors.transparent,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: gradient[0].withOpacity(0.2),
+                                  blurRadius: 20,
+                                  offset: Offset(5, 5),
+                                  spreadRadius: 10),
+                            ],
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: Text(
+                            buttonText,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: SizeConfig.mediumTextSize * 1.3),
+                          ),
+                        ),
+                      )
               ],
             ),
           )

@@ -89,7 +89,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Text(
                   "Update Profile Picture",
                   style: GoogleFonts.montserrat(
@@ -101,6 +101,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
               Container(
                 height: SizeConfig.screenHeight * 0.2,
                 width: SizeConfig.screenHeight * 0.2,
+                margin: EdgeInsets.symmetric(vertical: 16),
                 decoration:
                     BoxDecoration(shape: BoxShape.circle, color: Colors.black),
                 child: Stack(
@@ -116,80 +117,74 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
                   ],
                 ),
               ),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    isUploading = true;
-                  });
-                  if (widget.image != null) {
-                    updatePicture(context).then((flag) {
-                      if (flag) {
-                        BaseAnalytics.logProfilePictureAdded();
-                        baseProvider.showPositiveAlert('Complete',
-                            'Your profile Picture has been updated', context);
-                      } else {
-                        baseProvider.showNegativeAlert(
-                            'Failed',
-                            'Your Profile Picture could not be updated at the moment',
-                            context);
-                      }
-                      setState(() {
-                        isUploading = false;
-                      });
-                      Navigator.pop(context);
-                    });
-                  }
-                },
-                child: Container(
-                  margin: EdgeInsets.only(top: 24, bottom: 8),
-                  width: double.infinity,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: UiConstants.primaryColor,
-                  ),
-                  alignment: Alignment.center,
-                  child: isUploading
-                      ? SpinKitThreeBounce(
-                          color: UiConstants.spinnerColor2,
-                          size: 18.0,
-                        )
-                      : Text(
-                          "Update",
-                          style: GoogleFonts.montserrat(
-                            color: Colors.white,
-                            fontSize: SizeConfig.mediumTextSize,
-                            fontWeight: FontWeight.w500,
+              isUploading
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SpinKitThreeBounce(
+                        color: UiConstants.primaryColor,
+                        size: 24.0,
+                      ),
+                    )
+                  : Column(
+                      children: [
+                        Container(
+                          width: SizeConfig.screenWidth * 0.7,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: UiConstants.primaryColor),
+                            onPressed: () {
+                              setState(() {
+                                isUploading = true;
+                              });
+                              if (widget.image != null) {
+                                updatePicture(context).then((flag) {
+                                  if (flag) {
+                                    BaseAnalytics.logProfilePictureAdded();
+                                    baseProvider.showPositiveAlert(
+                                        'Complete',
+                                        'Your profile Picture has been updated',
+                                        context);
+                                  } else {
+                                    baseProvider.showNegativeAlert(
+                                        'Failed',
+                                        'Your Profile Picture could not be updated at the moment',
+                                        context);
+                                  }
+                                  setState(() {
+                                    isUploading = false;
+                                  });
+                                  Navigator.pop(context);
+                                });
+                              }
+                            },
+                            child: Text(
+                              "Update",
+                              style: GoogleFonts.montserrat(
+                                color: Colors.white,
+                                fontSize: SizeConfig.mediumTextSize,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
                         ),
-                ),
-              ),
-              InkWell(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 24),
-                  width: double.infinity,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: UiConstants.primaryColor),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  alignment: Alignment.center,
-                  child: isUploading
-                      ? SpinKitThreeBounce(
-                          color: UiConstants.spinnerColor2,
-                          size: 18.0,
-                        )
-                      : Text(
-                          "Cancel",
-                          style: GoogleFonts.montserrat(
-                            color: UiConstants.primaryColor,
-                            fontSize: SizeConfig.mediumTextSize,
-                            fontWeight: FontWeight.w500,
+                        Container(
+                          width: SizeConfig.screenWidth * 0.7,
+                          child: ElevatedButton(
+                            style:
+                                ElevatedButton.styleFrom(primary: Colors.white),
+                            onPressed: () => Navigator.pop(context),
+                            child: Text(
+                              "Cancle",
+                              style: GoogleFonts.montserrat(
+                                color: Colors.black,
+                                fontSize: SizeConfig.mediumTextSize,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
                         ),
-                ),
-              ),
+                      ],
+                    ),
             ],
           ),
         ),

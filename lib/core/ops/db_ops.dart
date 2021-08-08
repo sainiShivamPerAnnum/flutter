@@ -15,7 +15,6 @@ import 'package:felloapp/core/model/TicketRequest.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
-import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTicketWallet.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/service/api.dart';
@@ -71,6 +70,55 @@ class DBModel extends ChangeNotifier {
     }
   }
 
+  Future<bool> updateUserPreferences(
+      String uid, UserPreferences userPreferences) async {
+    try {
+      await _api.updateUserDocumentPreferenceField(
+          uid, {BaseUser.fldUserPrefs: userPreferences.toJson()});
+      return true;
+    } catch (e) {
+      log.error("Failed to update user preference field: $e");
+      return false;
+    }
+  }
+
+  /// return obj:
+  /// {value: GHexqwio123==, enid:2}
+  Future<Map<String, dynamic>> getEncodedUserPan(String uid) async {
+    try {
+      var doc = await _api.getUserPrtdDocPan(uid);
+      if (doc.exists && doc.data() != null) {
+        Map<String, dynamic> _snapshotData = doc.data();
+        String val = _snapshotData['value'];
+        int enid = _snapshotData['enid'];
+        if (val == null || val.isEmpty || enid == 0)
+          return null;
+        else
+          return {'value': val, 'enid': enid};
+      }
+      return null;
+    } catch (e) {
+      log.error(e.toString());
+      return null;
+    }
+  }
+
+  Future<bool> saveEncodedUserPan(String uid, String encPan, int enid) async {
+    try {
+      Map<String, dynamic> pObj = {
+        'enid': enid,
+        'value': encPan,
+        'type': 'pan',
+        'timestamp': Timestamp.now()
+      };
+      await _api.addUserPrtdDocPan(uid, pObj);
+      return true;
+    } catch (e) {
+      log.error(e.toString());
+      return false;
+    }
+  }
+
   //////////////////ICICI////////////////////////////////
   Future<UserIciciDetail> getUserIciciDetails(String id) async {
     try {
@@ -89,29 +137,6 @@ class DBModel extends ChangeNotifier {
       return true;
     } catch (e) {
       log.error("Failed to update user icici detail object: " + e.toString());
-      return false;
-    }
-  }
-
-  /////////////////////KYC/////////////////////////////////
-  Future<UserKycDetail> getUserKycDetails(String id) async {
-    try {
-      var doc = await _api.getUserKycDetailDocument(id);
-      // print(UserKycDetail.fromMap(doc.data()));
-      return UserKycDetail.fromMap(doc.data());
-    } catch (e) {
-      log.error('Failed to fetch user kyc details: $e');
-      return null;
-    }
-  }
-
-  Future<bool> updateUserKycDetails(
-      String userId, UserKycDetail kycDetail) async {
-    try {
-      await _api.updateUserKycDetailDocument(userId, kycDetail.toJson());
-      return true;
-    } catch (e) {
-      log.error("Failed to update user kyc detail object: " + e.toString());
       return false;
     }
   }
@@ -250,7 +275,7 @@ class DBModel extends ChangeNotifier {
 
       List<TambolaBoard> _requestedBoards = [];
       for (QueryDocumentSnapshot _docSnapshot in _querySnapshot.docs) {
-        if (!_docSnapshot.exists || _docSnapshot.data().isEmpty) continue;
+        if (!_docSnapshot.exists || _docSnapshot.data() == null) continue;
         TambolaBoard _board =
             TambolaBoard.fromMap(_docSnapshot.data(), _docSnapshot.id);
         if (_board.isValid()) _requestedBoards.add(_board);
@@ -290,7 +315,7 @@ class DBModel extends ChangeNotifier {
       //there should only be one document for a week
       if (querySnapshot != null && querySnapshot.docs.length == 1) {
         DocumentSnapshot snapshot = querySnapshot.docs[0];
-        if (snapshot.exists && snapshot.data().isNotEmpty) {
+        if (snapshot.exists && snapshot.data() == null) {
           _detail = TambolaWinnersDetail.fromMap(snapshot.data(), snapshot.id);
         }
       }
@@ -352,11 +377,12 @@ class DBModel extends ChangeNotifier {
         'aws-icici', Constants.activeAwsIciciStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
-      if (snapshot.exists && snapshot.data()['apiKey'] != null) {
-        log.debug('Found apiKey: ' + snapshot.data()['apiKey']);
+      Map<String, dynamic> _doc = snapshot.data();
+      if (snapshot.exists && _doc != null && _doc['apiKey'] != null) {
+        log.debug('Found apiKey: ' + _doc['apiKey']);
         return {
-          'baseuri': snapshot.data()['base_url'],
-          'key': snapshot.data()['apiKey']
+          'baseuri': _doc['base_url'],
+          'key': _doc['apiKey']
         };
       }
     }
@@ -379,11 +405,12 @@ class DBModel extends ChangeNotifier {
         'aws-augmont', Constants.activeAwsAugmontStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
-      if (snapshot.exists && snapshot.data()['apiKey'] != null) {
-        log.debug('Found apiKey: ' + snapshot.data()['apiKey']);
+      Map<String, dynamic> _doc = snapshot.data();
+      if (snapshot.exists && _doc != null && _doc['apiKey'] != null) {
+        log.debug('Found apiKey: ' + _doc['apiKey']);
         return {
-          'baseuri': snapshot.data()['base_url'],
-          'key': snapshot.data()['apiKey']
+          'baseuri': _doc['base_url'],
+          'key': _doc['apiKey']
         };
       }
     }
@@ -397,11 +424,12 @@ class DBModel extends ChangeNotifier {
         'signzy', Constants.activeSignzyStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
-      if (snapshot.exists && snapshot.data()['apiKey'] != null) {
-        log.debug('Found apiKey: ' + snapshot.data()['apiKey']);
+      Map<String, dynamic> _doc = snapshot.data();
+      if (snapshot.exists && _doc != null && _doc['apiKey'] != null) {
+        log.debug('Found apiKey: ' + _doc['apiKey']);
         return {
-          'baseuri': snapshot.data()['base_url'],
-          'key': snapshot.data()['apiKey']
+          'baseuri': _doc['base_url'],
+          'key': _doc['apiKey']
         };
       }
     }
@@ -429,7 +457,8 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<bool> addCallbackRequest(
-      String uid, String name, String mobile) async {
+      String uid, String name, String mobile, int callTime,
+      [int callWindow = 2]) async {
     try {
       DateTime today = DateTime.now();
       String year = today.year.toString();
@@ -439,6 +468,8 @@ class DBModel extends ChangeNotifier {
       data['name'] = name;
       data['mobile'] = mobile;
       data['timestamp'] = Timestamp.now();
+      data['call_time'] = callTime;
+      data['call_window'] = callWindow;
 
       await _api.addCallbackDocument(year, monthCde, data);
       return true;
@@ -503,7 +534,8 @@ class DBModel extends ChangeNotifier {
       [String pollId = Constants.POLL_NEXTGAME_ID]) async {
     try {
       DocumentSnapshot snapshot = await _api.getPollDocument(pollId);
-      if (snapshot.exists && snapshot.data().length > 0) {
+      Map<String, dynamic> _doc = snapshot.data();
+      if (snapshot.exists && _doc.length > 0) {
         return snapshot.data();
       }
     } catch (e) {
@@ -572,9 +604,10 @@ class DBModel extends ChangeNotifier {
       if (_querySnapshot == null || _querySnapshot.size != 1) return [];
 
       DocumentSnapshot _docSnapshot = _querySnapshot.docs[0];
-      if (!_docSnapshot.exists || _docSnapshot.data()['leaders'] == [])
+      Map<String, dynamic> _doc = _docSnapshot.data();
+      if (!_docSnapshot.exists || _doc == null || _doc['leaders'] == [])
         return null;
-      Map<String, dynamic> leaderMap = _docSnapshot.data()['leaders'];
+      Map<String, dynamic> leaderMap = _doc['leaders'];
       log.debug('Referral Leader Map: $leaderMap');
 
       List<ReferralLeader> leaderList = [];
@@ -606,9 +639,10 @@ class DBModel extends ChangeNotifier {
       if (_querySnapshot == null || _querySnapshot.size != 1) return [];
 
       DocumentSnapshot _docSnapshot = _querySnapshot.docs[0];
-      if (!_docSnapshot.exists || _docSnapshot.data()['leaders'] == [])
+      Map<String, dynamic> _doc = _docSnapshot.data();
+      if (!_docSnapshot.exists || _doc == null || _doc['leaders'] == [])
         return null;
-      Map<String, dynamic> leaderMap = _docSnapshot.data()['leaders'];
+      Map<String, dynamic> leaderMap = _doc['leaders'];
       log.debug('Prize Leader Map: $leaderMap');
 
       List<PrizeLeader> leaderList = [];
@@ -641,7 +675,8 @@ class DBModel extends ChangeNotifier {
     try {
       DocumentSnapshot snapshot = await _api.getUserReferDoc(uid);
       // .getReferralDocs(uid);
-      if (snapshot.exists && snapshot.data().isNotEmpty) {
+      Map<String, dynamic> _doc = snapshot.data();
+      if (snapshot.exists && _doc != null && _doc.isNotEmpty) {
         return ReferralDetail.fromMap(snapshot.data());
       }
     } catch (e) {
@@ -656,7 +691,8 @@ class DBModel extends ChangeNotifier {
       List<ReferralDetail> _refDetail = [];
       if (querySnapshot.size > 0) {
         for (QueryDocumentSnapshot snapshot in querySnapshot.docs) {
-          if (snapshot.exists && snapshot.data().isNotEmpty) {
+          Map<String, dynamic> _doc = snapshot.data();
+          if (snapshot.exists && _doc != null && _doc.isNotEmpty) {
             ReferralDetail _detail = ReferralDetail.fromMap(snapshot.data());
             _refDetail.add(_detail);
           }
@@ -771,6 +807,15 @@ class DBModel extends ChangeNotifier {
       return await _api.getFileFromDPBucketURL(uid, 'image');
     } catch (e) {
       log.error('Failed to fetch dp url');
+      return null;
+    }
+  }
+
+  Future<List<String>> getWalkthroughUrls() async {
+    try {
+      return await _api.getWalkthroughFiles();
+    } catch (e) {
+      log.error('Failed to fetch walkthrough files');
       return null;
     }
   }
@@ -940,7 +985,8 @@ class DBModel extends ChangeNotifier {
       else {
         double _netQuantity = 0.0;
         for (QueryDocumentSnapshot snapshot in querySnapshot.docs) {
-          if (snapshot.exists && snapshot.data().isNotEmpty) {
+          Map<String, dynamic> _doc = snapshot.data();
+          if (snapshot.exists && _doc != null && _doc.isNotEmpty) {
             UserTransaction _txn =
                 UserTransaction.fromMap(snapshot.data(), snapshot.id);
             if (_txn != null &&
@@ -1066,13 +1112,16 @@ class DBModel extends ChangeNotifier {
       QuerySnapshot querySnapshot = await _api.getHomeCardCollection();
       if (querySnapshot != null && querySnapshot.docs.length > 0) {
         for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+          Map<String, dynamic> _doc = documentSnapshot.data();
           if (documentSnapshot != null &&
-              documentSnapshot.exists &&
-              documentSnapshot.data().length > 0)
+              documentSnapshot.exists && _doc != null &&
+              _doc.length > 0)
             _cards.add(FeedCard.fromMap(documentSnapshot.data()));
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      log.error('Error Fetching Home cards: ${e.toString()}');
+    }
     return _cards;
   }
 

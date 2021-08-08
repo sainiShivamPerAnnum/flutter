@@ -1,4 +1,3 @@
-
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
@@ -31,6 +30,7 @@ class BaseUser {
   bool _isIciciEnabled;
   bool _isAugmontEnabled;
   bool _isemailVerified;
+  UserPreferences _userPreferences;
 
   static final String fldId = "mID";
   static final String fldMobile = "mMobile";
@@ -58,33 +58,54 @@ class BaseUser {
   static final String fldPendingTxnId = "mPendingTxnId";
   static final String fldIsIciciEnabled = "mIsIciciEnabled";
   static final String fldIsAugmontEnabled = "mIsAugmontEnabled";
+  static final String fldUserPrefs = "mUserPrefs";
 
   BaseUser(
-    this._uid,
-    this._mobile,
-    this._email,
-    this._name,
-    this._dob,
-    this._gender,
-    this._client_token,
-    this._prize_balance,
-    this._lifetime_winnings,
-    this._pan,
-    this._age,
-    this._isInvested,
-    this._isIciciOnboarded,
-    this._isAugmontOnboarded,
-    this._isKycVerified,
-    this._pendingTxnId,
-    this._isIciciEnabled,
-    this._isAugmontEnabled,
-    this._username,
-    this._isemailVerified,
-  );
+      this._uid,
+      this._mobile,
+      this._email,
+      this._name,
+      this._dob,
+      this._gender,
+      this._client_token,
+      this._prize_balance,
+      this._lifetime_winnings,
+      this._pan,
+      this._age,
+      this._isInvested,
+      this._isIciciOnboarded,
+      this._isAugmontOnboarded,
+      this._isKycVerified,
+      this._pendingTxnId,
+      this._isIciciEnabled,
+      this._isAugmontEnabled,
+      this._username,
+      this._isemailVerified,
+      this._userPreferences);
 
   BaseUser.newUser(String id, String mobile)
-      : this(id, mobile, null, null, null, null, null, 0, 0, null, null, false,
-            false, false, Constants.KYC_UNTESTED, null, false, true, "", false);
+      : this(
+            id,
+            mobile,
+            null,
+            null,
+            null,
+            null,
+            null,
+            0,
+            0,
+            null,
+            null,
+            false,
+            false,
+            false,
+            Constants.KYC_UNTESTED,
+            null,
+            false,
+            true,
+            "",
+            false,
+            UserPreferences(null));
 
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String client_token])
       : this(
@@ -107,7 +128,8 @@ class BaseUser {
             data[fldIsIciciEnabled],
             data[fldIsAugmontEnabled],
             data[fldUsername],
-            data[fldIsEmailVerified]);
+            data[fldIsEmailVerified],
+            UserPreferences(data[fldUserPrefs]));
 
   //to send user object to server
   toJson() {
@@ -132,7 +154,8 @@ class BaseUser {
     if (_isIciciEnabled != null) userObj[fldIsIciciEnabled] = _isIciciEnabled;
     if (_isAugmontEnabled != null)
       userObj[fldIsAugmontEnabled] = _isAugmontEnabled;
-
+    if (_userPreferences != null)
+      userObj[fldUserPrefs] = _userPreferences.toJson();
     return userObj;
   }
 
@@ -295,4 +318,47 @@ class BaseUser {
   set isAugmontOnboarded(bool value) {
     _isAugmontOnboarded = value;
   }
+
+  UserPreferences get userPreferences => _userPreferences;
+
+  set userPreferences(UserPreferences value) {
+    _userPreferences = value;
+  }
+}
+
+enum Preferences { TAMBOLANOTIFICATIONS, APPLOCK }
+
+class UserPreferences {
+  //setup index with firebase keys
+  static const Map<Preferences, String> _index = {
+    Preferences.TAMBOLANOTIFICATIONS: 'tn',
+    Preferences.APPLOCK: 'al'
+  };
+
+  //setup defaults
+  final Map<Preferences, int> _defValues = {
+    Preferences.TAMBOLANOTIFICATIONS: 1,
+    Preferences.APPLOCK: 0
+  };
+
+  //current values
+  Map<String, int> _activePrefs = {};
+
+  UserPreferences(Map<dynamic, dynamic> remValues) {
+    for (Preferences p in Preferences.values) {
+      String _fKey = _index[p];
+      int _defValue = _defValues[p];
+      _activePrefs[_fKey] = (remValues != null &&
+              remValues[_fKey] != null &&
+              remValues[_fKey] is int)
+          ? remValues[_fKey]
+          : _defValue;
+    }
+  }
+
+  int getPreference(Preferences p) => _activePrefs[_index[p]];
+
+  setPreference(Preferences p, int val) => _activePrefs[_index[p]] = val;
+
+  toJson() => _activePrefs;
 }

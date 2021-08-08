@@ -11,66 +11,48 @@ class Roulette extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: double.infinity,
-        margin: EdgeInsets.symmetric(
-            horizontal: SizeConfig.blockSizeHorizontal * 4),
-        padding: EdgeInsets.all(10),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: Colors.blueGrey[400],
-          boxShadow: [
-            new BoxShadow(
-              color: Colors.black26,
-              offset: Offset.fromDirection(20, 7),
-              blurRadius: 5.0,
-            )
-          ],
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            stops: [0.1, 0.4],
-            colors: [Colors.blueGrey[500], Colors.blueGrey[400]],
-          ),
+      margin:
+          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 4),
+      padding: EdgeInsets.all(10),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Colors.blueGrey[400],
+        boxShadow: [
+          new BoxShadow(
+            color: Colors.black26,
+            offset: Offset.fromDirection(20, 7),
+            blurRadius: 5.0,
+          )
+        ],
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          stops: [0.1, 0.4],
+          colors: [Colors.blueGrey[500], Colors.blueGrey[400]],
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              (SizeConfig.screenWidth < 800)
-                  ? Padding(
-                      padding: EdgeInsets.only(top: 0, bottom: 3),
-                      child: DPTextSlider(
-                        infoList: dailyPickTextList,
-                      ),
-                    )
-                  : Container(),
-              Container(
-                padding: EdgeInsets.only(bottom: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Holes(
-                      pick: digits[0],
-                    ),
-                    Holes(
-                      pick: digits[1],
-                    ),
-                    Holes(
-                      pick: digits[2],
-                    ),
-                    Holes(
-                      pick: digits[3],
-                    ),
-                    Holes(
-                      pick: digits[4],
-                    ),
-                  ],
-                ),
-              )
-            ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 0, bottom: 5),
+            child: DPTextSlider(
+              infoList: dailyPickTextList,
+            ),
           ),
-        ));
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: List.generate(
+              digits.length,
+              (index) => Holes(
+                pick: digits[index],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -112,8 +94,6 @@ class _HolesState extends State<Holes> {
 
   @override
   Widget build(BuildContext context) {
-    double _height = MediaQuery.of(context).size.height;
-    double _width = MediaQuery.of(context).size.width;
     List pickList = [
       widget.pick - 2,
       widget.pick + 4,
@@ -124,31 +104,59 @@ class _HolesState extends State<Holes> {
     ];
     return Container(
       height: SizeConfig.screenWidth * 0.1,
-      width: SizeConfig.screenWidth * 0.10,
-      padding: EdgeInsets.all(4),
+      width: SizeConfig.screenWidth * 0.1,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.white,
       ),
       child: widget.pick != -1
-          ? ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: pickList.length,
+          ? ListWheelScrollView(
+              itemExtent: SizeConfig.screenWidth * 0.1,
               controller: _scrollController,
-              shrinkWrap: true,
-              itemBuilder: (ctx, i) {
-                return Text(
-                  "${pickList[i]}",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: _height * 0.028),
-                );
-              },
+              physics: BouncingScrollPhysics(),
+              children: List.generate(
+                  pickList.length,
+                  (i) => Container(
+                        height: SizeConfig.screenWidth * 0.1,
+                        width: SizeConfig.screenWidth * 0.1,
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.all(8),
+                        child: FittedBox(
+                          child: Text(
+                            "${pickList[i]}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black54,
+                                fontSize: SizeConfig.largeTextSize),
+                          ),
+                        ),
+                      )),
             )
+          // ListView.builder(
+          //     physics: NeverScrollableScrollPhysics(),
+          //     itemCount: pickList.length,
+          //
+          //     shrinkWrap: true,
+          //     itemBuilder: (ctx, i) {
+          //       return Container(
+          //         height: SizeConfig.screenWidth * 0.1,
+          //         width: SizeConfig.screenWidth * 0.1,
+          //         alignment: Alignment.center,
+          //         padding: EdgeInsets.all(8),
+          //         child: Text(
+          //           "${pickList[i]}",
+          //           style: TextStyle(
+          //               fontWeight: FontWeight.w700,
+          //               fontSize: SizeConfig.largeTextSize),
+          //         ),
+          //       );
+          //     },
+          //   )
           : Center(
               child: Text(
                 "-",
-                style: TextStyle(fontSize: _height * 0.028),
+                style: TextStyle(fontSize: SizeConfig.largeTextSize),
               ),
             ),
     );

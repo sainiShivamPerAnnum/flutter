@@ -28,8 +28,8 @@ class UsernameState extends State<Username> {
   final _formKey = GlobalKey<FormState>();
 
   Future<bool> validate() async {
+    username = usernameController.text.trim();
     setState(() {
-      username = usernameController.text.trim().replaceAll('.', '@');
       isLoading = true;
     });
     if (username == "" || username == null)
@@ -37,7 +37,8 @@ class UsernameState extends State<Username> {
         isValid = null;
       });
     else if (regex.hasMatch(username)) {
-      bool res = await dbProvider.checkIfUsernameIsAvailable(username);
+      bool res = await dbProvider
+          .checkIfUsernameIsAvailable(username.replaceAll('.', '@'));
       setState(() {
         isValid = res;
       });
@@ -62,11 +63,11 @@ class UsernameState extends State<Username> {
         ),
       );
     } else if (isValid == true)
-      return Text("$username is available",
+      return Text("${usernameController.text.trim()} is available",
           style: TextStyle(
               color: UiConstants.primaryColor, fontWeight: FontWeight.w500));
     else if (isValid == false)
-      return Text("$username is not available",
+      return Text("${usernameController.text.trim()} is not available",
           style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500));
     return SizedBox(
       height: 16,

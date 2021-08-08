@@ -1,8 +1,13 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class BaseRemoteConfig {
   static RemoteConfig remoteConfig;
+  static DBModel _dbProvider = locator<DBModel>();
+  static BaseUtil _baseProvider = locator<BaseUtil>();
 
   ///Each config is set as a map = {name, default value}
   static const Map<String, String> _DRAW_PICK_TIME = {'draw_pick_time': '18'};
@@ -11,6 +16,9 @@ class BaseRemoteConfig {
   };
   static const Map<String, String> _TAMBOLA_HEADER_SECOND = {
     'tambola_header_2': 'Click to see the other picks'
+  };
+  static const Map<String, String> _TAMBOLA_DAILY_PICK_COUNT = {
+    'tambola_daily_pick_count': '5'
   };
   static const Map<String, String> _DEPOSIT_UPI_ADDRESS = {
     'deposit_upi_address': '9769637379@okbizaxis'
@@ -66,6 +74,7 @@ class BaseRemoteConfig {
     ..._DRAW_PICK_TIME,
     ..._TAMBOLA_HEADER_FIRST,
     ..._TAMBOLA_HEADER_SECOND,
+    ..._TAMBOLA_DAILY_PICK_COUNT,
     ..._DEPOSIT_UPI_ADDRESS,
     ..._PLAY_SCREEN_FIRST,
     ..._TAMBOLA_WIN_CORNER,
@@ -86,24 +95,30 @@ class BaseRemoteConfig {
   };
 
   static Future<bool> init() async {
-    remoteConfig = await RemoteConfig.instance;
-    remoteConfig.setDefaults(DEFAULTS);
+    print('initializing remote config');
+    remoteConfig = RemoteConfig.instance;
     try {
       // Fetches every 6 hrs
       await remoteConfig.fetch();
-      await remoteConfig.activateFetched();
+      // await remoteConfig.activateFetched();
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeoutMillis: 30000,
-        minimumFetchIntervalMillis: 21600000,
+        fetchTimeout: const Duration(milliseconds: 30000),
+        minimumFetchInterval: const Duration(milliseconds: 21600000),
       ));
+      await remoteConfig.setDefaults(DEFAULTS);
+      RemoteConfigValue(null, ValueSource.valueStatic);
       return true;
-    } on FetchThrottledException catch (exception) {
-      // Fetch throttled.
-      print(exception);
-      return false;
     } catch (exception) {
       print(
           'Unable to fetch remote config. Cached or default values will be used');
+      if (_baseProvider.myUser.uid != null) {
+        var errorDetails = {
+          'Error Type': 'Remote config details fetch failed',
+          'Error message': 'Remote config fetch failed, using default values.'
+        };
+        _dbProvider.logFailure(_baseProvider.myUser.uid,
+            FailType.RemoteConfigFailed, errorDetails);
+      }
       return false;
     }
   }
@@ -141,6 +156,9 @@ class BaseRemoteConfig {
   static String get TAMBOLA_WIN_TOP => _TAMBOLA_WIN_TOP.keys.first;
 
   static String get TAMBOLA_WIN_CORNER => _TAMBOLA_WIN_CORNER.keys.first;
+
+  static String get TAMBOLA_DAILY_PICK_COUNT =>
+      _TAMBOLA_DAILY_PICK_COUNT.keys.first;
 
   static String get PLAY_SCREEN_FIRST => _PLAY_SCREEN_FIRST.keys.first;
 

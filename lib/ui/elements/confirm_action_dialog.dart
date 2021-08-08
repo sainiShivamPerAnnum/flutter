@@ -70,6 +70,7 @@ class _FormDialogState extends State<ConfirmActionDialog> {
             children: <Widget>[
               Text(
                 widget.title,
+                textAlign: TextAlign.center,
                 style: GoogleFonts.montserrat(
                   fontSize: 24.0,
                   fontWeight: FontWeight.w500,

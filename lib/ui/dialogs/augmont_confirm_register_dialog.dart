@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/fundPalettes.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -55,7 +56,6 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     return WillPopScope(
         onWillPop: () async {
-          print("I am here----------->");
           backButtonDispatcher.didPopRoute();
           baseProvider.isAugmontRegnInProgress = false;
           print(AppState.screenStack);
@@ -102,7 +102,7 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                       style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w700,
-                          color: UiConstants.primaryColor),
+                          color: augmontGoldPalette.primaryColor2),
                     ),
                     SizedBox(
                       height: 10,
@@ -135,7 +135,7 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                         ? Padding(
                             padding: EdgeInsets.all(10),
                             child: Text(
-                              'This information cant be changed later',
+                              "This information can't be changed later",
                               style: TextStyle(
                                   fontStyle: FontStyle.italic,
                                   fontSize: SizeConfig.smallTextSize),
@@ -145,22 +145,39 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                     SizedBox(
                       height: 20,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                            onPressed: () {
-                              backButtonDispatcher.didPopRoute();
-                              widget.onReject();
-                            },
-                            child: Text('CANCEL')),
-                        TextButton(
+                    IntrinsicHeight(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          TextButton(
+                              onPressed: () {
+                                backButtonDispatcher.didPopRoute();
+                                widget.onReject();
+                              },
+                              child: Text(
+                                'CANCEL',
+                                style: TextStyle(
+                                    color: augmontGoldPalette.secondaryColor),
+                              )),
+                          VerticalDivider(
+                            thickness: 1,
+                            width: 20,
+                            color: augmontGoldPalette.secondaryColor,
+                          ),
+                          TextButton(
                             onPressed: () {
                               backButtonDispatcher.didPopRoute();
                               widget.onAccept();
                             },
-                            child: Text('CONFIRM')),
-                      ],
+                            child: Text(
+                              'CONFIRM',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: augmontGoldPalette.primaryColor),
+                            ),
+                          ),
+                        ],
+                      ),
                     )
                   ],
                 )),
@@ -192,7 +209,7 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
           style: TextStyle(
             color: Colors.black54,
             fontSize: SizeConfig.mediumTextSize,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),

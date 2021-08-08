@@ -3,12 +3,14 @@ import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
+import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
+import 'package:felloapp/ui/modals/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
@@ -20,7 +22,6 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcase_widget.dart';
 
 class Root extends StatefulWidget {
   @override
@@ -57,33 +58,37 @@ class _RootState extends State<Root> {
       NavBarItemData("Profile", Icons.verified_user, 115,
           "images/svgs/profile.svg", _showFocuses[3]),
     ];
-
     //Create the views which will be mapped to the indices for our nav btns
     _viewsByIndex = <Widget>[
       HomePage(),
-      ShowCaseWidget(
-        builder: Builder(
-          builder: (context) => GamePage(),
-        ),
-        onFinish: () {
-          baseProvider.show_game_tutorial = false;
-          _navBarItems[1].showFocus = false;
-          lclDbProvider.saveHomeTutorialComplete = true;
-          setState(() {});
-        },
-      ),
-      ShowCaseWidget(
-        builder: Builder(
-          builder: (context) => FinancePage(),
-        ),
-        onFinish: () {
-          baseProvider.show_finance_tutorial = false;
-          _navBarItems[2].showFocus = false;
-          baseProvider.show_game_tutorial = true;
-          _navBarItems[1].showFocus = true;
-          setState(() {});
-        },
-      ),
+      GamePage(),
+      FinancePage(),
+      // ShowCaseWidget(
+      //   builder: Builder(
+      //     builder: (context) => GamePage(),
+      //   ),
+      //   onFinish: () {
+      //     baseProvider.show_game_tutorial = false;
+      //     _navBarItems[1].showFocus = false;
+      //     lclDbProvider.saveHomeTutorialComplete = true;
+      //
+      //     _showSecurityBottomSheet();
+      //
+      //     setState(() {});
+      //   },
+      // ),
+      // ShowCaseWidget(
+      //   builder: Builder(
+      //     builder: (context) => FinancePage(),
+      //   ),
+      //   onFinish: () {
+      //     baseProvider.show_finance_tutorial = false;
+      //     _navBarItems[2].showFocus = false;
+      //     baseProvider.show_game_tutorial = true;
+      //     _navBarItems[1].showFocus = true;
+      //     setState(() {});
+      //   },
+      // ),
       ProfilePage(),
     ];
     super.initState();
@@ -104,14 +109,6 @@ class _RootState extends State<Root> {
     }
   }
 
-  // String getBurgerImage() {
-  //   if (appState.getCurrentTabIndex == 0 || appState.getCurrentTabIndex == 1) {
-  //     return "images/menu-white.png";
-  //   } else {
-  //     return "images/menu.png";
-  //   }
-  // }
-
   _initAdhocNotifications() {
     if (fcmProvider != null && baseProvider != null) {
       fcmProvider.addIncomingMessageListener((valueMap) {
@@ -124,18 +121,43 @@ class _RootState extends State<Root> {
     }
   }
 
+  void _showSecurityBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0))),
+        backgroundColor: UiConstants.bottomNavBarColor,
+        builder: (context) {
+          return const SecurityModalSheet();
+        });
+  }
+
   _initialize() {
     if (!_isInitialized) {
       _isInitialized = true;
       lclDbProvider.isHomeTutorialComplete.then((value) {
         if (value == 0) {
           //show tutorial
-          baseProvider.show_finance_tutorial = true;
-          _navBarItems[2].showFocus = true;
+          baseProvider.show_home_tutorial = true;
+          // _navBarItems[2].showFocus = true;
           setState(() {});
         }
       });
       _initAdhocNotifications();
+
+      // show security modal
+      if (baseProvider.show_security_prompt &&
+          baseProvider.myUser.isAugmontOnboarded &&
+          baseProvider.myUser.userPreferences
+                  .getPreference(Preferences.APPLOCK) ==
+              0) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _showSecurityBottomSheet();
+          lclDbProvider.updateSecurityPrompt(false);
+        });
+      }
       baseProvider.isUnreadFreshchatSupportMessages().then((flag) {
         if (flag) {
           baseProvider.showPositiveAlert('You have unread support messages',
@@ -171,57 +193,57 @@ class _RootState extends State<Root> {
     // final GlobalKey<ScaffoldState> _scaffoldKey =
     //     new GlobalKey<ScaffoldState>();
     return Scaffold(
-      backgroundColor: UiConstants.bottomNavBarColor,
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          Container(
-            width: double.infinity,
-            //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
-            child: AnimatedSwitcher(
-              duration: Duration(milliseconds: 350),
-              //Pass the current accent color down as a theme, so our overscroll indicator matches the btn color
-              child: Theme(
-                data: ThemeData(accentColor: accentColor),
-                child: contentView,
+        backgroundColor: UiConstants.bottomNavBarColor,
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [
+            Container(
+              width: double.infinity,
+              //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
+              child: AnimatedSwitcher(
+                duration: Duration(milliseconds: 350),
+                //Pass the current accent color down as a theme, so our overscroll indicator matches the btn color
+                child: Theme(
+                  data: ThemeData(accentColor: accentColor),
+                  child: contentView,
+                ),
               ),
             ),
-          ),
-          SafeArea(
-            child: GestureDetector(
-              onTap: () {
-                HapticFeedback.vibrate();
-                delegate.parseRoute(Uri.parse("d-ham"));
-              },
-              child: Container(
-                height: SizeConfig.blockSizeVertical * 5,
-                width: SizeConfig.blockSizeVertical * 5,
-                margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.blockSizeHorizontal * 5,
-                  vertical: kToolbarHeight * 0.4,
-                ),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: getBurgerBorder(), width: 2),
-                ),
-                alignment: Alignment.center,
+            SafeArea(
+              child: GestureDetector(
+                onTap: () {
+                  HapticFeedback.vibrate();
+                  delegate.parseRoute(Uri.parse("d-ham"));
+                },
                 child: Container(
-                  height: SizeConfig.blockSizeVertical * 1.4,
-                  child: Image.asset(
-                    "images/menu.png",
-                    color: (appState.getCurrentTabIndex == 0 ||
-                            appState.getCurrentTabIndex == 1)
-                        ? Colors.white
-                        : Colors.black,
+                  height: SizeConfig.blockSizeVertical * 5,
+                  width: SizeConfig.blockSizeVertical * 5,
+                  margin: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.blockSizeHorizontal * 5,
+                    vertical: kToolbarHeight * 0.2,
+                  ),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: getBurgerBorder(), width: 2),
+                  ),
+                  alignment: Alignment.center,
+                  child: Container(
+                    height: SizeConfig.blockSizeVertical * 1.4,
+                    child: Image.asset(
+                      "images/menu.png",
+                      color: (appState.getCurrentTabIndex == 0 ||
+                              appState.getCurrentTabIndex == 1)
+                          ? Colors.white
+                          : Colors.black,
+                    ),
                   ),
                 ),
               ),
-            ),
-          )
-        ],
-      ),
-      bottomNavigationBar: navBar, //Pass our custom navBar into the scaffold
-    );
+            )
+          ],
+        ),
+        bottomNavigationBar: navBar //Pass our custom navBar into the scaffold
+        );
   }
 
   void _handleNavBtnTapped(int index) {

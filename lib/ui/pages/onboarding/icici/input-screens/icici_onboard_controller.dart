@@ -14,7 +14,7 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-screens/income_details.
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/otp_verification.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
-import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
+import '../../../tabs/finance/icici/mf_details_page.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -581,14 +581,14 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
           baseProvider.myUser.uid, baseProvider.iciciDetail);
       //update flags in user document
       baseProvider.myUser.isKycVerified = Constants.KYC_VALID;
-      baseProvider.myUser.pan = panNumber;
+      baseProvider.myUser.pan = panNumber; //TODO change pan field to vX
       bool userFlagUpdated = await dbProvider.updateUser(baseProvider.myUser);
       log.debug(
           'Flags for icici update and user update: $iciciUpdated, $userFlagUpdated');
     } else if (fKycStatus == GetKycStatus.KYC_STATUS_ALLOW_VIDEO) {
       log.debug('User is NOT KYC verified');
       baseProvider.myUser.isKycVerified = Constants.KYC_INVALID;
-      baseProvider.myUser.pan = panNumber;
+      baseProvider.myUser.pan = panNumber; //TODO change pan field to vX
       bool userFlagUpdated = await dbProvider.updateUser(baseProvider.myUser);
       log.debug('Flags for icici update:$userFlagUpdated');
     } else {
@@ -1227,21 +1227,21 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
                                         onClick: () {
                                           if (baseProvider.isSignedIn() &&
                                               baseProvider.isActiveUser()) {
-                                            dbProvider
-                                                .addCallbackRequest(
-                                                    baseProvider
-                                                        .firebaseUser.uid,
-                                                    baseProvider.myUser.name,
-                                                    baseProvider.myUser.mobile)
-                                                .then((flag) {
-                                              if (flag) {
-                                                Navigator.of(context).pop();
-                                                baseProvider.showPositiveAlert(
-                                                    'Callback placed!',
-                                                    'We\'ll contact you soon on your registered mobile',
-                                                    context);
-                                              }
-                                            });
+                                            // dbProvider
+                                            //     .addCallbackRequest(
+                                            //         baseProvider
+                                            //             .firebaseUser.uid,
+                                            //         baseProvider.myUser.name,
+                                            //         baseProvider.myUser.mobile)
+                                            //     .then((flag) {
+                                            //   if (flag) {
+                                            //     Navigator.of(context).pop();
+                                            //     baseProvider.showPositiveAlert(
+                                            //         'Callback placed!',
+                                            //         'We\'ll contact you soon on your registered mobile',
+                                            //         context);
+                                            //   }
+                                            // });
                                           } else {
                                             baseProvider.showNegativeAlert(
                                                 'Unavailable',

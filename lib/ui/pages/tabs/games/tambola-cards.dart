@@ -1,5 +1,5 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
-import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class TambolaCardsList extends StatelessWidget {
@@ -10,13 +10,7 @@ class TambolaCardsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          backgroundColor: UiConstants.primaryColor,
-          iconTheme: IconThemeData(color: Colors.white),
-          title: Text(
-            "My Tambola Cards",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-          )),
+      appBar: BaseUtil.getAppBar(context, "My Tambola Cards"),
       body: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20),
         child: ListView.builder(

@@ -38,6 +38,12 @@ class Api {
     return ref.doc(docId).set(data, SetOptions(merge: true));
   }
 
+  Future<void> updateUserDocumentPreferenceField(
+      String docId, Map<String, dynamic> data) {
+    ref = _db.collection(Constants.COLN_USERS);
+    return ref.doc(docId).update(data);
+  }
+
   Future<DocumentSnapshot> getUserIciciDetailDocument(String userId) {
     ref = _db
         .collection(Constants.COLN_USERS)
@@ -54,6 +60,22 @@ class Api {
     return ref
         .doc(Constants.DOC_USER_ICICI_DETAIL)
         .set(data, SetOptions(merge: true));
+  }
+
+  Future<DocumentSnapshot> getUserPrtdDocPan(String userId) {
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_PRTD);
+    return ref.doc('pan').get();
+  }
+
+  Future<void> addUserPrtdDocPan(String userId, Map data) {
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_PRTD);
+    return ref.doc('pan').set(data, SetOptions(merge: false));
   }
 
   Future<DocumentSnapshot> getUserAugmontDetailDocument(String userId) {
@@ -152,18 +174,18 @@ class Api {
     return _db
         .runTransaction((transaction) async {
           DocumentSnapshot snapshot = await transaction.get(_rRef);
-          if (!snapshot.exists) {
+          Map<String, dynamic> snapData = (snapshot.exists)?snapshot.data():null;
+          if (!snapshot.exists && snapData == null) {
             //did not sign up via referral
             throw Exception('No referral found');
-          } else if (snapshot.data() == null ||
-              snapshot.data()[ReferralDetail.fldUsrBonusFlag] == null ||
-              snapshot.data()[ReferralDetail.fldRefereeBonusFlag] == null) {
+          } else if (snapData[ReferralDetail.fldUsrBonusFlag] == null ||
+              snapData[ReferralDetail.fldRefereeBonusFlag] == null) {
             throw Exception('Empty/invalid data');
           } else {
             bool _uFlag, _rFlag;
             try {
-              _uFlag = snapshot.data()[ReferralDetail.fldUsrBonusFlag];
-              _rFlag = snapshot.data()[ReferralDetail.fldRefereeBonusFlag];
+              _uFlag = snapData[ReferralDetail.fldUsrBonusFlag];
+              _rFlag = snapData[ReferralDetail.fldRefereeBonusFlag];
             } catch (e) {
               throw Exception('Failed to create bool flags');
             }
@@ -456,6 +478,16 @@ class Api {
     return _storage.ref('dps/$uid/$path').getDownloadURL();
   }
 
+  Future<List<String>> getWalkthroughFiles() async {
+    ListResult _allVideos = await _storage.ref('walkthrough').listAll();
+    List<String> _res = [];
+    for (Reference ref in _allVideos.items) {
+      var value = await ref.getDownloadURL();
+      _res.add(value);
+    }
+    return _res;
+  }
+
   Future<bool> deleteUserTicketsBeforeWeekCode(String uid, int weekCde) async {
     bool flag = true;
     Query _query = _db
@@ -519,8 +551,8 @@ class Api {
 
   Future<bool> createEmailVerificationDocument(String email, String otp) async {
     // String htmlCode = OTPEmail().getEmailCode(otp);
-    String htmlCode = await rootBundle
-        .loadString('resources/fello-email-verification.html');
+    String htmlCode =
+        await rootBundle.loadString('resources/fello-email-verification.html');
     htmlCode = htmlCode.replaceAll('\$otp', otp);
     Map<String, dynamic> data = {
       'to': [email],

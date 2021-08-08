@@ -1,4 +1,4 @@
-class Log{
+class Log {
   final String APP_NAME = "FELLO";
   String class_name;
 

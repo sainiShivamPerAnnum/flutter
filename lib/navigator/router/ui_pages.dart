@@ -5,7 +5,7 @@ const String SplashPath = '/splash';
 const String LoginPath = '/login';
 const String OnboardPath = '/onboard';
 const String RootPath = '/approot';
-const String EditProfilePath = '/editProfile';
+const String UserProfileDetailsPath = '/userProfileDetails';
 const String MfDetailsPath = '/mfDetails';
 const String AugDetailsPath = '/augDetails';
 const String TransactionPath = '/tran';
@@ -21,13 +21,17 @@ const String ReferralPolicyPath = '/refPolicy';
 const String ChatSupportPath = '/chatSupport';
 const String ClaimUsernamePath = '/claimUsername';
 const String VerifyEmailPath = '/verifyEmail';
+const String ContactUsPath = '/contactUs';
+const String WalkThroughPath = '/walkThrough';
+const String WalkThroughCompletedPath = '/walkThroughCompleted';
+const String YourFundsPath = '/yourFunds';
 
 enum Pages {
   Splash,
   Login,
   Onboard,
   Root,
-  EditProfile,
+  UserProfileDetails,
   MfDetails,
   AugDetails,
   Transaction,
@@ -42,7 +46,11 @@ enum Pages {
   RefPolicy,
   ChatSupport,
   ClaimUsername,
-  VerifyEmail
+  VerifyEmail,
+  ContactUs,
+  WalkThrough,
+  WalkThroughCompleted,
+  YourFunds
 }
 
 class PageConfiguration {
@@ -78,10 +86,10 @@ PageConfiguration OnboardPageConfig = PageConfiguration(
   path: OnboardPath,
   uiPage: Pages.Onboard,
 );
-PageConfiguration EditProfileConfig = PageConfiguration(
+PageConfiguration UserProfileDetailsConfig = PageConfiguration(
   key: 'EditProfile',
-  path: EditProfilePath,
-  uiPage: Pages.EditProfile,
+  path: UserProfileDetailsPath,
+  uiPage: Pages.UserProfileDetails,
 );
 PageConfiguration MfDetailsPageConfig = PageConfiguration(
   key: 'MfDetails',
@@ -161,4 +169,24 @@ PageConfiguration VerifyEmailPageConfig = PageConfiguration(
   key: 'VerifyEmail',
   path: VerifyEmailPath,
   uiPage: Pages.VerifyEmail,
+);
+PageConfiguration ContactUsConfig = PageConfiguration(
+  key: 'ContactUs',
+  path: ContactUsPath,
+  uiPage: Pages.ContactUs,
+);
+PageConfiguration WalkThroughConfig = PageConfiguration(
+  key: 'WalkThrough',
+  path: WalkThroughPath,
+  uiPage: Pages.WalkThrough,
+);
+PageConfiguration WalkThroughCompletedConfig = PageConfiguration(
+  key: 'WalkThroughCompleted',
+  path: WalkThroughCompletedPath,
+  uiPage: Pages.WalkThroughCompleted,
+);
+PageConfiguration YourFundsConfig = PageConfiguration(
+  key: 'YourFunds',
+  path: YourFundsPath,
+  uiPage: Pages.YourFunds,
 );

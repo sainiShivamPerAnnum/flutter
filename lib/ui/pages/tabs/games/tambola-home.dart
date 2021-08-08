@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
@@ -243,92 +242,85 @@ class _TambolaGameScreen extends State<TambolaHome> {
         backgroundColor: Color(0xfff1f1f1),
         body: ShowCaseWidget(
           builder: Builder(
-              builder: (context) =>
-                  Stack(
-                    children: [
-                      Container(
-                        height: SizeConfig.screenHeight * 0.2,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            stops: [0.1, 0.6],
-                            colors: [
-                              UiConstants.primaryColor.withGreen(190),
-                              UiConstants.primaryColor,
-                            ],
-                          ),
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.elliptical(
-                                MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width * 0.50, 18),
-                            bottomRight: Radius.elliptical(
-                                MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width * 0.50, 18),
-                          ),
+              builder: (context) => Stack(
+                children: [
+                  Container(
+                    height: SizeConfig.screenHeight * 0.2,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        stops: [0.1, 0.6],
+                        colors: [
+                          UiConstants.primaryColor.withGreen(190),
+                          UiConstants.primaryColor,
+                        ],
+                      ),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.elliptical(
+                            MediaQuery.of(context).size.width * 0.50, 18),
+                        bottomRight: Radius.elliptical(
+                            MediaQuery.of(context).size.width * 0.50, 18),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Spacer(),
+                        _buildTicketCount(),
+                        SizedBox(
+                          height: 10,
                         ),
-                        child: Column(
+                      ],
+                    ),
+                  ),
+                  SafeArea(
+                      child: SingleChildScrollView(
+                          physics: BouncingScrollPhysics(),
+                          child: _buildCardCanvas(context))),
+                  Positioned(
+                    top: 5,
+                    child: SafeArea(
+                      child: Container(
+                        width: SizeConfig.screenWidth,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.blockSizeHorizontal * 3),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Spacer(),
-                            _buildTicketCount(),
-                            SizedBox(
-                              height: 10,
+                            IconButton(
+                              color: Colors.white,
+                              icon: Icon(Icons.arrow_back),
+                              onPressed: () {
+                                HapticFeedback.vibrate();
+                                backButtonDispatcher.didPopRoute();
+                              },
+                            ),
+                            Text('Tambola',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: SizeConfig.largeTextSize)),
+                            IconButton(
+                              color: Colors.white,
+                              icon: Icon(Icons.help_outline),
+                              onPressed: () {
+                                HapticFeedback.vibrate();
+                                _showTutorial = true;
+                                if (!_startTutorial(context)) {
+                                  //baseProvider.showNegativeAlert('Try soon', message, context)
+                                }
+                              },
                             ),
                           ],
                         ),
                       ),
-                      SafeArea(
-                          child: SingleChildScrollView(
-                              physics: BouncingScrollPhysics(),
-                              child: _buildCardCanvas(context))),
-                      Positioned(
-                        top: 5,
-                        child: SafeArea(
-                          child: Container(
-                            width: SizeConfig.screenWidth,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.blockSizeHorizontal * 3),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                IconButton(
-                                  color: Colors.white,
-                                  icon: Icon(Icons.arrow_back),
-                                  onPressed: () {
-                                    HapticFeedback.vibrate();
-                                    backButtonDispatcher.didPopRoute();
-                                  },
-                                ),
-                                Text('Tambola',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: SizeConfig.largeTextSize)),
-                                IconButton(
-                                  color: Colors.white,
-                                  icon: Icon(Icons.help_outline),
-                                  onPressed: () {
-                                    HapticFeedback.vibrate();
-                                    _showTutorial = true;
-                                    if (!_startTutorial(context)) {
-                                      //baseProvider.showNegativeAlert('Try soon', message, context)
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      // SafeArea(
-                      //     child: Align(
-                      //         alignment: Alignment.bottomCenter, child: _buildPrizeButton()))
-                    ],
-                  )),
+                    ),
+                  ),
+                  // SafeArea(
+                  //     child: Align(
+                  //         alignment: Alignment.bottomCenter, child: _buildPrizeButton()))
+                ],
+              )),
         )
       //),
     );
@@ -343,12 +335,11 @@ class _TambolaGameScreen extends State<TambolaHome> {
         SizedBox(height: SizeConfig.screenHeight * 0.143),
         (baseProvider.weeklyDrawFetched)
             ? InkWell(
-          child: BaseUtil.buildShowcaseWrapper(
-              _showcaseTwo,
-              Assets.showCaseDesc[1],
-              _buildTodaysPicksWidget(baseProvider.weeklyDigits)),
+          child: BaseUtil.buildShowcaseWrapper(_showcaseTwo,
+              Assets.showCaseDesc[1], _buildTodaysPicksWidget()),
           onTap: () {
             HapticFeedback.vibrate();
+            AppState.screenStack.add(ScreenItem.dialog);
             showDialog(
                 context: context,
                 builder: (BuildContext context) =>
@@ -424,14 +415,6 @@ class _TambolaGameScreen extends State<TambolaHome> {
                           tambolaBoardView: _tambolaBoardViews,
                         ),
                       );
-                      // Navigator.push(
-                      //   context,
-                      //   CupertinoPageRoute(
-                      //     builder: (ctx) => TambolaCardsList(
-                      //       tambolaBoardView: _tambolaBoardViews,
-                      //     ),
-                      //   ),
-                      // );
                     },
                   ),
                 ],
@@ -483,19 +466,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
                 indent: SizeConfig.blockSizeHorizontal * 10,
               ),
               //_buildPrizeTabView(),
-              _buildPrizePodium(),
-              (Platform.isIOS) ? Padding(
-                padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                child: Center(
-                  child: Text('Note: Apple is not involved in any way with the Fello Tambola',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.blueGrey,
-                        fontSize: SizeConfig.mediumTextSize
-                    ),
-                  ),
-                ),
-              ):Container()
+              _buildPrizePodium()
             ],
           ),
         )
@@ -504,6 +475,12 @@ class _TambolaGameScreen extends State<TambolaHome> {
   }
 
   _buildPrizePodium() {
+    List<String> faqLeadIcons = [
+      "images/svgs/howitworks.svg",
+      "images/svgs/cash-distribution.svg",
+      "images/svgs/redeem.svg",
+      "images/svgs/winmore.svg",
+    ];
     return Container(
       width: SizeConfig.screenWidth,
       child: Column(
@@ -515,8 +492,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: _podiumItem(
                 "images/Tambola/fullhouse.png",
-                '₹ ${BaseRemoteConfig.remoteConfig.getString(
-                    BaseRemoteConfig.TAMBOLA_WIN_FULL)}',
+                '₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_FULL)}',
                 "Full House"),
           ),
           Row(
@@ -525,16 +501,14 @@ class _TambolaGameScreen extends State<TambolaHome> {
                 flex: 6,
                 child: _podiumItem(
                     "images/Tambola/rows.png",
-                    "₹ ${BaseRemoteConfig.remoteConfig.getString(
-                        BaseRemoteConfig.TAMBOLA_WIN_TOP)}",
+                    "₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_TOP)}",
                     "First/Second/Third Row"),
               ),
               Expanded(
                 flex: 4,
                 child: _podiumItem(
                     "images/Tambola/corners.png",
-                    "₹ ${BaseRemoteConfig.remoteConfig.getString(
-                        BaseRemoteConfig.TAMBOLA_WIN_CORNER)}",
+                    "₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_CORNER)}",
                     "Corners"),
               )
             ],
@@ -543,15 +517,16 @@ class _TambolaGameScreen extends State<TambolaHome> {
           ExpansionPanelList(
             animationDuration: Duration(milliseconds: 600),
             expandedHeaderPadding: EdgeInsets.all(0),
-            dividerColor: Colors.grey.withOpacity(0.3),
+            dividerColor: Colors.grey.withOpacity(0.2),
             elevation: 0,
-            children: [
-              ExpansionPanel(
-                headerBuilder: (ctx, isOpen) =>
-                    _prizeFAQHeader(
-                        "images/svgs/howitworks.svg",
-                        Assets.tambolaFaqList[0].keys.first),
-                isExpanded: detStatus[0],
+            children: List.generate(
+              Assets.tambolaFaqList.length,
+                  (index) => ExpansionPanel(
+                canTapOnHeader: true,
+                headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
+                    faqLeadIcons[index],
+                    Assets.tambolaFaqList[index].keys.first),
+                isExpanded: detStatus[index],
                 body: Container(
                   child: Column(
                     children: [
@@ -566,70 +541,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
                   ),
                 ),
               ),
-              ExpansionPanel(
-                headerBuilder: (ctx, isOpen) =>
-                    _prizeFAQHeader(
-                        "images/svgs/cash-distribution.svg",
-                        Assets.tambolaFaqList[1].keys.first),
-                isExpanded: detStatus[1],
-                body: Container(
-                  padding: EdgeInsets.only(right: 25),
-                  child: Column(
-                    children: [
-                      Text(
-                        Assets.tambolaFaqList[1].values.first,
-                        style: TextStyle(
-                          height: 1.5,
-                          fontSize: SizeConfig.mediumTextSize,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              ExpansionPanel(
-                headerBuilder: (ctx, isOpen) =>
-                    _prizeFAQHeader(
-                        "images/svgs/redeem.svg",
-                        Assets.tambolaFaqList[2].keys.first),
-                body: Container(
-                  padding: EdgeInsets.only(right: 25),
-                  child: Column(
-                    children: [
-                      Text(
-                        Assets.tambolaFaqList[2].values.first,
-                        style: TextStyle(
-                          height: 1.5,
-                          fontSize: SizeConfig.mediumTextSize,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                isExpanded: detStatus[2],
-              ),
-              ExpansionPanel(
-                headerBuilder: (ctx, isOpen) =>
-                    _prizeFAQHeader(
-                        "images/svgs/winmore.svg",
-                        Assets.tambolaFaqList[3].keys.first),
-                body: Container(
-                  padding: EdgeInsets.only(right: 25),
-                  child: Column(
-                    children: [
-                      Text(
-                        Assets.tambolaFaqList[3].values.first,
-                        style: TextStyle(
-                          height: 1.5,
-                          fontSize: SizeConfig.mediumTextSize,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                isExpanded: detStatus[3],
-              )
-            ],
+            ),
             expansionCallback: (i, isOpen) {
               print("$i th item is $isOpen");
               setState(() {
@@ -743,18 +655,15 @@ class _TambolaGameScreen extends State<TambolaHome> {
     if (baseProvider.userWeeklyBoards == null ||
         baseProvider.userWeeklyBoards.isEmpty ||
         baseProvider.weeklyDigits == null ||
-        baseProvider.weeklyDigits
-            .toList()
-            .isEmpty ||
+        baseProvider.weeklyDigits.toList().isEmpty ||
         localDBModel == null) {
       log.debug('Testing is not ready yet');
       return false;
     }
     DateTime date = DateTime.now();
     if (date.weekday == DateTime.sunday) {
-      if (baseProvider.weeklyDigits
-          .toList()
-          .length == 35) {
+      if (baseProvider.weeklyDigits.toList().length ==
+          7 * baseProvider.dailyPicksCount) {
         localDBModel.isTambolaResultProcessingDone().then((flag) {
           if (flag == 0) {
             log.debug('Ticket results not yet displayed. Displaying: ');
@@ -783,9 +692,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
     if (baseProvider.userWeeklyBoards == null ||
         baseProvider.userWeeklyBoards.isEmpty ||
         baseProvider.weeklyDigits == null ||
-        baseProvider.weeklyDigits
-            .toList()
-            .isEmpty) {
+        baseProvider.weeklyDigits.toList().isEmpty) {
       log.debug('Testing is not ready yet');
       return false;
     }
@@ -846,11 +753,10 @@ class _TambolaGameScreen extends State<TambolaHome> {
       new Timer(const Duration(milliseconds: 2500), () {
         showDialog(
             context: context,
-            builder: (BuildContext context) =>
-                TambolaResultsDialog(
-                  winningsMap: ticketCodeWinIndex,
-                  isEligible: _isEligible,
-                ));
+            builder: (BuildContext context) => TambolaResultsDialog(
+              winningsMap: ticketCodeWinIndex,
+              isEligible: _isEligible,
+            ));
       });
     _winnerDialogCalled = true;
 
@@ -882,9 +788,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
     List<TambolaBoard>.filled(5, baseProvider.userWeeklyBoards[0]);
 
     if (baseProvider.weeklyDigits == null ||
-        baseProvider.weeklyDigits
-            .toList()
-            .isEmpty) {
+        baseProvider.weeklyDigits.toList().isEmpty) {
       return _bestTambolaBoards;
     }
 
@@ -1033,9 +937,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
     List<int> _calledDigits;
     if (!baseProvider.weeklyDrawFetched ||
         picks == null ||
-        picks
-            .toList()
-            .isEmpty)
+        picks.toList().isEmpty)
       _calledDigits = [];
     else {
       _calledDigits = picks.getPicksPostDate(board.generatedDayCode);
@@ -1046,95 +948,96 @@ class _TambolaGameScreen extends State<TambolaHome> {
         boardColor: UiConstants.primaryColor.withGreen(200));
   }
 
-  Widget _buildTodaysPicksWidget(DailyPick draws) {
+  Widget _buildTodaysPicksWidget() {
     DateTime date = DateTime.now();
     return Roulette(
-        dailyPickTextList: dailyPickTextList,
-        digits: _getDailyPickData(baseProvider.weeklyDigits, date.weekday));
-  }
-
-  Widget _buildPrizeTabView() {
-    String win_corner = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.TAMBOLA_WIN_CORNER);
-    String win_top = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.TAMBOLA_WIN_TOP);
-    String win_middle = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.TAMBOLA_WIN_MIDDLE);
-    String win_bottom = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.TAMBOLA_WIN_BOTTOM);
-    String win_full = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.TAMBOLA_WIN_FULL);
-    String referral_bonus = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.REFERRAL_BONUS);
-    return Padding(
-      padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _getPrizeRow(
-              'Referral',
-              (referral_bonus == null || referral_bonus.isEmpty)
-                  ? '₹25'
-                  : '₹$referral_bonus'),
-          _getPrizeRow(
-              'Corners',
-              (win_corner == null || win_corner.isEmpty)
-                  ? '₹500'
-                  : '₹$win_corner'),
-          _getPrizeRow('First Row',
-              (win_top == null || win_top.isEmpty) ? '₹1500' : '₹$win_top'),
-          _getPrizeRow(
-              'Second Row',
-              (win_middle == null || win_middle.isEmpty)
-                  ? '₹1500'
-                  : '₹$win_middle'),
-          _getPrizeRow(
-              'Third Row',
-              (win_bottom == null || win_bottom.isEmpty)
-                  ? '₹1500'
-                  : '₹$win_bottom'),
-          _getPrizeRow(
-              'Full House',
-              (win_full == null || win_full.isEmpty)
-                  ? '₹10,000'
-                  : '₹$win_full'),
-        ],
-      ),
-    );
-    // );
-  }
-
-  Widget _getPrizeRow(String title, String prize) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 8),
-      padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.blockSizeHorizontal * 1.6,
-          vertical: SizeConfig.blockSizeVertical * 0.5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Expanded(
-            child: Text(title,
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                    fontSize: SizeConfig.mediumTextSize,
-                    height: 1.6,
-                    color: UiConstants.accentColor)),
-          ),
-          Expanded(
-            child: Text(prize,
-                textAlign: TextAlign.end,
-                style: TextStyle(
-                    fontSize: SizeConfig.mediumTextSize,
-                    height: 1.6,
-                    fontWeight: FontWeight.bold,
-                    color: UiConstants.primaryColor)),
-          ),
-        ],
-      ),
+      dailyPickTextList: dailyPickTextList,
+      digits: _getDailyPickData(baseProvider.weeklyDigits, date.weekday),
     );
   }
+
+  // Widget _buildPrizeTabView() {
+  //   String win_corner = BaseRemoteConfig.remoteConfig
+  //       .getString(BaseRemoteConfig.TAMBOLA_WIN_CORNER);
+  //   String win_top = BaseRemoteConfig.remoteConfig
+  //       .getString(BaseRemoteConfig.TAMBOLA_WIN_TOP);
+  //   String win_middle = BaseRemoteConfig.remoteConfig
+  //       .getString(BaseRemoteConfig.TAMBOLA_WIN_MIDDLE);
+  //   String win_bottom = BaseRemoteConfig.remoteConfig
+  //       .getString(BaseRemoteConfig.TAMBOLA_WIN_BOTTOM);
+  //   String win_full = BaseRemoteConfig.remoteConfig
+  //       .getString(BaseRemoteConfig.TAMBOLA_WIN_FULL);
+  //   String referral_bonus = BaseRemoteConfig.remoteConfig
+  //       .getString(BaseRemoteConfig.REFERRAL_BONUS);
+  //   return Padding(
+  //     padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
+  //     child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.start,
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: [
+  //         _getPrizeRow(
+  //             'Referral',
+  //             (referral_bonus == null || referral_bonus.isEmpty)
+  //                 ? '₹25'
+  //                 : '₹$referral_bonus'),
+  //         _getPrizeRow(
+  //             'Corners',
+  //             (win_corner == null || win_corner.isEmpty)
+  //                 ? '₹500'
+  //                 : '₹$win_corner'),
+  //         _getPrizeRow('First Row',
+  //             (win_top == null || win_top.isEmpty) ? '₹1500' : '₹$win_top'),
+  //         _getPrizeRow(
+  //             'Second Row',
+  //             (win_middle == null || win_middle.isEmpty)
+  //                 ? '₹1500'
+  //                 : '₹$win_middle'),
+  //         _getPrizeRow(
+  //             'Third Row',
+  //             (win_bottom == null || win_bottom.isEmpty)
+  //                 ? '₹1500'
+  //                 : '₹$win_bottom'),
+  //         _getPrizeRow(
+  //             'Full House',
+  //             (win_full == null || win_full.isEmpty)
+  //                 ? '₹10,000'
+  //                 : '₹$win_full'),
+  //       ],
+  //     ),
+  //   );
+  //   // );
+  // }
+
+  // Widget _getPrizeRow(String title, String prize) {
+  //   return Container(
+  //     margin: EdgeInsets.only(bottom: 8),
+  //     padding: EdgeInsets.symmetric(
+  //         horizontal: SizeConfig.blockSizeHorizontal * 1.6,
+  //         vertical: SizeConfig.blockSizeVertical * 0.5),
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //       children: [
+  //         Expanded(
+  //           child: Text(title,
+  //               textAlign: TextAlign.left,
+  //               style: TextStyle(
+  //                   fontSize: SizeConfig.mediumTextSize,
+  //                   height: 1.6,
+  //                   color: UiConstants.accentColor)),
+  //         ),
+  //         Expanded(
+  //           child: Text(prize,
+  //               textAlign: TextAlign.end,
+  //               style: TextStyle(
+  //                   fontSize: SizeConfig.mediumTextSize,
+  //                   height: 1.6,
+  //                   fontWeight: FontWeight.bold,
+  //                   color: UiConstants.primaryColor)),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   List<int> _getDailyPickData(DailyPick draws, int day) {
     List<int> picks = [];
@@ -1143,7 +1046,7 @@ class _TambolaGameScreen extends State<TambolaHome> {
         picks.add(element);
       });
     } else {
-      for (int i = 0; i < 5; i++) {
+      for (int i = 0; i < baseProvider.dailyPicksCount; i++) {
         picks.add(-1);
       }
     }
@@ -1198,7 +1101,7 @@ class Odds extends StatelessWidget {
                         color: Colors.blueGrey[800]))),
           ),
           ListView.builder(
-            physics: BouncingScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: 6,
             itemBuilder: (context, index) {
@@ -1346,11 +1249,10 @@ class Odds extends StatelessWidget {
                       HapticFeedback.vibrate();
                       showDialog(
                           context: cx,
-                          builder: (BuildContext context) =>
-                              TambolaDialog(
-                                board: _bestBoard,
-                                digits: _digits,
-                              ));
+                          builder: (BuildContext context) => TambolaDialog(
+                            board: _bestBoard,
+                            digits: _digits,
+                          ));
                     },
                   )),
             ]));

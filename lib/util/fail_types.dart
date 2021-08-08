@@ -1,4 +1,4 @@
-enum FailType{
+enum FailType {
   UserLoginOtpFailed,
   UserKYCFlagFetchFailed,
   UserICICAppCreationFailed,
@@ -28,6 +28,11 @@ enum FailType{
   UserAugmontDepositUpdateDiscrepancy,
   UserAugmontWthdrwUpdateDiscrepancy,
   UserAugmontRegnFailed,
+  DailyPickParseFailed,
+  FreshchatFail,
+  RemoteConfigFailed,
+  UserAugmontBalanceUpdateFailed,
+  TambolaDrawNotificationSettingFailed,
 }
 
 extension ParseToString on FailType {
