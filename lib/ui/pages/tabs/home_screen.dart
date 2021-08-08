@@ -227,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.white,
                   width: 3,
                 )),
-            child: isImageLoading
+            child: baseProvider.myUserDpUrl == null
                 ? Image.asset(
                     "images/profile.png",
                     fit: BoxFit.cover,
@@ -254,7 +254,7 @@ class _HomePageState extends State<HomePage> {
                       fontWeight: FontWeight.w700,
                       fontSize: SizeConfig.largeTextSize),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 FittedBox(
                   child: Text(
                     baseProvider.myUser.name,
@@ -278,7 +278,6 @@ class HomeCard extends StatelessWidget {
   final String asset, title, subtitle, buttonText;
   final Function onPressed;
   final List<Color> gradient;
-  LocalDBModel localDbProvider;
   bool isHighlighted;
 
   HomeCard(
@@ -292,7 +291,8 @@ class HomeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    localDbProvider = Provider.of<LocalDBModel>(context, listen: false);
+    LocalDBModel localDbProvider =
+        Provider.of<LocalDBModel>(context, listen: false);
     return Container(
       margin: EdgeInsets.only(
           bottom: 20,

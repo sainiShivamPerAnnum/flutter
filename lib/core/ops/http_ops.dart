@@ -131,7 +131,7 @@ class HttpModel extends ChangeNotifier {
     final Uri _uri = Uri.https(
         US_BASE_URI, '/userTxnOps/api/registerPrizeClaim', {
       'userId': userId,
-      'amount': amount,
+      'amount': '$amount',
       'redeemType': claimChoice.value()
     });
     log.debug('URL: $_uri');

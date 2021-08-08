@@ -4,9 +4,9 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class AboutUsDialog extends StatelessWidget {
-  final Log log = new Log('AboutUsDialog');
+  final Log log = const Log('AboutUsDialog');
 
-  AboutUsDialog();
+  const AboutUsDialog();
 
   @override
   Widget build(BuildContext context) {

@@ -19,9 +19,7 @@ import 'package:provider/provider.dart';
 class NameInputScreen extends StatefulWidget {
   static const int index = 2;
 
-  //final VoidCallback continueWithGoogle;
-
-  NameInputScreen({Key key}) : super(key: key); //pager index
+  const NameInputScreen({Key key}) : super(key: key); //pager index
 
   @override
   State<StatefulWidget> createState() => NameInputScreenState();
@@ -240,7 +238,6 @@ class NameInputScreenState extends State<NameInputScreen> {
     }
     return Container(
       child: ListView(
-        //crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 16),

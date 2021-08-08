@@ -6,7 +6,7 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
-import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
@@ -101,50 +101,17 @@ class HamburgerMenu extends StatelessWidget {
 
   _routeOptionRequest(String key, BuildContext context) {
     switch (key) {
-      case 'upAddress':
-        {
-          // if(BaseUtil.isDeviceOffline)
-          //   baseProvider.showNoInternetAlert(context);
-          // else
-          //   Navigator.of(context).pushNamed('/updateAddress');
-          break;
-        }
       case 'abUs':
         {
           delegate.parseRoute(Uri.parse("d-aboutUs"));
           break;
         }
-      case 'faq':
-        {
-          HapticFeedback.vibrate();
-          //Navigator.of(context).pushNamed('/faq');
-          appstate.currentAction =
-              PageAction(state: PageState.addPage, page: FaqPageConfig);
-          break;
-        }
-      case 'tnc':
-        {
-          HapticFeedback.vibrate();
-          //Navigator.of(context).pushNamed('/tnc');
-          appstate.currentAction =
-              PageAction(state: PageState.addPage, page: TncPageConfig);
-          break;
-        }
-      case 'contUs':
+      case 'supp':
         {
           appstate.currentAction =
-              PageAction(state: PageState.addPage, page: ContactUsConfig);
+              PageAction(state: PageState.addPage, page: SupportConfig);
           break;
         }
-      // case 'kyc':
-      //   {
-      //     HapticFeedback.vibrate();
-      //     Navigator.push(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => KycOnboardController()),
-      //     );
-      //     break;
-      //   }
       case 'signOut':
         {
           AppState.screenStack.add(ScreenItem.dialog);
@@ -212,7 +179,7 @@ class HamburgerMenu extends StatelessWidget {
                                 : baseProvider.firebaseUser.uid,
                             fdbk)
                         .then((flag) {
-                      Navigator.of(context).pop();
+                      backButtonDispatcher.didPopRoute();
                       if (flag) {
                         baseProvider.showPositiveAlert('Thank You',
                             'We appreciate your feedback!', context);
@@ -233,7 +200,7 @@ class HamburgerMenu extends StatelessWidget {
           key: 'abUs', value: 'About ${Constants.APP_NAME}', isEnabled: true),
       new OptionDetail(key: 'fdbk', value: 'Feedback', isEnabled: true),
       // new OptionDetail(key: 'faq', value: 'FAQs', isEnabled: true),
-      new OptionDetail(key: 'contUs', value: 'Support', isEnabled: true),
+      new OptionDetail(key: 'supp', value: 'Support', isEnabled: true),
       new OptionDetail(
           key: 'signOut',
           value: 'Sign Out',
@@ -251,84 +218,3 @@ class OptionDetail {
 
   OptionDetail({this.key, this.value, this.isEnabled});
 }
-
-// OLD CONTACT US SYSTEM---------------------------------------------------------------------------------------------------
-
-//TODO Navigator.of(context).pushNamed('/support');
-// showDialog(
-//     context: context,
-//     builder: (BuildContext dialogContext) => ContactUsDialog(
-//           isResident: (baseProvider.isSignedIn() &&
-//               baseProvider.isActiveUser()),
-//           isUnavailable: BaseUtil.isDeviceOffline,
-//           onClick: () {
-//             if (BaseUtil.isDeviceOffline) {
-//               baseProvider.showNoInternetAlert(context);
-//               return;
-//             }
-//             if (baseProvider.isSignedIn() &&
-//                 baseProvider.isActiveUser()) {
-//               reqProvider
-//                   .addCallbackRequest(
-//                       baseProvider.firebaseUser.uid,
-//                       baseProvider.myUser.name,
-//                       baseProvider.myUser.mobile)
-//                   .then((flag) {
-//                 if (flag) {
-//                   Navigator.of(context).pop();
-//                   baseProvider.showPositiveAlert(
-//                       'Callback placed!',
-//                       'We\'ll contact you soon on your registered mobile',
-//                       context);
-//                 }
-//               });
-//             } else {
-//               baseProvider.showNegativeAlert('Unavailable',
-//                   'Callbacks are reserved for active users', context);
-//             }
-//           },
-//         ));
-//TODO AppState.screenStack.add(ScreenItem.dialog);
-// showDialog(
-//     context: context,
-//     builder: (BuildContext dialogContext) => WillPopScope(
-//           onWillPop: () {
-//             AppState.screenStack.removeLast();
-//             return Future.value(true);
-//           },
-//           child: ContactUsDialog(
-//             isResident: (baseProvider.isSignedIn() &&
-//                 baseProvider.isActiveUser()),
-//             isUnavailable: BaseUtil.isDeviceOffline,
-//             onClick: () {
-//               if (BaseUtil.isDeviceOffline) {
-//                 baseProvider.showNoInternetAlert(context);
-//                 return;
-//               }
-//               if (baseProvider.isSignedIn() &&
-//                   baseProvider.isActiveUser()) {
-//                 reqProvider
-//                     .addCallbackRequest(
-//                         baseProvider.firebaseUser.uid,
-//                         baseProvider.myUser.name,
-//                         baseProvider.myUser.mobile)
-//                     .then((flag) {
-//                   if (flag) {
-//                     Navigator.of(context).pop();
-//                     AppState.screenStack.removeLast();
-//                     baseProvider.showPositiveAlert(
-//                         'Callback placed!',
-//                         'We\'ll contact you soon on your registered mobile',
-//                         context);
-//                   }
-//                 });
-//               } else {
-//                 baseProvider.showNegativeAlert(
-//                     'Unavailable',
-//                     'Callbacks are reserved for active users',
-//                     context);
-//               }
-//             },
-//           ),
-//         ));
-//--------------------------------------------------------------------------------------------------------------------------------

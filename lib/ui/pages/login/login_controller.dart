@@ -10,6 +10,7 @@ import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/elements/Buttons/large_button.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
@@ -182,18 +183,9 @@ class _LoginControllerState extends State<LoginController>
     appStateProvider = Provider.of<AppState>(context, listen: false);
     httpProvider = Provider.of<HttpModel>(context, listen: false);
     return Scaffold(
-      // appBar: BaseUtil.getAppBar(),
-
       body: SafeArea(
           child: Stack(
         children: <Widget>[
-          // LinearProgressIndicator(
-          //   value: _formProgress,
-          //   backgroundColor: Colors.transparent,
-          //   valueColor: AlwaysStoppedAnimation<Color>(
-          //     UiConstants.primaryColor.withBlue(150),
-          //   ),
-          // ),
           Positioned(
             top: kToolbarHeight / 3,
             child: Container(
@@ -260,7 +252,6 @@ class _LoginControllerState extends State<LoginController>
                   ],
                 );
               }),
-
           Align(
             alignment: Alignment.bottomCenter,
             child: Column(
@@ -268,7 +259,7 @@ class _LoginControllerState extends State<LoginController>
               children: [
                 (_currentPage == MobileInputScreen.index)
                     ? Padding(
-                        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                         child: RichText(
                           text: new TextSpan(
                             children: [
@@ -294,7 +285,8 @@ class _LoginControllerState extends State<LoginController>
                               ),
                             ],
                           ),
-                        ))
+                        ),
+                      )
                     : Container(),
                 Container(
                   width: SizeConfig.screenWidth,
@@ -306,43 +298,53 @@ class _LoginControllerState extends State<LoginController>
                       new Container(
                         width: SizeConfig.screenWidth -
                             SizeConfig.blockSizeHorizontal * 10,
-                        height: 50.0,
-                        decoration: BoxDecoration(
-                          gradient: new LinearGradient(
-                              colors: [
-                                UiConstants.primaryColor,
-                                UiConstants.primaryColor.withBlue(200),
-                              ],
-                              begin: Alignment(0.5, -1.0),
-                              end: Alignment(0.5, 1.0)),
-                          borderRadius: new BorderRadius.circular(10.0),
+                        child: LargeButton(
+                          child: (!baseProvider.isLoginNextInProgress)
+                              ? Text(
+                                  _currentPage == Username.index
+                                      ? 'FINISH'
+                                      : 'NEXT',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .button
+                                      .copyWith(color: Colors.white),
+                                )
+                              : SpinKitThreeBounce(
+                                  color: UiConstants.spinnerColor2,
+                                  size: 18.0,
+                                ),
+                          onTap: () {
+                            if (!baseProvider.isLoginNextInProgress)
+                              _processScreenInput(_currentPage);
+                          },
                         ),
-                        child: new Material(
-                          child: MaterialButton(
-                            child: (!baseProvider.isLoginNextInProgress)
-                                ? Text(
-                                    _currentPage == Username.index
-                                        ? 'FINISH'
-                                        : 'NEXT',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .button
-                                        .copyWith(color: Colors.white),
-                                  )
-                                : SpinKitThreeBounce(
-                                    color: UiConstants.spinnerColor2,
-                                    size: 18.0,
-                                  ),
-                            onPressed: () {
-                              if (!baseProvider.isLoginNextInProgress)
-                                _processScreenInput(_currentPage);
-                            },
-                            highlightColor: Colors.white30,
-                            splashColor: Colors.white30,
-                          ),
-                          color: Colors.transparent,
-                          borderRadius: new BorderRadius.circular(30.0),
-                        ),
+
+                        // Material(
+                        //   child: MaterialButton(
+                        //     child: (!baseProvider.isLoginNextInProgress)
+                        //         ? Text(
+                        //             _currentPage == Username.index
+                        //                 ? 'FINISH'
+                        //                 : 'NEXT',
+                        //             style: Theme.of(context)
+                        //                 .textTheme
+                        //                 .button
+                        //                 .copyWith(color: Colors.white),
+                        //           )
+                        //         : SpinKitThreeBounce(
+                        //             color: UiConstants.spinnerColor2,
+                        //             size: 18.0,
+                        //           ),
+                        //     onPressed: () {
+                        //       if (!baseProvider.isLoginNextInProgress)
+                        //         _processScreenInput(_currentPage);
+                        //     },
+                        //     highlightColor: Colors.white30,
+                        //     splashColor: Colors.white30,
+                        //   ),
+                        //   color: Colors.transparent,
+                        //   borderRadius: new BorderRadius.circular(30.0),
+                        // ),
                       ),
                     ],
                   ),
@@ -638,7 +640,7 @@ class ProgressBarItem extends StatelessWidget {
   final int index;
   final IconData icon;
 
-  ProgressBarItem({this.value, this.index, this.icon});
+  const ProgressBarItem({this.value, this.index, this.icon});
 
   @override
   Widget build(BuildContext context) {

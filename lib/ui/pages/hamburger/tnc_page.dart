@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -74,46 +75,48 @@ class _TnCState extends State<TnC> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: BaseUtil.getAppBar(context, "Terms & Conditions"),
-        body: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: SingleChildScrollView(
-              padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  (_isLoadComplete && !_downloadFailed)
-                      ? Html(
-                          data: htmlString ?? '',
-                        )
-                      : Container(),
-                  (_isLoadComplete && _downloadFailed)
-                      ? Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Text(
-                              'Failed to load the Terms of Service at the moment. Please try again later',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w300,
-                                  color: UiConstants.accentColor),
-                            ),
-                          ),
-                        )
-                      : Container(),
-                  (!_isLoadComplete)
-                      ? Center(
-                          child: Padding(
-                              padding: EdgeInsets.all(30),
-                              child: SpinKitWave(
-                                color: UiConstants.primaryColor,
-                              )),
-                        )
-                      : Container()
-                ],
-              ),
-            )));
+      appBar: BaseUtil.getAppBar(context, "Terms & Conditions"),
+      body: Container(
+        width: SizeConfig.screenWidth,
+        height: SizeConfig.screenHeight,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              (_isLoadComplete && !_downloadFailed)
+                  ? Html(
+                      data: htmlString ?? '',
+                    )
+                  : Container(),
+              (_isLoadComplete && _downloadFailed)
+                  ? Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Text(
+                          'Failed to load the Terms of Service at the moment. Please try again later',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300,
+                              color: UiConstants.accentColor),
+                        ),
+                      ),
+                    )
+                  : Container(),
+              (!_isLoadComplete)
+                  ? Center(
+                      child: Padding(
+                          padding: const EdgeInsets.all(30),
+                          child: SpinKitWave(
+                            color: UiConstants.primaryColor,
+                          )),
+                    )
+                  : Container()
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

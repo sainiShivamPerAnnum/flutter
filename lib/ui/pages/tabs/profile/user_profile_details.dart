@@ -9,9 +9,9 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/change_profile_picture_dialog.dart';
-import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
-import 'package:felloapp/ui/elements/update_name.dart';
+import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/dialogs/update_name_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -286,7 +286,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                         children: [
                           cardItem(
                               "Username",
-                              (baseProvider.myUser.username != ""
+                              (baseProvider.myUser.username != "" &&
+                                          baseProvider.myUser.username != null
                                       ? "@${baseProvider.myUser.username.replaceAll('@', '.')}"
                                       : "unavailable") ??
                                   "N/A"),
