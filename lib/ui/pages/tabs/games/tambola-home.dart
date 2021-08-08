@@ -1149,42 +1149,6 @@ class Odds extends StatelessWidget {
                     fontSize: SizeConfig.mediumTextSize,
                   ),
                 ),
-<<<<<<< HEAD
-              ),
-              Expanded(
-                  child: InkWell(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Text(
-                          _oOdd,
-                          style: TextStyle(
-                            color: Colors.blueGrey,
-                            fontSize: SizeConfig.mediumTextSize,
-                          ),
-                        ),
-                        Text(
-                          'Best ticket',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.blue[900],
-                            fontSize: SizeConfig.smallTextSize,
-                          ),
-                        )
-                      ],
-                    ),
-                    onTap: () {
-                      HapticFeedback.vibrate();
-                      showDialog(
-                          context: cx,
-                          builder: (BuildContext context) => TambolaDialog(
-                            board: _bestBoard,
-                            digits: _digits,
-                          ));
-                    },
-                  )),
-            ]));
-=======
                 Text(
                   'This ticket',
                   style: TextStyle(
@@ -1222,15 +1186,14 @@ class Odds extends StatelessWidget {
                 showDialog(
                     context: cx,
                     builder: (BuildContext context) => TambolaDialog(
-                          board: _bestBoard,
-                          digits: _digits,
-                        ));
+                      board: _bestBoard,
+                      digits: _digits,
+                    ));
               },
             ),
           ),
         ],
       ),
     );
->>>>>>> 8f3c8515fa438d9d88cf58a1a9ffedc49abf0a9e
   }
 }

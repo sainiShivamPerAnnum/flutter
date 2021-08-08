@@ -237,7 +237,6 @@ class _GamePageState extends State<GamePage> {
             ),
             appState.getCurrentGameTabIndex == 0
                 ? Positioned(
-<<<<<<< HEAD
               bottom: 10,
               child: Container(
                 width: SizeConfig.screenWidth,
@@ -248,29 +247,10 @@ class _GamePageState extends State<GamePage> {
                       'images/lottie/swipeup.json',
                       height: SizeConfig.screenHeight * 0.05,
                     ),
-                    Text(
+                    const Text(
                       "Swipe up to see prizes and leaderboards",
                       style: TextStyle(
                         fontSize: 8,
-=======
-                    bottom: 10,
-                    child: Container(
-                      width: SizeConfig.screenWidth,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          LottieBuilder.asset(
-                            'images/lottie/swipeup.json',
-                            height: SizeConfig.screenHeight * 0.05,
-                          ),
-                          const Text(
-                            "Swipe up to see prizes and leaderboards",
-                            style: TextStyle(
-                              fontSize: 8,
-                            ),
-                          ),
-                        ],
->>>>>>> 8f3c8515fa438d9d88cf58a1a9ffedc49abf0a9e
                       ),
                     ),
                   ],
