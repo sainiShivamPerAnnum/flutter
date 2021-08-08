@@ -31,7 +31,6 @@ class _HomePageState extends State<HomePage> {
   AppState appState;
   bool _isInit = false;
 
-<<<<<<< HEAD
   Future<void> getProfilePicUrl() async {
     if (baseProvider == null || baseProvider.myUser == null) return;
     baseProvider.myUserDpUrl =
@@ -47,8 +46,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-=======
->>>>>>> fa1c4445573380f949baef5fc0ec8d4280bad030
   String getGreeting() {
     int hour = DateTime.now().hour;
     if (hour >= 5 && hour <= 12) {
@@ -88,18 +85,11 @@ class _HomePageState extends State<HomePage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
-<<<<<<< HEAD
     // FirebaseCrashlytics.instance.crash();
     if (baseProvider.myUserDpUrl == null) {
       isImageLoading = true;
       getProfilePicUrl();
     }
-=======
-    // if (baseProvider.myUserDpUrl == null) {
-    //   isImageLoading = true;
-    //   getProfilePicUrl();
-    // }
->>>>>>> fa1c4445573380f949baef5fc0ec8d4280bad030
     if (!_isInit || baseProvider.feedCards.length == 0) {
       _init();
     }

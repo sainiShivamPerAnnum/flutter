@@ -517,167 +517,7 @@ class ShareCard extends StatelessWidget {
                             context: context,
                             builder: (ctx) {
                               AppState.screenStack.add(ScreenItem.dialog);
-<<<<<<< HEAD
-                              return Wrap(
-                                children: [
-                                  Container(
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.only(
-                                              left: SizeConfig
-                                                      .blockSizeHorizontal *
-                                                  5,
-                                              right: SizeConfig
-                                                      .blockSizeHorizontal *
-                                                  5,
-                                              top: 16,
-                                              bottom: 0),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              // SizedBox(
-                                              // width: SizeConfig
-                                              //         .blockSizeHorizontal *
-                                              //     5),
-                                              Expanded(
-                                                child: FittedBox(
-                                                  fit: BoxFit.cover,
-                                                  child: Text(
-                                                    "How to make a successful Referral ",
-                                                    textAlign: TextAlign.center,
-                                                    maxLines: 2,
-                                                    style: GoogleFonts
-                                                        .montserratAlternates(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: UiConstants
-                                                          .primaryColor,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                  width: SizeConfig
-                                                          .blockSizeHorizontal *
-                                                      5),
-                                              IconButton(
-                                                onPressed: () {
-                                                  backButtonDispatcher
-                                                      .didPopRoute();
-                                                },
-                                                icon: Icon(
-                                                  Icons.close,
-                                                  color: Colors.grey,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        Divider(),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal:
-                                                SizeConfig.blockSizeHorizontal *
-                                                    5,
-                                          ),
-                                          child: Stack(
-                                            children: [
-                                              Positioned(
-                                                bottom: 0,
-                                                right: -30,
-                                                child: Opacity(
-                                                  opacity: 0.6,
-                                                  child: Image.asset(
-                                                    "images/share-bottomsheet.png",
-                                                    width:
-                                                        SizeConfig.screenWidth *
-                                                            0.45,
-                                                  ),
-                                                ),
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  referralTile(
-                                                    "Share your personalised link to your friends and family",
-                                                    0,
-                                                  ),
-                                                  referralTile(
-                                                      "Prize balance gets credited as soon as they sign up.",
-                                                      SizeConfig.screenWidth *
-                                                          0.1),
-                                                  referralTile(
-                                                      "Prize balance gets unlocked when they make their first investment.",
-                                                      SizeConfig.screenWidth *
-                                                          0.2),
-                                                  referralTile(
-                                                      "you can invest or withdraw that balance afterwards",
-                                                      SizeConfig.screenWidth *
-                                                          0.3),
-                                                  SizedBox(height: 20),
-                                                  Container(
-                                                    width:
-                                                        SizeConfig.screenWidth *
-                                                            0.5,
-                                                    height: SizeConfig
-                                                            .screenHeight *
-                                                        0.1,
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          "Want to earn even more with Fello?",
-                                                          style: GoogleFonts
-                                                              .montserrat(
-                                                                  color: Colors
-                                                                      .grey),
-                                                        ),
-                                                        InkWell(
-                                                          onTap: () async {
-                                                            String url =
-                                                                "https://www.fello.in";
-                                                            if (await canLaunch(
-                                                                url)) {
-                                                              launchUrl(url);
-                                                            } else {
-                                                              backButtonDispatcher
-                                                                  .didPopRoute();
-                                                            }
-                                                          },
-                                                          child: Text(
-                                                            "Visit our CFO page",
-                                                            style: GoogleFonts
-                                                                .montserrat(
-                                                              color: UiConstants
-                                                                  .primaryColor,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(height: 20),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              );
-=======
                               return ShareInfoModalSheet();
->>>>>>> fa1c4445573380f949baef5fc0ec8d4280bad030
                             });
                       },
                       child: Icon(
@@ -695,7 +535,6 @@ class ShareCard extends StatelessWidget {
                   text: new TextSpan(
                     children: [
                       new TextSpan(
-<<<<<<< HEAD
                         text: 'Both you and your friend receive ',
                         style: TextStyle(
                             color: Colors.white,
@@ -727,29 +566,6 @@ class ShareCard extends StatelessWidget {
                             color: Colors.white,
                             fontSize: SizeConfig.mediumTextSize * 1.2),
                       )
-=======
-                          text: 'Both you and your friend receive ',
-                          style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                              fontSize: SizeConfig.mediumTextSize * 1.12,
-                              height: 1.5),
-                          children: [
-                            new TextSpan(
-                              text: '₹ 25',
-                              style: TextStyle(fontWeight: FontWeight.w700),
-                            ),
-                            new TextSpan(
-                              text: ' and ',
-                            ),
-                            new TextSpan(
-                              text: '10 gaming tickets',
-                              style: TextStyle(fontWeight: FontWeight.w700),
-                            ),
-                            new TextSpan(
-                              text: ' for every successful referral!',
-                            )
-                          ]),
->>>>>>> fa1c4445573380f949baef5fc0ec8d4280bad030
                     ],
                   ),
                 ),

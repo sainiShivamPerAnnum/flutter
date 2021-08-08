@@ -16,7 +16,6 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/tambola_dialog.dart';
 import 'package:felloapp/ui/dialogs/tambola_user_results_dialog.dart';
 import 'package:felloapp/ui/dialogs/weekly_draw_dialog.dart';
-import 'package:felloapp/ui/elements/unused/board_selector.dart';
 import 'package:felloapp/ui/elements/roulette.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola-cards.dart';

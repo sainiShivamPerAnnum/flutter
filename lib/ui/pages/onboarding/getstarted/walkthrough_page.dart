@@ -199,37 +199,6 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                                                 SizeConfig.largeTextSize * 0.7,
                                             fontWeight: FontWeight.bold),
                                   ),
-<<<<<<< HEAD
-                                  child: new Material(
-                                    child: MaterialButton(
-                                      child: Text(
-                                        'Complete',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .button
-                                            .copyWith(
-                                                color: Colors.white,
-                                                fontSize:
-                                                    SizeConfig.largeTextSize *
-                                                        0.7,
-                                                fontWeight: FontWeight.bold),
-                                      ),
-                                      highlightColor: Colors.white30,
-                                      splashColor: Colors.white30,
-                                      onPressed: () {
-                                        backButtonDispatcher.didPopRoute();
-                                      },
-                                    ),
-                                    color: Colors.transparent,
-                                    borderRadius:
-                                        new BorderRadius.circular(30.0),
-                                  ),
-                                )
-                              : SizedBox(
-                                  width: 0,
-                                ),
-                        )),
-=======
                                   onTap: () {
                                     backButtonDispatcher.didPopRoute();
                                   },
@@ -239,7 +208,6 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                               ),
                       ),
                     ),
->>>>>>> fa1c4445573380f949baef5fc0ec8d4280bad030
                   ],
                 ),
               ),

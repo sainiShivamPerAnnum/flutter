@@ -12,7 +12,6 @@ import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
-import 'package:felloapp/ui/elements/unused/walkthrough_completed.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/root.dart';
 import '../../ui/pages/tabs/finance/augmont/augmont-details.dart';
