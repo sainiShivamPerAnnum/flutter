@@ -1,6 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/ui/elements/contact_dialog.dart';
+import 'package:felloapp/ui/dialogs/contact_dialog.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

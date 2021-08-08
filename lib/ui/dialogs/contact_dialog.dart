@@ -193,53 +193,9 @@ class _ContactUsState extends State<ContactUsDialog> {
                 ),
                 borderRadius: new BorderRadius.circular(10.0),
               ),
-//              Form(
-//                key: _formKey,
-//                child: TextFormField(
-//                    enableSuggestions: true,
-//                    keyboardType: TextInputType.multiline,
-//                    autofocus: true,
-//                    maxLines: 6,
-//                    controller: fdbkController,
-//                    validator: (value) {
-//                      return (value == null || value.isEmpty)?'Please add some feedback':null;
-//                    },
-//                    decoration: new InputDecoration(
-//                      labelText: "Feedback",
-//                      //fillColor: Colors.white,
-//                      border: new OutlineInputBorder(
-//                        borderRadius: new BorderRadius.circular(25.0),
-//                        borderSide: new BorderSide(
-//                        ),
-//                      ),)
-//                ),
-//              ),
-//              SizedBox(height: 16.0),
-//              Align(
-//                alignment: Alignment.bottomRight,
-//                child: TextButton(
-//                  onPressed: () {
-//                    HapticFeedback.vibrate();
-//                    log.debug('DialogAction clicked');
-//                    if(_formKey.currentState.validate()) {
-//                      //widget.dialogAction(fdbkController.text);
-//                    }
-//                  },
-//                  child: Text('ContactUs'),
-//                ),
-//              ),
             ],
           ),
         ),
-        //...top circlular image part,
-//        Positioned(
-//          left: UiConstants.padding,
-//          right: UiConstants.padding,
-//          child: CircleAvatar(
-//            backgroundColor: Colors.blueAccent,
-//            radius: UiConstants.avatarRadius,
-//          ),
-//        ),
       ],
     );
   }

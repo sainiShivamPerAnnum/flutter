@@ -13,7 +13,7 @@ import 'package:felloapp/ui/dialogs/ticket_details_dialog.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'package:felloapp/ui/elements/Parallax-card/game_card_list.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
-import 'package:felloapp/ui/elements/week-winners.dart';
+import 'package:felloapp/ui/elements/week-winners_board.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,10 +24,6 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class GamePage extends StatefulWidget {
-  // final ValueChanged<int> tabChange;
-
-  // GamePage({this.tabChange});
-
   @override
   _GamePageState createState() => _GamePageState();
 }
@@ -174,7 +170,7 @@ class _GamePageState extends State<GamePage> {
                             //
                             // ),
                           ),
-                          Spacer(
+                          const Spacer(
                             flex: 1,
                           ),
                           GameCardList(
@@ -186,7 +182,7 @@ class _GamePageState extends State<GamePage> {
                           //   'Use the tickets to play exciting weekly games and win fun prizes!',
                           //
                           // ),
-                          Spacer(
+                          const Spacer(
                             flex: 1,
                           ),
 
@@ -198,7 +194,7 @@ class _GamePageState extends State<GamePage> {
                                   child: const IdeaSection())
                               : const IdeaSection(),
                           /////////////////////////////////////////////////////////////
-                          Spacer(
+                          const Spacer(
                             flex: 1,
                           )
                         ],
@@ -212,8 +208,8 @@ class _GamePageState extends State<GamePage> {
                         Container(
                           height: kToolbarHeight * 0.8,
                         ),
-                        WeekWinnerBoard(),
-                        Leaderboard(),
+                        const WeekWinnerBoard(),
+                        const Leaderboard(),
                       ],
                     ),
                   )
@@ -251,7 +247,7 @@ class _GamePageState extends State<GamePage> {
                             'images/lottie/swipeup.json',
                             height: SizeConfig.screenHeight * 0.05,
                           ),
-                          Text(
+                          const Text(
                             "Swipe up to see prizes and leaderboards",
                             style: TextStyle(
                               fontSize: 8,
@@ -286,7 +282,7 @@ class IdeaSection extends StatelessWidget {
         physics: BouncingScrollPhysics(),
         children: [
           GameCard(
-            gradient: [
+            gradient: const [
               Color(0xffACB6E5),
               Color(0xff74EBD5),
             ],
@@ -296,7 +292,7 @@ class IdeaSection extends StatelessWidget {
                 onPressed: () => delegate.parseRoute(Uri.parse("finance")),
                 title: "Invest",
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               GameOfferCardButton(
@@ -306,7 +302,7 @@ class IdeaSection extends StatelessWidget {
             ],
           ),
           GameCard(
-            gradient: [
+            gradient: const [
               Color(0xffD4AC5B),
               Color(0xffDECBA4),
             ],
@@ -363,7 +359,7 @@ class IdeaSection extends StatelessWidget {
 class TicketCount extends StatefulWidget {
   final int totalCount;
 
-  TicketCount(this.totalCount);
+  const TicketCount(this.totalCount);
 
   @override
   _TicketCountState createState() => _TicketCountState();
@@ -440,7 +436,7 @@ class GameCard extends StatelessWidget {
   final List<Color> gradient;
   final List<Widget> action;
 
-  GameCard({this.buttonText, this.title, this.gradient, this.action});
+  const GameCard({this.buttonText, this.title, this.gradient, this.action});
 
   @override
   Widget build(BuildContext context) {
@@ -506,7 +502,7 @@ class GameOfferCardButton extends StatelessWidget {
   final Function onPressed;
   final String title;
 
-  GameOfferCardButton({this.onPressed, this.title});
+  const GameOfferCardButton({this.onPressed, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -521,13 +517,6 @@ class GameOfferCardButton extends StatelessWidget {
               color: Colors.white,
             ),
             color: Colors.transparent,
-            // boxShadow: [
-            //   BoxShadow(
-            //       color: gradient[0].withOpacity(0.2),
-            //       blurRadius: 20,
-            //       offset: Offset(5, 5),
-            //       spreadRadius: 10),
-            // ],
             borderRadius: BorderRadius.circular(100),
           ),
           child: Text(

@@ -1,17 +1,29 @@
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TambolaBoardView extends StatefulWidget {
-  TambolaBoardView(
-      {Key key,
-      this.tambolaBoard,
-      this.calledDigits,
-      this.boardColor = Colors.blueGrey})
-      : super(key: key);
+  TambolaBoardView({
+    Key key,
+    this.tambolaBoard,
+    this.calledDigits,
+    this.boardColor,
+    this.ticketColor1,
+    this.ticketColor2,
+  }) : super(key: key);
 
+  @required
   final List<List<int>> tambolaBoard;
+  @required
   final Color boardColor;
+  @required
+  final Color ticketColor1;
+  @required
+  final Color ticketColor2;
+  @required
   final List<int> calledDigits;
 
   @override
@@ -24,46 +36,44 @@ class TambolaBoardState extends State<TambolaBoardView> {
   static final int boardLength = 9;
   bool gridOnTap = false;
   var tappedX, tappedY;
-  Color altGridColor = Colors.blueGrey;
-  Color borderColor = Colors.blueGrey;
 
-  @override
-  void initState() {
-    //decodeBoard(widget.boardValueCde);
-    if (widget.boardColor != Colors.blueGrey) {
-      int r = widget.boardColor.red;
-      int g = widget.boardColor.green;
-      int b = widget.boardColor.blue;
+  // @override
+  // void initState() {
+  //   //decodeBoard(widget.boardValueCde);
+  //   if (widget.boardColor != Colors.blueGrey) {
+  //     int r = widget.boardColor.red;
+  //     int g = widget.boardColor.green;
+  //     int b = widget.boardColor.blue;
 
-      int rx = r + (255 - r * 0.25).round();
-      int gx = g + (255 - g * 0.25).round();
-      int bx = b + (255 - b * 0.25).round();
+  //     int rx = r + (255 - r * 0.25).round();
+  //     int gx = g + (255 - g * 0.25).round();
+  //     int bx = b + (255 - b * 0.25).round();
 
-      altGridColor = Color.fromRGBO(
-          rx, gx, bx, 1); //widget.boardColor;//Color.fromRGBO(rx, gx, bx, 1);
-      borderColor = widget.boardColor;
-    }
-    super.initState();
-  }
+  //     altGridColor = Color.fromRGBO(
+  //         rx, gx, bx, 1); //widget.boardColor;//Color.fromRGBO(rx, gx, bx, 1);
+  //     borderColor = widget.boardColor;
+  //   }
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
       AspectRatio(
-          aspectRatio: 3.1,
+          aspectRatio: 2.9,
           child: SizedBox.expand(
             child: Container(
-              margin: const EdgeInsets.only(left: 8.0, right: 8.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(6.0),
-                child: GridView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: boardLength,
-                  ),
-                  itemBuilder: _buildGridItems,
-                  itemCount: boardLength * boardHeight,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: widget.boardColor),
+              padding: EdgeInsets.all(4),
+              child: GridView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: boardLength,
                 ),
+                itemBuilder: _buildGridItems,
+                itemCount: boardLength * boardHeight,
               ),
             ),
           )),
@@ -98,36 +108,49 @@ class TambolaBoardState extends State<TambolaBoardView> {
   }
 
   Widget _buildGridItem(int x, int y, int digit) {
+    BorderRadius getBorderRadius() {
+      if (x == 0 && y == 0)
+        return BorderRadius.only(
+          topLeft: Radius.circular(8),
+        );
+      else if (x == 0 && y == 8)
+        return BorderRadius.only(
+          topRight: Radius.circular(8),
+        );
+      else if (x == 2 && y == 0)
+        return BorderRadius.only(bottomLeft: Radius.circular(8));
+      else if (x == 2 && y == 8)
+        return BorderRadius.only(bottomRight: Radius.circular(8));
+      else
+        return BorderRadius.zero;
+    }
+
     return SizedBox.expand(
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(
-              color: this.gridOnTap && x == this.tappedX && y == this.tappedY
-                  ? widget.boardColor
-                  : Colors.black,
-              width: this.gridOnTap && x == this.tappedX && y == this.tappedY
-                  ? 2.0
-                  : 0.0),
-          color: (x + y) % 2 == 0 ? altGridColor : Colors.grey[400],
-        ),
+            border: Border.all(
+                color: this.gridOnTap && x == this.tappedX && y == this.tappedY
+                    ? widget.boardColor
+                    : Colors.transparent,
+                width: this.gridOnTap && x == this.tappedX && y == this.tappedY
+                    ? 2.0
+                    : 0.0),
+            color: (x + y) % 2 == 0 ? widget.ticketColor1 : widget.ticketColor2,
+            borderRadius: getBorderRadius()),
         foregroundDecoration: BoxDecoration(
-            border: Border(
-                top: BorderSide(
-                    width: x == 0 ? 4.0 : 0.0,
-                    color: x == 0 ? borderColor : Colors.black),
-                left: BorderSide(
-                    width: y == 0 ? 4.0 : 0.0,
-                    color: y == 0 ? borderColor : Colors.black),
-                bottom: BorderSide(
-                    width: x == 2 ? 4.0 : 0.0,
-                    color: x == 2 || x == 5 || x == 8
-                        ? borderColor
-                        : Colors.black),
-                right: BorderSide(
-                    width: y == 8 ? 4.0 : 0.0,
-                    color: y == 2 || y == 5 || y == 8
-                        ? borderColor
-                        : Colors.black))),
+            // border: Border(
+            //   top: BorderSide(
+            //       width: 0.0, color: x == 0 ? borderColor : Colors.black),
+            //   left: BorderSide(
+            //       width: 0.0, color: y == 0 ? borderColor : Colors.black),
+            //   bottom: BorderSide(
+            //       width: 0.0,
+            //       color: x == 2 || x == 5 || x == 8 ? borderColor : Colors.black),
+            //   right: BorderSide(
+            //       width: 0.0,
+            //       color: y == 2 || y == 5 || y == 8 ? borderColor : Colors.black),
+            // ),
+            ),
         child: Center(
           child: _getDecoratedDigit(digit, widget.calledDigits),
         ),
@@ -142,19 +165,13 @@ class TambolaBoardState extends State<TambolaBoardView> {
       return StrikeThroughWidget(
         child: Text(
           digit.toString(),
-          style: Theme.of(context)
-              .textTheme
-              .bodyText1
-              .copyWith(fontFamily: 'rms', color: Colors.black),
+          style: GoogleFonts.montserrat(fontWeight: FontWeight.w500),
         ),
       );
     else {
       return Text(
         digit.toString(),
-        style: Theme.of(context)
-            .textTheme
-            .bodyText1
-            .copyWith(fontFamily: 'rms', color: Colors.black),
+        style: GoogleFonts.montserrat(fontWeight: FontWeight.w500),
       );
     }
   }

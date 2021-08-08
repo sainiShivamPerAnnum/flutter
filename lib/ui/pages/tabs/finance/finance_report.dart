@@ -177,7 +177,7 @@ class _YourFundsState extends State<YourFunds> {
                                   Container(
                                     height: 50,
                                     width: 50,
-                                    padding: EdgeInsets.all(10),
+                                    padding: const EdgeInsets.all(10),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       shape: BoxShape.circle,
@@ -207,7 +207,7 @@ class _YourFundsState extends State<YourFunds> {
                                   )
                                 ],
                               ),
-                              SizedBox(height: 12),
+                              const SizedBox(height: 12),
                               Text(
                                 widget.chartFunds[index].description[0],
                                 textAlign: TextAlign.start,
@@ -216,7 +216,7 @@ class _YourFundsState extends State<YourFunds> {
                                     fontSize: SizeConfig.mediumTextSize,
                                     height: 1.5),
                               ),
-                              SizedBox(height: 12),
+                              const SizedBox(height: 12),
                               baseProvider.userFundWallet.prizeBalance > 0 &&
                                       widget.chartFunds[index].action
                                   ? ElevatedButton(
@@ -234,7 +234,7 @@ class _YourFundsState extends State<YourFunds> {
                                         style: TextStyle(color: Colors.white),
                                       ),
                                     )
-                                  : SizedBox()
+                                  : const SizedBox()
                             ],
                           ),
                         )

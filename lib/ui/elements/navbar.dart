@@ -1,12 +1,10 @@
 import 'dart:core';
 import 'dart:io';
 import 'dart:math';
-
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class NavBar extends StatelessWidget {
@@ -39,14 +37,9 @@ class NavBar extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: UiConstants.bottomNavBarColor,
-        //Add some drop-shadow to our navbar, use 2 for a slightly nicer effect
-        // boxShadow: [
-        //   BoxShadow(blurRadius: 16, color: Colors.black12),
-        //   BoxShadow(blurRadius: 24, color: Colors.black12),
-        // ],
       ),
-      height: 64,
-      padding: (Platform.isIOS)
+      height: kBottomNavigationBarHeight,
+      margin: (Platform.isIOS)
           ? EdgeInsets.only(
               left: SizeConfig.blockSizeHorizontal * 5,
               right: SizeConfig.blockSizeHorizontal * 5,
@@ -54,13 +47,11 @@ class NavBar extends StatelessWidget {
           : EdgeInsets.symmetric(
               horizontal: SizeConfig.blockSizeHorizontal * 5),
       //Clip the row of widgets, to suppress any overflow errors that might occur during animation
-      child: SizedBox(
-        child: Row(
-          //Center buttons horizontally
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          // Inject a bunch of btn instances into our row
-          children: buttonWidgets,
-        ),
+      child: Row(
+        //Center buttons horizontally
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        // Inject a bunch of btn instances into our row
+        children: buttonWidgets,
       ),
     );
   }
@@ -85,12 +76,11 @@ class _NavbarButtonState extends State<NavbarButton>
     with SingleTickerProviderStateMixin {
   AnimationController _iconAnimController;
   bool _wasSelected;
-  double _animScale = 1;
 
   @override
   void initState() {
     //Create a tween + controller which will drive the icon rotation
-    int duration = (350 / _animScale).round();
+    int duration = 700;
     _iconAnimController = AnimationController(
       duration: Duration(milliseconds: duration),
       vsync: this,
@@ -116,19 +106,23 @@ class _NavbarButtonState extends State<NavbarButton>
       children: <Widget>[
         //Rotate the icon using the current animation value
         Rotation3d(
-            rotationY: 180 * _iconAnimController.value,
-            child: SvgPicture.asset(
-              widget.data.iconImage,
-              height: 30,
-              color: widget.isSelected ? Colors.white : Color(0xffcccccc),
-            )),
+          rotationY: 180 * _iconAnimController.value,
+          child: SvgPicture.asset(
+            widget.data.iconImage,
+            height: 30,
+            color: widget.isSelected ? Colors.white : Color(0xffcccccc),
+          ),
+        ),
         //Add some hz spacing
         SizedBox(width: SizeConfig.blockSizeHorizontal),
         //Label
         FittedBox(
           child: Text(
             widget.data.title,
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: SizeConfig.mediumTextSize,
+            ),
           ),
         ),
       ],
@@ -140,15 +134,7 @@ class _NavbarButtonState extends State<NavbarButton>
     _startAnimIfSelectedChanged(widget.isSelected);
     //Create our main button, a Row, with an icon and some text
     //Inject the data from our widget.data property
-    var content = (widget.isFocus)
-        ? Stack(children: [
-            Center(
-                child: SpinKitPulse(
-              color: UiConstants.primaryColor,
-            )),
-            _buildContent()
-          ])
-        : _buildContent();
+    var content = _buildContent();
 
     //Wrap btn in GestureDetector so we can listen to taps
     return GestureDetector(
@@ -156,9 +142,10 @@ class _NavbarButtonState extends State<NavbarButton>
       //Wrap in a bit of extra padding to make it easier to tap
       child: Container(
         color: UiConstants.bottomNavBarColor,
-        padding: EdgeInsets.symmetric(
-          vertical: kToolbarHeight * 0.16,
+        margin: EdgeInsets.symmetric(
+          vertical: kBottomNavigationBarHeight * 0.11,
         ),
+        padding: EdgeInsets.symmetric(horizontal: 10),
         //Wrap in an animated container, so changes to width & color automatically animate into place
         child: AnimatedContainer(
           alignment: Alignment.center,
@@ -166,7 +153,7 @@ class _NavbarButtonState extends State<NavbarButton>
           width: widget.isSelected ? widget.data.width : 56,
           curve: Curves.easeOutCubic,
           padding: EdgeInsets.all(12),
-          duration: Duration(milliseconds: (700 / _animScale).round()),
+          duration: Duration(milliseconds: 1000),
           //Use BoxDecoration top create a rounded container
           decoration: BoxDecoration(
             color: widget.isSelected

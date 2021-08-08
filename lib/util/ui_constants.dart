@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 class UiConstants {
   UiConstants._();
 
-//  static final Color primaryColor = Colors.greenAccent[400];
-  //static final Color primaryColor = const Color.fromARGB(255, 58, 134, 255);
-  //static final Color accentColor = Colors.grey[800];
   static final Color primaryColor = const Color(0xff2EB19F);
   static final Color accentColor = const Color(0xff333333);
   static final Color darkPrimaryColor = const Color.fromARGB(255, 58, 120, 255);
@@ -35,17 +32,21 @@ class UiConstants {
   static const double padding = 16.0;
   static const double avatarRadius = 96.0;
 
-  static offerSnacks(BuildContext context, String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    Scaffold.of(context).showSnackBar(snackBar);
-    return;
-  }
-
-  // static List<Color> boardColors = [Colors.green[100],Colors.green[200],Colors.green[300],Colors.green[400],
-  //   Colors.green,Colors.green[600],Colors.green[700],Colors.green[800],Colors.green[900],Colors.lightGreen,
-  //   Colors.lightGreen[600],Colors.lightGreen[700],Colors.lightGreen[800],Colors.lightGreen[900]];
-
   static List<Color> boardColors = [Colors.greenAccent];
+
+  static const MaterialColor kPrimaryColor = MaterialColor(
+    0xff2EB19F,
+    const <int, Color>{
+      50: const Color(0xff2EB19F),
+      100: const Color(0xff2EB19F),
+      200: const Color(0xff2EB19F),
+      300: const Color(0xff2EB19F),
+      400: const Color(0xff2EB19F),
+      500: const Color(0xff2EB19F),
+      600: const Color(0xff2EB19F),
+      700: const Color(0xff2EB19F),
+      800: const Color(0xff2EB19F),
+      900: const Color(0xff2EB19F),
+    },
+  );
 }
