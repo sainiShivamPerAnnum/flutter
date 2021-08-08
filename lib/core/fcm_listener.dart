@@ -14,7 +14,7 @@ import 'package:felloapp/util/logger.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 
 class FcmListener extends ChangeNotifier {
@@ -35,9 +35,9 @@ class FcmListener extends ChangeNotifier {
   //   importance: Importance.high,
   // );
 
-  /// Initialize the [FlutterLocalNotificationsPlugin] package.
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  // Initialize the [FlutterLocalNotificationsPlugin] package.
+  // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  //     FlutterLocalNotificationsPlugin();
 
   static Future<dynamic> backgroundMessageHandler(RemoteMessage message) async {
     print('background notif');

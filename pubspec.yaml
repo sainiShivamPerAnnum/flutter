@@ -24,11 +24,10 @@ dependencies:
   #core packages
   connectivity: ^3.0.6
   encrypt: ^5.0.0
-  flutter_local_notifications: ^8.0.0
+#  flutter_local_notifications: ^8.0.0
   flutter_html_to_pdf: ^0.6.1
   freshchat_sdk: ^0.8.0
   get_it: ^7.2.0
-  geolocator: ^7.4.0
   http: ^0.13.3
   open_file: ^3.2.1
   path: ^1.8.0
@@ -38,20 +37,20 @@ dependencies:
   provider: ^5.0.0
   razorpay_flutter: ^1.2.6
   shared_preferences: ^2.0.6
-  share: ^0.6.5+4
+  share: ^2.0.4
   synchronized: ^3.0.0
   url_launcher: ^6.0.9
   in_app_update: ^2.0.0
   image_gallery_saver: ^1.6.9
   #ui packages
   camera: ^0.8.1+7
-  cached_network_image: ^2.0.0
+  cached_network_image: ^3.1.0
   confetti: ^0.5.4+1
   device_unlock: ^1.1.0
-  flutter_spinkit: ^4.0.0
-  flutter_share_me: ^0.9.2
+  flutter_spinkit: ^5.0.0
+  flutter_share_me: ^0.11.1
   flutter_html: ^2.1.1
-  flutter_image_compress: ^0.7.0
+  flutter_image_compress: ^1.1.0
   flutter_staggered_grid_view: ^0.4.0
   flutter_svg: ^0.22.0
   flushbar: ^1.10.4
@@ -62,7 +61,7 @@ dependencies:
   screenshot: ^1.2.1
   showcaseview: ^0.1.6
   shimmer_animation : ^2.1.0+1
-  slider_button: ^0.6.0
+  slider_button: ^1.0.0
   sms_autofill: ^2.0.0
 
   flutter:
