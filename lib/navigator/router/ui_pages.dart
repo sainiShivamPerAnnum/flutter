@@ -26,6 +26,13 @@ const String WalkThroughPath = '/walkThrough';
 const String WalkThroughCompletedPath = '/walkThroughCompleted';
 const String YourFundsPath = '/yourFunds';
 
+// For testing
+const String THome = '/tHome';
+const String TWalkthrough = 'tWalkthrough';
+const String TShowAllTickets = 'tShowAllTickets';
+const String TPickDraw = 'tPickDraw';
+const String TWeeklyResult = 'tWeeklyResult';
+
 enum Pages {
   Splash,
   Login,
@@ -50,7 +57,12 @@ enum Pages {
   Support,
   WalkThrough,
   WalkThroughCompleted,
-  YourFunds
+  YourFunds,
+  THome,
+  TWeeklyResult,
+  TWalkthrough,
+  TPickDraw,
+  TShowAllTickets
 }
 
 class PageConfiguration {
@@ -180,13 +192,34 @@ PageConfiguration WalkThroughConfig = PageConfiguration(
   path: WalkThroughPath,
   uiPage: Pages.WalkThrough,
 );
-// PageConfiguration WalkThroughCompletedConfig = PageConfiguration(
-//   key: 'WalkThroughCompleted',
-//   path: WalkThroughCompletedPath,
-//   uiPage: Pages.WalkThroughCompleted,
-// );
 PageConfiguration YourFundsConfig = PageConfiguration(
   key: 'YourFunds',
   path: YourFundsPath,
   uiPage: Pages.YourFunds,
+);
+
+PageConfiguration THomePageConfig = PageConfiguration(
+  key: 'THome',
+  path: THome,
+  uiPage: Pages.THome,
+);
+PageConfiguration TWeeklyResultPageConfig = PageConfiguration(
+  key: 'TWeeklyResult',
+  path: TWeeklyResult,
+  uiPage: Pages.TWeeklyResult,
+);
+PageConfiguration TPickDrawPageConfig = PageConfiguration(
+  key: 'TPickDraw',
+  path: TPickDraw,
+  uiPage: Pages.TPickDraw,
+);
+PageConfiguration TShowAllTicketsPageConfig = PageConfiguration(
+  key: 'TShowAllTickets',
+  path: TShowAllTickets,
+  uiPage: Pages.TShowAllTickets,
+);
+PageConfiguration TWalkthroughPageConfig = PageConfiguration(
+  key: 'TWalkthrough',
+  path: TWalkthrough,
+  uiPage: Pages.TWalkthrough,
 );

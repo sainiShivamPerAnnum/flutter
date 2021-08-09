@@ -14,6 +14,12 @@ import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/root.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_result.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/show_all_tickets.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/tambola-home.dart'
+    as NTambola;
+import 'package:felloapp/ui/pages/tabs/games/tambola/tambola_walkthrough.dart';
 import '../../ui/pages/tabs/finance/augmont/augmont-details.dart';
 import '../../ui/pages/tabs/finance/augmont/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
@@ -198,6 +204,21 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.YourFunds:
           _addPageData(YourFunds(), YourFundsConfig);
           break;
+        case Pages.THome:
+          _addPageData(NTambola.TambolaHome(), THomePageConfig);
+          break;
+        case Pages.TPickDraw:
+          _addPageData(PicksDraw(), TPickDrawPageConfig);
+          break;
+        case Pages.TShowAllTickets:
+          _addPageData(ShowAllTickets(), TShowAllTicketsPageConfig);
+          break;
+        case Pages.TWalkthrough:
+          _addPageData(Walkthrough(), TWalkthroughPageConfig);
+          break;
+        case Pages.TWeeklyResult:
+          _addPageData(WeeklyResult(), TWeeklyResultPageConfig);
+          break;
         default:
           break;
       }
@@ -328,6 +349,21 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       //   break;
       case Pages.YourFunds:
         YourFundsConfig.currentPageAction = action;
+        break;
+      case Pages.THome:
+        THomePageConfig.currentPageAction = action;
+        break;
+      case Pages.TPickDraw:
+        TPickDrawPageConfig.currentPageAction = action;
+        break;
+      case Pages.TShowAllTickets:
+        TShowAllTicketsPageConfig.currentPageAction = action;
+        break;
+      case Pages.TWalkthrough:
+        TWalkthroughPageConfig.currentPageAction = action;
+        break;
+      case Pages.TWeeklyResult:
+        TWeeklyResultPageConfig.currentPageAction = action;
         break;
 
       default:

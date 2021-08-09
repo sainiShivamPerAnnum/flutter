@@ -1,0 +1,331 @@
+import 'dart:math';
+
+import 'package:felloapp/main.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/tambola-home.dart';
+import 'package:felloapp/util/size_config.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:rive/rive.dart' as rive;
+
+class PicksDraw extends StatefulWidget {
+  const PicksDraw({Key key}) : super(key: key);
+
+  @override
+  _PicksDrawState createState() => _PicksDrawState();
+}
+
+class _PicksDrawState extends State<PicksDraw>
+    with SingleTickerProviderStateMixin {
+  double radius = 0;
+  double rowWidth = 0;
+  double topPos = -100;
+  double angle = 0;
+  double opacity = 0;
+  double textPos = -10;
+  bool showTxt = false;
+  double ringWidth = 0;
+  AnimationController _bgController;
+
+  showPicksDraw() {
+    setState(() {
+      radius = radius == SizeConfig.screenWidth * 0.14
+          ? 0
+          : SizeConfig.screenWidth * 0.14;
+      rowWidth =
+          rowWidth == SizeConfig.screenWidth ? 0 : SizeConfig.screenWidth;
+      topPos = topPos == -100 ? SizeConfig.screenHeight * 0.2 : -100;
+      ringWidth = ringWidth == SizeConfig.screenWidth * 0.1
+          ? 0
+          : SizeConfig.screenWidth * 0.1;
+      opacity = 1;
+    });
+  }
+
+  showText() {
+    setState(() {
+      showTxt = true;
+      textPos = 0;
+    });
+  }
+
+  rotatebg() {
+    for (int i = 0; i < 360; i++) {
+      Future.delayed(Duration(milliseconds: 100), () {
+        setState(() {
+          angle += 1;
+        });
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    _bgController =
+        new AnimationController(vsync: this, duration: Duration(seconds: 12))
+          ..repeat();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      rotatebg();
+      Future.delayed(Duration(seconds: 1), () {
+        showPicksDraw();
+      }).then((_) {
+        Future.delayed(Duration(seconds: 1), () {
+          showText();
+        }).then((value) {
+          // Future.delayed(Duration(seconds: 2), () {
+          //   Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (ctx) => TambolaHome(),
+          //     ),
+          //   );
+          // });
+        });
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _bgController.dispose();
+    super.dispose();
+  }
+
+  final List<int> draws = [12, 34, 45, 34, 23, 69];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
+        child: Icon(
+          Icons.navigate_next_rounded,
+          color: Color(0xff150E56),
+        ),
+        onPressed: () {
+          backButtonDispatcher.didPopRoute();
+        },
+      ),
+      body: Container(
+        child: Stack(
+          children: [
+            Container(
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.screenHeight,
+              decoration: BoxDecoration(
+                  gradient: new LinearGradient(
+                      colors: [Color(0xffCF0060), Color(0xffF9711B)],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter)),
+            ),
+            // Align(
+            //   alignment: Alignment.center,
+            //   child: RotationTransition(
+            //     alignment: Alignment.center,
+            //     turns: _bgController,
+            //     child: ScaleTransition(
+            //       scale: _bgController,
+            //       child: Container(
+            //         width: SizeConfig.screenWidth,
+            //         height: SizeConfig.screenWidth,
+            //         decoration: BoxDecoration(
+            //             gradient: new LinearGradient(
+            //                 colors: [Color(0xffCF0060), Color(0xffF9711B)],
+            //                 begin: Alignment.topCenter,
+            //                 end: Alignment.bottomCenter)),
+            //         // child: RotationTransition(
+            //         //   alignment: Alignment.center,
+            //         //   turns: _bgController,
+            //         //   child: Transform.scale(
+            //         //     scale: 3.5,
+            //         //     child: SvgPicture.asset(
+            //         //       "images/Tambola/animbg.svg",
+            //         //     ),
+            //         //   ),
+            //         // ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            Positioned(
+              child: SafeArea(
+                  child: Container(
+                width: SizeConfig.screenWidth,
+                height: kToolbarHeight,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "images/fello_logo.png",
+                      height: kToolbarHeight * 0.8,
+                    ),
+                  ],
+                ),
+              )),
+            ),
+            SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Spacer(flex: 1),
+                  Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text(
+                      "Today's Picks\nare:",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.montserrat(
+                        color: Colors.white,
+                        fontSize: 50,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 250,
+                    width: SizeConfig.screenWidth,
+                    margin: EdgeInsets.symmetric(
+                        vertical: SizeConfig.screenHeight * 0.05),
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            height: 180,
+                            width: 180,
+                            child: rive.RiveAnimation.asset(
+                              "images/Tambola/openbox.riv",
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                            bottom: 28,
+                            left: SizeConfig.screenWidth / 2,
+                            child: Image.asset(
+                              "images/fello-dark.png",
+                              height: 30,
+                            )),
+                        AnimatedPositioned(
+                          duration: Duration(seconds: 1),
+                          //curve: Curves.decelerate,
+                          top: rowWidth == 0 ? 120 : 0,
+                          child: Container(
+                            width: SizeConfig.screenWidth,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                AnimatedContainer(
+                                  alignment: Alignment.topCenter,
+                                  width: rowWidth,
+                                  duration: Duration(seconds: 1),
+                                  curve: Curves.easeIn,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [12, 82, 69, 51, 19]
+                                        .map(
+                                          (e) => AnimatedContainer(
+                                            curve: Curves.easeIn,
+                                            height: radius,
+                                            width: radius,
+                                            duration: Duration(seconds: 1),
+                                            decoration: BoxDecoration(
+                                              color: Colors.black,
+                                              shape: BoxShape.circle,
+                                              gradient: RadialGradient(
+                                                center: Alignment(-0.8, -0.6),
+                                                colors: [
+                                                  Color(0xff515E63),
+                                                  Colors.black
+                                                ],
+                                                radius: 1.0,
+                                              ),
+                                            ),
+                                            alignment: Alignment.center,
+                                            child: Transform.scale(
+                                              scale: opacity,
+                                              child: Stack(
+                                                children: [
+                                                  Align(
+                                                    alignment: Alignment.center,
+                                                    child: AnimatedContainer(
+                                                      height: ringWidth,
+                                                      width: ringWidth,
+                                                      duration:
+                                                          Duration(seconds: 1),
+                                                      curve: Curves.easeIn,
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                          color: Colors.white,
+                                                          width: 0.5,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(100),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  AnimatedOpacity(
+                                                    duration: Duration(
+                                                        milliseconds: 500),
+                                                    curve: Curves.easeInOutBack,
+                                                    opacity: opacity,
+                                                    child: Container(
+                                                      height: radius,
+                                                      width: radius,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: showTxt
+                                                          ? FittedBox(
+                                                              fit: BoxFit.cover,
+                                                              child: Text(
+                                                                e.toString(),
+                                                                style: GoogleFonts
+                                                                    .montserrat(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 20,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                ),
+                                                              ),
+                                                            )
+                                                          : SizedBox(),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      "Let's see how many numbers matched your tickets...",
+                      style: GoogleFonts.montserrat(
+                        color: Colors.white,
+                        fontSize: 28,
+                      ),
+                    ),
+                  ),
+                  Spacer(flex: 3),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

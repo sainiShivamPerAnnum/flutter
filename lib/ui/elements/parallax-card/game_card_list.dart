@@ -54,6 +54,8 @@ class GameCardListState extends State<GameCardList>
       //       ),
       //     ),
       () => appState.currentAction =
+          PageAction(state: PageState.addPage, page: THomePageConfig),
+      () => appState.currentAction =
           PageAction(state: PageState.addPage, page: TambolaHomePageConfig),
       () {
         HapticFeedback.vibrate();
