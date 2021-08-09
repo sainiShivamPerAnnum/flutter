@@ -63,7 +63,7 @@ dependencies:
   screenshot: ^1.2.1
   showcaseview: ^0.1.6
   shimmer_animation : ^2.1.0+1
-  slider_button: ^1.0.0
+  slider_button: ^0.6.0
   sms_autofill: ^2.0.0
   video_player: ^2.1.12
 
