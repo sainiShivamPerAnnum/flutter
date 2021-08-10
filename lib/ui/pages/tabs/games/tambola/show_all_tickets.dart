@@ -32,7 +32,7 @@ class ShowAllTickets extends StatelessWidget {
             children: [
               SizedBox(height: 10),
               Container(
-                height: SizeConfig.screenWidth * 0.95 * 2,
+                height: SizeConfig.screenWidth * 0.94 * 2,
                 width: SizeConfig.screenWidth,
                 child: GridView.builder(
                   shrinkWrap: true,
