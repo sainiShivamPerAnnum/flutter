@@ -257,7 +257,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         setState(() {
           _selectedFrequency = 0;
           filteredDataItems = dataItems.sublist(dataItems.length - 6);
-          maxX = 96;
+          maxX = 95;
           minX = 90;
         });
         break;
@@ -265,7 +265,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         setState(() {
           _selectedFrequency = 1;
           filteredDataItems = dataItems.sublist(dataItems.length - 9);
-          maxX = 96;
+          maxX = 95;
           minX = 87;
         });
         break;
@@ -273,7 +273,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         setState(() {
           _selectedFrequency = 2;
           filteredDataItems = dataItems.sublist(dataItems.length - 18);
-          maxX = 96;
+          maxX = 95;
           minX = 78;
         });
         break;
@@ -281,7 +281,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         setState(() {
           _selectedFrequency = 3;
           filteredDataItems = dataItems.sublist(dataItems.length - 36);
-          maxX = 96;
+          maxX = 95;
           minX = 60;
         });
         break;
