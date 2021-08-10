@@ -1,4 +1,6 @@
 import 'package:felloapp/core/ops/augmont_ops.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fundPalettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -6,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
+import '../../../base_util.dart';
 
 class LineChartWidget extends StatefulWidget {
   @override
@@ -20,6 +24,13 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           DateTime(2018, 1, 1), DateTime.now());
       print(_res.length);
     } catch (err) {
+      if(baseProvider.myUser.uid!=null) {
+        Map<String,dynamic> errorDetails = {
+          'Error message' : 'Fetching gold rates for api for line chart failed',
+          'Error details' : err.toString()
+        };
+        dbProvider.logFailure(baseProvider.myUser.uid, FailType.GoldRateFetchFailed,errorDetails);
+      }
       print(err);
     }
     return _res;
@@ -33,11 +44,13 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   List<GoldGraphPoint> graphPoints = [];
   List<FlSpot> dataItems = [];
   AugmontModel augmontProvider;
+  DBModel dbProvider;
+  BaseUtil baseProvider;
   String _dataPointsState = "loading";
   int _selectedFrequency = 4;
 
   List<FlSpot> filteredDataItems = [];
-  double maxX = 30;
+  double maxX = 97;
   double minX = 0;
 
   @override
@@ -240,40 +253,40 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       case 0:
         setState(() {
           _selectedFrequency = 0;
-          filteredDataItems = dataItems.sublist(dataItems.length - 3);
-          maxX = 30;
-          minX = 28;
+          filteredDataItems = dataItems.sublist(dataItems.length - 6);
+          maxX = 96;
+          minX = 90;
         });
         break;
       case 1:
         setState(() {
           _selectedFrequency = 1;
-          filteredDataItems = dataItems.sublist(dataItems.length - 5);
-          maxX = 30;
-          minX = 26;
+          filteredDataItems = dataItems.sublist(dataItems.length - 9);
+          maxX = 96;
+          minX = 87;
         });
         break;
       case 2:
         setState(() {
           _selectedFrequency = 2;
-          filteredDataItems = dataItems.sublist(dataItems.length - 6);
-          maxX = 30;
-          minX = 25;
+          filteredDataItems = dataItems.sublist(dataItems.length - 18);
+          maxX = 96;
+          minX = 78;
         });
         break;
       case 3:
         setState(() {
           _selectedFrequency = 3;
-          filteredDataItems = dataItems.sublist(dataItems.length - 12);
-          maxX = 30;
-          minX = 19;
+          filteredDataItems = dataItems.sublist(dataItems.length - 36);
+          maxX = 96;
+          minX = 60;
         });
         break;
       case 4:
         setState(() {
           _selectedFrequency = 4;
           filteredDataItems = dataItems;
-          maxX = 30;
+          maxX = 97;
           minX = 0;
         });
         break;
