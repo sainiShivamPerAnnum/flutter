@@ -22,6 +22,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     try {
       _res = await augmontProvider.getGoldRateChart(
           DateTime(2018, 1, 1), DateTime.now());
+      _res.sort((GoldGraphPoint a, GoldGraphPoint b) {
+        return a.timestamp.compareTo(b.timestamp);
+      });
       print(_res.length);
     } catch (err) {
       if(baseProvider.myUser.uid!=null) {
