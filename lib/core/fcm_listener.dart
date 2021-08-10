@@ -234,7 +234,7 @@ class FcmListener extends ChangeNotifier {
     } catch (e) {
       log.error(e.toString());
       if(_baseUtil.myUser.uid!=null) {
-        var errorDetails = {'Error Message' : e.toString()};
+        Map<String,dynamic> errorDetails = {'Error Message' : e.toString()};
         _dbModel.logFailure(_baseUtil.myUser.uid, FailType.TambolaDrawNotificationSettingFailed, errorDetails);
       }
       _baseUtil.showNegativeAlert(

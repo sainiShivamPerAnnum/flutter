@@ -30,7 +30,6 @@ class _HomePageState extends State<HomePage> {
   DBModel dbProvider;
   AppState appState;
   bool _isInit = false;
-
   Future<void> getProfilePicUrl() async {
     if (baseProvider == null || baseProvider.myUser == null) return;
     baseProvider.myUserDpUrl =
@@ -85,7 +84,6 @@ class _HomePageState extends State<HomePage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
-    // FirebaseCrashlytics.instance.crash();
     if (baseProvider.myUserDpUrl == null) {
       isImageLoading = true;
       getProfilePicUrl();

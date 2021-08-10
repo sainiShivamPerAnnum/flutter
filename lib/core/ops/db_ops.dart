@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info/device_info.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
@@ -24,6 +26,7 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/help_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:synchronized/synchronized.dart';
@@ -33,6 +36,7 @@ class DBModel extends ChangeNotifier {
   Lock _lock = new Lock();
   final Log log = new Log("DBModel");
   ValueChanged<TicketRequest> _ticketRequestListener;
+  FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
 
   Future<bool> updateClientToken(BaseUser user, String token) async {
     try {
@@ -839,12 +843,35 @@ class DBModel extends ChangeNotifier {
       String userId, FailType failType, Map<String, dynamic> data) async {
     try {
       Map<String, dynamic> dMap = (data == null) ? {} : data;
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      IosDeviceInfo iosDeviceInfo;
+      AndroidDeviceInfo androidDeviceInfo;
+      String iosVersion;
+      AndroidBuildVersion androidBuildVersion;
+      if(Platform.isIOS) {
+        iosDeviceInfo = await deviceInfo.iosInfo;
+      } else if(Platform.isAndroid) {
+        androidDeviceInfo = await deviceInfo.androidInfo;
+      }
+      String model = (Platform.isIOS)?iosDeviceInfo.model:androidDeviceInfo.model;
+      if(Platform.isIOS) {
+        iosVersion = iosDeviceInfo.systemVersion;
+      } else if(Platform.isAndroid) {
+        androidBuildVersion = androidDeviceInfo.version;
+      }
       dMap['user_id'] = userId;
       dMap['fail_type'] = failType.value();
       dMap['manually_resolved'] = false;
       dMap['app_version'] =
           '${BaseUtil.packageInfo.version}+${BaseUtil.packageInfo.buildNumber}';
+      dMap['phone_model'] = model;
+      dMap['phone_version'] = (Platform.isIOS)?iosVersion:('Android '+androidBuildVersion.release);
       dMap['timestamp'] = Timestamp.now();
+      try {
+        await firebaseCrashlytics.recordError(failType.toString(), StackTrace.fromString(failType.value().toUpperCase()), reason : dMap);
+      } catch(e) {
+        log.error('Crashlytics record error fail : $e');
+      }
       await _api.addFailedReportDocument(dMap);
       return true;
     } catch (e) {

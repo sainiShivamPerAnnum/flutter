@@ -267,7 +267,7 @@ class BaseUtil extends ChangeNotifier {
       return (unreadCount['count'] > 0);
     } catch (e) {
       log.error('Error reading unread count variable: $e');
-      var errorDetails = {'User number' : _myUser.mobile, 'Error Type' : 'Unread message count failed', 'Error message' : e.toString()};
+      Map<String,dynamic> errorDetails = {'User number' : _myUser.mobile, 'Error Type' : 'Unread message count failed', 'Error message' : e.toString()};
       _dbModel.logFailure(_myUser.uid, FailType.FreshchatFail, errorDetails);
       return false;
     }
@@ -735,7 +735,7 @@ class BaseUtil extends ChangeNotifier {
       notifyListeners(); //might cause ui error if screen no longer active
     }).catchError((err) {
       if(_myUser.uid!=null) {
-        var errorDetails = {'Error message': err.toString()};
+        Map<String,dynamic> errorDetails = {'Error message': err.toString()};
         _dbModel.logFailure(_myUser.uid, FailType.UserAugmontBalanceUpdateFailed,errorDetails);
       }
       print('$err');
