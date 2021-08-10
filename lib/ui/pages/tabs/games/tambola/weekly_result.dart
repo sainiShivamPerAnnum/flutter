@@ -88,7 +88,7 @@ class PrizeProcessing extends StatelessWidget {
                 style: TextStyle(
                     fontFamily: "Cucciolo",
                     color: Color(0xff272727),
-                    fontSize: 60,
+                    fontSize: SizeConfig.cardTitleTextSize * 1.6,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 2,
                     shadows: [
@@ -104,12 +104,15 @@ class PrizeProcessing extends StatelessWidget {
                 child: Text(
                   "It's Sunday, and we are processing your tickets to see if any of your tickets won or not ",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, height: 1.5, letterSpacing: 2),
+                  style: TextStyle(
+                      fontSize: SizeConfig.mediumTextSize,
+                      height: 1.5,
+                      letterSpacing: 2),
                 ),
               ),
               LottieBuilder.asset(
                 "images/Tambola/process.json",
-                width: SizeConfig.screenWidth * 0.8,
+                width: SizeConfig.screenWidth * 0.6,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
@@ -118,7 +121,7 @@ class PrizeProcessing extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Color(0xffFCB260),
-                      fontSize: 32,
+                      fontSize: SizeConfig.largeTextSize,
                       height: 1.5,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 5),
@@ -179,16 +182,6 @@ class _PrizeWinState extends State<PrizeWin> {
               margin: EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  SizedBox(
-                    height: kToolbarHeight * 1.6,
-                    width: SizeConfig.screenWidth,
-                    child: Center(
-                      child: Image.asset(
-                        "images/fello_logo.png",
-                        height: kToolbarHeight * 0.8,
-                      ),
-                    ),
-                  ),
                   Spacer(
                     flex: 1,
                   ),
@@ -197,7 +190,8 @@ class _PrizeWinState extends State<PrizeWin> {
                     child: Text(
                       "YOU ARE A",
                       style: GoogleFonts.montserrat(
-                          fontSize: 24, letterSpacing: 2),
+                          fontSize: SizeConfig.mediumTextSize,
+                          letterSpacing: 2),
                     ),
                   ),
                   Text(
@@ -205,7 +199,7 @@ class _PrizeWinState extends State<PrizeWin> {
                     style: TextStyle(
                         fontFamily: "Cucciolo",
                         color: Color(0xff272727),
-                        fontSize: 60,
+                        fontSize: SizeConfig.cardTitleTextSize * 2,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 2,
                         shadows: [
@@ -226,7 +220,7 @@ class _PrizeWinState extends State<PrizeWin> {
                       textAlign: TextAlign.center,
                       style: GoogleFonts.montserrat(
                         color: Color(0xff10AB8F),
-                        fontSize: 22,
+                        fontSize: SizeConfig.mediumTextSize,
                         height: 1.5,
                         fontWeight: FontWeight.w500,
                       ),
@@ -389,12 +383,12 @@ class _PrizePWinState extends State<PrizePWin> {
           child: Column(
             children: [
               SizedBox(
-                height: kToolbarHeight * 1.6,
+                height: kToolbarHeight * 0.8,
                 width: SizeConfig.screenWidth,
                 child: Center(
                   child: Image.asset(
                     "images/fello_logo.png",
-                    height: kToolbarHeight * 0.8,
+                    height: kToolbarHeight * 0.6,
                   ),
                 ),
               ),
@@ -405,7 +399,8 @@ class _PrizePWinState extends State<PrizePWin> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   "YOU ARE A",
-                  style: GoogleFonts.montserrat(fontSize: 24, letterSpacing: 2),
+                  style: GoogleFonts.montserrat(
+                      fontSize: SizeConfig.mediumTextSize, letterSpacing: 2),
                 ),
               ),
               Text(
@@ -413,7 +408,7 @@ class _PrizePWinState extends State<PrizePWin> {
                 style: TextStyle(
                     fontFamily: "Cucciolo",
                     color: Color(0xff272727),
-                    fontSize: 60,
+                    fontSize: SizeConfig.cardTitleTextSize * 1.6,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 2,
                     shadows: [
@@ -438,7 +433,7 @@ class _PrizePWinState extends State<PrizePWin> {
                         duration: Duration(seconds: 2),
                         child: Image.asset(
                           "images/Tambola/sloth.png",
-                          width: SizeConfig.screenWidth * 0.9,
+                          height: SizeConfig.screenHeight / 3.5,
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -456,7 +451,7 @@ class _PrizePWinState extends State<PrizePWin> {
                   textAlign: TextAlign.center,
                   style: GoogleFonts.montserrat(
                     color: Color(0xffFB743E),
-                    fontSize: 22,
+                    fontSize: SizeConfig.mediumTextSize,
                     height: 1.5,
                     fontWeight: FontWeight.w500,
                   ),
@@ -540,7 +535,7 @@ class Loser extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(
-                    height: kToolbarHeight * 2,
+                    height: kToolbarHeight * 1.6,
                     width: SizeConfig.screenWidth,
                     child: Center(
                       child: Image.asset(
@@ -553,7 +548,7 @@ class Loser extends StatelessWidget {
                     "Oops!",
                     style: GoogleFonts.montserrat(
                         color: Color(0xff272727),
-                        fontSize: 40,
+                        fontSize: SizeConfig.cardTitleTextSize * 1.4,
                         fontWeight: FontWeight.w500,
                         letterSpacing: 2,
                         shadows: [
@@ -571,7 +566,7 @@ class Loser extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: GoogleFonts.montserrat(
                         color: Color(0xffFCB260),
-                        fontSize: 28,
+                        fontSize: SizeConfig.largeTextSize,
                         height: 1.2,
                         fontWeight: FontWeight.w500,
                       ),
@@ -582,7 +577,9 @@ class Loser extends StatelessWidget {
                     child: Text(
                       "More number of tickets you have, more Is your chances of winning. You can get more tickets by",
                       style: GoogleFonts.montserrat(
-                          fontSize: 20, height: 1.5, letterSpacing: 2),
+                          fontSize: SizeConfig.mediumTextSize,
+                          height: 1.5,
+                          letterSpacing: 2),
                     ),
                   ),
                   Padding(
@@ -603,6 +600,9 @@ class Loser extends StatelessWidget {
                               ),
                               Text(
                                 "Buying more tickets.",
+                                style: GoogleFonts.montserrat(
+                                  fontSize: SizeConfig.mediumTextSize,
+                                ),
                               ),
                             ],
                           ),
@@ -610,7 +610,7 @@ class Loser extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 24),
+                  Spacer(),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context);

@@ -14,6 +14,7 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/tambola_board_view.dart';
+import 'package:felloapp/ui/elements/texts/daily_pick_text_slider.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/tambola_walkthrough.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_result.dart';
@@ -36,17 +37,17 @@ class TambolaHome extends StatefulWidget {
 }
 
 class _TambolaHomeState extends State<TambolaHome> {
-  double topCardHeight = SizeConfig.screenWidth * 0.76;
+  double topCardHeight = SizeConfig.screenWidth * 0.80;
   bool isShowingAllPicks = false;
   double titleOpacity = 1;
 
   void _onVerticalDragUpdate(DragUpdateDetails details) {
     if (details.primaryDelta > 1.5) {
-      topCardHeight = SizeConfig.screenHeight * 0.76;
+      topCardHeight = SizeConfig.screenHeight * 0.14 * 7;
       titleOpacity = 0;
       isShowingAllPicks = true;
     } else {
-      topCardHeight = SizeConfig.screenWidth * 0.76;
+      topCardHeight = SizeConfig.screenWidth * 0.80;
       isShowingAllPicks = false;
       setState(() {});
       Future.delayed(Duration(milliseconds: 500), () {
@@ -160,17 +161,6 @@ class _TambolaHomeState extends State<TambolaHome> {
     if (_isDeleted) {
       setState(() {});
     }
-
-    ///Show the onboarding showcase tutorial is user is new
-    // localDBModel.isTambolaTutorialComplete.then((flag) {
-    //   if (flag == 0) {
-    //     new Timer(const Duration(seconds: 4), () {
-    //       _showTutorial = true;
-    //       setState(() {});
-    //     });
-    //     localDBModel.saveTambolaTutorialComplete = true;
-    //   }
-    // });
   }
 
   _refreshTambolaTickets() async {
@@ -224,353 +214,109 @@ class _TambolaHomeState extends State<TambolaHome> {
                       end: Alignment.topLeft,
                     ),
                   ),
-                  margin: EdgeInsets.all(10),
+                  margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
                   child: Column(
                     children: [
-                      Container(
-                        height: kToolbarHeight * 1.2,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              onPressed: () => Navigator.pop(context),
-                              icon: Icon(
-                                Icons.arrow_back_rounded,
-                              ),
-                              color: Colors.white,
-                            ),
-                            Image.asset(
-                              "images/fello-dark.png",
-                              height: kToolbarHeight * 0.6,
-                            ),
-                            IconButton(
-                              onPressed: () => delegate.appState.currentAction =
-                                  PageAction(
-                                      state: PageState.addPage,
-                                      page: TWalkthroughPageConfig),
-                              icon: Icon(Icons.info),
-                              color: Colors.white,
-                            ),
-                          ],
+                      !isShowingAllPicks
+                          ? const GameAppBar()
+                          : SizedBox(height: 8),
+                      !isShowingAllPicks
+                          ? GameTitle(titleOpacity: titleOpacity)
+                          : SizedBox(),
+                      InkWell(
+                        onTap: () => delegate.appState.currentAction =
+                            PageAction(
+                                state: PageState.addPage,
+                                page: TPickDrawPageConfig),
+                        child: Text(
+                          !isShowingAllPicks ? "Today's Picks" : "Weekly Picks",
+                          style: GoogleFonts.montserrat(
+                            color: Colors.white,
+                            fontSize: SizeConfig.cardTitleTextSize,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                       !isShowingAllPicks
-                          ? AnimatedOpacity(
-                              opacity: titleOpacity,
-                              duration: Duration(seconds: 1),
-                              child: Container(
-                                margin: EdgeInsets.symmetric(vertical: 20),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "TAMBOLA",
-                                      style: TextStyle(
-                                          fontFamily: "Cucciolo",
-                                          color: Color(0xffEEEBDD),
-                                          fontSize: 60,
-                                          fontWeight: FontWeight.w700,
-                                          letterSpacing: 2,
-                                          shadows: [
-                                            BoxShadow(
-                                                color: Colors.black
-                                                    .withOpacity(0.3),
-                                                offset: Offset(1, 1),
-                                                blurRadius: 5,
-                                                spreadRadius: 5)
-                                          ]),
-                                    ),
-                                    Text(
-                                      "[ GLOBAL ]",
-                                      style: GoogleFonts.montserrat(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        letterSpacing: 5,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                          ? CurrentPicks(
+                              dailyPickTextList: dailyPickTextList,
+                              digits: _getDailyPickData(
+                                  baseProvider.weeklyDigits,
+                                  DateTime.now().weekday),
                             )
-                          : SizedBox(),
-                      !isShowingAllPicks
-                          ? InkWell(
-                              onTap: () => delegate.appState.currentAction =
-                                  PageAction(
-                                      state: PageState.addPage,
-                                      page: TPickDrawPageConfig),
-                              child: Text(
-                                "Today's Picks",
-                                style: GoogleFonts.montserrat(
-                                  color: Colors.white,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            )
-                          : SizedBox(),
-                      isShowingAllPicks
-                          ? Text(
-                              "Weekly Picks",
-                              style: GoogleFonts.montserrat(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            )
-                          : SizedBox(),
-                      !isShowingAllPicks
-                          ? Expanded(
-                              child: Container(
-                                alignment: Alignment.bottomCenter,
-                                margin: EdgeInsets.symmetric(vertical: 10),
-                                width: SizeConfig.screenWidth,
-                                height: SizeConfig.screenHeight * 0.06,
-                                child: PageView(
-                                  children: [
-                                    Container(
-                                      width: SizeConfig.screenWidth,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [12, 82, 69, 51, 19]
-                                            .map(
-                                              (e) => Container(
-                                                height: SizeConfig.screenWidth *
-                                                    0.14,
-                                                width: SizeConfig.screenWidth *
-                                                    0.14,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black,
-                                                  shape: BoxShape.circle,
-                                                  gradient: RadialGradient(
-                                                    center:
-                                                        Alignment(-0.8, -0.6),
-                                                    colors: [
-                                                      Color(0xff515E63),
-                                                      Colors.black
-                                                    ],
-                                                    radius: 1.0,
-                                                  ),
-                                                ),
-                                                alignment: Alignment.center,
-                                                child: Stack(
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Container(
-                                                        height: SizeConfig
-                                                                .screenWidth *
-                                                            0.1,
-                                                        width: SizeConfig
-                                                                .screenWidth *
-                                                            0.1,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          border: Border.all(
-                                                            color: Colors.white,
-                                                            width: 0.5,
-                                                          ),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      100),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      height: SizeConfig
-                                                              .screenWidth *
-                                                          0.14,
-                                                      width: SizeConfig
-                                                              .screenWidth *
-                                                          0.14,
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Text(
-                                                        e.toString(),
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 24,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            )
-                                            .toList(),
-                                      ),
-                                    ),
-                                    PickTimer(),
-                                  ],
-                                ),
-                              ),
-                            )
-                          : Expanded(
-                              child: Container(
-                                padding: EdgeInsets.symmetric(vertical: 10),
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: 7,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemBuilder: (ctx, i) {
-                                    return ListTile(
-                                      title: Container(
-                                        alignment: Alignment.center,
-                                        padding: EdgeInsets.all(8),
-                                        child: Text(
-                                          "MONDAY",
-                                          style: GoogleFonts.montserrat(
-                                            color: Colors.white,
-                                            fontSize: 12,
-                                            letterSpacing: 5,
-                                          ),
-                                        ),
-                                      ),
-                                      subtitle: Container(
-                                        width: double.infinity,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [12, 2, 39, 43, 55]
-                                              .map(
-                                                (e) => Container(
-                                                  height: 40,
-                                                  width: 40,
-                                                  alignment: Alignment.center,
-                                                  decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: Colors.white
-                                                      // gradient: RadialGradient(
-                                                      //   center:
-                                                      //       Alignment(-0.8, -0.6),
-                                                      //   colors: [
-                                                      //     Color(0xff515E63),
-                                                      //     Colors.black
-                                                      //   ],
-                                                      //   radius: 1.0,
-                                                      // ),
-                                                      ),
-                                                  child: Text(
-                                                    e.toString(),
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                              .toList(),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
+                          : WeeklyPicks(
+                              weeklyDraws: baseProvider.weeklyDigits,
                             ),
-                      !isShowingAllPicks
-                          ? Padding(
-                              padding: EdgeInsets.only(bottom: 8),
-                              child: Text("Pull to see all the picks"),
-                            )
-                          : SizedBox(),
                     ],
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Text(
-                  "My Tickets (7)",
-                  style: GoogleFonts.montserrat(
-                    color: Colors.black87,
-                    fontSize: 30,
-                    fontWeight: FontWeight.w500,
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      "My Tickets ($_activeTambolaCardCount)",
+                      style: GoogleFonts.montserrat(
+                        color: Colors.black87,
+                        fontSize: SizeConfig.cardTitleTextSize,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
-                ),
+                  Spacer(),
+                  InkWell(
+                    onTap: () {
+                      _tambolaBoardViews = [];
+                      baseProvider.userWeeklyBoards.forEach((board) {
+                        _tambolaBoardViews.add(
+                            _buildBoardView(board, baseProvider.weeklyDigits));
+                      });
+                      delegate.appState.currentAction = PageAction(
+                        state: PageState.addWidget,
+                        page: TShowAllTicketsPageConfig,
+                        widget: ShowAllTickets(
+                          tambolaBoardView: _tambolaBoardViews,
+                        ),
+                      );
+                    },
+                    highlightColor: Color(0xff34C3A7).withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(100),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      margin: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.blockSizeHorizontal * 3),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Color(0xff4AB474),
+                        ),
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      child: Text(
+                        "Show All",
+                        style: GoogleFonts.montserrat(
+                          color: Color(0xff4AB474),
+                          fontSize: SizeConfig.mediumTextSize,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
               _buildCards(
                   baseProvider.weeklyTicksFetched,
                   baseProvider.weeklyDrawFetched,
                   baseProvider.userWeeklyBoards,
                   _activeTambolaCardCount),
-              // Container(
-              //   height: SizeConfig.screenWidth * 0.9,
-              //   width: SizeConfig.screenWidth,
-              //   child: ListView(
-              //     physics: BouncingScrollPhysics(),
-              //     scrollDirection: Axis.horizontal,
-              //     children: [
-              //       Ticket(
-              //         odds: odds,
-              //         bgColor: Color(0xffD6C481),
-              //         boardColorEven: Color(0xffC7B36C),
-              //         boardColorOdd: Colors.white,
-              //         boradColorMarked: Color(0xffE76F51),
-              //       ),
-              //       Ticket(
-              //         odds: odds,
-              //         bgColor: Color(0xff445C3C),
-              //         boardColorEven: Color(0xffC9D99E),
-              //         boardColorOdd: Color(0xffFAE8C8),
-              //         boradColorMarked: Color(0xffFDA77F),
-              //       ),
-              //       Ticket(
-              //         odds: odds,
-              //         bgColor: Color(0xffEA907A),
-              //         boardColorEven: Color(0xffC56E58),
-              //         boardColorOdd: Colors.white,
-              //         boradColorMarked: Color(0xffFFD56B),
-              //       ),
-              //       Ticket(
-              //         odds: odds,
-              //         bgColor: Color(0xff0C9463),
-              //         boardColorEven: Color(0xff09744D),
-              //         boardColorOdd: Colors.white,
-              //         boradColorMarked: Color(0xffFFD56B),
-              //       ),
-              //       Container(
-              //         width: SizeConfig.screenWidth * 0.5,
-              //         alignment: Alignment.center,
-              //         child: InkWell(
-              //           onTap: () => delegate.appState.currentAction =
-              //               PageAction(
-              //                   state: PageState.addPage,
-              //                   page: TShowAllTicketsPageConfig),
-              //           highlightColor: Color(0xff34C3A7).withOpacity(0.3),
-              //           borderRadius: BorderRadius.circular(100),
-              //           child: Container(
-              //             padding: EdgeInsets.symmetric(
-              //               horizontal: 16,
-              //               vertical: 8,
-              //             ),
-              //             decoration: BoxDecoration(
-              //               border: Border.all(
-              //                 color: Color(0xff4AB474),
-              //               ),
-              //               borderRadius: BorderRadius.circular(100),
-              //             ),
-              //             child: Text(
-              //               "Show All",
-              //               style: GoogleFonts.montserrat(
-              //                   color: Color(0xff4AB474)),
-              //             ),
-              //           ),
-              //         ),
-              //       )
-              //     ],
-              //   ),
-              // ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(bottom: 10, left: 10),
+                    padding: EdgeInsets.only(
+                        bottom: 10, right: SizeConfig.blockSizeHorizontal * 3),
                     child: Text(
                       "* Best 5 Tickets are shown here",
                       style: TextStyle(
@@ -595,7 +341,6 @@ class _TambolaHomeState extends State<TambolaHome> {
                         ),
                       ),
                   child: PrizeSection()),
-              //FAQ SECTION
               FaqSection()
             ],
           ),
@@ -623,49 +368,43 @@ class _TambolaHomeState extends State<TambolaHome> {
       );
     } else if (boards == null || count == 0) {
       _widget = Padding(
-          padding: EdgeInsets.all(10),
-          child: Container(
-              width: double.infinity,
-              height: 200,
-              child: Center(
-                child: (ticketsBeingGenerated)
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: SpinKitWave(color: UiConstants.primaryColor),
-                          ),
-                          Text(
-                            'Your tickets are being generated..',
-                            style: TextStyle(
-                              fontSize: SizeConfig.mediumTextSize,
-                            ),
-                          )
-                        ],
+        padding: EdgeInsets.all(10),
+        child: Container(
+          width: double.infinity,
+          height: 200,
+          child: Center(
+            child: (ticketsBeingGenerated)
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: SpinKitWave(color: UiConstants.primaryColor),
+                      ),
+                      Text(
+                        'Your tickets are being generated..',
+                        style: TextStyle(
+                          fontSize: SizeConfig.mediumTextSize,
+                        ),
                       )
-                    : Text('No tickets yet'),
-              )));
-    }
-    //  else if (count == 1) {
-    //   _tambolaBoardViews = [];
-    //   _tambolaBoardViews.add(_buildBoardView(
-    //       baseProvider.userWeeklyBoards[0], baseProvider.weeklyDigits));
-    //   _currentBoardView = _tambolaBoardViews[0];
-    //   _currentBoard = baseProvider.userWeeklyBoards[0];
-    //   _widget = Padding(
-    //       padding: EdgeInsets.all(10),
-    //       child:
-    //           Container(width: double.infinity, child: _tambolaBoardViews[0]));
-    // }
-    else {
+                    ],
+                  )
+                : Text('No tickets yet'),
+          ),
+        ),
+      );
+    } else {
       _tambolaBoardViews = [];
-      for (int i = 0; i < 5; i++) {
-        _tambolaBoardViews.add(_buildBoardView(
-            baseProvider.userWeeklyBoards[i], baseProvider.weeklyDigits));
-      }
+      _refreshBestBoards().forEach((element) {
+        _tambolaBoardViews
+            .add(_buildBoardView(element, baseProvider.weeklyDigits));
+      });
+      // for (int i = 0; i < 5; i++) {
+      //   _tambolaBoardViews.add(_buildBoardView(
+      //       baseProvider.userWeeklyBoards[i], baseProvider.weeklyDigits));
+      // }
 
       _widget = Container(
         height: SizeConfig.screenWidth * 0.9,
@@ -677,35 +416,7 @@ class _TambolaHomeState extends State<TambolaHome> {
               _tambolaBoardViews.length, (index) => _tambolaBoardViews[index]),
         ),
       );
-      // Container(
-      //   width: SizeConfig.screenWidth,
-      //   height: SizeConfig.screenHeight * 0.16,
-      //   child: Swiper(
-      //     controller: ticketsController,
-      //     itemBuilder: (BuildContext context, int index) {
-      //       return _tambolaBoardViews[index];
-      //     },
-      //     itemCount: _tambolaBoardViews.length,
-      //     itemWidth: SizeConfig.screenWidth * 0.78,
-      //     physics: BouncingScrollPhysics(),
-      //     layout: SwiperLayout.STACK,
-      //   ),
-      // );
-      // BaseUtil.buildShowcaseWrapper(
-      //     _showcaseThree,
-      //     Assets.showCaseDesc[2],
-      //     CardSelector(
-      //         cards: _tambolaBoardViews.toList(),
-      //         mainCardWidth: SizeConfig.screenWidth * 0.8,
-      //         mainCardHeight: SizeConfig.screenHeight * 0.16,
-      //         mainCardPadding: 4.0,
-      //         dropTargetWidth: 0,
-      //         cardAnimationDurationMs: 500,
-      //         onChanged: (i) {
-      //           _currentBoard = baseProvider.userWeeklyBoards[i];
-      //           _currentBoardView = _tambolaBoardViews[i];
-      //           setState(() {});
-      //         }));
+
       if (_currentBoardView == null)
         _currentBoardView = Ticket(
           bgColor: tambolaTicketColorList[0].boardColor,
@@ -713,7 +424,6 @@ class _TambolaHomeState extends State<TambolaHome> {
           boardColorOdd: tambolaTicketColorList[0].itemColorOdd,
           boradColorMarked: tambolaTicketColorList[0].itemColorMarked,
           calledDigits: [],
-          odds: odds,
           board: null,
         );
       if (_currentBoard == null)
@@ -732,8 +442,8 @@ class _TambolaHomeState extends State<TambolaHome> {
     else {
       _calledDigits = picks.getPicksPostDate(board.generatedDayCode);
     }
-    TambolaTicketColor ticketColor =
-        tambolaTicketColorList[Random().nextInt(3) + 1];
+    TambolaTicketColor ticketColor = tambolaTicketColorList[
+        Random().nextInt(tambolaTicketColorList.length - 1) + 1];
     return Ticket(
       board: board,
       calledDigits: _calledDigits,
@@ -741,16 +451,7 @@ class _TambolaHomeState extends State<TambolaHome> {
       boardColorEven: ticketColor.itemColorEven,
       boardColorOdd: ticketColor.itemColorOdd,
       boradColorMarked: ticketColor.itemColorMarked,
-      odds: odds,
     );
-
-    // TambolaBoardView(
-    //   tambolaBoard: board.tambolaBoard,
-    //   calledDigits: _calledDigits,
-    //   boardColor: UiConstants.primaryColor,
-    //   ticketColor1: Color(0xff55C595),
-    //   ticketColor2: Color(0xffEEEEEE),
-    // );
   }
 
   _checkSundayResultsProcessing() {
@@ -960,35 +661,317 @@ class _TambolaHomeState extends State<TambolaHome> {
 
     return _bestTambolaBoards;
   }
+
+  List<int> _getDailyPickData(DailyPick draws, int day) {
+    List<int> picks = [];
+    if (draws != null && draws.getWeekdayDraws(day - 1) != null) {
+      draws.getWeekdayDraws(day - 1).forEach((element) {
+        picks.add(element);
+      });
+    } else {
+      for (int i = 0; i < baseProvider.dailyPicksCount; i++) {
+        picks.add(-1);
+      }
+    }
+    return picks;
+  }
 }
 
-List<TicketOdds> odds = [
-  TicketOdds(
-      color: Color(0xffE76F51),
-      icon: Icons.apps,
-      title: "Full House",
-      left: 12),
-  TicketOdds(
-      color: Color(0xff264653),
-      icon: Icons.border_top,
-      title: "Top Row",
-      left: 4),
-  TicketOdds(
-      color: Color(0xff264653),
-      icon: Icons.border_horizontal,
-      title: "Middle Row",
-      left: 3),
-  TicketOdds(
-      color: Color(0xff264653),
-      icon: Icons.border_bottom,
-      title: "Bottom Row",
-      left: 0),
-  TicketOdds(
-      color: Color(0xff4AB474),
-      icon: Icons.border_outer,
-      title: "Corners",
-      left: 2),
-];
+class WeeklyPicks extends StatelessWidget {
+  final DailyPick weeklyDraws;
+  // BaseUtil baseProvider;
+
+  const WeeklyPicks({
+    this.weeklyDraws,
+    Key key,
+  }) : super(key: key);
+
+  String getDayName(int weekday) {
+    switch (weekday) {
+      case 1:
+        return 'Monday';
+      case 2:
+        return 'Tuesday';
+      case 3:
+        return 'Wednesday';
+      case 4:
+        return 'Thursday';
+      case 5:
+        return 'Friday';
+      case 6:
+        return 'Saturday';
+      case 7:
+        return 'Sunday';
+      default:
+        return 'N/A';
+    }
+  }
+
+  Widget _getDrawBallRow(DailyPick draws, int day) {
+    List<Widget> balls = [];
+    if (draws != null && draws.getWeekdayDraws(day - 1) != null) {
+      draws.getWeekdayDraws(day - 1).forEach((element) {
+        balls.add(_getDrawBall(element.toString()));
+      });
+    } else {
+      for (int i = 0; i < draws.mon.length; i++) {
+        balls.add(_getDrawBall('-'));
+      }
+    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: balls,
+    );
+  }
+
+  Widget _getDrawBall(String digit) {
+    return Container(
+      width: SizeConfig.screenWidth * 0.08,
+      height: SizeConfig.screenWidth * 0.08,
+      decoration: new BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+      ),
+      child: Center(
+          child: Text(
+        digit,
+        style: TextStyle(
+            fontSize: SizeConfig.mediumTextSize * 1.2,
+            fontWeight: FontWeight.w500,
+            color: Colors.black),
+        textAlign: TextAlign.center,
+      )),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (weeklyDraws == null || weeklyDraws.toList().isEmpty) {
+      return Expanded(
+        child: Center(
+          child: Container(
+            height: 150,
+            child: Center(
+                child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                'This week\'s numbers have not been drawn yet.',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.black54),
+              ),
+            )),
+          ),
+        ),
+      );
+    }
+    DateTime today = DateTime.now();
+    List<ListTile> colElems = [];
+    int colCount = today.weekday;
+    for (int i = 0; i < 7; i++) {
+      // if (weeklyDraws.getWeekdayDraws(i) != null) {
+      colElems.add(
+        ListTile(
+          title: Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.all(8),
+            child: Text(
+              getDayName(i + 1).toUpperCase(),
+              style: GoogleFonts.montserrat(
+                color: Colors.white,
+                fontSize: SizeConfig.smallTextSize,
+                letterSpacing: 5,
+              ),
+            ),
+          ),
+          subtitle: _getDrawBallRow(weeklyDraws, i + 1),
+        ),
+      );
+      // }
+    }
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.only(bottom: 8),
+        child: ListView(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          children: colElems,
+        ),
+      ),
+    );
+  }
+}
+
+class GameTitle extends StatelessWidget {
+  const GameTitle({
+    Key key,
+    @required this.titleOpacity,
+  }) : super(key: key);
+
+  final double titleOpacity;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedOpacity(
+      opacity: titleOpacity,
+      duration: Duration(seconds: 1),
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 20),
+        child: Column(
+          children: [
+            Text(
+              "TAMBOLA",
+              style: TextStyle(
+                fontFamily: "Cucciolo",
+                color: Color(0xffEEEBDD),
+                fontSize: SizeConfig.cardTitleTextSize * 1.6,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 2,
+                shadows: [
+                  BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      offset: Offset(1, 1),
+                      blurRadius: 5,
+                      spreadRadius: 5)
+                ],
+              ),
+            ),
+            Text(
+              "[ GLOBAL ]",
+              style: GoogleFonts.montserrat(
+                color: Colors.white,
+                fontSize: 12,
+                letterSpacing: 5,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class GameAppBar extends StatelessWidget {
+  const GameAppBar({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: kToolbarHeight * 1.2,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(
+              Icons.arrow_back_rounded,
+            ),
+            color: Colors.white,
+          ),
+          Image.asset(
+            "images/fello-dark.png",
+            height: kToolbarHeight * 0.6,
+          ),
+          IconButton(
+            onPressed: () => delegate.appState.currentAction = PageAction(
+                state: PageState.addPage, page: TWalkthroughPageConfig),
+            icon: Icon(Icons.info),
+            color: Colors.white,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CurrentPicks extends StatelessWidget {
+  final List<String> dailyPickTextList;
+  final List<int> digits;
+
+  const CurrentPicks({Key key, this.dailyPickTextList, this.digits})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.only(top: 10),
+        child: Column(
+          children: [
+            digits[0] < 0
+                ? DailyPicksTimer()
+                : Container(
+                    width: SizeConfig.screenWidth,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: digits
+                          .map(
+                            (e) => Container(
+                              height: SizeConfig.screenWidth * 0.12,
+                              width: SizeConfig.screenWidth * 0.12,
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                shape: BoxShape.circle,
+                                gradient: RadialGradient(
+                                  center: Alignment(-0.8, -0.6),
+                                  colors: [Color(0xff515E63), Colors.black],
+                                  radius: 1.0,
+                                ),
+                              ),
+                              alignment: Alignment.center,
+                              child: Stack(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: Container(
+                                      height: SizeConfig.screenWidth * 0.09,
+                                      width: SizeConfig.screenWidth * 0.09,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.white,
+                                          width: 0.5,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: SizeConfig.screenWidth * 0.12,
+                                    width: SizeConfig.screenWidth * 0.12,
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.all(8),
+                                    child: FittedBox(
+                                      child: Text(
+                                        e.toString(),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white,
+                                            fontSize: SizeConfig.largeTextSize),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: DPTextSlider(
+                infoList: dailyPickTextList,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class FaqSection extends StatefulWidget {
   const FaqSection({Key key}) : super(key: key);
@@ -1105,15 +1088,13 @@ class _FaqSectionState extends State<FaqSection> {
 
 class Ticket extends StatefulWidget {
   const Ticket(
-      {@required this.odds,
-      @required this.bgColor,
+      {@required this.bgColor,
       @required this.boardColorEven,
       @required this.boardColorOdd,
       @required this.boradColorMarked,
       @required this.board,
       @required this.calledDigits});
 
-  final List<TicketOdds> odds;
   final bgColor, boardColorOdd, boardColorEven, boradColorMarked;
   final TambolaBoard board;
   final List<int> calledDigits;
@@ -1125,6 +1106,7 @@ class Ticket extends StatefulWidget {
 class _TicketState extends State<Ticket> {
   List<int> markedIndices = [];
   List<int> ticketNumbers = [];
+  List<TicketOdds> odds = [];
 
   markItem(int index) {
     print("marked index : $index");
@@ -1136,9 +1118,8 @@ class _TicketState extends State<Ticket> {
   }
 
   getColor(int index) {
-    if (markedIndices.contains(index)) {
+    if (widget.calledDigits.contains(ticketNumbers[index]))
       return widget.boradColorMarked;
-    }
     if (index % 2 == 0) {
       return widget.boardColorEven;
     } else {
@@ -1147,7 +1128,7 @@ class _TicketState extends State<Ticket> {
   }
 
   markStatus(int index) {
-    if (markedIndices.contains(index)) {
+    if (widget.calledDigits.contains(ticketNumbers[index])) {
       return Align(
         alignment: Alignment.center,
         child: Transform.rotate(
@@ -1168,6 +1149,37 @@ class _TicketState extends State<Ticket> {
     }
   }
 
+  generateOdds() {
+    odds = [
+      TicketOdds(
+        color: Color(0xffE76F51),
+        icon: Icons.apps,
+        title: "Full House",
+        left: widget.board.getFullHouseOdds(widget.calledDigits),
+      ),
+      TicketOdds(
+          color: Color(0xff264653),
+          icon: Icons.border_top,
+          title: "Top Row",
+          left: widget.board.getRowOdds(0, widget.calledDigits)),
+      TicketOdds(
+          color: Color(0xff264653),
+          icon: Icons.border_horizontal,
+          title: "Middle Row",
+          left: widget.board.getRowOdds(1, widget.calledDigits)),
+      TicketOdds(
+          color: Color(0xff264653),
+          icon: Icons.border_bottom,
+          title: "Bottom Row",
+          left: widget.board.getRowOdds(2, widget.calledDigits)),
+      TicketOdds(
+          color: Color(0xff4AB474),
+          icon: Icons.border_outer,
+          title: "Corners",
+          left: widget.board.getCornerOdds(widget.calledDigits)),
+    ];
+  }
+
   @override
   void initState() {
     for (int i = 0; i < 3; i++) {
@@ -1175,6 +1187,7 @@ class _TicketState extends State<Ticket> {
         ticketNumbers.add(widget.board.tambolaBoard[i][j]);
       }
     }
+    generateOdds();
     super.initState();
   }
 
@@ -1185,13 +1198,13 @@ class _TicketState extends State<Ticket> {
       width: SizeConfig.screenWidth * 0.9,
       decoration: BoxDecoration(
         color: widget.bgColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(
           width: 0,
           color: Color(0xffF0F0CB),
         ),
       ),
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.all(8),
       child: Stack(
         children: [
           Container(
@@ -1200,7 +1213,7 @@ class _TicketState extends State<Ticket> {
             child: Opacity(
               opacity: 0.16,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(14),
                 child: Image.asset(
                   "images/Tambola/ticket-bg.png",
                   fit: BoxFit.cover,
@@ -1215,15 +1228,17 @@ class _TicketState extends State<Ticket> {
                 Expanded(
                   child: Container(
                     alignment: Alignment.center,
-                    padding: const EdgeInsets.all(16.0),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.blockSizeHorizontal * 5,
+                        vertical: SizeConfig.blockSizeHorizontal * 2),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
                           'Ticket #${widget.board.getTicketNumber()}',
                           style: GoogleFonts.montserrat(
-                            color: Colors.white,
-                          ),
+                              color: Colors.white,
+                              fontSize: SizeConfig.smallTextSize),
                         ),
                         Spacer(),
                         GridView.builder(
@@ -1236,20 +1251,25 @@ class _TicketState extends State<Ticket> {
                           ),
                           itemBuilder: (ctx, i) {
                             return InkWell(
-                              onTap: () => markItem(i),
+                              //onTap: () => markItem(i),
                               child: Container(
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
-                                    color: getColor(i),
-                                    borderRadius: BorderRadius.circular(16)),
+                                  color: getColor(i),
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.blockSizeHorizontal * 3),
+                                ),
                                 child: Stack(
                                   children: [
                                     Align(
                                       alignment: Alignment.center,
                                       child: Text(
-                                        i.toString(),
+                                        ticketNumbers[i] == 0
+                                            ? ""
+                                            : ticketNumbers[i].toString(),
                                         style: GoogleFonts.montserrat(
                                           fontWeight: FontWeight.w500,
+                                          fontSize: SizeConfig.mediumTextSize,
                                         ),
                                       ),
                                     ),
@@ -1267,42 +1287,81 @@ class _TicketState extends State<Ticket> {
                 ),
                 Divider(
                   color: Color(0xffF0F0CB),
-                  thickness: 1,
                   indent: 40,
                   endIndent: 40,
                 ),
                 Expanded(
-                  child: GridView.count(
-                    physics: NeverScrollableScrollPhysics(),
-                    childAspectRatio: 3.5 / 1,
-                    crossAxisCount: 2,
-                    children: List.generate(5, (index) {
-                      return ListTile(
-                        leading: Container(
-                          padding: EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                              color: widget.odds[index].color,
-                              borderRadius: BorderRadius.circular(4)),
-                          child: Icon(
-                            widget.odds[index].icon,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                        ),
-                        title: Text(
-                          widget.odds[index].title,
-                          style: GoogleFonts.montserrat(
-                              color: Colors.white, fontSize: 14),
-                        ),
-                        subtitle: Text(
-                          "${widget.odds[index].left} left",
-                          style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 18),
-                        ),
-                      );
-                    }),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.blockSizeHorizontal * 5,
+                    ),
+                    child: GridView.count(
+                      physics: NeverScrollableScrollPhysics(),
+                      childAspectRatio: 3.5 / 1,
+                      crossAxisCount: 2,
+                      children: List.generate(5, (index) {
+                        return Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                  color: odds[index].color,
+                                  borderRadius: BorderRadius.circular(4)),
+                              child: Icon(odds[index].icon,
+                                  color: Colors.white,
+                                  size: SizeConfig.screenWidth * 0.06),
+                            ),
+                            SizedBox(width: 12),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  odds[index].title,
+                                  style: GoogleFonts.montserrat(
+                                    color: Colors.white,
+                                    fontSize: SizeConfig.smallTextSize,
+                                  ),
+                                ),
+                                Text(
+                                  "${odds[index].left} left",
+                                  style: GoogleFonts.montserrat(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: SizeConfig.mediumTextSize),
+                                ),
+                              ],
+                            )
+                          ],
+                        );
+
+                        // ListTile(
+                        //   leading: Container(
+                        //     padding: EdgeInsets.all(4),
+                        //     decoration: BoxDecoration(
+                        //         color: odds[index].color,
+                        //         borderRadius: BorderRadius.circular(4)),
+                        //     child: Icon(odds[index].icon,
+                        //         color: Colors.white,
+                        //         size: SizeConfig.screenWidth * 0.05),
+                        //   ),
+                        //   title: Text(
+                        //     odds[index].title,
+                        //     style: GoogleFonts.montserrat(
+                        //       color: Colors.white,
+                        //       fontSize: SizeConfig.smallTextSize,
+                        //     ),
+                        //   ),
+                        //   subtitle: Text(
+                        //     "${odds[index].left} left",
+                        //     style: GoogleFonts.montserrat(
+                        //         color: Colors.white,
+                        //         fontWeight: FontWeight.w700,
+                        //         fontSize: SizeConfig.mediumTextSize),
+                        //   ),
+                        // );
+                      }),
+                    ),
                   ),
                 ),
               ],
@@ -1318,7 +1377,7 @@ class _TicketState extends State<Ticket> {
                   print(widget.board.getTicketNumber());
                 },
                 child: Text(
-                  "Generated on: 08/08/2021",
+                  "Generated on: ${DateTime.fromMillisecondsSinceEpoch(widget.board.assigned_time.millisecondsSinceEpoch).day.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(widget.board.assigned_time.millisecondsSinceEpoch).month.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(widget.board.assigned_time.millisecondsSinceEpoch).year}",
                   style: GoogleFonts.montserrat(
                     color: Colors.white,
                   ),
@@ -1574,133 +1633,6 @@ class PrizeSection extends StatelessWidget {
   }
 }
 
-class PickTimer extends StatelessWidget {
-  const PickTimer({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: SizeConfig.screenWidth,
-      height: SizeConfig.screenWidth,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            height: SizeConfig.screenWidth * 0.16,
-            width: SizeConfig.screenWidth * 0.16,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              "12",
-              style: GoogleFonts.montserrat(
-                  color: Colors.white,
-                  fontSize: 40,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 2,
-                  shadows: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        offset: Offset(1, 1),
-                        blurRadius: 5,
-                        spreadRadius: 5)
-                  ]),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              ":",
-              style: GoogleFonts.montserrat(
-                  color: Colors.white,
-                  fontSize: 50,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 2,
-                  shadows: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        offset: Offset(1, 1),
-                        blurRadius: 5,
-                        spreadRadius: 5)
-                  ]),
-            ),
-          ),
-          Container(
-            height: SizeConfig.screenWidth * 0.16,
-            width: SizeConfig.screenWidth * 0.16,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              "30",
-              style: GoogleFonts.montserrat(
-                  color: Colors.white,
-                  fontSize: 40,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 2,
-                  shadows: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        offset: Offset(1, 1),
-                        blurRadius: 5,
-                        spreadRadius: 5)
-                  ]),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              ":",
-              style: GoogleFonts.montserrat(
-                  color: Colors.white,
-                  fontSize: 50,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 2,
-                  shadows: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        offset: Offset(1, 1),
-                        blurRadius: 5,
-                        spreadRadius: 5)
-                  ]),
-            ),
-          ),
-          Container(
-            height: SizeConfig.screenWidth * 0.16,
-            width: SizeConfig.screenWidth * 0.16,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              "55",
-              style: GoogleFonts.montserrat(
-                  color: Colors.white,
-                  fontSize: 40,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 2,
-                  shadows: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        offset: Offset(1, 1),
-                        blurRadius: 5,
-                        spreadRadius: 5)
-                  ]),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class TambolaTicketColor {
   Color boardColor;
   Color itemColorEven;
@@ -1739,4 +1671,132 @@ List<TambolaTicketColor> tambolaTicketColorList = [
     itemColorMarked: Color(0xffFFD56B),
     itemColorOdd: Colors.white,
   ),
+  TambolaTicketColor(
+    boardColor: Color(0xffD4A5A5),
+    itemColorEven: Color(0xffC59B9B),
+    itemColorMarked: Color(0xffFFD56B),
+    itemColorOdd: Colors.white,
+  ),
+  TambolaTicketColor(
+    boardColor: Color(0xff086972),
+    itemColorEven: Color(0xff118792),
+    itemColorMarked: Color(0xffFFD56B),
+    itemColorOdd: Colors.white,
+  ),
 ];
+
+class DailyPicksTimer extends StatefulWidget {
+  @override
+  _DailyPicksTimerState createState() => _DailyPicksTimerState();
+}
+
+class _DailyPicksTimerState extends State<DailyPicksTimer> {
+  Duration duration;
+  Timer timer;
+
+  bool countDown = true;
+
+  @override
+  void initState() {
+    calculateTime();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
+    });
+    super.initState();
+  }
+
+  void calculateTime() {
+    DateTime currentTime = DateTime.now();
+    DateTime drawTime = DateTime(DateTime.now().year, DateTime.now().month,
+        DateTime.now().day, 18, 0, 0);
+    Duration timeDiff = currentTime.difference(drawTime);
+    if (timeDiff.inSeconds < 0) {
+      duration = timeDiff.abs();
+    }
+  }
+
+  void addTime() {
+    final addSeconds = countDown ? -1 : 1;
+    setState(() {
+      final seconds = duration.inSeconds + addSeconds;
+      if (seconds < 0) {
+        print("Cancle");
+        timer?.cancel();
+      } else {
+        duration = Duration(seconds: seconds);
+      }
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final hours = twoDigits(duration.inHours);
+    final minutes = twoDigits(duration.inMinutes.remainder(60));
+    final seconds = twoDigits(duration.inSeconds.remainder(60));
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+      buildTimeCard(time: hours),
+      buildDivider(),
+      buildTimeCard(time: minutes),
+      buildDivider(),
+      buildTimeCard(time: seconds),
+    ]);
+  }
+
+  Widget buildTimeCard({@required String time}) => Container(
+        height: SizeConfig.screenWidth * 0.14,
+        width: SizeConfig.screenWidth * 0.14,
+        decoration: BoxDecoration(
+          color: Color(0xff09464B),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          time,
+          style: GoogleFonts.montserrat(
+              color: Colors.white,
+              fontSize: SizeConfig.cardTitleTextSize,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 2,
+              shadows: [
+                BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    offset: Offset(1, 1),
+                    blurRadius: 5,
+                    spreadRadius: 5)
+              ]),
+        ),
+      );
+
+  Widget buildDivider() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Text(
+        ":",
+        style: GoogleFonts.montserrat(
+            color: Colors.white,
+            fontSize: 50,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 2,
+            shadows: [
+              BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: Offset(1, 1),
+                  blurRadius: 5,
+                  spreadRadius: 5)
+            ]),
+      ),
+    );
+  }
+}

@@ -15,7 +15,7 @@ class BaseRemoteConfig {
     'tambola_header_1': 'Today\'s picks'
   };
   static const Map<String, String> _TAMBOLA_HEADER_SECOND = {
-    'tambola_header_2': 'Click to see the other picks'
+    'tambola_header_2': 'Pull to see the other picks'
   };
   static const Map<String, String> _TAMBOLA_DAILY_PICK_COUNT = {
     'tambola_daily_pick_count': '5'

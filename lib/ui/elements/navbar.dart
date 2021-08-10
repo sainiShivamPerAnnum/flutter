@@ -150,7 +150,7 @@ class _NavbarButtonState extends State<NavbarButton>
         child: AnimatedContainer(
           alignment: Alignment.center,
           //Determine target width, selected item is wider
-          width: widget.isSelected ? widget.data.width : 56,
+          width: widget.isSelected ? widget.data.width : 50,
           curve: Curves.easeOutCubic,
           padding: EdgeInsets.all(12),
           duration: Duration(milliseconds: 1000),
