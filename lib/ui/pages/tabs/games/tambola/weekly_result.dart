@@ -1,4 +1,6 @@
 import 'package:confetti/confetti.dart';
+import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -28,7 +30,7 @@ class _WeeklyResultState extends State<WeeklyResult> {
   @override
   void didChangeDependencies() {
     Future.delayed(Duration(seconds: 3), () {
-      if (!widget.isEligible)
+      if (!widget.isEligible && widget.winningsmap.isNotEmpty)
         _pageController.jumpToPage(3);
       else if (widget.isEligible && widget.winningsmap.isNotEmpty)
         _pageController.jumpToPage(2);
@@ -69,9 +71,10 @@ class PrizeProcessing extends StatelessWidget {
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: kToolbarHeight * 2,
+                height: kToolbarHeight * 1,
                 width: SizeConfig.screenWidth,
                 child: Center(
                   child: Image.asset(
@@ -112,7 +115,7 @@ class PrizeProcessing extends StatelessWidget {
               ),
               LottieBuilder.asset(
                 "images/Tambola/process.json",
-                width: SizeConfig.screenWidth * 0.6,
+                width: SizeConfig.screenWidth * 0.5,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
@@ -182,6 +185,16 @@ class _PrizeWinState extends State<PrizeWin> {
               margin: EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
+                  SizedBox(
+                    height: kToolbarHeight,
+                    width: SizeConfig.screenWidth,
+                    child: Center(
+                      child: Image.asset(
+                        "images/fello_logo.png",
+                        height: kToolbarHeight * 0.8,
+                      ),
+                    ),
+                  ),
                   Spacer(
                     flex: 1,
                   ),
@@ -228,7 +241,7 @@ class _PrizeWinState extends State<PrizeWin> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      backButtonDispatcher.didPopRoute();
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Color(0xff272727),
@@ -238,7 +251,7 @@ class _PrizeWinState extends State<PrizeWin> {
                       width: SizeConfig.screenWidth / 2,
                       alignment: Alignment.center,
                       child: Text(
-                        "Continue",
+                        "Back to Game",
                         style: GoogleFonts.montserrat(
                           color: Colors.white,
                           fontSize: 20,
@@ -383,12 +396,12 @@ class _PrizePWinState extends State<PrizePWin> {
           child: Column(
             children: [
               SizedBox(
-                height: kToolbarHeight * 0.8,
+                height: kToolbarHeight,
                 width: SizeConfig.screenWidth,
                 child: Center(
                   child: Image.asset(
                     "images/fello_logo.png",
-                    height: kToolbarHeight * 0.6,
+                    height: kToolbarHeight * 0.8,
                   ),
                 ),
               ),
@@ -434,7 +447,8 @@ class _PrizePWinState extends State<PrizePWin> {
                         child: Image.asset(
                           "images/Tambola/sloth.png",
                           height: SizeConfig.screenHeight / 3.5,
-                          fit: BoxFit.cover,
+                          width: SizeConfig.screenWidth * 0.8,
+                          fit: BoxFit.contain,
                         ),
                       ),
                       top: slothPos,
@@ -459,7 +473,9 @@ class _PrizePWinState extends State<PrizePWin> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  backButtonDispatcher.didPopRoute();
+                  backButtonDispatcher.didPopRoute();
+                  delegate.appState.setCurrentTabIndex = 2;
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Color(0xff53C5AE),
@@ -481,7 +497,7 @@ class _PrizePWinState extends State<PrizePWin> {
               SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  backButtonDispatcher.didPopRoute();
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Color(0xff272727),
@@ -491,7 +507,7 @@ class _PrizePWinState extends State<PrizePWin> {
                   width: SizeConfig.screenWidth / 2,
                   alignment: Alignment.center,
                   child: Text(
-                    "Continue",
+                    "Back to Game",
                     style: GoogleFonts.montserrat(
                       color: Colors.white,
                       fontSize: 20,
@@ -585,35 +601,38 @@ class Loser extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Column(
-                      children: List.generate(
-                        2,
-                        (index) => Container(
-                          height: 40,
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 4,
-                                backgroundColor: Colors.black,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "Buying more tickets.",
-                                style: GoogleFonts.montserrat(
-                                  fontSize: SizeConfig.mediumTextSize,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                        children: [
+                      "Investing in available funds",
+                      "Sharing Fello with your friends"
+                    ]
+                            .map((e) => Container(
+                                  height: 40,
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 4,
+                                        backgroundColor: Colors.black,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        e,
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: SizeConfig.mediumTextSize,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ))
+                            .toList()),
                   ),
                   Spacer(),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      backButtonDispatcher.didPopRoute();
+                      backButtonDispatcher.didPopRoute();
+                      delegate.appState.setCurrentTabIndex = 3;
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Color(0xff53C5AE),
@@ -623,7 +642,7 @@ class Loser extends StatelessWidget {
                       width: SizeConfig.screenWidth / 2,
                       alignment: Alignment.center,
                       child: Text(
-                        "Invest Now!",
+                        "Share now and get ₹25",
                         style: GoogleFonts.montserrat(
                           color: Colors.white,
                           fontSize: 20,
@@ -635,7 +654,7 @@ class Loser extends StatelessWidget {
                   SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      backButtonDispatcher.didPopRoute();
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Color(0xff272727),
@@ -645,7 +664,7 @@ class Loser extends StatelessWidget {
                       width: SizeConfig.screenWidth / 2,
                       alignment: Alignment.center,
                       child: Text(
-                        "Continue",
+                        "Back to Game",
                         style: GoogleFonts.montserrat(
                           color: Colors.white,
                           fontSize: 20,

@@ -1,15 +1,14 @@
-import 'dart:math';
-
 import 'package:felloapp/main.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola/tambola-home.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rive/rive.dart' as rive;
 
 class PicksDraw extends StatefulWidget {
-  const PicksDraw({Key key}) : super(key: key);
+  final List<int> picks;
+  PicksDraw({Key key, @required this.picks}) : super(key: key);
 
   @override
   _PicksDrawState createState() => _PicksDrawState();
@@ -73,12 +72,8 @@ class _PicksDrawState extends State<PicksDraw>
           showText();
         }).then((value) {
           // Future.delayed(Duration(seconds: 2), () {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (ctx) => TambolaHome(),
-          //     ),
-          //   );
+          //   delegate.appState.currentAction =
+          //       PageAction(state: PageState.replace, page: THomePageConfig);
           // });
         });
       });
@@ -97,6 +92,7 @@ class _PicksDrawState extends State<PicksDraw>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
         child: Icon(
@@ -104,7 +100,8 @@ class _PicksDrawState extends State<PicksDraw>
           color: Color(0xff150E56),
         ),
         onPressed: () {
-          backButtonDispatcher.didPopRoute();
+          delegate.appState.currentAction =
+              PageAction(state: PageState.replace, page: THomePageConfig);
         },
       ),
       body: Container(
@@ -152,13 +149,13 @@ class _PicksDrawState extends State<PicksDraw>
               child: SafeArea(
                   child: Container(
                 width: SizeConfig.screenWidth,
-                height: kToolbarHeight,
+                height: kToolbarHeight * 2,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      "images/fello_logo.png",
-                      height: kToolbarHeight * 0.8,
+                      "images/fello-dark.png",
+                      height: kToolbarHeight,
                     ),
                   ],
                 ),
@@ -176,7 +173,7 @@ class _PicksDrawState extends State<PicksDraw>
                       textAlign: TextAlign.center,
                       style: GoogleFonts.montserrat(
                         color: Colors.white,
-                        fontSize: 50,
+                        fontSize: SizeConfig.cardTitleTextSize * 1.2,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -222,7 +219,7 @@ class _PicksDrawState extends State<PicksDraw>
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
-                                    children: [12, 82, 69, 51, 19]
+                                    children: widget.picks
                                         .map(
                                           (e) => AnimatedContainer(
                                             curve: Curves.easeIn,
@@ -310,12 +307,14 @@ class _PicksDrawState extends State<PicksDraw>
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.blockSizeHorizontal * 10),
                     child: Text(
                       "Let's see how many numbers matched your tickets...",
+                      textAlign: TextAlign.center,
                       style: GoogleFonts.montserrat(
                         color: Colors.white,
-                        fontSize: 28,
+                        fontSize: SizeConfig.largeTextSize,
                       ),
                     ),
                   ),

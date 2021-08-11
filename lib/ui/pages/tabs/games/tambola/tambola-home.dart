@@ -14,6 +14,7 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/texts/daily_pick_text_slider.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_result.dart';
 import 'package:felloapp/util/assets.dart';
@@ -26,6 +27,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class TambolaHome extends StatefulWidget {
   const TambolaHome({Key key}) : super(key: key);
@@ -45,7 +47,7 @@ class _TambolaHomeState extends State<TambolaHome> {
     if (details.primaryDelta > 1.5) {
       topCardHeight =
           (SizeConfig.smallTextSize + SizeConfig.screenWidth * 0.1) * 8 +
-              SizeConfig.cardTitleTextSize * 2 +
+              SizeConfig.cardTitleTextSize * 2.4 +
               kToolbarHeight * 1.5;
       titleOpacity = 0;
       isShowingAllPicks = true;
@@ -194,9 +196,9 @@ class _TambolaHomeState extends State<TambolaHome> {
     _init();
     _checkSundayResultsProcessing();
     return Scaffold(
-      backgroundColor: Color(0xffF0F0CB),
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
           child: Column(
             children: [
               GestureDetector(
@@ -226,10 +228,15 @@ class _TambolaHomeState extends State<TambolaHome> {
                           ? GameTitle(titleOpacity: titleOpacity)
                           : SizedBox(),
                       InkWell(
-                        onTap: () => delegate.appState.currentAction =
-                            PageAction(
-                                state: PageState.addPage,
-                                page: TPickDrawPageConfig),
+                        onTap: () =>
+                            delegate.appState.currentAction = PageAction(
+                          state: PageState.addWidget,
+                          page: TPickDrawPageConfig,
+                          widget: PicksDraw(
+                            picks:
+                                List.filled(baseProvider.dailyPicksCount, -1),
+                          ),
+                        ),
                         child: Text(
                           !isShowingAllPicks ? "Today's Picks" : "Weekly Picks",
                           style: GoogleFonts.montserrat(
@@ -335,13 +342,8 @@ class _TambolaHomeState extends State<TambolaHome> {
                         state: PageState.addWidget,
                         page: TWeeklyResultPageConfig,
                         widget: WeeklyResult(
-                          winningsmap: {
-                            "12AB34": 1,
-                            "2345BA": 2,
-                            "09481M": 3,
-                            "4895BM": 4
-                          },
-                          isEligible: true,
+                          winningsmap: {},
+                          isEligible: false,
                         ),
                       ),
                   child: PrizeSection()),
@@ -409,7 +411,7 @@ class _TambolaHomeState extends State<TambolaHome> {
       }
 
       _widget = Container(
-        height: SizeConfig.screenWidth * 0.9,
+        height: SizeConfig.screenWidth * 0.95,
         width: SizeConfig.screenWidth,
         child: ListView(
           physics: BouncingScrollPhysics(),
@@ -558,15 +560,8 @@ class _TambolaHomeState extends State<TambolaHome> {
       delegate.appState.currentAction = PageAction(
           state: PageState.addPage,
           widget: WeeklyResult(
-            // winningsmap: ticketCodeWinIndex,
-            // isEligible: _isEligible,
-            winningsmap: {
-              "12AB34": 0,
-              "12AB34": 0,
-              "12AB34": 0,
-              "12AB34": 0,
-            },
-            isEligible: true,
+            winningsmap: ticketCodeWinIndex,
+            isEligible: _isEligible,
           ));
     // new Timer(const Duration(milliseconds: 2500), () {
     //   showDialog(
@@ -822,7 +817,7 @@ class GameTitle extends StatelessWidget {
               "TAMBOLA",
               style: TextStyle(
                 fontFamily: "Cucciolo",
-                color: Color(0xffEEEBDD),
+                color: Colors.white,
                 fontSize: SizeConfig.cardTitleTextSize * 1.6,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 2,
@@ -901,6 +896,7 @@ class CurrentPicks extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            Spacer(flex: 2),
             digits[0] < 0
                 ? DailyPicksTimer()
                 : Container(
@@ -961,17 +957,20 @@ class CurrentPicks extends StatelessWidget {
                           .toList(),
                     ),
                   ),
+            Spacer(),
             Padding(
               padding: EdgeInsets.only(top: SizeConfig.blockSizeHorizontal * 5),
-              child: DPTextSlider(
-                infoList: dailyPickTextList,
+              child: Text(
+                "Swipe down to see all picks of this week",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: SizeConfig.mediumTextSize,
+                    height: 2),
               ),
             ),
-            // IconButton(
-            //   onPressed: () {},
-            //   icon:
-            //       Icon(Icons.arrow_drop_down_circle_rounded, color: Colors.white),
-            // ),
+            Icon(Icons.arrow_drop_down_circle_rounded,
+                color: Colors.white.withOpacity(0.5)),
+            Spacer(),
           ],
         ),
       ),
@@ -994,10 +993,16 @@ class _FaqSectionState extends State<FaqSection> {
     return Container(
       width: SizeConfig.screenWidth,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: Colors.white,
-      ),
-      margin: EdgeInsets.all(10),
+          borderRadius: BorderRadius.circular(16),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                offset: Offset(5, 5),
+                spreadRadius: 5,
+                blurRadius: 5)
+          ]),
+      margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
       padding: EdgeInsets.only(top: 12, left: 10),
       child: Column(
         children: [
@@ -1200,7 +1205,7 @@ class _TicketState extends State<Ticket> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.screenWidth * 0.9,
+      height: SizeConfig.screenWidth * 0.95,
       width: SizeConfig.screenWidth * 0.9,
       decoration: BoxDecoration(
         color: widget.bgColor,
@@ -1210,11 +1215,14 @@ class _TicketState extends State<Ticket> {
           color: Color(0xffF0F0CB),
         ),
       ),
-      margin: EdgeInsets.all(8),
+      margin: EdgeInsets.only(
+        left: SizeConfig.blockSizeHorizontal * 3,
+        bottom: SizeConfig.blockSizeHorizontal * 3,
+      ),
       child: Stack(
         children: [
           Container(
-            height: SizeConfig.screenWidth * 0.9,
+            height: SizeConfig.screenWidth * 0.95,
             width: SizeConfig.screenWidth * 0.9,
             child: Opacity(
               opacity: 0.16,
@@ -1228,7 +1236,9 @@ class _TicketState extends State<Ticket> {
             ),
           ),
           CustomPaint(
-            painter: TicketPainter(puchRadius: 20),
+            painter: TicketPainter(
+                puchRadius: 20,
+                color: Theme.of(context).scaffoldBackgroundColor),
             child: Column(
               children: [
                 Expanded(
@@ -1256,32 +1266,29 @@ class _TicketState extends State<Ticket> {
                             crossAxisCount: 9,
                           ),
                           itemBuilder: (ctx, i) {
-                            return InkWell(
-                              //onTap: () => markItem(i),
-                              child: Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: getColor(i),
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.blockSizeHorizontal * 3),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        ticketNumbers[i] == 0
-                                            ? ""
-                                            : ticketNumbers[i].toString(),
-                                        style: GoogleFonts.montserrat(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: SizeConfig.mediumTextSize,
-                                        ),
+                            return Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: getColor(i),
+                                borderRadius: BorderRadius.circular(
+                                    SizeConfig.blockSizeHorizontal * 3),
+                              ),
+                              child: Stack(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      ticketNumbers[i] == 0
+                                          ? ""
+                                          : ticketNumbers[i].toString(),
+                                      style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: SizeConfig.mediumTextSize,
                                       ),
                                     ),
-                                    markStatus(i)
-                                  ],
-                                ),
+                                  ),
+                                  markStatus(i)
+                                ],
                               ),
                             );
                           },
@@ -1308,14 +1315,18 @@ class _TicketState extends State<Ticket> {
                       children: List.generate(5, (index) {
                         return Row(
                           children: [
-                            Container(
-                              padding: EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                  color: odds[index].color,
-                                  borderRadius: BorderRadius.circular(4)),
-                              child: Icon(odds[index].icon,
-                                  color: Colors.white,
-                                  size: SizeConfig.screenWidth * 0.06),
+                            Shimmer(
+                              enabled: odds[index].left == 0,
+                              direction: ShimmerDirection.fromLTRB(),
+                              child: Container(
+                                padding: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                    color: odds[index].color,
+                                    borderRadius: BorderRadius.circular(4)),
+                                child: Icon(odds[index].icon,
+                                    color: Colors.white,
+                                    size: SizeConfig.screenWidth * 0.06),
+                              ),
                             ),
                             SizedBox(width: 12),
                             Column(
@@ -1340,32 +1351,6 @@ class _TicketState extends State<Ticket> {
                             )
                           ],
                         );
-
-                        // ListTile(
-                        //   leading: Container(
-                        //     padding: EdgeInsets.all(4),
-                        //     decoration: BoxDecoration(
-                        //         color: odds[index].color,
-                        //         borderRadius: BorderRadius.circular(4)),
-                        //     child: Icon(odds[index].icon,
-                        //         color: Colors.white,
-                        //         size: SizeConfig.screenWidth * 0.05),
-                        //   ),
-                        //   title: Text(
-                        //     odds[index].title,
-                        //     style: GoogleFonts.montserrat(
-                        //       color: Colors.white,
-                        //       fontSize: SizeConfig.smallTextSize,
-                        //     ),
-                        //   ),
-                        //   subtitle: Text(
-                        //     "${odds[index].left} left",
-                        //     style: GoogleFonts.montserrat(
-                        //         color: Colors.white,
-                        //         fontWeight: FontWeight.w700,
-                        //         fontSize: SizeConfig.mediumTextSize),
-                        //   ),
-                        // );
                       }),
                     ),
                   ),
@@ -1408,13 +1393,14 @@ class TicketOdds {
 
 class TicketPainter extends CustomPainter {
   final double puchRadius;
+  final Color color;
 
-  const TicketPainter({this.puchRadius});
+  const TicketPainter({this.puchRadius, this.color});
   @override
   void paint(Canvas canvas, Size size) {
     var paintMain = Paint();
 
-    paintMain.color = Color(0xffF0F0CB);
+    paintMain.color = color;
     paintMain.style = PaintingStyle.fill;
 
     var pathMain = Path();
@@ -1458,7 +1444,7 @@ class PrizeSection extends StatelessWidget {
           end: Alignment.topRight,
         ),
       ),
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
       child: Stack(
         children: [
           Positioned(
@@ -1479,24 +1465,68 @@ class PrizeSection extends StatelessWidget {
             width: SizeConfig.screenWidth,
             child: Column(
               children: [
-                Text(
-                  "Prizes",
-                  style: GoogleFonts.montserrat(
-                    color: Colors.white,
-                    fontSize: 30,
-                    fontWeight: FontWeight.w500,
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 16),
+                  child: Text(
+                    "Prizes",
+                    style: GoogleFonts.montserrat(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
                 Row(
                   children: [
                     Expanded(
+                      flex: 3,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.apps,
-                            color: Colors.white,
-                            size: 70,
+                          Image.asset("images/Tambola/p-rows.png"),
+                          SizedBox(height: 10),
+                          Text(
+                            "Any Row",
+                            style: GoogleFonts.montserrat(
+                              color: Colors.white,
+                            ),
+                          ),
+                          FittedBox(
+                            child: Text(
+                              "₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_TOP)}",
+                              style: GoogleFonts.montserrat(
+                                  color: Colors.white,
+                                  fontSize: SizeConfig.cardTitleTextSize * 1.2,
+                                  fontWeight: FontWeight.w600,
+                                  shadows: [
+                                    BoxShadow(
+                                        color: Colors.black.withOpacity(0.5),
+                                        offset: Offset(4, 4),
+                                        spreadRadius: 4,
+                                        blurRadius: 4)
+                                  ]),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Expanded(
+                      flex: 4,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(
+                                SizeConfig.blockSizeHorizontal * 2),
+                            decoration: BoxDecoration(
+                                color: Color(0xff5B51E7),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Icon(
+                              Icons.apps,
+                              color: Colors.white,
+                              size: SizeConfig.screenWidth * 0.14,
+                            ),
                           ),
                           SizedBox(height: 10),
                           Text(
@@ -1505,52 +1535,42 @@ class PrizeSection extends StatelessWidget {
                               color: Colors.white,
                             ),
                           ),
-                          Text(
-                            '₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_FULL)}',
-                            style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.w700,
+                          FittedBox(
+                            child: Text(
+                              '₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_FULL)}',
+                              style: GoogleFonts.montserrat(
+                                  color: Colors.white,
+                                  fontSize: SizeConfig.cardTitleTextSize * 2,
+                                  fontWeight: FontWeight.w600,
+                                  shadows: [
+                                    BoxShadow(
+                                        color: Colors.black.withOpacity(0.5),
+                                        offset: Offset(4, 4),
+                                        spreadRadius: 4,
+                                        blurRadius: 4)
+                                  ]),
                             ),
                           )
                         ],
                       ),
                     ),
+                    SizedBox(width: 20),
                     Expanded(
+                      flex: 3,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.border_top_rounded,
-                            color: Colors.white,
-                            size: 70,
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            "Any Row",
-                            style: GoogleFonts.montserrat(
-                              color: Colors.white,
+                          Container(
+                            padding: EdgeInsets.all(
+                                SizeConfig.blockSizeHorizontal * 1),
+                            decoration: BoxDecoration(
+                                color: Color(0xffE9E9E9),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Icon(
+                              Icons.border_outer_rounded,
+                              color: Color(0xff264653),
+                              size: SizeConfig.screenWidth * 0.1,
                             ),
-                          ),
-                          Text(
-                            "₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_TOP)}",
-                            style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.border_outer,
-                            color: Colors.white,
-                            size: 70,
                           ),
                           SizedBox(height: 10),
                           Text(
@@ -1559,12 +1579,20 @@ class PrizeSection extends StatelessWidget {
                               color: Colors.white,
                             ),
                           ),
-                          Text(
-                            "₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_CORNER)}",
-                            style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.w700,
+                          FittedBox(
+                            child: Text(
+                              "₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_CORNER)}",
+                              style: GoogleFonts.montserrat(
+                                  color: Colors.white,
+                                  fontSize: SizeConfig.cardTitleTextSize,
+                                  fontWeight: FontWeight.w600,
+                                  shadows: [
+                                    BoxShadow(
+                                        color: Colors.black.withOpacity(0.5),
+                                        offset: Offset(4, 4),
+                                        spreadRadius: 4,
+                                        blurRadius: 4)
+                                  ]),
                             ),
                           )
                         ],

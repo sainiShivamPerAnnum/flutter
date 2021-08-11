@@ -1,3 +1,5 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -5,6 +7,7 @@ import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/elements/Parallax-card/card_renderer.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola-home.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,6 +31,8 @@ class GameCardListState extends State<GameCardList>
     with SingleTickerProviderStateMixin {
   final double _maxRotation = 20;
   AppState appState;
+  BaseUtil baseProvider;
+  LocalDBModel _localDBModel;
 
   PageController _pageController;
 
@@ -42,19 +47,69 @@ class GameCardListState extends State<GameCardList>
   Tween<double> _tween;
   Animation<double> _tweenAnim;
   List<Function> gameRoutes;
+  List<int> todaysPicks;
+
+  getDrawaStatus() async {
+    // CHECKING IF THE PICK ARE DRAWN OR NOT
+    switch (DateTime.now().weekday) {
+      case 1:
+        todaysPicks = baseProvider.weeklyDigits.mon;
+        break;
+      case 2:
+        todaysPicks = baseProvider.weeklyDigits.tue;
+        break;
+      case 3:
+        todaysPicks = baseProvider.weeklyDigits.wed;
+        break;
+      case 4:
+        todaysPicks = baseProvider.weeklyDigits.thu;
+        break;
+      case 5:
+        todaysPicks = baseProvider.weeklyDigits.fri;
+        break;
+      case 6:
+        todaysPicks = baseProvider.weeklyDigits.sat;
+        break;
+      case 7:
+        todaysPicks = baseProvider.weeklyDigits.sun;
+        break;
+    }
+
+    //CHECKING FOR THE FIRST TIME OPENING OF TAMBOLA AFTER THE PICKS ARE DRAWN FOR THIS PARTICULAR DAY
+
+    if (todaysPicks != null &&
+        DateTime.now().weekday != await _localDBModel.getDailyPickAnimLastDay())
+      return true;
+
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
     appState = Provider.of<AppState>(context, listen: false);
+    baseProvider = Provider.of<BaseUtil>(context);
+    _localDBModel = Provider.of<LocalDBModel>(context, listen: false);
     gameRoutes = [
-      // () => Navigator.push(
-      //       context,
-      //       MaterialPageRoute(
-      //         builder: (ctx) => TambolaHome(),
-      //       ),
-      //     ),
-      () => appState.currentAction =
-          PageAction(state: PageState.addPage, page: THomePageConfig),
+      () async {
+        if (await getDrawaStatus()) {
+          await _localDBModel
+              .saveDailyPicksAnimStatus(DateTime.now().weekday)
+              .then(
+                (value) => print(
+                    "Daily Picks Draw Animation Save Status Code: $value"),
+              );
+          appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: TPickDrawPageConfig,
+            widget: PicksDraw(
+              picks:
+                  todaysPicks ?? List.filled(baseProvider.dailyPicksCount, -1),
+            ),
+          );
+        } else
+          appState.currentAction =
+              PageAction(state: PageState.addPage, page: THomePageConfig);
+      },
       () => appState.currentAction =
           PageAction(state: PageState.addPage, page: TambolaHomePageConfig),
       () {
