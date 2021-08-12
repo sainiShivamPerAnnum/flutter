@@ -4,7 +4,6 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart';
 
 class Walkthrough extends StatelessWidget {
   const Walkthrough({Key key}) : super(key: key);

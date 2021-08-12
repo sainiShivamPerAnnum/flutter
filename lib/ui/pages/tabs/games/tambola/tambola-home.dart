@@ -13,13 +13,16 @@ import 'package:felloapp/core/service/tambola_generation_service.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/texts/daily_pick_text_slider.dart';
+import 'package:felloapp/ui/elements/tambola-global/tambola_daily_draw_timer.dart';
+import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
+import 'package:felloapp/ui/elements/tambola-global/weekly_picks.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_result.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -37,32 +40,17 @@ class TambolaHome extends StatefulWidget {
 }
 
 class _TambolaHomeState extends State<TambolaHome> {
-  double topCardHeight = kToolbarHeight * 1.2 + SizeConfig.screenWidth * 0.74;
+  // HEIGHT CALCULATED ACCORDING TO THE ITEMS PRESENT IN THE CONTAINER
+  double normalTopCardHeight =
+      kToolbarHeight * 1.2 + SizeConfig.screenWidth * 0.74;
+  double expandedTopCardHeight =
+      (SizeConfig.smallTextSize + SizeConfig.screenWidth * 0.1) * 8 +
+          SizeConfig.cardTitleTextSize * 2.4 +
+          kToolbarHeight * 1.5;
 
-  //SizeConfig.screenWidth * 0.80;
+  double topCardHeight;
   bool isShowingAllPicks = false;
   double titleOpacity = 1;
-
-  void _onVerticalDragUpdate(DragUpdateDetails details) {
-    if (details.primaryDelta > 1.5) {
-      topCardHeight =
-          (SizeConfig.smallTextSize + SizeConfig.screenWidth * 0.1) * 8 +
-              SizeConfig.cardTitleTextSize * 2.4 +
-              kToolbarHeight * 1.5;
-      titleOpacity = 0;
-      isShowingAllPicks = true;
-    } else {
-      topCardHeight = SizeConfig.screenWidth * 0.8;
-      isShowingAllPicks = false;
-      setState(() {});
-      Future.delayed(Duration(milliseconds: 500), () {
-        titleOpacity = 1;
-        setState(() {});
-      });
-    }
-    setState(() {});
-  }
-
   Log log = new Log('CardScreen');
   TambolaBoard _currentBoard;
   Ticket _currentBoardView;
@@ -85,9 +73,27 @@ class _TambolaHomeState extends State<TambolaHome> {
 
   TambolaGenerationService _tambolaTicketService;
 
+  void _onVerticalDragUpdate(DragUpdateDetails details) {
+    if (details.primaryDelta > 1.5) {
+      topCardHeight = expandedTopCardHeight;
+      titleOpacity = 0;
+      isShowingAllPicks = true;
+    } else {
+      topCardHeight = normalTopCardHeight;
+      isShowingAllPicks = false;
+      setState(() {});
+      Future.delayed(Duration(milliseconds: 500), () {
+        titleOpacity = 1;
+        setState(() {});
+      });
+    }
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
+    topCardHeight = normalTopCardHeight;
     initDailyPickFlags();
     BaseAnalytics.analytics
         .setCurrentScreen(screenName: BaseAnalytics.PAGE_TAMBOLA);
@@ -423,10 +429,10 @@ class _TambolaHomeState extends State<TambolaHome> {
 
       if (_currentBoardView == null)
         _currentBoardView = Ticket(
-          bgColor: tambolaTicketColorList[0].boardColor,
-          boardColorEven: tambolaTicketColorList[0].itemColorEven,
-          boardColorOdd: tambolaTicketColorList[0].itemColorOdd,
-          boradColorMarked: tambolaTicketColorList[0].itemColorMarked,
+          bgColor: tambolaTicketColorPaletteList[0].boardColor,
+          boardColorEven: tambolaTicketColorPaletteList[0].itemColorEven,
+          boardColorOdd: tambolaTicketColorPaletteList[0].itemColorOdd,
+          boradColorMarked: tambolaTicketColorPaletteList[0].itemColorMarked,
           calledDigits: [],
           board: null,
         );
@@ -446,8 +452,8 @@ class _TambolaHomeState extends State<TambolaHome> {
     else {
       _calledDigits = picks.getPicksPostDate(board.generatedDayCode);
     }
-    TambolaTicketColor ticketColor = tambolaTicketColorList[
-        Random().nextInt(tambolaTicketColorList.length - 1) + 1];
+    TambolaTicketColorPalette ticketColor = tambolaTicketColorPaletteList[
+        Random().nextInt(tambolaTicketColorPaletteList.length - 1) + 1];
     return Ticket(
       board: board,
       calledDigits: _calledDigits,
@@ -674,128 +680,6 @@ class _TambolaHomeState extends State<TambolaHome> {
   }
 }
 
-class WeeklyPicks extends StatelessWidget {
-  final DailyPick weeklyDraws;
-  // BaseUtil baseProvider;
-
-  const WeeklyPicks({
-    this.weeklyDraws,
-    Key key,
-  }) : super(key: key);
-
-  String getDayName(int weekday) {
-    switch (weekday) {
-      case 1:
-        return 'Monday';
-      case 2:
-        return 'Tuesday';
-      case 3:
-        return 'Wednesday';
-      case 4:
-        return 'Thursday';
-      case 5:
-        return 'Friday';
-      case 6:
-        return 'Saturday';
-      case 7:
-        return 'Sunday';
-      default:
-        return 'N/A';
-    }
-  }
-
-  Widget _getDrawBallRow(DailyPick draws, int day) {
-    List<Widget> balls = [];
-    if (draws != null && draws.getWeekdayDraws(day - 1) != null) {
-      draws.getWeekdayDraws(day - 1).forEach((element) {
-        balls.add(_getDrawBall(element.toString()));
-      });
-    } else {
-      for (int i = 0; i < draws.mon.length; i++) {
-        balls.add(_getDrawBall('-'));
-      }
-    }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: balls,
-    );
-  }
-
-  Widget _getDrawBall(String digit) {
-    return Container(
-      width: SizeConfig.screenWidth * 0.08,
-      height: SizeConfig.screenWidth * 0.08,
-      decoration: new BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-      ),
-      child: Center(
-          child: Text(
-        digit,
-        style: TextStyle(
-            fontSize: SizeConfig.mediumTextSize * 1.2,
-            fontWeight: FontWeight.w500,
-            color: Colors.black),
-        textAlign: TextAlign.center,
-      )),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (weeklyDraws == null || weeklyDraws.toList().isEmpty) {
-      return Center(
-        child: Container(
-          height: 150,
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                'This week\'s numbers have not been drawn yet.',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black54),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    DateTime today = DateTime.now();
-    List<Widget> colElems = [];
-    int colCount = today.weekday;
-    for (int i = 0; i < 7; i++) {
-      // if (weeklyDraws.getWeekdayDraws(i) != null) {
-      colElems.add(Container(
-        margin: EdgeInsets.symmetric(vertical: 6),
-        height: SizeConfig.smallTextSize + SizeConfig.screenWidth * 0.1,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Text(
-              getDayName(i + 1).toUpperCase(),
-              style: GoogleFonts.montserrat(
-                color: Colors.white,
-                fontSize: SizeConfig.smallTextSize,
-                letterSpacing: 5,
-              ),
-            ),
-            _getDrawBallRow(weeklyDraws, i + 1),
-          ],
-        ),
-      ));
-    }
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.only(bottom: 8),
-        child: ListView(
-          physics: NeverScrollableScrollPhysics(),
-          children: colElems,
-        ),
-      ),
-    );
-  }
-}
-
 class GameTitle extends StatelessWidget {
   const GameTitle({
     Key key,
@@ -979,8 +863,6 @@ class CurrentPicks extends StatelessWidget {
 }
 
 class FaqSection extends StatefulWidget {
-  const FaqSection({Key key}) : super(key: key);
-
   @override
   _FaqSectionState createState() => _FaqSectionState();
 }
@@ -1094,336 +976,6 @@ class _FaqSectionState extends State<FaqSection> {
         ],
       ),
     );
-  }
-}
-
-class Ticket extends StatefulWidget {
-  const Ticket(
-      {@required this.bgColor,
-      @required this.boardColorEven,
-      @required this.boardColorOdd,
-      @required this.boradColorMarked,
-      @required this.board,
-      @required this.calledDigits});
-
-  final bgColor, boardColorOdd, boardColorEven, boradColorMarked;
-  final TambolaBoard board;
-  final List<int> calledDigits;
-
-  @override
-  _TicketState createState() => _TicketState();
-}
-
-class _TicketState extends State<Ticket> {
-  List<int> markedIndices = [];
-  List<int> ticketNumbers = [];
-  List<TicketOdds> odds = [];
-
-  markItem(int index) {
-    print("marked index : $index");
-    if (markedIndices.contains(index))
-      markedIndices.remove(index);
-    else
-      markedIndices.add(index);
-    setState(() {});
-  }
-
-  getColor(int index) {
-    if (widget.calledDigits.contains(ticketNumbers[index]))
-      return widget.boradColorMarked;
-    if (index % 2 == 0) {
-      return widget.boardColorEven;
-    } else {
-      return widget.boardColorOdd;
-    }
-  }
-
-  markStatus(int index) {
-    if (widget.calledDigits.contains(ticketNumbers[index])) {
-      return Align(
-        alignment: Alignment.center,
-        child: Transform.rotate(
-          angle: -45,
-          alignment: Alignment.center,
-          child: Container(
-            margin: EdgeInsets.all(2),
-            width: 2,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(100),
-            ),
-          ),
-        ),
-      );
-    } else {
-      return SizedBox();
-    }
-  }
-
-  generateOdds() {
-    odds = [
-      TicketOdds(
-        color: Color(0xffE76F51),
-        icon: Icons.apps,
-        title: "Full House",
-        left: widget.board.getFullHouseOdds(widget.calledDigits),
-      ),
-      TicketOdds(
-          color: Color(0xff264653),
-          icon: Icons.border_top,
-          title: "Top Row",
-          left: widget.board.getRowOdds(0, widget.calledDigits)),
-      TicketOdds(
-          color: Color(0xff264653),
-          icon: Icons.border_horizontal,
-          title: "Middle Row",
-          left: widget.board.getRowOdds(1, widget.calledDigits)),
-      TicketOdds(
-          color: Color(0xff264653),
-          icon: Icons.border_bottom,
-          title: "Bottom Row",
-          left: widget.board.getRowOdds(2, widget.calledDigits)),
-      TicketOdds(
-          color: Color(0xff4AB474),
-          icon: Icons.border_outer,
-          title: "Corners",
-          left: widget.board.getCornerOdds(widget.calledDigits)),
-    ];
-  }
-
-  @override
-  void initState() {
-    for (int i = 0; i < 3; i++) {
-      for (int j = 0; j < 9; j++) {
-        ticketNumbers.add(widget.board.tambolaBoard[i][j]);
-      }
-    }
-    generateOdds();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: SizeConfig.screenWidth * 0.95,
-      width: SizeConfig.screenWidth * 0.9,
-      decoration: BoxDecoration(
-        color: widget.bgColor,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          width: 0,
-          color: Color(0xffF0F0CB),
-        ),
-      ),
-      margin: EdgeInsets.only(
-        left: SizeConfig.blockSizeHorizontal * 3,
-        bottom: SizeConfig.blockSizeHorizontal * 3,
-      ),
-      child: Stack(
-        children: [
-          Container(
-            height: SizeConfig.screenWidth * 0.95,
-            width: SizeConfig.screenWidth * 0.9,
-            child: Opacity(
-              opacity: 0.16,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(14),
-                child: Image.asset(
-                  "images/Tambola/ticket-bg.png",
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-          CustomPaint(
-            painter: TicketPainter(
-                puchRadius: 20,
-                color: Theme.of(context).scaffoldBackgroundColor),
-            child: Column(
-              children: [
-                Expanded(
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.blockSizeHorizontal * 5,
-                        vertical: SizeConfig.blockSizeHorizontal * 2),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Ticket #${widget.board.getTicketNumber()}',
-                          style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                              fontSize: SizeConfig.smallTextSize),
-                        ),
-                        Spacer(),
-                        GridView.builder(
-                          shrinkWrap: true,
-                          itemCount: 27,
-                          physics: NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 9,
-                          ),
-                          itemBuilder: (ctx, i) {
-                            return Container(
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: getColor(i),
-                                borderRadius: BorderRadius.circular(
-                                    SizeConfig.blockSizeHorizontal * 3),
-                              ),
-                              child: Stack(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      ticketNumbers[i] == 0
-                                          ? ""
-                                          : ticketNumbers[i].toString(),
-                                      style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: SizeConfig.mediumTextSize,
-                                      ),
-                                    ),
-                                  ),
-                                  markStatus(i)
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                        Spacer(),
-                      ],
-                    ),
-                  ),
-                ),
-                Divider(
-                  color: Color(0xffF0F0CB),
-                  indent: 40,
-                  endIndent: 40,
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.blockSizeHorizontal * 5,
-                    ),
-                    child: GridView.count(
-                      physics: NeverScrollableScrollPhysics(),
-                      childAspectRatio: 3.5 / 1,
-                      crossAxisCount: 2,
-                      children: List.generate(5, (index) {
-                        return Row(
-                          children: [
-                            Shimmer(
-                              enabled: odds[index].left == 0,
-                              direction: ShimmerDirection.fromLTRB(),
-                              child: Container(
-                                padding: EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                    color: odds[index].color,
-                                    borderRadius: BorderRadius.circular(4)),
-                                child: Icon(odds[index].icon,
-                                    color: Colors.white,
-                                    size: SizeConfig.screenWidth * 0.06),
-                              ),
-                            ),
-                            SizedBox(width: 12),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  odds[index].title,
-                                  style: GoogleFonts.montserrat(
-                                    color: Colors.white,
-                                    fontSize: SizeConfig.smallTextSize,
-                                  ),
-                                ),
-                                Text(
-                                  "${odds[index].left} left",
-                                  style: GoogleFonts.montserrat(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: SizeConfig.mediumTextSize),
-                                ),
-                              ],
-                            )
-                          ],
-                        );
-                      }),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: InkWell(
-                onTap: () {
-                  print(widget.board.getTicketNumber());
-                },
-                child: Text(
-                  "Generated on: ${DateTime.fromMillisecondsSinceEpoch(widget.board.assigned_time.millisecondsSinceEpoch).day.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(widget.board.assigned_time.millisecondsSinceEpoch).month.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(widget.board.assigned_time.millisecondsSinceEpoch).year}",
-                  style: GoogleFonts.montserrat(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class TicketOdds {
-  final String title;
-  final int left;
-  final IconData icon;
-  final Color color;
-
-  TicketOdds({this.icon, this.left, this.title, this.color});
-}
-
-class TicketPainter extends CustomPainter {
-  final double puchRadius;
-  final Color color;
-
-  const TicketPainter({this.puchRadius, this.color});
-  @override
-  void paint(Canvas canvas, Size size) {
-    var paintMain = Paint();
-
-    paintMain.color = color;
-    paintMain.style = PaintingStyle.fill;
-
-    var pathMain = Path();
-
-    pathMain.moveTo(0, 0);
-
-    pathMain.moveTo(size.width, 0);
-    pathMain.moveTo(size.width, size.height / 2 - puchRadius);
-    pathMain.quadraticBezierTo(size.width - puchRadius * 1.5, size.height / 2,
-        size.width, size.height / 2 + puchRadius);
-    pathMain.moveTo(size.width, size.height);
-    pathMain.moveTo(0, size.height);
-    pathMain.moveTo(0, size.height / 2 + puchRadius);
-    pathMain.quadraticBezierTo(
-        puchRadius * 1.5, size.height / 2, 0, size.height / 2 - puchRadius);
-    pathMain.close();
-
-    canvas.drawPath(pathMain, paintMain);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
   }
 }
 
@@ -1607,174 +1159,6 @@ class PrizeSection extends StatelessWidget {
             ),
           )
         ],
-      ),
-    );
-  }
-}
-
-class TambolaTicketColor {
-  Color boardColor;
-  Color itemColorEven;
-  Color itemColorOdd;
-  Color itemColorMarked;
-
-  TambolaTicketColor(
-      {@required this.boardColor,
-      @required this.itemColorEven,
-      @required this.itemColorMarked,
-      @required this.itemColorOdd});
-}
-
-List<TambolaTicketColor> tambolaTicketColorList = [
-  TambolaTicketColor(
-    boardColor: Color(0xffD6C481),
-    itemColorEven: Color(0xffC7B36C),
-    itemColorMarked: Color(0xffE76F51),
-    itemColorOdd: Colors.white,
-  ),
-  TambolaTicketColor(
-    boardColor: Color(0xff445C3C),
-    itemColorEven: Color(0xffC9D99E),
-    itemColorMarked: Color(0xffFDA77F),
-    itemColorOdd: Color(0xffFAE8C8),
-  ),
-  TambolaTicketColor(
-    boardColor: Color(0xffEA907A),
-    itemColorEven: Color(0xffC56E58),
-    itemColorMarked: Color(0xffFFD56B),
-    itemColorOdd: Colors.white,
-  ),
-  TambolaTicketColor(
-    boardColor: Color(0xff0C9463),
-    itemColorEven: Color(0xff09744D),
-    itemColorMarked: Color(0xffFFD56B),
-    itemColorOdd: Colors.white,
-  ),
-  TambolaTicketColor(
-    boardColor: Color(0xffD4A5A5),
-    itemColorEven: Color(0xffC59B9B),
-    itemColorMarked: Color(0xffFFD56B),
-    itemColorOdd: Colors.white,
-  ),
-  TambolaTicketColor(
-    boardColor: Color(0xff086972),
-    itemColorEven: Color(0xff118792),
-    itemColorMarked: Color(0xffFFD56B),
-    itemColorOdd: Colors.white,
-  ),
-];
-
-class DailyPicksTimer extends StatefulWidget {
-  @override
-  _DailyPicksTimerState createState() => _DailyPicksTimerState();
-}
-
-class _DailyPicksTimerState extends State<DailyPicksTimer> {
-  Duration duration;
-  Timer timer;
-
-  bool countDown = true;
-
-  @override
-  void initState() {
-    calculateTime();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
-    });
-    super.initState();
-  }
-
-  void calculateTime() {
-    DateTime currentTime = DateTime.now();
-    DateTime drawTime = DateTime(DateTime.now().year, DateTime.now().month,
-        DateTime.now().day, 18, 0, 0);
-    Duration timeDiff = currentTime.difference(drawTime);
-    if (timeDiff.inSeconds < 0) {
-      duration = timeDiff.abs();
-    }
-  }
-
-  void addTime() {
-    final addSeconds = countDown ? -1 : 1;
-    setState(() {
-      final seconds = duration.inSeconds + addSeconds;
-      if (seconds < 0) {
-        print("Cancle");
-        timer?.cancel();
-      } else {
-        duration = Duration(seconds: seconds);
-      }
-    });
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    timer?.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final hours = twoDigits(duration.inHours);
-    final minutes = twoDigits(duration.inMinutes.remainder(60));
-    final seconds = twoDigits(duration.inSeconds.remainder(60));
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      buildTimeCard(time: hours),
-      buildDivider(),
-      buildTimeCard(time: minutes),
-      buildDivider(),
-      buildTimeCard(time: seconds),
-    ]);
-  }
-
-  Widget buildTimeCard({@required String time}) => Container(
-        height: SizeConfig.screenWidth * 0.14,
-        width: SizeConfig.screenWidth * 0.14,
-        decoration: BoxDecoration(
-          color: Color(0xff09464B),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          time,
-          style: GoogleFonts.montserrat(
-              color: Colors.white,
-              fontSize: SizeConfig.cardTitleTextSize,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 2,
-              shadows: [
-                BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    offset: Offset(1, 1),
-                    blurRadius: 5,
-                    spreadRadius: 5)
-              ]),
-        ),
-      );
-
-  Widget buildDivider() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      child: Text(
-        ":",
-        style: GoogleFonts.montserrat(
-            color: Colors.white,
-            fontSize: 50,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 2,
-            shadows: [
-              BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  offset: Offset(1, 1),
-                  blurRadius: 5,
-                  spreadRadius: 5)
-            ]),
       ),
     );
   }

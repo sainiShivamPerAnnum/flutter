@@ -49,20 +49,20 @@ class _RootState extends State<Root> {
     _initDynamicLinks();
     //Declare some buttons for our tab bar
     _navBarItems = [
-      NavBarItemData("Home", Icons.home, SizeConfig.screenWidth * 0.2,
+      NavBarItemData("Home", Icons.home, SizeConfig.screenWidth * 0.25,
           "images/svgs/home.svg", _showFocuses[0]),
-      NavBarItemData("Play", Icons.games, SizeConfig.screenWidth * 0.18,
+      NavBarItemData("Play", Icons.games, SizeConfig.screenWidth * 0.24,
           "images/svgs/game.svg", _showFocuses[1]),
       NavBarItemData(
           "Save",
           Icons.wallet_giftcard,
-          SizeConfig.screenWidth * 0.18,
+          SizeConfig.screenWidth * 0.24,
           "images/svgs/save.svg",
           _showFocuses[2]),
       NavBarItemData(
           "Profile",
           Icons.verified_user,
-          SizeConfig.screenWidth * 0.21,
+          SizeConfig.screenWidth * 0.25,
           "images/svgs/profile.svg",
           _showFocuses[3]),
     ];

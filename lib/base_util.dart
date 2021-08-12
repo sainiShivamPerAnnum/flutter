@@ -290,9 +290,9 @@ class BaseUtil extends ChangeNotifier {
         userFundWallet = aValue;
         if (userFundWallet.augGoldQuantity > 0)
           _updateAugmontBalance(); //setstate call in method
-        else
-          notifyListeners();
+
       }
+      notifyListeners();
     });
   }
 

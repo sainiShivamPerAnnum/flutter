@@ -3,40 +3,29 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:rive/rive.dart' as rive;
 
 class PicksDraw extends StatefulWidget {
   final List<int> picks;
-  PicksDraw({Key key, @required this.picks}) : super(key: key);
+  const PicksDraw({Key key, @required this.picks}) : super(key: key);
 
   @override
   _PicksDrawState createState() => _PicksDrawState();
 }
 
-class _PicksDrawState extends State<PicksDraw>
-    with SingleTickerProviderStateMixin {
+class _PicksDrawState extends State<PicksDraw> {
   double radius = 0;
   double rowWidth = 0;
-  double topPos = -100;
-  double angle = 0;
   double opacity = 0;
   double textPos = -10;
   bool showTxt = false;
   double ringWidth = 0;
-  AnimationController _bgController;
 
   showPicksDraw() {
     setState(() {
-      radius = radius == SizeConfig.screenWidth * 0.14
-          ? 0
-          : SizeConfig.screenWidth * 0.14;
-      rowWidth =
-          rowWidth == SizeConfig.screenWidth ? 0 : SizeConfig.screenWidth;
-      topPos = topPos == -100 ? SizeConfig.screenHeight * 0.2 : -100;
-      ringWidth = ringWidth == SizeConfig.screenWidth * 0.1
-          ? 0
-          : SizeConfig.screenWidth * 0.1;
+      radius = SizeConfig.screenWidth * 0.14;
+      rowWidth = SizeConfig.screenWidth;
+      ringWidth = SizeConfig.screenWidth * 0.1;
       opacity = 1;
     });
   }
@@ -48,29 +37,17 @@ class _PicksDrawState extends State<PicksDraw>
     });
   }
 
-  rotatebg() {
-    for (int i = 0; i < 360; i++) {
-      Future.delayed(Duration(milliseconds: 100), () {
-        setState(() {
-          angle += 1;
-        });
-      });
-    }
-  }
-
   @override
   void initState() {
-    _bgController =
-        new AnimationController(vsync: this, duration: Duration(seconds: 12))
-          ..repeat();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      rotatebg();
       Future.delayed(Duration(seconds: 1), () {
         showPicksDraw();
       }).then((_) {
         Future.delayed(Duration(seconds: 1), () {
           showText();
         }).then((value) {
+          // FOR AUTOMATICALLY REPLACING THIS SCREEN WITH THE TAMBOLA HOME SCREEN
+
           // Future.delayed(Duration(seconds: 2), () {
           //   delegate.appState.currentAction =
           //       PageAction(state: PageState.replace, page: THomePageConfig);
@@ -82,99 +59,66 @@ class _PicksDrawState extends State<PicksDraw>
   }
 
   @override
-  void dispose() {
-    _bgController.dispose();
-    super.dispose();
-  }
-
-  final List<int> draws = [12, 34, 45, 34, 23, 69];
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
-        child: Icon(
-          Icons.navigate_next_rounded,
-          color: Color(0xff150E56),
-        ),
-        onPressed: () {
-          delegate.appState.currentAction =
-              PageAction(state: PageState.replace, page: THomePageConfig);
-        },
-      ),
+      floatingActionButton: showTxt
+          ? FloatingActionButton(
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.navigate_next_rounded,
+                color: Color(0xff150E56),
+              ),
+              onPressed: () {
+                delegate.appState.currentAction =
+                    PageAction(state: PageState.replace, page: THomePageConfig);
+              },
+            )
+          : SizedBox(),
       body: Container(
         child: Stack(
           children: [
             Container(
-              width: SizeConfig.screenWidth,
-              height: SizeConfig.screenHeight,
               decoration: BoxDecoration(
-                  gradient: new LinearGradient(
-                      colors: [Color(0xffCF0060), Color(0xffF9711B)],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter)),
-            ),
-            // Align(
-            //   alignment: Alignment.center,
-            //   child: RotationTransition(
-            //     alignment: Alignment.center,
-            //     turns: _bgController,
-            //     child: ScaleTransition(
-            //       scale: _bgController,
-            //       child: Container(
-            //         width: SizeConfig.screenWidth,
-            //         height: SizeConfig.screenWidth,
-            //         decoration: BoxDecoration(
-            //             gradient: new LinearGradient(
-            //                 colors: [Color(0xffCF0060), Color(0xffF9711B)],
-            //                 begin: Alignment.topCenter,
-            //                 end: Alignment.bottomCenter)),
-            //         // child: RotationTransition(
-            //         //   alignment: Alignment.center,
-            //         //   turns: _bgController,
-            //         //   child: Transform.scale(
-            //         //     scale: 3.5,
-            //         //     child: SvgPicture.asset(
-            //         //       "images/Tambola/animbg.svg",
-            //         //     ),
-            //         //   ),
-            //         // ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            Positioned(
-              child: SafeArea(
-                  child: Container(
-                width: SizeConfig.screenWidth,
-                height: kToolbarHeight * 2,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "images/fello-dark.png",
-                      height: kToolbarHeight,
-                    ),
-                  ],
+                image: DecorationImage(
+                  image: AssetImage("images/Tambola/tranbg.png"),
+                  fit: BoxFit.cover,
                 ),
-              )),
+                borderRadius: BorderRadius.circular(12),
+                gradient: LinearGradient(
+                  colors: [Color(0xff34C3A7), Color(0xff4AB474)],
+                  begin: Alignment.bottomRight,
+                  end: Alignment.topLeft,
+                ),
+              ),
             ),
             SafeArea(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  Container(
+                    width: SizeConfig.screenWidth,
+                    height: kToolbarHeight * 2,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "images/fello-dark.png",
+                          height: kToolbarHeight,
+                        ),
+                      ],
+                    ),
+                  ),
                   Spacer(flex: 1),
                   Padding(
                     padding: EdgeInsets.all(16),
                     child: Text(
-                      "Today's Picks\nare:",
+                      "Today's Picks are:",
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: SizeConfig.cardTitleTextSize * 1.2,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
@@ -196,12 +140,13 @@ class _PicksDrawState extends State<PicksDraw>
                           ),
                         ),
                         Positioned(
-                            bottom: 28,
-                            left: SizeConfig.screenWidth / 2,
-                            child: Image.asset(
-                              "images/fello-dark.png",
-                              height: 30,
-                            )),
+                          bottom: 28,
+                          left: SizeConfig.screenWidth / 2,
+                          child: Image.asset(
+                            "images/fello-dark.png",
+                            height: 30,
+                          ),
+                        ),
                         AnimatedPositioned(
                           duration: Duration(seconds: 1),
                           //curve: Curves.decelerate,
@@ -277,14 +222,14 @@ class _PicksDrawState extends State<PicksDraw>
                                                               fit: BoxFit.cover,
                                                               child: Text(
                                                                 e.toString(),
-                                                                style: GoogleFonts
-                                                                    .montserrat(
+                                                                style:
+                                                                    TextStyle(
                                                                   color: Colors
                                                                       .white,
                                                                   fontSize: 20,
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w500,
+                                                                          .w700,
                                                                 ),
                                                               ),
                                                             )
@@ -312,8 +257,9 @@ class _PicksDrawState extends State<PicksDraw>
                     child: Text(
                       "Let's see how many numbers matched your tickets...",
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
+                      style: TextStyle(
                         color: Colors.white,
+                        letterSpacing: 2,
                         fontSize: SizeConfig.largeTextSize,
                       ),
                     ),
