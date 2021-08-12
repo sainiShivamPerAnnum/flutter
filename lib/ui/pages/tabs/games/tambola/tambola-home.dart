@@ -700,10 +700,10 @@ class GameTitle extends StatelessWidget {
             Text(
               "TAMBOLA",
               style: TextStyle(
-                fontFamily: "Cucciolo",
+                // fontFamily: "Cucciolo",
                 color: Colors.white,
                 fontSize: SizeConfig.cardTitleTextSize * 1.6,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w900,
                 letterSpacing: 2,
                 shadows: [
                   BoxShadow(
@@ -714,14 +714,14 @@ class GameTitle extends StatelessWidget {
                 ],
               ),
             ),
-            Text(
-              "[ GLOBAL ]",
-              style: GoogleFonts.montserrat(
-                color: Colors.white,
-                fontSize: 12,
-                letterSpacing: 5,
-              ),
-            ),
+            // Text(
+            //   "[ GLOBAL ]",
+            //   style: GoogleFonts.montserrat(
+            //     color: Colors.white,
+            //     fontSize: 12,
+            //     letterSpacing: 5,
+            //   ),
+            // ),
           ],
         ),
       ),
