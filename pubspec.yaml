@@ -67,6 +67,8 @@ dependencies:
   slider_button: ^0.6.0
   sms_autofill: ^2.0.0
   video_player: ^2.1.12
+  rive: ^0.7.22
+
 
   flutter:
     sdk: flutter
@@ -94,3 +96,7 @@ flutter:
     - resources/fello-email-verification.html
 
 
+  fonts:
+    - family: Cucciolo
+      fonts:
+        - asset: fonts/Cucciolo Rough.ttf

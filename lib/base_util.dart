@@ -209,6 +209,7 @@ class BaseUtil extends ChangeNotifier {
       }
 
       await getProfilePicUrl();
+      await fetchWeeklyPicks();
 
       ///Freshchat utils
       freshchatKeys = await _dbModel.getActiveFreshchatKey();
@@ -227,8 +228,12 @@ class BaseUtil extends ChangeNotifier {
         _dailyPickCount = int.parse(_dpc);
       } catch (e) {
         log.error('key parsing failed: ' + e.toString());
-        Map<String,String> errorDetails = {'User number': _myUser.mobile, 'Error message' : e.toString()};
-        _dbModel.logFailure(_myUser.uid, FailType.DailyPickParseFailed, errorDetails);
+        Map<String, String> errorDetails = {
+          'User number': _myUser.mobile,
+          'Error message': e.toString()
+        };
+        _dbModel.logFailure(
+            _myUser.uid, FailType.DailyPickParseFailed, errorDetails);
         _dailyPickCount = 5;
       }
 
@@ -281,9 +286,9 @@ class BaseUtil extends ChangeNotifier {
         userFundWallet = aValue;
         if (userFundWallet.augGoldQuantity > 0)
           _updateAugmontBalance(); //setstate call in method
-        else
-          notifyListeners();
+
       }
+      notifyListeners();
     });
   }
 
@@ -309,6 +314,18 @@ class BaseUtil extends ChangeNotifier {
               fontWeight: FontWeight.w500,
               fontSize: SizeConfig.largeTextSize)),
     );
+  }
+
+  fetchWeeklyPicks() async {
+    if (!weeklyDrawFetched) {
+      log.debug('Requesting for weekly picks');
+      DailyPick _picks = await _dbModel.getWeeklyPicks();
+      weeklyDrawFetched = true;
+      if (_picks != null) {
+        weeklyDigits = _picks;
+      }
+      notifyListeners();
+    }
   }
 
   showPositiveAlert(String title, String message, BuildContext context,
@@ -734,9 +751,10 @@ class BaseUtil extends ChangeNotifier {
           BaseUtil.digitPrecision(userFundWallet.augGoldQuantity * gSellRate);
       notifyListeners(); //might cause ui error if screen no longer active
     }).catchError((err) {
-      if(_myUser.uid!=null) {
-        Map<String,dynamic> errorDetails = {'Error message': err.toString()};
-        _dbModel.logFailure(_myUser.uid, FailType.UserAugmontBalanceUpdateFailed,errorDetails);
+      if (_myUser.uid != null) {
+        var errorDetails = {'Error message': err.toString()};
+        _dbModel.logFailure(
+            _myUser.uid, FailType.UserAugmontBalanceUpdateFailed, errorDetails);
       }
       print('$err');
     });

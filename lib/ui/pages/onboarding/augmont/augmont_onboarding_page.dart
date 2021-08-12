@@ -15,7 +15,7 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.da
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/augmont_state_list.dart';
 import 'package:felloapp/util/fail_types.dart';
-import 'package:felloapp/util/fundPalettes.dart';
+import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
