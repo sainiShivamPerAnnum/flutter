@@ -536,33 +536,33 @@ class ShareCard extends StatelessWidget {
                     children: [
                       new TextSpan(
                         text: 'Both you and your friend receive ',
-                        style: TextStyle(
+                        style: GoogleFonts.montserrat(
                             color: Colors.white,
                             fontSize: SizeConfig.mediumTextSize * 1.2),
                       ),
                       new TextSpan(
                         text: '₹ 25',
-                        style: TextStyle(
+                        style: GoogleFonts.montserrat(
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
                             fontSize: SizeConfig.mediumTextSize * 1.2),
                       ),
                       new TextSpan(
                         text: ' and ',
-                        style: TextStyle(
+                        style: GoogleFonts.montserrat(
                             color: Colors.white,
                             fontSize: SizeConfig.mediumTextSize * 1.2),
                       ),
                       new TextSpan(
                         text: '10 gaming tickets',
-                        style: TextStyle(
+                        style: GoogleFonts.montserrat(
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
                             fontSize: SizeConfig.mediumTextSize * 1.2),
                       ),
                       new TextSpan(
                         text: ' for every successful referral!',
-                        style: TextStyle(
+                        style: GoogleFonts.montserrat(
                             color: Colors.white,
                             fontSize: SizeConfig.mediumTextSize * 1.2),
                       )

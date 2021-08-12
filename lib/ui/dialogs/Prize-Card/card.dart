@@ -11,7 +11,7 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/fold-card.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
-import 'package:felloapp/util/fundPalettes.dart';
+import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
