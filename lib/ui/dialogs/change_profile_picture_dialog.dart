@@ -94,7 +94,6 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
       if(baseProvider.myUser.uid!=null) {
         var errorDetails = {
           'Error message' : 'Method call to upload picture failed',
-          'Error details' : e.toString()
         };
         dbProvider.logFailure(baseProvider.myUser.uid, FailType.ProfilePictureUpdateFailed, errorDetails);
       }

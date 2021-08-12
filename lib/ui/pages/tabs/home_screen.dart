@@ -17,7 +17,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
-// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 class HomePage extends StatefulWidget {
   @override

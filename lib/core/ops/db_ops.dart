@@ -37,6 +37,29 @@ class DBModel extends ChangeNotifier {
   final Log log = new Log("DBModel");
   ValueChanged<TicketRequest> _ticketRequestListener;
   FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  bool isDeviceInfoInitiated = false;
+  String phoneModel;
+  String softwareVersion;
+
+  Future<void> initDeviceInfo() async {
+    try {
+      if(Platform.isIOS) {
+        IosDeviceInfo iosDeviceInfo;
+        iosDeviceInfo = await deviceInfo.iosInfo;
+        phoneModel = iosDeviceInfo.model;
+        softwareVersion = iosDeviceInfo.systemVersion;
+      } else if(Platform.isAndroid) {
+        AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
+        phoneModel = androidDeviceInfo.model;
+        softwareVersion = androidDeviceInfo.version.release;
+      }
+      isDeviceInfoInitiated = true;
+    } catch(e) {
+      log.error('Initiating Device Info failed');
+    }
+  } 
+
 
   Future<bool> updateClientToken(BaseUser user, String token) async {
     try {
@@ -843,29 +866,20 @@ class DBModel extends ChangeNotifier {
       String userId, FailType failType, Map<String, dynamic> data) async {
     try {
       Map<String, dynamic> dMap = (data == null) ? {} : data;
-      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      IosDeviceInfo iosDeviceInfo;
-      AndroidDeviceInfo androidDeviceInfo;
-      String iosVersion;
-      AndroidBuildVersion androidBuildVersion;
-      if(Platform.isIOS) {
-        iosDeviceInfo = await deviceInfo.iosInfo;
-      } else if(Platform.isAndroid) {
-        androidDeviceInfo = await deviceInfo.androidInfo;
-      }
-      String model = (Platform.isIOS)?iosDeviceInfo.model:androidDeviceInfo.model;
-      if(Platform.isIOS) {
-        iosVersion = iosDeviceInfo.systemVersion;
-      } else if(Platform.isAndroid) {
-        androidBuildVersion = androidDeviceInfo.version;
+      if(!isDeviceInfoInitiated) {
+        await initDeviceInfo();
       }
       dMap['user_id'] = userId;
       dMap['fail_type'] = failType.value();
       dMap['manually_resolved'] = false;
       dMap['app_version'] =
           '${BaseUtil.packageInfo.version}+${BaseUtil.packageInfo.buildNumber}';
-      dMap['phone_model'] = model;
-      dMap['phone_version'] = (Platform.isIOS)?iosVersion:('Android '+androidBuildVersion.release);
+      if(phoneModel!=null) {
+        dMap['phone_model'] = phoneModel;
+      }
+      if(softwareVersion!=null) {
+        dMap['phone_version'] = softwareVersion;
+      }
       dMap['timestamp'] = Timestamp.now();
       try {
         await firebaseCrashlytics.recordError(failType.toString(), StackTrace.fromString(failType.value().toUpperCase()), reason : dMap);

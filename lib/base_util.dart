@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -267,7 +268,7 @@ class BaseUtil extends ChangeNotifier {
       return (unreadCount['count'] > 0);
     } catch (e) {
       log.error('Error reading unread count variable: $e');
-      Map<String,dynamic> errorDetails = {'User number' : _myUser.mobile, 'Error Type' : 'Unread message count failed', 'Error message' : e.toString()};
+      Map<String,dynamic> errorDetails = {'User number' : _myUser.mobile, 'Error Type' : 'Unread message count failed'};
       _dbModel.logFailure(_myUser.uid, FailType.FreshchatFail, errorDetails);
       return false;
     }
