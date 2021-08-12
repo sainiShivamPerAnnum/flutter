@@ -1,4 +1,6 @@
 import 'package:felloapp/core/ops/augmont_ops.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:fl_chart/fl_chart.dart';
