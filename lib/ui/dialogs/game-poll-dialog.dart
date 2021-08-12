@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,10 @@ class _GamePollState extends State<GamePoll> {
     }
     dbProvider.addUserPollResponse(baseProvider.myUser.uid, index).then((flag) {
       if (!flag) {
+        Map<String,dynamic> errorDetails = {
+          'Error Message' : 'Adding user poll response in game-poll-dialog failed'
+        };
+        dbProvider.logFailure(baseProvider.myUser.uid, FailType.GameVoteFailed, errorDetails);
         baseProvider.showNegativeAlert('Couldn\'t save response',
             'Please try again in some time', context);
       }

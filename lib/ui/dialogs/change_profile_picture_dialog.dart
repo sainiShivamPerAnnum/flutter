@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -25,13 +27,14 @@ class ChangeProfilePicture extends StatefulWidget {
 class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
   final FirebaseStorage storage = FirebaseStorage.instance;
   BaseUtil baseProvider;
+  DBModel dbProvider;
   bool isUploading = false;
   bool isUploaded = false;
 
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
-
+    dbProvider = Provider.of<DBModel>(context, listen: false);
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
       child: Dialog(
@@ -88,6 +91,12 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
       }
       return isUploaded;
     } catch (e) {
+      if(baseProvider.myUser.uid!=null) {
+        var errorDetails = {
+          'Error message' : 'Method call to upload picture failed',
+        };
+        dbProvider.logFailure(baseProvider.myUser.uid, FailType.ProfilePictureUpdateFailed, errorDetails);
+      }
       print('$e');
       return false;
     }
