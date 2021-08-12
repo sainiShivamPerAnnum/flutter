@@ -234,7 +234,7 @@ class FcmListener extends ChangeNotifier {
     } catch (e) {
       log.error(e.toString());
       if(_baseUtil.myUser.uid!=null) {
-        var errorDetails = {'Error Message' : e.toString()};
+        Map<String,dynamic> errorDetails = {'Error Message' : 'Changing Tambola Notification Status failed'};
         _dbModel.logFailure(_baseUtil.myUser.uid, FailType.TambolaDrawNotificationSettingFailed, errorDetails);
       }
       _baseUtil.showNegativeAlert(

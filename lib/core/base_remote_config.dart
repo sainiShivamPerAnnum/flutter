@@ -112,7 +112,7 @@ class BaseRemoteConfig {
       print(
           'Unable to fetch remote config. Cached or default values will be used');
       if (_baseProvider.myUser.uid != null) {
-        var errorDetails = {
+        Map<String,dynamic> errorDetails = {
           'Error Type': 'Remote config details fetch failed',
           'Error message': 'Remote config fetch failed, using default values.'
         };

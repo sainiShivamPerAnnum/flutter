@@ -11,6 +11,7 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/fold-card.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fundPalettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -855,9 +856,21 @@ class _CloseCardState extends State<CloseCard> {
               'Fello really is a very rewarding way to invest in assets and play games! You should try it out too: https://fello.in/download/app',
         );
       }).catchError((onError) {
+        if(baseProvider.myUser.uid!=null) {
+          Map<String,dynamic> errorDetails = {
+            'Error message' : 'Share reward card in card.dart failed'
+          };
+          dbProvider.logFailure(baseProvider.myUser.uid, FailType.FelloRewardCardShareFailed, errorDetails);
+        }
         print(onError);
       });
     } catch (e) {
+       if(baseProvider.myUser.uid!=null) {
+          Map<String,dynamic> errorDetails = {
+            'Error message' : 'Share reward card creation failed'
+          };
+          dbProvider.logFailure(baseProvider.myUser.uid, FailType.FelloRewardCardShareFailed, errorDetails);
+        }
       setState(() {
         isSaving = false;
       });
