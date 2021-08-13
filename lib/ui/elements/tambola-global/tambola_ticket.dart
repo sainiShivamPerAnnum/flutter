@@ -7,19 +7,20 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class Ticket extends StatelessWidget {
-  Ticket(
-      {@required this.bgColor,
-      @required this.boardColorEven,
-      @required this.boardColorOdd,
-      @required this.boradColorMarked,
-      @required this.board,
-      @required this.calledDigits});
+  Ticket({
+    @required this.bgColor,
+    @required this.boardColorEven,
+    @required this.boardColorOdd,
+    @required this.boradColorMarked,
+    @required this.board,
+    @required this.calledDigits,
+  });
 
   final bgColor, boardColorOdd, boardColorEven, boradColorMarked;
   final TambolaBoard board;
   final List<int> calledDigits;
 
-  List<int> markedIndices = [];
+  //List<int> markedIndices = [];
   List<int> ticketNumbers = [];
   List<TicketOdds> odds = [];
 
@@ -121,7 +122,7 @@ class Ticket extends StatelessWidget {
       ),
       margin: EdgeInsets.only(
         left: SizeConfig.blockSizeHorizontal * 3,
-        bottom: SizeConfig.blockSizeHorizontal * 3,
+        bottom: SizeConfig.blockSizeHorizontal,
       ),
       child: Stack(
         children: [
@@ -240,16 +241,22 @@ class Ticket extends StatelessWidget {
                                 Text(
                                   odds[index].title,
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: odds[index].left == 0
+                                        ? Colors.black
+                                        : Colors.white,
                                     fontSize: SizeConfig.smallTextSize,
                                   ),
                                 ),
                                 Text(
                                   "${odds[index].left} left",
                                   style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: SizeConfig.mediumTextSize),
+                                      color: odds[index].left == 0
+                                          ? Colors.black
+                                          : Colors.white,
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: odds[index].left == 0
+                                          ? SizeConfig.mediumTextSize * 1.2
+                                          : SizeConfig.mediumTextSize),
                                 ),
                               ],
                             )
@@ -275,6 +282,7 @@ class Ticket extends StatelessWidget {
                   "Generated on: ${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).day.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).month.toString().padLeft(2, '0')}-${DateTime.fromMillisecondsSinceEpoch(board.assigned_time.millisecondsSinceEpoch).year}",
                   style: TextStyle(
                     color: Colors.white,
+                    fontSize: SizeConfig.smallTextSize,
                   ),
                 ),
               ),

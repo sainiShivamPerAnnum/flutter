@@ -41,8 +41,7 @@ class TambolaHome extends StatefulWidget {
 
 class _TambolaHomeState extends State<TambolaHome> {
   // HEIGHT CALCULATED ACCORDING TO THE ITEMS PRESENT IN THE CONTAINER
-  double normalTopCardHeight =
-      kToolbarHeight * 1.2 + SizeConfig.screenWidth * 0.74;
+  double normalTopCardHeight = SizeConfig.screenWidth * 0.8;
   double expandedTopCardHeight =
       (SizeConfig.smallTextSize + SizeConfig.screenWidth * 0.1) * 8 +
           SizeConfig.cardTitleTextSize * 2.4 +
@@ -55,6 +54,8 @@ class _TambolaHomeState extends State<TambolaHome> {
   TambolaBoard _currentBoard;
   Ticket _currentBoardView;
   bool _winnerDialogCalled = false;
+  bool _isTicketSummaryLoaded = false;
+  List<List<BestTambolaTicketsSumm>> ticketSummaryData;
 
   List<Ticket> _tambolaBoardViews, _topFiveTambolaBoards;
   List<TambolaBoard> _bestTambolaBoards;
@@ -73,15 +74,14 @@ class _TambolaHomeState extends State<TambolaHome> {
 
   TambolaGenerationService _tambolaTicketService;
 
-  void _onVerticalDragUpdate(DragUpdateDetails details) {
-    if (details.primaryDelta > 1.5) {
+  void _onVerticalDragUpdate() {
+    if (!isShowingAllPicks) {
       topCardHeight = expandedTopCardHeight;
       titleOpacity = 0;
       isShowingAllPicks = true;
     } else {
       topCardHeight = normalTopCardHeight;
       isShowingAllPicks = false;
-      setState(() {});
       Future.delayed(Duration(milliseconds: 500), () {
         titleOpacity = 1;
         setState(() {});
@@ -208,7 +208,7 @@ class _TambolaHomeState extends State<TambolaHome> {
           child: Column(
             children: [
               GestureDetector(
-                onVerticalDragUpdate: _onVerticalDragUpdate,
+                onTap: _onVerticalDragUpdate,
                 child: AnimatedContainer(
                   width: SizeConfig.screenWidth,
                   height: topCardHeight,
@@ -343,6 +343,11 @@ class _TambolaHomeState extends State<TambolaHome> {
                   baseProvider.weeklyDrawFetched,
                   baseProvider.userWeeklyBoards,
                   _activeTambolaCardCount),
+              _buildTicketSummaryCards(
+                  baseProvider.weeklyTicksFetched,
+                  baseProvider.weeklyDrawFetched,
+                  baseProvider.userWeeklyBoards,
+                  _activeTambolaCardCount),
               InkWell(
                   onTap: () => delegate.appState.currentAction = PageAction(
                         state: PageState.addWidget,
@@ -383,7 +388,7 @@ class _TambolaHomeState extends State<TambolaHome> {
         padding: EdgeInsets.all(10),
         child: Container(
           width: double.infinity,
-          height: 200,
+          height: SizeConfig.screenWidth * 0.9,
           child: Center(
             child: (ticketsBeingGenerated)
                 ? Column(
@@ -462,6 +467,147 @@ class _TambolaHomeState extends State<TambolaHome> {
       boardColorOdd: ticketColor.itemColorOdd,
       boradColorMarked: ticketColor.itemColorMarked,
     );
+  }
+
+  _buildTicketSummaryCards(bool fetchedFlag, bool drawFetchedFlag,
+      List<TambolaBoard> boards, int count) {
+    Widget _widget;
+    if (!fetchedFlag || !drawFetchedFlag) {
+      _widget = SizedBox();
+    } else if (boards == null || count == 0) {
+      _widget = SizedBox();
+    } else {
+      if (!_isTicketSummaryLoaded)
+        ticketSummaryData = _getTambolaTicketsSummary();
+      List<String> cardTitle = [
+        "Congratulations",
+        "Very Close to Win",
+        "Jackpot is near"
+      ];
+      _widget = ticketSummaryData.isEmpty
+          ? SizedBox()
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: SizeConfig.blockSizeHorizontal * 3,
+                    left: SizeConfig.blockSizeHorizontal * 3,
+                    right: SizeConfig.blockSizeHorizontal * 3,
+                    bottom: SizeConfig.blockSizeHorizontal,
+                  ),
+                  child: Text(
+                    "Tickets Summary",
+                    style: GoogleFonts.montserrat(
+                      color: Colors.black87,
+                      fontSize: SizeConfig.cardTitleTextSize,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                Container(
+                  height: SizeConfig.screenWidth * 0.5,
+                  width: SizeConfig.screenWidth,
+                  child: PageView(
+                    physics: BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    children: List.generate(
+                      ticketSummaryData.length,
+                      (index) => Container(
+                        height: SizeConfig.screenWidth * 0.5,
+                        width: SizeConfig.screenWidth,
+                        margin: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.blockSizeHorizontal * 3),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Color(0xffB980F0),
+                          image: DecorationImage(
+                            image: NetworkImage(
+                                "https://media.istockphoto.com/videos/confetti-particle-cg-animation-video-id884038624?b=1&k=6&m=884038624&s=640x640&h=rkbk3IABay83MtXOVJwOpr8-s5RY8t0H3KfT_7dDGZE="),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        child: Stack(
+                          children: [
+                            Container(
+                              height: SizeConfig.screenWidth * 0.5,
+                              width: SizeConfig.screenWidth,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.black.withOpacity(0.8),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(
+                                  SizeConfig.blockSizeHorizontal * 3),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                      cardTitle[index],
+                                      style: TextStyle(
+                                        fontSize: SizeConfig.largeTextSize,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: ListView(
+                                      shrinkWrap: true,
+                                      children: List.generate(
+                                        ticketSummaryData[index].length,
+                                        (i) => ListTile(
+                                          onTap: () {
+                                            _tambolaBoardViews = [];
+                                            ticketSummaryData[index][i]
+                                                .boards
+                                                .forEach((board) {
+                                              _tambolaBoardViews.add(
+                                                  _buildBoardView(
+                                                      board,
+                                                      baseProvider
+                                                          .weeklyDigits));
+                                            });
+                                            delegate.appState.currentAction =
+                                                PageAction(
+                                              state: PageState.addWidget,
+                                              page: TShowAllTicketsPageConfig,
+                                              widget: ShowAllTickets(
+                                                tambolaBoardView:
+                                                    _tambolaBoardViews,
+                                              ),
+                                            );
+                                          },
+                                          title: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 10),
+                                            child: Text(
+                                              ticketSummaryData[index][i].title,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+    }
+    //_isTicketSummaryLoaded = true;
+    return _widget;
   }
 
   _checkSundayResultsProcessing() {
@@ -595,6 +741,198 @@ class _TambolaHomeState extends State<TambolaHome> {
             context);
       });
     }
+  }
+
+  List<List<BestTambolaTicketsSumm>> _getTambolaTicketsSummary() {
+    List<List<BestTambolaTicketsSumm>> summary = [];
+    List<TambolaBoard> bestCornerBoard = [];
+    List<TambolaBoard> bestTopRowBoard = [];
+    List<TambolaBoard> bestMiddleRowBoard = [];
+    List<TambolaBoard> bestBottomRowBoard = [];
+    List<TambolaBoard> bestFullHouseBoard = [];
+    List<TambolaBoard> completedCornersBoard = [];
+    List<TambolaBoard> completedTopRowBoard = [];
+    List<TambolaBoard> completedBottomRowBoard = [];
+    List<TambolaBoard> completedMiddleRowBoard = [];
+    List<TambolaBoard> completedFullHouseBoard = [];
+
+    List<BestTambolaTicketsSumm> completedBoardCardItems = [];
+    List<BestTambolaTicketsSumm> bestChancesBoardCardItems = [];
+    List<BestTambolaTicketsSumm> fullHouseBoardCardItems = [];
+
+    if (baseProvider.userWeeklyBoards == null ||
+        baseProvider.userWeeklyBoards.isEmpty) {
+      return summary;
+    }
+
+    if (baseProvider.weeklyDigits == null ||
+        baseProvider.weeklyDigits.toList().isEmpty) {
+      return summary;
+    }
+
+    baseProvider.userWeeklyBoards.forEach((board) {
+      // CORNERS CHECK
+      // Checking for any completed corner borads
+      if (board.getCornerOdds(baseProvider.weeklyDigits
+              .getPicksPostDate(board.generatedDayCode)) ==
+          0) completedCornersBoard.add(board);
+      // Checking for best Chances
+      if (board.getCornerOdds(baseProvider.weeklyDigits
+                  .getPicksPostDate(board.generatedDayCode)) <
+              2 &&
+          board.getCornerOdds(baseProvider.weeklyDigits
+                  .getPicksPostDate(board.generatedDayCode)) >
+              0) bestCornerBoard.add(board);
+
+      // ROWS CHECK
+      // TOP ROW
+      if (board.getRowOdds(
+                  0,
+                  baseProvider.weeklyDigits
+                      .getPicksPostDate(board.generatedDayCode)) <
+              3 &&
+          board.getRowOdds(
+                  0,
+                  baseProvider.weeklyDigits
+                      .getPicksPostDate(board.generatedDayCode)) >
+              0) bestTopRowBoard.add(board);
+
+      if (board.getRowOdds(
+              0,
+              baseProvider.weeklyDigits
+                  .getPicksPostDate(board.generatedDayCode)) ==
+          0) completedTopRowBoard.add(board);
+
+      // MIDDLE ROW
+      if (board.getRowOdds(
+                  1,
+                  baseProvider.weeklyDigits
+                      .getPicksPostDate(board.generatedDayCode)) <
+              3 &&
+          board.getRowOdds(
+                  1,
+                  baseProvider.weeklyDigits
+                      .getPicksPostDate(board.generatedDayCode)) >
+              0) bestMiddleRowBoard.add(board);
+
+      if (board.getRowOdds(
+              1,
+              baseProvider.weeklyDigits
+                  .getPicksPostDate(board.generatedDayCode)) ==
+          0) completedMiddleRowBoard.add(board);
+
+      // BOTTOM ROW
+      if (board.getRowOdds(
+                  2,
+                  baseProvider.weeklyDigits
+                      .getPicksPostDate(board.generatedDayCode)) <
+              3 &&
+          board.getRowOdds(
+                  2,
+                  baseProvider.weeklyDigits
+                      .getPicksPostDate(board.generatedDayCode)) >
+              0) bestBottomRowBoard.add(board);
+
+      if (board.getRowOdds(
+              2,
+              baseProvider.weeklyDigits
+                  .getPicksPostDate(board.generatedDayCode)) ==
+          0) completedBottomRowBoard.add(board);
+
+      // FULL HOUSE CHECK
+
+      // Checking for completed Full House Boards
+      if (board.getFullHouseOdds(baseProvider.weeklyDigits
+              .getPicksPostDate(board.generatedDayCode)) ==
+          0) completedFullHouseBoard.add(board);
+      // Checking for best Chances of a Full House Board
+      if (board.getFullHouseOdds(baseProvider.weeklyDigits
+                  .getPicksPostDate(board.generatedDayCode)) <
+              5 &&
+          board.getFullHouseOdds(baseProvider.weeklyDigits
+                  .getPicksPostDate(board.generatedDayCode)) >
+              0) bestFullHouseBoard.add(board);
+    });
+
+    // ADDING COMPLETED CATEGORIES TO FORM A LIST OF TILE DATA FOR THE CARD
+    if (completedFullHouseBoard.isNotEmpty)
+      completedBoardCardItems.add(BestTambolaTicketsSumm(
+          boards: completedFullHouseBoard,
+          title: getBoardTileTitle(
+              "Full House", completedFullHouseBoard.length, false)));
+    if (completedTopRowBoard.isNotEmpty)
+      completedBoardCardItems.add(BestTambolaTicketsSumm(
+          boards: completedTopRowBoard,
+          title: getBoardTileTitle(
+              "Top Row", completedTopRowBoard.length, false)));
+    if (completedMiddleRowBoard.isNotEmpty)
+      completedBoardCardItems.add(BestTambolaTicketsSumm(
+          boards: completedMiddleRowBoard,
+          title: getBoardTileTitle(
+              "Middle Row", completedMiddleRowBoard.length, false)));
+    if (completedBottomRowBoard.isNotEmpty)
+      completedBoardCardItems.add(BestTambolaTicketsSumm(
+          boards: completedBottomRowBoard,
+          title: getBoardTileTitle(
+              "Bottom Row", completedBottomRowBoard.length, false)));
+    if (completedCornersBoard.isNotEmpty)
+      completedBoardCardItems.add(BestTambolaTicketsSumm(
+          boards: completedCornersBoard,
+          title: getBoardTileTitle(
+              "Corners", completedCornersBoard.length, false)));
+
+    // ADDING BEST CHANCES CATEGORIES TO FORM A LIST OF TILE DATA FOR THE CARD
+    if (bestCornerBoard.isNotEmpty)
+      bestChancesBoardCardItems.add(BestTambolaTicketsSumm(
+          boards: bestCornerBoard,
+          title: getBoardTileTitle("Corners", bestCornerBoard.length, true)));
+    if (bestTopRowBoard.isNotEmpty)
+      bestChancesBoardCardItems.add(BestTambolaTicketsSumm(
+          boards: bestTopRowBoard,
+          title: getBoardTileTitle("Top Row", bestTopRowBoard.length, true)));
+    if (bestMiddleRowBoard.isNotEmpty)
+      bestChancesBoardCardItems.add(BestTambolaTicketsSumm(
+          boards: bestMiddleRowBoard,
+          title: getBoardTileTitle(
+              "Middle Row", bestMiddleRowBoard.length, true)));
+    if (bestBottomRowBoard.isNotEmpty)
+      bestChancesBoardCardItems.add(BestTambolaTicketsSumm(
+          boards: bestBottomRowBoard,
+          title: getBoardTileTitle(
+              "Bottom Row", bestBottomRowBoard.length, true)));
+
+    // ADDING THE BEST CHANCES OFF FULL HOUSE -SINGLE ITEM
+    if (bestFullHouseBoard.isNotEmpty)
+      fullHouseBoardCardItems.add(BestTambolaTicketsSumm(
+          boards: bestFullHouseBoard,
+          title: getBoardTileTitle(
+              "Full House", bestFullHouseBoard.length, true)));
+
+    if (completedBoardCardItems.isNotEmpty)
+      summary.add(completedBoardCardItems);
+    if (bestChancesBoardCardItems.isNotEmpty)
+      summary.add(bestChancesBoardCardItems);
+    if (fullHouseBoardCardItems.isNotEmpty)
+      summary.add(fullHouseBoardCardItems);
+    _isTicketSummaryLoaded = true;
+    return summary;
+  }
+
+  getBoardTileTitle(String category, int length, bool bestCards) {
+    String singplu = length > 1 ? "s" : "";
+    String suffix = length > 1 ? "view all tickets" : "see";
+    String output;
+    if (bestCards) {
+      if (category == "Corners")
+        output =
+            "$length of your ticket$singplu needs only 1 number to complete";
+      else
+        output =
+            "$length of your ticket$singplu needs only 2 or less numbers to complete";
+    } else
+      output = "$length of your ticket$singplu completed";
+
+    return output + " $category. Tap to $suffix";
   }
 
   List<TambolaBoard> _refreshBestBoards() {
@@ -841,19 +1179,17 @@ class CurrentPicks extends StatelessWidget {
                           .toList(),
                     ),
                   ),
-            Spacer(),
+            //Spacer(),
             Padding(
               padding: EdgeInsets.only(top: SizeConfig.blockSizeHorizontal * 5),
               child: Text(
-                "Swipe down to see all picks of this week",
+                "Tap to see all picks of this week",
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: SizeConfig.mediumTextSize,
                     height: 2),
               ),
             ),
-            Icon(Icons.arrow_drop_down_circle_rounded,
-                color: Colors.white.withOpacity(0.5)),
             Spacer(),
           ],
         ),
@@ -931,7 +1267,7 @@ class _FaqSectionState extends State<FaqSection> {
                   child: Column(
                     children: [
                       Text(
-                        Assets.tambolaFaqList[0].values.first,
+                        Assets.tambolaFaqList[index].values.first,
                         style: TextStyle(
                           height: 1.5,
                           fontSize: SizeConfig.mediumTextSize,
@@ -1162,4 +1498,11 @@ class PrizeSection extends StatelessWidget {
       ),
     );
   }
+}
+
+class BestTambolaTicketsSumm {
+  final List<TambolaBoard> boards;
+  final String title;
+
+  BestTambolaTicketsSumm({@required this.boards, @required this.title});
 }
