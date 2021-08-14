@@ -11,7 +11,6 @@ class Walkthrough extends StatelessWidget {
   static const List<String> dailyPicks = [
     "Every day 5 random numbers are picked out from 1 to 90 at 6 pm",
     "You can view all the picks of this week by pulling the card down",
-    "Lorem ipsum",
   ];
   static const List<String> tambolatickets = [
     "This is how a Fello Tambola ticket looks which is very simple and easy to understand ",
@@ -28,27 +27,28 @@ class Walkthrough extends StatelessWidget {
     return points
         .map(
           (e) => Container(
-            width: SizeConfig.screenWidth,
-            margin: EdgeInsets.symmetric(
-                vertical: 10, horizontal: SizeConfig.blockSizeHorizontal * 3),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 4,
-                  backgroundColor: Colors.black,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: Text(
-                    e,
-                  ),
-                ),
-              ],
+        width: SizeConfig.screenWidth,
+        margin: EdgeInsets.symmetric(
+            vertical: 10, horizontal: SizeConfig.blockSizeHorizontal * 3),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 4,
+              backgroundColor: Colors.black,
             ),
-          ),
-        )
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: Text(
+                e,
+                style: TextStyle(fontSize: SizeConfig.mediumTextSize),
+              ),
+            ),
+          ],
+        ),
+      ),
+    )
         .toList();
   }
 
@@ -72,8 +72,8 @@ class Walkthrough extends StatelessWidget {
               delegate.appState.currentAction =
                   PageAction(state: PageState.addPage, page: SupportConfig);
             },
-            icon: Icon(Icons.support_agent_rounded),
-          )
+            icon: Icon(Icons.contact_support_outlined),
+          ),
         ],
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.white),

@@ -719,14 +719,14 @@ class _CloseCardState extends State<CloseCard> {
     return widget.isClaimed ? _buildEndCard(context) : _buildBeginCard(context);
   }
 
-  String _getEndCardTitleText(PrizeClaimChoice choice) {
-    if (choice == PrizeClaimChoice.AMZ_VOUCHER)
-      return 'Your amazon gift card shall be sent to your registered email and mobile shortly!';
-    else if (choice == PrizeClaimChoice.GOLD_CREDIT)
-      return 'Your digital gold shall be credited to your Fello wallet shortly!';
-    else
-      return 'Your prize shall be credited to you soon!';
-  }
+  // String _getEndCardTitleText(PrizeClaimChoice choice) {
+  //   if (choice == PrizeClaimChoice.AMZ_VOUCHER)
+  //     return 'Your amazon gift card shall be sent to your registered email and mobile shortly!';
+  //   else if (choice == PrizeClaimChoice.GOLD_CREDIT)
+  //     return 'Your digital gold shall be credited to your Fello wallet shortly!';
+  //   else
+  //     return 'Your prize shall be credited to you soon!';
+  // }
 
   // _buildShareCard() async {
   //   showDialog(

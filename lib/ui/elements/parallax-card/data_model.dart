@@ -29,6 +29,12 @@ class DemoData {
   List<Game> _cities = [
     Game(
       name: 'Tambola',
+      title: 'New Tambola',
+      description: 'Test',
+      color: Color(0xffdee5cf),
+    ),
+    Game(
+      name: 'Tambola',
       title: 'Tambola',
       description: 'Play Tambola and win exciting prizes',
       color: Color(0xffdee5cf),
