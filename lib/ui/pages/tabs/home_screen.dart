@@ -17,7 +17,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
-// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -30,7 +29,6 @@ class _HomePageState extends State<HomePage> {
   DBModel dbProvider;
   AppState appState;
   bool _isInit = false;
-
   Future<void> getProfilePicUrl() async {
     if (baseProvider == null || baseProvider.myUser == null) return;
     baseProvider.myUserDpUrl =
@@ -85,7 +83,6 @@ class _HomePageState extends State<HomePage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
-    // FirebaseCrashlytics.instance.crash();
     if (baseProvider.myUserDpUrl == null) {
       isImageLoading = true;
       getProfilePicUrl();

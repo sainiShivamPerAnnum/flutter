@@ -1,4 +1,4 @@
-import 'package:felloapp/util/fundPalettes.dart';
+import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 

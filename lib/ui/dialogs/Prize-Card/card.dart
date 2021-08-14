@@ -11,7 +11,8 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/fold-card.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
-import 'package:felloapp/util/fundPalettes.dart';
+import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
-// import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share/share.dart';
@@ -718,14 +719,14 @@ class _CloseCardState extends State<CloseCard> {
     return widget.isClaimed ? _buildEndCard(context) : _buildBeginCard(context);
   }
 
-  String _getEndCardTitleText(PrizeClaimChoice choice) {
-    if (choice == PrizeClaimChoice.AMZ_VOUCHER)
-      return 'Your amazon gift card shall be sent to your registered email and mobile shortly!';
-    else if (choice == PrizeClaimChoice.GOLD_CREDIT)
-      return 'Your digital gold shall be credited to your Fello wallet shortly!';
-    else
-      return 'Your prize shall be credited to you soon!';
-  }
+  // String _getEndCardTitleText(PrizeClaimChoice choice) {
+  //   if (choice == PrizeClaimChoice.AMZ_VOUCHER)
+  //     return 'Your amazon gift card shall be sent to your registered email and mobile shortly!';
+  //   else if (choice == PrizeClaimChoice.GOLD_CREDIT)
+  //     return 'Your digital gold shall be credited to your Fello wallet shortly!';
+  //   else
+  //     return 'Your prize shall be credited to you soon!';
+  // }
 
   // _buildShareCard() async {
   //   showDialog(
@@ -855,9 +856,21 @@ class _CloseCardState extends State<CloseCard> {
               'Fello really is a very rewarding way to invest in assets and play games! You should try it out too: https://fello.in/download/app',
         );
       }).catchError((onError) {
+        if(baseProvider.myUser.uid!=null) {
+          Map<String,dynamic> errorDetails = {
+            'Error message' : 'Share reward card in card.dart failed'
+          };
+          dbProvider.logFailure(baseProvider.myUser.uid, FailType.FelloRewardCardShareFailed, errorDetails);
+        }
         print(onError);
       });
     } catch (e) {
+       if(baseProvider.myUser.uid!=null) {
+          Map<String,dynamic> errorDetails = {
+            'Error message' : 'Share reward card creation failed'
+          };
+          dbProvider.logFailure(baseProvider.myUser.uid, FailType.FelloRewardCardShareFailed, errorDetails);
+        }
       setState(() {
         isSaving = false;
       });
@@ -913,18 +926,16 @@ class _CloseCardState extends State<CloseCard> {
           }
           newPath = newPath + "/Fello";
           print(newPath);
-          directory = Directory(newPath);
-          ///TODO: permission_handler not working
-          // if (await _requestPermission(Permission.storage)) {
-          //
-          // } else {
-          //   return false;
-          // }
+          if (await _requestPermission(Permission.storage)) {
+            directory = Directory(newPath);
+          } else {
+            return false;
+          }
         } else {
-          directory = await getTemporaryDirectory();
-          // if (await _requestPermission(Permission.photos)) {
-          // } else
-          //   return false;
+          if (await _requestPermission(Permission.photos)) {
+            directory = await getTemporaryDirectory();
+          } else
+            return false;
         }
 
         if (!await directory.exists()) await directory.create(recursive: true);
@@ -955,15 +966,15 @@ class _CloseCardState extends State<CloseCard> {
     }
   }
 
-  // Future<bool> _requestPermission(Permission permission) async {
-  //   if (await permission.isGranted) {
-  //     return true;
-  //   } else {
-  //     var res = await permission.request();
-  //     if (res == PermissionStatus.granted)
-  //       return true;
-  //     else
-  //       return false;
-  //   }
-  // }
+  Future<bool> _requestPermission(Permission permission) async {
+    if (await permission.isGranted) {
+      return true;
+    } else {
+      var res = await permission.request();
+      if (res == PermissionStatus.granted)
+        return true;
+      else
+        return false;
+    }
+  }
 }

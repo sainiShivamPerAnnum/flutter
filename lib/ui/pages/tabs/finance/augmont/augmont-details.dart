@@ -19,7 +19,7 @@ import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dar
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
-import 'package:felloapp/util/fundPalettes.dart';
+import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';

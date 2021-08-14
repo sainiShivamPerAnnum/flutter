@@ -31,7 +31,7 @@ dependencies:
   http: ^0.13.3
   open_file: ^3.2.1
   path: ^1.8.0
-  #  permission_handler: ^7.2.0
+  permission_handler: ^8.1.4+2
   path_provider: ^2.0.2
   package_info: ^2.0.0
   provider: ^5.0.0
@@ -41,6 +41,7 @@ dependencies:
   synchronized: ^3.0.0
   url_launcher: ^6.0.9
   in_app_update: ^2.0.0
+  device_info : ^2.0.2
   image_gallery_saver: ^1.6.9
   #ui packages
   camera: ^0.8.1+7
@@ -62,9 +63,10 @@ dependencies:
   screenshot: ^1.2.1
   showcaseview: ^0.1.6
   shimmer_animation : ^2.1.0+1
-  slider_button: ^1.0.0
+  slider_button: ^0.6.0
   sms_autofill: ^2.0.0
   video_player: ^2.1.12
+  rive: ^0.7.22
 
   flutter:
     sdk: flutter
@@ -92,3 +94,7 @@ flutter:
     - resources/fello-email-verification.html
 
 
+  fonts:
+    - family: Cucciolo
+      fonts:
+        - asset: fonts/Cucciolo Rough.ttf

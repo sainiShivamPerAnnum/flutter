@@ -188,4 +188,20 @@ class LocalDBModel extends ChangeNotifier {
       return flag;
     }
   }
+
+  Future<bool> saveDailyPicksAnimStatus(int weekday) async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    try {
+      _prefs.setInt("DPAS", weekday);
+      return true;
+    } catch (e) {
+      log.debug("Error while saving the daily pick status");
+      return false;
+    }
+  }
+
+  Future<int> getDailyPickAnimLastDay() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    return _prefs.getInt("DPAS");
+  }
 }

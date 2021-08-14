@@ -15,7 +15,7 @@ class BaseRemoteConfig {
     'tambola_header_1': 'Today\'s picks'
   };
   static const Map<String, String> _TAMBOLA_HEADER_SECOND = {
-    'tambola_header_2': 'Click to see the other picks'
+    'tambola_header_2': 'Pull to see the other picks'
   };
   static const Map<String, String> _TAMBOLA_DAILY_PICK_COUNT = {
     'tambola_daily_pick_count': '5'
@@ -112,7 +112,7 @@ class BaseRemoteConfig {
       print(
           'Unable to fetch remote config. Cached or default values will be used');
       if (_baseProvider.myUser.uid != null) {
-        var errorDetails = {
+        Map<String,dynamic> errorDetails = {
           'Error Type': 'Remote config details fetch failed',
           'Error message': 'Remote config fetch failed, using default values.'
         };
