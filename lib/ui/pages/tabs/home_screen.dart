@@ -17,7 +17,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
-// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -30,7 +29,6 @@ class _HomePageState extends State<HomePage> {
   DBModel dbProvider;
   AppState appState;
   bool _isInit = false;
-
   Future<void> getProfilePicUrl() async {
     if (baseProvider == null || baseProvider.myUser == null) return;
     baseProvider.myUserDpUrl =
@@ -85,7 +83,6 @@ class _HomePageState extends State<HomePage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
-    // FirebaseCrashlytics.instance.crash();
     if (baseProvider.myUserDpUrl == null) {
       isImageLoading = true;
       getProfilePicUrl();
@@ -133,7 +130,7 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _buildLoadingFeed() {
     return [
       Container(
-        height: kToolbarHeight,
+        height: SizeConfig.screenHeight * 0.04,
       ),
       _buildProfileRow(),
       Padding(
@@ -169,7 +166,7 @@ class _HomePageState extends State<HomePage> {
     }
     List<Widget> _widget = [
       Container(
-        height: kToolbarHeight,
+        height: SizeConfig.screenHeight * 0.04,
       ),
       _buildProfileRow(),
     ];
@@ -214,13 +211,13 @@ class _HomePageState extends State<HomePage> {
       ),
       margin: EdgeInsets.symmetric(
           horizontal: SizeConfig.blockSizeHorizontal * 5,
-          vertical: SizeConfig.blockSizeHorizontal * 8),
+          vertical: SizeConfig.blockSizeHorizontal * 5),
       width: double.infinity,
       child: Row(
         children: [
           Container(
-            height: SizeConfig.screenWidth * 0.25,
-            width: SizeConfig.screenWidth * 0.25,
+            height: SizeConfig.screenWidth * 0.2,
+            width: SizeConfig.screenWidth * 0.2,
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
@@ -299,7 +296,7 @@ class HomeCard extends StatelessWidget {
           left: SizeConfig.blockSizeHorizontal * 5,
           right: SizeConfig.blockSizeHorizontal * 5),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(8),
           gradient: new LinearGradient(
             colors: gradient,
             begin: Alignment.bottomLeft,
@@ -307,15 +304,10 @@ class HomeCard extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: gradient[0].withOpacity(0.3),
-              offset: Offset(5, 5),
-              blurRadius: 10,
-            ),
-            BoxShadow(
-              color: gradient[1].withOpacity(0.3),
-              offset: Offset(5, 5),
-              blurRadius: 10,
-            ),
+                color: gradient[0].withOpacity(0.2),
+                offset: Offset(2, 2),
+                blurRadius: 10,
+                spreadRadius: 2),
           ]),
       width: double.infinity,
       child: Stack(

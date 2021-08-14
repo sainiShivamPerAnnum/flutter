@@ -2,6 +2,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/Buttons/large_button.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -517,6 +518,13 @@ class _SupportPageState extends State<SupportPage> {
                                     'Error',
                                     'Something went wrong while placing a request, please try again later.',
                                     context);
+                                if(baseProvider.myUser.uid!=null) {
+                                  Map<String,dynamic> errorDetails = {
+                                    'Error Message' : 'Placing a call request failed',
+                                    'Phone Number' : _requestCallPhoneController.text.trim(),
+                                  };
+                                  dbProvider.logFailure(baseProvider.myUser.uid, FailType.RequestCallbackFailed, errorDetails);
+                                }
                                 Navigator.of(context).pop();
                               }
                             } catch (e) {

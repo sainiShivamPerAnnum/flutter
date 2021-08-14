@@ -18,11 +18,11 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-
 
 class UserProfileDetails extends StatefulWidget {
   @override
@@ -405,6 +405,61 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                   ),
                 ),
               ),
+              Padding(
+                padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5),
+                child: TextButton(
+                  child: Text(
+                    "SIGN OUT",
+                    style: GoogleFonts.montserrat(
+                      color: Colors.red,
+                      fontSize: SizeConfig.largeTextSize,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                  onPressed: () {
+                    AppState.screenStack.add(ScreenItem.dialog);
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext dialogContext) => WillPopScope(
+                        onWillPop: () {
+                          backButtonDispatcher.didPopRoute();
+                          return Future.value(true);
+                        },
+                        child: ConfirmActionDialog(
+                          title: 'Confirm',
+                          description: 'Are you sure you want to sign out?',
+                          buttonText: 'Yes',
+                          confirmAction: () {
+                            HapticFeedback.vibrate();
+                            baseProvider.signOut().then((flag) {
+                              if (flag) {
+                                //log.debug('Sign out process complete');
+                                backButtonDispatcher.didPopRoute();
+                                delegate.appState.currentAction = PageAction(
+                                    state: PageState.replaceAll,
+                                    page: SplashPageConfig);
+                                baseProvider.showPositiveAlert('Signed out',
+                                    'Hope to see you soon', context);
+                              } else {
+                                backButtonDispatcher.didPopRoute();
+                                baseProvider.showNegativeAlert(
+                                    'Sign out failed',
+                                    'Couldn\'t signout. Please try again',
+                                    context);
+                                //log.error('Sign out process failed');
+                              }
+                            });
+                          },
+                          cancelAction: () {
+                            HapticFeedback.vibrate();
+                            backButtonDispatcher.didPopRoute();
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              )
             ],
           ),
         ),

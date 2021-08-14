@@ -2,6 +2,7 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -56,7 +57,7 @@ class Walkthrough extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff0C9463),
+        backgroundColor: UiConstants.primaryColor,
         elevation: 2,
         shadowColor: Color(0xff0C9463).withOpacity(0.5),
         title: Text(
@@ -70,7 +71,7 @@ class Walkthrough extends StatelessWidget {
           IconButton(
             onPressed: () {
               delegate.appState.currentAction =
-                  PageAction(state: PageState.addPage, page: SupportConfig);
+                  PageAction(state: PageState.addPage, page: SupportPageConfig);
             },
             icon: Icon(Icons.contact_support_outlined),
           ),

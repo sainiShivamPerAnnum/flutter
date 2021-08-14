@@ -109,7 +109,7 @@ class HamburgerMenu extends StatelessWidget {
       case 'supp':
         {
           appstate.currentAction =
-              PageAction(state: PageState.addPage, page: SupportConfig);
+              PageAction(state: PageState.addPage, page: SupportPageConfig);
           break;
         }
       case 'signOut':

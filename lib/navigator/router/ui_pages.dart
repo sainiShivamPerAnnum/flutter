@@ -32,6 +32,7 @@ const String TWalkthrough = 'tWalkthrough';
 const String TShowAllTickets = 'tShowAllTickets';
 const String TPickDraw = 'tPickDraw';
 const String TWeeklyResult = 'tWeeklyResult';
+const String TSummaryDetails = 'tSummaryDetails';
 
 enum Pages {
   Splash,
@@ -62,7 +63,8 @@ enum Pages {
   TWeeklyResult,
   TWalkthrough,
   TPickDraw,
-  TShowAllTickets
+  TShowAllTickets,
+  TSummaryDetails
 }
 
 class PageConfiguration {
@@ -182,7 +184,7 @@ PageConfiguration VerifyEmailPageConfig = PageConfiguration(
   path: VerifyEmailPath,
   uiPage: Pages.VerifyEmail,
 );
-PageConfiguration SupportConfig = PageConfiguration(
+PageConfiguration SupportPageConfig = PageConfiguration(
   key: 'Support',
   path: SupportPath,
   uiPage: Pages.Support,
@@ -222,4 +224,10 @@ PageConfiguration TWalkthroughPageConfig = PageConfiguration(
   key: 'TWalkthrough',
   path: TWalkthrough,
   uiPage: Pages.TWalkthrough,
+);
+
+PageConfiguration TSummaryDetailsPageConfig = PageConfiguration(
+  key: 'TSummaryDetails',
+  path: TSummaryDetails,
+  uiPage: Pages.TSummaryDetails,
 );

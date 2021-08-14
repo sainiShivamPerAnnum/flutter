@@ -32,7 +32,6 @@ dependencies:
   open_file: ^3.2.1
   path: ^1.8.0
   permission_handler: ^8.1.4+2
-  #  permission_handler: ^7.2.0
   path_provider: ^2.0.2
   package_info: ^2.0.0
   provider: ^5.0.0
@@ -42,13 +41,14 @@ dependencies:
   synchronized: ^3.0.0
   url_launcher: ^6.0.9
   in_app_update: ^2.0.0
+  device_info : ^2.0.2
   image_gallery_saver: ^1.6.9
   #ui packages
   camera: ^0.8.1+7
   cached_network_image: ^3.1.0
   confetti: ^0.5.4+1
   device_unlock: ^1.1.0
-  flutter_card_swipper: ^0.4.0
+
   flutter_spinkit: ^5.0.0
   flutter_share_me: ^0.11.1
   flutter_html: ^2.1.1

@@ -33,6 +33,12 @@ enum FailType {
   RemoteConfigFailed,
   UserAugmontBalanceUpdateFailed,
   TambolaDrawNotificationSettingFailed,
+  TambolaTicketGenerationFailed,
+  RequestCallbackFailed,
+  FelloRewardCardShareFailed,
+  GameVoteFailed,
+  ProfilePictureUpdateFailed,
+  GoldRateFetchFailed
 }
 
 extension ParseToString on FailType {
