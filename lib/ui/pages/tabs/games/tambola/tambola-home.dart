@@ -29,6 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
@@ -55,7 +56,7 @@ class _TambolaHomeState extends State<TambolaHome> {
   Ticket _currentBoardView;
   bool _winnerDialogCalled = false;
   bool _isTicketSummaryLoaded = false;
-  List<List<BestTambolaTicketsSumm>> ticketSummaryData;
+  List<TicketSummaryCardModel> ticketSummaryData;
 
   List<Ticket> _tambolaBoardViews, _topFiveTambolaBoards;
   List<TambolaBoard> _bestTambolaBoards;
@@ -479,11 +480,7 @@ class _TambolaHomeState extends State<TambolaHome> {
     } else {
       if (!_isTicketSummaryLoaded)
         ticketSummaryData = _getTambolaTicketsSummary();
-      List<String> cardTitle = [
-        "Congratulations",
-        "Very Close to Win",
-        "Jackpot is near"
-      ];
+
       _widget = ticketSummaryData.isEmpty
           ? SizedBox()
           : Column(
@@ -494,7 +491,7 @@ class _TambolaHomeState extends State<TambolaHome> {
                     top: SizeConfig.blockSizeHorizontal * 3,
                     left: SizeConfig.blockSizeHorizontal * 3,
                     right: SizeConfig.blockSizeHorizontal * 3,
-                    bottom: SizeConfig.blockSizeHorizontal,
+                    bottom: SizeConfig.blockSizeHorizontal * 2,
                   ),
                   child: Text(
                     "Tickets Summary",
@@ -520,23 +517,30 @@ class _TambolaHomeState extends State<TambolaHome> {
                             horizontal: SizeConfig.blockSizeHorizontal * 3),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          color: Color(0xffB980F0),
+                          color: Colors.black,
                           image: DecorationImage(
-                            image: NetworkImage(
-                                "https://media.istockphoto.com/videos/confetti-particle-cg-animation-video-id884038624?b=1&k=6&m=884038624&s=640x640&h=rkbk3IABay83MtXOVJwOpr8-s5RY8t0H3KfT_7dDGZE="),
+                            image:
+                                NetworkImage(ticketSummaryData[index].bgAsset),
                             fit: BoxFit.cover,
                           ),
                         ),
                         child: Stack(
                           children: [
-                            Container(
-                              height: SizeConfig.screenWidth * 0.5,
-                              width: SizeConfig.screenWidth,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Colors.black.withOpacity(0.8),
-                              ),
-                            ),
+                            ticketSummaryData[index].title == "Congratulations"
+                                ? Lottie.asset(
+                                    "images/lottie/reward-claimed.json",
+                                    height: SizeConfig.screenWidth * 0.5,
+                                    width: SizeConfig.screenWidth,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Container(
+                                    height: SizeConfig.screenWidth * 0.5,
+                                    width: SizeConfig.screenWidth,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: Colors.black.withOpacity(0.8),
+                                    ),
+                                  ),
                             Padding(
                               padding: EdgeInsets.all(
                                   SizeConfig.blockSizeHorizontal * 3),
@@ -545,7 +549,7 @@ class _TambolaHomeState extends State<TambolaHome> {
                                   Padding(
                                     padding: EdgeInsets.symmetric(vertical: 8),
                                     child: Text(
-                                      cardTitle[index],
+                                      ticketSummaryData[index].title,
                                       style: TextStyle(
                                         fontSize: SizeConfig.largeTextSize,
                                         color: Colors.white,
@@ -557,11 +561,12 @@ class _TambolaHomeState extends State<TambolaHome> {
                                     child: ListView(
                                       shrinkWrap: true,
                                       children: List.generate(
-                                        ticketSummaryData[index].length,
-                                        (i) => ListTile(
+                                        ticketSummaryData[index].data.length,
+                                        (i) => InkWell(
                                           onTap: () {
                                             _tambolaBoardViews = [];
-                                            ticketSummaryData[index][i]
+                                            ticketSummaryData[index]
+                                                .data[i]
                                                 .boards
                                                 .forEach((board) {
                                               _tambolaBoardViews.add(
@@ -580,14 +585,34 @@ class _TambolaHomeState extends State<TambolaHome> {
                                               ),
                                             );
                                           },
-                                          title: Padding(
+                                          child: Padding(
                                             padding: EdgeInsets.symmetric(
-                                                vertical: 10),
-                                            child: Text(
-                                              ticketSummaryData[index][i].title,
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
+                                                horizontal: SizeConfig
+                                                        .blockSizeHorizontal *
+                                                    3,
+                                                vertical: SizeConfig
+                                                        .blockSizeHorizontal *
+                                                    2.5),
+                                            child: Row(
+                                              children: [
+                                                CircleAvatar(
+                                                  radius: 3,
+                                                  backgroundColor: Colors.white,
+                                                ),
+                                                SizedBox(width: 10),
+                                                Expanded(
+                                                  child: Text(
+                                                    ticketSummaryData[index]
+                                                        .data[i]
+                                                        .title,
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: SizeConfig
+                                                          .mediumTextSize,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
@@ -743,8 +768,9 @@ class _TambolaHomeState extends State<TambolaHome> {
     }
   }
 
-  List<List<BestTambolaTicketsSumm>> _getTambolaTicketsSummary() {
-    List<List<BestTambolaTicketsSumm>> summary = [];
+  List<TicketSummaryCardModel> _getTambolaTicketsSummary() {
+    List<TicketSummaryCardModel> summary = [];
+
     List<TambolaBoard> bestCornerBoard = [];
     List<TambolaBoard> bestTopRowBoard = [];
     List<TambolaBoard> bestMiddleRowBoard = [];
@@ -755,7 +781,6 @@ class _TambolaHomeState extends State<TambolaHome> {
     List<TambolaBoard> completedBottomRowBoard = [];
     List<TambolaBoard> completedMiddleRowBoard = [];
     List<TambolaBoard> completedFullHouseBoard = [];
-
     List<BestTambolaTicketsSumm> completedBoardCardItems = [];
     List<BestTambolaTicketsSumm> bestChancesBoardCardItems = [];
     List<BestTambolaTicketsSumm> fullHouseBoardCardItems = [];
@@ -858,79 +883,106 @@ class _TambolaHomeState extends State<TambolaHome> {
     if (completedFullHouseBoard.isNotEmpty)
       completedBoardCardItems.add(BestTambolaTicketsSumm(
           boards: completedFullHouseBoard,
-          title: getBoardTileTitle(
-              "Full House", completedFullHouseBoard.length, false)));
+          title: getBoardTileTitle("Full House", completedFullHouseBoard.length,
+              false, completedFullHouseBoard[0])));
     if (completedTopRowBoard.isNotEmpty)
       completedBoardCardItems.add(BestTambolaTicketsSumm(
           boards: completedTopRowBoard,
-          title: getBoardTileTitle(
-              "Top Row", completedTopRowBoard.length, false)));
+          title: getBoardTileTitle("Top Row", completedTopRowBoard.length,
+              false, completedTopRowBoard[0])));
     if (completedMiddleRowBoard.isNotEmpty)
       completedBoardCardItems.add(BestTambolaTicketsSumm(
           boards: completedMiddleRowBoard,
-          title: getBoardTileTitle(
-              "Middle Row", completedMiddleRowBoard.length, false)));
+          title: getBoardTileTitle("Middle Row", completedMiddleRowBoard.length,
+              false, completedMiddleRowBoard[0])));
     if (completedBottomRowBoard.isNotEmpty)
       completedBoardCardItems.add(BestTambolaTicketsSumm(
           boards: completedBottomRowBoard,
-          title: getBoardTileTitle(
-              "Bottom Row", completedBottomRowBoard.length, false)));
+          title: getBoardTileTitle("Bottom Row", completedBottomRowBoard.length,
+              false, completedBottomRowBoard[0])));
     if (completedCornersBoard.isNotEmpty)
       completedBoardCardItems.add(BestTambolaTicketsSumm(
           boards: completedCornersBoard,
-          title: getBoardTileTitle(
-              "Corners", completedCornersBoard.length, false)));
+          title: getBoardTileTitle("Corners", completedCornersBoard.length,
+              false, completedCornersBoard[0])));
 
     // ADDING BEST CHANCES CATEGORIES TO FORM A LIST OF TILE DATA FOR THE CARD
     if (bestCornerBoard.isNotEmpty)
       bestChancesBoardCardItems.add(BestTambolaTicketsSumm(
           boards: bestCornerBoard,
-          title: getBoardTileTitle("Corners", bestCornerBoard.length, true)));
+          title: getBoardTileTitle(
+              "Corners", bestCornerBoard.length, true, bestCornerBoard[0])));
     if (bestTopRowBoard.isNotEmpty)
       bestChancesBoardCardItems.add(BestTambolaTicketsSumm(
           boards: bestTopRowBoard,
-          title: getBoardTileTitle("Top Row", bestTopRowBoard.length, true)));
+          title: getBoardTileTitle(
+              "Top Row", bestTopRowBoard.length, true, bestTopRowBoard[0])));
     if (bestMiddleRowBoard.isNotEmpty)
       bestChancesBoardCardItems.add(BestTambolaTicketsSumm(
           boards: bestMiddleRowBoard,
-          title: getBoardTileTitle(
-              "Middle Row", bestMiddleRowBoard.length, true)));
+          title: getBoardTileTitle("Middle Row", bestMiddleRowBoard.length,
+              true, bestMiddleRowBoard[0])));
     if (bestBottomRowBoard.isNotEmpty)
       bestChancesBoardCardItems.add(BestTambolaTicketsSumm(
           boards: bestBottomRowBoard,
-          title: getBoardTileTitle(
-              "Bottom Row", bestBottomRowBoard.length, true)));
+          title: getBoardTileTitle("Bottom Row", bestBottomRowBoard.length,
+              true, bestBottomRowBoard[0])));
 
     // ADDING THE BEST CHANCES OFF FULL HOUSE -SINGLE ITEM
     if (bestFullHouseBoard.isNotEmpty)
       fullHouseBoardCardItems.add(BestTambolaTicketsSumm(
           boards: bestFullHouseBoard,
-          title: getBoardTileTitle(
-              "Full House", bestFullHouseBoard.length, true)));
+          title: getBoardTileTitle("Full House", bestFullHouseBoard.length,
+              true, bestFullHouseBoard[0])));
+
+    //CREATING CARDS FOR EACH CARD ITEMS
+    if (fullHouseBoardCardItems.isNotEmpty)
+      summary.add(TicketSummaryCardModel(
+          data: fullHouseBoardCardItems,
+          title: "Jackpot is near",
+          bgAsset:
+              "https://img.freepik.com/free-vector/realistic-casino-background_52683-7264.jpg?size=626&ext=jpg&uid=P35674521"));
 
     if (completedBoardCardItems.isNotEmpty)
-      summary.add(completedBoardCardItems);
+      summary.add(TicketSummaryCardModel(
+          data: completedBoardCardItems,
+          title: "Congratulations",
+          bgAsset:
+              "dsfhttps://media.istockphoto.com/videos/confetti-particle-cg-animation-video-id884038624?b=1&k=6&m=884038624&s=640x640&h=rkbk3IABay83MtXOVJwOpr8-s5RY8t0H3KfT_7dDGZE="));
     if (bestChancesBoardCardItems.isNotEmpty)
-      summary.add(bestChancesBoardCardItems);
-    if (fullHouseBoardCardItems.isNotEmpty)
-      summary.add(fullHouseBoardCardItems);
+      summary.add(TicketSummaryCardModel(
+          data: bestChancesBoardCardItems,
+          title: "very close to win",
+          bgAsset:
+              "https://img.freepik.com/free-photo/close-up-strong-male-hand-holding-gold-medal-sporting-achievement_116124-44.jpg?size=626&ext=jpg&uid=P35674521"));
     _isTicketSummaryLoaded = true;
     return summary;
   }
 
-  getBoardTileTitle(String category, int length, bool bestCards) {
-    String singplu = length > 1 ? "s" : "";
+  getBoardTileTitle(
+      String category, int length, bool bestCards, TambolaBoard firstCard) {
     String suffix = length > 1 ? "view all tickets" : "see";
     String output;
     if (bestCards) {
-      if (category == "Corners")
-        output =
-            "$length of your ticket$singplu needs only 1 number to complete";
+      if (category == "Corners") {
+        if (length == 1)
+          output =
+              "Ticket #${firstCard.getTicketNumber()} is just 1 number away from";
+        else
+          output = "$length of your tickets needs only 1 number to complete";
+      } else {
+        if (length == 1)
+          output =
+              "Ticket #${firstCard.getTicketNumber()} is just 1 number away from";
+        else
+          output = "$length of your tickets needs only 2 numbers to complete";
+      }
+    } else {
+      if (length == 1)
+        output = "Ticket #${firstCard.getTicketNumber()} completed";
       else
-        output =
-            "$length of your ticket$singplu needs only 2 or less numbers to complete";
-    } else
-      output = "$length of your ticket$singplu completed";
+        output = "$length of your tickets completed";
+    }
 
     return output + " $category. Tap to $suffix";
   }
@@ -1075,7 +1127,7 @@ class GameAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: kToolbarHeight * 1.2,
+      height: SizeConfig.screenWidth * 0.16,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1089,7 +1141,7 @@ class GameAppBar extends StatelessWidget {
           ),
           Image.asset(
             "images/fello-dark.png",
-            height: kToolbarHeight * 0.6,
+            height: SizeConfig.screenWidth * 0.1,
           ),
           IconButton(
             onPressed: () => delegate.appState.currentAction = PageAction(
@@ -1179,9 +1231,9 @@ class CurrentPicks extends StatelessWidget {
                           .toList(),
                     ),
                   ),
-            //Spacer(),
+            Spacer(),
             Padding(
-              padding: EdgeInsets.only(top: SizeConfig.blockSizeHorizontal * 5),
+              padding: EdgeInsets.only(top: SizeConfig.blockSizeHorizontal * 2),
               child: Text(
                 "Tap to see all picks of this week",
                 style: TextStyle(
@@ -1498,6 +1550,14 @@ class PrizeSection extends StatelessWidget {
       ),
     );
   }
+}
+
+class TicketSummaryCardModel {
+  final List<BestTambolaTicketsSumm> data;
+  final String title;
+  final String bgAsset;
+
+  TicketSummaryCardModel({this.bgAsset, this.data, this.title});
 }
 
 class BestTambolaTicketsSumm {
