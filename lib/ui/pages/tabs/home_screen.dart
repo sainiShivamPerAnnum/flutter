@@ -254,7 +254,7 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 5),
                 FittedBox(
                   child: Text(
-                    baseProvider.myUser.name,
+                    baseProvider.myUser?.name??'NA',
                     maxLines: 1,
                     textAlign: TextAlign.start,
                     style: TextStyle(
