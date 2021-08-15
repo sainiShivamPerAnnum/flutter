@@ -466,6 +466,9 @@ class BaseUtil extends ChangeNotifier {
       log.debug('Cleared local cache');
       _appState.setCurrentTabIndex = 0;
 
+      //remove fcm token from remote
+      await _dbModel.updateClientToken(myUser, '');
+
       //TODO better fix required
       ///IMP: When a user signs out and attempts
       /// to sign in again without closing the app,

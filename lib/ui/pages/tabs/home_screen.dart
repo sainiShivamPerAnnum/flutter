@@ -183,7 +183,7 @@ class _HomePageState extends State<HomePage> {
           HapticFeedback.vibrate();
           // delegate.parseRoute(Uri.parse(cards[i].actionUri));
 
-          /////////test code
+          ///TODO test code
           if (cards[i].id == Constants.LEARN_FEED_CARD_ID) {
             delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
           } else {
