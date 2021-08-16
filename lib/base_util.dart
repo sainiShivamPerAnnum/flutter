@@ -55,6 +55,7 @@ class BaseUtil extends ChangeNotifier {
   List<FeedCard> feedCards;
   int _dailyPickCount;
   String userRegdPan;
+  List<int> todaysPicks;
 
   ///Tambola global objects
   DailyPick weeklyDigits;
@@ -414,6 +415,42 @@ class BaseUtil extends ChangeNotifier {
         )
       ],
     )..show(context);
+  }
+
+  Future<bool> getDrawaStatus() async {
+    // CHECKING IF THE PICK ARE DRAWN OR NOT
+    if (!weeklyDrawFetched || weeklyDigits == null) await fetchWeeklyPicks();
+    if (weeklyDrawFetched && weeklyDigits != null)
+      switch (DateTime.now().weekday) {
+        case 1:
+          todaysPicks = weeklyDigits.mon;
+          break;
+        case 2:
+          todaysPicks = weeklyDigits.tue;
+          break;
+        case 3:
+          todaysPicks = weeklyDigits.wed;
+          break;
+        case 4:
+          todaysPicks = weeklyDigits.thu;
+          break;
+        case 5:
+          todaysPicks = weeklyDigits.fri;
+          break;
+        case 6:
+          todaysPicks = weeklyDigits.sat;
+          break;
+        case 7:
+          todaysPicks = weeklyDigits.sun;
+          break;
+      }
+    //CHECKING FOR THE FIRST TIME OPENING OF TAMBOLA AFTER THE PICKS ARE DRAWN FOR THIS PARTICULAR DAY
+    notifyListeners();
+    if (todaysPicks != null &&
+        DateTime.now().weekday != await _lModel.getDailyPickAnimLastDay())
+      return true;
+
+    return false;
   }
 
   showRefreshIndicator(BuildContext context) {

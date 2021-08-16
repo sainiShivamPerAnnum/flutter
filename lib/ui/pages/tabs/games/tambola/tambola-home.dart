@@ -642,11 +642,11 @@ class _TambolaHomeState extends State<TambolaHome> {
       return false;
     }
     DateTime date = DateTime.now();
-    if (date.weekday == DateTime.monday) {
+    if (date.weekday == DateTime.sunday) {
       if (baseProvider.weeklyDigits.toList().length ==
-          1 * baseProvider.dailyPicksCount) {
+          7 * baseProvider.dailyPicksCount) {
         localDBModel.isTambolaResultProcessingDone().then((flag) {
-          if (flag == 1) {
+          if (flag == 0) {
             log.debug('Ticket results not yet displayed. Displaying: ');
             _examineTicketsForWins();
 

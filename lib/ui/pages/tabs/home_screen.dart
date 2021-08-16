@@ -10,6 +10,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_daily_draw_timer.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -391,7 +392,7 @@ class HomeCard extends StatelessWidget {
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
+                                  horizontal: 16, vertical: 12),
                               decoration: BoxDecoration(
                                 border: Border.all(
                                   width: 2,
@@ -419,8 +420,8 @@ class HomeCard extends StatelessWidget {
                     : GestureDetector(
                         onTap: onPressed,
                         child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
                           decoration: BoxDecoration(
                             border: Border.all(
                               width: 2,
@@ -454,8 +455,12 @@ class HomeCard extends StatelessWidget {
 }
 
 class TambolaHomeCard extends StatelessWidget {
+  BaseUtil baseProvider;
+  LocalDBModel _localDBModel;
   @override
   Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context);
+    _localDBModel = Provider.of<LocalDBModel>(context);
     return Container(
       margin: EdgeInsets.only(
           bottom: 20,
@@ -512,7 +517,7 @@ class TambolaHomeCard extends StatelessWidget {
                       fontSize: SizeConfig.cardTitleTextSize),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 Text(
                   "Join in for a round of tambola!",
@@ -528,15 +533,31 @@ class TambolaHomeCard extends StatelessWidget {
                       fontWeight: FontWeight.w100),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 30,
                 ),
                 DailyPicksTimer(
                   alignment: MainAxisAlignment.start,
                   bgColor: Color(0xff50445B).withOpacity(0.8),
                   replacementWidget: GestureDetector(
-                    onTap: () {
-                      delegate.appState.setCurrentTabIndex = 1;
-                      delegate.appState.setCurrentGameTabIndex = 1;
+                    onTap: () async {
+                      if (await baseProvider.getDrawaStatus()) {
+                        await _localDBModel
+                            .saveDailyPicksAnimStatus(DateTime.now().weekday)
+                            .then(
+                              (value) => print(
+                                  "Daily Picks Draw Animation Save Status Code: $value"),
+                            );
+                        delegate.appState.currentAction = PageAction(
+                          state: PageState.addWidget,
+                          page: TPickDrawPageConfig,
+                          widget: PicksDraw(
+                            picks: baseProvider.todaysPicks ??
+                                List.filled(baseProvider.dailyPicksCount, -1),
+                          ),
+                        );
+                      } else
+                        delegate.appState.currentAction = PageAction(
+                            state: PageState.addPage, page: THomePageConfig);
                     },
                     child: Container(
                       padding:
@@ -562,6 +583,22 @@ class TambolaHomeCard extends StatelessWidget {
                             color: Colors.white,
                             fontSize: SizeConfig.mediumTextSize * 1.3),
                       ),
+                    ),
+                  ),
+                  additionalWidget: Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      "Today's draws coming in",
+                      style: TextStyle(
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              color: Color(0xff343A40),
+                              offset: Offset(1, 1),
+                            ),
+                          ],
+                          fontSize: SizeConfig.mediumTextSize,
+                          fontWeight: FontWeight.w500),
                     ),
                   ),
                 )

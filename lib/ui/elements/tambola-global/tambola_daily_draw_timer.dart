@@ -9,9 +9,13 @@ class DailyPicksTimer extends StatefulWidget {
   final Widget replacementWidget;
   final Color bgColor;
   final MainAxisAlignment alignment;
+  final Widget additionalWidget;
 
   DailyPicksTimer(
-      {@required this.replacementWidget, this.bgColor, this.alignment});
+      {@required this.replacementWidget,
+      this.bgColor,
+      this.alignment,
+      this.additionalWidget});
   @override
   _DailyPicksTimerState createState() => _DailyPicksTimerState();
 }
@@ -79,15 +83,21 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
       final hours = twoDigits(duration.inHours);
       final minutes = twoDigits(duration.inMinutes.remainder(60));
       final seconds = twoDigits(duration.inSeconds.remainder(60));
-      return Row(
-          mainAxisAlignment: widget.alignment ?? MainAxisAlignment.center,
-          children: [
-            buildTimeCard(time: hours),
-            buildDivider(),
-            buildTimeCard(time: minutes),
-            buildDivider(),
-            buildTimeCard(time: seconds),
-          ]);
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          widget.additionalWidget ?? SizedBox(),
+          Row(
+              mainAxisAlignment: widget.alignment ?? MainAxisAlignment.center,
+              children: [
+                buildTimeCard(time: hours),
+                buildDivider(),
+                buildTimeCard(time: minutes),
+                buildDivider(),
+                buildTimeCard(time: seconds),
+              ]),
+        ],
+      );
     }
     return widget.replacementWidget;
   }
