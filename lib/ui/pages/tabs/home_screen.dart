@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   DBModel dbProvider;
   AppState appState;
   bool _isInit = false;
+
   Future<void> getProfilePicUrl() async {
     if (baseProvider == null || baseProvider.myUser == null) return;
     baseProvider.myUserDpUrl =
@@ -172,36 +173,53 @@ class _HomePageState extends State<HomePage> {
     ];
 
     for (int i = 0; i < cards.length; i++) {
-      _widget.add(HomeCard(
-        title: cards[i].title,
-        asset: cards[i].assetLocalLink,
-        subtitle: cards[i].subtitle,
-        buttonText: cards[i].btnText,
-        isHighlighted: (baseProvider.show_home_tutorial &&
-            cards[i].id == Constants.LEARN_FEED_CARD_ID),
-        onPressed: () async {
-          HapticFeedback.vibrate();
-          // delegate.parseRoute(Uri.parse(cards[i].actionUri));
-
-          ///TODO test code
-          if (cards[i].id == Constants.LEARN_FEED_CARD_ID) {
-            delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
-          } else {
-            delegate.parseRoute(Uri.parse(cards[i].actionUri));
-          }
-        },
-        gradient: [
-          Color(cards[i].clrCodeA),
-          Color(cards[i].clrCodeB),
-        ],
-        // "0/d-guide"
-        //   "3"
-        //   "1/d-gamePoll"
-        //   "2/augDetails/editProfile/d-aboutus"
-      ));
+      _widget.add(_buildFeedCard(cards[i]));
     }
 
     return _widget;
+  }
+
+  Widget _buildFeedCard(FeedCard card) {
+    if (card == null) return Container();
+    switch (card.type) {
+      case Constants.LEARN_FEED_CARD_TYPE:
+        return HomeCard(
+          title: card.title,
+          asset: card.assetLocalLink,
+          subtitle: card.subtitle,
+          buttonText: card.btnText,
+          isHighlighted: (baseProvider.show_home_tutorial),
+          onPressed: () async {
+            HapticFeedback.vibrate();
+            delegate.parseRoute(Uri.parse(card.actionUri));
+          },
+          gradient: [
+            Color(card.clrCodeA),
+            Color(card.clrCodeB),
+          ],
+        );
+      case Constants.TAMBOLA_FEED_CARD_TYPE:
+        return Container();
+      case Constants.PRIZE_FEED_CARD_TYPE:
+        return Container();
+      case Constants.DEFAULT_FEED_CARD_TYPE:
+      default:
+        return HomeCard(
+          title: card.title,
+          asset: card.assetLocalLink,
+          subtitle: card.subtitle,
+          buttonText: card.btnText,
+          isHighlighted: false,
+          onPressed: () async {
+            HapticFeedback.vibrate();
+            delegate.parseRoute(Uri.parse(card.actionUri));
+          },
+          gradient: [
+            Color(card.clrCodeA),
+            Color(card.clrCodeB),
+          ],
+        );
+    }
   }
 
   Widget _buildProfileRow() {
@@ -254,7 +272,7 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 5),
                 FittedBox(
                   child: Text(
-                    baseProvider.myUser?.name??'NA',
+                    baseProvider.myUser?.name ?? 'NA',
                     maxLines: 1,
                     textAlign: TextAlign.start,
                     style: TextStyle(

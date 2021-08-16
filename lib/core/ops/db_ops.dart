@@ -1156,8 +1156,10 @@ class DBModel extends ChangeNotifier {
           Map<String, dynamic> _doc = documentSnapshot.data();
           if (documentSnapshot != null &&
               documentSnapshot.exists && _doc != null &&
-              _doc.length > 0)
-            _cards.add(FeedCard.fromMap(documentSnapshot.data()));
+              _doc.length > 0) {
+            FeedCard _card = FeedCard.fromMap(documentSnapshot.data());
+            if (_card != null && _card.isHidden != null && !_card.isHidden) _cards.add(_card);
+          }
         }
       }
     } catch (e) {

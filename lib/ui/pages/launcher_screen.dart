@@ -125,7 +125,6 @@ class LogoFadeIn extends State<SplashScreen> {
   }
 
   Future<bool> checkBreakingUpdate() async {
-    return true;
     String currentBuild = BaseUtil.packageInfo.buildNumber;
     print('Current Build $currentBuild');
     String minBuild = BaseRemoteConfig.remoteConfig

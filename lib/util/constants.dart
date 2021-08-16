@@ -15,7 +15,7 @@ class Constants {
   static final String COLN_CREDENTIALS = "credentials";
   static final String COLN_POLLS = "polls";
   static final String COLN_LEADERBOARD = "leaderboard";
-  static final String COLN_HOMECARDS = "feed";
+  static final String COLN_HOMECARDS = "homefeed";
   static final String COLN_EMAILOTPREQUESTS = "emailotprequests";
 
   //Sub-collections
@@ -45,7 +45,12 @@ class Constants {
 
   static const String POLL_NEXTGAME_ID = "nextgame";
 
-  static const int LEARN_FEED_CARD_ID = 108;
+  //home feed
+  static const String LEARN_FEED_CARD_TYPE = 'L';
+  static const String PRIZE_FEED_CARD_TYPE = 'P';
+  static const String TAMBOLA_FEED_CARD_TYPE = 'T';
+  static const String DEFAULT_FEED_CARD_TYPE = 'T';
+
 
   static const int REFERRAL_TICKET_BONUS = 10;
   static const int REFERRAL_AMT_BONUS = 25;

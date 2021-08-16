@@ -7,12 +7,27 @@ class FeedCard {
   final String _subtitle;
   final String _btnText;
   final String _assetLocalLink;
+  final String _assetRemoteLink;
   final int _clrCodeA;
   final int _clrCodeB;
   final String _actionUri;
+  final bool _isHidden;
+  final String _type;
+  final Map<String, dynamic> _dataMap;
 
-  FeedCard(this._id, this._title, this._subtitle, this._btnText,
-      this._assetLocalLink, this._actionUri, this._clrCodeA, this._clrCodeB);
+  FeedCard(
+      this._id,
+      this._title,
+      this._subtitle,
+      this._btnText,
+      this._assetLocalLink,
+      this._assetRemoteLink,
+      this._actionUri,
+      this._clrCodeA,
+      this._clrCodeB,
+      this._isHidden,
+      this._type,
+      this._dataMap);
 
   FeedCard.fromMap(Map<String, dynamic> cMap)
       : this(
@@ -21,9 +36,13 @@ class FeedCard {
             cMap['subtitle'],
             cMap['btnText'],
             cMap['assetLocalLink'],
+            cMap['assetRemoteLink'],
             cMap['actionUri'],
             cMap['clrCodeA'],
-            cMap['clrCodeB']);
+            cMap['clrCodeB'],
+            cMap['isHidden'],
+            cMap['type'],
+            cMap['dataMap']);
 
   String get subtitle => _subtitle;
 
@@ -40,4 +59,10 @@ class FeedCard {
   int get id => _id;
 
   String get actionUri => _actionUri;
+
+  String get type => _type;
+
+  bool get isHidden => _isHidden;
+
+  String get assetRemoteLink => _assetRemoteLink;
 }
