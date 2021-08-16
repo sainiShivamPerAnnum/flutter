@@ -79,7 +79,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
         padding: EdgeInsets.only(top: SizeConfig.screenHeight * 0.03),
         width: SizeConfig.screenWidth,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
             gradient: new LinearGradient(
               colors: [
                 Color(0xff1488CC),

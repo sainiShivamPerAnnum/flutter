@@ -1,7 +1,9 @@
+import 'package:felloapp/main.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly-results-scenes/prize_loss.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly-results-scenes/prize_partial_win.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly-results-scenes/prize_win.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly-results-scenes/processing.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 
 class WeeklyResult extends StatefulWidget {
@@ -27,12 +29,14 @@ class _WeeklyResultState extends State<WeeklyResult> {
   @override
   void didChangeDependencies() {
     Future.delayed(Duration(seconds: 3), () {
-      if (!widget.isEligible && widget.winningsmap.isNotEmpty)
-        _pageController.jumpToPage(3);
-      else if (widget.isEligible && widget.winningsmap.isNotEmpty)
-        _pageController.jumpToPage(2);
-      else
-        _pageController.jumpToPage(1);
+      if (mounted) {
+        if (!widget.isEligible && widget.winningsmap.isNotEmpty)
+          _pageController.jumpToPage(3);
+        else if (widget.isEligible && widget.winningsmap.isNotEmpty)
+          _pageController.jumpToPage(2);
+        else
+          _pageController.jumpToPage(1);
+      }
     });
     super.didChangeDependencies();
   }
@@ -40,6 +44,24 @@ class _WeeklyResultState extends State<WeeklyResult> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          leading: SizedBox(),
+          elevation: 0,
+          centerTitle: true,
+          backgroundColor: Color(0xffF5DFC3),
+          title: Image.asset(
+            "images/fello_logo.png",
+            height: kToolbarHeight * 0.6,
+          ),
+          actions: [
+            IconButton(
+              onPressed: () => backButtonDispatcher.didPopRoute(),
+              icon: Icon(
+                Icons.close,
+                color: Color(0xff272727),
+              ),
+            ),
+          ]),
       body: PageView(
         controller: _pageController,
         children: [

@@ -10,6 +10,7 @@ class SizeConfig {
   static double mediumTextSize;
   static double largeTextSize;
   static double cardTitleTextSize;
+  static double cardBorderRadius;
   static BorderRadius homeViewBorder;
   static bool isGamefirstTime;
 
@@ -23,6 +24,7 @@ class SizeConfig {
     mediumTextSize = blockSizeHorizontal * 3.2;
     largeTextSize = blockSizeHorizontal * 5;
     cardTitleTextSize = blockSizeHorizontal * 7;
+    cardBorderRadius = 12;
     isGamefirstTime = true;
 
     homeViewBorder = BorderRadius.only(

@@ -273,7 +273,7 @@ class IdeaSection extends StatelessWidget {
     final baseProvider = Provider.of<BaseUtil>(context, listen: false);
     final dbProvider = Provider.of<DBModel>(context, listen: false);
     return Container(
-      height: SizeConfig.screenHeight * 0.2,
+      height: SizeConfig.screenHeight * 0.16,
       width: SizeConfig.screenWidth,
       child: ListView(
         shrinkWrap: true,
@@ -371,6 +371,8 @@ class _TicketCountState extends State<TicketCount>
   Animation<double> _animation;
   double _latestBegin;
   double _latestEnd;
+  double tagWidth = 0, tagHeight = 0, tagOpacity = 0;
+  bool showTag = false;
 
   @override
   void dispose() {
@@ -381,10 +383,53 @@ class _TicketCountState extends State<TicketCount>
   @override
   void initState() {
     super.initState();
+
     _controller =
         AnimationController(duration: Duration(seconds: 2), vsync: this);
     _latestBegin = 0;
     _latestEnd = widget.totalCount + .0;
+    if (AppState.isFirstTime) animateTag();
+  }
+
+  animateTag() {
+    showTag = true;
+    Future.delayed(Duration(seconds: 2), () {
+      if (mounted)
+        setState(() {
+          tagWidth = SizeConfig.screenWidth / 2;
+          tagHeight = SizeConfig.cardTitleTextSize * 1.2;
+        });
+    }).then((_) {
+      Future.delayed(Duration(seconds: 2), () {
+        if (mounted)
+          setState(() {
+            tagOpacity = 1;
+          });
+      }).then((_) {
+        Future.delayed(Duration(seconds: 2), () {
+          if (mounted)
+            setState(() {
+              tagOpacity = 0;
+            });
+        }).then((_) {
+          Future.delayed(Duration(seconds: 1), () {
+            if (mounted)
+              setState(() {
+                tagWidth = 0;
+                tagHeight = 0;
+              });
+            AppState.isFirstTime = false;
+          }).then((value) {
+            Future.delayed(Duration(seconds: 2), () {
+              if (mounted)
+                setState(() {
+                  showTag = false;
+                });
+            });
+          });
+        });
+      });
+    });
   }
 
   @override
@@ -425,6 +470,38 @@ class _TicketCountState extends State<TicketCount>
             style: TextStyle(
                 color: Colors.white, fontSize: SizeConfig.mediumTextSize),
           ),
+          // showTag
+          //     ? Container(
+          // height: SizeConfig.cardTitleTextSize * 1.5,
+          //child:
+          AnimatedContainer(
+            duration: Duration(seconds: 2),
+            margin: EdgeInsets.only(top: 10, left: 50, right: 50),
+            width: tagWidth,
+            height: tagHeight,
+            curve: Curves.bounceOut,
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+              color: Colors.amber[100],
+            ),
+            alignment: Alignment.center,
+            child: AnimatedOpacity(
+              opacity: tagOpacity,
+              duration: Duration(seconds: 1),
+              child: Text(
+                "₹ 100 = 1 Ticket",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: SizeConfig.mediumTextSize,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 2,
+                ),
+              ),
+            ),
+          ),
+          //   )
+          // : SizedBox(),
         ],
       ),
     );
@@ -448,7 +525,7 @@ class GameCard extends StatelessWidget {
           ),
           padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(8),
               gradient: new LinearGradient(
                 colors: gradient,
                 begin: Alignment.bottomLeft,
@@ -467,7 +544,7 @@ class GameCard extends StatelessWidget {
                 ),
               ]),
           width: SizeConfig.screenWidth * 0.8,
-          height: SizeConfig.screenHeight * 0.16,
+          height: SizeConfig.screenHeight * 0.14,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,

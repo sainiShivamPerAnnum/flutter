@@ -37,33 +37,14 @@ class _PrizePWinState extends State<PrizePWin> {
           margin: EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              SizedBox(
-                height: kToolbarHeight,
-                width: SizeConfig.screenWidth,
-                child: Center(
-                  child: Image.asset(
-                    "images/fello_logo.png",
-                    height: kToolbarHeight * 0.8,
-                  ),
-                ),
-              ),
               Spacer(
-                flex: 1,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "YOU ARE A",
-                  style: GoogleFonts.montserrat(
-                      fontSize: SizeConfig.mediumTextSize, letterSpacing: 2),
-                ),
+                flex: 3,
               ),
               Text(
-                "Winner",
+                "CONGRATULATIONS",
                 style: TextStyle(
-                    fontFamily: "Cucciolo",
                     color: Color(0xff272727),
-                    fontSize: SizeConfig.cardTitleTextSize * 1.6,
+                    fontSize: SizeConfig.cardTitleTextSize,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 2,
                     shadows: [
@@ -74,6 +55,7 @@ class _PrizePWinState extends State<PrizePWin> {
                           spreadRadius: 5)
                     ]),
               ),
+              Spacer(),
               Container(
                 height: SizeConfig.screenHeight / 2.5,
                 width: SizeConfig.screenWidth,
@@ -100,6 +82,7 @@ class _PrizePWinState extends State<PrizePWin> {
                   ],
                 ),
               ),
+              Spacer(),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: Text(
@@ -107,10 +90,19 @@ class _PrizePWinState extends State<PrizePWin> {
                   textAlign: TextAlign.center,
                   style: GoogleFonts.montserrat(
                     color: Color(0xffFB743E),
-                    fontSize: SizeConfig.mediumTextSize,
+                    fontSize: SizeConfig.mediumTextSize * 1.2,
                     height: 1.5,
                     fontWeight: FontWeight.w500,
                   ),
+                ),
+              ),
+              Spacer(flex: 3),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  "GEAR UP FOR NEXT WEEK",
+                  style: GoogleFonts.montserrat(
+                      fontSize: SizeConfig.mediumTextSize, letterSpacing: 2),
                 ),
               ),
               ElevatedButton(
@@ -130,36 +122,14 @@ class _PrizePWinState extends State<PrizePWin> {
                     "Invest Now!",
                     style: GoogleFonts.montserrat(
                       color: Colors.white,
-                      fontSize: 20,
-                      letterSpacing: 0,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  backButtonDispatcher.didPopRoute();
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Color(0xff272727),
-                ),
-                child: Container(
-                  height: 50,
-                  width: SizeConfig.screenWidth / 2,
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Back to Game",
-                    style: GoogleFonts.montserrat(
-                      color: Colors.white,
-                      fontSize: 20,
+                      fontSize: SizeConfig.mediumTextSize * 1.2,
                       letterSpacing: 0,
                     ),
                   ),
                 ),
               ),
               Spacer(
-                flex: 2,
+                flex: 3,
               )
             ],
           ),

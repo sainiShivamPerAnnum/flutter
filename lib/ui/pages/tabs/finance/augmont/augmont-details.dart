@@ -122,16 +122,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
         ),
         actions: [IconButton(onPressed: () {}, icon: SizedBox())],
       ),
-      // body: NestedScrollView(
-      //   headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-      //     return <Widget>[
-      //       FundAppBar(
-      //           logo: "images/augmont-share.png",
-      //           title: "Augmont Gold",
-      //           backgroundImage:
-      //               "https://www.augmont.in/wp-content/uploads/2017/04/augmont-dia-470x480.png"),
-      //     ];
-      //   },
+
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -147,6 +138,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                   showBullet: true,
                 ),
                 Container(
+                    margin: EdgeInsets.only(top: kToolbarHeight / 2),
                     width: SizeConfig.screenWidth,
                     padding: EdgeInsets.symmetric(vertical: 20),
                     child: LineChartWidget()),

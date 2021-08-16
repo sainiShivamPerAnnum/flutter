@@ -13,6 +13,7 @@ import 'package:felloapp/core/service/tambola_generation_service.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/elements/tambola-global/prize_section.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_daily_draw_timer.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/elements/tambola-global/weekly_picks.dart';
@@ -27,6 +28,7 @@ import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,7 +45,7 @@ class TambolaHome extends StatefulWidget {
 
 class _TambolaHomeState extends State<TambolaHome> {
   // HEIGHT CALCULATED ACCORDING TO THE ITEMS PRESENT IN THE CONTAINER
-  double normalTopCardHeight = SizeConfig.screenWidth * 0.8;
+  double normalTopCardHeight = SizeConfig.screenWidth * 0.76;
   double expandedTopCardHeight =
       (SizeConfig.smallTextSize + SizeConfig.screenWidth * 0.1) * 8 +
           SizeConfig.cardTitleTextSize * 2.4 +
@@ -221,7 +223,8 @@ class _TambolaHomeState extends State<TambolaHome> {
                       image: AssetImage("images/Tambola/tranbg.png"),
                       fit: BoxFit.cover,
                     ),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius:
+                        BorderRadius.circular(SizeConfig.cardBorderRadius),
                     gradient: LinearGradient(
                       colors: [Color(0xff34C3A7), Color(0xff4AB474)],
                       begin: Alignment.bottomRight,
@@ -235,25 +238,34 @@ class _TambolaHomeState extends State<TambolaHome> {
                       !isShowingAllPicks
                           ? GameTitle(titleOpacity: titleOpacity)
                           : SizedBox(),
-                      InkWell(
-                        onTap: () =>
-                            delegate.appState.currentAction = PageAction(
-                          state: PageState.addWidget,
-                          page: TPickDrawPageConfig,
-                          widget: PicksDraw(
-                            picks:
-                                List.filled(baseProvider.dailyPicksCount, -1),
-                          ),
-                        ),
-                        child: Text(
-                          !isShowingAllPicks ? "Today's Picks" : "Weekly Picks",
-                          style: GoogleFonts.montserrat(
-                            color: Colors.white,
-                            fontSize: SizeConfig.cardTitleTextSize,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
+                      isShowingAllPicks
+                          ? Text(
+                              "Weekly Picks",
+                              style: GoogleFonts.montserrat(
+                                color: Colors.white,
+                                fontSize: SizeConfig.cardTitleTextSize,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )
+                          : (_getDailyPickData(baseProvider.weeklyDigits,
+                                      DateTime.now().weekday)[0] >
+                                  0
+                              ? Text(
+                                  "Today's Picks",
+                                  style: GoogleFonts.montserrat(
+                                    color: Colors.white,
+                                    fontSize: SizeConfig.cardTitleTextSize,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                )
+                              : Text(
+                                  "Today's picks will be drawn at 6 pm.",
+                                  style: GoogleFonts.montserrat(
+                                    color: Colors.white,
+                                    fontSize: SizeConfig.mediumTextSize,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                )),
                       !isShowingAllPicks
                           ? CurrentPicks(
                               // dailyPickTextList: dailyPickTextList,
@@ -337,7 +349,7 @@ class _TambolaHomeState extends State<TambolaHome> {
                         state: PageState.addWidget,
                         page: TWeeklyResultPageConfig,
                         widget: WeeklyResult(
-                          winningsmap: {},
+                          winningsmap: {"#12345": 1, "#34325": 4},
                           isEligible: false,
                         ),
                       ),
@@ -464,10 +476,65 @@ class _TambolaHomeState extends State<TambolaHome> {
       if (!_isTicketSummaryLoaded)
         ticketSummaryData = _getTambolaTicketsSummary();
 
+      // ticketSummaryData = [
+      //   TicketSummaryCardModel(
+      //       data: [
+      //         BestTambolaTicketsSumm(
+      //             boards: baseProvider.userWeeklyBoards
+      //                 .map((e) => _buildBoardView(e))
+      //                 .toList(),
+      //             title:
+      //                 "You are just 5 or less numbers away from hitting the 10,000 Full House jackpot.🎊")
+      //       ],
+      //       color: Color(0xff810000),
+      //       cardType: "Jackpot",
+      //       bgAsset:
+      //           "https://img.freepik.com/free-photo/copy-space-text-red-texture-background-concept-chinese-new-year-background_45281-280.jpg?size=626&ext=jpg&uid=P35674521"),
+      //   TicketSummaryCardModel(
+      //       data: List.generate(
+      //         2,
+      //         (index) => BestTambolaTicketsSumm(
+      //             boards: baseProvider.userWeeklyBoards
+      //                 .map((e) => _buildBoardView(e))
+      //                 .toList(),
+      //             title: "Ticket #1234 completed Top Row"),
+      //       ),
+      //       color: Colors.blue,
+      //       cardType: "Completed",
+      //       bgAsset:
+      //           "https://img.freepik.com/free-vector/blue-halftone-memphis-background-with-yellow-lines-circles-shapes_1017-31954.jpg?size=626&ext=jpg&uid=P35674521"),
+      //   TicketSummaryCardModel(
+      //       data: [
+      //         BestTambolaTicketsSumm(
+      //             boards: baseProvider.userWeeklyBoards
+      //                 .map((e) => _buildBoardView(e))
+      //                 .toList(),
+      //             title:
+      //                 "5 of your tickets are just 1 number away from completing corners")
+      //       ],
+      //       color: Color(0xff511281),
+      //       cardType: "Best Corners",
+      //       bgAsset:
+      //           "https://img.freepik.com/free-vector/gradient-liquid-abstract-background_52683-60469.jpg?size=626&ext=jpg&uid=P35674521"),
+      //   TicketSummaryCardModel(
+      //       data: [
+      //         BestTambolaTicketsSumm(
+      //             boards: baseProvider.userWeeklyBoards
+      //                 .map((e) => _buildBoardView(e))
+      //                 .toList(),
+      //             title:
+      //                 "8 of your tickets needs just 2 or less numbers to complete Bottom Row")
+      //       ],
+      //       color: Colors.orange,
+      //       cardType: "Best Rows",
+      //       bgAsset:
+      //           "https://img.freepik.com/free-vector/abstract-halftone-background_23-2148583453.jpg?size=626&ext=jpg&uid=P35674521")
+      // ];
+
       _widget = ticketSummaryData.isEmpty
           ? SizedBox()
           : Container(
-              height: SizeConfig.screenWidth * 0.5,
+              height: SizeConfig.screenWidth * 0.4,
               width: SizeConfig.screenWidth,
               margin: EdgeInsets.symmetric(
                   vertical: SizeConfig.blockSizeHorizontal * 2),
@@ -478,17 +545,13 @@ class _TambolaHomeState extends State<TambolaHome> {
                 children: List.generate(
                   ticketSummaryData.length,
                   (index) => Container(
-                    height: SizeConfig.screenWidth * 0.5,
+                    height: SizeConfig.screenWidth * 0.4,
                     width: SizeConfig.screenWidth,
                     margin: EdgeInsets.only(
                         right: SizeConfig.blockSizeHorizontal * 3),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
-                      gradient: new LinearGradient(
-                        colors: [Color(0xff7C83FD), Color(0xff96BAFF)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
+                      color: ticketSummaryData[index].color,
                       image: DecorationImage(
                         image: NetworkImage(ticketSummaryData[index].bgAsset),
                         fit: BoxFit.cover,
@@ -497,10 +560,12 @@ class _TambolaHomeState extends State<TambolaHome> {
                     child: Stack(
                       children: [
                         Container(
-                          height: SizeConfig.screenWidth * 0.5,
+                          height: SizeConfig.screenWidth * 0.8,
                           width: SizeConfig.screenWidth,
                           decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.2),
+                              color: ticketSummaryData[index]
+                                  .color
+                                  .withOpacity(0.4),
                               borderRadius: BorderRadius.circular(8)),
                         ),
                         Padding(
@@ -515,7 +580,7 @@ class _TambolaHomeState extends State<TambolaHome> {
                               Text(
                                 ticketSummaryData[index].data[0].title,
                                 style: TextStyle(
-                                  fontSize: SizeConfig.largeTextSize * 1.08,
+                                  fontSize: SizeConfig.largeTextSize,
                                   color: Colors.white,
                                   height: 1.6,
                                   fontWeight: FontWeight.w700,
@@ -523,7 +588,7 @@ class _TambolaHomeState extends State<TambolaHome> {
                               ),
                               checkForMoreItems(ticketSummaryData[index]),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   InkWell(
                                     onTap: () {
@@ -537,6 +602,8 @@ class _TambolaHomeState extends State<TambolaHome> {
                                       );
                                     },
                                     child: Container(
+                                      alignment: Alignment.center,
+                                      width: SizeConfig.screenWidth * 0.8,
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 16, vertical: 8),
                                       decoration: BoxDecoration(
@@ -584,11 +651,11 @@ class _TambolaHomeState extends State<TambolaHome> {
       return false;
     }
     DateTime date = DateTime.now();
-    if (date.weekday == DateTime.sunday) {
+    if (date.weekday == DateTime.monday) {
       if (baseProvider.weeklyDigits.toList().length ==
-          7 * baseProvider.dailyPicksCount) {
+          1 * baseProvider.dailyPicksCount) {
         localDBModel.isTambolaResultProcessingDone().then((flag) {
-          if (flag == 0) {
+          if (flag == 1) {
             log.debug('Ticket results not yet displayed. Displaying: ');
             _examineTicketsForWins();
 
@@ -674,11 +741,13 @@ class _TambolaHomeState extends State<TambolaHome> {
 
     if (!_winnerDialogCalled)
       delegate.appState.currentAction = PageAction(
-          state: PageState.addPage,
-          widget: WeeklyResult(
-            winningsmap: ticketCodeWinIndex,
-            isEligible: _isEligible,
-          ));
+        state: PageState.addWidget,
+        page: TWeeklyResultPageConfig,
+        widget: WeeklyResult(
+          winningsmap: ticketCodeWinIndex,
+          isEligible: _isEligible,
+        ),
+      );
     // new Timer(const Duration(milliseconds: 2500), () {
     //   showDialog(
     //       context: context,
@@ -710,7 +779,7 @@ class _TambolaHomeState extends State<TambolaHome> {
   checkForMoreItems(TicketSummaryCardModel cardItem) {
     TextStyle style = TextStyle(
         color: Colors.white,
-        fontSize: SizeConfig.smallTextSize * 1.2,
+        fontSize: SizeConfig.mediumTextSize,
         fontWeight: FontWeight.w700,
         decoration: TextDecoration.underline,
         decorationStyle: TextDecorationStyle.dotted);
@@ -1084,11 +1153,11 @@ class GameTitle extends StatelessWidget {
           children: [
             Text(
               "TAMBOLA",
-              style: TextStyle(
+              style: GoogleFonts.montserrat(
                 // fontFamily: "Cucciolo",
                 color: Colors.white,
                 fontSize: SizeConfig.cardTitleTextSize * 1.6,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w700,
                 letterSpacing: 2,
                 shadows: [
                   BoxShadow(
@@ -1355,191 +1424,6 @@ class _FaqSectionState extends State<FaqSection> {
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class PrizeSection extends StatelessWidget {
-  const PrizeSection({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: SizeConfig.screenWidth,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        gradient: LinearGradient(
-          colors: [Color(0xff7C83FD), Color(0xff96BAFF)],
-          begin: Alignment.bottomCenter,
-          end: Alignment.topRight,
-        ),
-      ),
-      margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
-      child: Stack(
-        children: [
-          Positioned(
-            bottom: 10,
-            child: Opacity(
-              opacity: 0.2,
-              child: Transform.scale(
-                scale: 1.2,
-                child: SvgPicture.asset(
-                  "images/Tambola/gifts.svg",
-                  width: SizeConfig.screenWidth,
-                ),
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            width: SizeConfig.screenWidth,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, bottom: 16),
-                  child: Text(
-                    "Prizes",
-                    style: GoogleFonts.montserrat(
-                      color: Colors.white,
-                      fontSize: 30,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset("images/Tambola/p-rows.png"),
-                          SizedBox(height: 10),
-                          Text(
-                            "Any Row",
-                            style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                            ),
-                          ),
-                          FittedBox(
-                            child: Text(
-                              "₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_TOP)}",
-                              style: GoogleFonts.montserrat(
-                                  color: Colors.white,
-                                  fontSize: SizeConfig.cardTitleTextSize * 1.2,
-                                  fontWeight: FontWeight.w600,
-                                  shadows: [
-                                    BoxShadow(
-                                        color: Colors.black.withOpacity(0.5),
-                                        offset: Offset(4, 4),
-                                        spreadRadius: 4,
-                                        blurRadius: 4)
-                                  ]),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    Expanded(
-                      flex: 4,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(
-                                SizeConfig.blockSizeHorizontal * 2),
-                            decoration: BoxDecoration(
-                                color: Color(0xff5B51E7),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Icon(
-                              Icons.apps,
-                              color: Colors.white,
-                              size: SizeConfig.screenWidth * 0.14,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            "Full House",
-                            style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                            ),
-                          ),
-                          FittedBox(
-                            child: Text(
-                              '₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_FULL)}',
-                              style: GoogleFonts.montserrat(
-                                  color: Colors.white,
-                                  fontSize: SizeConfig.cardTitleTextSize * 2,
-                                  fontWeight: FontWeight.w600,
-                                  shadows: [
-                                    BoxShadow(
-                                        color: Colors.black.withOpacity(0.5),
-                                        offset: Offset(4, 4),
-                                        spreadRadius: 4,
-                                        blurRadius: 4)
-                                  ]),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(
-                                SizeConfig.blockSizeHorizontal * 1),
-                            decoration: BoxDecoration(
-                                color: Color(0xffE9E9E9),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Icon(
-                              Icons.border_outer_rounded,
-                              color: Color(0xff264653),
-                              size: SizeConfig.screenWidth * 0.1,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            "Corners",
-                            style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                            ),
-                          ),
-                          FittedBox(
-                            child: Text(
-                              "₹ ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_WIN_CORNER)}",
-                              style: GoogleFonts.montserrat(
-                                  color: Colors.white,
-                                  fontSize: SizeConfig.cardTitleTextSize,
-                                  fontWeight: FontWeight.w600,
-                                  shadows: [
-                                    BoxShadow(
-                                        color: Colors.black.withOpacity(0.5),
-                                        offset: Offset(4, 4),
-                                        spreadRadius: 4,
-                                        blurRadius: 4)
-                                  ]),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-              ],
-            ),
-          )
         ],
       ),
     );

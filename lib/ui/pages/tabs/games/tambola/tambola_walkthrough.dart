@@ -1,6 +1,7 @@
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/elements/tambola-global/prize_section.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -124,11 +125,7 @@ class Walkthrough extends StatelessWidget {
                 ),
               ),
             ),
-            Image.asset(
-              "images/Tambola/w-prize.png",
-              width: SizeConfig.screenWidth,
-              fit: BoxFit.cover,
-            ),
+            PrizeSection(),
             Column(children: generatePoints(prizes)),
           ],
         ),

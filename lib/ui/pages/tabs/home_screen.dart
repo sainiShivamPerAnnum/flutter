@@ -6,8 +6,10 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
+import 'package:felloapp/ui/elements/tambola-global/tambola_daily_draw_timer.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -15,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
@@ -169,6 +172,7 @@ class _HomePageState extends State<HomePage> {
         height: SizeConfig.screenHeight * 0.04,
       ),
       _buildProfileRow(),
+      CustomHomeCard(),
     ];
 
     for (int i = 0; i < cards.length; i++) {
@@ -182,8 +186,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: () async {
           HapticFeedback.vibrate();
           // delegate.parseRoute(Uri.parse(cards[i].actionUri));
-
-          /////////test code
+          // /////////test code
           if (cards[i].id == Constants.LEARN_FEED_CARD_ID) {
             delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
           } else {
@@ -205,67 +208,74 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildProfileRow() {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      margin: EdgeInsets.symmetric(
-          horizontal: SizeConfig.blockSizeHorizontal * 5,
-          vertical: SizeConfig.blockSizeHorizontal * 5),
-      width: double.infinity,
-      child: Row(
-        children: [
-          Container(
-            height: SizeConfig.screenWidth * 0.2,
-            width: SizeConfig.screenWidth * 0.2,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.white,
-                  width: 3,
-                )),
-            child: baseProvider.myUserDpUrl == null
-                ? Image.asset(
-                    "images/profile.png",
-                    fit: BoxFit.cover,
-                  )
-                : ClipOval(
-                    child: CachedNetworkImage(
-                      imageUrl: baseProvider.myUserDpUrl,
+    return InkWell(
+      onTap: () {
+        delegate.appState.setCurrentTabIndex = 3;
+        delegate.appState.currentAction = PageAction(
+            state: PageState.addPage, page: UserProfileDetailsConfig);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        margin: EdgeInsets.symmetric(
+            horizontal: SizeConfig.blockSizeHorizontal * 5,
+            vertical: SizeConfig.blockSizeHorizontal * 5),
+        width: double.infinity,
+        child: Row(
+          children: [
+            Container(
+              height: SizeConfig.screenWidth * 0.2,
+              width: SizeConfig.screenWidth * 0.2,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 3,
+                  )),
+              child: baseProvider.myUserDpUrl == null
+                  ? Image.asset(
+                      "images/profile.png",
                       fit: BoxFit.cover,
+                    )
+                  : ClipOval(
+                      child: CachedNetworkImage(
+                        imageUrl: baseProvider.myUserDpUrl,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-          ),
-          SizedBox(
-            width: 30,
-          ),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  getGreeting().toUpperCase(),
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: SizeConfig.largeTextSize),
-                ),
-                const SizedBox(height: 5),
-                FittedBox(
-                  child: Text(
-                    baseProvider.myUser.name,
-                    maxLines: 1,
-                    textAlign: TextAlign.start,
+            ),
+            SizedBox(
+              width: 30,
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    getGreeting().toUpperCase(),
                     style: TextStyle(
                         color: Colors.white,
+                        fontWeight: FontWeight.w700,
                         fontSize: SizeConfig.largeTextSize),
                   ),
-                ),
-              ],
-            ),
-          )
-        ],
+                  const SizedBox(height: 5),
+                  FittedBox(
+                    child: Text(
+                      baseProvider.myUser.name,
+                      maxLines: 1,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: SizeConfig.largeTextSize),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -296,7 +306,7 @@ class HomeCard extends StatelessWidget {
           left: SizeConfig.blockSizeHorizontal * 5,
           right: SizeConfig.blockSizeHorizontal * 5),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
           gradient: new LinearGradient(
             colors: gradient,
             begin: Alignment.bottomLeft,
@@ -433,6 +443,107 @@ class HomeCard extends StatelessWidget {
                           ),
                         ),
                       )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class CustomHomeCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(
+          bottom: 20,
+          left: SizeConfig.blockSizeHorizontal * 5,
+          right: SizeConfig.blockSizeHorizontal * 5),
+      decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(
+                "https://img.freepik.com/free-photo/many-barrels-with-numbers-cards-lotto-russian-bingo-table-game-wooden-surface-russian-lotto-has-similar-rules-classical-worldwide-bingo-game_76080-12635.jpg?size=626&ext=jpg&uid=P35674521"),
+            fit: BoxFit.cover,
+          ),
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+                color: Color(0xff343A40).withOpacity(0.2),
+                offset: Offset(2, 2),
+                blurRadius: 10,
+                spreadRadius: 2),
+          ]),
+      width: double.infinity,
+      child: Stack(
+        children: [
+          Opacity(
+            opacity: 0.9,
+            child: Container(
+              height: SizeConfig.screenWidth / 1.8,
+              decoration: BoxDecoration(
+                  gradient: new LinearGradient(
+                    colors: [Color(0xff343A40), Color(0xff7952B3)],
+                    begin: Alignment.bottomLeft,
+                    end: Alignment.topRight,
+                  ),
+                  borderRadius:
+                      BorderRadius.circular(SizeConfig.cardBorderRadius)),
+            ),
+          ),
+          // Positioned(
+          //   right: 10,
+          //   bottom: 0,
+          //   child: Opacity(
+          //     opacity: 0.3,
+          //     child: Image.asset(
+          //       asset,
+          //       //height: height * 0.25,
+          //       width: SizeConfig.screenWidth * 0.5,
+          //     ),
+          //   ),
+          // ),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(SizeConfig.screenWidth * 0.06),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Today's Picks in ",
+                  style: TextStyle(
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          offset: Offset(5, 5),
+                          color: Colors.black26,
+                          blurRadius: 10,
+                        )
+                      ],
+                      fontWeight: FontWeight.w700,
+                      fontSize: SizeConfig.cardTitleTextSize),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "Every day 5 random numbers are picked out from 1 to 90 at 6 pm",
+                  style: TextStyle(
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          color: Color(0xff343A40),
+                          offset: Offset(1, 1),
+                        ),
+                      ],
+                      fontSize: SizeConfig.mediumTextSize * 1.3,
+                      fontWeight: FontWeight.w400),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                DailyPicksTimer()
               ],
             ),
           )
