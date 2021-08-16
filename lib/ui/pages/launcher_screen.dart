@@ -64,12 +64,12 @@ class LogoFadeIn extends State<SplashScreen> {
     _timer3.cancel();
 
     ///TODO tbt check if an important update is pending
-    //bool isThereBreakingUpdate = await checkBreakingUpdate();
-    //if (isThereBreakingUpdate) {
+    // bool isThereBreakingUpdate = await checkBreakingUpdate();
+    // if (isThereBreakingUpdate) {
     // stateProvider.currentAction =
     //     PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
-    //return;
-    //}
+    // return;
+    // }
 
     ///check if user is onboarded
     if (!baseProvider.isUserOnboarded) {
