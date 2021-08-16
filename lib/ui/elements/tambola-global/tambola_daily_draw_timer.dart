@@ -6,6 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DailyPicksTimer extends StatefulWidget {
+  final Widget replacementWidget;
+  final Color bgColor;
+  final MainAxisAlignment alignment;
+
+  DailyPicksTimer(
+      {@required this.replacementWidget, this.bgColor, this.alignment});
   @override
   _DailyPicksTimerState createState() => _DailyPicksTimerState();
 }
@@ -14,7 +20,6 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
   Duration duration;
   Timer timer;
   bool showClock = true;
-
   bool countDown = true;
 
   @override
@@ -74,22 +79,24 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
       final hours = twoDigits(duration.inHours);
       final minutes = twoDigits(duration.inMinutes.remainder(60));
       final seconds = twoDigits(duration.inSeconds.remainder(60));
-      return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        buildTimeCard(time: hours),
-        buildDivider(),
-        buildTimeCard(time: minutes),
-        buildDivider(),
-        buildTimeCard(time: seconds),
-      ]);
+      return Row(
+          mainAxisAlignment: widget.alignment ?? MainAxisAlignment.center,
+          children: [
+            buildTimeCard(time: hours),
+            buildDivider(),
+            buildTimeCard(time: minutes),
+            buildDivider(),
+            buildTimeCard(time: seconds),
+          ]);
     }
-    return SizedBox();
+    return widget.replacementWidget;
   }
 
   Widget buildTimeCard({@required String time}) => Container(
         height: SizeConfig.screenWidth * 0.14,
         width: SizeConfig.screenWidth * 0.14,
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.2), // Color(0xff09464B),
+          color: widget.bgColor ?? Color(0xff206A5D),
           borderRadius: BorderRadius.circular(8),
         ),
         alignment: Alignment.center,

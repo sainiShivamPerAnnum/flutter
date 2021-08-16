@@ -172,7 +172,8 @@ class _HomePageState extends State<HomePage> {
         height: SizeConfig.screenHeight * 0.04,
       ),
       _buildProfileRow(),
-      CustomHomeCard(),
+      TambolaHomeCard(),
+      ScoreHomeCard()
     ];
 
     for (int i = 0; i < cards.length; i++) {
@@ -452,7 +453,7 @@ class HomeCard extends StatelessWidget {
   }
 }
 
-class CustomHomeCard extends StatelessWidget {
+class TambolaHomeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -461,12 +462,12 @@ class CustomHomeCard extends StatelessWidget {
           left: SizeConfig.blockSizeHorizontal * 5,
           right: SizeConfig.blockSizeHorizontal * 5),
       decoration: BoxDecoration(
-          image: DecorationImage(
-            image: NetworkImage(
-                "https://img.freepik.com/free-photo/many-barrels-with-numbers-cards-lotto-russian-bingo-table-game-wooden-surface-russian-lotto-has-similar-rules-classical-worldwide-bingo-game_76080-12635.jpg?size=626&ext=jpg&uid=P35674521"),
-            fit: BoxFit.cover,
+          gradient: new LinearGradient(
+            colors: [Color(0xff595260), Color(0xffA35D6A)],
+            begin: Alignment.bottomLeft,
+            end: Alignment.topRight,
           ),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
           boxShadow: [
             BoxShadow(
                 color: Color(0xff343A40).withOpacity(0.2),
@@ -477,32 +478,18 @@ class CustomHomeCard extends StatelessWidget {
       width: double.infinity,
       child: Stack(
         children: [
-          Opacity(
-            opacity: 0.9,
-            child: Container(
-              height: SizeConfig.screenWidth / 1.8,
-              decoration: BoxDecoration(
-                  gradient: new LinearGradient(
-                    colors: [Color(0xff343A40), Color(0xff7952B3)],
-                    begin: Alignment.bottomLeft,
-                    end: Alignment.topRight,
-                  ),
-                  borderRadius:
-                      BorderRadius.circular(SizeConfig.cardBorderRadius)),
+          Positioned(
+            right: 10,
+            bottom: 0,
+            child: Opacity(
+              opacity: 0.3,
+              child: Image.asset(
+                "images/homw-pick-card-asset.png",
+                //height: height * 0.25,
+                width: SizeConfig.screenWidth * 0.5,
+              ),
             ),
           ),
-          // Positioned(
-          //   right: 10,
-          //   bottom: 0,
-          //   child: Opacity(
-          //     opacity: 0.3,
-          //     child: Image.asset(
-          //       asset,
-          //       //height: height * 0.25,
-          //       width: SizeConfig.screenWidth * 0.5,
-          //     ),
-          //   ),
-          // ),
           Container(
             width: double.infinity,
             padding: EdgeInsets.all(SizeConfig.screenWidth * 0.06),
@@ -511,7 +498,7 @@ class CustomHomeCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Today's Picks in ",
+                  "Win upto ₹ 10,000 this week 🎉",
                   style: TextStyle(
                       color: Colors.white,
                       shadows: [
@@ -528,7 +515,7 @@ class CustomHomeCard extends StatelessWidget {
                   height: 20,
                 ),
                 Text(
-                  "Every day 5 random numbers are picked out from 1 to 90 at 6 pm",
+                  "Join in for a round of tambola!",
                   style: TextStyle(
                       color: Colors.white,
                       shadows: [
@@ -538,14 +525,192 @@ class CustomHomeCard extends StatelessWidget {
                         ),
                       ],
                       fontSize: SizeConfig.mediumTextSize * 1.3,
-                      fontWeight: FontWeight.w400),
+                      fontWeight: FontWeight.w100),
                 ),
                 SizedBox(
                   height: 20,
                 ),
-                DailyPicksTimer()
+                DailyPicksTimer(
+                  alignment: MainAxisAlignment.start,
+                  bgColor: Color(0xff50445B).withOpacity(0.8),
+                  replacementWidget: GestureDetector(
+                    onTap: () {
+                      delegate.appState.setCurrentTabIndex = 1;
+                      delegate.appState.setCurrentGameTabIndex = 1;
+                    },
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 2,
+                          color: Colors.white,
+                        ),
+                        color: Colors.transparent,
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color(0xff197163).withOpacity(0.2),
+                              blurRadius: 20,
+                              offset: Offset(5, 5),
+                              spreadRadius: 10),
+                        ],
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      child: Text(
+                        "View Leaderboard",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: SizeConfig.mediumTextSize * 1.3),
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class ScoreHomeCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(
+          bottom: 20,
+          left: SizeConfig.blockSizeHorizontal * 5,
+          right: SizeConfig.blockSizeHorizontal * 5),
+      decoration: BoxDecoration(
+          gradient: new LinearGradient(
+            colors: [Color(0xff197163), Color(0xff158467)],
+            begin: Alignment.bottomLeft,
+            end: Alignment.topRight,
+          ),
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+          boxShadow: [
+            BoxShadow(
+                color: Color(0xff343A40).withOpacity(0.2),
+                offset: Offset(2, 2),
+                blurRadius: 10,
+                spreadRadius: 2),
+          ]),
+      width: double.infinity,
+      child: Stack(
+        children: [
+          Positioned(
+            right: 10,
+            bottom: 0,
+            child: Opacity(
+              opacity: 0.3,
+              child: Image.asset(
+                "images/home-score-card-asset.png",
+                //height: height * 0.25,
+                width: SizeConfig.screenWidth * 0.5,
+              ),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(SizeConfig.screenWidth * 0.06),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // SizedBox(
+                //   height: 20,
+                // ),
+                Text(
+                  "Last week's tally",
+                  style: GoogleFonts.montserrat(
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        color: Color(0xff197163),
+                        offset: Offset(1, 1),
+                      ),
+                    ],
+                    fontSize: SizeConfig.mediumTextSize * 1.3,
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    getSection("500", "players"),
+                    getSection("15", "winners"),
+                    getSection("₹ 5000+", "in prizes"),
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    delegate.appState.setCurrentTabIndex = 1;
+                    delegate.appState.setCurrentGameTabIndex = 1;
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 2,
+                        color: Colors.white,
+                      ),
+                      color: Colors.transparent,
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color(0xff197163).withOpacity(0.2),
+                            blurRadius: 20,
+                            offset: Offset(5, 5),
+                            spreadRadius: 10),
+                      ],
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Text(
+                      "View Leaderboard",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: SizeConfig.mediumTextSize * 1.3),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  getSection(String title, String subtitle) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+                color: Colors.white,
+                shadows: [
+                  Shadow(
+                    offset: Offset(5, 5),
+                    color: Colors.black26,
+                    blurRadius: 10,
+                  )
+                ],
+                fontWeight: FontWeight.w700,
+                fontSize: SizeConfig.cardTitleTextSize),
+          ),
+          SizedBox(height: 10),
+          Text(
+            subtitle,
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: SizeConfig.mediumTextSize * 1.3,
+                fontWeight: FontWeight.w500),
           )
         ],
       ),

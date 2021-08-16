@@ -63,6 +63,7 @@ class _WeeklyResultState extends State<WeeklyResult> {
             ),
           ]),
       body: PageView(
+        physics: NeverScrollableScrollPhysics(),
         controller: _pageController,
         children: [
           const PrizeProcessing(),

@@ -344,16 +344,7 @@ class _TambolaHomeState extends State<TambolaHome> {
                   baseProvider.weeklyDrawFetched,
                   baseProvider.userWeeklyBoards,
                   _activeTambolaCardCount),
-              InkWell(
-                  onTap: () => delegate.appState.currentAction = PageAction(
-                        state: PageState.addWidget,
-                        page: TWeeklyResultPageConfig,
-                        widget: WeeklyResult(
-                          winningsmap: {"#12345": 1, "#34325": 4},
-                          isEligible: false,
-                        ),
-                      ),
-                  child: PrizeSection()),
+              PrizeSection(),
               FaqSection()
             ],
           ),
@@ -1234,66 +1225,65 @@ class CurrentPicks extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Spacer(flex: 2),
-            digits[0] < 0
-                ? DailyPicksTimer()
-                : Container(
-                    width: SizeConfig.screenWidth,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: digits
-                          .map(
-                            (e) => Container(
-                              height: SizeConfig.screenWidth * 0.12,
-                              width: SizeConfig.screenWidth * 0.12,
-                              decoration: BoxDecoration(
-                                color: Colors.black,
-                                shape: BoxShape.circle,
-                                gradient: RadialGradient(
-                                  center: Alignment(-0.8, -0.6),
-                                  colors: [Color(0xff515E63), Colors.black],
-                                  radius: 1.0,
+            DailyPicksTimer(
+              replacementWidget: Container(
+                width: SizeConfig.screenWidth,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: digits
+                      .map(
+                        (e) => Container(
+                          height: SizeConfig.screenWidth * 0.12,
+                          width: SizeConfig.screenWidth * 0.12,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            shape: BoxShape.circle,
+                            gradient: RadialGradient(
+                              center: Alignment(-0.8, -0.6),
+                              colors: [Color(0xff515E63), Colors.black],
+                              radius: 1.0,
+                            ),
+                          ),
+                          alignment: Alignment.center,
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment.center,
+                                child: Container(
+                                  height: SizeConfig.screenWidth * 0.09,
+                                  width: SizeConfig.screenWidth * 0.09,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 0.5,
+                                    ),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
                                 ),
                               ),
-                              alignment: Alignment.center,
-                              child: Stack(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Container(
-                                      height: SizeConfig.screenWidth * 0.09,
-                                      width: SizeConfig.screenWidth * 0.09,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.white,
-                                          width: 0.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                      ),
-                                    ),
+                              Container(
+                                height: SizeConfig.screenWidth * 0.12,
+                                width: SizeConfig.screenWidth * 0.12,
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.all(8),
+                                child: FittedBox(
+                                  child: Text(
+                                    e.toString(),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                        fontSize: SizeConfig.largeTextSize),
                                   ),
-                                  Container(
-                                    height: SizeConfig.screenWidth * 0.12,
-                                    width: SizeConfig.screenWidth * 0.12,
-                                    alignment: Alignment.center,
-                                    padding: EdgeInsets.all(8),
-                                    child: FittedBox(
-                                      child: Text(
-                                        e.toString(),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.white,
-                                            fontSize: SizeConfig.largeTextSize),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            ),
             Spacer(),
             Padding(
               padding: EdgeInsets.only(top: SizeConfig.blockSizeHorizontal * 2),
