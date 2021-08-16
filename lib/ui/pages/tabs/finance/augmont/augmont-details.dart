@@ -677,7 +677,11 @@ class FundDetailsTable extends StatelessWidget {
               width: 10,
             ),
             Text(
-                'Current Gold Balance: ${_goldBalance.toStringAsFixed(4)} grams'),
+              'Current Gold Balance: ${_goldBalance.toStringAsFixed(4)} grams',
+              style: TextStyle(
+                fontSize: SizeConfig.mediumTextSize,
+              ),
+            ),
           ],
         ),
       ),

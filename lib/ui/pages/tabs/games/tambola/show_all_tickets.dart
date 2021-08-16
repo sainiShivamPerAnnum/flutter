@@ -1,6 +1,7 @@
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/tambola-home.dart';
 import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,7 +13,7 @@ class ShowAllTickets extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff086972),
+        backgroundColor: UiConstants.primaryColor,
         elevation: 2,
         shadowColor: Color(0xff086972).withOpacity(0.5),
         title: Text(

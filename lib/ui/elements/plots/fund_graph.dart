@@ -27,11 +27,12 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       });
       print(_res.length);
     } catch (err) {
-      if(baseProvider.myUser.uid!=null) {
-        Map<String,dynamic> errorDetails = {
-          'Error message' : 'Fetching gold rates for api for line chart failed',
+      if (baseProvider.myUser.uid != null) {
+        Map<String, dynamic> errorDetails = {
+          'Error message': 'Fetching gold rates for api for line chart failed',
         };
-        dbProvider.logFailure(baseProvider.myUser.uid, FailType.GoldRateFetchFailed,errorDetails);
+        dbProvider.logFailure(baseProvider.myUser.uid,
+            FailType.GoldRateFetchFailed, errorDetails);
       }
       print(err);
     }

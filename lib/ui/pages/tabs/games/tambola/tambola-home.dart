@@ -18,6 +18,7 @@ import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/elements/tambola-global/weekly_picks.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/show_all_tickets.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/summary_tickets_display.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_result.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -70,12 +71,12 @@ class _TambolaHomeState extends State<TambolaHome> {
 
   bool ticketsBeingGenerated = true;
   bool dailyPickHeaderWithTimings = false;
-  String dailyPickHeaderText = 'Today\'s picks';
-  List<String> dailyPickTextList = [];
+  //List<String> dailyPickTextList = [];
+  PageController _summaryController = PageController(viewportFraction: 0.94);
 
   TambolaGenerationService _tambolaTicketService;
 
-  void _onVerticalDragUpdate() {
+  void _onTap() {
     if (!isShowingAllPicks) {
       topCardHeight = expandedTopCardHeight;
       titleOpacity = 0;
@@ -95,21 +96,21 @@ class _TambolaHomeState extends State<TambolaHome> {
   void initState() {
     super.initState();
     topCardHeight = normalTopCardHeight;
-    initDailyPickFlags();
+    // initDailyPickFlags();
     BaseAnalytics.analytics
         .setCurrentScreen(screenName: BaseAnalytics.PAGE_TAMBOLA);
     _tambolaTicketService = new TambolaGenerationService();
   }
 
-  initDailyPickFlags() {
-    String remoteStr1 = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.TAMBOLA_HEADER_FIRST);
-    String remoteStr2 = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.TAMBOLA_HEADER_SECOND);
+  // initDailyPickFlags() {
+  //   String remoteStr1 = BaseRemoteConfig.remoteConfig
+  //       .getString(BaseRemoteConfig.TAMBOLA_HEADER_FIRST);
+  //   String remoteStr2 = BaseRemoteConfig.remoteConfig
+  //       .getString(BaseRemoteConfig.TAMBOLA_HEADER_SECOND);
 
-    dailyPickTextList.add(remoteStr1);
-    dailyPickTextList.add(remoteStr2);
-  }
+  //   dailyPickTextList.add(remoteStr1);
+  //   dailyPickTextList.add(remoteStr2);
+  // }
 
   _init() async {
     if (baseProvider == null || dbProvider == null) {
@@ -209,7 +210,7 @@ class _TambolaHomeState extends State<TambolaHome> {
           child: Column(
             children: [
               GestureDetector(
-                onTap: _onVerticalDragUpdate,
+                onTap: _onTap,
                 child: AnimatedContainer(
                   width: SizeConfig.screenWidth,
                   height: topCardHeight,
@@ -255,7 +256,7 @@ class _TambolaHomeState extends State<TambolaHome> {
                       ),
                       !isShowingAllPicks
                           ? CurrentPicks(
-                        dailyPickTextList: dailyPickTextList,
+                        // dailyPickTextList: dailyPickTextList,
                         digits: _getDailyPickData(
                             baseProvider.weeklyDigits,
                             DateTime.now().weekday),
@@ -267,44 +268,31 @@ class _TambolaHomeState extends State<TambolaHome> {
                   ),
                 ),
               ),
+              _buildTicketSummaryCards(
+                  baseProvider.weeklyTicksFetched,
+                  baseProvider.weeklyDrawFetched,
+                  baseProvider.userWeeklyBoards,
+                  _activeTambolaCardCount),
               Container(
                 margin: EdgeInsets.symmetric(
                     horizontal: SizeConfig.blockSizeHorizontal * 3,
                     vertical: SizeConfig.blockSizeHorizontal * 2),
                 child: Row(
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "My Tickets ($_activeTambolaCardCount)",
-                          style: GoogleFonts.montserrat(
-                            color: Colors.black87,
-                            fontSize: SizeConfig.cardTitleTextSize,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            top: 4,
-                          ),
-                          child: Text(
-                            "Here are your best 5 tickets",
-                            style: TextStyle(
-                              fontSize: SizeConfig.smallTextSize,
-                              color: UiConstants.primaryColor,
-                            ),
-                          ),
-                        ),
-                      ],
+                    Text(
+                      "My Tickets ($_activeTambolaCardCount)",
+                      style: GoogleFonts.montserrat(
+                        color: Colors.black87,
+                        fontSize: SizeConfig.cardTitleTextSize,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     Spacer(),
                     InkWell(
                       onTap: () {
                         _tambolaBoardViews = [];
                         baseProvider.userWeeklyBoards.forEach((board) {
-                          _tambolaBoardViews.add(_buildBoardView(
-                              board, baseProvider.weeklyDigits));
+                          _tambolaBoardViews.add(_buildBoardView(board));
                         });
                         delegate.appState.currentAction = PageAction(
                           state: PageState.addWidget,
@@ -340,11 +328,6 @@ class _TambolaHomeState extends State<TambolaHome> {
                 ),
               ),
               _buildCards(
-                  baseProvider.weeklyTicksFetched,
-                  baseProvider.weeklyDrawFetched,
-                  baseProvider.userWeeklyBoards,
-                  _activeTambolaCardCount),
-              _buildTicketSummaryCards(
                   baseProvider.weeklyTicksFetched,
                   baseProvider.weeklyDrawFetched,
                   baseProvider.userWeeklyBoards,
@@ -417,8 +400,7 @@ class _TambolaHomeState extends State<TambolaHome> {
       if (_topFiveTambolaBoards == null) {
         _topFiveTambolaBoards = [];
         _refreshBestBoards().forEach((element) {
-          _topFiveTambolaBoards
-              .add(_buildBoardView(element, baseProvider.weeklyDigits));
+          _topFiveTambolaBoards.add(_buildBoardView(element));
         });
       }
 
@@ -448,15 +430,16 @@ class _TambolaHomeState extends State<TambolaHome> {
     return _widget;
   }
 
-  Ticket _buildBoardView(TambolaBoard board, DailyPick picks) {
+  Ticket _buildBoardView(TambolaBoard board) {
     if (board == null || !board.isValid()) return null;
     List<int> _calledDigits;
     if (!baseProvider.weeklyDrawFetched ||
-        picks == null ||
-        picks.toList().isEmpty)
+        baseProvider.weeklyDigits == null ||
+        baseProvider.weeklyDigits.toList().isEmpty)
       _calledDigits = [];
     else {
-      _calledDigits = picks.getPicksPostDate(board.generatedDayCode);
+      _calledDigits =
+          baseProvider.weeklyDigits.getPicksPostDate(board.generatedDayCode);
     }
     TambolaTicketColorPalette ticketColor = tambolaTicketColorPaletteList[
     Random().nextInt(tambolaTicketColorPaletteList.length - 1) + 1];
@@ -483,152 +466,108 @@ class _TambolaHomeState extends State<TambolaHome> {
 
       _widget = ticketSummaryData.isEmpty
           ? SizedBox()
-          : Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: SizeConfig.blockSizeHorizontal * 3,
-              left: SizeConfig.blockSizeHorizontal * 3,
-              right: SizeConfig.blockSizeHorizontal * 3,
-              bottom: SizeConfig.blockSizeHorizontal * 2,
-            ),
-            child: Text(
-              "Tickets Summary",
-              style: GoogleFonts.montserrat(
-                color: Colors.black87,
-                fontSize: SizeConfig.cardTitleTextSize,
-                fontWeight: FontWeight.w500,
+          : Container(
+        height: SizeConfig.screenWidth * 0.5,
+        width: SizeConfig.screenWidth,
+        margin: EdgeInsets.symmetric(
+            vertical: SizeConfig.blockSizeHorizontal * 2),
+        child: PageView(
+          controller: _summaryController,
+          physics: BouncingScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          children: List.generate(
+            ticketSummaryData.length,
+                (index) => Container(
+              height: SizeConfig.screenWidth * 0.5,
+              width: SizeConfig.screenWidth,
+              margin: EdgeInsets.only(
+                  right: SizeConfig.blockSizeHorizontal * 3),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                gradient: new LinearGradient(
+                  colors: [Color(0xff7C83FD), Color(0xff96BAFF)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                image: DecorationImage(
+                  image: NetworkImage(ticketSummaryData[index].bgAsset),
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-          ),
-          Container(
-            height: SizeConfig.screenWidth * 0.5,
-            width: SizeConfig.screenWidth,
-            child: PageView(
-              physics: BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              children: List.generate(
-                ticketSummaryData.length,
-                    (index) => Container(
-                  height: SizeConfig.screenWidth * 0.5,
-                  width: SizeConfig.screenWidth,
-                  margin: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.blockSizeHorizontal * 3),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.black,
-                    image: DecorationImage(
-                      image:
-                      NetworkImage(ticketSummaryData[index].bgAsset),
-                      fit: BoxFit.cover,
-                    ),
+              child: Stack(
+                children: [
+                  Container(
+                    height: SizeConfig.screenWidth * 0.5,
+                    width: SizeConfig.screenWidth,
+                    decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(8)),
                   ),
-                  child: Stack(
-                    children: [
-                      ticketSummaryData[index].title == "Congratulations"
-                          ? Lottie.asset(
-                        "images/lottie/reward-claimed.json",
-                        height: SizeConfig.screenWidth * 0.5,
-                        width: SizeConfig.screenWidth,
-                        fit: BoxFit.cover,
-                      )
-                          : Container(
-                        height: SizeConfig.screenWidth * 0.5,
-                        width: SizeConfig.screenWidth,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.black.withOpacity(0.8),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.blockSizeHorizontal * 3,
+                      vertical: SizeConfig.blockSizeHorizontal * 2,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          ticketSummaryData[index].data[0].title,
+                          style: TextStyle(
+                            fontSize: SizeConfig.largeTextSize * 1.08,
+                            color: Colors.white,
+                            height: 1.6,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(
-                            SizeConfig.blockSizeHorizontal * 3),
-                        child: Column(
+                        checkForMoreItems(ticketSummaryData[index]),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                ticketSummaryData[index].title,
-                                style: TextStyle(
-                                  fontSize: SizeConfig.largeTextSize,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: ListView(
-                                shrinkWrap: true,
-                                children: List.generate(
-                                  ticketSummaryData[index].data.length,
-                                      (i) => InkWell(
-                                    onTap: () {
-                                      _tambolaBoardViews = [];
-                                      ticketSummaryData[index]
-                                          .data[i]
-                                          .boards
-                                          .forEach((board) {
-                                        _tambolaBoardViews.add(
-                                            _buildBoardView(
-                                                board,
-                                                baseProvider
-                                                    .weeklyDigits));
-                                      });
-                                      delegate.appState.currentAction =
-                                          PageAction(
-                                            state: PageState.addWidget,
-                                            page: TShowAllTicketsPageConfig,
-                                            widget: ShowAllTickets(
-                                              tambolaBoardView:
-                                              _tambolaBoardViews,
-                                            ),
-                                          );
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: SizeConfig
-                                              .blockSizeHorizontal *
-                                              3,
-                                          vertical: SizeConfig
-                                              .blockSizeHorizontal *
-                                              2.5),
-                                      child: Row(
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 3,
-                                            backgroundColor: Colors.white,
-                                          ),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(
-                                              ticketSummaryData[index]
-                                                  .data[i]
-                                                  .title,
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: SizeConfig
-                                                    .mediumTextSize,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                            InkWell(
+                              onTap: () {
+                                delegate.appState.currentAction =
+                                    PageAction(
+                                      state: PageState.addWidget,
+                                      page: TSummaryDetailsPageConfig,
+                                      widget: SummaryTicketsDisplay(
+                                        summary: ticketSummaryData[index],
                                       ),
-                                    ),
+                                    );
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.white,
+                                  ),
+                                  borderRadius:
+                                  BorderRadius.circular(100),
+                                ),
+                                child: Text(
+                                  ticketSummaryData[index].data.length ==
+                                      1
+                                      ? "Show ticket(s)"
+                                      : "Show All",
+                                  style: TextStyle(
+                                    fontSize: SizeConfig.mediumTextSize,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
                             ),
                           ],
-                        ),
-                      ),
-                    ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ),
-        ],
+        ),
       );
     }
     //_isTicketSummaryLoaded = true;
@@ -768,21 +707,52 @@ class _TambolaHomeState extends State<TambolaHome> {
     }
   }
 
+  checkForMoreItems(TicketSummaryCardModel cardItem) {
+    TextStyle style = TextStyle(
+        color: Colors.white,
+        fontSize: SizeConfig.smallTextSize * 1.2,
+        fontWeight: FontWeight.w700,
+        decoration: TextDecoration.underline,
+        decorationStyle: TextDecorationStyle.dotted);
+
+    if (cardItem.data.length == 1)
+      return SizedBox();
+    else if (cardItem.data.length == 2) {
+      if (cardItem.cardType == "Completed")
+        return Text("You have won ${cardItem.data.length - 1} more category",
+            style: style);
+      else if (cardItem.cardType == "Best Rows")
+        return Text(
+            "You have winning chances in ${cardItem.data.length - 1} more category",
+            style: style);
+    } else if (cardItem.data.length > 2) {
+      if (cardItem.cardType == "Completed")
+        return Text("You have won ${cardItem.data.length - 1} more categories",
+            style: style);
+      else if (cardItem.cardType == "Best Rows")
+        return Text(
+            "You have winning chances in ${cardItem.data.length - 1} more categories",
+            style: style);
+    }
+    return SizedBox();
+  }
+
   List<TicketSummaryCardModel> _getTambolaTicketsSummary() {
     List<TicketSummaryCardModel> summary = [];
 
-    List<TambolaBoard> bestCornerBoard = [];
-    List<TambolaBoard> bestTopRowBoard = [];
-    List<TambolaBoard> bestMiddleRowBoard = [];
-    List<TambolaBoard> bestBottomRowBoard = [];
-    List<TambolaBoard> bestFullHouseBoard = [];
-    List<TambolaBoard> completedCornersBoard = [];
-    List<TambolaBoard> completedTopRowBoard = [];
-    List<TambolaBoard> completedBottomRowBoard = [];
-    List<TambolaBoard> completedMiddleRowBoard = [];
-    List<TambolaBoard> completedFullHouseBoard = [];
+    List<Ticket> bestCornerBoard = [];
+    List<Ticket> bestTopRowBoard = [];
+    List<Ticket> bestMiddleRowBoard = [];
+    List<Ticket> bestBottomRowBoard = [];
+    List<Ticket> bestFullHouseBoard = [];
+    List<Ticket> completedCornersBoard = [];
+    List<Ticket> completedTopRowBoard = [];
+    List<Ticket> completedBottomRowBoard = [];
+    List<Ticket> completedMiddleRowBoard = [];
+    List<Ticket> completedFullHouseBoard = [];
     List<BestTambolaTicketsSumm> completedBoardCardItems = [];
-    List<BestTambolaTicketsSumm> bestChancesBoardCardItems = [];
+    List<BestTambolaTicketsSumm> bestRowsBoardCardItems = [];
+    List<BestTambolaTicketsSumm> bestCornersBoardCardItems = [];
     List<BestTambolaTicketsSumm> fullHouseBoardCardItems = [];
 
     if (baseProvider.userWeeklyBoards == null ||
@@ -800,14 +770,14 @@ class _TambolaHomeState extends State<TambolaHome> {
       // Checking for any completed corner borads
       if (board.getCornerOdds(baseProvider.weeklyDigits
           .getPicksPostDate(board.generatedDayCode)) ==
-          0) completedCornersBoard.add(board);
+          0) completedCornersBoard.add(_buildBoardView(board));
       // Checking for best Chances
       if (board.getCornerOdds(baseProvider.weeklyDigits
           .getPicksPostDate(board.generatedDayCode)) <
           2 &&
           board.getCornerOdds(baseProvider.weeklyDigits
               .getPicksPostDate(board.generatedDayCode)) >
-              0) bestCornerBoard.add(board);
+              0) bestCornerBoard.add(_buildBoardView(board));
 
       // ROWS CHECK
       // TOP ROW
@@ -820,13 +790,13 @@ class _TambolaHomeState extends State<TambolaHome> {
               0,
               baseProvider.weeklyDigits
                   .getPicksPostDate(board.generatedDayCode)) >
-              0) bestTopRowBoard.add(board);
+              0) bestTopRowBoard.add(_buildBoardView(board));
 
       if (board.getRowOdds(
           0,
           baseProvider.weeklyDigits
               .getPicksPostDate(board.generatedDayCode)) ==
-          0) completedTopRowBoard.add(board);
+          0) completedTopRowBoard.add(_buildBoardView(board));
 
       // MIDDLE ROW
       if (board.getRowOdds(
@@ -838,13 +808,13 @@ class _TambolaHomeState extends State<TambolaHome> {
               1,
               baseProvider.weeklyDigits
                   .getPicksPostDate(board.generatedDayCode)) >
-              0) bestMiddleRowBoard.add(board);
+              0) bestMiddleRowBoard.add(_buildBoardView(board));
 
       if (board.getRowOdds(
           1,
           baseProvider.weeklyDigits
               .getPicksPostDate(board.generatedDayCode)) ==
-          0) completedMiddleRowBoard.add(board);
+          0) completedMiddleRowBoard.add(_buildBoardView(board));
 
       // BOTTOM ROW
       if (board.getRowOdds(
@@ -856,27 +826,27 @@ class _TambolaHomeState extends State<TambolaHome> {
               2,
               baseProvider.weeklyDigits
                   .getPicksPostDate(board.generatedDayCode)) >
-              0) bestBottomRowBoard.add(board);
+              0) bestBottomRowBoard.add(_buildBoardView(board));
 
       if (board.getRowOdds(
           2,
           baseProvider.weeklyDigits
               .getPicksPostDate(board.generatedDayCode)) ==
-          0) completedBottomRowBoard.add(board);
+          0) completedBottomRowBoard.add(_buildBoardView(board));
 
       // FULL HOUSE CHECK
 
       // Checking for completed Full House Boards
       if (board.getFullHouseOdds(baseProvider.weeklyDigits
           .getPicksPostDate(board.generatedDayCode)) ==
-          0) completedFullHouseBoard.add(board);
+          0) completedFullHouseBoard.add(_buildBoardView(board));
       // Checking for best Chances of a Full House Board
       if (board.getFullHouseOdds(baseProvider.weeklyDigits
           .getPicksPostDate(board.generatedDayCode)) <
           5 &&
           board.getFullHouseOdds(baseProvider.weeklyDigits
               .getPicksPostDate(board.generatedDayCode)) >
-              0) bestFullHouseBoard.add(board);
+              0) bestFullHouseBoard.add(_buildBoardView(board));
     });
 
     // ADDING COMPLETED CATEGORIES TO FORM A LIST OF TILE DATA FOR THE CARD
@@ -908,22 +878,22 @@ class _TambolaHomeState extends State<TambolaHome> {
 
     // ADDING BEST CHANCES CATEGORIES TO FORM A LIST OF TILE DATA FOR THE CARD
     if (bestCornerBoard.isNotEmpty)
-      bestChancesBoardCardItems.add(BestTambolaTicketsSumm(
+      bestCornersBoardCardItems.add(BestTambolaTicketsSumm(
           boards: bestCornerBoard,
           title: getBoardTileTitle(
               "Corners", bestCornerBoard.length, true, bestCornerBoard[0])));
     if (bestTopRowBoard.isNotEmpty)
-      bestChancesBoardCardItems.add(BestTambolaTicketsSumm(
+      bestRowsBoardCardItems.add(BestTambolaTicketsSumm(
           boards: bestTopRowBoard,
           title: getBoardTileTitle(
               "Top Row", bestTopRowBoard.length, true, bestTopRowBoard[0])));
     if (bestMiddleRowBoard.isNotEmpty)
-      bestChancesBoardCardItems.add(BestTambolaTicketsSumm(
+      bestRowsBoardCardItems.add(BestTambolaTicketsSumm(
           boards: bestMiddleRowBoard,
           title: getBoardTileTitle("Middle Row", bestMiddleRowBoard.length,
               true, bestMiddleRowBoard[0])));
     if (bestBottomRowBoard.isNotEmpty)
-      bestChancesBoardCardItems.add(BestTambolaTicketsSumm(
+      bestRowsBoardCardItems.add(BestTambolaTicketsSumm(
           boards: bestBottomRowBoard,
           title: getBoardTileTitle("Bottom Row", bestBottomRowBoard.length,
               true, bestBottomRowBoard[0])));
@@ -939,52 +909,73 @@ class _TambolaHomeState extends State<TambolaHome> {
     if (fullHouseBoardCardItems.isNotEmpty)
       summary.add(TicketSummaryCardModel(
           data: fullHouseBoardCardItems,
-          title: "Jackpot is near",
+          color: Color(0xff810000),
+          cardType: "Jackpot",
           bgAsset:
           "https://img.freepik.com/free-vector/realistic-casino-background_52683-7264.jpg?size=626&ext=jpg&uid=P35674521"));
 
     if (completedBoardCardItems.isNotEmpty)
       summary.add(TicketSummaryCardModel(
           data: completedBoardCardItems,
-          title: "Congratulations",
+          color: Colors.blue,
+          cardType: "Completed",
           bgAsset:
-          "dsfhttps://media.istockphoto.com/videos/confetti-particle-cg-animation-video-id884038624?b=1&k=6&m=884038624&s=640x640&h=rkbk3IABay83MtXOVJwOpr8-s5RY8t0H3KfT_7dDGZE="));
-    if (bestChancesBoardCardItems.isNotEmpty)
+          "https://img.freepik.com/free-vector/blue-halftone-memphis-background-with-yellow-lines-circles-shapes_1017-31954.jpg?size=626&ext=jpg&uid=P35674521"));
+    if (bestCornersBoardCardItems.isNotEmpty)
       summary.add(TicketSummaryCardModel(
-          data: bestChancesBoardCardItems,
-          title: "very close to win",
+          data: bestCornersBoardCardItems,
+          color: Color(0xff511281),
+          cardType: "Best Corners",
           bgAsset:
-          "https://img.freepik.com/free-photo/close-up-strong-male-hand-holding-gold-medal-sporting-achievement_116124-44.jpg?size=626&ext=jpg&uid=P35674521"));
+          "https://img.freepik.com/free-vector/gradient-liquid-abstract-background_52683-60469.jpg?size=626&ext=jpg&uid=P35674521"));
+    if (bestRowsBoardCardItems.isNotEmpty)
+      summary.add(TicketSummaryCardModel(
+          data: bestRowsBoardCardItems,
+          color: Colors.amber,
+          cardType: "Best Rows",
+          bgAsset:
+          "https://img.freepik.com/free-vector/abstract-halftone-background_23-2148583453.jpg?size=626&ext=jpg&uid=P35674521"));
+
     _isTicketSummaryLoaded = true;
     return summary;
   }
 
   getBoardTileTitle(
-      String category, int length, bool bestCards, TambolaBoard firstCard) {
-    String suffix = length > 1 ? "view all tickets" : "see";
+      String category, int length, bool bestCards, Ticket firstCard) {
     String output;
+
     if (bestCards) {
       if (category == "Corners") {
         if (length == 1)
           output =
-          "Ticket #${firstCard.getTicketNumber()} is just 1 number away from";
+          "Ticket #${firstCard.board.getTicketNumber()} is just 1 number away from $category.";
         else
-          output = "$length of your tickets needs only 1 number to complete";
+          output =
+          "$length of your tickets needs only 1 number to complete $category.";
+      } else if (category == "Full House") {
+        if (length == 1)
+          output =
+          "Ticket #${firstCard.board.getTicketNumber()} is just 4 of less numbers less to hit the $category JACKPOT.";
+        else
+          output =
+          "$length of your tickets needs only 4 or less numbers to  hit the $category JACKPOT.";
       } else {
         if (length == 1)
           output =
-          "Ticket #${firstCard.getTicketNumber()} is just 1 number away from";
+          "Ticket #${firstCard.board.getTicketNumber()} is just 2 or less numbers away from $category.";
         else
-          output = "$length of your tickets needs only 2 numbers to complete";
+          output =
+          "$length of your tickets needs only 2 or less numbers to complete $category.";
       }
     } else {
       if (length == 1)
-        output = "Ticket #${firstCard.getTicketNumber()} completed";
+        output =
+        "Ticket #${firstCard.board.getTicketNumber()} completed $category.";
       else
-        output = "$length of your tickets completed";
+        output = "$length of your tickets completed $category.";
     }
 
-    return output + " $category. Tap to $suffix";
+    return output;
   }
 
   List<TambolaBoard> _refreshBestBoards() {
@@ -999,6 +990,10 @@ class _TambolaHomeState extends State<TambolaHome> {
     if (baseProvider.weeklyDigits == null ||
         baseProvider.weeklyDigits.toList().isEmpty) {
       return _bestTambolaBoards;
+    }
+
+    for (int i = 0; i < 5 && i < baseProvider.userWeeklyBoards.length; i++) {
+      _bestTambolaBoards[i] = baseProvider.userWeeklyBoards[i];
     }
 
     baseProvider.userWeeklyBoards.forEach((board) {
@@ -1090,10 +1085,10 @@ class GameTitle extends StatelessWidget {
             Text(
               "TAMBOLA",
               style: TextStyle(
-                fontFamily: "Cucciolo",
+                // fontFamily: "Cucciolo",
                 color: Colors.white,
                 fontSize: SizeConfig.cardTitleTextSize * 1.6,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w900,
                 letterSpacing: 2,
                 shadows: [
                   BoxShadow(
@@ -1104,14 +1099,14 @@ class GameTitle extends StatelessWidget {
                 ],
               ),
             ),
-            Text(
-              "[ GLOBAL ]",
-              style: GoogleFonts.montserrat(
-                color: Colors.white,
-                fontSize: 12,
-                letterSpacing: 5,
-              ),
-            ),
+            // Text(
+            //   "[ GLOBAL ]",
+            //   style: GoogleFonts.montserrat(
+            //     color: Colors.white,
+            //     fontSize: 12,
+            //     letterSpacing: 5,
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -1156,11 +1151,10 @@ class GameAppBar extends StatelessWidget {
 }
 
 class CurrentPicks extends StatelessWidget {
-  final List<String> dailyPickTextList;
+  //final List<String> dailyPickTextList;
   final List<int> digits;
 
-  const CurrentPicks({Key key, this.dailyPickTextList, this.digits})
-      : super(key: key);
+  const CurrentPicks({Key key, this.digits}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -1554,14 +1548,15 @@ class PrizeSection extends StatelessWidget {
 
 class TicketSummaryCardModel {
   final List<BestTambolaTicketsSumm> data;
-  final String title;
+  final String cardType;
   final String bgAsset;
+  final Color color;
 
-  TicketSummaryCardModel({this.bgAsset, this.data, this.title});
+  TicketSummaryCardModel({this.bgAsset, this.data, this.cardType, this.color});
 }
 
 class BestTambolaTicketsSumm {
-  final List<TambolaBoard> boards;
+  final List<Ticket> boards;
   final String title;
 
   BestTambolaTicketsSumm({@required this.boards, @required this.title});

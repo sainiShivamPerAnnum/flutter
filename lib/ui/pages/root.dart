@@ -9,6 +9,7 @@ import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/modals/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
@@ -217,34 +218,21 @@ class _RootState extends State<Root> {
                 ),
               ),
             ),
-            SafeArea(
-              child: GestureDetector(
-                onTap: () {
-                  HapticFeedback.vibrate();
-                  delegate.parseRoute(Uri.parse("d-ham"));
-                },
-                child: Container(
-                  height: SizeConfig.blockSizeVertical * 5,
-                  width: SizeConfig.blockSizeVertical * 5,
-                  margin: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.blockSizeHorizontal * 5,
-                    vertical: kToolbarHeight * 0.2,
-                  ),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: getBurgerBorder(), width: 2),
-                  ),
-                  alignment: Alignment.center,
-                  child: Container(
-                    height: SizeConfig.blockSizeVertical * 1.4,
-                    child: Image.asset(
-                      "images/menu.png",
-                      color: (appState.getCurrentTabIndex == 0 ||
-                              appState.getCurrentTabIndex == 1)
-                          ? Colors.white
-                          : Colors.black,
-                    ),
-                  ),
+            Positioned(
+              top: 0,
+              right: 10,
+              child: SafeArea(
+                child: IconButton(
+                  icon: Icon(Icons.contact_support_outlined),
+                  iconSize: kToolbarHeight * 0.5,
+                  color: (appState.getCurrentTabIndex == 0)
+                      ? Colors.white
+                      : Colors.black54,
+                  onPressed: () {
+                    HapticFeedback.vibrate();
+                    delegate.appState.currentAction = PageAction(
+                        state: PageState.addPage, page: SupportPageConfig);
+                  },
                 ),
               ),
             )

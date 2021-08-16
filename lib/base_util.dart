@@ -272,7 +272,10 @@ class BaseUtil extends ChangeNotifier {
       return (unreadCount['count'] > 0);
     } catch (e) {
       log.error('Error reading unread count variable: $e');
-      Map<String,dynamic> errorDetails = {'User number' : _myUser.mobile, 'Error Type' : 'Unread message count failed'};
+      Map<String, dynamic> errorDetails = {
+        'User number': _myUser.mobile,
+        'Error Type': 'Unread message count failed'
+      };
       _dbModel.logFailure(_myUser.uid, FailType.FreshchatFail, errorDetails);
       return false;
     }

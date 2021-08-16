@@ -440,9 +440,9 @@ class ShareCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin:
-          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
+          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 4),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(8),
           gradient: new LinearGradient(
             colors: [
               Color(0xff4E4376),
@@ -453,15 +453,10 @@ class ShareCard extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Color(0xff4E4376).withOpacity(0.3),
-              offset: Offset(5, 5),
-              blurRadius: 10,
-            ),
-            BoxShadow(
-              color: Color(0xff2B5876).withOpacity(0.3),
-              offset: Offset(5, 5),
-              blurRadius: 10,
-            ),
+                color: Color(0xff4E4376).withOpacity(0.2),
+                offset: Offset(20, 5),
+                blurRadius: 20,
+                spreadRadius: 10),
           ]),
       width: double.infinity,
       child: Stack(
@@ -886,20 +881,20 @@ class UserProfileCard extends StatelessWidget {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     return Container(
       width: SizeConfig.screenWidth,
-      height: SizeConfig.screenWidth * 0.52,
+      height: SizeConfig.screenWidth * 0.4,
       decoration: BoxDecoration(
         gradient: new LinearGradient(
           colors: [Color(0xff299F8F), UiConstants.primaryColor],
           begin: Alignment.bottomLeft,
           end: Alignment.topCenter,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
       ),
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.blockSizeHorizontal * 4,
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
         child: CustomPaint(
           painter: ShapePainter(),
           child: Container(
