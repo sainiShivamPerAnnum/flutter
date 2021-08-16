@@ -1,18 +1,28 @@
 import 'dart:io';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/ui/pages/tabs/profile/profile_screen.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:in_app_update/in_app_update.dart';
+import 'package:provider/provider.dart';
 
-class UpdateRequiredScreen extends StatelessWidget {
-  const UpdateRequiredScreen({Key key}) : super(key: key);
+class UpdateRequiredScreen extends StatefulWidget {
+  @override 
+  _UpdateRequiredScreenState createState() => _UpdateRequiredScreenState();
+}
 
+class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
+  final Log log = Log('Update Screen');
+  BaseUtil baseProvider;
   @override
   Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
     return Scaffold(
       body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
         SafeArea(
@@ -98,8 +108,8 @@ class UpdateRequiredScreen extends StatelessWidget {
                     if (Platform.isIOS) {
                       //TODO : Add ios Store link
                     } else if (Platform.isAndroid) {
-                      launchUrl(
-                          'https://play.google.com/store/apps/details?id=in.fello.felloapp');
+                      // launchUrl('https://play.google.com/store/apps/details?id=in.fello.felloapp');
+                      autoUpdate();
                     }
                   },
                 ),
@@ -112,4 +122,23 @@ class UpdateRequiredScreen extends StatelessWidget {
       ]),
     );
   }
+
+  Future<void> autoUpdate() async {
+    AppUpdateInfo updateInfo;
+    try {
+      updateInfo = await InAppUpdate.checkForUpdate();
+      if(updateInfo.updateAvailability==UpdateAvailability.updateAvailable) {
+        InAppUpdate.performImmediateUpdate().catchError((err) {
+          baseProvider.showNegativeAlert('Update Error', 'Oops! Something went wrong while updating your app', context);
+          log.error(err);
+          //TODO: Once merged, add log failure
+        });
+      }
+    } catch(e) {
+      baseProvider.showNegativeAlert('Update Error', 'Oops! Something went wrong while updating your app', context);
+      log.error(e);
+      //TODO: once merged, add log failure
+    }
+  }
+
 }
