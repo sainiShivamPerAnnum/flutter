@@ -4,6 +4,7 @@ import 'dart:ui' as ui show Image, instantiateImageCodec;
 
 import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -63,13 +64,12 @@ class LogoFadeIn extends State<SplashScreen> {
     await fcmProvider.setupFcm();
     _timer3.cancel();
 
-    ///TODO tbt check if an important update is pending
-    // bool isThereBreakingUpdate = await checkBreakingUpdate();
-    // if (isThereBreakingUpdate) {
-    // stateProvider.currentAction =
-    //     PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
-    // return;
-    // }
+    bool isThereBreakingUpdate = await checkBreakingUpdate();
+    if (isThereBreakingUpdate) {
+    stateProvider.currentAction =
+        PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
+    return;
+    }
 
     ///check if user is onboarded
     if (!baseProvider.isUserOnboarded) {
@@ -122,6 +122,25 @@ class LogoFadeIn extends State<SplashScreen> {
           'Please restart the application to try again.', context);
     }
     return _res;
+  }
+
+  Future<bool> checkBreakingUpdate() async {
+    return true;
+    String currentBuild = BaseUtil.packageInfo.buildNumber;
+    print('Current Build $currentBuild');
+    String minBuild = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.FORCE_MIN_BUILD_NUMBER);
+    print('Min Build Required $minBuild');
+    // minBuild = "0";
+    try {
+      if (int.parse(currentBuild) < int.parse(minBuild)) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      log.error(e.toString());
+      return false;
+    }
   }
 
   @override

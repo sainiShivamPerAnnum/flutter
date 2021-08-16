@@ -20,6 +20,9 @@ class BaseRemoteConfig {
   static const Map<String, String> _TAMBOLA_DAILY_PICK_COUNT = {
     'tambola_daily_pick_count': '5'
   };
+  static const Map<String, String> _FORCE_MIN_BUILD_NUMBER = {
+    'force_min_build_number': '0'
+  };
   static const Map<String, String> _DEPOSIT_UPI_ADDRESS = {
     'deposit_upi_address': '9769637379@okbizaxis'
   };
@@ -75,6 +78,7 @@ class BaseRemoteConfig {
     ..._TAMBOLA_HEADER_FIRST,
     ..._TAMBOLA_HEADER_SECOND,
     ..._TAMBOLA_DAILY_PICK_COUNT,
+    ..._FORCE_MIN_BUILD_NUMBER,
     ..._DEPOSIT_UPI_ADDRESS,
     ..._PLAY_SCREEN_FIRST,
     ..._TAMBOLA_WIN_CORNER,
@@ -112,7 +116,7 @@ class BaseRemoteConfig {
       print(
           'Unable to fetch remote config. Cached or default values will be used');
       if (_baseProvider.myUser.uid != null) {
-        Map<String,dynamic> errorDetails = {
+        Map<String, dynamic> errorDetails = {
           'Error Type': 'Remote config details fetch failed',
           'Error message': 'Remote config fetch failed, using default values.'
         };
@@ -122,6 +126,9 @@ class BaseRemoteConfig {
       return false;
     }
   }
+
+  static String get FORCE_MIN_BUILD_NUMBER =>
+      _FORCE_MIN_BUILD_NUMBER.keys.first;
 
   static String get DRAW_PICK_TIME => _DRAW_PICK_TIME.keys.first;
 

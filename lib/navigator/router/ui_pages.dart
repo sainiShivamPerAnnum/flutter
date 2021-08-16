@@ -22,6 +22,7 @@ const String ChatSupportPath = '/chatSupport';
 const String ClaimUsernamePath = '/claimUsername';
 const String VerifyEmailPath = '/verifyEmail';
 const String SupportPath = '/support';
+const String UpdateRequiredPath = '/updateRequired';
 const String WalkThroughPath = '/walkThrough';
 const String WalkThroughCompletedPath = '/walkThroughCompleted';
 const String YourFundsPath = '/yourFunds';
@@ -48,6 +49,7 @@ enum Pages {
   Tnc,
   Faq,
   AugOnboard,
+  UpdateRequired,
   AugWithdrawal,
   EditAugBankDetails,
   TambolaTickets,
@@ -173,6 +175,11 @@ PageConfiguration ChatSupportPageConfig = PageConfiguration(
   key: 'ChatSupport',
   path: ChatSupportPath,
   uiPage: Pages.ChatSupport,
+);
+PageConfiguration UpdateRequiredConfig = PageConfiguration(
+  key: 'UpdateRequired',
+  path: UpdateRequiredPath,
+  uiPage: Pages.UpdateRequired,
 );
 PageConfiguration ClaimUsernamePageConfig = PageConfiguration(
   key: 'ClaimUsername',

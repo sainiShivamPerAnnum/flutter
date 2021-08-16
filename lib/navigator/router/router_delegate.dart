@@ -21,6 +21,7 @@ import 'package:felloapp/ui/pages/tabs/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/tambola-home.dart'
     as NTambola;
 import 'package:felloapp/ui/pages/tabs/games/tambola/tambola_walkthrough.dart';
+import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import '../../ui/pages/tabs/finance/augmont/augmont-details.dart';
 import '../../ui/pages/tabs/finance/augmont/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
@@ -181,6 +182,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         // case Pages.TambolaTickets:
         //   _addPageData(TambolaCardsList(), TambolaTicketsPageConfig);
         //   break;
+        case Pages.UpdateRequired:
+          _addPageData(UpdateRequiredScreen(), UpdateRequiredConfig);
+          break;
         case Pages.RefPolicy:
           _addPageData(ReferralPolicy(), RefPolicyPageConfig);
           break;
