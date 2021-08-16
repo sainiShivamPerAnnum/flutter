@@ -236,18 +236,18 @@ class Ticket extends StatelessWidget {
                                         child: Icon(odds[index].icon,
                                             color: Colors.white,
                                             size:
-                                                SizeConfig.screenWidth * 0.06),
+                                            SizeConfig.screenWidth * 0.06),
                                       ),
                                       odds[index].left == 0
                                           ? Transform.translate(
-                                              offset: Offset(-3, -3),
-                                              child: Image.network(
-                                                "https://image.flaticon.com/icons/png/512/3699/3699516.png",
-                                                height:
-                                                    SizeConfig.largeTextSize,
-                                                width: SizeConfig.largeTextSize,
-                                              ),
-                                            )
+                                        offset: Offset(-3, -3),
+                                        child: Image.network(
+                                          "https://image.flaticon.com/icons/png/512/3699/3699516.png",
+                                          height:
+                                          SizeConfig.largeTextSize,
+                                          width: SizeConfig.largeTextSize,
+                                        ),
+                                      )
                                           : SizedBox()
                                     ],
                                   ),
@@ -262,32 +262,16 @@ class Ticket extends StatelessWidget {
                                 Text(
                                   odds[index].title,
                                   style: TextStyle(
-<<<<<<< HEAD
-                                    color: odds[index].left == 0
-                                        ? Colors.black
-                                        : Colors.white,
-=======
                                     color: Colors.white,
->>>>>>> 6b3c6b7e6ef3db4dac9a9b300234238ea079480b
                                     fontSize: SizeConfig.smallTextSize,
                                   ),
                                 ),
                                 Text(
                                   "${odds[index].left} left",
                                   style: TextStyle(
-<<<<<<< HEAD
-                                      color: odds[index].left == 0
-                                          ? Colors.black
-                                          : Colors.white,
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: odds[index].left == 0
-                                          ? SizeConfig.mediumTextSize * 1.2
-                                          : SizeConfig.mediumTextSize),
-=======
                                       color: Colors.white,
                                       fontWeight: FontWeight.w900,
                                       fontSize: SizeConfig.mediumTextSize),
->>>>>>> 6b3c6b7e6ef3db4dac9a9b300234238ea079480b
                                 ),
                               ],
                             )
