@@ -543,6 +543,7 @@ class BaseUtil extends ChangeNotifier {
       freshchatKeys = null;
       _userCreationTimestamp = null;
       lastTransactionListDocument = null;
+      hasMoreTransactionListDocuments = true;
       isOtpResendCount = 0;
       show_security_prompt = false;
       delegate.appState.setCurrentTabIndex = 0;

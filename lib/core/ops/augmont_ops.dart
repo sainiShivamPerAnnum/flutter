@@ -499,7 +499,9 @@ class AugmontModel extends ChangeNotifier {
     _augmontTxnProcessListener = null;
 
     _baseProvider.userMiniTxnList =
-        null; //this is to ensure that the transactions list gets refreshed
+        null;
+    _baseProvider.hasMoreTransactionListDocuments = true;
+    _baseProvider.lastTransactionListDocument=null;//this is to ensure that the transactions list gets refreshed
   }
 
   double getTaxOnAmount(double amount, double taxRate) {
