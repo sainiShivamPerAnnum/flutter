@@ -388,13 +388,13 @@ class _TicketCountState extends State<TicketCount>
         AnimationController(duration: Duration(seconds: 2), vsync: this);
     _latestBegin = 0;
     _latestEnd = widget.totalCount + .0;
-    // if (AppState.isFirstTime)
+    if (AppState.isFirstTime)
       animateTag();
   }
 
   animateTag() {
     showTag = true;
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(milliseconds: 2500), () {
       if (mounted)
         setState(() {
           tagWidth = SizeConfig.screenWidth / 2;
@@ -468,10 +468,23 @@ class _TicketCountState extends State<TicketCount>
               fontWeight: FontWeight.w500,
             ),
           ),
-          Text(
-            "Tickets",
-            style: TextStyle(
-                color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                " Tickets",
+                style: TextStyle(
+                    color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 1),
+                child: Icon(
+                  Icons.info_outline,
+                  color: Colors.white60,
+                  size: SizeConfig.mediumTextSize,
+                ),
+              )
+            ],
           ),
           // showTag
           //     ? Container(
