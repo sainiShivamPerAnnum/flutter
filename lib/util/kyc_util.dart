@@ -17,8 +17,7 @@ class KycUrls {
     }
   }
 
-  static String createOnboardingObject =
-      "/api/channels/$channelId/onboardings";
+  static String createOnboardingObject = "/api/channels/$channelId/onboardings";
   static String convertImages = "https://persist.signzy.tech/api/files/upload";
 
   static String login = "/api/onboardings/login?ns=";

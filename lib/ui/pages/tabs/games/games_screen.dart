@@ -96,14 +96,6 @@ class _GamePageState extends State<GamePage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
-    // if (baseProvider.show_game_tutorial) {
-    //   Timer(const Duration(milliseconds: 2100), () {
-    //     WidgetsBinding.instance.addPostFrameCallback((_) {
-    //       ShowCaseWidget.of(context)
-    //           .startShowCase([_showcaseHeader, _showcaseFooter]);
-    //     });
-    //   });
-    // }
     return RefreshIndicator(
       onRefresh: () async {
         await _onTicketsRefresh();
@@ -161,11 +153,6 @@ class _GamePageState extends State<GamePage> {
                             },
                             child: TicketCount(baseProvider.userTicketWallet
                                 .getActiveTickets()),
-                            // BaseUtil.buildShowcaseWrapper(
-                            //   _showcaseHeader,
-                            //   'Your game tickets appear here. You receive 1 game ticket for every ₹${Constants.INVESTMENT_AMOUNT_FOR_TICKET} you save. You can also click here to see a further breakdown.',
-                            //
-                            // ),
                           ),
                           const Spacer(
                             flex: 1,
@@ -174,11 +161,6 @@ class _GamePageState extends State<GamePage> {
                             games: _gameList,
                             onGameChange: _handleGameChange,
                           ),
-                          // BaseUtil.buildShowcaseWrapper(
-                          //   _showcaseFooter,
-                          //   'Use the tickets to play exciting weekly games and win fun prizes!',
-                          //
-                          // ),
                           const Spacer(
                             flex: 1,
                           ),
@@ -385,8 +367,7 @@ class _TicketCountState extends State<TicketCount>
         AnimationController(duration: Duration(seconds: 2), vsync: this);
     _latestBegin = 0;
     _latestEnd = widget.totalCount + .0;
-    if (AppState.isFirstTime)
-      animateTag();
+    if (AppState.isFirstTime) animateTag();
   }
 
   animateTag() {
@@ -398,37 +379,37 @@ class _TicketCountState extends State<TicketCount>
           tagHeight = SizeConfig.cardTitleTextSize * 1.2;
         });
     })
-      //   .then((_) {
-      // Future.delayed(Duration(seconds: 2), () {
-      //   if (mounted)
-      //     setState(() {
-      //       tagOpacity = 1;
-      //     });
-      // }).then((_) {
-      //   Future.delayed(Duration(seconds: 2), () {
-      //     if (mounted)
-      //       setState(() {
-      //         tagOpacity = 0;
-      //       });
-      //   })
-            .then((_) {
-          Future.delayed(Duration(milliseconds: 2500), () {
-            if (mounted)
-              setState(() {
-                tagWidth = 0;
-                tagHeight = 0;
-              });
-            AppState.isFirstTime = false;
-          }).then((value) {
-            Future.delayed(Duration(seconds: 2), () {
-              if (mounted)
-                setState(() {
-                  showTag = false;
-                });
-            });
+        //   .then((_) {
+        // Future.delayed(Duration(seconds: 2), () {
+        //   if (mounted)
+        //     setState(() {
+        //       tagOpacity = 1;
+        //     });
+        // }).then((_) {
+        //   Future.delayed(Duration(seconds: 2), () {
+        //     if (mounted)
+        //       setState(() {
+        //         tagOpacity = 0;
+        //       });
+        //   })
+        .then((_) {
+      Future.delayed(Duration(milliseconds: 2500), () {
+        if (mounted)
+          setState(() {
+            tagWidth = 0;
+            tagHeight = 0;
           });
+        AppState.isFirstTime = false;
+      }).then((value) {
+        Future.delayed(Duration(seconds: 2), () {
+          if (mounted)
+            setState(() {
+              showTag = false;
+            });
         });
-      // });
+      });
+    });
+    // });
     // });
   }
 

@@ -30,7 +30,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await Firebase.initializeApp();
-  }catch(e) {
+  } catch (e) {
     print(e.toString());
   }
   FirebaseMessaging.onBackgroundMessage(FcmListener.backgroundMessageHandler);

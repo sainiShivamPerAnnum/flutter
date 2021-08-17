@@ -66,9 +66,9 @@ class LogoFadeIn extends State<SplashScreen> {
 
     bool isThereBreakingUpdate = await checkBreakingUpdate();
     if (isThereBreakingUpdate) {
-    stateProvider.currentAction =
-        PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
-    return;
+      stateProvider.currentAction =
+          PageAction(state: PageState.replaceAll, page: UpdateRequiredConfig);
+      return;
     }
 
     ///check if user is onboarded

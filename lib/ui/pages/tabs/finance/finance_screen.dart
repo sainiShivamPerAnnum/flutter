@@ -71,8 +71,9 @@ class _FinancePageState extends State<FinancePage> {
           child: ClipRRect(
             borderRadius: SizeConfig.homeViewBorder,
             child: Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: SizeConfig.globalMargin,vertical: SizeConfig.blockSizeVertical),
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.globalMargin,
+                  vertical: SizeConfig.blockSizeVertical),
               child: CustomScrollView(
                 slivers: [
                   SliverList(

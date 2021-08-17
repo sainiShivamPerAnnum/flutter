@@ -292,7 +292,9 @@ class AugmontModel extends ChangeNotifier {
         !resMap[INTERNAL_FAIL_FLAG] ||
         resMap[SubmitGoldPurchase.resTranId] == null) {
       log.error('Query Failed');
-      Map<String,dynamic> _failMap = {'txnDocId': _baseProvider.currentAugmontTxn.docKey};
+      Map<String, dynamic> _failMap = {
+        'txnDocId': _baseProvider.currentAugmontTxn.docKey
+      };
       await _dbModel.logFailure(_baseProvider.myUser.uid,
           FailType.UserAugmontPurchaseFailed, _failMap);
       bool flag = await _dbModel.updateUserTransaction(
@@ -320,7 +322,9 @@ class AugmontModel extends ChangeNotifier {
 
   _onPaymentFailed() async {
     log.error('Query Failed');
-    Map<String,dynamic> _failMap = {'txnDocId': _baseProvider.currentAugmontTxn.docKey};
+    Map<String, dynamic> _failMap = {
+      'txnDocId': _baseProvider.currentAugmontTxn.docKey
+    };
     await _dbModel.logFailure(_baseProvider.myUser.uid,
         FailType.UserRazorpayPurchaseFailed, _failMap);
     _baseProvider.currentAugmontTxn.tranStatus =
@@ -498,10 +502,10 @@ class AugmontModel extends ChangeNotifier {
     _baseProvider.currentAugmontTxn = null;
     _augmontTxnProcessListener = null;
 
-    _baseProvider.userMiniTxnList =
-        null;
+    _baseProvider.userMiniTxnList = null;
     _baseProvider.hasMoreTransactionListDocuments = true;
-    _baseProvider.lastTransactionListDocument=null;//this is to ensure that the transactions list gets refreshed
+    _baseProvider.lastTransactionListDocument =
+        null; //this is to ensure that the transactions list gets refreshed
   }
 
   double getTaxOnAmount(double amount, double taxRate) {

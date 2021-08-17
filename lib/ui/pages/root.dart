@@ -75,32 +75,6 @@ class _RootState extends State<Root> {
       HomePage(),
       GamePage(),
       FinancePage(),
-      // ShowCaseWidget(
-      //   builder: Builder(
-      //     builder: (context) => GamePage(),
-      //   ),
-      //   onFinish: () {
-      //     baseProvider.show_game_tutorial = false;
-      //     _navBarItems[1].showFocus = false;
-      //     lclDbProvider.saveHomeTutorialComplete = true;
-      //
-      //     _showSecurityBottomSheet();
-      //
-      //     setState(() {});
-      //   },
-      // ),
-      // ShowCaseWidget(
-      //   builder: Builder(
-      //     builder: (context) => FinancePage(),
-      //   ),
-      //   onFinish: () {
-      //     baseProvider.show_finance_tutorial = false;
-      //     _navBarItems[2].showFocus = false;
-      //     baseProvider.show_game_tutorial = true;
-      //     _navBarItems[1].showFocus = true;
-      //     setState(() {});
-      //   },
-      // ),
       ProfilePage(),
     ];
     super.initState();

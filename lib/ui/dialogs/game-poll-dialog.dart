@@ -65,10 +65,12 @@ class _GamePollState extends State<GamePoll> {
     }
     dbProvider.addUserPollResponse(baseProvider.myUser.uid, index).then((flag) {
       if (!flag) {
-        Map<String,dynamic> errorDetails = {
-          'Error Message' : 'Adding user poll response in game-poll-dialog failed'
+        Map<String, dynamic> errorDetails = {
+          'Error Message':
+              'Adding user poll response in game-poll-dialog failed'
         };
-        dbProvider.logFailure(baseProvider.myUser.uid, FailType.GameVoteFailed, errorDetails);
+        dbProvider.logFailure(
+            baseProvider.myUser.uid, FailType.GameVoteFailed, errorDetails);
         baseProvider.showNegativeAlert('Couldn\'t save response',
             'Please try again in some time', context);
       }

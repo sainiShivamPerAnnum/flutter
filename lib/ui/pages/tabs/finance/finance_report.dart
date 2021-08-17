@@ -6,7 +6,6 @@ import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 class YourFunds extends StatefulWidget {
   final List<ChartFundItem> chartFunds;
 

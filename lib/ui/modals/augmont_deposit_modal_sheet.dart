@@ -117,7 +117,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                       size: 30,
                     ),
                     onPressed: () {
-                      if(_isDepositInProgress) {
+                      if (_isDepositInProgress) {
                         // do nothing
                       } else {
                         backButtonDispatcher.didPopRoute();
