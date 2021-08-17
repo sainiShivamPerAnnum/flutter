@@ -1,11 +1,11 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/model/chartFundItem.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../main.dart';
 
 class YourFunds extends StatefulWidget {
   final List<ChartFundItem> chartFunds;

@@ -37,9 +37,6 @@ class _GamePageState extends State<GamePage> {
   DBModel dbProvider;
   AppState appState;
 
-  GlobalKey _showcaseHeader = GlobalKey();
-  GlobalKey _showcaseFooter = GlobalKey();
-
   PageController _controller;
 
   @override
