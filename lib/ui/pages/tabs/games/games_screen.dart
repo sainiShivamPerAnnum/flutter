@@ -371,7 +371,7 @@ class _TicketCountState extends State<TicketCount>
   Animation<double> _animation;
   double _latestBegin;
   double _latestEnd;
-  double tagWidth = 0, tagHeight = 0, tagOpacity = 0;
+  double tagWidth = 0, tagHeight = 0, tagOpacity = 1;
   bool showTag = false;
 
   @override
@@ -388,31 +388,34 @@ class _TicketCountState extends State<TicketCount>
         AnimationController(duration: Duration(seconds: 2), vsync: this);
     _latestBegin = 0;
     _latestEnd = widget.totalCount + .0;
-    if (AppState.isFirstTime) animateTag();
+    if (AppState.isFirstTime)
+      animateTag();
   }
 
   animateTag() {
     showTag = true;
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(milliseconds: 2500), () {
       if (mounted)
         setState(() {
           tagWidth = SizeConfig.screenWidth / 2;
           tagHeight = SizeConfig.cardTitleTextSize * 1.2;
         });
-    }).then((_) {
-      Future.delayed(Duration(seconds: 2), () {
-        if (mounted)
-          setState(() {
-            tagOpacity = 1;
-          });
-      }).then((_) {
-        Future.delayed(Duration(seconds: 2), () {
-          if (mounted)
-            setState(() {
-              tagOpacity = 0;
-            });
-        }).then((_) {
-          Future.delayed(Duration(seconds: 1), () {
+    })
+      //   .then((_) {
+      // Future.delayed(Duration(seconds: 2), () {
+      //   if (mounted)
+      //     setState(() {
+      //       tagOpacity = 1;
+      //     });
+      // }).then((_) {
+      //   Future.delayed(Duration(seconds: 2), () {
+      //     if (mounted)
+      //       setState(() {
+      //         tagOpacity = 0;
+      //       });
+      //   })
+            .then((_) {
+          Future.delayed(Duration(milliseconds: 2500), () {
             if (mounted)
               setState(() {
                 tagWidth = 0;
@@ -428,8 +431,8 @@ class _TicketCountState extends State<TicketCount>
             });
           });
         });
-      });
-    });
+      // });
+    // });
   }
 
   @override
@@ -465,13 +468,26 @@ class _TicketCountState extends State<TicketCount>
               fontWeight: FontWeight.w500,
             ),
           ),
-          Text(
-            "Tickets",
-            style: TextStyle(
-                color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                " Tickets",
+                style: TextStyle(
+                    color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 1),
+                child: Icon(
+                  Icons.info_outline,
+                  color: Colors.white60,
+                  size: SizeConfig.mediumTextSize,
+                ),
+              )
+            ],
           ),
           AnimatedContainer(
-            duration: Duration(seconds: 2),
+            duration: Duration(milliseconds: 600),
             margin: EdgeInsets.only(top: 10, left: 50, right: 50),
             width: tagWidth,
             height: tagHeight,
@@ -479,14 +495,14 @@ class _TicketCountState extends State<TicketCount>
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(100),
-              color: Colors.amber[100],
+              color: Colors.yellow[100],
             ),
             alignment: Alignment.center,
             child: AnimatedOpacity(
               opacity: tagOpacity,
               duration: Duration(seconds: 1),
               child: Text(
-                "₹ 100 = 1 Ticket",
+                "🏁 ₹ 100 = 1 Ticket",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: SizeConfig.mediumTextSize,

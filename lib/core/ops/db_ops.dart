@@ -1158,7 +1158,9 @@ class DBModel extends ChangeNotifier {
               documentSnapshot.exists && _doc != null &&
               _doc.length > 0) {
             FeedCard _card = FeedCard.fromMap(documentSnapshot.data());
+            ///only include the feedcards that are not 'hidden'
             if (_card != null && _card.isHidden != null && !_card.isHidden) _cards.add(_card);
+            ///bump down the 'learn' card if the user is old
           }
         }
       }

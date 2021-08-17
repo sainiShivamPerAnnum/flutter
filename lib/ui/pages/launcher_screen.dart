@@ -37,14 +37,14 @@ class LogoFadeIn extends State<SplashScreen> {
   @override
   void initState() {
     _loadImageAsset(Assets.logoMaxSize);
+    initialize();
     Timer(const Duration(milliseconds: 300), () {
       setState(() {
         _logoStyle = LogoStyle.stacked;
       });
     });
-    Timer(const Duration(milliseconds: 500), () {
-      initialize();
-    });
+    // Timer(const Duration(milliseconds: 500), () {
+    // });
     _timer3 = new Timer(const Duration(seconds: 6), () {
       //display slow internet message
       setState(() {
