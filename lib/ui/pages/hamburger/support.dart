@@ -518,12 +518,17 @@ class _SupportPageState extends State<SupportPage> {
                                     'Error',
                                     'Something went wrong while placing a request, please try again later.',
                                     context);
-                                if(baseProvider.myUser.uid!=null) {
-                                  Map<String,dynamic> errorDetails = {
-                                    'Error Message' : 'Placing a call request failed',
-                                    'Phone Number' : _requestCallPhoneController.text.trim(),
+                                if (baseProvider.myUser.uid != null) {
+                                  Map<String, dynamic> errorDetails = {
+                                    'Error Message':
+                                        'Placing a call request failed',
+                                    'Phone Number':
+                                        _requestCallPhoneController.text.trim(),
                                   };
-                                  dbProvider.logFailure(baseProvider.myUser.uid, FailType.RequestCallbackFailed, errorDetails);
+                                  dbProvider.logFailure(
+                                      baseProvider.myUser.uid,
+                                      FailType.RequestCallbackFailed,
+                                      errorDetails);
                                 }
                                 Navigator.of(context).pop();
                               }

@@ -116,7 +116,13 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                       Icons.clear_rounded,
                       size: 30,
                     ),
-                    onPressed: () => backButtonDispatcher.didPopRoute(),
+                    onPressed: () {
+                      if (_isDepositInProgress) {
+                        // do nothing
+                      } else {
+                        backButtonDispatcher.didPopRoute();
+                      }
+                    },
                   )
                 ],
               ),
@@ -410,6 +416,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
       HapticFeedback.vibrate();
       showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (BuildContext context) => SuccessDialog(),
       );
     } else

@@ -167,7 +167,7 @@ class Ticket extends StatelessWidget {
                           itemCount: 27,
                           physics: NeverScrollableScrollPhysics(),
                           gridDelegate:
-                          SliverGridDelegateWithFixedCrossAxisCount(
+                              SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 9,
                           ),
                           itemBuilder: (ctx, i) {
@@ -236,18 +236,18 @@ class Ticket extends StatelessWidget {
                                         child: Icon(odds[index].icon,
                                             color: Colors.white,
                                             size:
-                                            SizeConfig.screenWidth * 0.06),
+                                                SizeConfig.screenWidth * 0.06),
                                       ),
                                       odds[index].left == 0
                                           ? Transform.translate(
-                                        offset: Offset(-3, -3),
-                                        child: Image.network(
-                                          "https://image.flaticon.com/icons/png/512/3699/3699516.png",
-                                          height:
-                                          SizeConfig.largeTextSize,
-                                          width: SizeConfig.largeTextSize,
-                                        ),
-                                      )
+                                              offset: Offset(-3, -3),
+                                              child: Image.network(
+                                                "https://image.flaticon.com/icons/png/512/3699/3699516.png",
+                                                height:
+                                                    SizeConfig.largeTextSize,
+                                                width: SizeConfig.largeTextSize,
+                                              ),
+                                            )
                                           : SizedBox()
                                     ],
                                   ),

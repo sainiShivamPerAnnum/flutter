@@ -29,28 +29,28 @@ class Walkthrough extends StatelessWidget {
     return points
         .map(
           (e) => Container(
-        width: SizeConfig.screenWidth,
-        margin: EdgeInsets.symmetric(
-            vertical: 10, horizontal: SizeConfig.blockSizeHorizontal * 3),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 4,
-              backgroundColor: Colors.black,
+            width: SizeConfig.screenWidth,
+            margin: EdgeInsets.symmetric(
+                vertical: 10, horizontal: SizeConfig.blockSizeHorizontal * 3),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 4,
+                  backgroundColor: Colors.black,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: Text(
+                    e,
+                    style: TextStyle(fontSize: SizeConfig.mediumTextSize),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: Text(
-                e,
-                style: TextStyle(fontSize: SizeConfig.mediumTextSize),
-              ),
-            ),
-          ],
-        ),
-      ),
-    )
+          ),
+        )
         .toList();
   }
 

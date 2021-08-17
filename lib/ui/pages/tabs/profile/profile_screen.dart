@@ -276,7 +276,7 @@ class Social extends StatelessWidget {
 
   Widget socialButton(String asset, String url) {
     return GestureDetector(
-      onTap: () async => launchUrl(url),
+      onTap: () async => BaseUtil.launchUrl(url),
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
@@ -293,14 +293,6 @@ class Social extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-void launchUrl(String url) async {
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
   }
 }
 
@@ -322,8 +314,9 @@ class TermsRow extends StatelessWidget {
             ),
             onTap: () {
               HapticFeedback.vibrate();
-              delegate.appState.currentAction =
-                  PageAction(state: PageState.addPage, page: TncPageConfig);
+              BaseUtil.launchUrl('https://fello.in/policy/tnc');
+              // delegate.appState.currentAction =
+              //     PageAction(state: PageState.addPage, page: TncPageConfig);
             },
           ),
         ),
@@ -335,15 +328,15 @@ class TermsRow extends StatelessWidget {
           padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
           child: InkWell(
             child: Text(
-              'Referral Policy',
+              'Privacy Policy',
               style: TextStyle(
                   color: Colors.grey, decoration: TextDecoration.underline),
             ),
             onTap: () {
               HapticFeedback.vibrate();
-
-              delegate.appState.currentAction = PageAction(
-                  state: PageState.addPage, page: RefPolicyPageConfig);
+              BaseUtil.launchUrl('https://fello.in/policy/privacy');
+              // delegate.appState.currentAction = PageAction(
+              //     state: PageState.addPage, page: RefPolicyPageConfig);
             },
           ),
         )
