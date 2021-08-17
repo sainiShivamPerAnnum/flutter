@@ -137,7 +137,7 @@ class _FundsChartViewState extends State<FundsChartView> {
           function: () {},
           fundAmount: widget.userFundWallet.lockedPrizeBalance,
           logo: "images/fello_logo.png",
-          isHighlighted: true),
+          isHighlighted: false),
     ];
   }
 
@@ -161,80 +161,85 @@ class _FundsChartViewState extends State<FundsChartView> {
       child: Container(
         width: SizeConfig.screenWidth,
         // height: SizeConfig.screenHeight * 0.25,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: Stack(
           children: [
-            Container(
-              child: PieChart(
-                dataMap: getChartMap(),
-                animationDuration: Duration(milliseconds: 800),
-                chartLegendSpacing: 40,
-                chartRadius: SizeConfig.screenWidth / 2,
-                colorList: getColorList(),
-                initialAngleInDegree: 0,
-                shouldHighlight: getHighlightStatus(),
-                chartType: ChartType.ring,
-                ringStrokeWidth: 10.0,
-                centerText:
-                    "₹ ${widget.userFundWallet.getEstTotalWealth().toStringAsFixed(2)}",
-                legendOptions: LegendOptions(
-                  showLegendsInRow: false,
-                  legendPosition: LegendPosition.left,
-                  showLegends: false,
-                  legendShape: BoxShape.circle,
-                  legendTextStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  child: PieChart(
+                    dataMap: getChartMap(),
+                    animationDuration: Duration(milliseconds: 800),
+                    chartLegendSpacing: 40,
+                    chartRadius: SizeConfig.screenWidth / 2,
+                    colorList: getColorList(),
+                    initialAngleInDegree: 0,
+                    shouldHighlight: getHighlightStatus(),
+                    chartType: ChartType.ring,
+                    ringStrokeWidth: 10.0,
+                    centerText:
+                        "₹ ${widget.userFundWallet.getEstTotalWealth().toStringAsFixed(2)}",
+                    legendOptions: LegendOptions(
+                      showLegendsInRow: false,
+                      legendPosition: LegendPosition.left,
+                      showLegends: false,
+                      legendShape: BoxShape.circle,
+                      legendTextStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    chartValuesOptions: ChartValuesOptions(
+                      showChartValueBackground: true,
+                      showChartValues: false,
+                      chartValueBackgroundColor: UiConstants.backgroundColor,
+                      chartValueStyle: GoogleFonts.montserrat(
+                        fontSize: math.min(
+                            (SizeConfig.screenWidth) /
+                                (widget.userFundWallet
+                                        .getEstTotalWealth()
+                                        .toStringAsFixed(2)
+                                        .length *
+                                    1.8),
+                            SizeConfig.largeTextSize * 2),
+                        color: UiConstants.textColor,
+                      ),
+                      showChartValuesInPercentage: false,
+                      showChartValuesOutside: false,
+                    ),
                   ),
                 ),
-                chartValuesOptions: ChartValuesOptions(
-                  showChartValueBackground: true,
-                  showChartValues: false,
-                  chartValueBackgroundColor: UiConstants.backgroundColor,
-                  chartValueStyle: GoogleFonts.montserrat(
-                    fontSize: math.min(
-                        (SizeConfig.screenWidth) /
-                            (widget.userFundWallet
-                                    .getEstTotalWealth()
-                                    .toStringAsFixed(2)
-                                    .length *
-                                1.8),
-                        SizeConfig.largeTextSize * 2),
-                    color: UiConstants.textColor,
+                SizedBox(width: SizeConfig.blockSizeHorizontal * 5),
+                Container(
+                  width: SizeConfig.screenWidth * 0.3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      chartData.length,
+                      (i) => chartData[i].fundAmount > 0
+                          ? Legend(
+                              title: chartData[i].fundName,
+                              amount:
+                                  "₹ ${chartData[i].fundAmount.toStringAsFixed(2)}",
+                              color: chartData[i].color,
+                              titleTextStyle: TextStyle(
+                                fontSize: SizeConfig.smallTextSize * 1.2,
+                                color: UiConstants.textColor,
+                              ),
+                              bodyTextStyle: TextStyle(
+                                fontSize: SizeConfig.mediumTextSize,
+                                color: UiConstants.textColor,
+                              ),
+                              isHighlighted: chartData[i].isHighlighted,
+                            )
+                          : Container(),
+                    ),
                   ),
-                  showChartValuesInPercentage: false,
-                  showChartValuesOutside: false,
-                ),
-              ),
+                )
+              ],
             ),
-            SizedBox(width: SizeConfig.blockSizeHorizontal * 5),
-            Container(
-              width: SizeConfig.screenWidth * 0.3,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  chartData.length,
-                  (i) => chartData[i].fundAmount > 0
-                      ? Legend(
-                          title: chartData[i].fundName,
-                          amount:
-                              "₹ ${chartData[i].fundAmount.toStringAsFixed(2)}",
-                          color: chartData[i].color,
-                          titleTextStyle: TextStyle(
-                            fontSize: SizeConfig.smallTextSize * 1.2,
-                            color: UiConstants.textColor,
-                          ),
-                          bodyTextStyle: TextStyle(
-                            fontSize: SizeConfig.mediumTextSize,
-                            color: UiConstants.textColor,
-                          ),
-                          isHighlighted: chartData[i].isHighlighted,
-                        )
-                      : Container(),
-                ),
-              ),
-            )
+            Icon(Icons.info, color: Colors.grey)
           ],
         ),
       ),

@@ -9,6 +9,7 @@ import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/modals/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
@@ -21,6 +22,7 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class Root extends StatefulWidget {
@@ -40,11 +42,14 @@ class _RootState extends State<Root> {
   List<Widget> _viewsByIndex;
   List<bool> _showFocuses = List.filled(4, false);
   bool _isInitialized = false;
+  bool showTag = true;
+  double tagWidth = 0;
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       AppState().setRootLoadValue = true;
+      tagWidth = SizeConfig.screenWidth / 2;
     });
     _initDynamicLinks();
     //Declare some buttons for our tab bar
@@ -71,32 +76,6 @@ class _RootState extends State<Root> {
       HomePage(),
       GamePage(),
       FinancePage(),
-      // ShowCaseWidget(
-      //   builder: Builder(
-      //     builder: (context) => GamePage(),
-      //   ),
-      //   onFinish: () {
-      //     baseProvider.show_game_tutorial = false;
-      //     _navBarItems[1].showFocus = false;
-      //     lclDbProvider.saveHomeTutorialComplete = true;
-      //
-      //     _showSecurityBottomSheet();
-      //
-      //     setState(() {});
-      //   },
-      // ),
-      // ShowCaseWidget(
-      //   builder: Builder(
-      //     builder: (context) => FinancePage(),
-      //   ),
-      //   onFinish: () {
-      //     baseProvider.show_finance_tutorial = false;
-      //     _navBarItems[2].showFocus = false;
-      //     baseProvider.show_game_tutorial = true;
-      //     _navBarItems[1].showFocus = true;
-      //     setState(() {});
-      //   },
-      // ),
       ProfilePage(),
     ];
     super.initState();
@@ -109,12 +88,11 @@ class _RootState extends State<Root> {
     fcmProvider.addIncomingMessageListener(null);
   }
 
-  Color getBurgerBorder() {
-    if (appState.getCurrentTabIndex == 0 || appState.getCurrentTabIndex == 1) {
-      return Colors.white;
-    } else {
-      return Colors.black;
-    }
+  void toggleTag() {
+    print("got here");
+    setState(() {
+      showTag = !showTag;
+    });
   }
 
   _initAdhocNotifications() {
@@ -217,37 +195,29 @@ class _RootState extends State<Root> {
                 ),
               ),
             ),
-            SafeArea(
-              child: GestureDetector(
-                onTap: () {
-                  HapticFeedback.vibrate();
-                  delegate.parseRoute(Uri.parse("d-ham"));
-                },
-                child: Container(
-                  height: SizeConfig.blockSizeVertical * 5,
-                  width: SizeConfig.blockSizeVertical * 5,
-                  margin: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.blockSizeHorizontal * 5,
-                    vertical: kToolbarHeight * 0.2,
+            Positioned(
+              top: SizeConfig.blockSizeHorizontal * 2,
+              right: SizeConfig.blockSizeHorizontal * 2,
+              child: SafeArea(
+                child: InkWell(
+                  child: SvgPicture.asset(
+                    "images/support-log.svg",
+                    height: kToolbarHeight * 0.6,
+                    color: (appState.getCurrentTabIndex == 0)
+                        ? Colors.white
+                        : Color(0xff4C4C4C),
                   ),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: getBurgerBorder(), width: 2),
-                  ),
-                  alignment: Alignment.center,
-                  child: Container(
-                    height: SizeConfig.blockSizeVertical * 1.4,
-                    child: Image.asset(
-                      "images/menu.png",
-                      color: (appState.getCurrentTabIndex == 0 ||
-                              appState.getCurrentTabIndex == 1)
-                          ? Colors.white
-                          : Colors.black,
-                    ),
-                  ),
+                  //icon: Icon(Icons.contact_support_outlined),
+                  // iconSize: kToolbarHeight * 0.5,
+
+                  onTap: () {
+                    HapticFeedback.vibrate();
+                    delegate.appState.currentAction = PageAction(
+                        state: PageState.addPage, page: SupportPageConfig);
+                  },
                 ),
               ),
-            )
+            ),
           ],
         ),
         bottomNavigationBar: navBar //Pass our custom navBar into the scaffold

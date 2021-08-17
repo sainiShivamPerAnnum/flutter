@@ -37,9 +37,6 @@ class _GamePageState extends State<GamePage> {
   DBModel dbProvider;
   AppState appState;
 
-  GlobalKey _showcaseHeader = GlobalKey();
-  GlobalKey _showcaseFooter = GlobalKey();
-
   PageController _controller;
 
   @override
@@ -99,14 +96,6 @@ class _GamePageState extends State<GamePage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
-    // if (baseProvider.show_game_tutorial) {
-    //   Timer(const Duration(milliseconds: 2100), () {
-    //     WidgetsBinding.instance.addPostFrameCallback((_) {
-    //       ShowCaseWidget.of(context)
-    //           .startShowCase([_showcaseHeader, _showcaseFooter]);
-    //     });
-    //   });
-    // }
     return RefreshIndicator(
       onRefresh: () async {
         await _onTicketsRefresh();
@@ -164,11 +153,6 @@ class _GamePageState extends State<GamePage> {
                             },
                             child: TicketCount(baseProvider.userTicketWallet
                                 .getActiveTickets()),
-                            // BaseUtil.buildShowcaseWrapper(
-                            //   _showcaseHeader,
-                            //   'Your game tickets appear here. You receive 1 game ticket for every ₹${Constants.INVESTMENT_AMOUNT_FOR_TICKET} you save. You can also click here to see a further breakdown.',
-                            //
-                            // ),
                           ),
                           const Spacer(
                             flex: 1,
@@ -177,11 +161,6 @@ class _GamePageState extends State<GamePage> {
                             games: _gameList,
                             onGameChange: _handleGameChange,
                           ),
-                          // BaseUtil.buildShowcaseWrapper(
-                          //   _showcaseFooter,
-                          //   'Use the tickets to play exciting weekly games and win fun prizes!',
-                          //
-                          // ),
                           const Spacer(
                             flex: 1,
                           ),
@@ -273,7 +252,7 @@ class IdeaSection extends StatelessWidget {
     final baseProvider = Provider.of<BaseUtil>(context, listen: false);
     final dbProvider = Provider.of<DBModel>(context, listen: false);
     return Container(
-      height: SizeConfig.screenHeight * 0.2,
+      height: SizeConfig.screenHeight * 0.16,
       width: SizeConfig.screenWidth,
       child: ListView(
         shrinkWrap: true,
@@ -371,6 +350,8 @@ class _TicketCountState extends State<TicketCount>
   Animation<double> _animation;
   double _latestBegin;
   double _latestEnd;
+  double tagWidth = 0, tagHeight = 0, tagOpacity = 1;
+  bool showTag = false;
 
   @override
   void dispose() {
@@ -381,10 +362,55 @@ class _TicketCountState extends State<TicketCount>
   @override
   void initState() {
     super.initState();
+
     _controller =
         AnimationController(duration: Duration(seconds: 2), vsync: this);
     _latestBegin = 0;
     _latestEnd = widget.totalCount + .0;
+    if (AppState.isFirstTime) animateTag();
+  }
+
+  animateTag() {
+    showTag = true;
+    Future.delayed(Duration(milliseconds: 2500), () {
+      if (mounted)
+        setState(() {
+          tagWidth = SizeConfig.screenWidth / 2;
+          tagHeight = SizeConfig.cardTitleTextSize * 1.2;
+        });
+    })
+        //   .then((_) {
+        // Future.delayed(Duration(seconds: 2), () {
+        //   if (mounted)
+        //     setState(() {
+        //       tagOpacity = 1;
+        //     });
+        // }).then((_) {
+        //   Future.delayed(Duration(seconds: 2), () {
+        //     if (mounted)
+        //       setState(() {
+        //         tagOpacity = 0;
+        //       });
+        //   })
+        .then((_) {
+      Future.delayed(Duration(milliseconds: 2500), () {
+        if (mounted)
+          setState(() {
+            tagWidth = 0;
+            tagHeight = 0;
+          });
+        AppState.isFirstTime = false;
+      }).then((value) {
+        Future.delayed(Duration(seconds: 2), () {
+          if (mounted)
+            setState(() {
+              showTag = false;
+            });
+        });
+      });
+    });
+    // });
+    // });
   }
 
   @override
@@ -420,10 +446,49 @@ class _TicketCountState extends State<TicketCount>
               fontWeight: FontWeight.w500,
             ),
           ),
-          Text(
-            "Tickets",
-            style: TextStyle(
-                color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                " Tickets",
+                style: TextStyle(
+                    color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 1),
+                child: Icon(
+                  Icons.info_outline,
+                  color: Colors.white60,
+                  size: SizeConfig.mediumTextSize,
+                ),
+              )
+            ],
+          ),
+          AnimatedContainer(
+            duration: Duration(milliseconds: 600),
+            margin: EdgeInsets.only(top: 10, left: 50, right: 50),
+            width: tagWidth,
+            height: tagHeight,
+            curve: Curves.bounceOut,
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+              color: Colors.yellow[100],
+            ),
+            alignment: Alignment.center,
+            child: AnimatedOpacity(
+              opacity: tagOpacity,
+              duration: Duration(seconds: 1),
+              child: Text(
+                "🏁 ₹ 100 = 1 Ticket",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: SizeConfig.mediumTextSize,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 2,
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -444,11 +509,11 @@ class GameCard extends StatelessWidget {
       children: [
         Container(
           margin: EdgeInsets.only(
-            left: SizeConfig.blockSizeHorizontal * 5,
+            left: SizeConfig.globalMargin,
           ),
           padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(8),
               gradient: new LinearGradient(
                 colors: gradient,
                 begin: Alignment.bottomLeft,
@@ -467,7 +532,7 @@ class GameCard extends StatelessWidget {
                 ),
               ]),
           width: SizeConfig.screenWidth * 0.8,
-          height: SizeConfig.screenHeight * 0.16,
+          height: SizeConfig.screenHeight * 0.14,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,

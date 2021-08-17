@@ -86,7 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
           physics: BouncingScrollPhysics(),
           children: [
             Container(
-              height: SizeConfig.screenHeight * 0.08,
+              height: kToolbarHeight,
             ),
             Consumer<BaseUtil>(
               builder: (ctx, bp, child) {
@@ -109,11 +109,10 @@ class _ProfilePageState extends State<ProfilePage> {
                               children: [
                                 ListTile(
                                   contentPadding: EdgeInsets.symmetric(
-                                      horizontal:
-                                          SizeConfig.blockSizeHorizontal * 5),
+                                      horizontal: SizeConfig.globalMargin),
                                   leading: Icon(
                                     Icons.account_circle_outlined,
-                                    size: SizeConfig.blockSizeHorizontal * 5,
+                                    size: SizeConfig.globalMargin,
                                     color: UiConstants.primaryColor,
                                   ),
                                   title: Text(
@@ -154,10 +153,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                   ),
                   ProfileTabTile(
-                    leadWidget: Image.asset(
-                      "images/contact-book.png",
-                      height: SizeConfig.blockSizeHorizontal * 5,
-                    ),
+                    leadIcon: "images/contact-book.png",
                     onPress: () => appState.currentAction = PageAction(
                         state: PageState.addPage,
                         page: UserProfileDetailsConfig),
@@ -169,10 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   ProfileTabTile(
-                      leadWidget: Image.asset(
-                        "images/transaction.png",
-                        height: SizeConfig.blockSizeHorizontal * 5,
-                      ),
+                      leadIcon: "images/transaction.png",
                       title: "Transactions",
                       trailWidget: Text(
                         "See All",
@@ -185,10 +178,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           state: PageState.addPage,
                           page: TransactionPageConfig)),
                   ProfileTabTile(
-                    leadWidget: Image.asset(
-                      "images/referrals.png",
-                      height: SizeConfig.blockSizeHorizontal * 5,
-                    ),
+                    leadIcon: "images/referrals.png",
                     title: "Referrals",
                     trailWidget: Text(
                       _myReferralCount.toString(),
@@ -286,7 +276,7 @@ class Social extends StatelessWidget {
 
   Widget socialButton(String asset, String url) {
     return GestureDetector(
-      onTap: () async => launchUrl(url),
+      onTap: () async => BaseUtil.launchUrl(url),
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
@@ -303,14 +293,6 @@ class Social extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-void launchUrl(String url) async {
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
   }
 }
 
@@ -332,8 +314,9 @@ class TermsRow extends StatelessWidget {
             ),
             onTap: () {
               HapticFeedback.vibrate();
-              delegate.appState.currentAction =
-                  PageAction(state: PageState.addPage, page: TncPageConfig);
+              BaseUtil.launchUrl('https://fello.in/policy/tnc');
+              // delegate.appState.currentAction =
+              //     PageAction(state: PageState.addPage, page: TncPageConfig);
             },
           ),
         ),
@@ -345,15 +328,15 @@ class TermsRow extends StatelessWidget {
           padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
           child: InkWell(
             child: Text(
-              'Referral Policy',
+              'Privacy Policy',
               style: TextStyle(
                   color: Colors.grey, decoration: TextDecoration.underline),
             ),
             onTap: () {
               HapticFeedback.vibrate();
-
-              delegate.appState.currentAction = PageAction(
-                  state: PageState.addPage, page: RefPolicyPageConfig);
+              BaseUtil.launchUrl('https://fello.in/policy/privacy');
+              // delegate.appState.currentAction = PageAction(
+              //     state: PageState.addPage, page: RefPolicyPageConfig);
             },
           ),
         )
@@ -439,10 +422,9 @@ class ShareCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin:
-          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
+      margin: EdgeInsets.symmetric(horizontal: SizeConfig.globalMargin),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
           gradient: new LinearGradient(
             colors: [
               Color(0xff4E4376),
@@ -453,15 +435,10 @@ class ShareCard extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Color(0xff4E4376).withOpacity(0.3),
-              offset: Offset(5, 5),
-              blurRadius: 10,
-            ),
-            BoxShadow(
-              color: Color(0xff2B5876).withOpacity(0.3),
-              offset: Offset(5, 5),
-              blurRadius: 10,
-            ),
+                color: Color(0xff4E4376).withOpacity(0.2),
+                offset: Offset(20, 5),
+                blurRadius: 20,
+                spreadRadius: 10),
           ]),
       width: double.infinity,
       child: Stack(
@@ -480,7 +457,9 @@ class ShareCard extends StatelessWidget {
           ),
           Container(
             width: double.infinity,
-            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5),
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.globalMargin,
+                vertical: SizeConfig.globalMargin * 1.6),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -529,7 +508,7 @@ class ShareCard extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 24,
                 ),
                 RichText(
                   text: new TextSpan(
@@ -569,7 +548,7 @@ class ShareCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 24),
                 const ShareOptions(),
               ],
             ),
@@ -835,27 +814,30 @@ class _ShareOptionsState extends State<ShareOptions> {
 }
 
 class ProfileTabTile extends StatelessWidget {
-  final String title;
-  final Widget leadWidget, trailWidget;
+  final String title, leadIcon;
+  final Widget trailWidget;
   final Function onPress;
 
   const ProfileTabTile(
-      {this.leadWidget, this.onPress, this.title, this.trailWidget});
+      {this.leadIcon, this.onPress, this.title, this.trailWidget});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onPress,
       child: Container(
-        padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.blockSizeHorizontal * 5),
+        padding:
+            EdgeInsets.symmetric(horizontal: SizeConfig.globalMargin * 1.6),
         child: Column(
           children: [
             SizedBox(height: SizeConfig.blockSizeHorizontal * 4),
             Row(
               children: [
-                leadWidget,
-                SizedBox(width: SizeConfig.blockSizeHorizontal * 5),
+                Image.asset(
+                  leadIcon,
+                  height: SizeConfig.blockSizeHorizontal * 5,
+                ),
+                SizedBox(width: SizeConfig.globalMargin),
                 Text(
                   title,
                   style: GoogleFonts.montserrat(
@@ -886,20 +868,20 @@ class UserProfileCard extends StatelessWidget {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     return Container(
       width: SizeConfig.screenWidth,
-      height: SizeConfig.screenWidth * 0.52,
+      height: SizeConfig.screenWidth * 0.4,
       decoration: BoxDecoration(
         gradient: new LinearGradient(
           colors: [Color(0xff299F8F), UiConstants.primaryColor],
           begin: Alignment.bottomLeft,
           end: Alignment.topCenter,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
       ),
       margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.blockSizeHorizontal * 4,
+        horizontal: SizeConfig.globalMargin,
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
         child: CustomPaint(
           painter: ShapePainter(),
           child: Container(
@@ -936,7 +918,7 @@ class UserProfileCard extends StatelessWidget {
                             ),
                     ),
                     SizedBox(
-                      width: SizeConfig.blockSizeHorizontal * 5,
+                      width: SizeConfig.globalMargin,
                     ),
                     Expanded(
                       child: Column(

@@ -88,7 +88,7 @@ class Ticket extends StatelessWidget {
           title: "Bottom Row",
           left: board.getRowOdds(2, calledDigits)),
       TicketOdds(
-          color: Color(0xff4AB474),
+          color: Color(0xff865858),
           icon: Icons.border_outer,
           title: "Corners",
           left: board.getCornerOdds(calledDigits)),
@@ -167,7 +167,7 @@ class Ticket extends StatelessWidget {
                           itemCount: 27,
                           physics: NeverScrollableScrollPhysics(),
                           gridDelegate:
-                          SliverGridDelegateWithFixedCrossAxisCount(
+                              SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 9,
                           ),
                           itemBuilder: (ctx, i) {
@@ -220,17 +220,38 @@ class Ticket extends StatelessWidget {
                       children: List.generate(5, (index) {
                         return Row(
                           children: [
-                            Shimmer(
-                              enabled: odds[index].left == 0,
-                              direction: ShimmerDirection.fromLTRB(),
-                              child: Container(
-                                padding: EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                    color: odds[index].color,
-                                    borderRadius: BorderRadius.circular(4)),
-                                child: Icon(odds[index].icon,
-                                    color: Colors.white,
-                                    size: SizeConfig.screenWidth * 0.06),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: Shimmer(
+                                enabled: odds[index].left == 0,
+                                direction: ShimmerDirection.fromLTRB(),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: odds[index].color,
+                                      borderRadius: BorderRadius.circular(4)),
+                                  child: Stack(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.all(4),
+                                        child: Icon(odds[index].icon,
+                                            color: Colors.white,
+                                            size:
+                                                SizeConfig.screenWidth * 0.06),
+                                      ),
+                                      odds[index].left == 0
+                                          ? Transform.translate(
+                                              offset: Offset(-3, -3),
+                                              child: Image.network(
+                                                "https://image.flaticon.com/icons/png/512/3699/3699516.png",
+                                                height:
+                                                    SizeConfig.largeTextSize,
+                                                width: SizeConfig.largeTextSize,
+                                              ),
+                                            )
+                                          : SizedBox()
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
                             SizedBox(width: 12),
@@ -241,22 +262,16 @@ class Ticket extends StatelessWidget {
                                 Text(
                                   odds[index].title,
                                   style: TextStyle(
-                                    color: odds[index].left == 0
-                                        ? Colors.black
-                                        : Colors.white,
+                                    color: Colors.white,
                                     fontSize: SizeConfig.smallTextSize,
                                   ),
                                 ),
                                 Text(
                                   "${odds[index].left} left",
                                   style: TextStyle(
-                                      color: odds[index].left == 0
-                                          ? Colors.black
-                                          : Colors.white,
+                                      color: Colors.white,
                                       fontWeight: FontWeight.w900,
-                                      fontSize: odds[index].left == 0
-                                          ? SizeConfig.mediumTextSize * 1.2
-                                          : SizeConfig.mediumTextSize),
+                                      fontSize: SizeConfig.mediumTextSize),
                                 ),
                               ],
                             )

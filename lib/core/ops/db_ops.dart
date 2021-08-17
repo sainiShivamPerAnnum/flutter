@@ -44,22 +44,21 @@ class DBModel extends ChangeNotifier {
 
   Future<void> initDeviceInfo() async {
     try {
-      if(Platform.isIOS) {
+      if (Platform.isIOS) {
         IosDeviceInfo iosDeviceInfo;
         iosDeviceInfo = await deviceInfo.iosInfo;
         phoneModel = iosDeviceInfo.model;
         softwareVersion = iosDeviceInfo.systemVersion;
-      } else if(Platform.isAndroid) {
+      } else if (Platform.isAndroid) {
         AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
         phoneModel = androidDeviceInfo.model;
         softwareVersion = androidDeviceInfo.version.release;
       }
       isDeviceInfoInitiated = true;
-    } catch(e) {
+    } catch (e) {
       log.error('Initiating Device Info failed');
     }
-  } 
-
+  }
 
   Future<bool> updateClientToken(BaseUser user, String token) async {
     try {
@@ -407,10 +406,7 @@ class DBModel extends ChangeNotifier {
       Map<String, dynamic> _doc = snapshot.data();
       if (snapshot.exists && _doc != null && _doc['apiKey'] != null) {
         log.debug('Found apiKey: ' + _doc['apiKey']);
-        return {
-          'baseuri': _doc['base_url'],
-          'key': _doc['apiKey']
-        };
+        return {'baseuri': _doc['base_url'], 'key': _doc['apiKey']};
       }
     }
 
@@ -435,10 +431,7 @@ class DBModel extends ChangeNotifier {
       Map<String, dynamic> _doc = snapshot.data();
       if (snapshot.exists && _doc != null && _doc['apiKey'] != null) {
         log.debug('Found apiKey: ' + _doc['apiKey']);
-        return {
-          'baseuri': _doc['base_url'],
-          'key': _doc['apiKey']
-        };
+        return {'baseuri': _doc['base_url'], 'key': _doc['apiKey']};
       }
     }
 
@@ -454,10 +447,7 @@ class DBModel extends ChangeNotifier {
       Map<String, dynamic> _doc = snapshot.data();
       if (snapshot.exists && _doc != null && _doc['apiKey'] != null) {
         log.debug('Found apiKey: ' + _doc['apiKey']);
-        return {
-          'baseuri': _doc['base_url'],
-          'key': _doc['apiKey']
-        };
+        return {'baseuri': _doc['base_url'], 'key': _doc['apiKey']};
       }
     }
     return null;
@@ -866,7 +856,7 @@ class DBModel extends ChangeNotifier {
       String userId, FailType failType, Map<String, dynamic> data) async {
     try {
       Map<String, dynamic> dMap = (data == null) ? {} : data;
-      if(!isDeviceInfoInitiated) {
+      if (!isDeviceInfoInitiated) {
         await initDeviceInfo();
       }
       dMap['user_id'] = userId;
@@ -874,16 +864,18 @@ class DBModel extends ChangeNotifier {
       dMap['manually_resolved'] = false;
       dMap['app_version'] =
           '${BaseUtil.packageInfo.version}+${BaseUtil.packageInfo.buildNumber}';
-      if(phoneModel!=null) {
+      if (phoneModel != null) {
         dMap['phone_model'] = phoneModel;
       }
-      if(softwareVersion!=null) {
+      if (softwareVersion != null) {
         dMap['phone_version'] = softwareVersion;
       }
       dMap['timestamp'] = Timestamp.now();
       try {
-        await firebaseCrashlytics.recordError(failType.toString(), StackTrace.fromString(failType.value().toUpperCase()), reason : dMap);
-      } catch(e) {
+        await firebaseCrashlytics.recordError(failType.toString(),
+            StackTrace.fromString(failType.value().toUpperCase()),
+            reason: dMap);
+      } catch (e) {
         log.error('Crashlytics record error fail : $e');
       }
       await _api.addFailedReportDocument(dMap);
@@ -1155,9 +1147,17 @@ class DBModel extends ChangeNotifier {
         for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
           Map<String, dynamic> _doc = documentSnapshot.data();
           if (documentSnapshot != null &&
-              documentSnapshot.exists && _doc != null &&
-              _doc.length > 0)
-            _cards.add(FeedCard.fromMap(documentSnapshot.data()));
+              documentSnapshot.exists &&
+              _doc != null &&
+              _doc.length > 0) {
+            FeedCard _card = FeedCard.fromMap(documentSnapshot.data());
+
+            ///only include the feedcards that are not 'hidden'
+            if (_card != null && _card.isHidden != null && !_card.isHidden)
+              _cards.add(_card);
+
+            ///bump down the 'learn' card if the user is old
+          }
         }
       }
     } catch (e) {

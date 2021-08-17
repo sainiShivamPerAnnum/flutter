@@ -38,7 +38,8 @@ enum FailType {
   FelloRewardCardShareFailed,
   GameVoteFailed,
   ProfilePictureUpdateFailed,
-  GoldRateFetchFailed
+  GoldRateFetchFailed,
+  AndroidInAppUpdateFailed
 }
 
 extension ParseToString on FailType {

@@ -75,11 +75,12 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
       }
       return isUploaded;
     } catch (e) {
-      if(baseProvider.myUser.uid!=null) {
+      if (baseProvider.myUser.uid != null) {
         var errorDetails = {
-          'Error message' : 'Method call to upload picture failed',
+          'Error message': 'Method call to upload picture failed',
         };
-        dbProvider.logFailure(baseProvider.myUser.uid, FailType.ProfilePictureUpdateFailed, errorDetails);
+        dbProvider.logFailure(baseProvider.myUser.uid,
+            FailType.ProfilePictureUpdateFailed, errorDetails);
       }
       print('$e');
       return false;

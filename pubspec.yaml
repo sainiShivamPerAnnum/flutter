@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: 'none'
 
-version: 2.4.6+22
+version: 2.5.0+22
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -21,10 +21,11 @@ dependencies:
   firebase_remote_config: ^0.10.0+3
   firebase_storage: ^10.0.1
   google_sign_in: ^5.0.7
+
   #core packages
-  connectivity: ^3.0.6
-  encrypt: ^5.0.0
+#  connectivity: ^3.0.6
 #  flutter_local_notifications: ^8.0.0
+  encrypt: ^5.0.0
   flutter_html_to_pdf: ^0.6.1
   freshchat_sdk: ^0.8.0
   get_it: ^7.2.0
@@ -43,12 +44,12 @@ dependencies:
   in_app_update: ^2.0.0
   device_info : ^2.0.2
   image_gallery_saver: ^1.6.9
+
   #ui packages
   camera: ^0.8.1+7
   cached_network_image: ^3.1.0
   confetti: ^0.5.4+1
   device_unlock: ^1.1.0
-  flutter_card_swipper: ^0.4.0
   flutter_spinkit: ^5.0.0
   flutter_share_me: ^0.11.1
   flutter_html: ^2.1.1
@@ -60,13 +61,12 @@ dependencies:
   google_fonts: ^2.1.0
   image_picker: ^0.8.3
   lottie: ^1.1.0
+  rive: ^0.7.22
   screenshot: ^1.2.1
-  showcaseview: ^0.1.6
   shimmer_animation : ^2.1.0+1
   slider_button: ^0.6.0
   sms_autofill: ^2.0.0
   video_player: ^2.1.12
-  rive: ^0.7.22
 
   flutter:
     sdk: flutter

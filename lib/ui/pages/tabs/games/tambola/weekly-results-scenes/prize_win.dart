@@ -50,34 +50,14 @@ class _PrizeWinState extends State<PrizeWin> {
               margin: EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  SizedBox(
-                    height: kToolbarHeight,
-                    width: SizeConfig.screenWidth,
-                    child: Center(
-                      child: Image.asset(
-                        "images/fello_logo.png",
-                        height: kToolbarHeight * 0.8,
-                      ),
-                    ),
-                  ),
                   Spacer(
                     flex: 1,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "YOU ARE A",
-                      style: GoogleFonts.montserrat(
-                          fontSize: SizeConfig.mediumTextSize,
-                          letterSpacing: 2),
-                    ),
-                  ),
                   Text(
-                    "Winner",
+                    "CONGRATULATIONS",
                     style: TextStyle(
-                        fontFamily: "Cucciolo",
                         color: Color(0xff272727),
-                        fontSize: SizeConfig.cardTitleTextSize * 2,
+                        fontSize: SizeConfig.cardTitleTextSize,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 2,
                         shadows: [
@@ -98,10 +78,19 @@ class _PrizeWinState extends State<PrizeWin> {
                       textAlign: TextAlign.center,
                       style: GoogleFonts.montserrat(
                         color: Color(0xff10AB8F),
-                        fontSize: SizeConfig.mediumTextSize,
+                        fontSize: SizeConfig.largeTextSize * 0.9,
                         height: 1.5,
                         fontWeight: FontWeight.w500,
                       ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Text(
+                      "Prizes will be credited in 1-2 business days",
+                      style: GoogleFonts.montserrat(
+                          fontSize: SizeConfig.mediumTextSize,
+                          letterSpacing: 2),
                     ),
                   ),
                   ElevatedButton(
@@ -113,13 +102,13 @@ class _PrizeWinState extends State<PrizeWin> {
                     ),
                     child: Container(
                       height: 50,
-                      width: SizeConfig.screenWidth / 2,
+                      width: SizeConfig.screenWidth / 3,
                       alignment: Alignment.center,
                       child: Text(
-                        "Back to Game",
+                        "DONE",
                         style: GoogleFonts.montserrat(
                           color: Colors.white,
-                          fontSize: 20,
+                          fontSize: SizeConfig.mediumTextSize * 1.2,
                           letterSpacing: 0,
                         ),
                       ),

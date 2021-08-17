@@ -53,7 +53,7 @@ class MFDetailsPage extends StatefulWidget {
     if (_isGeneralUserAllowed == 0) {
       //General permission is denied. Check if specific user permission granted
       if (baseUser.isIciciEnabled != null && baseUser.isIciciEnabled) {
-        //this specific user is allowed to use Augmont
+        //this specific user is allowed to use ICICI
         _isAllowed = true;
       } else {
         _isAllowed = false;

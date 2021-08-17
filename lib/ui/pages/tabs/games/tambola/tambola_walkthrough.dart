@@ -1,7 +1,9 @@
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/elements/tambola-global/prize_section.dart';
 import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -27,28 +29,28 @@ class Walkthrough extends StatelessWidget {
     return points
         .map(
           (e) => Container(
-        width: SizeConfig.screenWidth,
-        margin: EdgeInsets.symmetric(
-            vertical: 10, horizontal: SizeConfig.blockSizeHorizontal * 3),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 4,
-              backgroundColor: Colors.black,
+            width: SizeConfig.screenWidth,
+            margin: EdgeInsets.symmetric(
+                vertical: 10, horizontal: SizeConfig.blockSizeHorizontal * 3),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 4,
+                  backgroundColor: Colors.black,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: Text(
+                    e,
+                    style: TextStyle(fontSize: SizeConfig.mediumTextSize),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: Text(
-                e,
-                style: TextStyle(fontSize: SizeConfig.mediumTextSize),
-              ),
-            ),
-          ],
-        ),
-      ),
-    )
+          ),
+        )
         .toList();
   }
 
@@ -56,7 +58,7 @@ class Walkthrough extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff0C9463),
+        backgroundColor: UiConstants.primaryColor,
         elevation: 2,
         shadowColor: Color(0xff0C9463).withOpacity(0.5),
         title: Text(
@@ -70,7 +72,7 @@ class Walkthrough extends StatelessWidget {
           IconButton(
             onPressed: () {
               delegate.appState.currentAction =
-                  PageAction(state: PageState.addPage, page: SupportConfig);
+                  PageAction(state: PageState.addPage, page: SupportPageConfig);
             },
             icon: Icon(Icons.contact_support_outlined),
           ),
@@ -123,11 +125,7 @@ class Walkthrough extends StatelessWidget {
                 ),
               ),
             ),
-            Image.asset(
-              "images/Tambola/w-prize.png",
-              width: SizeConfig.screenWidth,
-              fit: BoxFit.cover,
-            ),
+            PrizeSection(),
             Column(children: generatePoints(prizes)),
           ],
         ),

@@ -82,13 +82,13 @@ class _LeaderboardState extends State<Leaderboard> {
     return Expanded(
       child: Container(
         margin: EdgeInsets.symmetric(
-          horizontal: SizeConfig.screenWidth * 0.05,
-          vertical: SizeConfig.screenWidth * 0.02,
+          horizontal: SizeConfig.globalMargin,
+          vertical: SizeConfig.blockSizeHorizontal * 2,
         ),
         padding: EdgeInsets.only(top: SizeConfig.screenHeight * 0.03),
         width: SizeConfig.screenWidth,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
             gradient: new LinearGradient(
               colors: [Color(0xff0F2027), Color(0xff203A43), Color(0xff2C5364)],
               begin: Alignment.bottomLeft,

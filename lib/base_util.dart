@@ -33,8 +33,7 @@ import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
-import 'package:showcaseview/showcase.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'core/base_remote_config.dart';
 import 'core/model/TambolaBoard.dart';
 import 'core/model/UserAugmontDetail.dart';
@@ -55,6 +54,7 @@ class BaseUtil extends ChangeNotifier {
   List<FeedCard> feedCards;
   int _dailyPickCount;
   String userRegdPan;
+  List<int> todaysPicks;
 
   ///Tambola global objects
   DailyPick weeklyDigits;
@@ -272,7 +272,10 @@ class BaseUtil extends ChangeNotifier {
       return (unreadCount['count'] > 0);
     } catch (e) {
       log.error('Error reading unread count variable: $e');
-      Map<String,dynamic> errorDetails = {'User number' : _myUser.mobile, 'Error Type' : 'Unread message count failed'};
+      Map<String, dynamic> errorDetails = {
+        'User number': _myUser.mobile,
+        'Error Type': 'Unread message count failed'
+      };
       _dbModel.logFailure(_myUser.uid, FailType.FreshchatFail, errorDetails);
       return false;
     }
@@ -413,6 +416,42 @@ class BaseUtil extends ChangeNotifier {
     )..show(context);
   }
 
+  Future<bool> getDrawaStatus() async {
+    // CHECKING IF THE PICK ARE DRAWN OR NOT
+    if (!weeklyDrawFetched || weeklyDigits == null) await fetchWeeklyPicks();
+    if (weeklyDrawFetched && weeklyDigits != null)
+      switch (DateTime.now().weekday) {
+        case 1:
+          todaysPicks = weeklyDigits.mon;
+          break;
+        case 2:
+          todaysPicks = weeklyDigits.tue;
+          break;
+        case 3:
+          todaysPicks = weeklyDigits.wed;
+          break;
+        case 4:
+          todaysPicks = weeklyDigits.thu;
+          break;
+        case 5:
+          todaysPicks = weeklyDigits.fri;
+          break;
+        case 6:
+          todaysPicks = weeklyDigits.sat;
+          break;
+        case 7:
+          todaysPicks = weeklyDigits.sun;
+          break;
+      }
+    //CHECKING FOR THE FIRST TIME OPENING OF TAMBOLA AFTER THE PICKS ARE DRAWN FOR THIS PARTICULAR DAY
+    notifyListeners();
+    if (todaysPicks != null &&
+        DateTime.now().weekday != await _lModel.getDailyPickAnimLastDay())
+      return true;
+
+    return false;
+  }
+
   showRefreshIndicator(BuildContext context) {
     Flushbar(
       flushbarPosition: FlushbarPosition.TOP,
@@ -503,6 +542,7 @@ class BaseUtil extends ChangeNotifier {
       freshchatKeys = null;
       _userCreationTimestamp = null;
       lastTransactionListDocument = null;
+      hasMoreTransactionListDocuments = true;
       isOtpResendCount = 0;
       show_security_prompt = false;
       delegate.appState.setCurrentTabIndex = 0;
@@ -539,46 +579,6 @@ class BaseUtil extends ChangeNotifier {
     return 0;
   }
 
-  static Widget buildShowcaseWrapper(
-      GlobalKey showcaseKey, String showcaseMsg, Widget body) {
-    return Showcase.withWidget(
-        key: showcaseKey,
-        description: showcaseMsg,
-        contentPadding: EdgeInsets.all(20),
-        //descTextStyle: TextStyle(fontSize: 20),
-        width: 300,
-        height: 140,
-        container: Container(
-          padding: EdgeInsets.all(20),
-          decoration: new BoxDecoration(
-            shape: BoxShape.rectangle,
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(UiConstants.padding),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10.0,
-                offset: const Offset(0.0, 10.0),
-              ),
-            ],
-          ),
-          child: Container(
-            width: SizeConfig.screenWidth * 0.84,
-            child: Text(
-              showcaseMsg,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 16,
-                  height: 1.4,
-                  fontWeight: FontWeight.w300,
-                  color: UiConstants.accentColor),
-            ),
-          ),
-        ),
-        overlayOpacity: 0.6,
-        child: body);
-  }
-
   Future<void> getProfilePicUrl() async {
     try {
       if (myUser != null) myUserDpUrl = await _dbModel.getUserDP(myUser.uid);
@@ -588,6 +588,14 @@ class BaseUtil extends ChangeNotifier {
       }
     } catch (e) {
       log.error(e.toString());
+    }
+  }
+
+  static void launchUrl(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 

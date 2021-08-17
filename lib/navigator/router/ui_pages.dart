@@ -10,18 +10,17 @@ const String MfDetailsPath = '/mfDetails';
 const String AugDetailsPath = '/augDetails';
 const String TransactionPath = '/tran';
 const String ReferralPath = '/referral';
-const String TambolaHomePath = '/tambolaHome';
 const String TncPath = '/tnc';
 const String FaqPath = '/faq';
 const String AugOnboardingPath = '/augOnboard';
 const String AugWithdrawalPath = '/augWithdrawal';
 const String EditAugBankDetailsPath = '/editAugBankDetails';
-const String TambolaTicketsPath = '/tambolaTickets';
 const String ReferralPolicyPath = '/refPolicy';
 const String ChatSupportPath = '/chatSupport';
 const String ClaimUsernamePath = '/claimUsername';
 const String VerifyEmailPath = '/verifyEmail';
 const String SupportPath = '/support';
+const String UpdateRequiredPath = '/updateRequired';
 const String WalkThroughPath = '/walkThrough';
 const String WalkThroughCompletedPath = '/walkThroughCompleted';
 const String YourFundsPath = '/yourFunds';
@@ -32,6 +31,7 @@ const String TWalkthrough = 'tWalkthrough';
 const String TShowAllTickets = 'tShowAllTickets';
 const String TPickDraw = 'tPickDraw';
 const String TWeeklyResult = 'tWeeklyResult';
+const String TSummaryDetails = 'tSummaryDetails';
 
 enum Pages {
   Splash,
@@ -43,13 +43,12 @@ enum Pages {
   AugDetails,
   Transaction,
   Referral,
-  TambolaHome,
   Tnc,
   Faq,
   AugOnboard,
+  UpdateRequired,
   AugWithdrawal,
   EditAugBankDetails,
-  TambolaTickets,
   RefPolicy,
   ChatSupport,
   ClaimUsername,
@@ -62,7 +61,8 @@ enum Pages {
   TWeeklyResult,
   TWalkthrough,
   TPickDraw,
-  TShowAllTickets
+  TShowAllTickets,
+  TSummaryDetails
 }
 
 class PageConfiguration {
@@ -123,16 +123,6 @@ PageConfiguration ReferralPageConfig = PageConfiguration(
   path: ReferralPath,
   uiPage: Pages.Referral,
 );
-PageConfiguration TambolaHomePageConfig = PageConfiguration(
-  key: 'TambolaHome',
-  path: TambolaHomePath,
-  uiPage: Pages.TambolaHome,
-);
-PageConfiguration TambolaTicketsPageConfig = PageConfiguration(
-  key: 'TambolaTickets',
-  path: TambolaTicketsPath,
-  uiPage: Pages.TambolaTickets,
-);
 
 PageConfiguration TncPageConfig = PageConfiguration(
   key: 'Tnc',
@@ -172,6 +162,11 @@ PageConfiguration ChatSupportPageConfig = PageConfiguration(
   path: ChatSupportPath,
   uiPage: Pages.ChatSupport,
 );
+PageConfiguration UpdateRequiredConfig = PageConfiguration(
+  key: 'UpdateRequired',
+  path: UpdateRequiredPath,
+  uiPage: Pages.UpdateRequired,
+);
 PageConfiguration ClaimUsernamePageConfig = PageConfiguration(
   key: 'ClaimUsername',
   path: ClaimUsernamePath,
@@ -182,7 +177,7 @@ PageConfiguration VerifyEmailPageConfig = PageConfiguration(
   path: VerifyEmailPath,
   uiPage: Pages.VerifyEmail,
 );
-PageConfiguration SupportConfig = PageConfiguration(
+PageConfiguration SupportPageConfig = PageConfiguration(
   key: 'Support',
   path: SupportPath,
   uiPage: Pages.Support,
@@ -222,4 +217,10 @@ PageConfiguration TWalkthroughPageConfig = PageConfiguration(
   key: 'TWalkthrough',
   path: TWalkthrough,
   uiPage: Pages.TWalkthrough,
+);
+
+PageConfiguration TSummaryDetailsPageConfig = PageConfiguration(
+  key: 'TSummaryDetails',
+  path: TSummaryDetails,
+  uiPage: Pages.TSummaryDetails,
 );

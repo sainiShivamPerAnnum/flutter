@@ -6,6 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DailyPicksTimer extends StatefulWidget {
+  final Widget replacementWidget;
+  final Color bgColor;
+  final MainAxisAlignment alignment;
+  final Widget additionalWidget;
+
+  DailyPicksTimer(
+      {@required this.replacementWidget,
+      this.bgColor,
+      this.alignment,
+      this.additionalWidget});
   @override
   _DailyPicksTimerState createState() => _DailyPicksTimerState();
 }
@@ -13,26 +23,30 @@ class DailyPicksTimer extends StatefulWidget {
 class _DailyPicksTimerState extends State<DailyPicksTimer> {
   Duration duration;
   Timer timer;
-
+  bool showClock = true;
   bool countDown = true;
 
   @override
   void initState() {
-    calculateTime();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
-    });
+    if (calculateTime())
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
+      });
+    else
+      showClock = false;
     super.initState();
   }
 
-  void calculateTime() {
+  bool calculateTime() {
     DateTime currentTime = DateTime.now();
     DateTime drawTime = DateTime(DateTime.now().year, DateTime.now().month,
         DateTime.now().day, 18, 0, 0);
     Duration timeDiff = currentTime.difference(drawTime);
     if (timeDiff.inSeconds < 0) {
       duration = timeDiff.abs();
+      return true;
     }
+    return false;
   }
 
   void addTime() {
@@ -41,6 +55,9 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
       final seconds = duration.inSeconds + addSeconds;
       if (seconds < 0) {
         print("Cancle");
+        setState(() {
+          showClock = false;
+        });
         timer?.cancel();
       } else {
         duration = Duration(seconds: seconds);
@@ -61,24 +78,35 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
 
   @override
   Widget build(BuildContext context) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final hours = twoDigits(duration.inHours);
-    final minutes = twoDigits(duration.inMinutes.remainder(60));
-    final seconds = twoDigits(duration.inSeconds.remainder(60));
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      buildTimeCard(time: hours),
-      buildDivider(),
-      buildTimeCard(time: minutes),
-      buildDivider(),
-      buildTimeCard(time: seconds),
-    ]);
+    if (showClock) {
+      String twoDigits(int n) => n.toString().padLeft(2, '0');
+      final hours = twoDigits(duration.inHours);
+      final minutes = twoDigits(duration.inMinutes.remainder(60));
+      final seconds = twoDigits(duration.inSeconds.remainder(60));
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          widget.additionalWidget ?? SizedBox(),
+          Row(
+              mainAxisAlignment: widget.alignment ?? MainAxisAlignment.center,
+              children: [
+                buildTimeCard(time: hours),
+                buildDivider(),
+                buildTimeCard(time: minutes),
+                buildDivider(),
+                buildTimeCard(time: seconds),
+              ]),
+        ],
+      );
+    }
+    return widget.replacementWidget;
   }
 
   Widget buildTimeCard({@required String time}) => Container(
         height: SizeConfig.screenWidth * 0.14,
         width: SizeConfig.screenWidth * 0.14,
         decoration: BoxDecoration(
-          color: Color(0xff09464B),
+          color: widget.bgColor ?? Color(0xff206A5D),
           borderRadius: BorderRadius.circular(8),
         ),
         alignment: Alignment.center,

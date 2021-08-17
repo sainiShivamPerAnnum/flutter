@@ -15,16 +15,6 @@ class PrizeProcessing extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
-                height: kToolbarHeight * 1,
-                width: SizeConfig.screenWidth,
-                child: Center(
-                  child: Image.asset(
-                    "images/fello_logo.png",
-                    height: kToolbarHeight * 0.8,
-                  ),
-                ),
-              ),
               Spacer(
                 flex: 1,
               ),

@@ -209,7 +209,7 @@ class _SupportPageState extends State<SupportPage> {
                     },
                   ),
                   ListTile(
-                    title: Text('Request a call',
+                    title: Text('Request a callback',
                         style: TextStyle(
                           color: UiConstants.textColor,
                         )),
@@ -305,7 +305,7 @@ class _SupportPageState extends State<SupportPage> {
                     ListTile(
                         title: Center(
                             child: Text(
-                          'Request a call',
+                          'Request a callback',
                           style: Theme.of(context).textTheme.headline5.copyWith(
                               color: UiConstants.primaryColor,
                               fontSize: SizeConfig.largeTextSize * 1.2,
@@ -518,12 +518,17 @@ class _SupportPageState extends State<SupportPage> {
                                     'Error',
                                     'Something went wrong while placing a request, please try again later.',
                                     context);
-                                if(baseProvider.myUser.uid!=null) {
-                                  Map<String,dynamic> errorDetails = {
-                                    'Error Message' : 'Placing a call request failed',
-                                    'Phone Number' : _requestCallPhoneController.text.trim(),
+                                if (baseProvider.myUser.uid != null) {
+                                  Map<String, dynamic> errorDetails = {
+                                    'Error Message':
+                                        'Placing a call request failed',
+                                    'Phone Number':
+                                        _requestCallPhoneController.text.trim(),
                                   };
-                                  dbProvider.logFailure(baseProvider.myUser.uid, FailType.RequestCallbackFailed, errorDetails);
+                                  dbProvider.logFailure(
+                                      baseProvider.myUser.uid,
+                                      FailType.RequestCallbackFailed,
+                                      errorDetails);
                                 }
                                 Navigator.of(context).pop();
                               }

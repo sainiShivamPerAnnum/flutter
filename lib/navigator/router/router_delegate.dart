@@ -15,17 +15,16 @@ import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/root.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/summary_tickets_display.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_result.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/show_all_tickets.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola/tambola-home.dart'
-    as NTambola;
+import 'package:felloapp/ui/pages/tabs/games/tambola/tambola-home.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/tambola_walkthrough.dart';
+import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import '../../ui/pages/tabs/finance/augmont/augmont-details.dart';
 import '../../ui/pages/tabs/finance/augmont/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
 import '../../ui/pages/tabs/finance/icici/mf_details_page.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola-cards.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola-home.dart';
 import 'package:felloapp/ui/pages/tabs/profile/claim_username.dart';
 import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions.dart';
@@ -165,9 +164,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Referral:
           _addPageData(ReferralsPage(), ReferralPageConfig);
           break;
-        case Pages.TambolaHome:
-          _addPageData(TambolaHome(), TambolaHomePageConfig);
-          break;
+
         case Pages.Tnc:
           _addPageData(TnC(), TncPageConfig);
           break;
@@ -177,8 +174,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.EditAugBankDetails:
           _addPageData(EditAugmontBankDetail(), EditAugBankDetailsPageConfig);
           break;
-        case Pages.TambolaTickets:
-          _addPageData(TambolaCardsList(), TambolaTicketsPageConfig);
+
+        case Pages.UpdateRequired:
+          _addPageData(UpdateRequiredScreen(), UpdateRequiredConfig);
           break;
         case Pages.RefPolicy:
           _addPageData(ReferralPolicy(), RefPolicyPageConfig);
@@ -193,19 +191,17 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(VerifyEmail(), VerifyEmailPageConfig);
           break;
         case Pages.Support:
-          _addPageData(SupportPage(), SupportConfig);
+          _addPageData(SupportPage(), SupportPageConfig);
           break;
         case Pages.WalkThrough:
           _addPageData(WalkThroughPage(), WalkThroughConfig);
           break;
-        // case Pages.WalkThroughCompleted:
-        //   _addPageData(WalkThroughCompleted(), WalkThroughCompletedConfig);
-        //   break;
+
         case Pages.YourFunds:
           _addPageData(YourFunds(), YourFundsConfig);
           break;
         case Pages.THome:
-          _addPageData(NTambola.TambolaHome(), THomePageConfig);
+          _addPageData(TambolaHome(), THomePageConfig);
           break;
         case Pages.TPickDraw:
           _addPageData(PicksDraw(), TPickDrawPageConfig);
@@ -218,6 +214,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.TWeeklyResult:
           _addPageData(WeeklyResult(), TWeeklyResultPageConfig);
+          break;
+        case Pages.TSummaryDetails:
+          _addPageData(SummaryTicketsDisplay(), TSummaryDetailsPageConfig);
           break;
         default:
           break;
@@ -305,9 +304,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.Referral:
         ReferralPageConfig.currentPageAction = action;
         break;
-      case Pages.TambolaHome:
-        TambolaHomePageConfig.currentPageAction = action;
-        break;
+
       case Pages.Tnc:
         TncPageConfig.currentPageAction = action;
         break;
@@ -323,9 +320,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.EditAugBankDetails:
         EditAugBankDetailsPageConfig.currentPageAction = action;
         break;
-      case Pages.TambolaTickets:
-        TambolaTicketsPageConfig.currentPageAction = action;
-        break;
+
       case Pages.RefPolicy:
         RefPolicyPageConfig.currentPageAction = action;
         break;
@@ -339,7 +334,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         VerifyEmailPageConfig.currentPageAction = action;
         break;
       case Pages.Support:
-        SupportConfig.currentPageAction = action;
+        SupportPageConfig.currentPageAction = action;
         break;
       case Pages.WalkThrough:
         WalkThroughConfig.currentPageAction = action;
@@ -364,6 +359,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.TWeeklyResult:
         TWeeklyResultPageConfig.currentPageAction = action;
+        break;
+      case Pages.TSummaryDetails:
+        TSummaryDetailsPageConfig.currentPageAction = action;
         break;
 
       default:
@@ -472,7 +470,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   void screenCheck(String screenKey) {
-    PageConfiguration pageConfiguration = null;
+    PageConfiguration pageConfiguration;
     switch (screenKey) {
       case 'dashboard':
         appState.setCurrentTabIndex = 0;
@@ -506,7 +504,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = ReferralPageConfig;
         break;
       case 'tambolaHome':
-        pageConfiguration = TambolaHomePageConfig;
+        pageConfiguration = THomePageConfig;
         break;
       case 'tnc':
         pageConfiguration = TncPageConfig;

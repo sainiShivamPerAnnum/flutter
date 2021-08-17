@@ -1,10 +1,10 @@
-import 'package:felloapp/ui/pages/tabs/profile/profile_screen.dart';
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../main.dart';
 
 class ShareInfoModalSheet extends StatelessWidget {
   const ShareInfoModalSheet({Key key}) : super(key: key);
@@ -105,9 +105,9 @@ class ShareInfoModalSheet extends StatelessWidget {
                               ),
                               InkWell(
                                 onTap: () async {
-                                  String url = "https://www.fello.in";
+                                  String url = "https://fello.in";
                                   if (await canLaunch(url)) {
-                                    launchUrl(url);
+                                    BaseUtil.launchUrl(url);
                                   } else {
                                     backButtonDispatcher.didPopRoute();
                                   }

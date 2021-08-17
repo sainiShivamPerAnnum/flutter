@@ -358,14 +358,14 @@ class _TransactionsState extends State<Transactions> {
       _tiles.add(ListTile(
         onTap: () {
           HapticFeedback.vibrate();
-          if (filteredList[index].tranStatus !=
-              UserTransaction.TRAN_STATUS_CANCELLED)
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  AppState.screenStack.add(ScreenItem.dialog);
-                  return TransactionDetailsDialog(filteredList[index]);
-                });
+          // if (filteredList[index].tranStatus !=
+          //     UserTransaction.TRAN_STATUS_CANCELLED)
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                AppState.screenStack.add(ScreenItem.dialog);
+                return TransactionDetailsDialog(filteredList[index]);
+              });
         },
         dense: true,
         leading: Container(

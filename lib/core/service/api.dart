@@ -174,7 +174,8 @@ class Api {
     return _db
         .runTransaction((transaction) async {
           DocumentSnapshot snapshot = await transaction.get(_rRef);
-          Map<String, dynamic> snapData = (snapshot.exists)?snapshot.data():null;
+          Map<String, dynamic> snapData =
+              (snapshot.exists) ? snapshot.data() : null;
           if (!snapshot.exists && snapData == null) {
             //did not sign up via referral
             throw Exception('No referral found');

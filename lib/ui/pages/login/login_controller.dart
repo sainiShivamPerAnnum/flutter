@@ -109,7 +109,7 @@ class _LoginControllerState extends State<LoginController>
   Future<void> _verifyPhone() async {
     final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
       log.debug("Phone number hasnt been auto verified yet");
-      _otpScreenKey.currentState.onOtpAutoDetectTimeout();
+      if(_otpScreenKey.currentState!=null)_otpScreenKey.currentState.onOtpAutoDetectTimeout();
     };
 
     final PhoneCodeSent smsCodeSent = (String verId, [int forceCodeResend]) {
@@ -278,9 +278,11 @@ class _LoginControllerState extends State<LoginController>
                                 recognizer: new TapGestureRecognizer()
                                   ..onTap = () {
                                     HapticFeedback.vibrate();
-                                    appStateProvider.currentAction = PageAction(
-                                        state: PageState.addPage,
-                                        page: TncPageConfig);
+                                    BaseUtil.launchUrl(
+                                        'https://fello.in/policy/tnc');
+                                    // appStateProvider.currentAction = PageAction(
+                                    //     state: PageState.addPage,
+                                    //     page: TncPageConfig);
                                   },
                               ),
                             ],

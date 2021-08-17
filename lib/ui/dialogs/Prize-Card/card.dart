@@ -56,6 +56,7 @@ class _TicketState extends State<FCard> {
   LocalDBModel localDBModel;
   bool _isPrizeProcessing = false;
   bool _tChoice;
+  bool _isclaimed = false;
 
   LinearGradient cardGradient = const LinearGradient(
       //colors: [Color(0xff7F00FF), Color(0xffE100FF)],
@@ -96,6 +97,21 @@ class _TicketState extends State<FCard> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        // _isclaimed
+        //     ? Container(
+        //         height: SizeConfig.screenWidth * 0.5,
+        //         child: Transform.scale(
+        //           scale: 0.2,
+        //           child: ShareCard(
+        //             dpUrl: baseProvider.myUserDpUrl,
+        //             claimChoice: PrizeClaimChoice.AMZ_VOUCHER,
+        //             prizeAmount:
+        //                 baseProvider.userFundWallet.processingRedemptionBalance,
+        //             username: baseProvider.myUser.name,
+        //           ),
+        //         ),
+        //       )
+        //     : SizedBox(),
         FoldingCard(
             entries: _getEntries(), isOpen: _isOpen, onClick: _handleOnTap),
         CircleAvatar(
@@ -111,7 +127,7 @@ class _TicketState extends State<FCard> {
                       : backButtonDispatcher.didPopRoute();
                 }
               }),
-        )
+        ),
       ],
     );
   }
@@ -315,6 +331,7 @@ class _TicketState extends State<FCard> {
                       _registerClaimChoice(PrizeClaimChoice.AMZ_VOUCHER)
                           .then((flag) {
                         if (flag) {
+                          _isclaimed = true;
                           _tChoice = true;
                           setState(() {
                             _isPrizeProcessing = false;
@@ -362,6 +379,8 @@ class _TicketState extends State<FCard> {
                           .then((flag) {
                         _tChoice = true;
                         if (flag) {
+                          _isclaimed = true;
+
                           setState(() {
                             _isPrizeProcessing = false;
                             claimtype = PrizeClaimChoice.GOLD_CREDIT;
@@ -605,12 +624,13 @@ class _CloseCardState extends State<CloseCard> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Spacer(),
                 Text(
                   "Reward Claimed!",
                   style: GoogleFonts.montserrat(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
-                    fontSize: 32,
+                    fontSize: SizeConfig.cardTitleTextSize,
                   ),
                 ),
                 SizedBox(
@@ -622,35 +642,33 @@ class _CloseCardState extends State<CloseCard> {
                         claimText,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.montserrat(
-                          color: Colors.white,
-                        ),
+                            color: Colors.white,
+                            fontSize: SizeConfig.mediumTextSize),
                       ),
-                SizedBox(
-                  height: 20,
-                ),
+                Spacer(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white, width: 3),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      child: isCapturing
-                          ? SpinKitThreeBounce(
-                              color: UiConstants.spinnerColor2,
-                              size: 18.0,
-                            )
-                          : InkWell(
-                              onTap: () async {
-                                setState(() {
-                                  isCapturing = true;
-                                });
-                                _buildShareCard();
-                              },
-                              child: Wrap(
+                    InkWell(
+                      onTap: () async {
+                        setState(() {
+                          isCapturing = true;
+                        });
+                        _buildShareCard();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white, width: 3),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        child: isCapturing
+                            ? SpinKitThreeBounce(
+                                color: UiConstants.spinnerColor2,
+                                size: 18.0,
+                              )
+                            : Wrap(
                                 children: [
                                   Text(
                                     "Brag  📢",
@@ -661,29 +679,29 @@ class _CloseCardState extends State<CloseCard> {
                                   ),
                                 ],
                               ),
-                            ),
+                      ),
                     ),
                     Text("     ", style: TextStyle(color: Colors.white)),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white, width: 3),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      child: isSaving
-                          ? SpinKitThreeBounce(
-                              color: UiConstants.spinnerColor2,
-                              size: 18.0,
-                            )
-                          : InkWell(
-                              onTap: () async {
-                                setState(() {
-                                  isSaving = true;
-                                });
-                                _saveShareCard();
-                              },
-                              child: Wrap(
+                    InkWell(
+                      onTap: () async {
+                        setState(() {
+                          isSaving = true;
+                        });
+                        _saveShareCard();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white, width: 3),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        child: isSaving
+                            ? SpinKitThreeBounce(
+                                color: UiConstants.spinnerColor2,
+                                size: 18.0,
+                              )
+                            : Wrap(
                                 children: [
                                   Text(
                                     "Save  💾",
@@ -694,10 +712,11 @@ class _CloseCardState extends State<CloseCard> {
                                   ),
                                 ],
                               ),
-                            ),
+                      ),
                     ),
                   ],
                 ),
+                Spacer()
               ],
             ),
           ),
@@ -718,15 +737,6 @@ class _CloseCardState extends State<CloseCard> {
     print(widget.claimtype);
     return widget.isClaimed ? _buildEndCard(context) : _buildBeginCard(context);
   }
-
-  // String _getEndCardTitleText(PrizeClaimChoice choice) {
-  //   if (choice == PrizeClaimChoice.AMZ_VOUCHER)
-  //     return 'Your amazon gift card shall be sent to your registered email and mobile shortly!';
-  //   else if (choice == PrizeClaimChoice.GOLD_CREDIT)
-  //     return 'Your digital gold shall be credited to your Fello wallet shortly!';
-  //   else
-  //     return 'Your prize shall be credited to you soon!';
-  // }
 
   // _buildShareCard() async {
   //   showDialog(
@@ -856,21 +866,23 @@ class _CloseCardState extends State<CloseCard> {
               'Fello really is a very rewarding way to invest in assets and play games! You should try it out too: https://fello.in/download/app',
         );
       }).catchError((onError) {
-        if(baseProvider.myUser.uid!=null) {
-          Map<String,dynamic> errorDetails = {
-            'Error message' : 'Share reward card in card.dart failed'
+        if (baseProvider.myUser.uid != null) {
+          Map<String, dynamic> errorDetails = {
+            'Error message': 'Share reward card in card.dart failed'
           };
-          dbProvider.logFailure(baseProvider.myUser.uid, FailType.FelloRewardCardShareFailed, errorDetails);
+          dbProvider.logFailure(baseProvider.myUser.uid,
+              FailType.FelloRewardCardShareFailed, errorDetails);
         }
         print(onError);
       });
     } catch (e) {
-       if(baseProvider.myUser.uid!=null) {
-          Map<String,dynamic> errorDetails = {
-            'Error message' : 'Share reward card creation failed'
-          };
-          dbProvider.logFailure(baseProvider.myUser.uid, FailType.FelloRewardCardShareFailed, errorDetails);
-        }
+      if (baseProvider.myUser.uid != null) {
+        Map<String, dynamic> errorDetails = {
+          'Error message': 'Share reward card creation failed'
+        };
+        dbProvider.logFailure(baseProvider.myUser.uid,
+            FailType.FelloRewardCardShareFailed, errorDetails);
+      }
       setState(() {
         isSaving = false;
       });
