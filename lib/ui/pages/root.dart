@@ -22,6 +22,7 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class Root extends StatefulWidget {
@@ -221,16 +222,16 @@ class _RootState extends State<Root> {
               ),
             ),
             Positioned(
-              top: SizeConfig.blockSizeHorizontal * 3,
-              right: SizeConfig.blockSizeHorizontal * 5,
+              top: SizeConfig.blockSizeHorizontal * 2,
+              right: SizeConfig.blockSizeHorizontal * 2,
               child: SafeArea(
                 child: InkWell(
-                  child: Image.asset(
-                    "images/question.png",
+                  child: SvgPicture.asset(
+                    "images/support-log.svg",
                     height: kToolbarHeight * 0.6,
                     color: (appState.getCurrentTabIndex == 0)
                         ? Colors.white
-                        : Colors.black54,
+                        : Color(0xff36454F),
                   ),
                   //icon: Icon(Icons.contact_support_outlined),
                   // iconSize: kToolbarHeight * 0.5,

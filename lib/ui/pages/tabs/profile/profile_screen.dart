@@ -515,7 +515,7 @@ class ShareCard extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 24,
                 ),
                 RichText(
                   text: new TextSpan(
@@ -555,7 +555,7 @@ class ShareCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 24),
                 const ShareOptions(),
               ],
             ),
@@ -834,7 +834,7 @@ class ProfileTabTile extends StatelessWidget {
       onTap: onPress,
       child: Container(
         padding:
-            EdgeInsets.symmetric(horizontal: SizeConfig.globalMargin * 1.2),
+            EdgeInsets.symmetric(horizontal: SizeConfig.globalMargin * 1.6),
         child: Column(
           children: [
             SizedBox(height: SizeConfig.blockSizeHorizontal * 4),

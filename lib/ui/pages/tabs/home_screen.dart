@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("images/home-asset.png"),
-                  fit: BoxFit.fitWidth,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
@@ -177,19 +177,20 @@ class _HomePageState extends State<HomePage> {
     ];
 
     ///reorder learn card
-    for(FeedCard card in cards) {
-      if(card.type == Constants.LEARN_FEED_CARD_TYPE) {
+    for (FeedCard card in cards) {
+      if (card.type == Constants.LEARN_FEED_CARD_TYPE) {
         DateTime _now = DateTime.now();
         DateTime _lastWeek = _now.subtract(Duration(days: 7));
-        if(baseProvider.userCreationTimestamp.isBefore(_lastWeek)) {
+        if (baseProvider.userCreationTimestamp.isBefore(_lastWeek)) {
           card.id = 200;
         }
       }
     }
-    if(cards != null && cards.isNotEmpty)cards.sort((a, b) => a.id.compareTo(b.id));
+    if (cards != null && cards.isNotEmpty)
+      cards.sort((a, b) => a.id.compareTo(b.id));
 
     ///add to widgets
-    for(FeedCard card in cards) {
+    for (FeedCard card in cards) {
       _widget.add(_buildFeedCard(card));
     }
 
@@ -294,6 +295,8 @@ class _HomePageState extends State<HomePage> {
             isHighlighted: false,
             onPressed: () async {
               HapticFeedback.vibrate();
+              // print(Color(0xff096C47).value.toString());
+              // print(Color(0xff76A665).value.toString());
               delegate.parseRoute(Uri.parse(card.actionUri));
             },
           ),
@@ -314,7 +317,7 @@ class _HomePageState extends State<HomePage> {
         ),
         margin: EdgeInsets.symmetric(
             horizontal: SizeConfig.globalMargin,
-            vertical: SizeConfig.blockSizeHorizontal * 8),
+            vertical: SizeConfig.blockSizeHorizontal * 6),
         width: double.infinity,
         child: Row(
           children: [
@@ -340,7 +343,7 @@ class _HomePageState extends State<HomePage> {
                     ),
             ),
             SizedBox(
-              width: 30,
+              width: 16,
             ),
             Expanded(
               child: Column(
@@ -362,7 +365,6 @@ class _HomePageState extends State<HomePage> {
                       textAlign: TextAlign.start,
                       style: GoogleFonts.montserrat(
                           color: Colors.white,
-                          fontWeight: FontWeight.w200,
                           fontSize: SizeConfig.largeTextSize),
                     ),
                   ),
@@ -410,7 +412,7 @@ class BaseHomeCard extends StatelessWidget {
       child: Stack(
         children: [
           Positioned(
-            right: 10,
+            right: 0,
             bottom: 0,
             child: Opacity(
               opacity: 0.3,
@@ -470,18 +472,21 @@ class BaseHomeCardContent extends StatelessWidget {
         SizedBox(
           height: 20,
         ),
-        Text(
-          subtitle,
-          style: TextStyle(
-              color: Colors.white,
-              shadows: [
-                Shadow(
-                  color: shadowColor,
-                  offset: Offset(1, 1),
-                ),
-              ],
-              fontSize: SizeConfig.mediumTextSize * 1.3,
-              fontWeight: FontWeight.w400),
+        Container(
+          width: SizeConfig.screenWidth * 0.6,
+          child: Text(
+            subtitle,
+            style: TextStyle(
+                color: Colors.white,
+                shadows: [
+                  Shadow(
+                    color: shadowColor,
+                    offset: Offset(1, 1),
+                  ),
+                ],
+                fontSize: SizeConfig.mediumTextSize * 1.1,
+                fontWeight: FontWeight.w400),
+          ),
         ),
         SizedBox(
           height: 20,
@@ -496,24 +501,23 @@ class BaseHomeCardContent extends StatelessWidget {
                 if (isHighlighted == true) {
                   isHighlighted = false;
                   localDbProvider.saveHomeTutorialComplete = true;
-                  onPressed();
                 }
+                onPressed();
               },
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 decoration: BoxDecoration(
                   border: Border.all(
                     width: 2,
                     color: Colors.white,
                   ),
-                  color: Colors.transparent,
-                  boxShadow: [
-                    BoxShadow(
-                        color: shadowColor.withOpacity(0.2),
-                        blurRadius: 20,
-                        offset: Offset(5, 5),
-                        spreadRadius: 10),
-                  ],
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //       color: shadowColor.withOpacity(0.2),
+                  //       blurRadius: 20,
+                  //       offset: Offset(5, 5),
+                  //       spreadRadius: 10),
+                  // ],
                   borderRadius: BorderRadius.circular(100),
                 ),
                 child: Text(
@@ -530,229 +534,6 @@ class BaseHomeCardContent extends StatelessWidget {
     );
   }
 }
-
-// class HomeCard extends StatelessWidget {
-//   final String asset, title, subtitle, buttonText;
-//   final Function onPressed;
-//   final List<Color> gradient;
-//   bool isHighlighted;
-//   HomeCard(
-//       {this.asset,
-//       this.buttonText,
-//       this.onPressed,
-//       this.subtitle,
-//       this.title,
-//       this.gradient,
-//       this.isHighlighted = false});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     LocalDBModel localDbProvider =
-//         Provider.of<LocalDBModel>(context, listen: false);
-//     return Container(
-//       margin: EdgeInsets.only(
-//           bottom: 20,
-//           left: SizeConfig.globalMargin,
-//           right: SizeConfig.globalMargin),
-//       decoration: BoxDecoration(
-//           borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-//           gradient: new LinearGradient(
-//             colors: gradient,
-//             begin: Alignment.bottomLeft,
-//             end: Alignment.topRight,
-//           ),
-//           boxShadow: [
-//             BoxShadow(
-//                 color: gradient[0].withOpacity(0.2),
-//                 offset: Offset(2, 2),
-//                 blurRadius: 10,
-//                 spreadRadius: 2),
-//           ]),
-//       width: double.infinity,
-//       child: Stack(
-//         children: [
-//           Positioned(
-//             right: 10,
-//             bottom: 0,
-//             child: Opacity(
-//               opacity: 0.3,
-//               child: Image.asset(
-//                 asset,
-//                 //height: height * 0.25,
-//                 width: SizeConfig.screenWidth * 0.5,
-//               ),
-//             ),
-//           ),
-//           Container(
-//             width: double.infinity,
-//             padding: EdgeInsets.all(SizeConfig.screenWidth * 0.06),
-//             child: Column(
-//               mainAxisAlignment: MainAxisAlignment.spaceAround,
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text(
-//                   title,
-//                   style: TextStyle(
-//                       color: Colors.white,
-//                       shadows: [
-//                         Shadow(
-//                           offset: Offset(5, 5),
-//                           color: Colors.black26,
-//                           blurRadius: 10,
-//                         )
-//                       ],
-//                       fontWeight: FontWeight.w700,
-//                       fontSize: SizeConfig.cardTitleTextSize),
-//                 ),
-//                 SizedBox(
-//                   height: 20,
-//                 ),
-//                 Text(
-//                   subtitle,
-//                   style: TextStyle(
-//                       color: Colors.white,
-//                       shadows: [
-//                         Shadow(
-//                           color: gradient[0],
-//                           offset: Offset(1, 1),
-//                         ),
-//                       ],
-//                       fontSize: SizeConfig.mediumTextSize * 1.3,
-//                       fontWeight: FontWeight.w400),
-//                 ),
-//                 SizedBox(
-//                   height: 20,
-//                 ),
-//                 (isHighlighted)
-//                     ? ClipRRect(
-//                         borderRadius: BorderRadius.circular(100),
-//                         child: Shimmer(
-//                           enabled: true,
-//                           direction: ShimmerDirection.fromLeftToRight(),
-//                           child: GestureDetector(
-//                             onTap: () {
-//                               if (isHighlighted == true) {
-//                                 isHighlighted = false;
-//                                 localDbProvider.saveHomeTutorialComplete = true;
-//                                 onPressed();
-//                               }
-//                             },
-//                             child: Container(
-//                               padding: EdgeInsets.symmetric(
-//                                   horizontal: 16, vertical: 12),
-//                               decoration: BoxDecoration(
-//                                 border: Border.all(
-//                                   width: 2,
-//                                   color: Colors.white,
-//                                 ),
-//                                 color: Colors.transparent,
-//                                 boxShadow: [
-//                                   BoxShadow(
-//                                       color: gradient[0].withOpacity(0.2),
-//                                       blurRadius: 20,
-//                                       offset: Offset(5, 5),
-//                                       spreadRadius: 10),
-//                                 ],
-//                                 borderRadius: BorderRadius.circular(100),
-//                               ),
-//                               child: Text(
-//                                 buttonText,
-//                                 style: TextStyle(
-//                                     color: Colors.white,
-//                                     fontSize: SizeConfig.mediumTextSize * 1.3),
-//                               ),
-//                             ),
-//                           ),
-//                         ))
-//                     : GestureDetector(
-//                         onTap: onPressed,
-//                         child: Container(
-//                           padding: EdgeInsets.symmetric(
-//                               horizontal: 16, vertical: 12),
-//                           decoration: BoxDecoration(
-//                             border: Border.all(
-//                               width: 2,
-//                               color: Colors.white,
-//                             ),
-//                             color: Colors.transparent,
-//                             boxShadow: [
-//                               BoxShadow(
-//                                   color: gradient[0].withOpacity(0.2),
-//                                   blurRadius: 20,
-//                                   offset: Offset(5, 5),
-//                                   spreadRadius: 10),
-//                             ],
-//                             borderRadius: BorderRadius.circular(100),
-//                           ),
-//                           child: Text(
-//                             buttonText,
-//                             style: TextStyle(
-//                                 color: Colors.white,
-//                                 fontSize: SizeConfig.mediumTextSize * 1.3),
-//                           ),
-//                         ),
-//                       )
-//               ],
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-// class TambolaHomeCard extends StatelessWidget {
-//   BaseUtil baseProvider;
-//   LocalDBModel _localDBModel;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     baseProvider = Provider.of<BaseUtil>(context);
-//     _localDBModel = Provider.of<LocalDBModel>(context);
-//     return Container(
-//       margin: EdgeInsets.only(
-//           bottom: 20,
-//           left: SizeConfig.globalMargin,
-//           right: SizeConfig.globalMargin),
-//       decoration: BoxDecoration(
-//           gradient: new LinearGradient(
-//             colors: [Color(0xff595260), Color(0xffA35D6A)],
-//             begin: Alignment.bottomLeft,
-//             end: Alignment.topRight,
-//           ),
-//           borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-//           boxShadow: [
-//             BoxShadow(
-//                 color: Color(0xff343A40).withOpacity(0.2),
-//                 offset: Offset(2, 2),
-//                 blurRadius: 10,
-//                 spreadRadius: 2),
-//           ]),
-//       width: double.infinity,
-//       child: Stack(
-//         children: [
-//           Positioned(
-//             right: 10,
-//             bottom: 0,
-//             child: Opacity(
-//               opacity: 0.3,
-//               child: Image.asset(
-//                 "images/homw-pick-card-asset.png",
-//                 //height: height * 0.25,
-//                 width: SizeConfig.screenWidth * 0.5,
-//               ),
-//             ),
-//           ),
-//           Container(
-//             width: double.infinity,
-//             padding: EdgeInsets.all(SizeConfig.screenWidth * 0.06),
-//             child: TambolaCardContent(),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
 
 class TambolaCardContent extends StatelessWidget {
   BaseUtil baseProvider;
@@ -806,7 +587,7 @@ class TambolaCardContent extends StatelessWidget {
                   offset: Offset(1, 1),
                 ),
               ],
-              fontSize: SizeConfig.mediumTextSize * 1.3,
+              fontSize: SizeConfig.mediumTextSize * 1.1,
               fontWeight: FontWeight.w100),
         ),
         SizedBox(
@@ -816,7 +597,7 @@ class TambolaCardContent extends StatelessWidget {
           onTap: onPressed,
           child: DailyPicksTimer(
             alignment: MainAxisAlignment.start,
-            bgColor: Color(0xff50445B).withOpacity(0.8),
+            bgColor: UiConstants.primaryColor.withOpacity(0.5),
             replacementWidget: Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
@@ -910,6 +691,7 @@ class PrizeCardContent extends StatelessWidget {
                 offset: Offset(1, 1),
               ),
             ],
+            fontWeight: FontWeight.w500,
             fontSize: SizeConfig.mediumTextSize * 1.3,
           ),
         ),

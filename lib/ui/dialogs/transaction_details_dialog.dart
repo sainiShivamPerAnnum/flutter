@@ -392,6 +392,10 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                     '₹${widget._transaction.closingBalance.toStringAsFixed(2)}',
                                     UiConstants.primaryColor)
                                 : Container(),
+                            referralTileWide(
+                                'Transaction Status',
+                                widget._transaction.tranStatus,
+                                UiConstants.positiveAlertColor)
                           ],
                         ),
                       ),
