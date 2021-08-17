@@ -168,9 +168,9 @@ class _GamePageState extends State<GamePage> {
                           /////////TODO HACKY CODE - WRITTEN TO MANAGE TABLET SIZE DIMENSIONS
                           (SizeConfig.screenWidth >= 1200)
                               ? Transform.translate(
-                              offset:
-                              Offset(0, -SizeConfig.screenWidth * 0.08),
-                              child: const IdeaSection())
+                                  offset:
+                                      Offset(0, -SizeConfig.screenWidth * 0.08),
+                                  child: const IdeaSection())
                               : const IdeaSection(),
                           /////////////////////////////////////////////////////////////
                           const Spacer(
@@ -216,26 +216,26 @@ class _GamePageState extends State<GamePage> {
             ),
             appState.getCurrentGameTabIndex == 0
                 ? Positioned(
-              bottom: 10,
-              child: Container(
-                width: SizeConfig.screenWidth,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    LottieBuilder.asset(
-                      'images/lottie/swipeup.json',
-                      height: SizeConfig.screenHeight * 0.05,
-                    ),
-                    const Text(
-                      "Swipe up to see prizes and leaderboards",
-                      style: TextStyle(
-                        fontSize: 8,
+                    bottom: 10,
+                    child: Container(
+                      width: SizeConfig.screenWidth,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          LottieBuilder.asset(
+                            'images/lottie/swipeup.json',
+                            height: SizeConfig.screenHeight * 0.05,
+                          ),
+                          const Text(
+                            "Swipe up to see prizes and leaderboards",
+                            style: TextStyle(
+                              fontSize: 8,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            )
+                  )
                 : SizedBox(),
           ],
         ),
@@ -306,12 +306,12 @@ class IdeaSection extends StatelessWidget {
                             //feedback submission allowed even if user not signed in
                             dbProvider
                                 .submitFeedback(
-                                (baseProvider.firebaseUser == null ||
-                                    baseProvider.firebaseUser.uid ==
-                                        null)
-                                    ? 'UNKNOWN'
-                                    : baseProvider.firebaseUser.uid,
-                                fdbk)
+                                    (baseProvider.firebaseUser == null ||
+                                            baseProvider.firebaseUser.uid ==
+                                                null)
+                                        ? 'UNKNOWN'
+                                        : baseProvider.firebaseUser.uid,
+                                    fdbk)
                                 .then((flag) {
                               backButtonDispatcher.didPopRoute();
                               if (flag) {
@@ -417,7 +417,7 @@ class _TicketCountState extends State<TicketCount>
   Widget build(BuildContext context) {
     if (SizeConfig.isGamefirstTime == true) {
       CurvedAnimation curvedAnimation =
-      CurvedAnimation(parent: _controller, curve: Curves.decelerate);
+          CurvedAnimation(parent: _controller, curve: Curves.decelerate);
       _animation =
           Tween<double>(begin: 0, end: _latestEnd).animate(curvedAnimation);
 

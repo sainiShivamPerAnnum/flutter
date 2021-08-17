@@ -109,7 +109,7 @@ class BaseRemoteConfig {
       ));
       await remoteConfig.setDefaults(DEFAULTS);
       //RemoteConfigValue(null, ValueSource.valueStatic);
-      
+
       await remoteConfig.fetchAndActivate();
       return true;
     } catch (exception) {

@@ -109,7 +109,8 @@ class _LoginControllerState extends State<LoginController>
   Future<void> _verifyPhone() async {
     final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
       log.debug("Phone number hasnt been auto verified yet");
-      if(_otpScreenKey.currentState!=null)_otpScreenKey.currentState.onOtpAutoDetectTimeout();
+      if (_otpScreenKey.currentState != null)
+        _otpScreenKey.currentState.onOtpAutoDetectTimeout();
     };
 
     final PhoneCodeSent smsCodeSent = (String verId, [int forceCodeResend]) {
