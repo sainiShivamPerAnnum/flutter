@@ -109,11 +109,10 @@ class _ProfilePageState extends State<ProfilePage> {
                               children: [
                                 ListTile(
                                   contentPadding: EdgeInsets.symmetric(
-                                      horizontal:
-                                          SizeConfig.blockSizeHorizontal * 5),
+                                      horizontal: SizeConfig.globalMargin),
                                   leading: Icon(
                                     Icons.account_circle_outlined,
-                                    size: SizeConfig.blockSizeHorizontal * 5,
+                                    size: SizeConfig.globalMargin,
                                     color: UiConstants.primaryColor,
                                   ),
                                   title: Text(
@@ -154,10 +153,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                   ),
                   ProfileTabTile(
-                    leadWidget: Image.asset(
-                      "images/contact-book.png",
-                      height: SizeConfig.blockSizeHorizontal * 5,
-                    ),
+                    leadIcon: "images/contact-book.png",
                     onPress: () => appState.currentAction = PageAction(
                         state: PageState.addPage,
                         page: UserProfileDetailsConfig),
@@ -169,10 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   ProfileTabTile(
-                      leadWidget: Image.asset(
-                        "images/transaction.png",
-                        height: SizeConfig.blockSizeHorizontal * 5,
-                      ),
+                      leadIcon: "images/transaction.png",
                       title: "Transactions",
                       trailWidget: Text(
                         "See All",
@@ -185,10 +178,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           state: PageState.addPage,
                           page: TransactionPageConfig)),
                   ProfileTabTile(
-                    leadWidget: Image.asset(
-                      "images/referrals.png",
-                      height: SizeConfig.blockSizeHorizontal * 5,
-                    ),
+                    leadIcon: "images/referrals.png",
                     title: "Referrals",
                     trailWidget: Text(
                       _myReferralCount.toString(),
@@ -439,8 +429,7 @@ class ShareCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin:
-          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 4),
+      margin: EdgeInsets.symmetric(horizontal: SizeConfig.globalMargin),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
           gradient: new LinearGradient(
@@ -475,7 +464,9 @@ class ShareCard extends StatelessWidget {
           ),
           Container(
             width: double.infinity,
-            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5),
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.globalMargin,
+                vertical: SizeConfig.globalMargin * 1.6),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -830,27 +821,30 @@ class _ShareOptionsState extends State<ShareOptions> {
 }
 
 class ProfileTabTile extends StatelessWidget {
-  final String title;
-  final Widget leadWidget, trailWidget;
+  final String title, leadIcon;
+  final Widget trailWidget;
   final Function onPress;
 
   const ProfileTabTile(
-      {this.leadWidget, this.onPress, this.title, this.trailWidget});
+      {this.leadIcon, this.onPress, this.title, this.trailWidget});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onPress,
       child: Container(
-        padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.blockSizeHorizontal * 5),
+        padding:
+            EdgeInsets.symmetric(horizontal: SizeConfig.globalMargin * 1.2),
         child: Column(
           children: [
             SizedBox(height: SizeConfig.blockSizeHorizontal * 4),
             Row(
               children: [
-                leadWidget,
-                SizedBox(width: SizeConfig.blockSizeHorizontal * 5),
+                Image.asset(
+                  leadIcon,
+                  height: SizeConfig.blockSizeHorizontal * 5,
+                ),
+                SizedBox(width: SizeConfig.globalMargin),
                 Text(
                   title,
                   style: GoogleFonts.montserrat(
@@ -891,7 +885,7 @@ class UserProfileCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
       ),
       margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.blockSizeHorizontal * 4,
+        horizontal: SizeConfig.globalMargin,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
@@ -931,7 +925,7 @@ class UserProfileCard extends StatelessWidget {
                             ),
                     ),
                     SizedBox(
-                      width: SizeConfig.blockSizeHorizontal * 5,
+                      width: SizeConfig.globalMargin,
                     ),
                     Expanded(
                       child: Column(

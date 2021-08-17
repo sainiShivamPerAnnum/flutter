@@ -17,7 +17,7 @@ class MarqueeText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(
-          horizontal: SizeConfig.blockSizeHorizontal * 5, vertical: 16),
+          horizontal: SizeConfig.globalMargin, vertical: 16),
       child: MarqueeWidget(
         pauseDuration: Duration(seconds: 3),
         animationDuration: Duration(seconds: 5),

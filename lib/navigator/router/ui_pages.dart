@@ -10,13 +10,11 @@ const String MfDetailsPath = '/mfDetails';
 const String AugDetailsPath = '/augDetails';
 const String TransactionPath = '/tran';
 const String ReferralPath = '/referral';
-const String TambolaHomePath = '/tambolaHome';
 const String TncPath = '/tnc';
 const String FaqPath = '/faq';
 const String AugOnboardingPath = '/augOnboard';
 const String AugWithdrawalPath = '/augWithdrawal';
 const String EditAugBankDetailsPath = '/editAugBankDetails';
-const String TambolaTicketsPath = '/tambolaTickets';
 const String ReferralPolicyPath = '/refPolicy';
 const String ChatSupportPath = '/chatSupport';
 const String ClaimUsernamePath = '/claimUsername';
@@ -45,14 +43,12 @@ enum Pages {
   AugDetails,
   Transaction,
   Referral,
-  TambolaHome,
   Tnc,
   Faq,
   AugOnboard,
   UpdateRequired,
   AugWithdrawal,
   EditAugBankDetails,
-  TambolaTickets,
   RefPolicy,
   ChatSupport,
   ClaimUsername,
@@ -126,16 +122,6 @@ PageConfiguration ReferralPageConfig = PageConfiguration(
   key: 'Referral',
   path: ReferralPath,
   uiPage: Pages.Referral,
-);
-PageConfiguration TambolaHomePageConfig = PageConfiguration(
-  key: 'TambolaHome',
-  path: TambolaHomePath,
-  uiPage: Pages.TambolaHome,
-);
-PageConfiguration TambolaTicketsPageConfig = PageConfiguration(
-  key: 'TambolaTickets',
-  path: TambolaTicketsPath,
-  uiPage: Pages.TambolaTickets,
 );
 
 PageConfiguration TncPageConfig = PageConfiguration(

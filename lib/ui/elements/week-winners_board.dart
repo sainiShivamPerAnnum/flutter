@@ -73,8 +73,8 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
     return Expanded(
       child: Container(
         margin: EdgeInsets.symmetric(
-          horizontal: SizeConfig.screenWidth * 0.05,
-          vertical: SizeConfig.screenHeight * 0.02,
+          horizontal: SizeConfig.globalMargin,
+          vertical: SizeConfig.blockSizeHorizontal * 2,
         ),
         padding: EdgeInsets.only(top: SizeConfig.screenHeight * 0.03),
         width: SizeConfig.screenWidth,

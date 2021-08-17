@@ -470,10 +470,6 @@ class _TicketCountState extends State<TicketCount>
             style: TextStyle(
                 color: Colors.white, fontSize: SizeConfig.mediumTextSize),
           ),
-          // showTag
-          //     ? Container(
-          // height: SizeConfig.cardTitleTextSize * 1.5,
-          //child:
           AnimatedContainer(
             duration: Duration(seconds: 2),
             margin: EdgeInsets.only(top: 10, left: 50, right: 50),
@@ -500,8 +496,6 @@ class _TicketCountState extends State<TicketCount>
               ),
             ),
           ),
-          //   )
-          // : SizedBox(),
         ],
       ),
     );
@@ -521,7 +515,7 @@ class GameCard extends StatelessWidget {
       children: [
         Container(
           margin: EdgeInsets.only(
-            left: SizeConfig.blockSizeHorizontal * 5,
+            left: SizeConfig.globalMargin,
           ),
           padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
           decoration: BoxDecoration(

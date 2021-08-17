@@ -65,4 +65,6 @@ class FeedCard {
   bool get isHidden => _isHidden;
 
   String get assetRemoteLink => _assetRemoteLink;
+
+  Map<String, dynamic> get dataMap => _dataMap;
 }
