@@ -96,10 +96,10 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             height: SizeConfig.screenHeight * 0.2,
             child: LineChart(
               LineChartData(
-                minX: minX,
-                maxX: maxX,
+                // minX: minX,
+                // maxX: maxX,
                 minY: 0,
-                maxY: 5000,
+                maxY: 6000,
                 lineTouchData: LineTouchData(
                     enabled: true,
                     touchTooltipData: LineTouchTooltipData(
@@ -121,7 +121,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                               textAlign: TextAlign.left,
                               children: [
                                 TextSpan(
-                                  text: '₹ ${touchedSpot.y.toString()}',
+                                  text: '₹ ${touchedSpot.y.toStringAsFixed(2)}',
                                   style: GoogleFonts.montserrat(
                                     color: Colors.black,
                                     height: 2,

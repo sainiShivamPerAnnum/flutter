@@ -664,7 +664,7 @@ class FundDetailsTable extends StatelessWidget {
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(
-            vertical: 20, horizontal: SizeConfig.screenWidth * 0.08),
+            vertical: 20, horizontal: SizeConfig.screenWidth * 0.05),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

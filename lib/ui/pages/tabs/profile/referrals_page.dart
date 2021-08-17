@@ -113,7 +113,7 @@ class _ReferralsPageState extends State<ReferralsPage> {
     return Padding(
       padding: EdgeInsets.only(top: 5, bottom: 5),
       child: Container(
-        height: SizeConfig.screenHeight * 0.15,
+        height: SizeConfig.screenHeight * 0.2,
         margin: EdgeInsets.symmetric(
             horizontal: SizeConfig.blockSizeHorizontal * 2),
         decoration: BoxDecoration(
@@ -179,7 +179,7 @@ class _ReferralsPageState extends State<ReferralsPage> {
                           ),
                         ),
                         SizedBox(
-                          height: 8,
+                          height: 3,
                         ),
                         Text(
                           'Referred on ${_getUserMembershipDate(rDetail.timestamp)}',
