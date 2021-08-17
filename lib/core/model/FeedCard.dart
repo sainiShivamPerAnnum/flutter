@@ -2,7 +2,7 @@ import 'package:felloapp/util/logger.dart';
 
 class FeedCard {
   static Log log = new Log('HomeCard');
-  final int _id;
+  int _id;
   final String _title;
   final String _subtitle;
   final String _btnText;
@@ -57,6 +57,10 @@ class FeedCard {
   String get btnText => _btnText;
 
   int get id => _id;
+
+  set id(int value) {
+    _id = value;
+  }
 
   String get actionUri => _actionUri;
 

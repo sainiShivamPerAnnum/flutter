@@ -175,8 +175,21 @@ class _HomePageState extends State<HomePage> {
       ScoreHomeCard()
     ];
 
-    for (int i = 0; i < cards.length; i++) {
-      _widget.add(_buildFeedCard(cards[i]));
+    ///reorder learn card
+    for(FeedCard card in cards) {
+      if(card.type == Constants.LEARN_FEED_CARD_TYPE) {
+        DateTime _now = DateTime.now();
+        DateTime _lastWeek = _now.subtract(Duration(days: 7));
+        if(baseProvider.userCreationTimestamp.isBefore(_lastWeek)) {
+          card.id = 200;
+        }
+      }
+    }
+    if(cards != null && cards.isNotEmpty)cards.sort((a, b) => a.id.compareTo(b.id));
+
+    ///add to widgets
+    for(FeedCard card in cards) {
+      _widget.add(_buildFeedCard(card));
     }
 
     return _widget;
