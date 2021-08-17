@@ -205,7 +205,7 @@ class _RootState extends State<Root> {
                     height: kToolbarHeight * 0.6,
                     color: (appState.getCurrentTabIndex == 0)
                         ? Colors.white
-                        : Color(0xff36454F),
+                        : Color(0xff4C4C4C),
                   ),
                   //icon: Icon(Icons.contact_support_outlined),
                   // iconSize: kToolbarHeight * 0.5,

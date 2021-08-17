@@ -278,7 +278,8 @@ class _LoginControllerState extends State<LoginController>
                                 recognizer: new TapGestureRecognizer()
                                   ..onTap = () {
                                     HapticFeedback.vibrate();
-                                    BaseUtil.launchUrl('https://fello.in/policy/tnc');
+                                    BaseUtil.launchUrl(
+                                        'https://fello.in/policy/tnc');
                                     // appStateProvider.currentAction = PageAction(
                                     //     state: PageState.addPage,
                                     //     page: TncPageConfig);

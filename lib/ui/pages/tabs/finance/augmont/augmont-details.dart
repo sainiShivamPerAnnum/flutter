@@ -133,8 +133,8 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                   infoList: [
                     "24k Digital Gold",
                     "99.99% Purity",
-                    "17% growth rate in 3 years",
-                    "Ranked no 1 bullion in India"
+                    "26% growth in the past 2 years",
+                    "India's favored gold bullion"
                   ],
                   showBullet: true,
                 ),

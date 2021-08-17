@@ -456,7 +456,7 @@ class BaseHomeCardContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          title,
+          title.replaceAll("<br/>", "\n"),
           style: TextStyle(
               color: Colors.white,
               shadows: [
@@ -561,7 +561,7 @@ class TambolaCardContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          title,
+          title.replaceAll('<br/>', '\n'),
           style: TextStyle(
               color: Colors.white,
               shadows: [
@@ -682,7 +682,7 @@ class PrizeCardContent extends StatelessWidget {
         //   height: 20,
         // ),
         Text(
-          title,
+          title.replaceAll('<br/>', '\n'),
           style: GoogleFonts.montserrat(
             color: Colors.white,
             shadows: [
@@ -692,7 +692,7 @@ class PrizeCardContent extends StatelessWidget {
               ),
             ],
             fontWeight: FontWeight.w500,
-            fontSize: SizeConfig.mediumTextSize * 1.3,
+            fontSize: SizeConfig.mediumTextSize * 1.5,
           ),
         ),
         SizedBox(

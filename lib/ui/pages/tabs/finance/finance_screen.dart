@@ -95,15 +95,15 @@ class _FinancePageState extends State<FinancePage> {
                         );
                       },
                     ),
-                    // BaseUtil.buildShowcaseWrapper(_showcaseHeader,
-                    //     'Your savings and investments will show up here. The balances are based on live market rates.',
-                    //
-                    // ),
-                    Divider(
-                      color: Colors.black38,
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: SizeConfig.blockSizeVertical),
+                      child: Divider(
+                        color: Colors.black38,
+                      ),
                     ),
                     Text(
-                      "Available Funds",
+                      "Discover Assets",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
