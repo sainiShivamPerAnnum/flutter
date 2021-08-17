@@ -72,7 +72,8 @@ class _FinancePageState extends State<FinancePage> {
             borderRadius: SizeConfig.homeViewBorder,
             child: Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.blockSizeHorizontal * 5),
+                  horizontal: SizeConfig.blockSizeHorizontal * 5,
+                  vertical: SizeConfig.blockSizeVertical),
               child: CustomScrollView(
                 slivers: [
                   SliverList(
