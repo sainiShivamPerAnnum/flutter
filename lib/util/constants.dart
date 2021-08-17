@@ -51,9 +51,9 @@ class Constants {
   static const String TAMBOLA_FEED_CARD_TYPE = 'T';
   static const String DEFAULT_FEED_CARD_TYPE = 'T';
 
-
   static const int REFERRAL_TICKET_BONUS = 10;
   static const int REFERRAL_AMT_BONUS = 25;
+
   // static const int TOTAL_DRAWS = 35;
   static const int NEW_USER_TICKET_COUNT = 5;
   static const int MAX_TICKET_GEN_PER_REQUEST = 30;

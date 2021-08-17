@@ -78,7 +78,7 @@ class _FinancePageState extends State<FinancePage> {
                   SliverList(
                       delegate: SliverChildListDelegate([
                     Container(
-                      height: kToolbarHeight,
+                      height: kToolbarHeight / 1.6,
                     ),
                     Consumer<BaseUtil>(
                       builder: (context, baseUtil, child) {

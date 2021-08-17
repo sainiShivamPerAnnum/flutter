@@ -29,9 +29,11 @@ class PageAction {
 class AppState extends ChangeNotifier {
   int _rootIndex = 0;
   int _gameTabIndex = 0;
+
   int _gameIndex = 0;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
+  static bool isFirstTime = true;
   static bool isRootLoaded = false;
   static bool unsavedChanges = false;
   static bool unsavedPrefs = false;

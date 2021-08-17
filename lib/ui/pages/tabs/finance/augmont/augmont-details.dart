@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/fcm_listener.dart';
@@ -10,17 +11,17 @@ import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
+import 'package:felloapp/ui/elements/Texts/marquee_text.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/plots/fund_graph.dart';
-import 'package:felloapp/ui/elements/Texts/marquee_text.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
-import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/gestures.dart';
@@ -122,16 +123,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
         ),
         actions: [IconButton(onPressed: () {}, icon: SizedBox())],
       ),
-      // body: NestedScrollView(
-      //   headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-      //     return <Widget>[
-      //       FundAppBar(
-      //           logo: "images/augmont-share.png",
-      //           title: "Augmont Gold",
-      //           backgroundImage:
-      //               "https://www.augmont.in/wp-content/uploads/2017/04/augmont-dia-470x480.png"),
-      //     ];
-      //   },
+
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -147,6 +139,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                   showBullet: true,
                 ),
                 Container(
+                    margin: EdgeInsets.only(top: kToolbarHeight / 2),
                     width: SizeConfig.screenWidth,
                     padding: EdgeInsets.symmetric(vertical: 20),
                     child: LineChartWidget()),

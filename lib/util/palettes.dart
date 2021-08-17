@@ -65,4 +65,10 @@ List<TambolaTicketColorPalette> tambolaTicketColorPaletteList = [
     itemColorMarked: Color(0xffFFD56B),
     itemColorOdd: Colors.white,
   ),
+  TambolaTicketColorPalette(
+    boardColor: Color(0xff9E7777),
+    itemColorEven: Color(0xffDEBA9D),
+    itemColorMarked: Color(0xffCD113B),
+    itemColorOdd: Color(0xffF5E8C7),
+  ),
 ];

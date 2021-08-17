@@ -86,7 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
           physics: BouncingScrollPhysics(),
           children: [
             Container(
-              height: SizeConfig.screenHeight * 0.08,
+              height: kToolbarHeight,
             ),
             Consumer<BaseUtil>(
               builder: (ctx, bp, child) {
@@ -442,7 +442,7 @@ class ShareCard extends StatelessWidget {
       margin:
           EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 4),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
           gradient: new LinearGradient(
             colors: [
               Color(0xff4E4376),
@@ -888,13 +888,13 @@ class UserProfileCard extends StatelessWidget {
           begin: Alignment.bottomLeft,
           end: Alignment.topCenter,
         ),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
       ),
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.blockSizeHorizontal * 4,
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
         child: CustomPaint(
           painter: ShapePainter(),
           child: Container(

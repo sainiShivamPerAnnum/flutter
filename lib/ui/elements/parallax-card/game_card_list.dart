@@ -49,41 +49,6 @@ class GameCardListState extends State<GameCardList>
   List<Function> gameRoutes;
   List<int> todaysPicks;
 
-  getDrawaStatus() async {
-    // CHECKING IF THE PICK ARE DRAWN OR NOT
-    switch (DateTime.now().weekday) {
-      case 1:
-        todaysPicks = baseProvider.weeklyDigits.mon;
-        break;
-      case 2:
-        todaysPicks = baseProvider.weeklyDigits.tue;
-        break;
-      case 3:
-        todaysPicks = baseProvider.weeklyDigits.wed;
-        break;
-      case 4:
-        todaysPicks = baseProvider.weeklyDigits.thu;
-        break;
-      case 5:
-        todaysPicks = baseProvider.weeklyDigits.fri;
-        break;
-      case 6:
-        todaysPicks = baseProvider.weeklyDigits.sat;
-        break;
-      case 7:
-        todaysPicks = baseProvider.weeklyDigits.sun;
-        break;
-    }
-
-    //CHECKING FOR THE FIRST TIME OPENING OF TAMBOLA AFTER THE PICKS ARE DRAWN FOR THIS PARTICULAR DAY
-
-    if (todaysPicks != null &&
-        DateTime.now().weekday != await _localDBModel.getDailyPickAnimLastDay())
-      return true;
-
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     appState = Provider.of<AppState>(context, listen: false);
@@ -91,7 +56,27 @@ class GameCardListState extends State<GameCardList>
     _localDBModel = Provider.of<LocalDBModel>(context, listen: false);
     gameRoutes = [
       () async {
-        if (await getDrawaStatus()) {
+        if (await baseProvider.getDrawaStatus()) {
+          await _localDBModel
+              .saveDailyPicksAnimStatus(DateTime.now().weekday)
+              .then(
+                (value) => print(
+                    "Daily Picks Draw Animation Save Status Code: $value"),
+              );
+          delegate.appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: TPickDrawPageConfig,
+            widget: PicksDraw(
+              picks: baseProvider.todaysPicks ??
+                  List.filled(baseProvider.dailyPicksCount, -1),
+            ),
+          );
+        } else
+          delegate.appState.currentAction =
+              PageAction(state: PageState.addPage, page: THomePageConfig);
+      },
+      () async {
+        if (await baseProvider.getDrawaStatus()) {
           await _localDBModel
               .saveDailyPicksAnimStatus(DateTime.now().weekday)
               .then(

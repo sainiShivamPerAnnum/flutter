@@ -41,11 +41,14 @@ class _RootState extends State<Root> {
   List<Widget> _viewsByIndex;
   List<bool> _showFocuses = List.filled(4, false);
   bool _isInitialized = false;
+  bool showTag = true;
+  double tagWidth = 0;
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       AppState().setRootLoadValue = true;
+      tagWidth = SizeConfig.screenWidth / 2;
     });
     _initDynamicLinks();
     //Declare some buttons for our tab bar
@@ -110,12 +113,11 @@ class _RootState extends State<Root> {
     fcmProvider.addIncomingMessageListener(null);
   }
 
-  Color getBurgerBorder() {
-    if (appState.getCurrentTabIndex == 0 || appState.getCurrentTabIndex == 1) {
-      return Colors.white;
-    } else {
-      return Colors.black;
-    }
+  void toggleTag() {
+    print("got here");
+    setState(() {
+      showTag = !showTag;
+    });
   }
 
   _initAdhocNotifications() {
@@ -219,23 +221,28 @@ class _RootState extends State<Root> {
               ),
             ),
             Positioned(
-              top: 0,
-              right: 10,
+              top: SizeConfig.blockSizeHorizontal * 3,
+              right: SizeConfig.blockSizeHorizontal * 5,
               child: SafeArea(
-                child: IconButton(
-                  icon: Icon(Icons.contact_support_outlined),
-                  iconSize: kToolbarHeight * 0.5,
-                  color: (appState.getCurrentTabIndex == 0)
-                      ? Colors.white
-                      : Colors.black54,
-                  onPressed: () {
+                child: InkWell(
+                  child: Image.asset(
+                    "images/question.png",
+                    height: kToolbarHeight * 0.6,
+                    color: (appState.getCurrentTabIndex == 0)
+                        ? Colors.white
+                        : Colors.black54,
+                  ),
+                  //icon: Icon(Icons.contact_support_outlined),
+                  // iconSize: kToolbarHeight * 0.5,
+
+                  onTap: () {
                     HapticFeedback.vibrate();
                     delegate.appState.currentAction = PageAction(
                         state: PageState.addPage, page: SupportPageConfig);
                   },
                 ),
               ),
-            )
+            ),
           ],
         ),
         bottomNavigationBar: navBar //Pass our custom navBar into the scaffold

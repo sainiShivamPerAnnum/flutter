@@ -517,7 +517,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = ReferralPageConfig;
         break;
       case 'tambolaHome':
-        pageConfiguration = TambolaHomePageConfig;
+        pageConfiguration = THomePageConfig;
         break;
       case 'tnc':
         pageConfiguration = TncPageConfig;
