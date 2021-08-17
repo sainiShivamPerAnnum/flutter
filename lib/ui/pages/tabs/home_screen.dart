@@ -103,12 +103,12 @@ class _HomePageState extends State<HomePage> {
         child: Stack(
           children: [
             Container(
-              height: SizeConfig.screenHeight * 0.45,
-              width: double.infinity,
+              height: SizeConfig.screenHeight * 0.36,
+              width: SizeConfig.screenWidth,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("images/home-asset.png"),
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fitWidth,
                 ),
               ),
             ),
@@ -171,7 +171,7 @@ class _HomePageState extends State<HomePage> {
     }
     List<Widget> _widget = [
       Container(
-        height: SizeConfig.screenHeight * 0.04,
+        height: SizeConfig.screenHeight * 0.02,
       ),
       _buildProfileRow(),
     ];
@@ -301,13 +301,13 @@ class _HomePageState extends State<HomePage> {
         ),
         margin: EdgeInsets.symmetric(
             horizontal: SizeConfig.globalMargin,
-            vertical: SizeConfig.globalMargin),
+            vertical: SizeConfig.blockSizeHorizontal * 8),
         width: double.infinity,
         child: Row(
           children: [
             Container(
-              height: SizeConfig.screenWidth * 0.2,
-              width: SizeConfig.screenWidth * 0.2,
+              height: SizeConfig.screenWidth * 0.16,
+              width: SizeConfig.screenWidth * 0.16,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
@@ -335,11 +335,11 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    getGreeting().toUpperCase(),
+                    getGreeting(),
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
-                        fontSize: SizeConfig.largeTextSize),
+                        fontSize: SizeConfig.largeTextSize * 1.2),
                   ),
                   const SizedBox(height: 5),
                   FittedBox(
@@ -347,8 +347,9 @@ class _HomePageState extends State<HomePage> {
                       baseProvider.myUser?.name ?? 'NA',
                       maxLines: 1,
                       textAlign: TextAlign.start,
-                      style: TextStyle(
+                      style: GoogleFonts.montserrat(
                           color: Colors.white,
+                          fontWeight: FontWeight.w200,
                           fontSize: SizeConfig.largeTextSize),
                     ),
                   ),
