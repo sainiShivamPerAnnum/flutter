@@ -33,6 +33,7 @@ import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'core/base_remote_config.dart';
 import 'core/model/TambolaBoard.dart';
 import 'core/model/UserAugmontDetail.dart';
@@ -587,6 +588,14 @@ class BaseUtil extends ChangeNotifier {
       }
     } catch (e) {
       log.error(e.toString());
+    }
+  }
+
+  static void launchUrl(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 

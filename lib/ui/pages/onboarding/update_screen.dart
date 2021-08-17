@@ -110,10 +110,10 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
                   splashColor: Colors.white30,
                   onPressed: () {
                     if (Platform.isIOS) {
-                      launchUrl(
+                      BaseUtil.launchUrl(
                           'https://apps.apple.com/in/app/fello-save-play-win/id1558445254');
                     } else if (Platform.isAndroid) {
-                      // launchUrl('https://play.google.com/store/apps/details?id=in.fello.felloapp');
+                      // BaseUtil.launchUrl('https://play.google.com/store/apps/details?id=in.fello.felloapp');
                       autoUpdate();
                     }
                   },
@@ -142,7 +142,7 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
             'cause':
                 'InAppUpdate did not work, ${err.toString().substring(0, 80)}'
           });
-          launchUrl(
+          BaseUtil.launchUrl(
               'https://play.google.com/store/apps/details?id=in.fello.felloapp');
         });
       }
@@ -154,7 +154,7 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
           baseProvider.myUser.uid, FailType.AndroidInAppUpdateFailed, {
         'cause': 'InAppUpdate did not work, ${e.toString().substring(0, 80)}'
       });
-      launchUrl(
+      BaseUtil.launchUrl(
           'https://play.google.com/store/apps/details?id=in.fello.felloapp');
     }
   }

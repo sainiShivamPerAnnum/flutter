@@ -55,7 +55,6 @@ class LogoFadeIn extends State<SplashScreen> {
   }
 
   initialize() async {
-    deviceUnlock = DeviceUnlock();
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     final fcmProvider = Provider.of<FcmListener>(context, listen: false);
     final stateProvider = Provider.of<AppState>(context, listen: false);
@@ -63,6 +62,11 @@ class LogoFadeIn extends State<SplashScreen> {
     await baseProvider.init();
     await fcmProvider.setupFcm();
     _timer3.cancel();
+    try {
+      deviceUnlock = DeviceUnlock();
+    } catch (e) {
+      log.error(e.toString());
+    }
 
     bool isThereBreakingUpdate = await checkBreakingUpdate();
     if (isThereBreakingUpdate) {
@@ -82,8 +86,9 @@ class LogoFadeIn extends State<SplashScreen> {
     ///now check if app needs to be open securely
     bool _unlocked = true;
     if (baseProvider.myUser.userPreferences
-            .getPreference(Preferences.APPLOCK) ==
-        1) {
+                .getPreference(Preferences.APPLOCK) ==
+            1 &&
+        deviceUnlock != null) {
       try {
         _unlocked = await deviceUnlock.request(localizedReason: 'Unlock Fello');
       } on DeviceUnlockUnavailable {
