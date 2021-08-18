@@ -79,6 +79,18 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
   String _getAugmontGoldGrams(double gms) =>
       (gms == null || gms == 0) ? 'N/A' : gms.toStringAsFixed(4);
 
+  Color getFlagColor() {
+    if (widget._transaction.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE)
+      return UiConstants.primaryColor;
+    if (widget._transaction.tranStatus == UserTransaction.TRAN_STATUS_CANCELLED)
+      return Colors.red;
+    if (widget._transaction.tranStatus == UserTransaction.TRAN_STATUS_PENDING)
+      return Colors.orange;
+    if (widget._transaction.type == UserTransaction.TRAN_TYPE_PRIZE)
+      return Colors.blue;
+    return UiConstants.primaryColor;
+  }
+
   Widget dialogContent(BuildContext context) {
     return Wrap(
       children: [
@@ -134,7 +146,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                         ),
                       ),
                       Divider(
-                        color: UiConstants.primaryColor.withOpacity(0.7),
+                        color: getFlagColor().withOpacity(0.7),
                         height: 0,
                         endIndent: SizeConfig.screenWidth * 0.1,
                         indent: SizeConfig.screenWidth * 0.1,
@@ -144,7 +156,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                             EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         margin: EdgeInsets.only(bottom: 24),
                         decoration: BoxDecoration(
-                          color: UiConstants.primaryColor.withOpacity(0.7),
+                          color: getFlagColor().withOpacity(0.7),
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(8),
                             bottomRight: Radius.circular(8),
@@ -207,11 +219,11 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                     UserTransaction.TRAN_TYPE_WITHDRAW)
                                 ? referralTileWide(
                                     'Tickets Added:',
-                                    '${widget._transaction.ticketUpCount}',
+                                    '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
                                     UiConstants.primaryColor)
                                 : referralTileWide(
                                     'Tickets Reduced:',
-                                    '${widget._transaction.ticketUpCount}',
+                                    '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
                                     Colors.redAccent.withOpacity(0.6),
                                   ),
                             (widget._transaction.subType ==
@@ -222,19 +234,21 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                                 .subFldAugTotalGoldGm] ==
                                             null
                                         ? "Unavailable"
-                                        : '${widget._transaction.augmnt[UserTransaction.subFldAugTotalGoldGm]} grams',
+                                        : '${widget._transaction.augmnt[UserTransaction.subFldAugTotalGoldGm] ?? 'Unavailable'} grams',
                                     UiConstants.primaryColor)
                                 : Container(),
                             (widget._transaction.closingBalance > 0)
                                 ? referralTileWide(
                                     'Overall Closing Balance:',
-                                    '₹${widget._transaction.closingBalance.toStringAsFixed(2)}',
+                                    '₹${widget._transaction.closingBalance.toStringAsFixed(2) ?? 'Unavailable'}',
                                     UiConstants.primaryColor)
                                 : Container(),
-                            referralTileWide(
-                                'Transaction Status',
-                                widget._transaction.tranStatus,
-                                UiConstants.positiveAlertColor)
+                            widget._transaction.tranStatus != null
+                                ? referralTileWide(
+                                    'Transaction Status',
+                                    widget._transaction.tranStatus,
+                                    getFlagColor())
+                                : Container()
                           ],
                         ),
                       ),

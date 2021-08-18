@@ -468,62 +468,6 @@ class _TambolaHomeState extends State<TambolaHome> {
       if (!_isTicketSummaryLoaded)
         ticketSummaryData = _getTambolaTicketsSummary();
 
-// DUMMY DATA
-      // ticketSummaryData = [
-      //   TicketSummaryCardModel(
-      //       data: [
-      //         BestTambolaTicketsSumm(
-      //             boards: baseProvider.userWeeklyBoards
-      //                 .map((e) => _buildBoardView(e))
-      //                 .toList(),
-      //             title:
-      //                 "You are just 5 or less numbers away from hitting the 10,000 Full House jackpot.🎊")
-      //       ],
-      //       color: Color(0xff810000),
-      //       cardType: "Jackpot",
-      //       bgAsset:
-      //           "https://img.freepik.com/free-photo/copy-space-text-red-texture-background-concept-chinese-new-year-background_45281-280.jpg?size=626&ext=jpg&uid=P35674521"),
-      //   TicketSummaryCardModel(
-      //       data: List.generate(
-      //         2,
-      //         (index) => BestTambolaTicketsSumm(
-      //             boards: baseProvider.userWeeklyBoards
-      //                 .map((e) => _buildBoardView(e))
-      //                 .toList(),
-      //             title: "Ticket #1234 completed Top Row"),
-      //       ),
-      //       color: Colors.blue,
-      //       cardType: "Completed",
-      //       bgAsset:
-      //           "https://img.freepik.com/free-vector/blue-halftone-memphis-background-with-yellow-lines-circles-shapes_1017-31954.jpg?size=626&ext=jpg&uid=P35674521"),
-      //   TicketSummaryCardModel(
-      //       data: [
-      //         BestTambolaTicketsSumm(
-      //             boards: baseProvider.userWeeklyBoards
-      //                 .map((e) => _buildBoardView(e))
-      //                 .toList(),
-      //             title:
-      //                 "5 of your tickets are just 1 number away from completing corners")
-      //       ],
-      //       color: Color(0xff511281),
-      //       cardType: "Best Corners",
-      //       bgAsset:
-      //           "https://img.freepik.com/free-vector/gradient-liquid-abstract-background_52683-60469.jpg?size=626&ext=jpg&uid=P35674521"),
-      //   TicketSummaryCardModel(
-      //       data: [
-      //         BestTambolaTicketsSumm(
-      //             boards: baseProvider.userWeeklyBoards
-      //                 .map((e) => _buildBoardView(e))
-      //                 .toList(),
-      //             title:
-      //                 "8 of your tickets needs just 2 or less numbers to complete Bottom Row")
-      //       ],
-      //       color: Colors.orange,
-      //       cardType: "Best Rows",
-      //       bgAsset:
-      //           "https://img.freepik.com/free-vector/abstract-halftone-background_23-2148583453.jpg?size=626&ext=jpg&uid=P35674521")
-      // ];
-
       _widget = ticketSummaryData.isEmpty
           ? SizedBox()
           : Container(
@@ -567,7 +511,7 @@ class _TambolaHomeState extends State<TambolaHome> {
                             vertical: SizeConfig.blockSizeHorizontal * 2,
                           ),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
@@ -1179,7 +1123,7 @@ class GameAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.screenWidth * 0.16,
+      height: SizeConfig.screenWidth * 0.14,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1191,9 +1135,11 @@ class GameAppBar extends StatelessWidget {
             ),
             color: Colors.white,
           ),
-          Image.asset(
-            "images/fello-dark.png",
-            height: SizeConfig.screenWidth * 0.1,
+          FittedBox(
+            child: Image.asset(
+              "images/fello-dark.png",
+              height: kToolbarHeight * 0.6,
+            ),
           ),
           IconButton(
             onPressed: () => delegate.appState.currentAction = PageAction(

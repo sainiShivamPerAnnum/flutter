@@ -177,8 +177,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                   color: Colors.white,
                                   shape: BoxShape.circle,
                                 ),
-                                child: IconButton(
-                                  onPressed: () async {
+                                child: InkWell(
+                                  onTap: () async {
                                     var _status =
                                         await Permission.photos.status;
                                     if (_status.isRestricted ||
@@ -217,8 +217,10 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                           context);
                                     }
                                   },
-                                  icon: Icon(Icons.camera),
-                                  color: UiConstants.primaryColor,
+                                  child: Icon(
+                                    Icons.camera,
+                                    color: UiConstants.primaryColor,
+                                  ),
                                 ),
                               ),
                             ),

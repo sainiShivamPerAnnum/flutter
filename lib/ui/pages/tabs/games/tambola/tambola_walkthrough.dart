@@ -12,7 +12,7 @@ class Walkthrough extends StatelessWidget {
 
   static const List<String> dailyPicks = [
     "Every day 5 random numbers are picked out from 1 to 90 at 6 pm",
-    "You can view all the picks of this week by pulling the card down",
+    "You can view all the picks of this week by tapping on the card",
   ];
   static const List<String> tambolatickets = [
     "This is how a Fello Tambola ticket looks which is very simple and easy to understand ",

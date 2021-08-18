@@ -228,7 +228,8 @@ class _FundsChartViewState extends State<FundsChartView> {
                                 color: UiConstants.textColor,
                               ),
                               bodyTextStyle: TextStyle(
-                                fontSize: SizeConfig.mediumTextSize,
+                                fontSize: SizeConfig.mediumTextSize * 1.1,
+                                fontWeight: FontWeight.w700,
                                 color: UiConstants.textColor,
                               ),
                               isHighlighted: chartData[i].isHighlighted,
