@@ -24,7 +24,6 @@ class ChangeProfilePicture extends StatefulWidget {
 }
 
 class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
-  final FirebaseStorage storage = FirebaseStorage.instance;
   BaseUtil baseProvider;
   DBModel dbProvider;
   bool isUploading = false;
@@ -58,12 +57,16 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
     String targetPath = "${tempdir.path}/c-$imageName";
     print("temp path: " + targetPath);
     print("orignal path: " + widget.image.path);
-    await testCompressAndGetFile(File(widget.image.path), targetPath);
-    FirebaseStorage storage = FirebaseStorage.instance;
-    Reference ref = storage.ref().child("dps/${baseProvider.myUser.uid}/image");
-    UploadTask uploadTask = ref.putFile(File(targetPath));
+    // await testCompressAndGetFile(File(widget.image.path), targetPath);
+    Reference ref = FirebaseStorage.instance.ref().child('dps').child(baseProvider.myUser.uid).child('image');
+    final metadata = SettableMetadata(
+        contentType: 'image/jpg',
+        customMetadata: {'picked-file-path': targetPath});
+    File _dp = File(targetPath);
+    UploadTask uploadTask;
 
     try {
+      if(_dp != null)uploadTask = ref.putFile(_dp);
       var res = await uploadTask;
       String url = await res.ref.getDownloadURL();
       if (url != null) {
@@ -184,7 +187,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
                                 ElevatedButton.styleFrom(primary: Colors.white),
                             onPressed: () => Navigator.pop(context),
                             child: Text(
-                              "Cancle",
+                              "Cancel",
                               style: GoogleFonts.montserrat(
                                 color: Colors.black,
                                 fontSize: SizeConfig.mediumTextSize,

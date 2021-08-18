@@ -54,7 +54,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
     setState(() {
       final seconds = duration.inSeconds + addSeconds;
       if (seconds < 0) {
-        print("Cancle");
+        print("Cancel");
         setState(() {
           showClock = false;
         });
