@@ -3,6 +3,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/Buttons/large_button.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../../base_util.dart';
 import '../../../main.dart';
 
@@ -182,7 +184,7 @@ class _SupportPageState extends State<SupportPage> {
                       size: 16,
                     ),
                     onTap: () {
-                      HapticFeedback.vibrate();
+                      Haptic.vibrate();
                       appState.currentAction = PageAction(
                           state: PageState.addPage,
                           page: ChatSupportPageConfig);
@@ -197,7 +199,7 @@ class _SupportPageState extends State<SupportPage> {
                       size: 16,
                     ),
                     onTap: () {
-                      HapticFeedback.vibrate();
+                      Haptic.vibrate();
                       try {
                         _launchEmail();
                       } catch (e) {
@@ -219,7 +221,7 @@ class _SupportPageState extends State<SupportPage> {
                       size: 16,
                     ),
                     onTap: () {
-                      HapticFeedback.vibrate();
+                      Haptic.vibrate();
                       _showRequestCallSheet();
                     },
                   ),
@@ -247,7 +249,7 @@ class _SupportPageState extends State<SupportPage> {
                       size: 16,
                     ),
                     onTap: () {
-                      HapticFeedback.vibrate();
+                      Haptic.vibrate();
                       appState.currentAction = PageAction(
                           state: PageState.addPage, page: WalkThroughConfig);
                     },
@@ -261,7 +263,7 @@ class _SupportPageState extends State<SupportPage> {
                       size: 16,
                     ),
                     onTap: () {
-                      HapticFeedback.vibrate();
+                      Haptic.vibrate();
                       appState.currentAction = PageAction(
                           state: PageState.addPage, page: FaqPageConfig);
                     },

@@ -200,7 +200,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                   size: 18.0,
                 ),
           onPressed: () async {
-            HapticFeedback.vibrate();
+            Haptic.vibrate();
             baseProvider.isAugDepositRouteLogicInProgress = true;
             setState(() {});
             ///////////DUMMY///////////////////////////////////
@@ -263,7 +263,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                 ),
           onPressed: () async {
             if (!baseProvider.isAugWithdrawRouteLogicInProgress) {
-              HapticFeedback.vibrate();
+              Haptic.vibrate();
               _onWithdrawalClicked();
               // double amt = await augmontProvider.getGoldBalance();
               // log.debug(amt.toString());
@@ -466,7 +466,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
   }
 
   _onWithdrawalClicked() async {
-    HapticFeedback.vibrate();
+    Haptic.vibrate();
     baseProvider.augmontDetail = (baseProvider.augmontDetail == null)
         ? (await dbProvider.getUserAugmontDetails(baseProvider.myUser.uid))
         : baseProvider.augmontDetail;

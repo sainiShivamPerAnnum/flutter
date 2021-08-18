@@ -3,6 +3,7 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -148,7 +149,7 @@ class DepositModalSheetState extends State<DepositModalSheet>
                   label: Text("What is my UPI ID?"),
                   backgroundColor: UiConstants.chipColor,
                   onPressed: () {
-                    HapticFeedback.vibrate();
+                    Haptic.vibrate();
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => MoreInfoDialog(
@@ -161,7 +162,7 @@ class DepositModalSheetState extends State<DepositModalSheet>
                   label: Text("Where do I find it?"),
                   backgroundColor: UiConstants.chipColor,
                   onPressed: () {
-                    HapticFeedback.vibrate();
+                    Haptic.vibrate();
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => MoreInfoDialog(

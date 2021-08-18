@@ -4,10 +4,10 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class GamePoll extends StatefulWidget {
@@ -98,7 +98,7 @@ class _GamePollState extends State<GamePoll> {
         isVoted: isVoted,
         ontap: () {
           if (!isVoted) {
-            HapticFeedback.vibrate();
+            Haptic.vibrate();
             addPollVote(_item.id);
           }
         },

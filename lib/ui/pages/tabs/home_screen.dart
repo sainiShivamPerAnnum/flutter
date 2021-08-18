@@ -10,10 +10,10 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_daily_draw_timer.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -118,6 +118,7 @@ class _HomePageState extends State<HomePage> {
                 child: ListView(
                   controller: AppState.homeCardListController,
                   physics: BouncingScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal*1.6),
                   children: (!baseProvider.isHomeCardsFetched ||
                           baseProvider.feedCards.length == 0)
                       ? _buildLoadingFeed()
@@ -214,7 +215,7 @@ class _HomePageState extends State<HomePage> {
             buttonText: card.btnText,
             isHighlighted: (baseProvider.show_home_tutorial),
             onPressed: () async {
-              HapticFeedback.vibrate();
+              Haptic.vibrate();
               delegate.parseRoute(Uri.parse(card.actionUri));
             },
           ),
@@ -234,7 +235,7 @@ class _HomePageState extends State<HomePage> {
             buttonText: card.btnText,
             isHighlighted: false,
             onPressed: () async {
-              HapticFeedback.vibrate();
+              Haptic.vibrate();
               delegate.appState.setCurrentTabIndex = 1;
               if (await baseProvider.getDrawaStatus()) {
                 await _localDBModel
@@ -273,7 +274,7 @@ class _HomePageState extends State<HomePage> {
             isHighlighted: false,
             dataMap: card.dataMap,
             onPressed: () async {
-              HapticFeedback.vibrate();
+              Haptic.vibrate();
               delegate.appState.setCurrentTabIndex = 1;
               delegate.appState.setCurrentGameTabIndex = 1;
             },
@@ -294,7 +295,7 @@ class _HomePageState extends State<HomePage> {
             buttonText: card.btnText,
             isHighlighted: false,
             onPressed: () async {
-              HapticFeedback.vibrate();
+              Haptic.vibrate();
               // print(Color(0xff1FAB89).value.toString());
               // print(Color(0xff62D2A2).value.toString());
               delegate.parseRoute(Uri.parse(card.actionUri));
@@ -471,7 +472,7 @@ class BaseHomeCardContent extends StatelessWidget {
               fontSize: SizeConfig.cardTitleTextSize),
         ),
         SizedBox(
-          height: 20,
+          height: SizeConfig.blockSizeVertical,
         ),
         Container(
           width: SizeConfig.screenWidth * 0.6,
@@ -490,7 +491,7 @@ class BaseHomeCardContent extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 20,
+          height: SizeConfig.blockSizeVertical*1.5,
         ),
         ClipRRect(
           borderRadius: BorderRadius.circular(100),

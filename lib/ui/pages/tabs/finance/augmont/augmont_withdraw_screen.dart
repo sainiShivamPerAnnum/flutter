@@ -371,7 +371,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
             ],
           ),
           onPressed: () async {
-            HapticFeedback.vibrate();
+            Haptic.vibrate();
             if (_checkBankInfoMissing) {
               baseProvider.showNegativeAlert('Bank Details Missing',
                   'Please enter your bank details', context);
@@ -498,7 +498,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
             ],
           ),
           onTap: () {
-            HapticFeedback.vibrate();
+            Haptic.vibrate();
             showDialog(
               context: context,
               builder: (context) => new AlertDialog(

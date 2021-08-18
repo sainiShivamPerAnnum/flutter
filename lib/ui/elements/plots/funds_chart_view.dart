@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
@@ -6,20 +6,18 @@ import 'package:felloapp/core/model/chartFundItem.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/card.dart';
-import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/chart_values_options.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/legend_options.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/pie_chart.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:math' as math;
+import 'package:provider/provider.dart';
 
 class FundsChartView extends StatefulWidget {
   final UserFundWallet userFundWallet;
@@ -106,7 +104,7 @@ class _FundsChartViewState extends State<FundsChartView> {
           ],
           function: () {
             if (widget.userFundWallet.prizeBalance <= 0) return;
-            HapticFeedback.vibrate();
+            Haptic.vibrate();
             showDialog(
               context: context,
               barrierDismissible: false,
@@ -147,7 +145,7 @@ class _FundsChartViewState extends State<FundsChartView> {
     getchartData();
     return GestureDetector(
       onTap: () {
-        HapticFeedback.vibrate();
+        Haptic.vibrate();
         if (widget.userFundWallet.getEstTotalWealth() > 0.0)
           appState.currentAction = PageAction(
               state: PageState.addWidget,

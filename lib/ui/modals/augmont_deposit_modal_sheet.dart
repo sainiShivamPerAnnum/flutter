@@ -7,6 +7,7 @@ import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/dialogs/success-dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -174,7 +175,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                   label: Text("How does this work?"),
                   backgroundColor: UiConstants.chipColor,
                   onPressed: () {
-                    HapticFeedback.vibrate();
+                    Haptic.vibrate();
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => MoreInfoDialog(
@@ -187,7 +188,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                   label: Text("How long does it take?"),
                   backgroundColor: UiConstants.chipColor,
                   onPressed: () {
-                    HapticFeedback.vibrate();
+                    Haptic.vibrate();
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => MoreInfoDialog(
@@ -355,7 +356,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                   size: SizeConfig.mediumTextSize * 1.4,
                 ),
                 onTap: () {
-                  HapticFeedback.vibrate();
+                  Haptic.vibrate();
                   showDialog(
                       context: context,
                       builder: (BuildContext context) => MoreInfoDialog(
@@ -413,7 +414,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     if (flag) {
       // baseProvider.showPositiveAlert(
       //     'SUCCESS', 'You gold deposit was confirmed!', context);
-      HapticFeedback.vibrate();
+      Haptic.vibrate();
       showDialog(
         context: context,
         barrierDismissible: false,

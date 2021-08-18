@@ -1135,11 +1135,9 @@ class GameAppBar extends StatelessWidget {
             ),
             color: Colors.white,
           ),
-          FittedBox(
-            child: Image.asset(
-              "images/fello-dark.png",
-              height: kToolbarHeight * 0.6,
-            ),
+          Image.asset(
+            "images/fello-dark.png",
+            height: kToolbarHeight * 0.6,
           ),
           IconButton(
             onPressed: () => delegate.appState.currentAction = PageAction(

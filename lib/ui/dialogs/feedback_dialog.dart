@@ -1,3 +1,4 @@
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -109,7 +110,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
                 alignment: Alignment.bottomRight,
                 child: TextButton(
                   onPressed: () {
-                    HapticFeedback.vibrate();
+                    Haptic.vibrate();
                     log.debug('DialogAction clicked');
                     if (_formKey.currentState.validate()) {
                       widget.dialogAction(fdbkController.text);
