@@ -292,6 +292,6 @@ class PollItem {
     } catch (e) {
       print('Index parsing failed');
     }
-    return Assets.POLL_NEXT_GAME_LIST[index - 1];
+    return Assets.POLL_FOLLOW_UP_GAME_LIST[index - 1];
   }
 }
