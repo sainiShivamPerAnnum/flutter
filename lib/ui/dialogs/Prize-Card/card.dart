@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -25,7 +26,6 @@ import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:screenshot/screenshot.dart';
 import 'package:share/share.dart';
 
 class FCard extends StatefulWidget {
@@ -134,9 +134,9 @@ class _TicketState extends State<FCard> {
 
   List<FoldEntry> _getEntries() {
     return [
-      FoldEntry(height: SizeConfig.screenHeight * 0.23, front: topCard),
+      FoldEntry(height: SizeConfig.screenHeight * 0.26, front: topCard),
       FoldEntry(
-          height: SizeConfig.screenHeight * 0.23,
+          height: SizeConfig.screenHeight * 0.26,
           front: middleCard,
           back: frontCard),
       FoldEntry(height: 100.0, front: bottomCard, back: backCard)
@@ -237,29 +237,27 @@ class _TicketState extends State<FCard> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            child: Center(
-              child: Text(
-                "र ${widget.unclaimedPrize}",
-                style: GoogleFonts.montserrat(
-                  color: Colors.white,
-                  height: 1.3,
-                  shadows: [
-                    Shadow(
-                      offset: Offset(2, 2),
-                      color: Colors.black26,
-                      blurRadius: 5,
-                    )
-                  ],
-                  fontWeight: FontWeight.w800,
-                  fontSize: SizeConfig.cardTitleTextSize * 2.4,
-                ),
+          Spacer(),
+          FittedBox(
+            fit: BoxFit.contain,
+            child: Text(
+              "र ${widget.unclaimedPrize}",
+              style: GoogleFonts.montserrat(
+                color: Colors.white,
+                height: 1.3,
+                shadows: [
+                  Shadow(
+                    offset: Offset(2, 2),
+                    color: Colors.black26,
+                    blurRadius: 5,
+                  )
+                ],
+                fontWeight: FontWeight.w800,
+                fontSize: SizeConfig.cardTitleTextSize * 1.6,
               ),
             ),
           ),
-          SizedBox(
-            height: 10,
-          ),
+          Spacer(),
           Text(
             "How would you like to redeem it?",
             style: GoogleFonts.montserrat(
@@ -453,19 +451,6 @@ class _CloseCardState extends State<CloseCard> {
   bool isCapturing = false;
   bool isSaving = false;
 
-  //Create an instance of ScreenshotController
-  ScreenshotController screenshotController = ScreenshotController();
-
-  Future<Uint8List> convertWidgetToImage() async {
-    RenderRepaintBoundary renderRepaintBoundary =
-        scr.currentContext.findRenderObject();
-    ui.Image boxImage = await renderRepaintBoundary.toImage(pixelRatio: 1);
-    ByteData byteData =
-        await boxImage.toByteData(format: ui.ImageByteFormat.png);
-    Uint8List uint8list = byteData.buffer.asUint8List();
-    return uint8list;
-  }
-
   bool isClaimChoiceLoading = true;
   String claimText = "";
   PrizeClaimChoice choice;
@@ -651,9 +636,6 @@ class _CloseCardState extends State<CloseCard> {
                   children: [
                     InkWell(
                       onTap: () async {
-                        setState(() {
-                          isCapturing = true;
-                        });
                         _buildShareCard();
                       },
                       child: Container(
@@ -663,55 +645,17 @@ class _CloseCardState extends State<CloseCard> {
                         ),
                         padding:
                             EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        child: isCapturing
-                            ? SpinKitThreeBounce(
-                                color: UiConstants.spinnerColor2,
-                                size: 18.0,
-                              )
-                            : Wrap(
-                                children: [
-                                  Text(
-                                    "Brag  📢",
-                                    style: GoogleFonts.montserrat(
-                                        fontSize: SizeConfig.mediumTextSize,
-                                        color: Colors.white,
-                                        height: 1.3),
-                                  ),
-                                ],
-                              ),
-                      ),
-                    ),
-                    Text("     ", style: TextStyle(color: Colors.white)),
-                    InkWell(
-                      onTap: () async {
-                        setState(() {
-                          isSaving = true;
-                        });
-                        _saveShareCard();
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white, width: 3),
-                          borderRadius: BorderRadius.circular(100),
+                        child: Wrap(
+                          children: [
+                            Text(
+                              "Brag  📢",
+                              style: GoogleFonts.montserrat(
+                                  fontSize: SizeConfig.mediumTextSize,
+                                  color: Colors.white,
+                                  height: 1.3),
+                            ),
+                          ],
                         ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        child: isSaving
-                            ? SpinKitThreeBounce(
-                                color: UiConstants.spinnerColor2,
-                                size: 18.0,
-                              )
-                            : Wrap(
-                                children: [
-                                  Text(
-                                    "Save  💾",
-                                    style: GoogleFonts.montserrat(
-                                        fontSize: SizeConfig.mediumTextSize,
-                                        color: Colors.white,
-                                        height: 1.3),
-                                  ),
-                                ],
-                              ),
                       ),
                     ),
                   ],
@@ -724,6 +668,8 @@ class _CloseCardState extends State<CloseCard> {
       ),
     );
   }
+
+  GlobalKey imageKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -738,143 +684,135 @@ class _CloseCardState extends State<CloseCard> {
     return widget.isClaimed ? _buildEndCard(context) : _buildBeginCard(context);
   }
 
-  // _buildShareCard() async {
-  //   showDialog(
-  //     context: context,
-  //     builder: (ctx) => Material(
-  //       child: Container(
-  //         color: Colors.black.withOpacity(0.5),
-  //         child: Column(
-  //           children: [
-  //             Expanded(
-  //               child: SingleChildScrollView(
-  //                 child: Column(
-  //                   children: [
-  //                     SizedBox(height: kToolbarHeight),
-  //                     ShareCard(
-  //                       dpUrl: baseProvider.myUserDpUrl,
-  //                       claimChoice: widget.claimtype,
-  //                       prizeAmount: baseProvider.userFundWallet.prizeBalance,
-  //                       username: baseProvider.myUser.name,
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ),
-  //             ),
-  //             Container(
-  //               width: SizeConfig.screenWidth,
-  //               child: Row(
-  //                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //                 children: [
-  //                   Column(
-  //                     children: [
-  //                       IconButton(
-  //                           onPressed: () => Navigator.pop(context),
-  //                           icon: Icon(Icons.ios_share_rounded,
-  //                               color: Colors.white)),
-  //                       SizedBox(height: 8),
-  //                       Text(
-  //                         "Share",
-  //                         style: GoogleFonts.montserrat(
-  //                           color: Colors.white,
-  //                           fontSize: SizeConfig.mediumTextSize,
-  //                         ),
-  //                       ),
-  //                       SizedBox(height: 8)
-  //                     ],
-  //                   ),
-  //                   // Expanded(
-  //                   //   child: Column(
-  //                   //     children: [
-  //                   //       IconButton(
-  //                   //           onPressed: () => Navigator.pop(context),
-  //                   //           icon: Icon(Icons.save_alt_rounded,
-  //                   //               color: Colors.white)),
-  //                   //       SizedBox(height: 8),
-  //                   //       Text(
-  //                   //         "Save",
-  //                   //         style: GoogleFonts.montserrat(
-  //                   //           color: Colors.white,
-  //                   //           fontSize: SizeConfig.mediumTextSize,
-  //                   //         ),
-  //                   //       )
-  //                   //     ],
-  //                   //   ),
-  //                   //),
-  //                   Column(
-  //                     children: [
-  //                       IconButton(
-  //                           onPressed: () => Navigator.pop(context),
-  //                           icon:
-  //                               Icon(Icons.close_rounded, color: Colors.white)),
-  //                       Text(
-  //                         "Cancel",
-  //                         style: GoogleFonts.montserrat(
-  //                           color: Colors.white,
-  //                           fontSize: SizeConfig.mediumTextSize,
-  //                         ),
-  //                       )
-  //                     ],
-  //                   )
-  //                 ],
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   _buildShareCard() async {
+    AppState.screenStack.add(ScreenItem.dialog);
+    showDialog(
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async {
+          backButtonDispatcher.didPopRoute();
+          return Future.value(true);
+        },
+        child: Material(
+          child: Container(
+            height: SizeConfig.screenHeight,
+            width: SizeConfig.screenWidth,
+            color: Colors.black,
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Transform.scale(
+                    scale: 0.5,
+                    child: RepaintBoundary(
+                      key: imageKey,
+                      child: ShareCard(
+                        dpUrl: baseProvider.myUserDpUrl,
+                        claimChoice: widget.claimtype,
+                        prizeAmount: baseProvider.userFundWallet.prizeBalance,
+                        username: baseProvider.myUser.name,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  child: Container(
+                    color: Colors.black.withOpacity(0.8),
+                    width: SizeConfig.screenWidth,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        isCapturing
+                            ? SpinKitCircle(color: Colors.white)
+                            : Column(
+                                children: [
+                                  IconButton(
+                                    onPressed: () async {
+                                      Uint8List image = await captureCard();
+                                      if (image != null) shareCard(image);
+                                    },
+                                    icon: Icon(Icons.ios_share_rounded,
+                                        color: Colors.white),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Share",
+                                      style: GoogleFonts.montserrat(
+                                        color: Colors.white,
+                                        fontSize: SizeConfig.mediumTextSize,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                        isSaving
+                            ? SpinKitCircle(
+                                color: Colors.white,
+                              )
+                            : Column(
+                                children: [
+                                  IconButton(
+                                      onPressed: () async {
+                                        Uint8List image = await captureCard();
+                                        if (image != null) saveCard(image);
+                                      },
+                                      icon: Icon(Icons.save_alt_rounded,
+                                          color: Colors.white)),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Save",
+                                      style: GoogleFonts.montserrat(
+                                        color: Colors.white,
+                                        fontSize: SizeConfig.mediumTextSize,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                        Column(
+                          children: [
+                            IconButton(
+                                onPressed: () =>
+                                    backButtonDispatcher.didPopRoute(),
+                                icon: Icon(Icons.close_rounded,
+                                    color: Colors.white)),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                "Cancel",
+                                style: GoogleFonts.montserrat(
+                                  color: Colors.white,
+                                  fontSize: SizeConfig.mediumTextSize,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<Uint8List> captureCard() async {
     try {
-      //////ADDING A PRE_CALL DUE TO SCREENSHOT PACKAGE BUG
-      baseProvider.myUserDpUrl =
-          await dbProvider.getUserDP(baseProvider.myUser.uid);
-      await screenshotController.captureFromWidget(ShareCard(
-        dpUrl: baseProvider.myUserDpUrl,
-        claimChoice: widget.claimtype,
-        prizeAmount: baseProvider.userFundWallet.processingRedemptionBalance,
-        username: baseProvider.myUser.name,
-      ));
-      ////////////////////////////////////////////
-      screenshotController
-          .captureFromWidget(
-              ShareCard(
-                dpUrl: baseProvider.myUserDpUrl,
-                claimChoice: widget.claimtype,
-                prizeAmount:
-                    baseProvider.userFundWallet.processingRedemptionBalance == 0
-                        ? baseProvider.userFundWallet.prizeBalance
-                        : baseProvider
-                            .userFundWallet.processingRedemptionBalance,
-                username: baseProvider.myUser.name,
-              ),
-              delay: const Duration(seconds: 1))
-          .then((Uint8List image) async {
-        setState(() {
-          isCapturing = false;
-        });
-        final directory = (await getExternalStorageDirectory()).path;
-        String dt = DateTime.now().toString();
-        File imgg = new File('$directory/fello-reward-$dt.png');
-        imgg.writeAsBytesSync(image);
-        Share.shareFiles(
-          ['$directory/fello-reward-$dt.png'],
-          subject: 'Fello Rewards',
-          text:
-              'Fello really is a very rewarding way to invest in assets and play games! You should try it out too: https://fello.in/download/app',
-        );
-      }).catchError((onError) {
-        if (baseProvider.myUser.uid != null) {
-          Map<String, dynamic> errorDetails = {
-            'Error message': 'Share reward card in card.dart failed'
-          };
-          dbProvider.logFailure(baseProvider.myUser.uid,
-              FailType.FelloRewardCardShareFailed, errorDetails);
-        }
-        print(onError);
-      });
+      RenderRepaintBoundary imageObject =
+          imageKey.currentContext.findRenderObject();
+      final image = await imageObject.toImage(pixelRatio: 2);
+      ByteData byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      final pngBytes = byteData.buffer.asUint8List();
+
+      return pngBytes;
     } catch (e) {
       if (baseProvider.myUser.uid != null) {
         Map<String, dynamic> errorDetails = {
@@ -885,6 +823,45 @@ class _CloseCardState extends State<CloseCard> {
       }
       setState(() {
         isSaving = false;
+        isCapturing = false;
+      });
+      backButtonDispatcher.didPopRoute();
+      print(e.toString());
+      baseProvider.showNegativeAlert(
+          "Task Failed", "Unable to share the picture at the moment", context);
+    }
+    return null;
+  }
+
+  shareCard(Uint8List image) async {
+    try {
+      setState(() {
+        isCapturing = false;
+      });
+      final directory = (await getExternalStorageDirectory()).path;
+      String dt = DateTime.now().toString();
+      File imgg = new File('$directory/fello-reward-$dt.png');
+      imgg.writeAsBytesSync(image);
+      backButtonDispatcher.didPopRoute();
+      backButtonDispatcher.didPopRoute();
+      Share.shareFiles(
+        ['$directory/fello-reward-$dt.png'],
+        subject: 'Fello Rewards',
+        text:
+            'Fello really is a very rewarding way to invest in assets and play games! You should try it out too: https://fello.in/download/app',
+      ).catchError((onError) {
+        if (baseProvider.myUser.uid != null) {
+          Map<String, dynamic> errorDetails = {
+            'Error message': 'Share reward card in card.dart failed'
+          };
+          dbProvider.logFailure(baseProvider.myUser.uid,
+              FailType.FelloRewardCardShareFailed, errorDetails);
+        }
+        print(onError);
+      });
+    } catch (e) {
+      setState(() {
+        isCapturing = false;
       });
       backButtonDispatcher.didPopRoute();
       print(e.toString());
@@ -893,80 +870,54 @@ class _CloseCardState extends State<CloseCard> {
     }
   }
 
-  _saveShareCard() async {
+  saveCard(Uint8List image) async {
     try {
-      //////ADDING A PRE_CALL DUE TO SCREENSHOT PACKAGE BUG
-      baseProvider.myUserDpUrl =
-          await dbProvider.getUserDP(baseProvider.myUser.uid);
-      await screenshotController.captureFromWidget(ShareCard(
-        dpUrl: baseProvider.myUserDpUrl,
-        claimChoice: widget.claimtype,
-        prizeAmount: baseProvider.userFundWallet.processingRedemptionBalance,
-        username: baseProvider.myUser.name,
-      ));
-      ////////////////////////////////////////////
-      screenshotController
-          .captureFromWidget(
-              ShareCard(
-                dpUrl: baseProvider.myUserDpUrl,
-                claimChoice: widget.claimtype,
-                prizeAmount:
-                    baseProvider.userFundWallet.processingRedemptionBalance == 0
-                        ? baseProvider.userFundWallet.prizeBalance
-                        : baseProvider
-                            .userFundWallet.processingRedemptionBalance,
-                username: baseProvider.myUser.name,
-              ),
-              delay: const Duration(seconds: 2))
-          .then((Uint8List image) async {
-        setState(() {
-          isSaving = false;
-        });
-        String dt = DateTime.now().toString();
-        Directory directory;
-        if (Platform.isAndroid) {
-          directory = await getExternalStorageDirectory();
-          print(directory.path);
-          String newPath = "";
-          List<String> folders = directory.path.split('/');
-          for (int i = 1; i < folders.length; i++) {
-            String folder = folders[i];
-            if (folder != "Android")
-              newPath += '/' + folder;
-            else
-              break;
-          }
-          newPath = newPath + "/Fello";
-          print(newPath);
-          if (await _requestPermission(Permission.storage)) {
-            directory = Directory(newPath);
-          } else {
-            return false;
-          }
-        } else {
-          if (await _requestPermission(Permission.photos)) {
-            directory = await getTemporaryDirectory();
-          } else
-            return false;
-        }
-
-        if (!await directory.exists()) await directory.create(recursive: true);
-        if (await directory.exists()) {
-          File imageFile = new File('${directory.path}/fello-reward-$dt.png');
-          print('image path : ${imageFile.path}');
-          await imageFile.writeAsBytes(image);
-          if (Platform.isAndroid) {
-            ImageGallerySaver.saveFile(imageFile.path);
-          } else {
-            ImageGallerySaver.saveFile(imageFile.path);
-          }
-          backButtonDispatcher.didPopRoute();
-          baseProvider.showPositiveAlert("Saved Successfulyy",
-              "Share card saved successfully to the gallery", context);
-        }
-      }).catchError((onError) {
-        print(onError);
+      setState(() {
+        isSaving = false;
       });
+      String dt = DateTime.now().toString();
+      Directory directory;
+      if (Platform.isAndroid) {
+        directory = await getExternalStorageDirectory();
+        print(directory.path);
+        String newPath = "";
+        List<String> folders = directory.path.split('/');
+        for (int i = 1; i < folders.length; i++) {
+          String folder = folders[i];
+          if (folder != "Android")
+            newPath += '/' + folder;
+          else
+            break;
+        }
+        newPath = newPath + "/Fello";
+        print(newPath);
+        if (await _requestPermission(Permission.storage)) {
+          directory = Directory(newPath);
+        } else {
+          return false;
+        }
+      } else {
+        if (await _requestPermission(Permission.photos)) {
+          directory = await getTemporaryDirectory();
+        } else
+          return false;
+      }
+
+      if (!await directory.exists()) await directory.create(recursive: true);
+      if (await directory.exists()) {
+        File imageFile = new File('${directory.path}/fello-reward-$dt.png');
+        print('image path : ${imageFile.path}');
+        await imageFile.writeAsBytes(image);
+        if (Platform.isAndroid) {
+          ImageGallerySaver.saveFile(imageFile.path);
+        } else {
+          ImageGallerySaver.saveFile(imageFile.path);
+        }
+        backButtonDispatcher.didPopRoute();
+        backButtonDispatcher.didPopRoute();
+        baseProvider.showPositiveAlert("Saved Successfulyy",
+            "Share card saved successfully to the gallery", context);
+      }
     } catch (e) {
       setState(() {
         isSaving = false;

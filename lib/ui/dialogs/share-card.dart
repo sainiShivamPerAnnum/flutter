@@ -74,22 +74,20 @@ class ShareCard extends StatelessWidget {
                   : SizedBox(height: 20),
               Container(
                 margin: EdgeInsets.symmetric(vertical: 0),
-                child: Expanded(
-                  child: FittedBox(
-                    child: Text(
-                      "र $prizeAmount",
-                      style: GoogleFonts.montserrat(
-                        color: Colors.white,
-                        height: 1.3,
-                        shadows: [
-                          Shadow(
-                            offset: Offset(2, 2),
-                            color: Colors.black26,
-                          )
-                        ],
-                        fontWeight: FontWeight.w700,
-                        fontSize: SizeConfig.cardTitleTextSize * 2.4,
-                      ),
+                child: FittedBox(
+                  child: Text(
+                    "र $prizeAmount",
+                    style: GoogleFonts.montserrat(
+                      color: Colors.white,
+                      height: 1.3,
+                      shadows: [
+                        Shadow(
+                          offset: Offset(2, 2),
+                          color: Colors.black26,
+                        )
+                      ],
+                      fontWeight: FontWeight.w700,
+                      fontSize: SizeConfig.cardTitleTextSize * 2.4,
                     ),
                   ),
                 ),

@@ -985,10 +985,10 @@ class _TambolaHomeState extends State<TambolaHome> {
     if (bestRowsBoardCardItems.isNotEmpty)
       summary.add(TicketSummaryCardModel(
           data: bestRowsBoardCardItems,
-          color: Colors.brown,
+          color: Color(0xffFFA41B),
           cardType: "Best Rows",
           bgAsset:
-              "https://img.freepik.com/free-photo/full-frame-shot-brown-leather-background_23-2147951253.jpg?size=626&ext=jpg&uid=P35674521"));
+              "https://img.freepik.com/free-vector/abstract-low-poly-orange-yellow-background_1017-32111.jpg?size=626&ext=jpg&uid=P35674521"));
 
     _isTicketSummaryLoaded = true;
     return summary;
