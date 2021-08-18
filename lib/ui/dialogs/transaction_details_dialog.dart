@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
@@ -36,7 +38,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
             UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
         widget._transaction.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
         widget._transaction.tranStatus ==
-            UserTransaction.TRAN_STATUS_COMPLETE) {
+            UserTransaction.TRAN_STATUS_COMPLETE && Platform.isAndroid) {
       _showInvoiceButton = true;
     }
   }

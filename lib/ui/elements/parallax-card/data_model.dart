@@ -30,19 +30,13 @@ class DemoData {
     Game(
       name: 'Tambola',
       title: 'Tambola',
-      description: 'An Indian classic, now even better!',
+      description: 'An Indian classic, full of rewards!',
       color: Color(0xffdee5cf),
     ),
-    // Game(
-    //   name: 'Tambola',
-    //   title: 'Tambola',
-    //   description: 'Play Tambola and win exciting prizes',
-    //   color: Color(0xffdee5cf),
-    // ),
     Game(
       name: 'GamePoll',
       title: 'Next Game',
-      description: 'Support your favorite game',
+      description: 'Show support for your favorite game',
       color: Color(0xffdaf3f7),
     ),
   ];

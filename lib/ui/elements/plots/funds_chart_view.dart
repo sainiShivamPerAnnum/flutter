@@ -201,6 +201,7 @@ class _FundsChartViewState extends State<FundsChartView> {
                                     1.8),
                             SizeConfig.largeTextSize * 2),
                         color: UiConstants.textColor,
+                        fontWeight: FontWeight.w400
                       ),
                       showChartValuesInPercentage: false,
                       showChartValuesOutside: false,

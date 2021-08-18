@@ -11,18 +11,16 @@ class Walkthrough extends StatelessWidget {
   const Walkthrough({Key key}) : super(key: key);
 
   static const List<String> dailyPicks = [
-    "Every day 5 random numbers are picked out from 1 to 90 at 6 pm",
-    "You can view all the picks of this week by tapping on the card",
+    "Starting Monday, 5 random numbers are picked everyday from 1 to 90 at 6pm."
   ];
   static const List<String> tambolatickets = [
-    "This is how a Fello Tambola ticket looks which is very simple and easy to understand ",
-    "Every card has atleast 15 numbers and based on weekly picks, they get crossed out automagically",
-    "Odds section gives the straight forward count of all the winning odds.",
+    "Your Tambola tickets are refreshed every Monday. Each ticket comprises of 15 randomly placed numbers.",
+    "Based on the daily picks, the numbers that match with your ticket get automatically crossed.",
   ];
   static const List<String> prizes = [
-    "Every SUNDAY, tickets get processed (only if you open the game on that day).",
-    "If any of your tickets clears any of the odds completely, you are awarded with the cash prize",
-    "Complete list of all the winners can be seen in the game section",
+    "Sunday is final tally day. Once you open the game, your tickets are analysed for any winnings.",
+    "If any of your tickets completes a certain category, you will be marked eligible for that reward!",
+    "If more than 1 player wins that category, the prize money gets divided amongst the winners.",
   ];
 
   List<Widget> generatePoints(List<String> points) {
@@ -87,7 +85,7 @@ class Walkthrough extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),
               child: Text(
-                "Daily Picks",
+                "The Daily Picks",
                 style: GoogleFonts.montserrat(
                   fontSize: 24,
                   fontWeight: FontWeight.w500,
@@ -102,7 +100,7 @@ class Walkthrough extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),
               child: Text(
-                "Tambola tickets",
+                "Your tickets",
                 style: GoogleFonts.montserrat(
                   fontSize: 24,
                   fontWeight: FontWeight.w500,
@@ -118,7 +116,7 @@ class Walkthrough extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),
               child: Text(
-                "Cash Prizes",
+                "How to Win",
                 style: GoogleFonts.montserrat(
                   fontSize: 24,
                   fontWeight: FontWeight.w500,

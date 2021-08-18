@@ -946,31 +946,31 @@ class _TambolaHomeState extends State<TambolaHome> {
       if (category == "Corners") {
         if (length == 1)
           output =
-              "Ticket #${firstCard.board.getTicketNumber()} is just 1 number away from $category.";
+              "Ticket #${firstCard.board.getTicketNumber()} is just 1 number away from completing its $category!";
         else
           output =
-              "$length of your tickets needs only 1 number to complete $category.";
+              "$length of your tickets are just 1 number away from completing their $category!";
       } else if (category == "Full House") {
         if (length == 1)
           output =
-              "Ticket #${firstCard.board.getTicketNumber()} is just 4 of less numbers less to hit the $category JACKPOT.";
+              "Ticket #${firstCard.board.getTicketNumber()} is just less than 5 numbers away from winning the $category!";
         else
           output =
-              "$length of your tickets needs only 4 or less numbers to  hit the $category JACKPOT.";
+              "$length of your tickets are less than 5 numbers away from winning the $category!";
       } else {
         if (length == 1)
           output =
-              "Ticket #${firstCard.board.getTicketNumber()} is just 2 or less numbers away from $category.";
+              "Ticket #${firstCard.board.getTicketNumber()} is less than 3 numbers away from completing their $category!";
         else
           output =
-              "$length of your tickets needs only 2 or less numbers to complete $category.";
+              "$length of your tickets are less than 3 numbers away from completing its $category.";
       }
     } else {
       if (length == 1)
         output =
-            "Ticket #${firstCard.board.getTicketNumber()} completed $category.";
+            "Ticket #${firstCard.board.getTicketNumber()} has completed its $category!";
       else
-        output = "$length of your tickets completed $category.";
+        output = "$length of your tickets have completed their $category!";
     }
 
     return output;
