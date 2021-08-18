@@ -165,12 +165,9 @@ class _GamePageState extends State<GamePage> {
                             flex: 1,
                           ),
 
-                          /////////TODO HACKY CODE - WRITTEN TO MANAGE TABLET SIZE DIMENSIONS
+                          //TODO HACKY CODE - REMOVING IDEA SECTION TO MANAGE TABLET SIZE DIMENSIONS
                           (SizeConfig.screenWidth >= 1200)
-                              ? Transform.translate(
-                                  offset:
-                                      Offset(0, -SizeConfig.screenWidth * 0.08),
-                                  child: const IdeaSection())
+                              ? Container()
                               : const IdeaSection(),
                           /////////////////////////////////////////////////////////////
                           const Spacer(
