@@ -137,7 +137,7 @@ class _FundsChartViewState extends State<FundsChartView> {
           function: () {},
           fundAmount: widget.userFundWallet.lockedPrizeBalance,
           logo: "images/fello_logo.png",
-          isHighlighted: true),
+          isHighlighted: false),
     ];
   }
 

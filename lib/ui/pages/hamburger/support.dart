@@ -209,7 +209,7 @@ class _SupportPageState extends State<SupportPage> {
                     },
                   ),
                   ListTile(
-                    title: Text('Request a call',
+                    title: Text('Request a callback',
                         style: TextStyle(
                           color: UiConstants.textColor,
                         )),
@@ -305,7 +305,7 @@ class _SupportPageState extends State<SupportPage> {
                     ListTile(
                         title: Center(
                             child: Text(
-                          'Request a call',
+                          'Request a callback',
                           style: Theme.of(context).textTheme.headline5.copyWith(
                               color: UiConstants.primaryColor,
                               fontSize: SizeConfig.largeTextSize * 1.2,

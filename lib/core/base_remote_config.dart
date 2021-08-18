@@ -55,10 +55,10 @@ class BaseRemoteConfig {
     'aws_augmont_key_index': '1'
   };
   static const Map<String, String> _ICICI_DEPOSITS_ENABLED = {
-    'icici_deposits_enabled': '1'
+    'icici_deposits_enabled': '0'
   };
   static const Map<String, String> _ICICI_DEPOSIT_PERMISSION = {
-    'icici_deposit_permission': '1'
+    'icici_deposit_permission': '0'
   };
   static const Map<String, String> _AUGMONT_DEPOSITS_ENABLED = {
     'augmont_deposits_enabled': '1'
@@ -102,15 +102,15 @@ class BaseRemoteConfig {
     print('initializing remote config');
     remoteConfig = RemoteConfig.instance;
     try {
-      // Fetches every 6 hrs
-      await remoteConfig.fetch();
       // await remoteConfig.activateFetched();
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(milliseconds: 30000),
-        minimumFetchInterval: const Duration(milliseconds: 21600000),
+        minimumFetchInterval: const Duration(hours: 6),
       ));
       await remoteConfig.setDefaults(DEFAULTS);
-      RemoteConfigValue(null, ValueSource.valueStatic);
+      //RemoteConfigValue(null, ValueSource.valueStatic);
+      
+      await remoteConfig.fetchAndActivate();
       return true;
     } catch (exception) {
       print(
