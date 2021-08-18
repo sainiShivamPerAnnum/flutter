@@ -30,7 +30,7 @@ class DemoData {
     Game(
       name: 'Tambola',
       title: 'Tambola',
-      description: 'Play Tambola and win exciting prizes',
+      description: 'An Indian classic, now even better!',
       color: Color(0xffdee5cf),
     ),
     // Game(
@@ -42,7 +42,7 @@ class DemoData {
     Game(
       name: 'GamePoll',
       title: 'Next Game',
-      description: 'Vote for the next game you want on fello',
+      description: 'Support your favorite game',
       color: Color(0xffdaf3f7),
     ),
   ];

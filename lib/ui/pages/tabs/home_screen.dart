@@ -487,7 +487,7 @@ class BaseHomeCardContent extends StatelessWidget {
                 //   ),
                 // ],
                 fontSize: SizeConfig.mediumTextSize * 1.1,
-                fontWeight: FontWeight.w400),
+                fontWeight: FontWeight.w700),
           ),
         ),
         SizedBox(
@@ -590,7 +590,7 @@ class TambolaCardContent extends StatelessWidget {
                 ),
               ],
               fontSize: SizeConfig.mediumTextSize * 1.1,
-              fontWeight: FontWeight.w100),
+              fontWeight: FontWeight.w700),
         ),
         SizedBox(
           height: 30,

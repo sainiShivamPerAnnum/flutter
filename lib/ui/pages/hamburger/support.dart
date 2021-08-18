@@ -108,7 +108,7 @@ class _SupportPageState extends State<SupportPage> {
                           ],
                         ),
                         Text(
-                          "We are always here to assist you in any way!",
+                          "We're just a click and text away. Always.",
                           style: TextStyle(
                             color: Colors.white,
                             height: 1.4,

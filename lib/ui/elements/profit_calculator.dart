@@ -17,7 +17,7 @@ class ProfitCalculator extends StatefulWidget {
 
 class _ProfitCalculatorState extends State<ProfitCalculator> {
   TextEditingController inputPrice = new TextEditingController();
-  int months = 1;
+  int months = 12;
   double price = 1000;
   double outputprice = 1007;
   List<double> chipAmountList = [100, 500, 1000, 5000];
@@ -88,6 +88,9 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
                           contentPadding: EdgeInsets.only(
                               left: 15, bottom: 11, top: 11, right: 15),
                           hintText: price.toString(),
+                          hintStyle: TextStyle(
+                            fontSize: SizeConfig.mediumTextSize*1.2,
+                          ),
                           enabledBorder:
                               OutlineInputBorder(borderSide: BorderSide.none),
                           focusedBorder:
@@ -115,6 +118,10 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
                         padding: const EdgeInsets.only(left: 16.0),
                         child: Text(
                           outputprice.truncateToDouble().toString(),
+                          style: TextStyle(
+                            fontSize: SizeConfig.mediumTextSize*1.2,
+                            fontWeight: FontWeight.bold
+                          ),
                         ),
                       ),
                     )

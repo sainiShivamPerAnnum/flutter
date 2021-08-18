@@ -375,7 +375,7 @@ class _TicketCountState extends State<TicketCount>
     Future.delayed(Duration(milliseconds: 2500), () {
       if (mounted)
         setState(() {
-          tagWidth = SizeConfig.screenWidth / 2;
+          tagWidth = SizeConfig.screenWidth * 0.7;
           tagHeight = SizeConfig.cardTitleTextSize * 1.2;
         });
     }).then((_) {
@@ -464,7 +464,7 @@ class _TicketCountState extends State<TicketCount>
               opacity: tagOpacity,
               duration: Duration(seconds: 1),
               child: Text(
-                "🏁 ₹ 100 = 1 Ticket",
+                "🏁 ₹ 100 saved = 1 Ticket",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: SizeConfig.mediumTextSize,

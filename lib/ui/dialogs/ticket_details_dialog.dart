@@ -123,6 +123,16 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
                             'This week',
                             true)
                         : Container(),
+                    SizedBox(
+                      height: SizeConfig.blockSizeVertical,
+                    ),
+                    Text(
+                      'You receive 1 ticket for every ₹ 100 you save ✌',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: SizeConfig.mediumTextSize,
+                          color: Colors.blueGrey),
+                    ),
                   ],
                 )),
           )
