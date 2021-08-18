@@ -703,7 +703,7 @@ class _CloseCardState extends State<CloseCard> {
                 Align(
                   alignment: Alignment.center,
                   child: Transform.scale(
-                    scale: 0.5,
+                    scale: 0.6,
                     child: RepaintBoundary(
                       key: imageKey,
                       child: ShareCard(
