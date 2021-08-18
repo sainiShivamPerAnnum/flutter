@@ -95,7 +95,8 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
           colorScheme:
               ColorScheme.light(primary: augmontGoldPalette.primaryColor)),
       child: Stack(alignment: Alignment.topCenter, children: <Widget>[
-        AugInfoTiles(),
+        if (WidgetsBinding.instance.window.viewInsets.bottom == 0.0)
+          AugInfoTiles(),
         Opacity(
           child: _formContent(context),
           opacity: (baseProvider.isAugmontRegnInProgress ||

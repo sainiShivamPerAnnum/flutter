@@ -17,6 +17,7 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -167,17 +168,31 @@ class LogoFadeIn extends State<SplashScreen> {
                   ),
                 )
               : Text('Loading..'),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-                padding: EdgeInsets.fromLTRB(20, 20, 20, 40),
-                child: Visibility(
-                    maintainSize: true,
-                    maintainAnimation: true,
-                    maintainState: true,
-                    visible: _isSlowConnection,
-                    child: BreathingText(
-                        alertText: 'Connection is taking longer than usual'))),
+          Positioned(
+            bottom: 0,
+            child: Container(
+              width: SizeConfig.screenWidth,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 40),
+                    child: Visibility(
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      visible: _isSlowConnection,
+                      child: BreathingText(
+                        alertText: 'Connection is taking longer than usual',
+                        textStyle: GoogleFonts.montserrat(
+                          fontSize: SizeConfig.mediumTextSize * 1.3,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           )
         ],
       )),

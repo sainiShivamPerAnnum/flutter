@@ -424,6 +424,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
           bool _aflag = await dbProvider.updateUserAugmontDetails(
               baseProvider.myUser.uid, baseProvider.augmontDetail);
           if (_aflag) {
+            fcmProvider.removeSubscription(FcmTopic.MISSEDCONNECTION);
             fcmProvider.addSubscription(FcmTopic.GOLDINVESTOR);
           }
         }
@@ -526,22 +527,6 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
             bankIfsc: baseProvider.augmontDetail.ifsc,
           ),
         );
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //       builder: (ctx) => AugmontWithdrawScreen(
-        //         key: _withdrawalDialogKey2,
-        //         passbookBalance: _liveGoldQuantityBalance,
-        //         withdrawableGoldQnty: _withdrawableGoldQnty,
-        //         sellRate: baseProvider.augmontGoldRates.goldSellPrice,
-        //         onAmountConfirmed: (Map<String, double> amountDetails) {
-        //           _onInitiateWithdrawal(amountDetails['withdrawal_quantity']);
-        //         },
-        //         bankHolderName: baseProvider.augmontDetail.bankHolderName,
-        //         bankAccNo: baseProvider.augmontDetail.bankAccNo,
-        //         bankIfsc: baseProvider.augmontDetail.ifsc,
-        //       ),
-        //     ));
       }
     }
   }

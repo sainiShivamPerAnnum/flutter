@@ -73,6 +73,8 @@ class BaseRemoteConfig {
     'min_principle_for_prize': '100'
   };
 
+  static const Map<String, String> _WEEK_NUMBER = {'week_number': '12'};
+
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,
     ..._TAMBOLA_HEADER_FIRST,
@@ -95,7 +97,8 @@ class BaseRemoteConfig {
     ..._AUGMONT_DEPOSITS_ENABLED,
     ..._AUGMONT_DEPOSIT_PERMISSION,
     ..._KYC_COMPLETION_PRIZE,
-    ..._UNLOCK_REFERRAL_AMT
+    ..._UNLOCK_REFERRAL_AMT,
+    ..._WEEK_NUMBER,
   };
 
   static Future<bool> init() async {
@@ -109,7 +112,7 @@ class BaseRemoteConfig {
       ));
       await remoteConfig.setDefaults(DEFAULTS);
       //RemoteConfigValue(null, ValueSource.valueStatic);
-      
+
       await remoteConfig.fetchAndActivate();
       return true;
     } catch (exception) {
@@ -174,6 +177,8 @@ class BaseRemoteConfig {
   static String get TAMBOLA_HEADER_SECOND => _TAMBOLA_HEADER_SECOND.keys.first;
 
   static String get TAMBOLA_HEADER_FIRST => _TAMBOLA_HEADER_FIRST.keys.first;
+
+  static String get WEEK_NUMBER => _WEEK_NUMBER.keys.first;
 
   static int get UNLOCK_REFERRAL_AMT {
     String _val = _UNLOCK_REFERRAL_AMT.keys.first;

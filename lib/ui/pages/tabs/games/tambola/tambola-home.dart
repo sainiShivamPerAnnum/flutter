@@ -61,7 +61,7 @@ class _TambolaHomeState extends State<TambolaHome> {
   bool _isTicketSummaryLoaded = false;
   List<TicketSummaryCardModel> ticketSummaryData;
 
-  List<Ticket> _tambolaBoardViews, _topFiveTambolaBoards;
+  List<Ticket> _tambolaBoardViews, _topFiveTambolaBoards = [];
   List<TambolaBoard> _bestTambolaBoards;
   List<Widget> balls = [];
 
@@ -169,7 +169,6 @@ class _TambolaHomeState extends State<TambolaHome> {
               context);
         }
       });
-      setState(() {});
     }
 
     ///check if tickets need to be deleted
@@ -182,6 +181,7 @@ class _TambolaHomeState extends State<TambolaHome> {
 
   _refreshTambolaTickets() async {
     log.debug('Refreshing..');
+    _topFiveTambolaBoards = [];
     baseProvider.weeklyTicksFetched = false;
     setState(() {});
   }
@@ -401,7 +401,7 @@ class _TambolaHomeState extends State<TambolaHome> {
         ),
       );
     } else {
-      if (_topFiveTambolaBoards == null) {
+      if (_topFiveTambolaBoards.isEmpty) {
         _topFiveTambolaBoards = [];
         _refreshBestBoards().forEach((element) {
           _topFiveTambolaBoards.add(_buildBoardView(element));
@@ -1135,11 +1135,9 @@ class GameAppBar extends StatelessWidget {
             ),
             color: Colors.white,
           ),
-          FittedBox(
-            child: Image.asset(
-              "images/fello-dark.png",
-              height: kToolbarHeight * 0.6,
-            ),
+          Image.asset(
+            "images/fello-dark.png",
+            height: kToolbarHeight * 0.6,
           ),
           IconButton(
             onPressed: () => delegate.appState.currentAction = PageAction(

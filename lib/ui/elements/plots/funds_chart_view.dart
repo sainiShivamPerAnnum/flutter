@@ -10,6 +10,7 @@ import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/chart_values_options.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/legend_options.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/pie_chart.dart';
+import 'package:felloapp/ui/pages/tabs/finance/augmont/augmont-details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -90,7 +91,7 @@ class _FundsChartViewState extends State<FundsChartView> {
           isHighlighted: false),
       ChartFundItem(
           fundName: "Gold Balance",
-          action: false,
+          action: widget.userFundWallet.augGoldBalance > 0,
           color: Color(0xffF5B819),
           description: [widget.goldMoreInfo],
           function: () {},
@@ -104,33 +105,14 @@ class _FundsChartViewState extends State<FundsChartView> {
           description: [
             "This is the amount you've earned as rewards playing games and through successful referrals!"
           ],
-          function: () {
-            if (widget.userFundWallet.prizeBalance <= 0) return;
-            HapticFeedback.vibrate();
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (ctx) {
-                return Center(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: FCard(
-                      isClaimed:
-                          !widget.userFundWallet.isPrizeBalanceUnclaimed(),
-                      unclaimedPrize: widget.userFundWallet.unclaimedBalance,
-                    ),
-                  ),
-                );
-              },
-            );
-          },
+          function: () {},
           fundAmount: widget.userFundWallet.prizeBalance,
           logo: "images/fello_logo.png",
           isHighlighted: widget.userFundWallet.isPrizeBalanceUnclaimed()),
       ChartFundItem(
           fundName: "Locked Balance",
           action: false,
-          color: Color(0xff0A1931),
+          color: Color(0xff150485),
           description: [
             'Referral rewards could be locked due to either of the reasons: \n\n• You were referred by your friend but you haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet. \n\n• You referred your friends but they haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet.'
           ],

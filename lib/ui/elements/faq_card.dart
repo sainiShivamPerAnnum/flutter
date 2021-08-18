@@ -111,17 +111,15 @@ class _FAQCardItemsState extends State<FAQCardItems> {
               ),
             ],
           ),
-          AnimatedContainer(
-            curve: Curves.fastOutSlowIn,
-            duration: Duration(milliseconds: 500),
-            height: open ? MediaQuery.of(context).size.height * 0.15 : 0,
+          Container(
             padding: EdgeInsets.only(
               right: 30,
             ),
             width: double.infinity,
             child: Text(
               widget.itemResponse,
-              style: TextStyle(height: 1.4),
+              style: TextStyle(
+                  height: 1.4, fontSize: !open ? 0 : SizeConfig.mediumTextSize),
             ),
           ),
         ],

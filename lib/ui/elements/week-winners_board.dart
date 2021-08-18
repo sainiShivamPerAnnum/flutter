@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -33,7 +34,9 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
   }
 
   List<String> getWeek() {
-    int weekNumber = BaseUtil.getWeekNumber(); //12
+    int weekNumber = int.tryParse(BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.WEEK_NUMBER)); //12
+    print(weekNumber);
     var date = ((weekNumber - 2) * 7);
     var weekEnd = DateTime.utc(DateTime.now().year, 1, date).toLocal().weekday;
     var startDate = date - (weekEnd - 1);

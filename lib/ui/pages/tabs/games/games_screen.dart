@@ -268,7 +268,8 @@ class IdeaSection extends StatelessWidget {
             title: "Want more tickets?",
             action: [
               GameOfferCardButton(
-                onPressed: () => delegate.parseRoute(Uri.parse("finance")),
+                onPressed: () =>
+                    delegate.parseRoute(Uri.parse("finance/augDetails")),
                 title: "Invest",
               ),
               const SizedBox(
