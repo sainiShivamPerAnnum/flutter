@@ -80,7 +80,7 @@ class _GamePageState extends State<GamePage> {
     // });
   }
 
-  Future<void> _onTicketsRefresh() async {
+  Future<void> _onTicketsRefresh() {
     //TODO ADD LOADER
     return dbProvider
         .getUserTicketWallet(baseProvider.myUser.uid)
@@ -98,7 +98,7 @@ class _GamePageState extends State<GamePage> {
     appState = Provider.of<AppState>(context, listen: false);
     return RefreshIndicator(
       onRefresh: () async {
-        await _onTicketsRefresh();
+        _onTicketsRefresh();
       },
       child: Container(
         decoration: BoxDecoration(
@@ -378,21 +378,7 @@ class _TicketCountState extends State<TicketCount>
           tagWidth = SizeConfig.screenWidth / 2;
           tagHeight = SizeConfig.cardTitleTextSize * 1.2;
         });
-    })
-        //   .then((_) {
-        // Future.delayed(Duration(seconds: 2), () {
-        //   if (mounted)
-        //     setState(() {
-        //       tagOpacity = 1;
-        //     });
-        // }).then((_) {
-        //   Future.delayed(Duration(seconds: 2), () {
-        //     if (mounted)
-        //       setState(() {
-        //         tagOpacity = 0;
-        //       });
-        //   })
-        .then((_) {
+    }).then((_) {
       Future.delayed(Duration(milliseconds: 2500), () {
         if (mounted)
           setState(() {
@@ -409,8 +395,6 @@ class _TicketCountState extends State<TicketCount>
         });
       });
     });
-    // });
-    // });
   }
 
   @override

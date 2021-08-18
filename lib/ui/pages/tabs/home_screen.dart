@@ -295,8 +295,8 @@ class _HomePageState extends State<HomePage> {
             isHighlighted: false,
             onPressed: () async {
               HapticFeedback.vibrate();
-              // print(Color(0xff096C47).value.toString());
-              // print(Color(0xff76A665).value.toString());
+              // print(Color(0xff1FAB89).value.toString());
+              // print(Color(0xff62D2A2).value.toString());
               delegate.parseRoute(Uri.parse(card.actionUri));
             },
           ),
@@ -395,19 +395,20 @@ class BaseHomeCard extends StatelessWidget {
           left: SizeConfig.globalMargin,
           right: SizeConfig.globalMargin),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-          gradient: new LinearGradient(
-            colors: gradient,
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-          ),
-          boxShadow: [
-            BoxShadow(
-                color: gradient[0].withOpacity(0.2),
-                offset: Offset(2, 2),
-                blurRadius: 10,
-                spreadRadius: 2),
-          ]),
+        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+        gradient: new LinearGradient(
+          colors: gradient,
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+              color: gradient[0].withOpacity(0.3),
+              offset: Offset(0, 5),
+              blurRadius: 5,
+              spreadRadius: 2),
+        ],
+      ),
       width: double.infinity,
       child: Stack(
         children: [
@@ -459,6 +460,7 @@ class BaseHomeCardContent extends StatelessWidget {
           title,
           style: TextStyle(
               color: Colors.white,
+              fontWeight: FontWeight.w700,
               shadows: [
                 Shadow(
                   offset: Offset(5, 5),
@@ -466,7 +468,6 @@ class BaseHomeCardContent extends StatelessWidget {
                   blurRadius: 10,
                 )
               ],
-              fontWeight: FontWeight.w700,
               fontSize: SizeConfig.cardTitleTextSize),
         ),
         SizedBox(
@@ -478,12 +479,12 @@ class BaseHomeCardContent extends StatelessWidget {
             subtitle,
             style: TextStyle(
                 color: Colors.white,
-                shadows: [
-                  Shadow(
-                    color: shadowColor,
-                    offset: Offset(1, 1),
-                  ),
-                ],
+                // shadows: [
+                //   Shadow(
+                //     color: shadowColor,
+                //     offset: Offset(1, 1),
+                //   ),
+                // ],
                 fontSize: SizeConfig.mediumTextSize * 1.1,
                 fontWeight: FontWeight.w400),
           ),
@@ -597,7 +598,7 @@ class TambolaCardContent extends StatelessWidget {
           onTap: onPressed,
           child: DailyPicksTimer(
             alignment: MainAxisAlignment.start,
-            bgColor: UiConstants.primaryColor.withOpacity(0.5),
+            bgColor: Color(0xff127C56).withOpacity(0.5),
             replacementWidget: Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
@@ -766,7 +767,7 @@ class PrizeCardContent extends StatelessWidget {
             subtitle,
             style: TextStyle(
                 color: Colors.white,
-                fontSize: SizeConfig.mediumTextSize * 1.3,
+                fontSize: SizeConfig.mediumTextSize * 1.1,
                 fontWeight: FontWeight.w500),
           )
         ],

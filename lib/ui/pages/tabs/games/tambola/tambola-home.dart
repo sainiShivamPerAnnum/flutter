@@ -17,6 +17,7 @@ import 'package:felloapp/ui/elements/tambola-global/prize_section.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_daily_draw_timer.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_ticket.dart';
 import 'package:felloapp/ui/elements/tambola-global/weekly_picks.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/summary_tickets_display.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_result.dart';
@@ -31,7 +32,9 @@ import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class TambolaHome extends StatefulWidget {
   const TambolaHome({Key key}) : super(key: key);
@@ -70,7 +73,6 @@ class _TambolaHomeState extends State<TambolaHome> {
 
   bool ticketsBeingGenerated = true;
   bool dailyPickHeaderWithTimings = false;
-
   //List<String> dailyPickTextList = [];
   PageController _summaryController = PageController(viewportFraction: 0.94);
 
@@ -167,6 +169,7 @@ class _TambolaHomeState extends State<TambolaHome> {
               context);
         }
       });
+      setState(() {});
     }
 
     ///check if tickets need to be deleted
@@ -465,6 +468,7 @@ class _TambolaHomeState extends State<TambolaHome> {
       if (!_isTicketSummaryLoaded)
         ticketSummaryData = _getTambolaTicketsSummary();
 
+// DUMMY DATA
       // ticketSummaryData = [
       //   TicketSummaryCardModel(
       //       data: [
@@ -737,14 +741,6 @@ class _TambolaHomeState extends State<TambolaHome> {
           isEligible: _isEligible,
         ),
       );
-    // new Timer(const Duration(milliseconds: 2500), () {
-    //   showDialog(
-    //       context: context,
-    //       builder: (BuildContext context) => TambolaResultsDialog(
-    //             winningsMap: ticketCodeWinIndex,
-    //             isEligible: _isEligible,
-    //           ));
-    // });
     _winnerDialogCalled = true;
 
     if (ticketCodeWinIndex.length > 0) {
@@ -989,10 +985,10 @@ class _TambolaHomeState extends State<TambolaHome> {
     if (bestRowsBoardCardItems.isNotEmpty)
       summary.add(TicketSummaryCardModel(
           data: bestRowsBoardCardItems,
-          color: Colors.amber,
+          color: Colors.brown,
           cardType: "Best Rows",
           bgAsset:
-              "https://img.freepik.com/free-vector/abstract-halftone-background_23-2148583453.jpg?size=626&ext=jpg&uid=P35674521"));
+              "https://img.freepik.com/free-photo/full-frame-shot-brown-leather-background_23-2147951253.jpg?size=626&ext=jpg&uid=P35674521"));
 
     _isTicketSummaryLoaded = true;
     return summary;
@@ -1037,11 +1033,20 @@ class _TambolaHomeState extends State<TambolaHome> {
   }
 
   List<TambolaBoard> _refreshBestBoards() {
+    // If boards are empty
     if (baseProvider.userWeeklyBoards == null ||
         baseProvider.userWeeklyBoards.isEmpty) {
       return [];
     }
-    //initialise
+    // If number of boards are less than 5, return all the boards
+    if (baseProvider.userWeeklyBoards.length <= 5) {
+      _bestTambolaBoards = [];
+      baseProvider.userWeeklyBoards.forEach((e) {
+        _bestTambolaBoards.add(e);
+      });
+      return _bestTambolaBoards;
+    }
+    //initialise bestboards with first board
     _bestTambolaBoards =
         List<TambolaBoard>.filled(5, baseProvider.userWeeklyBoards[0]);
 
@@ -1050,16 +1055,10 @@ class _TambolaHomeState extends State<TambolaHome> {
       return _bestTambolaBoards;
     }
 
-    for (int i = 0; i < 5 && i < baseProvider.userWeeklyBoards.length; i++) {
-      _bestTambolaBoards[i] = baseProvider.userWeeklyBoards[i];
-    }
-
     baseProvider.userWeeklyBoards.forEach((board) {
-      if (_bestTambolaBoards[0] == null) _bestTambolaBoards[0] = board;
-      if (_bestTambolaBoards[1] == null) _bestTambolaBoards[1] = board;
-      if (_bestTambolaBoards[2] == null) _bestTambolaBoards[2] = board;
-      if (_bestTambolaBoards[3] == null) _bestTambolaBoards[3] = board;
-      if (_bestTambolaBoards[4] == null) _bestTambolaBoards[4] = board;
+      for (int i = 0; i < _bestTambolaBoards.length; i++) {
+        if (_bestTambolaBoards[i] == null) _bestTambolaBoards[i] = board;
+      }
 
       if (_bestTambolaBoards[0].getRowOdds(
               0,
