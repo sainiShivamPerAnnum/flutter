@@ -155,6 +155,10 @@ class _FinancePageState extends State<FinancePage>
                         color: UiConstants.textColor,
                       ),
                     ),
+                        // Align(
+                        //   alignment: Alignment.bottomCenter,
+                        //   child: Text('100 saved = 1 Ticket'),
+                        // )
                   ])),
                   SliverGrid(
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
