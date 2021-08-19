@@ -62,40 +62,43 @@ class LocalDBModel extends ChangeNotifier {
     return _api.writeTmbResultFile('$status');
   }
 
-  Future<int> get isTambolaTutorialComplete async {
+  Future<bool> get showTambolaTutorial async {
     try {
       final file = await _api.tambolaTutorialFile;
-      if (file == null) return 0;
+      if (file == null) return true;
       String contents = await file.readAsString();
-      if (contents == null || contents.isEmpty) return 0;
+      if (contents == null || contents.isEmpty) return true;
 
-      return int.parse(contents);
+      int flag = int.parse(contents);
+      return (flag == 1);
     } catch (e) {
-      log.error("Didnt find fresh user flag. Defaulting to 0.");
-      return 0;
+      log.error("Didnt find fresh tambola flag. Defaulting to 0.");
+      return true;
     }
   }
 
-  set saveTambolaTutorialComplete(bool flag) {
+  set setShowTambolaTutorial(bool flag) {
     int status = (flag) ? 1 : 0;
     _api.writeFreshTambolaTutorialFile('$status');
   }
 
-  Future<int> get isHomeTutorialComplete async {
+  Future<bool> get showHomeTutorial async {
+    //home tutorial only shown during signup and not signin
     try {
       final file = await _api.homeTutorialFile;
-      if (file == null) return 1;
+      if (file == null) return true;
       String contents = await file.readAsString();
-      if (contents == null || contents.isEmpty) return 0; //default to true
+      if (contents == null || contents.isEmpty) return true; //default to true
 
-      return int.parse(contents);
+      int flag = int.parse(contents);
+      return (flag == 1);
     } catch (e) {
-      log.error("Didnt find fresh home tutorial flag. Defaulting to 1.");
-      return 0;
+      log.error("Didnt find fresh home tutorial flag. Defaulting to true.");
+      return true;
     }
   }
 
-  set saveHomeTutorialComplete(bool flag) {
+  set setShowHomeTutorial(bool flag) {
     int status = (flag) ? 1 : 0;
     _api.writeFreshHomeTutorialFile('$status');
   }

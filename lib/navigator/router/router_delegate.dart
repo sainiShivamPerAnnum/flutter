@@ -6,7 +6,6 @@ import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
 import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
-import 'package:felloapp/ui/pages/hamburger/hamburger_screen.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
@@ -439,11 +438,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case "aboutUs":
         dialogWidget = const AboutUsDialog();
-        break;
-
-      case "ham":
-        dialogWidget = HamburgerMenu();
-        barrierDismissable = false;
         break;
       case "panInfo":
         dialogWidget = MoreInfoDialog(

@@ -25,11 +25,12 @@ class PrizeSection extends StatelessWidget {
       child: Stack(
         children: [
           Positioned(
-            bottom: 10,
+            bottom: 0,
             child: Opacity(
               opacity: 0.2,
-              child: Transform.scale(
-                scale: 1.2,
+              child: ClipRRect(
+                borderRadius:
+                    BorderRadius.circular(SizeConfig.cardBorderRadius),
                 child: SvgPicture.asset(
                   "images/Tambola/gifts.svg",
                   width: SizeConfig.screenWidth,

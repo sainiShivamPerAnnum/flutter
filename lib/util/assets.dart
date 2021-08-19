@@ -169,7 +169,7 @@ class Assets {
   static final List<Map<String, String>> tambolaFaqList = [
     {
       'How does one participate in Tambola?':
-          '- Everyday, 6 random numbers are picked.\n\n- The matching numbers on your tickets get automatically crossed, starting from the day they were generated.\n\n- On Sunday, your tickets are processed to see if they matched a category.'
+          '- Everyday, 5 random numbers are picked.\n\n- The matching numbers on your tickets get automatically crossed, starting from the day they were generated.\n\n- On Sunday, your tickets are processed to see if they matched a category.'
     },
     {
       'How does one win the game?':
@@ -244,6 +244,14 @@ class Assets {
     'Single/multi player card game',
     'Multi player board game',
     'Multi player arcade game',
+  ];
+
+  static const List<String> POLL_FOLLOW_UP_GAME_LIST = [
+    'Financial Quiz',
+    'Cricket',
+    'Fantasy Sports',
+    'Candy Crush®',
+    'Multi-player card games',
   ];
 
   static const String logoBase64 =

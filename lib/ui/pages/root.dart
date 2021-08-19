@@ -16,12 +16,12 @@ import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
 import 'package:felloapp/ui/pages/tabs/profile/profile_screen.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
@@ -123,16 +123,16 @@ class _RootState extends State<Root> {
   _initialize() {
     if (!_isInitialized) {
       _isInitialized = true;
-      lclDbProvider.isHomeTutorialComplete.then((value) {
-        if (value == 0) {
+      lclDbProvider.showHomeTutorial.then((value) {
+        if (value) {
           //show tutorial
-          baseProvider.show_home_tutorial = true;
-          // _navBarItems[2].showFocus = true;
+          lclDbProvider.setShowHomeTutorial = false;
+          delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
           setState(() {});
         }
       });
-      _initAdhocNotifications();
 
+      _initAdhocNotifications();
       // show security modal
       if (baseProvider.show_security_prompt &&
           baseProvider.myUser.isAugmontOnboarded &&
@@ -211,7 +211,7 @@ class _RootState extends State<Root> {
                   // iconSize: kToolbarHeight * 0.5,
 
                   onTap: () {
-                    HapticFeedback.vibrate();
+                    Haptic.vibrate();
                     delegate.appState.currentAction = PageAction(
                         state: PageState.addPage, page: SupportPageConfig);
                   },

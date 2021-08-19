@@ -923,6 +923,7 @@ class BaseUtil extends ChangeNotifier {
 
   set userTicketWallet(UserTicketWallet value) {
     _userTicketWallet = value;
+    notifyListeners();
   }
 
   int get dailyPicksCount => _dailyPickCount;

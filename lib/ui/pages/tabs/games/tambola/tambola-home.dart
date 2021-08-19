@@ -58,7 +58,7 @@ class _TambolaHomeState extends State<TambolaHome> {
   bool _isTicketSummaryLoaded = false;
   List<TicketSummaryCardModel> ticketSummaryData;
 
-  List<Ticket> _tambolaBoardViews, _topFiveTambolaBoards;
+  List<Ticket> _tambolaBoardViews, _topFiveTambolaBoards = [];
   List<TambolaBoard> _bestTambolaBoards;
   List<Widget> balls = [];
 
@@ -179,6 +179,7 @@ class _TambolaHomeState extends State<TambolaHome> {
 
   _refreshTambolaTickets() async {
     log.debug('Refreshing..');
+    _topFiveTambolaBoards = [];
     baseProvider.weeklyTicksFetched = false;
     setState(() {});
   }
@@ -398,7 +399,8 @@ class _TambolaHomeState extends State<TambolaHome> {
         ),
       );
     } else {
-      if (_topFiveTambolaBoards == null) {
+      if (_topFiveTambolaBoards.isEmpty ||
+          baseProvider.userWeeklyBoards.length < 5) {
         _topFiveTambolaBoards = [];
         _refreshBestBoards().forEach((element) {
           _topFiveTambolaBoards.add(_buildBoardView(element));
@@ -465,61 +467,6 @@ class _TambolaHomeState extends State<TambolaHome> {
       if (!_isTicketSummaryLoaded)
         ticketSummaryData = _getTambolaTicketsSummary();
 
-      // ticketSummaryData = [
-      //   TicketSummaryCardModel(
-      //       data: [
-      //         BestTambolaTicketsSumm(
-      //             boards: baseProvider.userWeeklyBoards
-      //                 .map((e) => _buildBoardView(e))
-      //                 .toList(),
-      //             title:
-      //                 "You are just 5 or less numbers away from hitting the 10,000 Full House jackpot.🎊")
-      //       ],
-      //       color: Color(0xff810000),
-      //       cardType: "Jackpot",
-      //       bgAsset:
-      //           "https://img.freepik.com/free-photo/copy-space-text-red-texture-background-concept-chinese-new-year-background_45281-280.jpg?size=626&ext=jpg&uid=P35674521"),
-      //   TicketSummaryCardModel(
-      //       data: List.generate(
-      //         2,
-      //         (index) => BestTambolaTicketsSumm(
-      //             boards: baseProvider.userWeeklyBoards
-      //                 .map((e) => _buildBoardView(e))
-      //                 .toList(),
-      //             title: "Ticket #1234 completed Top Row"),
-      //       ),
-      //       color: Colors.blue,
-      //       cardType: "Completed",
-      //       bgAsset:
-      //           "https://img.freepik.com/free-vector/blue-halftone-memphis-background-with-yellow-lines-circles-shapes_1017-31954.jpg?size=626&ext=jpg&uid=P35674521"),
-      //   TicketSummaryCardModel(
-      //       data: [
-      //         BestTambolaTicketsSumm(
-      //             boards: baseProvider.userWeeklyBoards
-      //                 .map((e) => _buildBoardView(e))
-      //                 .toList(),
-      //             title:
-      //                 "5 of your tickets are just 1 number away from completing corners")
-      //       ],
-      //       color: Color(0xff511281),
-      //       cardType: "Best Corners",
-      //       bgAsset:
-      //           "https://img.freepik.com/free-vector/gradient-liquid-abstract-background_52683-60469.jpg?size=626&ext=jpg&uid=P35674521"),
-      //   TicketSummaryCardModel(
-      //       data: [
-      //         BestTambolaTicketsSumm(
-      //             boards: baseProvider.userWeeklyBoards
-      //                 .map((e) => _buildBoardView(e))
-      //                 .toList(),
-      //             title:
-      //                 "8 of your tickets needs just 2 or less numbers to complete Bottom Row")
-      //       ],
-      //       color: Colors.orange,
-      //       cardType: "Best Rows",
-      //       bgAsset:
-      //           "https://img.freepik.com/free-vector/abstract-halftone-background_23-2148583453.jpg?size=626&ext=jpg&uid=P35674521")
-      // ];
-
       _widget = ticketSummaryData.isEmpty
           ? SizedBox()
           : Container(
@@ -563,7 +510,7 @@ class _TambolaHomeState extends State<TambolaHome> {
                             vertical: SizeConfig.blockSizeHorizontal * 2,
                           ),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
@@ -575,7 +522,7 @@ class _TambolaHomeState extends State<TambolaHome> {
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
-                              checkForMoreItems(ticketSummaryData[index]),
+                              // checkForMoreItems(ticketSummaryData[index]),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -737,14 +684,6 @@ class _TambolaHomeState extends State<TambolaHome> {
           isEligible: _isEligible,
         ),
       );
-    // new Timer(const Duration(milliseconds: 2500), () {
-    //   showDialog(
-    //       context: context,
-    //       builder: (BuildContext context) => TambolaResultsDialog(
-    //             winningsMap: ticketCodeWinIndex,
-    //             isEligible: _isEligible,
-    //           ));
-    // });
     _winnerDialogCalled = true;
 
     if (ticketCodeWinIndex.length > 0) {
@@ -989,10 +928,10 @@ class _TambolaHomeState extends State<TambolaHome> {
     if (bestRowsBoardCardItems.isNotEmpty)
       summary.add(TicketSummaryCardModel(
           data: bestRowsBoardCardItems,
-          color: Colors.amber,
+          color: Color(0xffFFA41B),
           cardType: "Best Rows",
           bgAsset:
-              "https://img.freepik.com/free-vector/abstract-halftone-background_23-2148583453.jpg?size=626&ext=jpg&uid=P35674521"));
+              "https://img.freepik.com/free-vector/abstract-low-poly-orange-yellow-background_1017-32111.jpg?size=626&ext=jpg&uid=P35674521"));
 
     _isTicketSummaryLoaded = true;
     return summary;
@@ -1006,42 +945,51 @@ class _TambolaHomeState extends State<TambolaHome> {
       if (category == "Corners") {
         if (length == 1)
           output =
-              "Ticket #${firstCard.board.getTicketNumber()} is just 1 number away from $category.";
+              "Ticket #${firstCard.board.getTicketNumber()} is just 1 number away from completing its $category!";
         else
           output =
-              "$length of your tickets needs only 1 number to complete $category.";
+              "$length of your tickets are just 1 number away from completing their $category!";
       } else if (category == "Full House") {
         if (length == 1)
           output =
-              "Ticket #${firstCard.board.getTicketNumber()} is just 4 of less numbers less to hit the $category JACKPOT.";
+              "Ticket #${firstCard.board.getTicketNumber()} is just less than 5 numbers away from winning the $category!";
         else
           output =
-              "$length of your tickets needs only 4 or less numbers to  hit the $category JACKPOT.";
+              "$length of your tickets are less than 5 numbers away from winning the $category!";
       } else {
         if (length == 1)
           output =
-              "Ticket #${firstCard.board.getTicketNumber()} is just 2 or less numbers away from $category.";
+              "Ticket #${firstCard.board.getTicketNumber()} is less than 3 numbers away from completing their $category!";
         else
           output =
-              "$length of your tickets needs only 2 or less numbers to complete $category.";
+              "$length of your tickets are less than 3 numbers away from completing its $category.";
       }
     } else {
       if (length == 1)
         output =
-            "Ticket #${firstCard.board.getTicketNumber()} completed $category.";
+            "Ticket #${firstCard.board.getTicketNumber()} has completed its $category!";
       else
-        output = "$length of your tickets completed $category.";
+        output = "$length of your tickets have completed their $category!";
     }
 
     return output;
   }
 
   List<TambolaBoard> _refreshBestBoards() {
+    // If boards are empty
     if (baseProvider.userWeeklyBoards == null ||
         baseProvider.userWeeklyBoards.isEmpty) {
       return [];
     }
-    //initialise
+    // If number of boards are less than 5, return all the boards
+    if (baseProvider.userWeeklyBoards.length <= 5) {
+      _bestTambolaBoards = [];
+      baseProvider.userWeeklyBoards.forEach((e) {
+        _bestTambolaBoards.add(e);
+      });
+      return _bestTambolaBoards;
+    }
+    //initialise bestboards with first board
     _bestTambolaBoards =
         List<TambolaBoard>.filled(5, baseProvider.userWeeklyBoards[0]);
 
@@ -1050,16 +998,10 @@ class _TambolaHomeState extends State<TambolaHome> {
       return _bestTambolaBoards;
     }
 
-    for (int i = 0; i < 5 && i < baseProvider.userWeeklyBoards.length; i++) {
-      _bestTambolaBoards[i] = baseProvider.userWeeklyBoards[i];
-    }
-
     baseProvider.userWeeklyBoards.forEach((board) {
-      if (_bestTambolaBoards[0] == null) _bestTambolaBoards[0] = board;
-      if (_bestTambolaBoards[1] == null) _bestTambolaBoards[1] = board;
-      if (_bestTambolaBoards[2] == null) _bestTambolaBoards[2] = board;
-      if (_bestTambolaBoards[3] == null) _bestTambolaBoards[3] = board;
-      if (_bestTambolaBoards[4] == null) _bestTambolaBoards[4] = board;
+      for (int i = 0; i < _bestTambolaBoards.length; i++) {
+        if (_bestTambolaBoards[i] == null) _bestTambolaBoards[i] = board;
+      }
 
       if (_bestTambolaBoards[0].getRowOdds(
               0,
@@ -1172,15 +1114,31 @@ class GameTitle extends StatelessWidget {
   }
 }
 
-class GameAppBar extends StatelessWidget {
+class GameAppBar extends StatefulWidget {
   const GameAppBar({
     Key key,
   }) : super(key: key);
 
   @override
+  State createState() => _GameAppBarState();
+}
+
+class _GameAppBarState extends State<GameAppBar> {
+  bool _highlight = false;
+  bool _isInit = false;
+
+  @override
   Widget build(BuildContext context) {
+    final lclDbModel = Provider.of<LocalDBModel>(context);
+    if (!_isInit) {
+      lclDbModel.showTambolaTutorial.then((flag) {
+        _highlight = flag;
+        _isInit = true;
+        setState(() {});
+      });
+    }
     return Container(
-      height: SizeConfig.screenWidth * 0.16,
+      height: SizeConfig.screenWidth * 0.14,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1194,13 +1152,29 @@ class GameAppBar extends StatelessWidget {
           ),
           Image.asset(
             "images/fello-dark.png",
-            height: SizeConfig.screenWidth * 0.1,
+            height: kToolbarHeight * 0.6,
           ),
-          IconButton(
-            onPressed: () => delegate.appState.currentAction = PageAction(
-                state: PageState.addPage, page: TWalkthroughPageConfig),
-            icon: Icon(Icons.info),
-            color: Colors.white,
+          Stack(
+            alignment: Alignment.topRight,
+            children: [
+              _highlight
+                  ? Center(
+                      child: SpinKitPulse(
+                      size: 50,
+                      color: Colors.white,
+                    ))
+                  : Container(),
+              Center(
+                  child: IconButton(
+                onPressed: () {
+                  delegate.appState.currentAction = PageAction(
+                      state: PageState.addPage, page: TWalkthroughPageConfig);
+                  lclDbModel.setShowTambolaTutorial = false;
+                },
+                icon: Icon(Icons.info),
+                color: Colors.white,
+              ))
+            ],
           ),
         ],
       ),
@@ -1367,16 +1341,18 @@ class _FaqSectionState extends State<FaqSection> {
                     Assets.tambolaFaqList[index].keys.first),
                 isExpanded: detStatus[index],
                 body: Container(
-                  child: Column(
-                    children: [
-                      Text(
-                        Assets.tambolaFaqList[index].values.first,
-                        style: TextStyle(
-                          height: 1.5,
-                          fontSize: SizeConfig.mediumTextSize,
-                        ),
-                      ),
-                    ],
+                  alignment: Alignment.centerLeft,
+                  margin: EdgeInsets.only(
+                    left: SizeConfig.blockSizeHorizontal * 2,
+                    right: SizeConfig.blockSizeHorizontal * 6,
+                  ),
+                  child: Text(
+                    Assets.tambolaFaqList[index].values.first,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      height: 1.5,
+                      fontSize: SizeConfig.mediumTextSize,
+                    ),
                   ),
                 ),
               ),

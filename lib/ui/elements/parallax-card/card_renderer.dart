@@ -103,7 +103,7 @@ class TravelCardRenderer extends StatelessWidget {
           style: ButtonStyle(),
           // disabledColor: Colors.transparent,
           // color: Colors.transparent,
-          child: Text('Tap to Play'.toUpperCase(), style: Styles.cardAction),
+          child: Text((game.title=='Tambola')?'TAP TO PLAY':'TAP TO VOTE', style: Styles.cardAction),
           onPressed: null,
         ),
       ],

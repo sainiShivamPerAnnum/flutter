@@ -1,12 +1,12 @@
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/Buttons/large_button.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:video_player/video_player.dart';
@@ -20,10 +20,94 @@ class WalkThroughPage extends StatefulWidget {
 
 class _WalkThroughPageState extends State<WalkThroughPage> {
   List<String> _videoURLS;
-  List<String> _content = [
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  static final TextStyle normStyle = GoogleFonts.montserrat(
+      fontSize: SizeConfig.mediumTextSize*1.4,
+      color: Colors.black);
+  static final TextStyle boldStyle = GoogleFonts.montserrat(
+      color: Colors.black,
+      fontWeight: FontWeight.bold,
+      fontSize: SizeConfig.mediumTextSize*1.4);
+  List<RichText> _content = [
+    RichText(
+      text: new TextSpan(
+        children: [
+          new TextSpan(
+            text: 'Save and invest ',
+            style: boldStyle,
+          ),
+          new TextSpan(
+            text: 'in strong financial assets with ease 💪',
+            style: normStyle,
+          ),
+        ],
+      ),
+    ),
+    RichText(
+      text: new TextSpan(
+        children: [
+          new TextSpan(
+            text: 'Earn ',
+            style: normStyle,
+          ),
+          new TextSpan(
+            text: '1 weekly gaming ticket for every ₹ 100 ',
+            style: boldStyle,
+          ),
+          new TextSpan(
+            text: 'you save 🎟️',
+            style: normStyle,
+          )
+        ],
+      ),
+    ),
+    RichText(
+      text: new TextSpan(
+        children: [
+          new TextSpan(
+            text: 'Use your gaming tickets to play ',
+            style: normStyle,
+          ),
+          new TextSpan(
+            text: 'fun filled games ',
+            style: boldStyle,
+          ),
+          new TextSpan(
+            text: '🎲',
+            style: normStyle,
+          )
+        ],
+      ),
+    ),
+    RichText(
+      text: new TextSpan(
+        children: [
+          new TextSpan(
+            text: 'Gain ',
+            style: normStyle,
+          ),
+          new TextSpan(
+            text: 'better returns ',
+            style: boldStyle,
+          ),
+          new TextSpan(
+            text: 'and win ',
+            style: normStyle,
+          ),
+          new TextSpan(
+            text: 'exciting prizes ',
+            style: normStyle,
+          ),
+          new TextSpan(
+            text: 'every week 🎉',
+            style: boldStyle,
+          ),
+        ],
+      ),
+    )
+    // 'Save and invest in strong financial assets with ease 💪',
+    // 'Earn 1 weekly gaming ticket for every ₹ 100 you save 🎟️',
+    // 'Use your gaming tickets to play fun filled games 🎲',
+    // 'Gain better returns and win exciting prizes every week 🎉'
   ];
   int _currentIndex = 0;
   PageController pageController = PageController(keepPage: false);
@@ -37,17 +121,6 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
     dbProvider.getWalkthroughUrls().then((value) {
       print(value.length);
       _videoURLS = value;
-      if (_videoURLS.length <= 3) {
-        var temp = _videoURLS;
-        var value = temp[0];
-        _videoURLS.clear();
-        int i = 0;
-        _videoURLS = [];
-        while (i < 3) {
-          _videoURLS.add(value);
-          i++;
-        }
-      }
       _initController(0);
     });
     isInit = true;
@@ -107,7 +180,8 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                   children: [
                     _buildWalkthroughPage(0),
                     _buildWalkthroughPage(1),
-                    _buildWalkthroughPage(2)
+                    _buildWalkthroughPage(2),
+                    _buildWalkthroughPage(3)
                     // WalkThroughSlide(
                     //     content: _content[0],
                     //     videoController: _videoController),
@@ -168,7 +242,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                                 backButtonDispatcher.didPopRoute();
                               },
                               child: Text(
-                                'Skip Tutorial >>',
+                                'Skip >',
                                 style: TextStyle(
                                     color: UiConstants.primaryColor,
                                     fontSize: SizeConfig.largeTextSize * 0.65),
@@ -250,11 +324,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
             bottom: SizeConfig.blockSizeHorizontal * 14,
           ),
           child: Center(
-            child: Text(
-              _content[index],
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
-            ),
+            child: _content[index],
           ),
         ),
       ],

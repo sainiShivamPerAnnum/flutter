@@ -1,9 +1,22 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
+import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/model/chartFundItem.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/dialogs/Prize-Card/card.dart';
+import 'package:felloapp/ui/dialogs/share-card.dart';
+import 'package:felloapp/ui/pages/tabs/finance/augmont/augmont_withdraw_screen.dart';
+import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class YourFunds extends StatefulWidget {
@@ -26,8 +39,16 @@ class YourFunds extends StatefulWidget {
 
 class _YourFundsState extends State<YourFunds> {
   List<double> breakdownWidth = [0, 0, 0, 0];
+  Log log = new Log('FinanceReport');
 
   BaseUtil baseProvider;
+  LocalDBModel localDBModel;
+  DBModel dbProvider;
+  AugmontModel augmontProvider;
+  double _withdrawableGoldQnty;
+
+  // PrizeClaimChoice choice;
+  GlobalKey<AugmontWithdrawScreenState> _withdrawalDialogKey2 = GlobalKey();
 
   @override
   void initState() {
@@ -50,9 +71,16 @@ class _YourFundsState extends State<YourFunds> {
     });
   }
 
+  Future<PrizeClaimChoice> getClaimChoice() async {
+    return await localDBModel.getPrizeClaimChoice();
+  }
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
+    localDBModel = Provider.of<LocalDBModel>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    augmontProvider = Provider.of<AugmontModel>(context, listen: false);
 
     return Scaffold(
         body: Column(
@@ -61,14 +89,14 @@ class _YourFundsState extends State<YourFunds> {
         Container(
           decoration: BoxDecoration(color: Colors.black),
           width: SizeConfig.screenWidth,
-          height: SizeConfig.screenHeight * 0.25,
+          height: SizeConfig.screenHeight * 0.27,
           child: Stack(
             children: [
               ListView(
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 children: List.generate(
-                  3,
+                  4,
                   (i) => AnimatedContainer(
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     duration: Duration(seconds: 2),
@@ -216,24 +244,10 @@ class _YourFundsState extends State<YourFunds> {
                                     height: 1.5),
                               ),
                               const SizedBox(height: 12),
-                              baseProvider.userFundWallet.prizeBalance > 0 &&
-                                      widget.chartFunds[index].action
-                                  ? ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          primary:
-                                              widget.chartFunds[index].color),
-                                      onPressed:
-                                          widget.chartFunds[index].function,
-                                      child: Text(
-                                        //widget.chartFunds[index].buttonText,
-                                        !baseProvider.userFundWallet
-                                                .isPrizeBalanceUnclaimed()
-                                            ? "Share"
-                                            : "Claim Prize",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    )
-                                  : const SizedBox()
+                              checkForAction(
+                                widget.chartFunds[index].fundName,
+                                widget.chartFunds[index].color,
+                              )
                             ],
                           ),
                         )
@@ -246,4 +260,213 @@ class _YourFundsState extends State<YourFunds> {
       ],
     ));
   }
+
+  checkForAction(String fundName, Color color) {
+    if (fundName == "Gold Balance" && widget.userFundWallet.augGoldBalance > 0)
+      return ElevatedButton(
+        style: ElevatedButton.styleFrom(primary: color),
+        onPressed: _onWithdrawalClicked,
+        child: Text(
+          "Withdraw",
+          style: TextStyle(color: Colors.white),
+        ),
+      );
+    else if (fundName == "Prize Balance" &&
+        baseProvider.userFundWallet.prizeBalance > 0) {
+      return ElevatedButton(
+        style: ElevatedButton.styleFrom(primary: color),
+        onPressed: prizeBalanceAction,
+        child: Text(
+          baseProvider.userFundWallet.isPrizeBalanceUnclaimed()
+              ? "Claim Prize"
+              : "Share",
+          style: TextStyle(color: Colors.white),
+        ),
+      );
+    } else
+      return SizedBox();
+  }
+
+  prizeBalanceAction() async {
+    HapticFeedback.vibrate();
+    if (baseProvider.userFundWallet.isPrizeBalanceUnclaimed())
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) {
+          return Center(
+            child: Material(
+              color: Colors.transparent,
+              child: FCard(
+                isClaimed:
+                    !baseProvider.userFundWallet.isPrizeBalanceUnclaimed(),
+                unclaimedPrize: widget.userFundWallet.unclaimedBalance,
+              ),
+            ),
+          );
+        },
+      );
+    else {
+      final choice = await getClaimChoice();
+      AppState.screenStack.add(ScreenItem.dialog);
+      showDialog(
+        context: context,
+        builder: (ctx) => ShareCard(
+          dpUrl: baseProvider.myUserDpUrl,
+          claimChoice: choice,
+          prizeAmount: baseProvider.userFundWallet.prizeBalance,
+          username: baseProvider.myUser.name,
+        ),
+      );
+    }
+  }
+
+  _onWithdrawalClicked() async {
+    HapticFeedback.vibrate();
+    baseProvider.augmontDetail = (baseProvider.augmontDetail == null)
+        ? (await dbProvider.getUserAugmontDetails(baseProvider.myUser.uid))
+        : baseProvider.augmontDetail;
+    if (!baseProvider.myUser.isAugmontOnboarded) {
+      baseProvider.showNegativeAlert(
+          'Not onboarded', 'You havent been onboarded to Augmont yet', context);
+    } else if (baseProvider.userFundWallet.augGoldQuantity == null ||
+        baseProvider.userFundWallet.augGoldQuantity == 0) {
+      baseProvider.showNegativeAlert('No balance',
+          'Your Augmont wallet has no balance presently', context);
+    } else {
+      baseProvider.isAugWithdrawRouteLogicInProgress = true;
+      setState(() {});
+      double _liveGoldQuantityBalance;
+      try {
+        baseProvider.augmontGoldRates = await augmontProvider.getRates();
+      } catch (e) {
+        log.error('Failed to fetch current sell rates: $e');
+      }
+      try {
+        _liveGoldQuantityBalance = await augmontProvider.getGoldBalance();
+      } catch (e) {
+        log.error('Failed to fetch current gold balance: $e');
+      }
+      try {
+        double _w = await dbProvider
+            .getNonWithdrawableAugGoldQuantity(baseProvider.myUser.uid);
+        _withdrawableGoldQnty = (_w != null)
+            ? _liveGoldQuantityBalance - _w
+            : _liveGoldQuantityBalance;
+      } catch (e) {
+        log.error('Failed to fetch non withdrawable gold quantity');
+      }
+      if (baseProvider.augmontGoldRates == null ||
+          _liveGoldQuantityBalance == null ||
+          _liveGoldQuantityBalance == 0) {
+        baseProvider.isAugWithdrawRouteLogicInProgress = false;
+        setState(() {});
+        baseProvider.showNegativeAlert('Couldn\'t complete your request',
+            'Please try again in some time', context);
+      } else {
+        baseProvider.isAugWithdrawRouteLogicInProgress = false;
+        setState(() {});
+        delegate.appState.currentAction = PageAction(
+          state: PageState.addWidget,
+          page: AugWithdrawalPageConfig,
+          widget: AugmontWithdrawScreen(
+            key: _withdrawalDialogKey2,
+            passbookBalance: _liveGoldQuantityBalance,
+            withdrawableGoldQnty: _withdrawableGoldQnty,
+            sellRate: baseProvider.augmontGoldRates.goldSellPrice,
+            onAmountConfirmed: (Map<String, double> amountDetails) {
+              _onInitiateWithdrawal(amountDetails['withdrawal_quantity']);
+            },
+            bankHolderName: baseProvider.augmontDetail.bankHolderName,
+            bankAccNo: baseProvider.augmontDetail.bankAccNo,
+            bankIfsc: baseProvider.augmontDetail.ifsc,
+          ),
+        );
+      }
+    }
+  }
+
+  _onInitiateWithdrawal(double qnt) {
+    if (baseProvider.augmontGoldRates != null && qnt != null) {
+      augmontProvider.initiateWithdrawal(baseProvider.augmontGoldRates, qnt);
+      augmontProvider.setAugmontTxnProcessListener(_onSellComplete);
+    }
+  }
+
+  _onSellComplete(UserTransaction txn) async {
+    if (baseProvider.currentAugmontTxn != null) {
+      if (baseProvider.currentAugmontTxn.tranStatus !=
+          UserTransaction.TRAN_STATUS_COMPLETE) {
+        _withdrawalDialogKey2.currentState.onTransactionProcessed(false);
+      } else {
+        ///reduce tickets and amount
+        baseProvider.currentAugmontTxn.closingBalance =
+            baseProvider.getUpdatedWithdrawalClosingBalance(
+                baseProvider.currentAugmontTxn.amount);
+        baseProvider.currentAugmontTxn.ticketUpCount =
+            baseProvider.getTicketCountForTransaction(
+                baseProvider.currentAugmontTxn.amount);
+        await dbProvider.updateUserTransaction(
+            baseProvider.myUser.uid, baseProvider.currentAugmontTxn);
+
+        ///update user wallet balance
+        double _tempCurrentBalance = baseProvider.userFundWallet.augGoldBalance;
+        baseProvider.userFundWallet =
+            await dbProvider.updateUserAugmontGoldBalance(
+                baseProvider.myUser.uid,
+                baseProvider.userFundWallet,
+                baseProvider.augmontGoldRates.goldSellPrice,
+                BaseUtil.toDouble(baseProvider.currentAugmontTxn
+                    .augmnt[UserTransaction.subFldAugTotalGoldGm]),
+                -1 * baseProvider.currentAugmontTxn.amount);
+
+        ///check if balance updated correctly
+        if (baseProvider.userFundWallet.augGoldBalance == _tempCurrentBalance) {
+          //wallet balance was not updated. Transaction update failed
+          Map<String, dynamic> _data = {
+            'txn_id': baseProvider.currentAugmontTxn.docKey,
+            'aug_tran_id': baseProvider
+                .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
+            'note':
+                'Transaction completed, but found inconsistency while updating balance'
+          };
+          await dbProvider.logFailure(baseProvider.myUser.uid,
+              FailType.UserAugmontWthdrwUpdateDiscrepancy, _data);
+        }
+
+        if (baseProvider.currentAugmontTxn.ticketUpCount > 0) {
+          ///update user ticket count
+          int _tempCurrentCount = baseProvider.userTicketWallet.augGold99Tck;
+          baseProvider.userTicketWallet =
+              await dbProvider.updateAugmontGoldUserTicketCount(
+                  baseProvider.myUser.uid,
+                  baseProvider.userTicketWallet,
+                  -1 * baseProvider.currentAugmontTxn.ticketUpCount);
+
+          ///check if ticket count updated correctly
+          if (baseProvider.userTicketWallet.augGold99Tck == _tempCurrentCount) {
+            //ticket count did not update
+            Map<String, dynamic> _data = {
+              'txn_id': baseProvider.currentAugmontTxn.docKey,
+              'aug_tran_id': baseProvider
+                  .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
+              'note':
+                  'Transaction completed, but found inconsistency while updating tickets'
+            };
+            await dbProvider.logFailure(baseProvider.myUser.uid,
+                FailType.UserAugmontWthdrwUpdateDiscrepancy, _data);
+          }
+        }
+
+        ///update UI and clear global variables
+        baseProvider.currentAugmontTxn = null;
+        baseProvider.userMiniTxnList = null; //make null so it refreshes
+        _withdrawalDialogKey2.currentState.onTransactionProcessed(true);
+      }
+    } else {
+      _withdrawalDialogKey2.currentState.onTransactionProcessed(false);
+    }
+  }
+
+  List<Function> cardButtonFunctions = [() {}, () {}, () {}];
 }

@@ -44,6 +44,7 @@ class Constants {
   static const int FULL_HOUSE_COMPLETED = 4;
 
   static const String POLL_NEXTGAME_ID = "nextgame";
+  static const String POLL_FOLLOWUPGAME_ID = "followupgame";
 
   //home feed
   static const String LEARN_FEED_CARD_TYPE = 'L';

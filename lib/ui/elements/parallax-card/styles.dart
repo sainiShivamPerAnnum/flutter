@@ -20,8 +20,8 @@ class Styles {
       baseBody.copyWith(color: Color(0xFF666666), height: 1.5, fontSize: 12);
   static final TextStyle cardAction = baseBody.copyWith(
       color: Color(0xFFa6998b),
-      fontSize: 10,
+      fontSize: 12,
       height: 1,
-      fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w700,
       letterSpacing: 0.1);
 }

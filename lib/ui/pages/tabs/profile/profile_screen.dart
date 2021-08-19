@@ -4,33 +4,33 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/elements/Texts/marquee_text.dart';
 import 'package:felloapp/ui/elements/custom-art/profile-card.dart';
 import 'package:felloapp/ui/modals/share_info_modal.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:share/share.dart';
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -109,15 +109,18 @@ class _ProfilePageState extends State<ProfilePage> {
                               children: [
                                 ListTile(
                                   contentPadding: EdgeInsets.symmetric(
-                                      horizontal: SizeConfig.globalMargin),
+                                      horizontal:
+                                          SizeConfig.globalMargin * 1.4),
                                   leading: Icon(
                                     Icons.account_circle_outlined,
-                                    size: SizeConfig.globalMargin,
+                                    size: SizeConfig.blockSizeHorizontal * 6,
                                     color: UiConstants.primaryColor,
                                   ),
                                   title: Text(
                                     "Username",
-                                    style: GoogleFonts.montserrat(),
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: SizeConfig.mediumTextSize,
+                                    ),
                                   ),
                                   onTap: () {
                                     if (baseProvider.myUser.username == null)
@@ -218,6 +221,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
 class ShowEmailVerifyLink extends StatelessWidget {
   const ShowEmailVerifyLink({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     BaseUtil baseProvider = Provider.of<BaseUtil>(context);
@@ -242,6 +246,7 @@ class ShowEmailVerifyLink extends StatelessWidget {
 
 class Social extends StatelessWidget {
   const Social();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -260,14 +265,9 @@ class Social extends StatelessWidget {
           ),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             socialButton("images/svgs/instagram.svg",
-                "https://www.instagram.com/fellofinance/"),
+                "https://www.instagram.com/jointhefelloship/"),
             socialButton("images/svgs/linkedin.svg",
                 "https://www.linkedin.com/company/fellofinance/"),
-            socialButton(
-                "images/svgs/whatsapp.svg",
-                Platform.isAndroid
-                    ? "https://wa.me/${917993252690}/?text=Hello Fello"
-                    : "https://api.whatsapp.com/send?phone=${917993252690}=Hello Fello"),
             socialButton("images/svgs/mail.svg", "mailto:hello@fello.in"),
             socialButton("images/svgs/web.svg", "https://fello.in"),
           ])
@@ -309,12 +309,13 @@ class TermsRow extends StatelessWidget {
           child: InkWell(
             child: Text(
               'Terms of Service',
-              style: TextStyle(
+              style: TextStyle(fontSize: SizeConfig.smallTextSize*1.2,
                   color: Colors.grey, decoration: TextDecoration.underline),
             ),
             onTap: () {
-              HapticFeedback.vibrate();
+              Haptic.vibrate();
               BaseUtil.launchUrl('https://fello.in/policy/tnc');
+
               // delegate.appState.currentAction =
               //     PageAction(state: PageState.addPage, page: TncPageConfig);
             },
@@ -329,14 +330,34 @@ class TermsRow extends StatelessWidget {
           child: InkWell(
             child: Text(
               'Privacy Policy',
-              style: TextStyle(
+              style: TextStyle(fontSize: SizeConfig.smallTextSize*1.2,
                   color: Colors.grey, decoration: TextDecoration.underline),
             ),
             onTap: () {
-              HapticFeedback.vibrate();
+              Haptic.vibrate();
               BaseUtil.launchUrl('https://fello.in/policy/privacy');
               // delegate.appState.currentAction = PageAction(
               //     state: PageState.addPage, page: RefPolicyPageConfig);
+            },
+          ),
+        ),
+        Text(
+          '•',
+          style: TextStyle(color: Colors.grey),
+        ),
+        Padding(
+          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          child: InkWell(
+            child: Text(
+              'Referral Policy',
+              style: TextStyle(fontSize: SizeConfig.smallTextSize*1.2,
+                  color: Colors.grey, decoration: TextDecoration.underline),
+            ),
+            onTap: () {
+              Haptic.vibrate();
+              // BaseUtil.launchUrl('https://fello.in/policy/privacy');
+              delegate.appState.currentAction = PageAction(
+                  state: PageState.addPage, page: RefPolicyPageConfig);
             },
           ),
         )
@@ -419,6 +440,7 @@ class AppVersionRow extends StatelessWidget {
 
 class ShareCard extends StatelessWidget {
   const ShareCard();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -561,6 +583,7 @@ class ShareCard extends StatelessWidget {
 
 class ShareOptions extends StatefulWidget {
   const ShareOptions();
+
   @override
   _ShareOptionsState createState() => _ShareOptionsState();
 }
@@ -570,6 +593,7 @@ class _ShareOptionsState extends State<ShareOptions> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   RazorpayModel rProvider;
+  FcmListener fcmProvider;
   String referral_bonus =
       BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
   String referral_ticket_bonus = BaseRemoteConfig.remoteConfig
@@ -599,6 +623,7 @@ class _ShareOptionsState extends State<ShareOptions> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     rProvider = Provider.of<RazorpayModel>(context, listen: false);
+    fcmProvider = Provider.of<FcmListener>(context, listen: false);
     _init();
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -640,6 +665,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                     size: 18.0,
                   ),
             onTap: () async {
+              fcmProvider.addSubscription(FcmTopic.REFERRER);
               BaseAnalytics.analytics.logShare(
                   contentType: 'referral',
                   itemId: baseProvider.myUser.uid,
@@ -714,6 +740,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                         ),
                   onTap: () async {
                     ////////////////////////////////
+                    fcmProvider.addSubscription(FcmTopic.REFERRER);
                     BaseAnalytics.analytics.logShare(
                         contentType: 'referral',
                         itemId: baseProvider.myUser.uid,
@@ -866,111 +893,115 @@ class UserProfileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    return Container(
-      width: SizeConfig.screenWidth,
-      height: SizeConfig.screenWidth * 0.4,
-      decoration: BoxDecoration(
-        gradient: new LinearGradient(
-          colors: [Color(0xff299F8F), UiConstants.primaryColor],
-          begin: Alignment.bottomLeft,
-          end: Alignment.topCenter,
+    return InkWell(
+      onTap: () => delegate.appState.currentAction =
+          PageAction(state: PageState.addPage, page: UserProfileDetailsConfig),
+      child: Container(
+        width: SizeConfig.screenWidth,
+        height: SizeConfig.screenWidth * 0.4,
+        decoration: BoxDecoration(
+          gradient: new LinearGradient(
+            colors: [Color(0xff299F8F), UiConstants.primaryColor],
+            begin: Alignment.bottomLeft,
+            end: Alignment.topCenter,
+          ),
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
         ),
-        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-      ),
-      margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.globalMargin,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-        child: CustomPaint(
-          painter: ShapePainter(),
-          child: Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.blockSizeHorizontal * 4,
-                vertical: SizeConfig.blockSizeHorizontal * 2.5),
-            child: Column(
-              children: [
-                Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: picSize,
-                      width: picSize,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                      child: baseProvider.myUserDpUrl == null
-                          ? Image.asset(
-                              "images/profile.png",
-                              height: picSize,
-                              width: picSize,
-                              fit: BoxFit.cover,
-                            )
-                          : ClipOval(
-                              child: CachedNetworkImage(
-                                imageUrl: baseProvider.myUserDpUrl,
+        margin: EdgeInsets.symmetric(
+          horizontal: SizeConfig.globalMargin,
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+          child: CustomPaint(
+            painter: ShapePainter(),
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.blockSizeHorizontal * 4,
+                  vertical: SizeConfig.blockSizeHorizontal * 2.5),
+              child: Column(
+                children: [
+                  Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: picSize,
+                        width: picSize,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                        ),
+                        child: baseProvider.myUserDpUrl == null
+                            ? Image.asset(
+                                "images/profile.png",
                                 height: picSize,
                                 width: picSize,
                                 fit: BoxFit.cover,
-                              ),
-                            ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.globalMargin,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: SizeConfig.screenWidth * 0.5,
-                            child: Text(
-                              baseProvider.myUser.name,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: SizeConfig.cardTitleTextSize,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          baseProvider.myUser.username != null
-                              ? Padding(
-                                  padding: EdgeInsets.only(top: 4),
-                                  child: Text(
-                                    "@${baseProvider.myUser.username.replaceAll('@', '.')}",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: SizeConfig.mediumTextSize,
-                                    ),
-                                  ),
-                                )
-                              : SizedBox(
-                                  height: 8,
+                              )
+                            : ClipOval(
+                                child: CachedNetworkImage(
+                                  imageUrl: baseProvider.myUserDpUrl,
+                                  height: picSize,
+                                  width: picSize,
+                                  fit: BoxFit.cover,
                                 ),
-                        ],
+                              ),
                       ),
-                    )
-                  ],
-                ),
-                Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Member since ${_getUserMembershipDate()}',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: SizeConfig.smallTextSize,
+                      SizedBox(
+                        width: SizeConfig.globalMargin,
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: SizeConfig.screenWidth * 0.5,
+                              child: Text(
+                                baseProvider.myUser.name,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: SizeConfig.cardTitleTextSize,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            baseProvider.myUser.username != null
+                                ? Padding(
+                                    padding: EdgeInsets.only(top: 4),
+                                    child: Text(
+                                      "@${baseProvider.myUser.username.replaceAll('@', '.')}",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: SizeConfig.mediumTextSize,
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox(
+                                    height: 8,
+                                  ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Member since ${_getUserMembershipDate()}',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: SizeConfig.smallTextSize,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

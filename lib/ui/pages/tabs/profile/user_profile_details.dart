@@ -13,6 +13,7 @@ import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/update_name_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
   chooseprofilePicture() async {
     final temp = await ImagePicker().getImage(source: ImageSource.gallery);
     if (temp != null) {
-      HapticFeedback.vibrate();
+      Haptic.vibrate();
       showDialog(
         context: context,
         builder: (BuildContext context) => ChangeProfilePicture(
@@ -177,8 +178,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                   color: Colors.white,
                                   shape: BoxShape.circle,
                                 ),
-                                child: IconButton(
-                                  onPressed: () async {
+                                child: InkWell(
+                                  onTap: () async {
                                     var _status =
                                         await Permission.photos.status;
                                     if (_status.isRestricted ||
@@ -217,8 +218,10 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                           context);
                                     }
                                   },
-                                  icon: Icon(Icons.camera),
-                                  color: UiConstants.primaryColor,
+                                  child: Icon(
+                                    Icons.camera,
+                                    color: UiConstants.primaryColor,
+                                  ),
                                 ),
                               ),
                             ),
@@ -430,7 +433,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                           description: 'Are you sure you want to sign out?',
                           buttonText: 'Yes',
                           confirmAction: () {
-                            HapticFeedback.vibrate();
+                            Haptic.vibrate();
                             baseProvider.signOut().then((flag) {
                               if (flag) {
                                 //log.debug('Sign out process complete');
@@ -451,7 +454,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             });
                           },
                           cancelAction: () {
-                            HapticFeedback.vibrate();
+                            Haptic.vibrate();
                             backButtonDispatcher.didPopRoute();
                           },
                         ),

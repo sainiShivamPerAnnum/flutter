@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
@@ -7,6 +9,7 @@ import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/dialogs/success-dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -47,6 +50,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
   String _errorMessage;
   double _width;
   AugmontModel augmontProvider;
+  int validDuration = 120;
+  Timer validityTimer;
 
   _initFields() {
     if (baseProvider != null) {
@@ -55,6 +60,15 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
       try {
         int t = (_isEnabledStr != null) ? int.parse(_isEnabledStr) : 1;
         _isDepositsEnabled = (t == 1);
+        validityTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+          if (validDuration == 0) {
+            timer.cancel();
+            backButtonDispatcher.didPopRoute();
+          }
+          setState(() {
+            validDuration--;
+          });
+        });
       } catch (e) {
         _isDepositsEnabled = true;
       }
@@ -103,7 +117,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                     width: 10,
                   ),
                   Text(
-                    "Gold Deposit",
+                    "Buy Digital Gold",
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       height: 1.5,
@@ -120,6 +134,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                       if (_isDepositInProgress) {
                         // do nothing
                       } else {
+                        validityTimer.cancel();
                         backButtonDispatcher.didPopRoute();
                       }
                     },
@@ -167,6 +182,12 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
               ),
             ),
             _buildPurchaseDescriptionCard(_getDouble(_amtController.text)),
+            SizedBox(
+              height: SizeConfig.screenWidth * 0.01,
+            ),
+            SizedBox(
+              height: SizeConfig.screenWidth * 0.01,
+            ),
             Wrap(
               spacing: 20,
               children: [
@@ -174,7 +195,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                   label: Text("How does this work?"),
                   backgroundColor: UiConstants.chipColor,
                   onPressed: () {
-                    HapticFeedback.vibrate();
+                    Haptic.vibrate();
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => MoreInfoDialog(
@@ -187,7 +208,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                   label: Text("How long does it take?"),
                   backgroundColor: UiConstants.chipColor,
                   onPressed: () {
-                    HapticFeedback.vibrate();
+                    Haptic.vibrate();
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => MoreInfoDialog(
@@ -223,6 +244,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                         //widget.onDepositConfirmed();
                         if (depositformKey3.currentState.validate()) {
                           _isDepositInProgress = true;
+                          validityTimer.cancel();
                           setState(() {});
                           widget.onDepositConfirmed(
                               _getTaxIncludedAmount(_amtController.text));
@@ -271,7 +293,14 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                           style: TextStyle(
                               fontSize: 16, color: UiConstants.accentColor)),
                     ))
-                : Container()
+                : Container(),
+            // Center(
+            //   child: Text(
+            //     'Gold rate valid for ${Duration(seconds: validDuration).inMinutes.toString().padLeft(2,'0')}:${Duration(seconds: validDuration%60).inSeconds.toString().padLeft(2,'0')}s',
+            //     style: TextStyle(fontWeight: FontWeight.w400, color: Colors.blueGrey),
+            //     textAlign: TextAlign.center,
+            //   )
+            // ),
           ],
         ),
       ),
@@ -309,7 +338,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _buildRateRow(
+          _buildRateRow2(
               'Rate per gram:',
               '₹${widget.currentRates.goldBuyPrice.toStringAsFixed(2)}',
               'This is the current price of 1 gram of gold'),
@@ -321,6 +350,65 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
               'SGST:',
               '${widget.currentRates.sgstPercent.toString()}%',
               'This is the Goods and Services Tax(GST) charged by the state government'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRateRow2(String title, String value, String info) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
+            ),
+          ),
+          Expanded(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InkWell(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      value,
+                      style:
+                          TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.grey,
+                      size: SizeConfig.mediumTextSize * 1.4,
+                    )
+                  ],
+                ),
+                onTap: () {
+                  Haptic.vibrate();
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) => MoreInfoDialog(
+                            title: title,
+                            text: info,
+                          ));
+                },
+              ),
+              Text(
+                'Valid for ${Duration(seconds: validDuration).inMinutes.toString().padLeft(2, '0')}:${Duration(seconds: validDuration % 60).inSeconds.toString().padLeft(2, '0')}s',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400, color: Colors.blueGrey),
+                textAlign: TextAlign.start,
+              )
+            ],
+          ))
         ],
       ),
     );
@@ -339,33 +427,33 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
             ),
           ),
           Expanded(
-              child: Row(
-            children: [
-              Text(
-                value,
-                style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
-              ),
-              SizedBox(
-                width: 4,
-              ),
-              InkWell(
-                child: Icon(
-                  Icons.info_outline,
-                  color: Colors.grey,
-                  size: SizeConfig.mediumTextSize * 1.4,
-                ),
+              child: InkWell(
                 onTap: () {
-                  HapticFeedback.vibrate();
+                  Haptic.vibrate();
                   showDialog(
                       context: context,
                       builder: (BuildContext context) => MoreInfoDialog(
-                            title: title,
-                            text: info,
-                          ));
+                        title: title,
+                        text: info,
+                      ));
                 },
-              )
-            ],
-          ))
+                child: Row(
+                  children: [
+                    Text(
+                      value,
+                      style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.grey,
+                      size: SizeConfig.mediumTextSize * 1.4,
+                    )
+                  ],
+                ),
+              ))
         ],
       ),
     );
@@ -413,17 +501,19 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     if (flag) {
       // baseProvider.showPositiveAlert(
       //     'SUCCESS', 'You gold deposit was confirmed!', context);
-      HapticFeedback.vibrate();
+      Haptic.vibrate();
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => SuccessDialog(),
       );
-    } else
+    } else {
+      backButtonDispatcher.didPopRoute();
       baseProvider.showNegativeAlert(
           'Failed',
           'Your gold deposit failed. Please try again or contact us if you are facing issues',
           context,
           seconds: 5);
+    }
   }
 }

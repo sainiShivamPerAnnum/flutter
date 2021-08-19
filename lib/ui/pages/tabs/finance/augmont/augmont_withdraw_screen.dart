@@ -5,6 +5,7 @@ import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -371,7 +372,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
             ],
           ),
           onPressed: () async {
-            HapticFeedback.vibrate();
+            Haptic.vibrate();
             if (_checkBankInfoMissing) {
               baseProvider.showNegativeAlert('Bank Details Missing',
                   'Please enter your bank details', context);
@@ -498,7 +499,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
             ],
           ),
           onTap: () {
-            HapticFeedback.vibrate();
+            Haptic.vibrate();
             showDialog(
               context: context,
               builder: (context) => new AlertDialog(

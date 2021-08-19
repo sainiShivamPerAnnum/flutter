@@ -10,10 +10,10 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_daily_draw_timer.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -118,6 +118,8 @@ class _HomePageState extends State<HomePage> {
                 child: ListView(
                   controller: AppState.homeCardListController,
                   physics: BouncingScrollPhysics(),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.blockSizeHorizontal * 1.6),
                   children: (!baseProvider.isHomeCardsFetched ||
                           baseProvider.feedCards.length == 0)
                       ? _buildLoadingFeed()
@@ -212,9 +214,9 @@ class _HomePageState extends State<HomePage> {
             title: card.title,
             subtitle: card.subtitle,
             buttonText: card.btnText,
-            isHighlighted: (baseProvider.show_home_tutorial),
+            isHighlighted: false,
             onPressed: () async {
-              HapticFeedback.vibrate();
+              Haptic.vibrate();
               delegate.parseRoute(Uri.parse(card.actionUri));
             },
           ),
@@ -234,7 +236,7 @@ class _HomePageState extends State<HomePage> {
             buttonText: card.btnText,
             isHighlighted: false,
             onPressed: () async {
-              HapticFeedback.vibrate();
+              Haptic.vibrate();
               delegate.appState.setCurrentTabIndex = 1;
               if (await baseProvider.getDrawaStatus()) {
                 await _localDBModel
@@ -273,7 +275,7 @@ class _HomePageState extends State<HomePage> {
             isHighlighted: false,
             dataMap: card.dataMap,
             onPressed: () async {
-              HapticFeedback.vibrate();
+              Haptic.vibrate();
               delegate.appState.setCurrentTabIndex = 1;
               delegate.appState.setCurrentGameTabIndex = 1;
             },
@@ -293,10 +295,8 @@ class _HomePageState extends State<HomePage> {
             subtitle: card.subtitle,
             buttonText: card.btnText,
             isHighlighted: false,
-            onPressed: () async {
-              HapticFeedback.vibrate();
-              // print(Color(0xff096C47).value.toString());
-              // print(Color(0xff76A665).value.toString());
+            onPressed: () {
+              Haptic.vibrate();
               delegate.parseRoute(Uri.parse(card.actionUri));
             },
           ),
@@ -307,7 +307,6 @@ class _HomePageState extends State<HomePage> {
   Widget _buildProfileRow() {
     return InkWell(
       onTap: () {
-        delegate.appState.setCurrentTabIndex = 3;
         delegate.appState.currentAction = PageAction(
             state: PageState.addPage, page: UserProfileDetailsConfig);
       },
@@ -395,19 +394,20 @@ class BaseHomeCard extends StatelessWidget {
           left: SizeConfig.globalMargin,
           right: SizeConfig.globalMargin),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-          gradient: new LinearGradient(
-            colors: gradient,
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-          ),
-          boxShadow: [
-            BoxShadow(
-                color: gradient[0].withOpacity(0.2),
-                offset: Offset(2, 2),
-                blurRadius: 10,
-                spreadRadius: 2),
-          ]),
+        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+        gradient: new LinearGradient(
+          colors: gradient,
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+              color: gradient[0].withOpacity(0.3),
+              offset: Offset(0, 5),
+              blurRadius: 5,
+              spreadRadius: 2),
+        ],
+      ),
       width: double.infinity,
       child: Stack(
         children: [
@@ -459,6 +459,7 @@ class BaseHomeCardContent extends StatelessWidget {
           title.replaceAll("<br/>", "\n"),
           style: TextStyle(
               color: Colors.white,
+              fontWeight: FontWeight.w700,
               shadows: [
                 Shadow(
                   offset: Offset(5, 5),
@@ -466,11 +467,10 @@ class BaseHomeCardContent extends StatelessWidget {
                   blurRadius: 10,
                 )
               ],
-              fontWeight: FontWeight.w700,
               fontSize: SizeConfig.cardTitleTextSize),
         ),
         SizedBox(
-          height: 20,
+          height: SizeConfig.blockSizeVertical,
         ),
         Container(
           width: SizeConfig.screenWidth * 0.6,
@@ -478,54 +478,37 @@ class BaseHomeCardContent extends StatelessWidget {
             subtitle,
             style: TextStyle(
                 color: Colors.white,
-                shadows: [
-                  Shadow(
-                    color: shadowColor,
-                    offset: Offset(1, 1),
-                  ),
-                ],
+                // shadows: [
+                //   Shadow(
+                //     color: shadowColor,
+                //     offset: Offset(1, 1),
+                //   ),
+                // ],
                 fontSize: SizeConfig.mediumTextSize * 1.1,
-                fontWeight: FontWeight.w400),
+                fontWeight: FontWeight.w700),
           ),
         ),
         SizedBox(
-          height: 20,
+          height: SizeConfig.blockSizeVertical * 1.5,
         ),
         ClipRRect(
           borderRadius: BorderRadius.circular(100),
-          child: Shimmer(
-            enabled: isHighlighted,
-            direction: ShimmerDirection.fromLeftToRight(),
-            child: GestureDetector(
-              onTap: () {
-                if (isHighlighted == true) {
-                  isHighlighted = false;
-                  localDbProvider.saveHomeTutorialComplete = true;
-                }
-                onPressed();
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 2,
+          child: GestureDetector(
+            onTap: onPressed,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 2,
+                  color: Colors.white,
+                ),
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Text(
+                buttonText,
+                style: TextStyle(
                     color: Colors.white,
-                  ),
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //       color: shadowColor.withOpacity(0.2),
-                  //       blurRadius: 20,
-                  //       offset: Offset(5, 5),
-                  //       spreadRadius: 10),
-                  // ],
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: Text(
-                  buttonText,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: SizeConfig.mediumTextSize * 1.3),
-                ),
+                    fontSize: SizeConfig.mediumTextSize * 1.3),
               ),
             ),
           ),
@@ -588,7 +571,7 @@ class TambolaCardContent extends StatelessWidget {
                 ),
               ],
               fontSize: SizeConfig.mediumTextSize * 1.1,
-              fontWeight: FontWeight.w100),
+              fontWeight: FontWeight.w700),
         ),
         SizedBox(
           height: 30,
@@ -597,7 +580,7 @@ class TambolaCardContent extends StatelessWidget {
           onTap: onPressed,
           child: DailyPicksTimer(
             alignment: MainAxisAlignment.start,
-            bgColor: UiConstants.primaryColor.withOpacity(0.5),
+            bgColor: Color(0xff127C56).withOpacity(0.5),
             replacementWidget: Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
@@ -766,7 +749,7 @@ class PrizeCardContent extends StatelessWidget {
             subtitle,
             style: TextStyle(
                 color: Colors.white,
-                fontSize: SizeConfig.mediumTextSize * 1.3,
+                fontSize: SizeConfig.mediumTextSize * 1.1,
                 fontWeight: FontWeight.w500),
           )
         ],

@@ -1,9 +1,9 @@
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -183,7 +183,7 @@ class _ContactUsState extends State<ContactUsDialog> {
                     if (widget.isUnavailable || !widget.isResident)
                       widget.onClick();
                     else if (!_isCallbackInitiated) {
-                      HapticFeedback.vibrate();
+                      Haptic.vibrate();
                       setState(() {
                         _isCallbackInitiated = true;
                       });

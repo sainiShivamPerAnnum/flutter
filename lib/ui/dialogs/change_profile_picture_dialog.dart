@@ -72,7 +72,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
       if (url != null) {
         isUploaded = true;
         baseProvider.isProfilePictureUpdated = true;
-        //baseProvider.myUserDpUrl = url;
+        //baseProvider.myUsefurDpUrl = url;
         baseProvider.setDisplayPictureUrl(url);
         print(url);
       }

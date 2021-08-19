@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
@@ -20,13 +21,13 @@ import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dar
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -200,7 +201,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                   size: 18.0,
                 ),
           onPressed: () async {
-            HapticFeedback.vibrate();
+            Haptic.vibrate();
             baseProvider.isAugDepositRouteLogicInProgress = true;
             setState(() {});
             ///////////DUMMY///////////////////////////////////
@@ -263,7 +264,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                 ),
           onPressed: () async {
             if (!baseProvider.isAugWithdrawRouteLogicInProgress) {
-              HapticFeedback.vibrate();
+              Haptic.vibrate();
               _onWithdrawalClicked();
               // double amt = await augmontProvider.getGoldBalance();
               // log.debug(amt.toString());
@@ -285,7 +286,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
     else if (_status == AugmontDetailsPage.STATUS_REGISTER)
       return 'REGISTER';
     else
-      return 'DEPOSIT';
+      return 'SAVE';
   }
 
   Future<bool> _onDepositClicked() async {
@@ -424,6 +425,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
           bool _aflag = await dbProvider.updateUserAugmontDetails(
               baseProvider.myUser.uid, baseProvider.augmontDetail);
           if (_aflag) {
+            fcmProvider.removeSubscription(FcmTopic.MISSEDCONNECTION);
             fcmProvider.addSubscription(FcmTopic.GOLDINVESTOR);
           }
         }
@@ -466,7 +468,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
   }
 
   _onWithdrawalClicked() async {
-    HapticFeedback.vibrate();
+    Haptic.vibrate();
     baseProvider.augmontDetail = (baseProvider.augmontDetail == null)
         ? (await dbProvider.getUserAugmontDetails(baseProvider.myUser.uid))
         : baseProvider.augmontDetail;
@@ -495,7 +497,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
         double _w = await dbProvider
             .getNonWithdrawableAugGoldQuantity(baseProvider.myUser.uid);
         _withdrawableGoldQnty = (_w != null)
-            ? _liveGoldQuantityBalance - _w
+            ? math.max(_liveGoldQuantityBalance - _w, 0)
             : _liveGoldQuantityBalance;
       } catch (e) {
         log.error('Failed to fetch non withdrawable gold quantity');
@@ -526,22 +528,6 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
             bankIfsc: baseProvider.augmontDetail.ifsc,
           ),
         );
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //       builder: (ctx) => AugmontWithdrawScreen(
-        //         key: _withdrawalDialogKey2,
-        //         passbookBalance: _liveGoldQuantityBalance,
-        //         withdrawableGoldQnty: _withdrawableGoldQnty,
-        //         sellRate: baseProvider.augmontGoldRates.goldSellPrice,
-        //         onAmountConfirmed: (Map<String, double> amountDetails) {
-        //           _onInitiateWithdrawal(amountDetails['withdrawal_quantity']);
-        //         },
-        //         bankHolderName: baseProvider.augmontDetail.bankHolderName,
-        //         bankAccNo: baseProvider.augmontDetail.bankAccNo,
-        //         bankIfsc: baseProvider.augmontDetail.ifsc,
-        //       ),
-        //     ));
       }
     }
   }
@@ -638,8 +624,8 @@ class FundDetailsTable extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-        left: SizeConfig.blockSizeHorizontal * 5,
-        right: SizeConfig.blockSizeHorizontal * 5,
+        left: SizeConfig.globalMargin,
+        right: SizeConfig.globalMargin,
         bottom: 24,
         top: 16,
       ),

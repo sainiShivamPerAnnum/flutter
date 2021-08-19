@@ -14,11 +14,11 @@ import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'package:felloapp/ui/elements/Parallax-card/game_card_list.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
 import 'package:felloapp/ui/elements/week-winners_board.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -80,7 +80,7 @@ class _GamePageState extends State<GamePage> {
     // });
   }
 
-  Future<void> _onTicketsRefresh() async {
+  Future<void> _onTicketsRefresh() {
     //TODO ADD LOADER
     return dbProvider
         .getUserTicketWallet(baseProvider.myUser.uid)
@@ -98,7 +98,7 @@ class _GamePageState extends State<GamePage> {
     appState = Provider.of<AppState>(context, listen: false);
     return RefreshIndicator(
       onRefresh: () async {
-        await _onTicketsRefresh();
+        _onTicketsRefresh();
       },
       child: Container(
         decoration: BoxDecoration(
@@ -142,7 +142,7 @@ class _GamePageState extends State<GamePage> {
                           ),
                           InkWell(
                             onTap: () async {
-                              HapticFeedback.vibrate();
+                              Haptic.vibrate();
                               AppState.screenStack.add(ScreenItem.dialog);
                               showDialog(
                                 context: context,
@@ -265,7 +265,8 @@ class IdeaSection extends StatelessWidget {
             title: "Want more tickets?",
             action: [
               GameOfferCardButton(
-                onPressed: () => delegate.parseRoute(Uri.parse("finance")),
+                onPressed: () =>
+                    delegate.parseRoute(Uri.parse("finance/augDetails")),
                 title: "Invest",
               ),
               const SizedBox(
@@ -372,24 +373,10 @@ class _TicketCountState extends State<TicketCount>
     Future.delayed(Duration(milliseconds: 2500), () {
       if (mounted)
         setState(() {
-          tagWidth = SizeConfig.screenWidth / 2;
+          tagWidth = SizeConfig.screenWidth * 0.7;
           tagHeight = SizeConfig.cardTitleTextSize * 1.2;
         });
-    })
-        //   .then((_) {
-        // Future.delayed(Duration(seconds: 2), () {
-        //   if (mounted)
-        //     setState(() {
-        //       tagOpacity = 1;
-        //     });
-        // }).then((_) {
-        //   Future.delayed(Duration(seconds: 2), () {
-        //     if (mounted)
-        //       setState(() {
-        //         tagOpacity = 0;
-        //       });
-        //   })
-        .then((_) {
+    }).then((_) {
       Future.delayed(Duration(milliseconds: 2500), () {
         if (mounted)
           setState(() {
@@ -406,8 +393,6 @@ class _TicketCountState extends State<TicketCount>
         });
       });
     });
-    // });
-    // });
   }
 
   @override
@@ -477,7 +462,7 @@ class _TicketCountState extends State<TicketCount>
               opacity: tagOpacity,
               duration: Duration(seconds: 1),
               child: Text(
-                "🏁 ₹ 100 = 1 Ticket",
+                "🏁 ₹ 100 saved = 1 Ticket",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: SizeConfig.mediumTextSize,

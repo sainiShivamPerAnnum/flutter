@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/util/locator.dart';
@@ -53,6 +54,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     else if (AppState.screenStack.length == 1 &&
         _routerDelegate.appState.getCurrentTabIndex != 0 &&
         _baseUtil.isUserOnboarded) {
+      _routerDelegate.appState.setCurrentGameTabIndex = 0;
       _routerDelegate.appState.returnHome();
     } else if (AppState.isOnboardingInProgress) {
       BaseUtil().showNegativeAlert(

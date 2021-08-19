@@ -78,18 +78,15 @@ class ShareInfoModalSheet extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         referralTile(
-                          "Share your personalised link to your friends and family",
+                          "Share a personalised link with your friends and family.",
                           0,
                         ),
                         referralTile(
-                            "Prize balance gets credited as soon as they sign up.",
+                            "Once they signup, both of you receive 10 tickets and ₹25.",
                             SizeConfig.screenWidth * 0.1),
                         referralTile(
-                            "Prize balance gets unlocked when they make their first investment.",
+                            "This balance gets unlocked once you make your first investment of atleast ₹100.",
                             SizeConfig.screenWidth * 0.2),
-                        referralTile(
-                            "you can invest or withdraw that balance afterwards",
-                            SizeConfig.screenWidth * 0.3),
                         SizedBox(height: 20),
                         Container(
                           width: SizeConfig.screenWidth * 0.5,
@@ -99,7 +96,7 @@ class ShareInfoModalSheet extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Want to earn even more with Fello?",
+                                "Want to earn more with Fello?",
                                 style:
                                     GoogleFonts.montserrat(color: Colors.grey),
                               ),

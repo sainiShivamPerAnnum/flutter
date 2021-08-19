@@ -30,19 +30,19 @@ class BaseRemoteConfig {
     'play_screen_first': 'true'
   };
   static const Map<String, String> _TAMBOLA_WIN_CORNER = {
-    'tambola_win_corner': '500'
+    'tambola_win_corner': '1000'
   };
   static const Map<String, String> _TAMBOLA_WIN_TOP = {
-    'tambola_win_top': '1500'
+    'tambola_win_top': '5000'
   };
   static const Map<String, String> _TAMBOLA_WIN_MIDDLE = {
-    'tambola_win_middle': '1500'
+    'tambola_win_middle': '5000'
   };
   static const Map<String, String> _TAMBOLA_WIN_BOTTOM = {
-    'tambola_win_bottom': '1500'
+    'tambola_win_bottom': '5000'
   };
   static const Map<String, String> _TAMBOLA_WIN_FULL = {
-    'tambola_win_full': '10,000'
+    'tambola_win_full': '25,000'
   };
   static const Map<String, String> _REFERRAL_BONUS = {'referral_bonus': '25'};
   static const Map<String, String> _REFERRAL_TICKET_BONUS = {
@@ -73,6 +73,8 @@ class BaseRemoteConfig {
     'min_principle_for_prize': '100'
   };
 
+  static const Map<String, String> _WEEK_NUMBER = {'week_number': '12'};
+
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,
     ..._TAMBOLA_HEADER_FIRST,
@@ -95,7 +97,8 @@ class BaseRemoteConfig {
     ..._AUGMONT_DEPOSITS_ENABLED,
     ..._AUGMONT_DEPOSIT_PERMISSION,
     ..._KYC_COMPLETION_PRIZE,
-    ..._UNLOCK_REFERRAL_AMT
+    ..._UNLOCK_REFERRAL_AMT,
+    ..._WEEK_NUMBER,
   };
 
   static Future<bool> init() async {
@@ -174,6 +177,8 @@ class BaseRemoteConfig {
   static String get TAMBOLA_HEADER_SECOND => _TAMBOLA_HEADER_SECOND.keys.first;
 
   static String get TAMBOLA_HEADER_FIRST => _TAMBOLA_HEADER_FIRST.keys.first;
+
+  static String get WEEK_NUMBER => _WEEK_NUMBER.keys.first;
 
   static int get UNLOCK_REFERRAL_AMT {
     String _val = _UNLOCK_REFERRAL_AMT.keys.first;

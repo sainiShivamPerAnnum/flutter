@@ -62,11 +62,21 @@ class SummaryTicketsDisplay extends StatelessWidget {
                   Container(
                     height: SizeConfig.screenWidth * 0.95,
                     width: SizeConfig.screenWidth,
-                    child: ListView.builder(
-                      itemCount: summary.data[index].boards.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (ctx, i) => summary.data[index].boards[i],
-                    ),
+                    child: summary.data[index].boards.length == 1
+                        ? Container(
+                            padding:
+                                EdgeInsets.only(right: SizeConfig.globalMargin),
+                            width: SizeConfig.screenWidth,
+                            child: Center(
+                              child: summary.data[index].boards[0],
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: summary.data[index].boards.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (ctx, i) =>
+                                summary.data[index].boards[i],
+                          ),
                   ),
                   Divider()
                 ],

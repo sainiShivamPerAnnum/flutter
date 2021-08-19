@@ -134,6 +134,18 @@ class FcmListener extends ChangeNotifier {
       addSubscription(FcmTopic.NEVERINVESTEDBEFORE);
     }
 
+    if (_baseUtil.myUser != null && !_baseUtil.myUser.isAugmontOnboarded)
+      addSubscription(FcmTopic.MISSEDCONNECTION);
+
+    if (_baseUtil.myUser != null &&
+        _baseUtil.myUser.isAugmontOnboarded &&
+        _baseUtil.userFundWallet != null &&
+        _baseUtil.userFundWallet.augGoldBalance != null &&
+        _baseUtil.userFundWallet.augGoldBalance > 300)
+      addSubscription(FcmTopic.FREQUENTFLYER)
+          .then((value) => log.debug("Added frequent flyer subscription"));
+
+
     if (_baseUtil.userTicketWallet != null &&
         _baseUtil.userTicketWallet.getActiveTickets() > 0 &&
         _baseUtil.myUser.userPreferences

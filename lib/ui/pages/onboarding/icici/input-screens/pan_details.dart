@@ -2,6 +2,7 @@ import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/data_provider.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -64,7 +65,7 @@ class PANPage extends StatelessWidget {
                         label: Text("Why is my PAN required?"),
                         backgroundColor: UiConstants.chipColor,
                         onPressed: () {
-                          HapticFeedback.vibrate();
+                          Haptic.vibrate();
                           showDialog(
                               context: context,
                               builder: (BuildContext context) => MoreInfoDialog(
@@ -77,7 +78,7 @@ class PANPage extends StatelessWidget {
                         label: Text("Where do I find it?"),
                         backgroundColor: UiConstants.chipColor,
                         onPressed: () {
-                          HapticFeedback.vibrate();
+                          Haptic.vibrate();
                           showDialog(
                               context: context,
                               builder: (BuildContext context) => MoreInfoDialog(
