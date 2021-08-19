@@ -213,7 +213,7 @@ class _HomePageState extends State<HomePage> {
             title: card.title,
             subtitle: card.subtitle,
             buttonText: card.btnText,
-            isHighlighted: (baseProvider.show_home_tutorial),
+            isHighlighted: false,
             onPressed: () async {
               Haptic.vibrate();
               delegate.parseRoute(Uri.parse(card.actionUri));
@@ -495,39 +495,22 @@ class BaseHomeCardContent extends StatelessWidget {
         ),
         ClipRRect(
           borderRadius: BorderRadius.circular(100),
-          child: Shimmer(
-            enabled: isHighlighted,
-            direction: ShimmerDirection.fromLeftToRight(),
-            child: GestureDetector(
-              onTap: () {
-                if (isHighlighted == true) {
-                  isHighlighted = false;
-                  localDbProvider.saveHomeTutorialComplete = true;
-                }
-                onPressed();
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 2,
+          child: GestureDetector(
+            onTap: () => onPressed,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 2,
+                  color: Colors.white,
+                ),
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Text(
+                buttonText,
+                style: TextStyle(
                     color: Colors.white,
-                  ),
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //       color: shadowColor.withOpacity(0.2),
-                  //       blurRadius: 20,
-                  //       offset: Offset(5, 5),
-                  //       spreadRadius: 10),
-                  // ],
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: Text(
-                  buttonText,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: SizeConfig.mediumTextSize * 1.3),
-                ),
+                    fontSize: SizeConfig.mediumTextSize * 1.3),
               ),
             ),
           ),

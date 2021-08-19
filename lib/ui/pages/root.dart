@@ -123,16 +123,16 @@ class _RootState extends State<Root> {
   _initialize() {
     if (!_isInitialized) {
       _isInitialized = true;
-      lclDbProvider.isHomeTutorialComplete.then((value) {
-        if (value == 0) {
+      lclDbProvider.showHomeTutorial.then((value) {
+        if (value) {
           //show tutorial
-          baseProvider.show_home_tutorial = true;
-          // _navBarItems[2].showFocus = true;
+          lclDbProvider.setShowHomeTutorial = false;
+          delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
           setState(() {});
         }
       });
-      _initAdhocNotifications();
 
+      _initAdhocNotifications();
       // show security modal
       if (baseProvider.show_security_prompt &&
           baseProvider.myUser.isAugmontOnboarded &&
