@@ -134,10 +134,10 @@ class FcmListener extends ChangeNotifier {
       addSubscription(FcmTopic.NEVERINVESTEDBEFORE);
     }
 
-    if (_baseUtil.userFundWallet.augGoldBalance > 300)
+    if (_baseUtil.userFundWallet != null && _baseUtil.userFundWallet.augGoldBalance >= 300)
       addSubscription(FcmTopic.FREQUENTFLYER);
 
-    if (!_baseUtil.myUser.isAugmontOnboarded)
+    if (_baseUtil.myUser != null && !_baseUtil.myUser.isAugmontOnboarded)
       addSubscription(FcmTopic.MISSEDCONNECTION);
 
     if (_baseUtil.userTicketWallet != null &&

@@ -61,7 +61,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         int t = (_isEnabledStr != null) ? int.parse(_isEnabledStr) : 1;
         _isDepositsEnabled = (t == 1);
         validityTimer = Timer.periodic(Duration(seconds: 1), (timer) {
-          if(validDuration==0) {
+          if (validDuration == 0) {
             timer.cancel();
             backButtonDispatcher.didPopRoute();
           }
@@ -69,7 +69,6 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
             validDuration--;
           });
         });
-
       } catch (e) {
         _isDepositsEnabled = true;
       }
@@ -186,10 +185,6 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
             SizedBox(
               height: SizeConfig.screenWidth * 0.01,
             ),
-            Text(
-              'Gold rate valid for ${Duration(seconds: validDuration).inMinutes.toString().padLeft(2,'0')}:${Duration(seconds: validDuration%60).inSeconds.toString().padLeft(2,'0')}',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
             SizedBox(
               height: SizeConfig.screenWidth * 0.01,
             ),
@@ -298,7 +293,14 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                           style: TextStyle(
                               fontSize: 16, color: UiConstants.accentColor)),
                     ))
-                : Container()
+                : Container(),
+            // Center(
+            //   child: Text(
+            //     'Gold rate valid for ${Duration(seconds: validDuration).inMinutes.toString().padLeft(2,'0')}:${Duration(seconds: validDuration%60).inSeconds.toString().padLeft(2,'0')}s',
+            //     style: TextStyle(fontWeight: FontWeight.w400, color: Colors.blueGrey),
+            //     textAlign: TextAlign.center,
+            //   )
+            // ),
           ],
         ),
       ),
@@ -336,7 +338,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _buildRateRow(
+          _buildRateRow2(
               'Rate per gram:',
               '₹${widget.currentRates.goldBuyPrice.toStringAsFixed(2)}',
               'This is the current price of 1 gram of gold'),
@@ -348,6 +350,65 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
               'SGST:',
               '${widget.currentRates.sgstPercent.toString()}%',
               'This is the Goods and Services Tax(GST) charged by the state government'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRateRow2(String title, String value, String info) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
+            ),
+          ),
+          Expanded(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InkWell(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      value,
+                      style:
+                          TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.grey,
+                      size: SizeConfig.mediumTextSize * 1.4,
+                    )
+                  ],
+                ),
+                onTap: () {
+                  Haptic.vibrate();
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) => MoreInfoDialog(
+                            title: title,
+                            text: info,
+                          ));
+                },
+              ),
+              Text(
+                'Valid for ${Duration(seconds: validDuration).inMinutes.toString().padLeft(2, '0')}:${Duration(seconds: validDuration % 60).inSeconds.toString().padLeft(2, '0')}s',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400, color: Colors.blueGrey),
+                textAlign: TextAlign.start,
+              )
+            ],
+          ))
         ],
       ),
     );
@@ -366,33 +427,33 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
             ),
           ),
           Expanded(
-              child: Row(
-            children: [
-              Text(
-                value,
-                style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
-              ),
-              SizedBox(
-                width: 4,
-              ),
-              InkWell(
-                child: Icon(
-                  Icons.info_outline,
-                  color: Colors.grey,
-                  size: SizeConfig.mediumTextSize * 1.4,
-                ),
+              child: InkWell(
                 onTap: () {
                   Haptic.vibrate();
                   showDialog(
                       context: context,
                       builder: (BuildContext context) => MoreInfoDialog(
-                            title: title,
-                            text: info,
-                          ));
+                        title: title,
+                        text: info,
+                      ));
                 },
-              )
-            ],
-          ))
+                child: Row(
+                  children: [
+                    Text(
+                      value,
+                      style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.grey,
+                      size: SizeConfig.mediumTextSize * 1.4,
+                    )
+                  ],
+                ),
+              ))
         ],
       ),
     );
