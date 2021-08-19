@@ -105,7 +105,8 @@ class _FinancePageState extends State<FinancePage>
                               height: 16,
                             ),
                             Text(
-                              "ICICI Prudential Fund",
+                              "ICICI Prudential Liquid Mutual Fund",
+                              textAlign: TextAlign.center,
                               style: GoogleFonts.montserrat(
                                 color: Colors.white,
                                 fontSize: SizeConfig.cardTitleTextSize,

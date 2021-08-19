@@ -660,7 +660,7 @@ class _CloseCardState extends State<CloseCard> {
                         child: Wrap(
                           children: [
                             Text(
-                              "Brag  📢",
+                              "Share  📢",
                               style: GoogleFonts.montserrat(
                                   fontSize: SizeConfig.mediumTextSize,
                                   color: Colors.white,
