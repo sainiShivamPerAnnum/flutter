@@ -58,6 +58,7 @@ class FAQCardState extends State<FAQCard> {
 
   _buildItems() {
     return Container(
+      padding: EdgeInsets.all(20),
       width: SizeConfig.screenWidth,
       child: Column(
         children: [
@@ -74,6 +75,7 @@ class FAQCardState extends State<FAQCard> {
                     widget.faqHeaders[index]),
                 isExpanded: detStatus[index],
                 body: Container(
+                  // padding: EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -87,7 +89,7 @@ class FAQCardState extends State<FAQCard> {
                     ],
                   ),
                 ),
-              ),>
+              ),
             ),
             expansionCallback: (i, isOpen) {
               setState(() {

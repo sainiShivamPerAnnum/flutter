@@ -314,7 +314,7 @@ class _ShareCardState extends State<ShareCard> {
         ['$directory/fello-reward-$dt.png'],
         subject: 'Fello Rewards',
         text:
-            'Fello really is a very rewarding way to invest in assets and play games! You should try it out too: https://fello.in/download/app',
+            'Fello is a really rewarding way to play games and invest in assets! Save and play with me and get rewarded: https://fello.in/download/app',
       ).catchError((onError) {
         if (baseProvider.myUser.uid != null) {
           Map<String, dynamic> errorDetails = {
