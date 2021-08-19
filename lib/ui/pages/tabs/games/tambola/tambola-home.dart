@@ -530,7 +530,7 @@ class _TambolaHomeState extends State<TambolaHome> {
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-                            checkForMoreItems(ticketSummaryData[index]),
+                            // checkForMoreItems(ticketSummaryData[index]),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -1149,14 +1149,18 @@ class GameAppBar extends StatefulWidget {
 
 class _GameAppBarState extends State<GameAppBar> {
   bool _highlight = false;
+  bool _isInit = false;
 
   @override
   Widget build(BuildContext context) {
     final lclDbModel = Provider.of<LocalDBModel>(context);
-    lclDbModel.showTambolaTutorial.then((flag) {
-      _highlight = flag;
-      setState(() {});
-    });
+    if(!_isInit) {
+      lclDbModel.showTambolaTutorial.then((flag) {
+        _highlight = flag;
+        _isInit = true;
+        setState(() {});
+      });
+    }
     return Container(
       height: SizeConfig.screenWidth * 0.14,
       child: Row(
