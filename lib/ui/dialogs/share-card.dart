@@ -19,7 +19,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ShareCard extends StatefulWidget {
   final String username, dpUrl;
@@ -306,25 +306,48 @@ class _ShareCardState extends State<ShareCard> {
       setState(() {
         isCapturing = false;
       });
-      final directory = (await getExternalStorageDirectory()).path;
-      String dt = DateTime.now().toString();
-      File imgg = new File('$directory/fello-reward-$dt.png');
-      imgg.writeAsBytesSync(image);
-      Share.shareFiles(
-        ['$directory/fello-reward-$dt.png'],
-        subject: 'Fello Rewards',
-        text:
-            'Fello is a really rewarding way to play games and invest in assets! Save and play with me and get rewarded: https://fello.in/download/app',
-      ).catchError((onError) {
-        if (baseProvider.myUser.uid != null) {
-          Map<String, dynamic> errorDetails = {
-            'Error message': 'Share reward card in card.dart failed'
-          };
-          dbProvider.logFailure(baseProvider.myUser.uid,
-              FailType.FelloRewardCardShareFailed, errorDetails);
-        }
-        print(onError);
-      });
+      if(Platform.isAndroid) {
+        final directory = (await getExternalStorageDirectory()).path;
+        String dt = DateTime.now().toString();
+        File imgg = new File('$directory/fello-reward-$dt.png');
+        imgg.writeAsBytesSync(image);
+        Share.shareFiles(
+            [imgg.path],
+            subject: 'Fello Rewards',
+            text:
+                'Fello is a really rewarding way to play games and invest in assets! Save and play with me and get rewarded: https://fello.in/download/app',
+          ).catchError((onError) {
+            if (baseProvider.myUser.uid != null) {
+              Map<String, dynamic> errorDetails = {
+                'Error message': 'Share reward card in card.dart failed'
+              };
+              dbProvider.logFailure(baseProvider.myUser.uid,
+                  FailType.FelloRewardCardShareFailed, errorDetails);
+            }
+            print(onError);
+          });
+      } else if(Platform.isIOS) {
+        final directory = (await getTemporaryDirectory());
+        if (!await directory.exists()) await directory.create(recursive: true);
+        String dt = DateTime.now().toString();
+        File imgg = new File('${directory.path}/fello-reward-$dt.png');
+        imgg.writeAsBytesSync(image);
+        Share.shareFiles(
+            [imgg.path],
+            subject: 'Fello Rewards',
+            text:
+                'Fello is a really rewarding way to play games and invest in assets! Save and play with me and get rewarded: https://fello.in/download/app',
+          ).catchError((onError) {
+            if (baseProvider.myUser.uid != null) {
+              Map<String, dynamic> errorDetails = {
+                'Error message': 'Share reward card in card.dart failed'
+              };
+              dbProvider.logFailure(baseProvider.myUser.uid,
+                  FailType.FelloRewardCardShareFailed, errorDetails);
+            }
+            print(onError);
+          });
+      }
     } catch (e) {
       // backButtonDispatcher.didPopRoute();
       print(e.toString());

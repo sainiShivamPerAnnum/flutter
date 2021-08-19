@@ -26,7 +26,8 @@ import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:share/share.dart';
+// import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 class FCard extends StatefulWidget {
   static const double nominalOpenHeight = 400;
