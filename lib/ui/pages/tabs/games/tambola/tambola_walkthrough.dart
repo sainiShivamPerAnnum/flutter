@@ -5,6 +5,8 @@ import 'package:felloapp/ui/elements/tambola-global/prize_section.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Walkthrough extends StatelessWidget {
@@ -67,13 +69,16 @@ class Walkthrough extends StatelessWidget {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: () {
+          InkWell(
+            child: SvgPicture.asset("images/support-log.svg",
+                height: kToolbarHeight * 0.6, color: Colors.white),
+            onTap: () {
+              HapticFeedback.vibrate();
               delegate.appState.currentAction =
                   PageAction(state: PageState.addPage, page: SupportPageConfig);
             },
-            icon: Icon(Icons.contact_support_outlined),
           ),
+          SizedBox(width: SizeConfig.blockSizeHorizontal)
         ],
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.white),

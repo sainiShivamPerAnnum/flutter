@@ -5,7 +5,10 @@ enum FcmTopic {
   TAMBOLAPLAYER,
   DAILYPICKBROADCAST,
   PROMOTION,
-  VERSION
+  VERSION,
+  REFERRER,
+  MISSEDCONNECTION,
+  FREQUENTFLYER
 }
 
 extension ParseToString on FcmTopic {

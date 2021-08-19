@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
@@ -16,6 +17,7 @@ import 'package:felloapp/ui/modals/share_info_modal.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -215,6 +217,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
 class ShowEmailVerifyLink extends StatelessWidget {
   const ShowEmailVerifyLink({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     BaseUtil baseProvider = Provider.of<BaseUtil>(context);
@@ -239,6 +242,7 @@ class ShowEmailVerifyLink extends StatelessWidget {
 
 class Social extends StatelessWidget {
   const Social();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -307,6 +311,7 @@ class TermsRow extends StatelessWidget {
             onTap: () {
               Haptic.vibrate();
               BaseUtil.launchUrl('https://fello.in/policy/tnc');
+
               // delegate.appState.currentAction =
               //     PageAction(state: PageState.addPage, page: TncPageConfig);
             },
@@ -411,6 +416,7 @@ class AppVersionRow extends StatelessWidget {
 
 class ShareCard extends StatelessWidget {
   const ShareCard();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -553,6 +559,7 @@ class ShareCard extends StatelessWidget {
 
 class ShareOptions extends StatefulWidget {
   const ShareOptions();
+
   @override
   _ShareOptionsState createState() => _ShareOptionsState();
 }
@@ -562,6 +569,7 @@ class _ShareOptionsState extends State<ShareOptions> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   RazorpayModel rProvider;
+  FcmListener fcmProvider;
   String referral_bonus =
       BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
   String referral_ticket_bonus = BaseRemoteConfig.remoteConfig
@@ -591,6 +599,7 @@ class _ShareOptionsState extends State<ShareOptions> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     rProvider = Provider.of<RazorpayModel>(context, listen: false);
+    fcmProvider = Provider.of<FcmListener>(context, listen: false);
     _init();
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -632,6 +641,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                     size: 18.0,
                   ),
             onTap: () async {
+              fcmProvider.addSubscription(FcmTopic.REFERRER);
               BaseAnalytics.analytics.logShare(
                   contentType: 'referral',
                   itemId: baseProvider.myUser.uid,
@@ -706,6 +716,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                         ),
                   onTap: () async {
                     ////////////////////////////////
+                    fcmProvider.addSubscription(FcmTopic.REFERRER);
                     BaseAnalytics.analytics.logShare(
                         contentType: 'referral',
                         itemId: baseProvider.myUser.uid,

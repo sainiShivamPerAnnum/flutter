@@ -1,3 +1,4 @@
+import 'package:felloapp/main.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -16,14 +17,20 @@ class IntegratedIciciDisabledState extends State<IntegratedIciciDisabled> {
   @override
   Widget build(BuildContext context) {
     _width = MediaQuery.of(context).size.width;
-    return Dialog(
-      insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
+    return WillPopScope(
+      onWillPop: () {
+        backButtonDispatcher.didPopRoute();
+        return Future.value(true);
+      },
+      child: Dialog(
+        insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        elevation: 0.0,
+        backgroundColor: Colors.white,
+        child: dialogContent(context),
       ),
-      elevation: 0.0,
-      backgroundColor: Colors.white,
-      child: dialogContent(context),
     );
   }
 

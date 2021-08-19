@@ -635,8 +635,19 @@ class _CloseCardState extends State<CloseCard> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     InkWell(
-                      onTap: () async {
-                        _buildShareCard();
+                      onTap: () {
+                        backButtonDispatcher.didPopRoute();
+                        AppState.screenStack.add(ScreenItem.dialog);
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => ShareCard(
+                            dpUrl: baseProvider.myUserDpUrl,
+                            claimChoice: widget.claimtype,
+                            prizeAmount:
+                                baseProvider.userFundWallet.prizeBalance,
+                            username: baseProvider.myUser.name,
+                          ),
+                        );
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -679,8 +690,6 @@ class _CloseCardState extends State<CloseCard> {
     if (claimText.isEmpty && widget.isClaimed) {
       getClaimChoice();
     }
-
-    print(widget.claimtype);
     return widget.isClaimed ? _buildEndCard(context) : _buildBeginCard(context);
   }
 
@@ -941,3 +950,85 @@ class _CloseCardState extends State<CloseCard> {
     }
   }
 }
+
+
+// Positioned(
+//               bottom: 0,
+//               child: Container(
+//                 color: Colors.black.withOpacity(0.8),
+//                 width: SizeConfig.screenWidth,
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                   children: [
+//                     isCapturing
+//                         ? SpinKitCircle(color: Colors.white)
+//                         : Column(
+//                             children: [
+//                               IconButton(
+//                                 onPressed: () async {
+//                                   Uint8List image = await captureCard();
+//                                   if (image != null) shareCard(image);
+//                                 },
+//                                 icon: Icon(Icons.ios_share_rounded,
+//                                     color: Colors.white),
+//                               ),
+//                               Padding(
+//                                 padding: const EdgeInsets.all(8.0),
+//                                 child: Text(
+//                                   "Share",
+//                                   style: GoogleFonts.montserrat(
+//                                     color: Colors.white,
+//                                     fontSize: SizeConfig.mediumTextSize,
+//                                   ),
+//                                 ),
+//                               ),
+//                             ],
+//                           ),
+//                     isSaving
+//                         ? SpinKitCircle(
+//                             color: Colors.white,
+//                           )
+//                         : Column(
+//                             children: [
+//                               IconButton(
+//                                   onPressed: () async {
+//                                     Uint8List image = await captureCard();
+//                                     if (image != null) saveCard(image);
+//                                   },
+//                                   icon: Icon(Icons.save_alt_rounded,
+//                                       color: Colors.white)),
+//                               Padding(
+//                                 padding: const EdgeInsets.all(8.0),
+//                                 child: Text(
+//                                   "Save",
+//                                   style: GoogleFonts.montserrat(
+//                                     color: Colors.white,
+//                                     fontSize: SizeConfig.mediumTextSize,
+//                                   ),
+//                                 ),
+//                               ),
+//                             ],
+//                           ),
+//                     Column(
+//                       children: [
+//                         IconButton(
+//                             onPressed: () =>
+//                                 backButtonDispatcher.didPopRoute(),
+//                             icon: Icon(Icons.close_rounded,
+//                                 color: Colors.white)),
+//                         Padding(
+//                           padding: const EdgeInsets.all(8.0),
+//                           child: Text(
+//                             "Cancel",
+//                             style: GoogleFonts.montserrat(
+//                               color: Colors.white,
+//                               fontSize: SizeConfig.mediumTextSize,
+//                             ),
+//                           ),
+//                         ),
+//                       ],
+//                     )
+//                   ],
+//                 ),
+//               ),
+//             )

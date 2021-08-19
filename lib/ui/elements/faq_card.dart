@@ -87,7 +87,7 @@ class FAQCardState extends State<FAQCard> {
                     ],
                   ),
                 ),
-              ),
+              ),>
             ),
             expansionCallback: (i, isOpen) {
               setState(() {
