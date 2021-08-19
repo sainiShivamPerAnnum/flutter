@@ -109,15 +109,18 @@ class _ProfilePageState extends State<ProfilePage> {
                               children: [
                                 ListTile(
                                   contentPadding: EdgeInsets.symmetric(
-                                      horizontal: SizeConfig.globalMargin),
+                                      horizontal:
+                                          SizeConfig.globalMargin * 1.4),
                                   leading: Icon(
                                     Icons.account_circle_outlined,
-                                    size: SizeConfig.globalMargin,
+                                    size: SizeConfig.blockSizeHorizontal * 6,
                                     color: UiConstants.primaryColor,
                                   ),
                                   title: Text(
                                     "Username",
-                                    style: GoogleFonts.montserrat(),
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: SizeConfig.mediumTextSize,
+                                    ),
                                   ),
                                   onTap: () {
                                     if (baseProvider.myUser.username == null)

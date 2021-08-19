@@ -4,14 +4,17 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/integrated_icici_disabled_dialog.dart';
 import 'package:felloapp/ui/elements/plots/funds_chart_view.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'augmont/augmont-details.dart';
@@ -65,14 +68,62 @@ class _FinancePageState extends State<FinancePage>
               AppState.screenStack.add(ScreenItem.dialog);
               showDialog(
                 context: context,
-                builder: (BuildContext context) => Dialog(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      "images/unavailable.png",
+                builder: (BuildContext context) => WillPopScope(
+                  onWillPop: () async {
+                    backButtonDispatcher.didPopRoute();
+                    return Future.value(true);
+                  },
+                  child: Dialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Container(
+                      height: SizeConfig.screenWidth,
                       width: SizeConfig.screenWidth * 0.8,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                            image: AssetImage("images/cunavailable.png"),
+                            fit: BoxFit.cover),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.globalMargin),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Spacer(flex: 1),
+                            Container(
+                              height: SizeConfig.screenWidth * 0.3,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Color(0xffE6E6E6),
+                              ),
+                              padding: EdgeInsets.all(10),
+                              child: Image.asset("images/icici.png"),
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            Text(
+                              "ICICI Prudential Fund",
+                              style: GoogleFonts.montserrat(
+                                color: Colors.white,
+                                fontSize: SizeConfig.cardTitleTextSize,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            Spacer(flex: 1),
+                            Text(
+                              Assets.integratedICICIUnavailable,
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.montserrat(
+                                  color: Colors.white,
+                                  fontSize: SizeConfig.largeTextSize * 0.8),
+                            ),
+                            Spacer(flex: 1),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
