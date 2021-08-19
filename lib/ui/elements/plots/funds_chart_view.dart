@@ -112,7 +112,7 @@ class _FundsChartViewState extends State<FundsChartView> {
       ChartFundItem(
           fundName: "Locked Balance",
           action: false,
-          color: Color(0xff150485),
+          color: Colors.grey[500],
           description: [
             'Referral rewards could be locked due to either of the reasons: \n\n• You were referred by your friend but you haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet. \n\n• You referred your friends but they haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet.'
           ],
@@ -207,11 +207,11 @@ class _FundsChartViewState extends State<FundsChartView> {
                               color: chartData[i].color,
                               titleTextStyle: TextStyle(
                                 fontSize: SizeConfig.smallTextSize * 1.2,
-                                color: UiConstants.textColor,
+                                color: UiConstants.textColor.withOpacity(0.5),
                               ),
                               bodyTextStyle: TextStyle(
                                 fontSize: SizeConfig.mediumTextSize * 1.1,
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w500,
                                 color: UiConstants.textColor,
                               ),
                               isHighlighted: chartData[i].isHighlighted,

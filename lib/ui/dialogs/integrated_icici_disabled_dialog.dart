@@ -1,9 +1,11 @@
 import 'package:felloapp/main.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class IntegratedIciciDisabled extends StatefulWidget {
   @override
@@ -28,7 +30,7 @@ class IntegratedIciciDisabledState extends State<IntegratedIciciDisabled> {
           borderRadius: BorderRadius.circular(20.0),
         ),
         elevation: 0.0,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         child: dialogContent(context),
       ),
     );
@@ -36,49 +38,56 @@ class IntegratedIciciDisabledState extends State<IntegratedIciciDisabled> {
 
   dialogContent(BuildContext context) {
     return Stack(
-        overflow: Overflow.visible,
-        alignment: Alignment.topCenter,
-        children: <Widget>[
-          SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Padding(
-                padding:
-                    EdgeInsets.only(top: 30, bottom: 40, left: 35, right: 35),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      child: Image(
-                        image: AssetImage(Assets.onboardingSlide[2]),
-                        fit: BoxFit.contain,
-                      ),
-                      width: 150,
-                      height: 150,
-                    ),
-                    Text(
-                      'Currently Unavailable',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
-                          color: UiConstants.primaryColor),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      Assets.integratedICICIUnavailable,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w300,
-                          color: UiConstants.accentColor),
-                    ),
-                  ],
-                )),
-          )
-        ]);
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          height: SizeConfig.screenHeight * 0.34,
+          margin: EdgeInsets.symmetric(
+              horizontal: SizeConfig.blockSizeHorizontal * 3),
+        ),
+        Transform.translate(
+          offset: Offset(0, -SizeConfig.screenHeight * 0.1),
+          child: Container(
+              margin: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.blockSizeHorizontal * 5),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image(
+                    image: AssetImage(Assets.onboardingSlide[2]),
+                    fit: BoxFit.contain,
+                    width: SizeConfig.screenWidth * 0.6,
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'Currently Unavailable',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.montserrat(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w500,
+                        color: UiConstants.primaryColor),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    Assets.integratedICICIUnavailable,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.montserrat(
+                        fontSize: SizeConfig.largeTextSize,
+                        height: 1.5,
+                        fontWeight: FontWeight.w300,
+                        color: UiConstants.accentColor),
+                  ),
+                ],
+              )),
+        ),
+      ],
+    );
   }
 }
