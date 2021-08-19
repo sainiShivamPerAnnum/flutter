@@ -35,15 +35,15 @@ class FAQCardState extends State<FAQCard> {
                 spreadRadius: 5,
                 blurRadius: 5)
           ]),
-      margin: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
+      margin: EdgeInsets.all(SizeConfig.globalMargin),
       padding: EdgeInsets.only(top: 12, left: 10),
       child: Column(
         children: [
           Text(
             "FAQs",
             style: GoogleFonts.montserrat(
-              color: Colors.black54,
-              fontSize: 30,
+              color: Colors.black,
+              fontSize: SizeConfig.largeTextSize,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -55,45 +55,48 @@ class FAQCardState extends State<FAQCard> {
   }
 
   _buildItems() {
-    return Container(
-      width: SizeConfig.screenWidth,
-      child: Column(
-        children: [
-          ExpansionPanelList(
-            animationDuration: Duration(milliseconds: 600),
-            expandedHeaderPadding: EdgeInsets.all(0),
-            dividerColor: Colors.grey.withOpacity(0.2),
-            elevation: 0,
-            children: List.generate(
-              widget.faqHeaders.length,
-                  (index) => ExpansionPanel(
-                canTapOnHeader: true,
-                headerBuilder: (ctx, isOpen) =>
-                    _prizeFAQHeader(widget.faqHeaders[index]),
-                isExpanded: detStatus[index],
-                body: Container(
-                  alignment: Alignment.centerLeft,
-                  margin: EdgeInsets.only(
-                    right: SizeConfig.blockSizeHorizontal * 6,
-                  ),
-                  child: Text(
-                    widget.faqResponses[index],
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      height: 1.5,
-                      fontSize: SizeConfig.mediumTextSize,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        width: SizeConfig.screenWidth,
+        child: Column(
+          children: [
+            ExpansionPanelList(
+              animationDuration: Duration(milliseconds: 600),
+              expandedHeaderPadding: EdgeInsets.all(0),
+              dividerColor: Colors.grey.withOpacity(0.2),
+              elevation: 0,
+              children: List.generate(
+                widget.faqHeaders.length,
+                (index) => ExpansionPanel(
+                  canTapOnHeader: true,
+                  headerBuilder: (ctx, isOpen) =>
+                      _prizeFAQHeader(widget.faqHeaders[index]),
+                  isExpanded: detStatus[index],
+                  body: Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(
+                      right: SizeConfig.blockSizeHorizontal * 6,
+                    ),
+                    child: Text(
+                      widget.faqResponses[index],
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        height: 1.5,
+                        fontSize: SizeConfig.mediumTextSize,
+                      ),
                     ),
                   ),
                 ),
               ),
+              expansionCallback: (i, isOpen) {
+                setState(() {
+                  detStatus[i] = !isOpen;
+                });
+              },
             ),
-            expansionCallback: (i, isOpen) {
-              setState(() {
-                detStatus[i] = !isOpen;
-              });
-            },
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

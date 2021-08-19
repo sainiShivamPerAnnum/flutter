@@ -163,98 +163,118 @@ class _FinancePageState extends State<FinancePage>
           borderRadius: SizeConfig.homeViewBorder,
         ),
         child: SafeArea(
-          child: ClipRRect(
-            borderRadius: SizeConfig.homeViewBorder,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.globalMargin,
-                  vertical: SizeConfig.blockSizeVertical),
-              child: CustomScrollView(
-                slivers: [
-                  SliverList(
-                      delegate: SliverChildListDelegate([
-                    Container(
-                      height: kToolbarHeight / 1.6,
-                    ),
-                    Consumer<BaseUtil>(
-                      builder: (context, baseUtil, child) {
-                        return Container(
-                          child: baseProvider.userFundWallet
-                                      .getEstTotalWealth() >
-                                  0
-                              ? FundsChartView(
-                                  userFundWallet: baseProvider.userFundWallet,
-                                  goldMoreInfo: goldMoreInfoStr,
-                                )
-                              : const ZeroBalView(),
-                        );
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: SizeConfig.blockSizeVertical),
-                      child: Divider(
-                        color: Colors.black38,
-                      ),
-                    ),
-                    Text(
-                      "Discover Assets",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: SizeConfig.largeTextSize,
-                        color: UiConstants.textColor,
-                      ),
-                    ),
+          child: Stack(
+            children: [
+              ClipRRect(
+                borderRadius: SizeConfig.homeViewBorder,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.globalMargin,
+                      vertical: SizeConfig.blockSizeVertical),
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverList(
+                          delegate: SliverChildListDelegate([
+                        Container(
+                          height: kToolbarHeight / 1.6,
+                        ),
+                        Consumer<BaseUtil>(
+                          builder: (context, baseUtil, child) {
+                            return Container(
+                              child: baseProvider.userFundWallet
+                                          .getEstTotalWealth() >
+                                      0
+                                  ? FundsChartView(
+                                      userFundWallet:
+                                          baseProvider.userFundWallet,
+                                      goldMoreInfo: goldMoreInfoStr,
+                                    )
+                                  : const ZeroBalView(),
+                            );
+                          },
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: SizeConfig.blockSizeVertical),
+                          child: Divider(
+                            color: Colors.black38,
+                          ),
+                        ),
+                        Text(
+                          "Discover Assets",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: SizeConfig.largeTextSize,
+                            color: UiConstants.textColor,
+                          ),
+                        ),
                         // Align(
                         //   alignment: Alignment.bottomCenter,
                         //   child: Text('100 saved = 1 Ticket'),
                         // )
-                  ])),
-                  SliverGrid(
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 275,
-                      childAspectRatio: 2 / 3,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20,
-                    ),
-                    delegate: SliverChildListDelegate(
-                      [
-                        // BaseUtil.buildShowcaseWrapper(
-                        //   _showcaseFooter,
-                        //   'Choose any of the assets to deposit in. Fello lists strong proven assets with great historical returns.',
-                        //
-                        // ),
-                        GestureDetector(
-                          onTap: () => appState.currentAction = PageAction(
-                              state: PageState.addPage,
-                              page: AugDetailsPageConfig),
-                          child: FundWidget(
-                            fund: fundList[1],
-                            isAvailable: (AugmontDetailsPage.checkAugmontStatus(
-                                    baseProvider.myUser) !=
-                                AugmontDetailsPage.STATUS_UNAVAILABLE),
-                          ),
+                      ])),
+                      SliverGrid(
+                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 275,
+                          childAspectRatio: 2 / 3,
+                          crossAxisSpacing: 20,
+                          mainAxisSpacing: 20,
                         ),
-                        GestureDetector(
-                          onTap: _onTapDown,
-                          child: Transform.scale(
-                            scale: _scale,
-                            child: FundWidget(
-                              fund: fundList[0],
-                              isAvailable:
-                                  (MFDetailsPage.checkICICIDespositStatus(
-                                          baseProvider.myUser) !=
-                                      MFDetailsPage.STATUS_UNAVAILABLE),
+                        delegate: SliverChildListDelegate(
+                          [
+                            // BaseUtil.buildShowcaseWrapper(
+                            //   _showcaseFooter,
+                            //   'Choose any of the assets to deposit in. Fello lists strong proven assets with great historical returns.',
+                            //
+                            // ),
+                            GestureDetector(
+                              onTap: () => appState.currentAction = PageAction(
+                                  state: PageState.addPage,
+                                  page: AugDetailsPageConfig),
+                              child: FundWidget(
+                                fund: fundList[1],
+                                isAvailable:
+                                    (AugmontDetailsPage.checkAugmontStatus(
+                                            baseProvider.myUser) !=
+                                        AugmontDetailsPage.STATUS_UNAVAILABLE),
+                              ),
                             ),
-                          ),
+                            GestureDetector(
+                              onTap: _onTapDown,
+                              child: Transform.scale(
+                                scale: _scale,
+                                child: FundWidget(
+                                  fund: fundList[0],
+                                  isAvailable:
+                                      (MFDetailsPage.checkICICIDespositStatus(
+                                              baseProvider.myUser) !=
+                                          MFDetailsPage.STATUS_UNAVAILABLE),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
+              Positioned(
+                bottom: 5,
+                width: SizeConfig.screenWidth,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "₹ 100 saved = 1 Ticket",
+                    style: TextStyle(
+                        color: Colors.blueGrey[300],
+                        fontSize: SizeConfig.mediumTextSize),
+                  ),
+                ),
+              )
+            ],
           ),
         ),
       ),

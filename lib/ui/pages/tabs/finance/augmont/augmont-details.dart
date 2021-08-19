@@ -173,10 +173,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
   Widget _buildSaveButton() {
     return Container(
       width: SizeConfig.screenWidth,
-      height: MediaQuery
-          .of(context)
-          .size
-          .height * 0.07,
+      height: MediaQuery.of(context).size.height * 0.07,
       decoration: BoxDecoration(
         gradient: new LinearGradient(colors: [
           // UiConstants.primaryColor,
@@ -189,21 +186,20 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
         child: MaterialButton(
           child: (!baseProvider.isAugDepositRouteLogicInProgress)
               ? Consumer<BaseUtil>(
-            builder: (ctx, bp, child) {
-              return Text(
-                _getActionButtonText(),
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .button
-                    .copyWith(color: Colors.white),
-              );
-            },
-          )
+                  builder: (ctx, bp, child) {
+                    return Text(
+                      _getActionButtonText(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .button
+                          .copyWith(color: Colors.white),
+                    );
+                  },
+                )
               : SpinKitThreeBounce(
-            color: UiConstants.spinnerColor2,
-            size: 18.0,
-          ),
+                  color: UiConstants.spinnerColor2,
+                  size: 18.0,
+                ),
           onPressed: () async {
             Haptic.vibrate();
             baseProvider.isAugDepositRouteLogicInProgress = true;
@@ -233,18 +229,12 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
   Widget _buildBetaWithdrawButton() {
     return Container(
       margin: EdgeInsets.only(
-          bottom: MediaQuery
-              .of(context)
-              .size
-              .height * 0.1,
+          bottom: MediaQuery.of(context).size.height * 0.1,
           left: SizeConfig.blockSizeHorizontal * 5,
           right: SizeConfig.blockSizeHorizontal * 5,
           top: 8),
       width: double.infinity,
-      height: MediaQuery
-          .of(context)
-          .size
-          .height * 0.05,
+      height: MediaQuery.of(context).size.height * 0.05,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         gradient: new LinearGradient(
@@ -262,17 +252,16 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
         child: MaterialButton(
           child: (!baseProvider.isAugWithdrawRouteLogicInProgress)
               ? Text(
-            'WITHDRAW',
-            style: Theme
-                .of(context)
-                .textTheme
-                .button
-                .copyWith(color: Colors.white),
-          )
+                  'WITHDRAW',
+                  style: Theme.of(context)
+                      .textTheme
+                      .button
+                      .copyWith(color: Colors.white),
+                )
               : SpinKitThreeBounce(
-            color: UiConstants.spinnerColor2,
-            size: 18.0,
-          ),
+                  color: UiConstants.spinnerColor2,
+                  size: 18.0,
+                ),
           onPressed: () async {
             if (!baseProvider.isAugWithdrawRouteLogicInProgress) {
               Haptic.vibrate();
@@ -331,7 +320,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
       return true;
     } else {
       baseProvider.augmontGoldRates =
-      await augmontProvider.getRates(); //refresh rates
+          await augmontProvider.getRates(); //refresh rates
       baseProvider.isAugDepositRouteLogicInProgress = false;
       if (baseProvider.augmontGoldRates == null) {
         baseProvider.showNegativeAlert('Portal unavailable',
@@ -370,13 +359,13 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
         ///update user wallet object account balance
         double _tempCurrentBalance = baseProvider.userFundWallet.augGoldBalance;
         baseProvider.userFundWallet =
-        await dbProvider.updateUserAugmontGoldBalance(
-            baseProvider.myUser.uid,
-            baseProvider.userFundWallet,
-            baseProvider.augmontGoldRates.goldSellPrice,
-            baseProvider.currentAugmontTxn
-                .augmnt[UserTransaction.subFldAugTotalGoldGm],
-            baseProvider.currentAugmontTxn.amount);
+            await dbProvider.updateUserAugmontGoldBalance(
+                baseProvider.myUser.uid,
+                baseProvider.userFundWallet,
+                baseProvider.augmontGoldRates.goldSellPrice,
+                baseProvider.currentAugmontTxn
+                    .augmnt[UserTransaction.subFldAugTotalGoldGm],
+                baseProvider.currentAugmontTxn.amount);
 
         ///check if balance updated correctly
         if (baseProvider.userFundWallet.augGoldBalance == _tempCurrentBalance) {
@@ -386,7 +375,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
             'aug_tran_id': baseProvider
                 .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
             'note':
-            'Transaction completed, but found inconsistency while updating balance'
+                'Transaction completed, but found inconsistency while updating balance'
           };
           await dbProvider.logFailure(baseProvider.myUser.uid,
               FailType.UserAugmontDepositUpdateDiscrepancy, _data);
@@ -399,10 +388,10 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
         if (_ticketUpdateCount > 0) {
           int _tempCurrentCount = baseProvider.userTicketWallet.augGold99Tck;
           baseProvider.userTicketWallet =
-          await dbProvider.updateAugmontGoldUserTicketCount(
-              baseProvider.myUser.uid,
-              baseProvider.userTicketWallet,
-              _ticketUpdateCount);
+              await dbProvider.updateAugmontGoldUserTicketCount(
+                  baseProvider.myUser.uid,
+                  baseProvider.userTicketWallet,
+                  _ticketUpdateCount);
 
           ///check if ticket count updated correctly
           if (baseProvider.userTicketWallet.augGold99Tck == _tempCurrentCount) {
@@ -412,7 +401,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
               'aug_tran_id': baseProvider
                   .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
               'note':
-              'Transaction completed, but found inconsistency while updating tickets'
+                  'Transaction completed, but found inconsistency while updating tickets'
             };
             await dbProvider.logFailure(baseProvider.myUser.uid,
                 FailType.UserAugmontDepositUpdateDiscrepancy, _data);
@@ -445,7 +434,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
         if (baseProvider.userFundWallet.augGoldPrinciple >=
             BaseRemoteConfig.UNLOCK_REFERRAL_AMT) {
           bool _isUnlocked =
-          await dbProvider.unlockReferralTickets(baseProvider.myUser.uid);
+              await dbProvider.unlockReferralTickets(baseProvider.myUser.uid);
           if (_isUnlocked) {
             //give it a few seconds before showing congratulatory message
             Timer(const Duration(seconds: 4), () {
@@ -569,13 +558,13 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
         ///update user wallet balance
         double _tempCurrentBalance = baseProvider.userFundWallet.augGoldBalance;
         baseProvider.userFundWallet =
-        await dbProvider.updateUserAugmontGoldBalance(
-            baseProvider.myUser.uid,
-            baseProvider.userFundWallet,
-            baseProvider.augmontGoldRates.goldSellPrice,
-            BaseUtil.toDouble(baseProvider.currentAugmontTxn
-                .augmnt[UserTransaction.subFldAugTotalGoldGm]),
-            -1 * baseProvider.currentAugmontTxn.amount);
+            await dbProvider.updateUserAugmontGoldBalance(
+                baseProvider.myUser.uid,
+                baseProvider.userFundWallet,
+                baseProvider.augmontGoldRates.goldSellPrice,
+                BaseUtil.toDouble(baseProvider.currentAugmontTxn
+                    .augmnt[UserTransaction.subFldAugTotalGoldGm]),
+                -1 * baseProvider.currentAugmontTxn.amount);
 
         ///check if balance updated correctly
         if (baseProvider.userFundWallet.augGoldBalance == _tempCurrentBalance) {
@@ -585,7 +574,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
             'aug_tran_id': baseProvider
                 .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
             'note':
-            'Transaction completed, but found inconsistency while updating balance'
+                'Transaction completed, but found inconsistency while updating balance'
           };
           await dbProvider.logFailure(baseProvider.myUser.uid,
               FailType.UserAugmontWthdrwUpdateDiscrepancy, _data);
@@ -595,10 +584,10 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
           ///update user ticket count
           int _tempCurrentCount = baseProvider.userTicketWallet.augGold99Tck;
           baseProvider.userTicketWallet =
-          await dbProvider.updateAugmontGoldUserTicketCount(
-              baseProvider.myUser.uid,
-              baseProvider.userTicketWallet,
-              -1 * baseProvider.currentAugmontTxn.ticketUpCount);
+              await dbProvider.updateAugmontGoldUserTicketCount(
+                  baseProvider.myUser.uid,
+                  baseProvider.userTicketWallet,
+                  -1 * baseProvider.currentAugmontTxn.ticketUpCount);
 
           ///check if ticket count updated correctly
           if (baseProvider.userTicketWallet.augGold99Tck == _tempCurrentCount) {
@@ -608,7 +597,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
               'aug_tran_id': baseProvider
                   .currentAugmontTxn.augmnt[UserTransaction.subFldAugTranId],
               'note':
-              'Transaction completed, but found inconsistency while updating tickets'
+                  'Transaction completed, but found inconsistency while updating tickets'
             };
             await dbProvider.logFailure(baseProvider.myUser.uid,
                 FailType.UserAugmontWthdrwUpdateDiscrepancy, _data);
@@ -635,8 +624,8 @@ class FundDetailsTable extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-        left: SizeConfig.blockSizeHorizontal * 5,
-        right: SizeConfig.blockSizeHorizontal * 5,
+        left: SizeConfig.globalMargin,
+        right: SizeConfig.globalMargin,
         bottom: 24,
         top: 16,
       ),
@@ -690,10 +679,7 @@ class FundDetailsCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double _width = MediaQuery.of(context).size.width;
     return Container(
       height: 75,
       width: _width * 0.5,
@@ -719,11 +705,10 @@ class FundDetailsCell extends StatelessWidget {
                   onTap: () {
                     showDialog(
                       context: context,
-                      builder: (context) =>
-                      new AlertDialog(
+                      builder: (context) => new AlertDialog(
                         shape: RoundedRectangleBorder(
                           borderRadius:
-                          BorderRadius.circular(UiConstants.padding),
+                              BorderRadius.circular(UiConstants.padding),
                         ),
                         title: new Text(title),
                         content: Text(info),

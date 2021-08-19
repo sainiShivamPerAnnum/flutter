@@ -42,7 +42,7 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
     outputprice = price + price * widget.calFactor * months;
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.blockSizeHorizontal * 5,
+        horizontal: SizeConfig.globalMargin,
       ),
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -89,7 +89,7 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
                               left: 15, bottom: 11, top: 11, right: 15),
                           hintText: price.toString(),
                           hintStyle: TextStyle(
-                            fontSize: SizeConfig.mediumTextSize*1.2,
+                            fontSize: SizeConfig.mediumTextSize * 1.2,
                           ),
                           enabledBorder:
                               OutlineInputBorder(borderSide: BorderSide.none),
@@ -119,9 +119,8 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
                         child: Text(
                           outputprice.truncateToDouble().toString(),
                           style: TextStyle(
-                            fontSize: SizeConfig.mediumTextSize*1.2,
-                            fontWeight: FontWeight.bold
-                          ),
+                              fontSize: SizeConfig.mediumTextSize * 1.2,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     )
