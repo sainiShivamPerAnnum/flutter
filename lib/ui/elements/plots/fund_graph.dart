@@ -50,7 +50,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   DBModel dbProvider;
   BaseUtil baseProvider;
   String _dataPointsState = "loading";
-  int _selectedFrequency = 4;
+  int _selectedFrequency = 3;
 
   List<FlSpot> filteredDataItems = [];
   double maxX = 97;
@@ -212,7 +212,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: List.generate(
-                5,
+                4,
                 (index) => GestureDetector(
                   onTap: () => getSplitedChartData(index),
                   child: Container(
@@ -250,44 +250,36 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     }
   }
 
-  List<String> segmentList = ['1M', '3M', '6M', '1Y', '3Y'];
+  List<String> segmentList = ['3M', '6M', '1Y', '3Y'];
   getSplitedChartData(int index) {
     switch (index) {
       case 0:
         setState(() {
           _selectedFrequency = 0;
-          filteredDataItems = dataItems.sublist(dataItems.length - 6);
-          maxX = 95;
-          minX = 90;
-        });
-        break;
-      case 1:
-        setState(() {
-          _selectedFrequency = 1;
           filteredDataItems = dataItems.sublist(dataItems.length - 9);
           maxX = 95;
           minX = 87;
         });
         break;
-      case 2:
+      case 1:
         setState(() {
-          _selectedFrequency = 2;
+          _selectedFrequency = 1;
           filteredDataItems = dataItems.sublist(dataItems.length - 18);
           maxX = 95;
           minX = 78;
         });
         break;
-      case 3:
+      case 2:
         setState(() {
-          _selectedFrequency = 3;
+          _selectedFrequency = 2;
           filteredDataItems = dataItems.sublist(dataItems.length - 36);
           maxX = 95;
           minX = 60;
         });
         break;
-      case 4:
+      case 3:
         setState(() {
-          _selectedFrequency = 4;
+          _selectedFrequency = 3;
           filteredDataItems = dataItems;
           maxX = 97;
           minX = 0;
