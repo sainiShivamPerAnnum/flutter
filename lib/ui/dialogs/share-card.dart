@@ -232,7 +232,7 @@ class _ShareCardState extends State<ShareCard> {
                       width: SizeConfig.screenWidth,
                       alignment: Alignment.center,
                       child: Text(
-                        "Just a minute, generating card",
+                        "Please wait..",
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,

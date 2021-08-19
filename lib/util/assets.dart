@@ -249,9 +249,9 @@ class Assets {
   static const List<String> POLL_FOLLOW_UP_GAME_LIST = [
     'Financial Quiz',
     'Cricket',
-    'A Fantasy Sport',
+    'Fantasy Sports',
     'Candy Crush®',
-    'A multi-player card game',
+    'Multi-player card games',
   ];
 
   static const String logoBase64 =

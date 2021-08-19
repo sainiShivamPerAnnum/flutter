@@ -117,7 +117,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                     width: 10,
                   ),
                   Text(
-                    "Gold Deposit",
+                    "Buy Digital Gold",
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       height: 1.5,

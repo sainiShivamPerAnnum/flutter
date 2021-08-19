@@ -286,7 +286,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
     else if (_status == AugmontDetailsPage.STATUS_REGISTER)
       return 'REGISTER';
     else
-      return 'DEPOSIT';
+      return 'SAVE';
   }
 
   Future<bool> _onDepositClicked() async {

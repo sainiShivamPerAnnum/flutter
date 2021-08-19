@@ -30,19 +30,19 @@ class BaseRemoteConfig {
     'play_screen_first': 'true'
   };
   static const Map<String, String> _TAMBOLA_WIN_CORNER = {
-    'tambola_win_corner': '500'
+    'tambola_win_corner': '1000'
   };
   static const Map<String, String> _TAMBOLA_WIN_TOP = {
-    'tambola_win_top': '1500'
+    'tambola_win_top': '5000'
   };
   static const Map<String, String> _TAMBOLA_WIN_MIDDLE = {
-    'tambola_win_middle': '1500'
+    'tambola_win_middle': '5000'
   };
   static const Map<String, String> _TAMBOLA_WIN_BOTTOM = {
-    'tambola_win_bottom': '1500'
+    'tambola_win_bottom': '5000'
   };
   static const Map<String, String> _TAMBOLA_WIN_FULL = {
-    'tambola_win_full': '10,000'
+    'tambola_win_full': '25,000'
   };
   static const Map<String, String> _REFERRAL_BONUS = {'referral_bonus': '25'};
   static const Map<String, String> _REFERRAL_TICKET_BONUS = {

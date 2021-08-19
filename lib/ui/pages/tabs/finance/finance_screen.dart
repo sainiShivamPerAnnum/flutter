@@ -267,7 +267,7 @@ class _FinancePageState extends State<FinancePage>
                   padding: EdgeInsets.all(10),
                   alignment: Alignment.center,
                   child: Text(
-                    "₹ 100 saved = 1 Ticket",
+                    "₹ 100 saved = 1 Ticket ",
                     style: TextStyle(
                         color: Colors.blueGrey[300],
                         fontSize: SizeConfig.mediumTextSize),
