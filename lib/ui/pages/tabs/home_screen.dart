@@ -307,7 +307,6 @@ class _HomePageState extends State<HomePage> {
   Widget _buildProfileRow() {
     return InkWell(
       onTap: () {
-        delegate.appState.setCurrentTabIndex = 3;
         delegate.appState.currentAction = PageAction(
             state: PageState.addPage, page: UserProfileDetailsConfig);
       },

@@ -870,111 +870,115 @@ class UserProfileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    return Container(
-      width: SizeConfig.screenWidth,
-      height: SizeConfig.screenWidth * 0.4,
-      decoration: BoxDecoration(
-        gradient: new LinearGradient(
-          colors: [Color(0xff299F8F), UiConstants.primaryColor],
-          begin: Alignment.bottomLeft,
-          end: Alignment.topCenter,
+    return InkWell(
+      onTap: () => delegate.appState.currentAction =
+          PageAction(state: PageState.addPage, page: UserProfileDetailsConfig),
+      child: Container(
+        width: SizeConfig.screenWidth,
+        height: SizeConfig.screenWidth * 0.4,
+        decoration: BoxDecoration(
+          gradient: new LinearGradient(
+            colors: [Color(0xff299F8F), UiConstants.primaryColor],
+            begin: Alignment.bottomLeft,
+            end: Alignment.topCenter,
+          ),
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
         ),
-        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-      ),
-      margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.globalMargin,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-        child: CustomPaint(
-          painter: ShapePainter(),
-          child: Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.blockSizeHorizontal * 4,
-                vertical: SizeConfig.blockSizeHorizontal * 2.5),
-            child: Column(
-              children: [
-                Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: picSize,
-                      width: picSize,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                      child: baseProvider.myUserDpUrl == null
-                          ? Image.asset(
-                              "images/profile.png",
-                              height: picSize,
-                              width: picSize,
-                              fit: BoxFit.cover,
-                            )
-                          : ClipOval(
-                              child: CachedNetworkImage(
-                                imageUrl: baseProvider.myUserDpUrl,
+        margin: EdgeInsets.symmetric(
+          horizontal: SizeConfig.globalMargin,
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+          child: CustomPaint(
+            painter: ShapePainter(),
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.blockSizeHorizontal * 4,
+                  vertical: SizeConfig.blockSizeHorizontal * 2.5),
+              child: Column(
+                children: [
+                  Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: picSize,
+                        width: picSize,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                        ),
+                        child: baseProvider.myUserDpUrl == null
+                            ? Image.asset(
+                                "images/profile.png",
                                 height: picSize,
                                 width: picSize,
                                 fit: BoxFit.cover,
-                              ),
-                            ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.globalMargin,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: SizeConfig.screenWidth * 0.5,
-                            child: Text(
-                              baseProvider.myUser.name,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: SizeConfig.cardTitleTextSize,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          baseProvider.myUser.username != null
-                              ? Padding(
-                                  padding: EdgeInsets.only(top: 4),
-                                  child: Text(
-                                    "@${baseProvider.myUser.username.replaceAll('@', '.')}",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: SizeConfig.mediumTextSize,
-                                    ),
-                                  ),
-                                )
-                              : SizedBox(
-                                  height: 8,
+                              )
+                            : ClipOval(
+                                child: CachedNetworkImage(
+                                  imageUrl: baseProvider.myUserDpUrl,
+                                  height: picSize,
+                                  width: picSize,
+                                  fit: BoxFit.cover,
                                 ),
-                        ],
+                              ),
                       ),
-                    )
-                  ],
-                ),
-                Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Member since ${_getUserMembershipDate()}',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: SizeConfig.smallTextSize,
+                      SizedBox(
+                        width: SizeConfig.globalMargin,
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: SizeConfig.screenWidth * 0.5,
+                              child: Text(
+                                baseProvider.myUser.name,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: SizeConfig.cardTitleTextSize,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            baseProvider.myUser.username != null
+                                ? Padding(
+                                    padding: EdgeInsets.only(top: 4),
+                                    child: Text(
+                                      "@${baseProvider.myUser.username.replaceAll('@', '.')}",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: SizeConfig.mediumTextSize,
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox(
+                                    height: 8,
+                                  ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Member since ${_getUserMembershipDate()}',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: SizeConfig.smallTextSize,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
