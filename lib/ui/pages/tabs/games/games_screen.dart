@@ -166,7 +166,7 @@ class _GamePageState extends State<GamePage> {
                           ),
 
                           //TODO HACKY CODE - REMOVING IDEA SECTION TO MANAGE TABLET SIZE DIMENSIONS
-                          (SizeConfig.screenWidth >= 1200)
+                          (SizeConfig.screenWidth >= 1000)
                               ? Container()
                               : const IdeaSection(),
                           /////////////////////////////////////////////////////////////
