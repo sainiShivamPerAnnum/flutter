@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/help_types.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +94,7 @@ class TransactionHelpDialog extends StatelessWidget {
         title: Text(option.value,
             style: TextStyle(fontSize: 18.0, color: Colors.black)),
         onTap: () {
-          HapticFeedback.vibrate();
+          Haptic.vibrate();
           dbProvider
               .addHelpRequest(baseProvider.myUser.uid, baseProvider.myUser.name,
                   baseProvider.myUser.mobile, option.key)

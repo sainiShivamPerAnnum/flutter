@@ -244,7 +244,10 @@ class _YourFundsState extends State<YourFunds> {
                                     height: 1.5),
                               ),
                               const SizedBox(height: 12),
-                              checkForAction(index)
+                              checkForAction(
+                                widget.chartFunds[index].fundName,
+                                widget.chartFunds[index].color,
+                              )
                             ],
                           ),
                         )
@@ -258,22 +261,23 @@ class _YourFundsState extends State<YourFunds> {
     ));
   }
 
-  checkForAction(int i) {
-    if (i == 0 && widget.userFundWallet.augGoldBalance > 0)
+  checkForAction(String fundName, Color color) {
+    if (fundName == "Gold Balance" && widget.userFundWallet.augGoldBalance > 0)
       return ElevatedButton(
-        style: ElevatedButton.styleFrom(primary: widget.chartFunds[i].color),
+        style: ElevatedButton.styleFrom(primary: color),
         onPressed: _onWithdrawalClicked,
         child: Text(
           "Withdraw",
           style: TextStyle(color: Colors.white),
         ),
       );
-    else if (i == 2 && widget.userFundWallet.prizeBalance > 0) {
+    else if (fundName == "Prize Balance" &&
+        baseProvider.userFundWallet.prizeBalance > 0) {
       return ElevatedButton(
-        style: ElevatedButton.styleFrom(primary: widget.chartFunds[i].color),
+        style: ElevatedButton.styleFrom(primary: color),
         onPressed: prizeBalanceAction,
         child: Text(
-          widget.userFundWallet.isPrizeBalanceUnclaimed()
+          baseProvider.userFundWallet.isPrizeBalanceUnclaimed()
               ? "Claim Prize"
               : "Share",
           style: TextStyle(color: Colors.white),
@@ -284,9 +288,8 @@ class _YourFundsState extends State<YourFunds> {
   }
 
   prizeBalanceAction() async {
-    if (widget.userFundWallet.prizeBalance <= 0) return;
     HapticFeedback.vibrate();
-    if (widget.userFundWallet.isPrizeBalanceUnclaimed())
+    if (baseProvider.userFundWallet.isPrizeBalanceUnclaimed())
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -295,7 +298,8 @@ class _YourFundsState extends State<YourFunds> {
             child: Material(
               color: Colors.transparent,
               child: FCard(
-                isClaimed: !widget.userFundWallet.isPrizeBalanceUnclaimed(),
+                isClaimed:
+                    !baseProvider.userFundWallet.isPrizeBalanceUnclaimed(),
                 unclaimedPrize: widget.userFundWallet.unclaimedBalance,
               ),
             ),

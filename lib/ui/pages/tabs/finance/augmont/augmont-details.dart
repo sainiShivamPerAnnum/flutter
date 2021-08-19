@@ -20,13 +20,13 @@ import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dar
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -200,7 +200,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                   size: 18.0,
                 ),
           onPressed: () async {
-            HapticFeedback.vibrate();
+            Haptic.vibrate();
             baseProvider.isAugDepositRouteLogicInProgress = true;
             setState(() {});
             ///////////DUMMY///////////////////////////////////
@@ -263,7 +263,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                 ),
           onPressed: () async {
             if (!baseProvider.isAugWithdrawRouteLogicInProgress) {
-              HapticFeedback.vibrate();
+              Haptic.vibrate();
               _onWithdrawalClicked();
               // double amt = await augmontProvider.getGoldBalance();
               // log.debug(amt.toString());
@@ -467,7 +467,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
   }
 
   _onWithdrawalClicked() async {
-    HapticFeedback.vibrate();
+    Haptic.vibrate();
     baseProvider.augmontDetail = (baseProvider.augmontDetail == null)
         ? (await dbProvider.getUserAugmontDetails(baseProvider.myUser.uid))
         : baseProvider.augmontDetail;

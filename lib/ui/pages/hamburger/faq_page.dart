@@ -67,7 +67,7 @@ class _FAQList extends State<FAQPage> {
         return ExpansionPanel(
             headerBuilder: (BuildContext context, bool isExpanded) {
               return ListTile(
-                title: Text("  " + item.headerValue),
+                title: Text(item.headerValue),
               );
             },
             canTapOnHeader: true,

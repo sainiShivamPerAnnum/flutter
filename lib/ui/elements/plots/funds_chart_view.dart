@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
@@ -6,21 +6,19 @@ import 'package:felloapp/core/model/chartFundItem.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/card.dart';
-import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/chart_values_options.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/legend_options.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/pie_chart.dart';
 import 'package:felloapp/ui/pages/tabs/finance/augmont/augmont-details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:math' as math;
+import 'package:provider/provider.dart';
 
 class FundsChartView extends StatefulWidget {
   final UserFundWallet userFundWallet;
@@ -82,41 +80,33 @@ class _FundsChartViewState extends State<FundsChartView> {
     chartData = [
       ChartFundItem(
           fundName: "ICICI Balance",
-          action: false,
           color: Color(0xff66DE93),
           description: ["This is your current ICICI Balance."],
-          function: () {},
           fundAmount: widget.userFundWallet.iciciBalance,
           logo: "images/icici.png",
           isHighlighted: false),
       ChartFundItem(
           fundName: "Gold Balance",
-          action: widget.userFundWallet.augGoldBalance > 0,
           color: Color(0xffF5B819),
           description: [widget.goldMoreInfo],
-          function: () {},
           fundAmount: widget.userFundWallet.augGoldBalance,
           logo: "images/augmont-logo.jpg",
           isHighlighted: false),
       ChartFundItem(
           fundName: "Prize Balance",
-          action: widget.userFundWallet.prizeBalance > 0,
           color: Color(0xff6389F2),
           description: [
             "This is the amount you've earned as rewards playing games and through successful referrals!"
           ],
-          function: () {},
           fundAmount: widget.userFundWallet.prizeBalance,
           logo: "images/fello_logo.png",
           isHighlighted: widget.userFundWallet.isPrizeBalanceUnclaimed()),
       ChartFundItem(
           fundName: "Locked Balance",
-          action: false,
           color: Colors.grey[500],
           description: [
             'Referral rewards could be locked due to either of the reasons: \n\n• You were referred by your friend but you haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet. \n\n• You referred your friends but they haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet.'
           ],
-          function: () {},
           fundAmount: widget.userFundWallet.lockedPrizeBalance,
           logo: "images/fello_logo.png",
           isHighlighted: false),
@@ -129,7 +119,7 @@ class _FundsChartViewState extends State<FundsChartView> {
     getchartData();
     return GestureDetector(
       onTap: () {
-        HapticFeedback.vibrate();
+        Haptic.vibrate();
         if (widget.userFundWallet.getEstTotalWealth() > 0.0)
           appState.currentAction = PageAction(
               state: PageState.addWidget,
@@ -176,16 +166,16 @@ class _FundsChartViewState extends State<FundsChartView> {
                       showChartValues: false,
                       chartValueBackgroundColor: UiConstants.backgroundColor,
                       chartValueStyle: GoogleFonts.montserrat(
-                        fontSize: math.min(
-                            (SizeConfig.screenWidth) /
-                                (widget.userFundWallet
-                                        .getEstTotalWealth()
-                                        .toStringAsFixed(2)
-                                        .length *
-                                    1.8),
-                            SizeConfig.largeTextSize * 2),
-                        color: UiConstants.textColor,
-                      ),
+                          fontSize: math.min(
+                              (SizeConfig.screenWidth) /
+                                  (widget.userFundWallet
+                                          .getEstTotalWealth()
+                                          .toStringAsFixed(2)
+                                          .length *
+                                      1.8),
+                              SizeConfig.largeTextSize * 2),
+                          color: UiConstants.textColor,
+                          fontWeight: FontWeight.w400),
                       showChartValuesInPercentage: false,
                       showChartValuesOutside: false,
                     ),
@@ -211,7 +201,7 @@ class _FundsChartViewState extends State<FundsChartView> {
                               ),
                               bodyTextStyle: TextStyle(
                                 fontSize: SizeConfig.mediumTextSize * 1.1,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                                 color: UiConstants.textColor,
                               ),
                               isHighlighted: chartData[i].isHighlighted,

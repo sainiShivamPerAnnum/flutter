@@ -231,14 +231,12 @@ class _ShareCardState extends State<ShareCard> {
                     child: Container(
                       width: SizeConfig.screenWidth,
                       alignment: Alignment.center,
-                      child: Expanded(
-                        child: Text(
-                          "Just a minute, generating card",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: SizeConfig.largeTextSize,
-                          ),
+                      child: Text(
+                        "Just a minute, generating card",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: SizeConfig.largeTextSize,
                         ),
                       ),
                     ),

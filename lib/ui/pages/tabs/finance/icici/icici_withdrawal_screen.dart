@@ -1,9 +1,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/payment_service.dart';
-import 'package:felloapp/ui/dialogs/icici_redemption_otp_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/dialogs/icici_redemption_otp_dialog.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -315,7 +316,7 @@ class ICICIWithdrawalState extends State<ICICIWithdrawal> {
                               .copyWith(color: Colors.white),
                         ),
                         onPressed: () async {
-                          HapticFeedback.vibrate();
+                          Haptic.vibrate();
                           _onWithdrawalClicked();
                         },
                         highlightColor: Colors.white30,

@@ -5,10 +5,9 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/Buttons/large_button.dart';
 import 'package:felloapp/ui/elements/custom-art/circles_with_image.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 
@@ -97,7 +96,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
               Theme.of(context).textTheme.button.copyWith(color: Colors.white),
         ),
         onTap: () {
-          HapticFeedback.vibrate();
+          Haptic.vibrate();
           appState.currentAction =
               PageAction(state: PageState.replaceAll, page: LoginPageConfig);
         },

@@ -244,12 +244,24 @@ class ZeroBalView extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.fromLTRB(20.0, 20, 20, 2),
             child: Text(
               "Your savings and prize balance is currently zero.",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.w400,
+                fontSize: SizeConfig.mediumTextSize,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: Text(
+              "Start now ⏬",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.w100,
                 fontSize: SizeConfig.mediumTextSize,
               ),
             ),

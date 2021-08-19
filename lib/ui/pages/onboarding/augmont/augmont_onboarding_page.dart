@@ -15,9 +15,10 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.da
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/augmont_state_list.dart';
 import 'package:felloapp/util/fail_types.dart';
-import 'package:felloapp/util/palettes.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -526,7 +527,7 @@ class AugInfoTiles extends StatelessWidget {
               TextButton.icon(
                 icon: Text("🔒"),
                 onPressed: () {
-                  HapticFeedback.vibrate();
+                  Haptic.vibrate();
                   showDialog(
                       context: context,
                       builder: (BuildContext context) =>
@@ -551,7 +552,7 @@ class AugInfoTiles extends StatelessWidget {
               TextButton.icon(
                 icon: Text("💰"),
                 onPressed: () async {
-                  HapticFeedback.vibrate();
+                  Haptic.vibrate();
                   const url = "https://www.augmont.com/about-us";
                   if (await canLaunch(url))
                     await launch(url);

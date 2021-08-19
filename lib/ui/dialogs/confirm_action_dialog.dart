@@ -1,9 +1,9 @@
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ConfirmActionDialog extends StatefulWidget {
@@ -93,7 +93,7 @@ class _FormDialogState extends State<ConfirmActionDialog> {
                     alignment: Alignment.bottomLeft,
                     child: TextButton(
                       onPressed: () {
-                        HapticFeedback.vibrate();
+                        Haptic.vibrate();
                         log.debug('DialogAction cancelled');
 
                         return widget.cancelAction();
@@ -109,7 +109,7 @@ class _FormDialogState extends State<ConfirmActionDialog> {
                     alignment: Alignment.bottomRight,
                     child: TextButton(
                       onPressed: () {
-                        HapticFeedback.vibrate();
+                        Haptic.vibrate();
                         log.debug('DialogAction clicked');
                         return widget.confirmAction();
                       },

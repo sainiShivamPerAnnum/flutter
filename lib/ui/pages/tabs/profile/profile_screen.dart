@@ -11,28 +11,25 @@ import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/elements/Texts/marquee_text.dart';
 import 'package:felloapp/ui/elements/custom-art/profile-card.dart';
 import 'package:felloapp/ui/modals/share_info_modal.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fcm_topics.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -262,14 +259,9 @@ class Social extends StatelessWidget {
           ),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             socialButton("images/svgs/instagram.svg",
-                "https://www.instagram.com/fellofinance/"),
+                "https://www.instagram.com/jointhefelloship/"),
             socialButton("images/svgs/linkedin.svg",
                 "https://www.linkedin.com/company/fellofinance/"),
-            socialButton(
-                "images/svgs/whatsapp.svg",
-                Platform.isAndroid
-                    ? "https://wa.me/${917993252690}/?text=Hello Fello"
-                    : "https://api.whatsapp.com/send?phone=${917993252690}=Hello Fello"),
             socialButton("images/svgs/mail.svg", "mailto:hello@fello.in"),
             socialButton("images/svgs/web.svg", "https://fello.in"),
           ])
@@ -315,7 +307,7 @@ class TermsRow extends StatelessWidget {
                   color: Colors.grey, decoration: TextDecoration.underline),
             ),
             onTap: () {
-              HapticFeedback.vibrate();
+              Haptic.vibrate();
               BaseUtil.launchUrl('https://fello.in/policy/tnc');
 
               // delegate.appState.currentAction =
@@ -336,7 +328,7 @@ class TermsRow extends StatelessWidget {
                   color: Colors.grey, decoration: TextDecoration.underline),
             ),
             onTap: () {
-              HapticFeedback.vibrate();
+              Haptic.vibrate();
               BaseUtil.launchUrl('https://fello.in/policy/privacy');
               // delegate.appState.currentAction = PageAction(
               //     state: PageState.addPage, page: RefPolicyPageConfig);

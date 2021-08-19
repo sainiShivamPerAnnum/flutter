@@ -2,10 +2,10 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/ui/dialogs/transaction_help_dialog.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
@@ -56,7 +56,7 @@ class _DepositVerificationState extends State<DepositVerification> {
                     ),
                   ),
                   onTap: () {
-                    HapticFeedback.vibrate();
+                    Haptic.vibrate();
                     showDialog(
                         context: context,
                         builder: (BuildContext context) =>

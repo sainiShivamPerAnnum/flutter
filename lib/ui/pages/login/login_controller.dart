@@ -6,7 +6,6 @@ import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -16,13 +15,13 @@ import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/username.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +49,6 @@ class _LoginControllerState extends State<LoginController>
   static DBModel dbProvider;
   static FcmListener fcmProvider;
   static LocalDBModel lclDbProvider;
-  static HttpModel httpProvider;
   static AppState appStateProvider;
   AnimationController animationController;
 
@@ -109,7 +107,8 @@ class _LoginControllerState extends State<LoginController>
   Future<void> _verifyPhone() async {
     final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
       log.debug("Phone number hasnt been auto verified yet");
-      if(_otpScreenKey.currentState!=null)_otpScreenKey.currentState.onOtpAutoDetectTimeout();
+      if (_otpScreenKey.currentState != null)
+        _otpScreenKey.currentState.onOtpAutoDetectTimeout();
     };
 
     final PhoneCodeSent smsCodeSent = (String verId, [int forceCodeResend]) {
@@ -181,7 +180,6 @@ class _LoginControllerState extends State<LoginController>
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     fcmProvider = Provider.of<FcmListener>(context, listen: false);
     appStateProvider = Provider.of<AppState>(context, listen: false);
-    httpProvider = Provider.of<HttpModel>(context, listen: false);
     return Scaffold(
       body: SafeArea(
           child: Stack(
@@ -277,7 +275,7 @@ class _LoginControllerState extends State<LoginController>
                                     decoration: TextDecoration.underline),
                                 recognizer: new TapGestureRecognizer()
                                   ..onTap = () {
-                                    HapticFeedback.vibrate();
+                                    Haptic.vibrate();
                                     BaseUtil.launchUrl(
                                         'https://fello.in/policy/tnc');
                                     // appStateProvider.currentAction = PageAction(
@@ -583,14 +581,16 @@ class _LoginControllerState extends State<LoginController>
       baseProvider.myUser = user ??
           BaseUser.newUser(baseProvider.firebaseUser.uid, this.userMobile);
       //Move to name input page
-      //set 'tutorial shown' flag to false to ensure tutorial gets shown to the user
-      lclDbProvider.saveHomeTutorialComplete = false;
+      lclDbProvider.setShowHomeTutorial = true;
+      lclDbProvider.setShowTambolaTutorial = true;
       _controller.animateToPage(NameInputScreen.index,
           duration: Duration(seconds: 1), curve: Curves.easeInToLinear);
       //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user
       await BaseAnalytics.analytics.logLogin(loginMethod: 'phonenumber');
+      lclDbProvider.setShowHomeTutorial = false;
+      lclDbProvider.setShowTambolaTutorial = false;
       log.debug("User details available: Name: " + user.name);
       baseProvider.myUser = user;
       _onSignUpComplete();

@@ -401,7 +401,8 @@ class _TambolaHomeState extends State<TambolaHome> {
         ),
       );
     } else {
-      if (_topFiveTambolaBoards.isEmpty) {
+      if (_topFiveTambolaBoards.isEmpty ||
+          baseProvider.userWeeklyBoards.length < 5) {
         _topFiveTambolaBoards = [];
         _refreshBestBoards().forEach((element) {
           _topFiveTambolaBoards.add(_buildBoardView(element));
@@ -523,7 +524,7 @@ class _TambolaHomeState extends State<TambolaHome> {
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
-                              checkForMoreItems(ticketSummaryData[index]),
+                              // checkForMoreItems(ticketSummaryData[index]),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -946,31 +947,31 @@ class _TambolaHomeState extends State<TambolaHome> {
       if (category == "Corners") {
         if (length == 1)
           output =
-              "Ticket #${firstCard.board.getTicketNumber()} is just 1 number away from $category.";
+              "Ticket #${firstCard.board.getTicketNumber()} is just 1 number away from completing its $category!";
         else
           output =
-              "$length of your tickets needs only 1 number to complete $category.";
+              "$length of your tickets are just 1 number away from completing their $category!";
       } else if (category == "Full House") {
         if (length == 1)
           output =
-              "Ticket #${firstCard.board.getTicketNumber()} is just 4 of less numbers less to hit the $category JACKPOT.";
+              "Ticket #${firstCard.board.getTicketNumber()} is just less than 5 numbers away from winning the $category!";
         else
           output =
-              "$length of your tickets needs only 4 or less numbers to  hit the $category JACKPOT.";
+              "$length of your tickets are less than 5 numbers away from winning the $category!";
       } else {
         if (length == 1)
           output =
-              "Ticket #${firstCard.board.getTicketNumber()} is just 2 or less numbers away from $category.";
+              "Ticket #${firstCard.board.getTicketNumber()} is less than 3 numbers away from completing their $category!";
         else
           output =
-              "$length of your tickets needs only 2 or less numbers to complete $category.";
+              "$length of your tickets are less than 3 numbers away from completing its $category.";
       }
     } else {
       if (length == 1)
         output =
-            "Ticket #${firstCard.board.getTicketNumber()} completed $category.";
+            "Ticket #${firstCard.board.getTicketNumber()} has completed its $category!";
       else
-        output = "$length of your tickets completed $category.";
+        output = "$length of your tickets have completed their $category!";
     }
 
     return output;
@@ -1310,16 +1311,18 @@ class _FaqSectionState extends State<FaqSection> {
                     Assets.tambolaFaqList[index].keys.first),
                 isExpanded: detStatus[index],
                 body: Container(
-                  child: Column(
-                    children: [
-                      Text(
-                        Assets.tambolaFaqList[index].values.first,
-                        style: TextStyle(
-                          height: 1.5,
-                          fontSize: SizeConfig.mediumTextSize,
-                        ),
-                      ),
-                    ],
+                  alignment: Alignment.centerLeft,
+                  margin: EdgeInsets.only(
+                    left: 25,
+                    right: SizeConfig.blockSizeHorizontal * 6,
+                  ),
+                  child: Text(
+                    Assets.tambolaFaqList[index].values.first,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      height: 1.5,
+                      fontSize: SizeConfig.mediumTextSize,
+                    ),
                   ),
                 ),
               ),

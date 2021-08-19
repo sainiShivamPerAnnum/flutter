@@ -4,14 +4,15 @@ import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/ui/dialogs/integrated_icici_disabled_dialog.dart';
-import 'package:felloapp/ui/modals/icici_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
+import 'package:felloapp/ui/modals/icici_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/icici_onboard_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -152,7 +153,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
                   size: 18.0,
                 ),
           onPressed: () async {
-            HapticFeedback.vibrate();
+            Haptic.vibrate();
             baseProvider.isIciciDepositRouteLogicInProgress = true;
             setState(() {});
             onDepositClicked().then((value) {
@@ -202,7 +203,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
             ],
           ),
           onPressed: () async {
-            HapticFeedback.vibrate();
+            Haptic.vibrate();
             onWithdrawalClicked();
           },
           highlightColor: Colors.orange.withOpacity(0.5),
@@ -326,7 +327,7 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
       baseProvider.showNegativeAlert(
           'No balance', 'Your ICICI wallet has no balance presently', context);
     } else {
-      HapticFeedback.vibrate();
+      Haptic.vibrate();
       Navigator.push(
         context,
         CupertinoPageRoute(

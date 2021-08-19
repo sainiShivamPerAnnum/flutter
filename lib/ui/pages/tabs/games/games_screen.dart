@@ -14,11 +14,11 @@ import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'package:felloapp/ui/elements/Parallax-card/game_card_list.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
 import 'package:felloapp/ui/elements/week-winners_board.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -142,7 +142,7 @@ class _GamePageState extends State<GamePage> {
                           ),
                           InkWell(
                             onTap: () async {
-                              HapticFeedback.vibrate();
+                              Haptic.vibrate();
                               AppState.screenStack.add(ScreenItem.dialog);
                               showDialog(
                                 context: context,
@@ -376,7 +376,7 @@ class _TicketCountState extends State<TicketCount>
     Future.delayed(Duration(milliseconds: 2500), () {
       if (mounted)
         setState(() {
-          tagWidth = SizeConfig.screenWidth / 2;
+          tagWidth = SizeConfig.screenWidth * 0.7;
           tagHeight = SizeConfig.cardTitleTextSize * 1.2;
         });
     }).then((_) {
@@ -465,7 +465,7 @@ class _TicketCountState extends State<TicketCount>
               opacity: tagOpacity,
               duration: Duration(seconds: 1),
               child: Text(
-                "🏁 ₹ 100 = 1 Ticket",
+                "🏁 ₹ 100 saved = 1 Ticket",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: SizeConfig.mediumTextSize,
