@@ -213,7 +213,7 @@ class Assets {
   ];
 
   static final String integratedICICIUnavailable =
-      "Mutual Fund deposits are currently being tested within a small cohort. \n\n It will soon be available for everyone. Stay tuned! 😎";
+      "Mutual Fund deposits are currently being tested within a small cohort. \n\n It shall soon be made available for everyone. Stay tuned! ✨";
 
   static final String augmontUnavailable =
       "We are slowly moving towards a fully automated system of deposits and withdrawals. " +
