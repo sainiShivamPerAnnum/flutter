@@ -56,7 +56,6 @@ class FAQCardState extends State<FAQCard> {
 
   _buildItems() {
     return Container(
-      padding: EdgeInsets.all(20),
       width: SizeConfig.screenWidth,
       child: Column(
         children: [
@@ -67,26 +66,12 @@ class FAQCardState extends State<FAQCard> {
             elevation: 0,
             children: List.generate(
               widget.faqHeaders.length,
-              (index) => ExpansionPanel(
+                  (index) => ExpansionPanel(
                 canTapOnHeader: true,
                 headerBuilder: (ctx, isOpen) =>
                     _prizeFAQHeader(widget.faqHeaders[index]),
                 isExpanded: detStatus[index],
                 body: Container(
-<<<<<<< HEAD
-                  // padding: EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.faqResponses[index],
-                        style: TextStyle(
-                          height: 1.5,
-                          fontSize: SizeConfig.mediumTextSize,
-                        ),
-                      ),
-                    ],
-=======
                   alignment: Alignment.centerLeft,
                   margin: EdgeInsets.only(
                     right: SizeConfig.blockSizeHorizontal * 6,
@@ -98,7 +83,6 @@ class FAQCardState extends State<FAQCard> {
                       height: 1.5,
                       fontSize: SizeConfig.mediumTextSize,
                     ),
->>>>>>> b27f52fb4c157c389a488527d1fc1b70de426a5f
                   ),
                 ),
               ),
