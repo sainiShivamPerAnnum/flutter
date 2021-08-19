@@ -113,7 +113,6 @@ class _ReferralsPageState extends State<ReferralsPage> {
     return Padding(
       padding: EdgeInsets.only(top: 5, bottom: 5),
       child: Container(
-        height: SizeConfig.screenHeight * 0.2,
         margin: EdgeInsets.symmetric(
             horizontal: SizeConfig.blockSizeHorizontal * 2),
         decoration: BoxDecoration(
@@ -143,70 +142,36 @@ class _ReferralsPageState extends State<ReferralsPage> {
         child: Container(
           padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
           width: double.infinity,
-          child: Column(
+          child : Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
-                height: SizeConfig.screenHeight * 0.02,
-              ),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Image.asset(
-                      "images/profile.png",
-                      height: SizeConfig.screenWidth * 0.25,
-                      fit: BoxFit.cover,
-                    ),
-                    SizedBox(
-                      width: SizeConfig.screenWidth * 0.05,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: SizeConfig.screenWidth * 0.5,
-                          child: Text(
-                            rDetail.userName ?? '',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: SizeConfig.cardTitleTextSize,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 3,
-                        ),
-                        Text(
-                          'Referred on ${_getUserMembershipDate(rDetail.timestamp)}',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: SizeConfig.smallTextSize * 1.3,
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Text(
-                _getBonusText(rDetail),
+              ListTile(
+              title: Text(
+                rDetail.userName ?? '',
+                maxLines : 1,
+                overflow: TextOverflow.clip,
                 style: TextStyle(
                   color: Colors.white,
+                  fontSize: SizeConfig.cardTitleTextSize,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-              SizedBox(
-                height: 8,
-              )
-            ],
-          ),
+              trailing : Text(
+                'Referred on ${_getUserMembershipDate(rDetail.timestamp)}',
+                maxLines: 2,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: SizeConfig.smallTextSize * 1.3,
+                ),
+              ),
+            ),
+            Text(
+              _getBonusText(rDetail),
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ],)
         ),
       ),
     );
