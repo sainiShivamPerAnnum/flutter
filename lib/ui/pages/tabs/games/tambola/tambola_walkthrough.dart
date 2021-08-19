@@ -84,7 +84,8 @@ class Walkthrough extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.blockSizeHorizontal * 5, vertical: 10),
         child: ListView(
           children: [
             Padding(

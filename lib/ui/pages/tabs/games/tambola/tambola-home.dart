@@ -404,7 +404,8 @@ class _TambolaHomeState extends State<TambolaHome> {
         ),
       );
     } else {
-      if (_topFiveTambolaBoards.isEmpty) {
+      if (_topFiveTambolaBoards.isEmpty ||
+          baseProvider.userWeeklyBoards.length < 5) {
         _topFiveTambolaBoards = [];
         _refreshBestBoards().forEach((element) {
           _topFiveTambolaBoards.add(_buildBoardView(element));

@@ -80,60 +80,34 @@ class _FundsChartViewState extends State<FundsChartView> {
     chartData = [
       ChartFundItem(
           fundName: "ICICI Balance",
-          action: false,
           color: Color(0xff66DE93),
           description: ["This is your current ICICI Balance."],
-          function: () {},
           fundAmount: widget.userFundWallet.iciciBalance,
           logo: "images/icici.png",
           isHighlighted: false),
       ChartFundItem(
           fundName: "Gold Balance",
-          action: widget.userFundWallet.augGoldBalance > 0,
           color: Color(0xffF5B819),
           description: [widget.goldMoreInfo],
-          function: () {},
           fundAmount: widget.userFundWallet.augGoldBalance,
           logo: "images/augmont-logo.jpg",
           isHighlighted: false),
       ChartFundItem(
           fundName: "Prize Balance",
-          action: widget.userFundWallet.prizeBalance > 0,
           color: Color(0xff6389F2),
           description: [
             "This is the amount you've earned as rewards playing games and through successful referrals!"
           ],
-          function: () {
-            if (widget.userFundWallet.prizeBalance <= 0) return;
-            Haptic.vibrate();
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (ctx) {
-                return Center(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: FCard(
-                      isClaimed:
-                          !widget.userFundWallet.isPrizeBalanceUnclaimed(),
-                      unclaimedPrize: widget.userFundWallet.unclaimedBalance,
-                    ),
-                  ),
-                );
-              },
-            );
-          },
+
           fundAmount: widget.userFundWallet.prizeBalance,
           logo: "images/fello_logo.png",
           isHighlighted: widget.userFundWallet.isPrizeBalanceUnclaimed()),
       ChartFundItem(
           fundName: "Locked Balance",
-          action: false,
-          color: Color(0xff150485),
+          color: Colors.grey[500],
           description: [
             'Referral rewards could be locked due to either of the reasons: \n\n• You were referred by your friend but you haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet. \n\n• You referred your friends but they haven\'t saved at least ₹${BaseRemoteConfig.UNLOCK_REFERRAL_AMT.toString()} yet.'
           ],
-          function: () {},
           fundAmount: widget.userFundWallet.lockedPrizeBalance,
           logo: "images/fello_logo.png",
           isHighlighted: false),
@@ -193,17 +167,16 @@ class _FundsChartViewState extends State<FundsChartView> {
                       showChartValues: false,
                       chartValueBackgroundColor: UiConstants.backgroundColor,
                       chartValueStyle: GoogleFonts.montserrat(
-                        fontSize: math.min(
-                            (SizeConfig.screenWidth) /
-                                (widget.userFundWallet
-                                        .getEstTotalWealth()
-                                        .toStringAsFixed(2)
-                                        .length *
-                                    1.8),
-                            SizeConfig.largeTextSize * 2),
-                        color: UiConstants.textColor,
-                        fontWeight: FontWeight.w400
-                      ),
+                          fontSize: math.min(
+                              (SizeConfig.screenWidth) /
+                                  (widget.userFundWallet
+                                          .getEstTotalWealth()
+                                          .toStringAsFixed(2)
+                                          .length *
+                                      1.8),
+                              SizeConfig.largeTextSize * 2),
+                          color: UiConstants.textColor,
+                          fontWeight: FontWeight.w400),
                       showChartValuesInPercentage: false,
                       showChartValuesOutside: false,
                     ),
@@ -225,7 +198,7 @@ class _FundsChartViewState extends State<FundsChartView> {
                               color: chartData[i].color,
                               titleTextStyle: TextStyle(
                                 fontSize: SizeConfig.smallTextSize * 1.2,
-                                color: UiConstants.textColor,
+                                color: UiConstants.textColor.withOpacity(0.5),
                               ),
                               bodyTextStyle: TextStyle(
                                 fontSize: SizeConfig.mediumTextSize * 1.1,

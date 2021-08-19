@@ -118,7 +118,8 @@ class _HomePageState extends State<HomePage> {
                 child: ListView(
                   controller: AppState.homeCardListController,
                   physics: BouncingScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal*1.6),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.blockSizeHorizontal * 1.6),
                   children: (!baseProvider.isHomeCardsFetched ||
                           baseProvider.feedCards.length == 0)
                       ? _buildLoadingFeed()
@@ -294,10 +295,8 @@ class _HomePageState extends State<HomePage> {
             subtitle: card.subtitle,
             buttonText: card.btnText,
             isHighlighted: false,
-            onPressed: () async {
+            onPressed: () {
               Haptic.vibrate();
-              // print(Color(0xff1FAB89).value.toString());
-              // print(Color(0xff62D2A2).value.toString());
               delegate.parseRoute(Uri.parse(card.actionUri));
             },
           ),
@@ -491,12 +490,12 @@ class BaseHomeCardContent extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: SizeConfig.blockSizeVertical*1.5,
+          height: SizeConfig.blockSizeVertical * 1.5,
         ),
         ClipRRect(
           borderRadius: BorderRadius.circular(100),
           child: GestureDetector(
-            onTap: () => onPressed,
+            onTap: onPressed,
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               decoration: BoxDecoration(

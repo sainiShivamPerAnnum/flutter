@@ -1,10 +1,13 @@
 import 'package:confetti/confetti.dart';
+import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly-results-scenes/winnerbox.dart';
+import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class PrizeWin extends StatefulWidget {
   final Map<String, int> winningsMap;
@@ -16,12 +19,15 @@ class PrizeWin extends StatefulWidget {
 
 class _PrizeWinState extends State<PrizeWin> {
   ConfettiController _confettiController;
+  FcmListener fcmProvider;
+  bool addedSubscription = false;
 
   @override
   void initState() {
     _confettiController = new ConfettiController(
       duration: new Duration(seconds: 2),
     );
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _confettiController.play();
     });
@@ -30,6 +36,11 @@ class _PrizeWinState extends State<PrizeWin> {
 
   @override
   Widget build(BuildContext context) {
+    fcmProvider = Provider.of<FcmListener>(context, listen: false);
+    if (!addedSubscription) {
+      fcmProvider.addSubscription(FcmTopic.WINNERWINNER);
+      addedSubscription = true;
+    }
     return Scaffold(
       backgroundColor: Color(0xffF5DFC3),
       body: SafeArea(

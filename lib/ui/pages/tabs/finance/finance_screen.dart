@@ -64,8 +64,19 @@ class _FinancePageState extends State<FinancePage>
             (value) => _controller.reverse().then((value) {
               AppState.screenStack.add(ScreenItem.dialog);
               showDialog(
-                  context: context,
-                  builder: (BuildContext context) => IntegratedIciciDisabled());
+                context: context,
+                builder: (BuildContext context) => Dialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      "images/unavailable.png",
+                      width: SizeConfig.screenWidth * 0.8,
+                    ),
+                  ),
+                ),
+              );
             }),
           );
   }

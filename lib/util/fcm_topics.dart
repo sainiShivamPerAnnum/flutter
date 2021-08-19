@@ -8,7 +8,8 @@ enum FcmTopic {
   VERSION,
   REFERRER,
   MISSEDCONNECTION,
-  FREQUENTFLYER
+  FREQUENTFLYER,
+  WINNERWINNER
 }
 
 extension ParseToString on FcmTopic {

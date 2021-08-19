@@ -2,23 +2,21 @@ import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class FAQCard extends StatefulWidget {
   final List<String> faqHeaders;
   final List<String> faqResponses;
   final Color borderColor;
 
   FAQCard(this.faqHeaders, this.faqResponses, this.borderColor);
-  @override 
+  @override
   State<StatefulWidget> createState() => FAQCardState();
 }
 
 class FAQCardState extends State<FAQCard> {
-  
   List<bool> detStatus;
 
   @override
-  void initState() { 
+  void initState() {
     detStatus = List.filled(widget.faqHeaders.length, false);
     super.initState();
   }
@@ -71,10 +69,11 @@ class FAQCardState extends State<FAQCard> {
               widget.faqHeaders.length,
               (index) => ExpansionPanel(
                 canTapOnHeader: true,
-                headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
-                    widget.faqHeaders[index]),
+                headerBuilder: (ctx, isOpen) =>
+                    _prizeFAQHeader(widget.faqHeaders[index]),
                 isExpanded: detStatus[index],
                 body: Container(
+<<<<<<< HEAD
                   // padding: EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,6 +86,19 @@ class FAQCardState extends State<FAQCard> {
                         ),
                       ),
                     ],
+=======
+                  alignment: Alignment.centerLeft,
+                  margin: EdgeInsets.only(
+                    right: SizeConfig.blockSizeHorizontal * 6,
+                  ),
+                  child: Text(
+                    widget.faqResponses[index],
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      height: 1.5,
+                      fontSize: SizeConfig.mediumTextSize,
+                    ),
+>>>>>>> b27f52fb4c157c389a488527d1fc1b70de426a5f
                   ),
                 ),
               ),
@@ -101,11 +113,11 @@ class FAQCardState extends State<FAQCard> {
       ),
     );
   }
-  
+
   _prizeFAQHeader(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      child:Text(
+      child: Text(
         title,
         style: TextStyle(
           fontSize: SizeConfig.mediumTextSize,
@@ -114,5 +126,4 @@ class FAQCardState extends State<FAQCard> {
       ),
     );
   }
-
 }

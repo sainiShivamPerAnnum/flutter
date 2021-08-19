@@ -548,7 +548,7 @@ class DBModel extends ChangeNotifier {
   /// op_4: 75
   /// op_5: 99}
   Future<Map<String, dynamic>> getPollCount(
-      [String pollId = Constants.POLL_FOLLOWUPGAME_ID]) async {
+      [String pollId = Constants.POLL_NEXTGAME_ID]) async {
     try {
       DocumentSnapshot snapshot = await _api.getPollDocument(pollId);
       Map<String, dynamic> _doc = snapshot.data();
@@ -563,7 +563,7 @@ class DBModel extends ChangeNotifier {
 
   ///response parameter should be the index of the poll option = 1,2,3,4,5
   Future<bool> addUserPollResponse(String uid, int response,
-      [String pollId = Constants.POLL_FOLLOWUPGAME_ID]) async {
+      [String pollId = Constants.POLL_NEXTGAME_ID]) async {
     bool incrementFlag = true;
     try {
       await _api.incrementPollDocument(pollId, 'op_$response');
@@ -595,7 +595,7 @@ class DBModel extends ChangeNotifier {
   ///If response = -1, user has not added a poll response yet
   ///else response is option index, 1,2,3,4,5
   Future<int> getUserPollResponse(String uid,
-      [String pollId = Constants.POLL_FOLLOWUPGAME_ID]) async {
+      [String pollId = Constants.POLL_NEXTGAME_ID]) async {
     try {
       DocumentSnapshot docSnapshot =
           await _api.getUserPollResponseDocument(uid, pollId);
