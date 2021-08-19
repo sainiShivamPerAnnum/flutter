@@ -257,14 +257,9 @@ class Social extends StatelessWidget {
           ),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             socialButton("images/svgs/instagram.svg",
-                "https://www.instagram.com/fellofinance/"),
+                "https://www.instagram.com/jointhefelloship/"),
             socialButton("images/svgs/linkedin.svg",
                 "https://www.linkedin.com/company/fellofinance/"),
-            socialButton(
-                "images/svgs/whatsapp.svg",
-                Platform.isAndroid
-                    ? "https://wa.me/${917993252690}/?text=Hello Fello"
-                    : "https://api.whatsapp.com/send?phone=${917993252690}=Hello Fello"),
             socialButton("images/svgs/mail.svg", "mailto:hello@fello.in"),
             socialButton("images/svgs/web.svg", "https://fello.in"),
           ])

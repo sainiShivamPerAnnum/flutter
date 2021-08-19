@@ -200,7 +200,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
                                 ElevatedButton.styleFrom(primary: Colors.white),
                             onPressed: () => Navigator.pop(context),
                             child: Text(
-                              "Cancle",
+                              "Cancel",
                               style: GoogleFonts.montserrat(
                                 color: Colors.black,
                                 fontSize: SizeConfig.mediumTextSize,

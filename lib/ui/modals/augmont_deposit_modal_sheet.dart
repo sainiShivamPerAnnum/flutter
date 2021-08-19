@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
@@ -48,6 +50,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
   String _errorMessage;
   double _width;
   AugmontModel augmontProvider;
+  int validDuration = 120;
+  Timer validityTimer;
 
   _initFields() {
     if (baseProvider != null) {
@@ -56,6 +60,16 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
       try {
         int t = (_isEnabledStr != null) ? int.parse(_isEnabledStr) : 1;
         _isDepositsEnabled = (t == 1);
+        validityTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+          if(validDuration==0) {
+            timer.cancel();
+            backButtonDispatcher.didPopRoute();
+          }
+          setState(() {
+            validDuration--;
+          });
+        });
+
       } catch (e) {
         _isDepositsEnabled = true;
       }
@@ -121,6 +135,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                       if (_isDepositInProgress) {
                         // do nothing
                       } else {
+                        validityTimer.cancel();
                         backButtonDispatcher.didPopRoute();
                       }
                     },
@@ -168,6 +183,16 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
               ),
             ),
             _buildPurchaseDescriptionCard(_getDouble(_amtController.text)),
+            SizedBox(
+              height: SizeConfig.screenWidth * 0.01,
+            ),
+            Text(
+              'Gold rate valid for ${Duration(seconds: validDuration).inMinutes.toString().padLeft(2,'0')}:${Duration(seconds: validDuration%60).inSeconds.toString().padLeft(2,'0')}',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: SizeConfig.screenWidth * 0.01,
+            ),
             Wrap(
               spacing: 20,
               children: [
@@ -224,6 +249,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                         //widget.onDepositConfirmed();
                         if (depositformKey3.currentState.validate()) {
                           _isDepositInProgress = true;
+                          validityTimer.cancel();
                           setState(() {});
                           widget.onDepositConfirmed(
                               _getTaxIncludedAmount(_amtController.text));
@@ -420,11 +446,13 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         barrierDismissible: false,
         builder: (BuildContext context) => SuccessDialog(),
       );
-    } else
+    } else {
+      backButtonDispatcher.didPopRoute();
       baseProvider.showNegativeAlert(
           'Failed',
           'Your gold deposit failed. Please try again or contact us if you are facing issues',
           context,
           seconds: 5);
+    }
   }
 }
