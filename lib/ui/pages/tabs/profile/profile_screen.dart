@@ -309,7 +309,7 @@ class TermsRow extends StatelessWidget {
           child: InkWell(
             child: Text(
               'Terms of Service',
-              style: TextStyle(
+              style: TextStyle(fontSize: SizeConfig.smallTextSize*1.2,
                   color: Colors.grey, decoration: TextDecoration.underline),
             ),
             onTap: () {
@@ -330,7 +330,7 @@ class TermsRow extends StatelessWidget {
           child: InkWell(
             child: Text(
               'Privacy Policy',
-              style: TextStyle(
+              style: TextStyle(fontSize: SizeConfig.smallTextSize*1.2,
                   color: Colors.grey, decoration: TextDecoration.underline),
             ),
             onTap: () {
@@ -338,6 +338,26 @@ class TermsRow extends StatelessWidget {
               BaseUtil.launchUrl('https://fello.in/policy/privacy');
               // delegate.appState.currentAction = PageAction(
               //     state: PageState.addPage, page: RefPolicyPageConfig);
+            },
+          ),
+        ),
+        Text(
+          '•',
+          style: TextStyle(color: Colors.grey),
+        ),
+        Padding(
+          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          child: InkWell(
+            child: Text(
+              'Referral Policy',
+              style: TextStyle(fontSize: SizeConfig.smallTextSize*1.2,
+                  color: Colors.grey, decoration: TextDecoration.underline),
+            ),
+            onTap: () {
+              Haptic.vibrate();
+              // BaseUtil.launchUrl('https://fello.in/policy/privacy');
+              delegate.appState.currentAction = PageAction(
+                  state: PageState.addPage, page: RefPolicyPageConfig);
             },
           ),
         )
