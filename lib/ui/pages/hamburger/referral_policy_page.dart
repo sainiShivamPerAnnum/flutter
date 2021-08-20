@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -69,12 +70,12 @@ class _ReferralPolicyState extends State<ReferralPolicy> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: BaseUtil.getAppBar(context),
+        appBar: BaseUtil.getAppBar(context, "Referral Policy"),
         body: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
+            width: SizeConfig.screenWidth,
+            height: SizeConfig.screenHeight,
             child: SingleChildScrollView(
-              padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
               physics: BouncingScrollPhysics(),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -87,7 +88,7 @@ class _ReferralPolicyState extends State<ReferralPolicy> {
                   (_isLoadComplete && _downloadFailed)
                       ? Center(
                           child: Padding(
-                            padding: EdgeInsets.all(20),
+                            padding: const EdgeInsets.all(20),
                             child: Text(
                               'Failed to load the Referral Policy at the moment. Please try again later',
                               style: TextStyle(
@@ -101,10 +102,11 @@ class _ReferralPolicyState extends State<ReferralPolicy> {
                   (!_isLoadComplete)
                       ? Center(
                           child: Padding(
-                              padding: EdgeInsets.all(30),
-                              child: SpinKitWave(
-                                color: UiConstants.primaryColor,
-                              )),
+                            padding: const EdgeInsets.all(30),
+                            child: SpinKitWave(
+                              color: UiConstants.primaryColor,
+                            ),
+                          ),
                         )
                       : Container()
                 ],

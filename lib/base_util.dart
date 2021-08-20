@@ -13,14 +13,16 @@ import 'package:felloapp/core/model/ReferralLeader.dart';
 import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
-import 'package:felloapp/core/model/UserKycDetail.dart';
 import 'package:felloapp/core/model/UserTicketWallet.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -31,8 +33,7 @@ import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
-import 'package:showcaseview/showcase.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'core/base_remote_config.dart';
 import 'core/model/TambolaBoard.dart';
 import 'core/model/UserAugmontDetail.dart';
@@ -43,6 +44,7 @@ class BaseUtil extends ChangeNotifier {
   final Log log = new Log("BaseUtil");
   DBModel _dbModel = locator<DBModel>();
   LocalDBModel _lModel = locator<LocalDBModel>();
+  AppState _appState = locator<AppState>();
   BaseUser _myUser;
   UserFundWallet _userFundWallet;
   UserTicketWallet _userTicketWallet;
@@ -50,6 +52,9 @@ class BaseUtil extends ChangeNotifier {
   FirebaseAnalytics baseAnalytics;
   PaymentService _payService;
   List<FeedCard> feedCards;
+  int _dailyPickCount;
+  String userRegdPan;
+  List<int> todaysPicks;
 
   ///Tambola global objects
   DailyPick weeklyDigits;
@@ -59,6 +64,7 @@ class BaseUtil extends ChangeNotifier {
   UserIciciDetail _iciciDetail;
   UserTransaction _currentICICITxn;
   UserTransaction _currentICICINonInstantWthrlTxn;
+  PanService panService;
 
   ///Augmont global objects
   UserAugmontDetail _augmontDetail;
@@ -66,7 +72,6 @@ class BaseUtil extends ChangeNotifier {
   AugmontRates augmontGoldRates;
 
   ///KYC global object
-  UserKycDetail _kycDetail;
   TambolaWinnersDetail tambolaWinnersDetail;
   List<PrizeLeader> prizeLeaders = [];
   List<ReferralLeader> referralLeaders = [];
@@ -77,50 +82,93 @@ class BaseUtil extends ChangeNotifier {
   static PackageInfo packageInfo;
   Map<String, dynamic> freshchatKeys;
 
-  // Objects for Transaction list Pagination
+  /// Objects for Transaction list Pagination
   DocumentSnapshot lastTransactionListDocument;
   bool hasMoreTransactionListDocuments = true;
 
   DateTime _userCreationTimestamp;
   int isOtpResendCount = 0;
+  bool show_security_prompt = false;
+  String zeroBalanceAssetUri;
 
   ///Flags in various screens defined as global variables
-  bool isUserOnboarded = false;
-  bool isLoginNextInProgress = false;
-  bool isEditProfileNextInProgress = false;
-  bool isRedemptionOtpInProgress = false;
-  bool isAugmontRegnInProgress = false;
-  bool isAugmontRegnCompleteAnimateInProgress = false;
-  bool isIciciDepositRouteLogicInProgress = false;
-  bool isEditAugmontBankDetailInProgress = false;
-  bool isAugDepositRouteLogicInProgress = false;
-  bool isAugWithdrawRouteLogicInProgress = false;
-  bool isAugmontRealTimeBalanceFetched = false;
-  bool isWeekWinnersFetched = false;
-  bool isPrizeLeadersFetched = false;
-  bool isReferralLeadersFetched = false;
-  bool weeklyDrawFetched = false;
-  bool weeklyTicksFetched = false;
-  bool referralsFetched = false;
-  bool userReferralInfoFetched = false;
-  bool isProfilePictureUpdated = false;
-  bool isReferralLinkBuildInProgressWhatsapp = false;
-  bool isReferralLinkBuildInProgressOther = false;
-  bool isHomeCardsFetched = false;
-  bool show_game_tutorial = false;
-  bool show_finance_tutorial = false;
-  static bool isDeviceOffline = false;
-  static bool ticketRequestSent = false;
-  static int ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
-  static int infoSliderIndex = 0;
-  static bool playScreenFirst = true;
-  static int atomicTicketGenerationLeftCount = 0;
-  static int atomicTicketDeletionLeftCount = 0;
+  bool isUserOnboarded,
+      isLoginNextInProgress,
+      isEditProfileNextInProgress,
+      isRedemptionOtpInProgress,
+      isAugmontRegnInProgress,
+      isAugmontRegnCompleteAnimateInProgress,
+      isIciciDepositRouteLogicInProgress,
+      isEditAugmontBankDetailInProgress,
+      isAugDepositRouteLogicInProgress,
+      isAugWithdrawRouteLogicInProgress,
+      isAugmontRealTimeBalanceFetched,
+      isWeekWinnersFetched,
+      isPrizeLeadersFetched,
+      isReferralLeadersFetched,
+      weeklyDrawFetched,
+      weeklyTicksFetched,
+      referralsFetched,
+      userReferralInfoFetched,
+      isProfilePictureUpdated,
+      isReferralLinkBuildInProgressWhatsapp,
+      isReferralLinkBuildInProgressOther,
+      isHomeCardsFetched,
+      show_home_tutorial,
+      show_game_tutorial,
+      show_finance_tutorial;
+  static bool isDeviceOffline, ticketRequestSent, playScreenFirst;
+  static int ticketCountBeforeRequest,
+      infoSliderIndex,
+      atomicTicketGenerationLeftCount,
+      atomicTicketDeletionLeftCount;
+
+  _setRuntimeDefaults() {
+    isUserOnboarded = false;
+    isLoginNextInProgress = false;
+    isEditProfileNextInProgress = false;
+    isRedemptionOtpInProgress = false;
+    isAugmontRegnInProgress = false;
+    isAugmontRegnCompleteAnimateInProgress = false;
+    isIciciDepositRouteLogicInProgress = false;
+    isEditAugmontBankDetailInProgress = false;
+    isAugDepositRouteLogicInProgress = false;
+    isAugWithdrawRouteLogicInProgress = false;
+    isAugmontRealTimeBalanceFetched = false;
+    isWeekWinnersFetched = false;
+    isPrizeLeadersFetched = false;
+    isReferralLeadersFetched = false;
+    weeklyDrawFetched = false;
+    weeklyTicksFetched = false;
+    referralsFetched = false;
+    userReferralInfoFetched = false;
+    isProfilePictureUpdated = false;
+    isReferralLinkBuildInProgressWhatsapp = false;
+    isReferralLinkBuildInProgressOther = false;
+    isHomeCardsFetched = false;
+    show_home_tutorial = false;
+    show_game_tutorial = false;
+    show_finance_tutorial = false;
+    isDeviceOffline = false;
+    ticketRequestSent = false;
+    ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
+    infoSliderIndex = 0;
+    playScreenFirst = true;
+    atomicTicketGenerationLeftCount = 0;
+    atomicTicketDeletionLeftCount = 0;
+    show_security_prompt = false;
+  }
 
   Future init() async {
+    print('inside init base util');
+    _setRuntimeDefaults();
+
     ///analytics
     BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
+    //remote config for various remote variables
+    print('base util remote config');
+    await BaseRemoteConfig.init();
 
     ///fetch on-boarding status and User details
     firebaseUser = FirebaseAuth.instance.currentUser;
@@ -132,24 +180,36 @@ class BaseUtil extends ChangeNotifier {
     isUserOnboarded =
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
     if (isUserOnboarded) {
-      //get user wallet
+      ///see if security needs to be shown
+      show_security_prompt = await _lModel.showSecurityPrompt();
+
+      ///get user wallet
       _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
       if (_userFundWallet == null) _compileUserWallet();
 
-      //get user ticket balance
+      ///get user ticket balance
       _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
       if (_userTicketWallet == null) {
         await _initiateNewTicketWallet();
       }
-      //remote config for various remote variables
-      await BaseRemoteConfig.init();
-      //get user creation time
-      _userCreationTimestamp = firebaseUser.metadata.creationTime;
-      //check if there are any icici deposits txns in process
-      _payService = locator<PaymentService>();
 
+      ///get user creation time
+      _userCreationTimestamp = firebaseUser.metadata.creationTime;
+
+      //check if there are any icici deposits txns in process
       //TODO not required for now
       // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
+      // _payService = locator<PaymentService>();
+
+      ///prefill augmont and pan details if available
+      panService = new PanService();
+      if (myUser.isAugmontOnboarded) {
+        augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
+        userRegdPan = await panService.getUserPan();
+      }
+
+      await getProfilePicUrl();
+      await fetchWeeklyPicks();
 
       ///Freshchat utils
       freshchatKeys = await _dbModel.getActiveFreshchatKey();
@@ -158,11 +218,33 @@ class BaseUtil extends ChangeNotifier {
             freshchatKeys['app_domain'],
             gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
       }
+
+      /// Fetch this weeks' Dailypicks count
+      String _dpc = BaseRemoteConfig.remoteConfig
+          .getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT);
+      if (_dpc == null || _dpc.isEmpty) _dpc = '5';
+      _dailyPickCount = 5;
+      try {
+        _dailyPickCount = int.parse(_dpc);
+      } catch (e) {
+        log.error('key parsing failed: ' + e.toString());
+        Map<String, String> errorDetails = {
+          'User number': _myUser.mobile,
+          'Error message': e.toString()
+        };
+        _dbModel.logFailure(
+            _myUser.uid, FailType.DailyPickParseFailed, errorDetails);
+        _dailyPickCount = 5;
+      }
+
+      ///pick zerobalance asset
+      Random rnd = new Random();
+      zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
     }
   }
 
   acceptNotificationsIfAny(BuildContext context) {
-    //if payment completed in the background:
+    ///if payment completed in the background:
     if (_payService != null && myUser.pendingTxnId != null) {
       _payService.addPaymentStatusListener((value) {
         if (value == PaymentService.TRANSACTION_COMPLETE) {
@@ -190,11 +272,30 @@ class BaseUtil extends ChangeNotifier {
       return (unreadCount['count'] > 0);
     } catch (e) {
       log.error('Error reading unread count variable: $e');
+      Map<String, dynamic> errorDetails = {
+        'User number': _myUser.mobile,
+        'Error Type': 'Unread message count failed'
+      };
+      _dbModel.logFailure(_myUser.uid, FailType.FreshchatFail, errorDetails);
       return false;
     }
   }
 
-  static Widget getAppBar(BuildContext context) {
+  Future<void> refreshFunds() async {
+    //TODO: ADD LOADER
+    print("-----------------> I got called");
+    return _dbModel.getUserFundWallet(myUser.uid).then((aValue) {
+      if (aValue != null) {
+        userFundWallet = aValue;
+        if (userFundWallet.augGoldQuantity > 0)
+          _updateAugmontBalance(); //setstate call in method
+
+      }
+      notifyListeners();
+    });
+  }
+
+  static Widget getAppBar(BuildContext context, String title) {
     return AppBar(
       leading: IconButton(
         icon: Icon(
@@ -205,40 +306,29 @@ class BaseUtil extends ChangeNotifier {
           backButtonDispatcher.didPopRoute();
         },
       ),
-
       elevation: 1.0,
       backgroundColor: UiConstants.primaryColor,
       iconTheme: IconThemeData(
         color: UiConstants.accentColor, //change your color here
       ),
-      title: Text('${Constants.APP_NAME}',
+      title: Text(title ?? '${Constants.APP_NAME}',
           style: GoogleFonts.montserrat(
               color: Colors.white,
               fontWeight: FontWeight.w500,
               fontSize: SizeConfig.largeTextSize)),
-      // bottom: PreferredSize(
-      //     child: Container(
-      //         color: Colors.blueGrey[100],
-      //         height: 25.0,
-      //         child: Padding(
-      //             padding:
-      //                 EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
-      //             child: Row(
-      //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //               children: [
-      //                 Text(
-      //                   'We are currently in Beta',
-      //                   style: TextStyle(color: Colors.black54),
-      //                 ),
-      //                 Icon(
-      //                   Icons.info_outline,
-      //                   size: 20,
-      //                   color: Colors.black54,
-      //                 )
-      //               ],
-      //             ))),
-      //     preferredSize: Size.fromHeight(25.0)),
     );
+  }
+
+  fetchWeeklyPicks() async {
+    if (!weeklyDrawFetched) {
+      log.debug('Requesting for weekly picks');
+      DailyPick _picks = await _dbModel.getWeeklyPicks();
+      weeklyDrawFetched = true;
+      if (_picks != null) {
+        weeklyDigits = _picks;
+      }
+      notifyListeners();
+    }
   }
 
   showPositiveAlert(String title, String message, BuildContext context,
@@ -326,6 +416,42 @@ class BaseUtil extends ChangeNotifier {
     )..show(context);
   }
 
+  Future<bool> getDrawaStatus() async {
+    // CHECKING IF THE PICK ARE DRAWN OR NOT
+    if (!weeklyDrawFetched || weeklyDigits == null) await fetchWeeklyPicks();
+    if (weeklyDrawFetched && weeklyDigits != null)
+      switch (DateTime.now().weekday) {
+        case 1:
+          todaysPicks = weeklyDigits.mon;
+          break;
+        case 2:
+          todaysPicks = weeklyDigits.tue;
+          break;
+        case 3:
+          todaysPicks = weeklyDigits.wed;
+          break;
+        case 4:
+          todaysPicks = weeklyDigits.thu;
+          break;
+        case 5:
+          todaysPicks = weeklyDigits.fri;
+          break;
+        case 6:
+          todaysPicks = weeklyDigits.sat;
+          break;
+        case 7:
+          todaysPicks = weeklyDigits.sun;
+          break;
+      }
+    //CHECKING FOR THE FIRST TIME OPENING OF TAMBOLA AFTER THE PICKS ARE DRAWN FOR THIS PARTICULAR DAY
+    notifyListeners();
+    if (todaysPicks != null &&
+        DateTime.now().weekday != await _lModel.getDailyPickAnimLastDay())
+      return true;
+
+    return false;
+  }
+
   showRefreshIndicator(BuildContext context) {
     Flushbar(
       flushbarPosition: FlushbarPosition.TOP,
@@ -377,6 +503,10 @@ class BaseUtil extends ChangeNotifier {
       log.debug('Signed Out Firebase User');
       await _lModel.deleteLocalAppData();
       log.debug('Cleared local cache');
+      _appState.setCurrentTabIndex = 0;
+
+      //remove fcm token from remote
+      await _dbModel.updateClientToken(myUser, '');
 
       //TODO better fix required
       ///IMP: When a user signs out and attempts
@@ -386,53 +516,37 @@ class BaseUtil extends ChangeNotifier {
       _myUser = null;
       _userFundWallet = null;
       _userTicketWallet = null;
+      firebaseUser = null;
+      baseAnalytics = null;
       _payService = null;
       feedCards = null;
+      _dailyPickCount = null;
+      userRegdPan = null;
       weeklyDigits = null;
       userWeeklyBoards = null;
       _iciciDetail = null;
       _currentICICITxn = null;
       _currentICICINonInstantWthrlTxn = null;
+      panService = null;
       _augmontDetail = null;
+      augmontGoldRates = null;
       _currentAugmontTxn = null;
-      _kycDetail = null;
       tambolaWinnersDetail = null;
-      prizeLeaders = null;
-      referralLeaders = null;
+      prizeLeaders = [];
+      referralLeaders = [];
       myUserDpUrl = null;
       userMiniTxnList = null;
       userReferralsList = null;
       myReferralInfo = null;
+      packageInfo = null;
+      freshchatKeys = null;
       _userCreationTimestamp = null;
-
+      lastTransactionListDocument = null;
+      hasMoreTransactionListDocuments = true;
       isOtpResendCount = 0;
-
-      isUserOnboarded = false;
-      isLoginNextInProgress = false;
-      isEditProfileNextInProgress = false;
-      isRedemptionOtpInProgress = false;
-      isAugmontRegnInProgress = false;
-      isAugmontRegnCompleteAnimateInProgress = false;
-      isIciciDepositRouteLogicInProgress = false;
-      isEditAugmontBankDetailInProgress = false;
-      isAugDepositRouteLogicInProgress = false;
-      isAugWithdrawRouteLogicInProgress = false;
-      isAugmontRealTimeBalanceFetched = false;
-      weeklyDrawFetched = false;
-      weeklyTicksFetched = false;
-      referralsFetched = false;
-      userReferralInfoFetched = false;
-      isProfilePictureUpdated = false;
-      isReferralLinkBuildInProgressWhatsapp = false;
-      isReferralLinkBuildInProgressOther = false;
-      isHomeCardsFetched = false;
-      isDeviceOffline = false;
-      ticketRequestSent = false;
-      ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
-      infoSliderIndex = 0;
-      playScreenFirst = true;
-      atomicTicketGenerationLeftCount = 0;
-      atomicTicketDeletionLeftCount = 0;
+      show_security_prompt = false;
+      delegate.appState.setCurrentTabIndex = 0;
+      _setRuntimeDefaults();
 
       return true;
     } catch (e) {
@@ -465,44 +579,24 @@ class BaseUtil extends ChangeNotifier {
     return 0;
   }
 
-  static Widget buildShowcaseWrapper(
-      GlobalKey showcaseKey, String showcaseMsg, Widget body) {
-    return Showcase.withWidget(
-        key: showcaseKey,
-        description: showcaseMsg,
-        contentPadding: EdgeInsets.all(20),
-        //descTextStyle: TextStyle(fontSize: 20),
-        width: 300,
-        height: 140,
-        container: Container(
-          padding: EdgeInsets.all(20),
-          decoration: new BoxDecoration(
-            shape: BoxShape.rectangle,
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(UiConstants.padding),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10.0,
-                offset: const Offset(0.0, 10.0),
-              ),
-            ],
-          ),
-          child: Container(
-            width: SizeConfig.screenWidth * 0.84,
-            child: Text(
-              showcaseMsg,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 16,
-                  height: 1.4,
-                  fontWeight: FontWeight.w300,
-                  color: UiConstants.accentColor),
-            ),
-          ),
-        ),
-        overlayOpacity: 0.6,
-        child: body);
+  Future<void> getProfilePicUrl() async {
+    try {
+      if (myUser != null) myUserDpUrl = await _dbModel.getUserDP(myUser.uid);
+      if (myUserDpUrl != null) {
+        print("got the image");
+        notifyListeners();
+      }
+    } catch (e) {
+      log.error(e.toString());
+    }
+  }
+
+  static void launchUrl(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   bool isOldCustomer() {
@@ -668,6 +762,11 @@ class BaseUtil extends ChangeNotifier {
           BaseUtil.digitPrecision(userFundWallet.augGoldQuantity * gSellRate);
       notifyListeners(); //might cause ui error if screen no longer active
     }).catchError((err) {
+      if (_myUser.uid != null) {
+        var errorDetails = {'Error message': err.toString()};
+        _dbModel.logFailure(
+            _myUser.uid, FailType.UserAugmontBalanceUpdateFailed, errorDetails);
+      }
       print('$err');
     });
   }
@@ -684,6 +783,48 @@ class BaseUtil extends ChangeNotifier {
     _myUser.isAugmontOnboarded = newValue;
     notifyListeners();
   }
+
+  void flipSecurityValue(bool value) {
+    _myUser.userPreferences.setPreference(Preferences.APPLOCK, (value) ? 1 : 0);
+    // saveSecurityValue(this.isSecurityEnabled);
+    AppState.unsavedPrefs = true;
+    notifyListeners();
+  }
+
+  void toggleTambolaNotificationStatus(bool value) {
+    _myUser.userPreferences
+        .setPreference(Preferences.TAMBOLANOTIFICATIONS, (value) ? 1 : 0);
+    AppState.unsavedPrefs = true;
+    notifyListeners();
+  }
+
+  //Saving and fetching app lock user preference
+  // void saveSecurityValue(bool newValue) async {
+  //   try {
+  //     SharedPreferences _prefs = await SharedPreferences.getInstance();
+  //     _prefs.setBool("securityEnabled", newValue);
+  //   } catch(e) {
+  //     log.debug("Error while saving security enabled value");
+  //   }
+  // }
+  //
+  // Future<bool> getSecurityValue() async {
+  //   try {
+  //     SharedPreferences _prefs = await SharedPreferences.getInstance();
+  //     if(_prefs.containsKey("securityEnabled")) {
+  //       bool _savedSecurityValue = _prefs.getBool("securityEnabled");
+  //       if(_savedSecurityValue!=null) {
+  //         return _savedSecurityValue;
+  //       }
+  //       else {
+  //         return false;
+  //       }
+  //     }
+  //   } catch(e) {
+  //     log.debug("Error while retrieving security enabled value");
+  //   }
+  //   return false;
+  // }
 
   static String getMonthName(int monthNum) {
     switch (monthNum) {
@@ -746,12 +887,6 @@ class BaseUtil extends ChangeNotifier {
     _iciciDetail = value;
   }
 
-  UserKycDetail get kycDetail => _kycDetail;
-
-  set kycDetail(UserKycDetail value) {
-    _kycDetail = value;
-  }
-
   UserTransaction get currentICICITxn => _currentICICITxn;
 
   set currentICICITxn(UserTransaction value) {
@@ -769,6 +904,7 @@ class BaseUtil extends ChangeNotifier {
 
   set augmontDetail(UserAugmontDetail value) {
     _augmontDetail = value;
+    notifyListeners();
   }
 
   bool isSignedIn() => (firebaseUser != null && firebaseUser.uid != null);
@@ -787,5 +923,8 @@ class BaseUtil extends ChangeNotifier {
 
   set userTicketWallet(UserTicketWallet value) {
     _userTicketWallet = value;
+    notifyListeners();
   }
+
+  int get dailyPicksCount => _dailyPickCount;
 }

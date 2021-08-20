@@ -1,122 +1,116 @@
+import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class FAQCard extends StatelessWidget {
-  final List<String> _faqHeaders;
-  final List<String> _faqResponses;
+class FAQCard extends StatefulWidget {
+  final List<String> faqHeaders;
+  final List<String> faqResponses;
+  final Color borderColor;
 
-  FAQCard(this._faqHeaders, this._faqResponses);
+  FAQCard(this.faqHeaders, this.faqResponses, this.borderColor);
+  @override
+  State<StatefulWidget> createState() => FAQCardState();
+}
+
+class FAQCardState extends State<FAQCard> {
+  List<bool> detStatus;
+
+  @override
+  void initState() {
+    detStatus = List.filled(widget.faqHeaders.length, false);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    double _height = MediaQuery.of(context).size.height;
     return Container(
-      margin: EdgeInsets.all(
-        _height * 0.02,
-      ),
-      width: double.infinity,
-      padding: EdgeInsets.all(16),
+      width: SizeConfig.screenWidth,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            offset: Offset(5, 5),
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.1),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
+          borderRadius: BorderRadius.circular(16),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                offset: Offset(5, 5),
+                spreadRadius: 5,
+                blurRadius: 5)
+          ]),
+      margin: EdgeInsets.all(SizeConfig.globalMargin),
+      padding: EdgeInsets.only(top: 12, left: 10),
       child: Column(
         children: [
           Text(
             "FAQs",
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: 24,
+            style: GoogleFonts.montserrat(
+              color: Colors.black,
+              fontSize: SizeConfig.largeTextSize,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          SizedBox(
-            height: 16,
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: _faqHeaders.length,
-            itemBuilder: (ctx, i) {
-              return FAQCardItems(
-                idx: i,
-                itemHeader: _faqHeaders[i],
-                itemResponse: _faqResponses[i],
-              );
-            },
-          )
+          SizedBox(height: 10),
+          _buildItems()
         ],
       ),
     );
   }
-}
 
-class FAQCardItems extends StatefulWidget {
-  final int idx;
-  final String itemHeader;
-  final String itemResponse;
-
-  FAQCardItems(
-      {@required this.idx,
-      @required this.itemHeader,
-      @required this.itemResponse});
-
-  @override
-  _FAQCardItemsState createState() => _FAQCardItemsState();
-}
-
-class _FAQCardItemsState extends State<FAQCardItems> {
-  bool open = false;
-
-  void toggleContainerHeight() {
-    if (!open) {
-      setState(() {
-        open = true;
-      });
-    } else {
-      setState(() {
-        open = false;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
+  _buildItems() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        width: SizeConfig.screenWidth,
+        child: Column(
           children: [
-            Expanded(
-              child: Text(
-                widget.itemHeader,
-                softWrap: true,
-                maxLines: 2,
+            ExpansionPanelList(
+              animationDuration: Duration(milliseconds: 600),
+              expandedHeaderPadding: EdgeInsets.all(0),
+              dividerColor: Colors.grey.withOpacity(0.2),
+              elevation: 0,
+              children: List.generate(
+                widget.faqHeaders.length,
+                (index) => ExpansionPanel(
+                  canTapOnHeader: true,
+                  headerBuilder: (ctx, isOpen) =>
+                      _prizeFAQHeader(widget.faqHeaders[index]),
+                  isExpanded: detStatus[index],
+                  body: Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(
+                      right: SizeConfig.blockSizeHorizontal * 6,
+                    ),
+                    child: Text(
+                      widget.faqResponses[index],
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        height: 1.5,
+                        fontSize: SizeConfig.mediumTextSize,
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            ),
-            IconButton(
-              onPressed: toggleContainerHeight,
-              icon: Icon(
-                !open ? Icons.arrow_drop_down : Icons.arrow_drop_up,
-              ),
+              expansionCallback: (i, isOpen) {
+                setState(() {
+                  detStatus[i] = !isOpen;
+                });
+              },
             ),
           ],
         ),
-        AnimatedContainer(
-          curve: Curves.fastOutSlowIn,
-          duration: Duration(milliseconds: 500),
-          height: open ? MediaQuery.of(context).size.height * 0.15 : 0,
-          padding: EdgeInsets.only(
-            right: 30,
-          ),
-          width: double.infinity,
-          child: Text(widget.itemResponse),
+      ),
+    );
+  }
+
+  _prizeFAQHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: SizeConfig.mediumTextSize,
+          fontWeight: FontWeight.w700,
         ),
-      ],
+      ),
     );
   }
 }

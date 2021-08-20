@@ -1,9 +1,9 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class KYCInvalid extends StatelessWidget {
@@ -15,7 +15,7 @@ class KYCInvalid extends StatelessWidget {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
     return Scaffold(
-        appBar: BaseUtil.getAppBar(context),
+        appBar: BaseUtil.getAppBar(context, null),
         bottomSheet: Container(
           width: double.infinity,
           height: MediaQuery.of(context).size.height * 0.07,
@@ -35,7 +35,7 @@ class KYCInvalid extends StatelessWidget {
                     .copyWith(color: Colors.white),
               ),
               onPressed: () async {
-                HapticFeedback.vibrate();
+                Haptic.vibrate();
                 baseProvider.showNegativeAlert(
                     'Unavailable',
                     'The in-house KYC verification engine will be made available soon',
@@ -99,7 +99,7 @@ class KYCInvalid extends StatelessWidget {
                                 label: Text("What is KYC?"),
                                 backgroundColor: UiConstants.chipColor,
                                 onPressed: () {
-                                  HapticFeedback.vibrate();
+                                  Haptic.vibrate();
                                   showDialog(
                                       context: context,
                                       builder: (BuildContext context) =>
@@ -113,7 +113,7 @@ class KYCInvalid extends StatelessWidget {
                                 label: Text("Why is it required?"),
                                 backgroundColor: UiConstants.chipColor,
                                 onPressed: () {
-                                  HapticFeedback.vibrate();
+                                  Haptic.vibrate();
                                   showDialog(
                                       context: context,
                                       builder: (BuildContext context) =>

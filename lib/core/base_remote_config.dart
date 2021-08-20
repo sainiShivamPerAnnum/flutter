@@ -1,8 +1,13 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class BaseRemoteConfig {
   static RemoteConfig remoteConfig;
+  static DBModel _dbProvider = locator<DBModel>();
+  static BaseUtil _baseProvider = locator<BaseUtil>();
 
   ///Each config is set as a map = {name, default value}
   static const Map<String, String> _DRAW_PICK_TIME = {'draw_pick_time': '18'};
@@ -10,7 +15,13 @@ class BaseRemoteConfig {
     'tambola_header_1': 'Today\'s picks'
   };
   static const Map<String, String> _TAMBOLA_HEADER_SECOND = {
-    'tambola_header_2': 'Click to see the other picks'
+    'tambola_header_2': 'Pull to see the other picks'
+  };
+  static const Map<String, String> _TAMBOLA_DAILY_PICK_COUNT = {
+    'tambola_daily_pick_count': '5'
+  };
+  static const Map<String, String> _FORCE_MIN_BUILD_NUMBER = {
+    'force_min_build_number': '0'
   };
   static const Map<String, String> _DEPOSIT_UPI_ADDRESS = {
     'deposit_upi_address': '9769637379@okbizaxis'
@@ -19,19 +30,19 @@ class BaseRemoteConfig {
     'play_screen_first': 'true'
   };
   static const Map<String, String> _TAMBOLA_WIN_CORNER = {
-    'tambola_win_corner': '500'
+    'tambola_win_corner': '1000'
   };
   static const Map<String, String> _TAMBOLA_WIN_TOP = {
-    'tambola_win_top': '1500'
+    'tambola_win_top': '5000'
   };
   static const Map<String, String> _TAMBOLA_WIN_MIDDLE = {
-    'tambola_win_middle': '1500'
+    'tambola_win_middle': '5000'
   };
   static const Map<String, String> _TAMBOLA_WIN_BOTTOM = {
-    'tambola_win_bottom': '1500'
+    'tambola_win_bottom': '5000'
   };
   static const Map<String, String> _TAMBOLA_WIN_FULL = {
-    'tambola_win_full': '10,000'
+    'tambola_win_full': '25,000'
   };
   static const Map<String, String> _REFERRAL_BONUS = {'referral_bonus': '25'};
   static const Map<String, String> _REFERRAL_TICKET_BONUS = {
@@ -44,10 +55,10 @@ class BaseRemoteConfig {
     'aws_augmont_key_index': '1'
   };
   static const Map<String, String> _ICICI_DEPOSITS_ENABLED = {
-    'icici_deposits_enabled': '1'
+    'icici_deposits_enabled': '0'
   };
   static const Map<String, String> _ICICI_DEPOSIT_PERMISSION = {
-    'icici_deposit_permission': '1'
+    'icici_deposit_permission': '0'
   };
   static const Map<String, String> _AUGMONT_DEPOSITS_ENABLED = {
     'augmont_deposits_enabled': '1'
@@ -62,10 +73,14 @@ class BaseRemoteConfig {
     'min_principle_for_prize': '100'
   };
 
+  static const Map<String, String> _WEEK_NUMBER = {'week_number': '12'};
+
   static const Map<String, dynamic> DEFAULTS = {
     ..._DRAW_PICK_TIME,
     ..._TAMBOLA_HEADER_FIRST,
     ..._TAMBOLA_HEADER_SECOND,
+    ..._TAMBOLA_DAILY_PICK_COUNT,
+    ..._FORCE_MIN_BUILD_NUMBER,
     ..._DEPOSIT_UPI_ADDRESS,
     ..._PLAY_SCREEN_FIRST,
     ..._TAMBOLA_WIN_CORNER,
@@ -82,31 +97,41 @@ class BaseRemoteConfig {
     ..._AUGMONT_DEPOSITS_ENABLED,
     ..._AUGMONT_DEPOSIT_PERMISSION,
     ..._KYC_COMPLETION_PRIZE,
-    ..._UNLOCK_REFERRAL_AMT
+    ..._UNLOCK_REFERRAL_AMT,
+    ..._WEEK_NUMBER,
   };
 
   static Future<bool> init() async {
-    remoteConfig = await RemoteConfig.instance;
-    remoteConfig.setDefaults(DEFAULTS);
+    print('initializing remote config');
+    remoteConfig = RemoteConfig.instance;
     try {
-      // Fetches every 6 hrs
-      await remoteConfig.fetch();
-      await remoteConfig.activateFetched();
+      // await remoteConfig.activateFetched();
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeoutMillis: 30000,
-        minimumFetchIntervalMillis: 21600000,
+        fetchTimeout: const Duration(milliseconds: 30000),
+        minimumFetchInterval: const Duration(hours: 6),
       ));
+      await remoteConfig.setDefaults(DEFAULTS);
+      //RemoteConfigValue(null, ValueSource.valueStatic);
+
+      await remoteConfig.fetchAndActivate();
       return true;
-    } on FetchThrottledException catch (exception) {
-      // Fetch throttled.
-      print(exception);
-      return false;
     } catch (exception) {
       print(
           'Unable to fetch remote config. Cached or default values will be used');
+      if (_baseProvider.myUser.uid != null) {
+        Map<String, dynamic> errorDetails = {
+          'Error Type': 'Remote config details fetch failed',
+          'Error message': 'Remote config fetch failed, using default values.'
+        };
+        _dbProvider.logFailure(_baseProvider.myUser.uid,
+            FailType.RemoteConfigFailed, errorDetails);
+      }
       return false;
     }
   }
+
+  static String get FORCE_MIN_BUILD_NUMBER =>
+      _FORCE_MIN_BUILD_NUMBER.keys.first;
 
   static String get DRAW_PICK_TIME => _DRAW_PICK_TIME.keys.first;
 
@@ -142,6 +167,9 @@ class BaseRemoteConfig {
 
   static String get TAMBOLA_WIN_CORNER => _TAMBOLA_WIN_CORNER.keys.first;
 
+  static String get TAMBOLA_DAILY_PICK_COUNT =>
+      _TAMBOLA_DAILY_PICK_COUNT.keys.first;
+
   static String get PLAY_SCREEN_FIRST => _PLAY_SCREEN_FIRST.keys.first;
 
   static String get DEPOSIT_UPI_ADDRESS => _DEPOSIT_UPI_ADDRESS.keys.first;
@@ -149,6 +177,8 @@ class BaseRemoteConfig {
   static String get TAMBOLA_HEADER_SECOND => _TAMBOLA_HEADER_SECOND.keys.first;
 
   static String get TAMBOLA_HEADER_FIRST => _TAMBOLA_HEADER_FIRST.keys.first;
+
+  static String get WEEK_NUMBER => _WEEK_NUMBER.keys.first;
 
   static int get UNLOCK_REFERRAL_AMT {
     String _val = _UNLOCK_REFERRAL_AMT.keys.first;

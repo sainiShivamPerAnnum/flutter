@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/model/TicketRequest.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -188,6 +189,15 @@ class TambolaGenerationService extends ChangeNotifier {
 
   _onTicketGenerationRequestFailed() {
     log.error('Ticket generation failed at one or many steps');
+    if (baseProvider.myUser.uid != null) {
+      Map<String, dynamic> errorDetails = {
+        'Error message': 'Tickete generation failed at one or many steps',
+        'Atomic Ticket Generation Left Count':
+            BaseUtil.atomicTicketGenerationLeftCount.toString()
+      };
+      dbProvider.logFailure(baseProvider.myUser.uid,
+          FailType.TambolaTicketGenerationFailed, errorDetails);
+    }
     BaseUtil.atomicTicketGenerationLeftCount =
         0; // clear this so it can be attempted again
     if (_generationComplete != null) {

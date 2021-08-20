@@ -1,5 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserTicketWallet.dart';
+import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -25,14 +27,20 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     _width = MediaQuery.of(context).size.width;
-    return Dialog(
-      insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
+    return WillPopScope(
+      onWillPop: () async {
+        backButtonDispatcher.didPopRoute();
+        return true;
+      },
+      child: Dialog(
+        insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        elevation: 0.0,
+        backgroundColor: Colors.white,
+        child: dialogContent(context),
       ),
-      elevation: 0.0,
-      backgroundColor: Colors.white,
-      child: dialogContent(context),
     );
   }
 
@@ -115,6 +123,16 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
                             'This week',
                             true)
                         : Container(),
+                    SizedBox(
+                      height: SizeConfig.blockSizeVertical,
+                    ),
+                    Text(
+                      'You receive 1 ticket for every ₹ 100 you save ✌',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: SizeConfig.mediumTextSize,
+                          color: Colors.blueGrey),
+                    ),
                   ],
                 )),
           )

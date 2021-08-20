@@ -169,7 +169,7 @@ class Assets {
   static final List<Map<String, String>> tambolaFaqList = [
     {
       'How does one participate in Tambola?':
-          '- Everyday, 6 random numbers are picked.\n\n- The matching numbers on your tickets get automatically crossed, starting from the day they were generated.\n\n- On Sunday, your tickets are processed to see if they matched a category.'
+          '- Everyday, 5 random numbers are picked.\n\n- The matching numbers on your tickets get automatically crossed, starting from the day they were generated.\n\n- On Sunday, your tickets are processed to see if they matched a category.'
     },
     {
       'How does one win the game?':
@@ -213,7 +213,7 @@ class Assets {
   ];
 
   static final String integratedICICIUnavailable =
-      "Mutual Fund deposits are currently being tested within a small cohort. \n\n It will soon be available for everyone. Stay tuned! 😎";
+      "Mutual Fund deposits are currently being tested within a small cohort. \n\n It shall soon be made available for everyone. Stay tuned! ✨";
 
   static final String augmontUnavailable =
       "We are slowly moving towards a fully automated system of deposits and withdrawals. " +
@@ -235,7 +235,8 @@ class Assets {
       'Simply enter the desired amount you wish to purchase and you will be redirected to a payment gateway where you can complete the payment. \n\nThe expected grams of gold and the tickets shall automatically get credited once the transaction is completed!';
   static final String infoAugmontTime =
       'Making a gold purchase is immediate and the gold and tickets get automatically credited once the payment is complete.\n\n Selling your gold is also processed within a few clicks and the amount gets reflected in your bank account within 2 business working days.';
-  static final String infoAugmontRegnSecurity = 'As per KYC norms, it is necessary to accept a user\'s PAN information before one starts purchasing Gold. Due to this, we prioritised our efforts to add strong security rules to sensitive data: \n\n• Your PAN information is secured and encrypted using the AES-256 standard, and thus is not available for use by anyone else other than you.\n• All requests and messages sent to servers are RSA encrypted, ensuring safe transmission.\n• All transactions and communication with Augmont happen through specific pre-verified IP addresses on the server-side.\n\nThese steps and more ensure a robust security infrastructure for your finances. Feel free to drop us a note if you have any queries!';
+  static final String infoAugmontRegnSecurity =
+      'As per KYC norms, it is necessary to accept a user\'s PAN information before one starts purchasing Gold. Due to this, we prioritised our efforts to add strong security rules to sensitive data: \n\n• Your PAN information is secured and encrypted using the AES-256 standard, and thus is not available for use by anyone else other than you.\n• All requests and messages sent to servers are RSA encrypted, ensuring safe transmission.\n• All transactions and communication with Augmont happen through specific pre-verified IP addresses on the server-side.\n\nThese steps and more ensure a robust security infrastructure for your finances. Feel free to drop us a note if you have any queries!';
 
   static const List<String> POLL_NEXT_GAME_LIST = [
     'Financial Quiz',
@@ -243,6 +244,14 @@ class Assets {
     'Single/multi player card game',
     'Multi player board game',
     'Multi player arcade game',
+  ];
+
+  static const List<String> POLL_FOLLOW_UP_GAME_LIST = [
+    'Financial Quiz',
+    'Cricket',
+    'Fantasy Sports',
+    'Candy Crush®',
+    'Multi-player card games',
   ];
 
   static const String logoBase64 =

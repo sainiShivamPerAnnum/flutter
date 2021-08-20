@@ -2,8 +2,11 @@
     package="in.fello.felloapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- REQUIRED FOR KYC -->
+    <!--    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
+    <!--    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
 
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
@@ -13,7 +16,8 @@
     <application
         android:name="in.fello.felloapp.Application"
         android:label="Fello"
-        android:icon="@mipmap/ic_fello">
+        android:requestLegacyExternalStorage="true"
+        android:icon="@mipmap/ic_circle">
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="in.fello.felloapp"

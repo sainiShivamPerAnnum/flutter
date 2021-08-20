@@ -4,35 +4,33 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/change_profile_picture_dialog.dart';
-import 'package:felloapp/ui/elements/confirm_action_dialog.dart';
-import 'package:felloapp/ui/elements/marquee_widget.dart';
+import 'package:felloapp/ui/elements/Texts/marquee_text.dart';
+import 'package:felloapp/ui/elements/custom-art/profile-card.dart';
+import 'package:felloapp/ui/modals/share_info_modal.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:flip_card/flip_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:share/share.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
+// import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -42,6 +40,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   BaseUtil baseProvider;
   DBModel dbProvider;
+  HttpModel httpProvider;
   AppState appState;
   bool isPanFieldHidden = true;
 
@@ -57,6 +56,7 @@ class _ProfilePageState extends State<ProfilePage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
+    httpProvider = Provider.of<HttpModel>(context, listen: false);
 
     if (!baseProvider.userReferralInfoFetched)
       dbProvider.getUserReferralInfo(baseProvider.myUser.uid).then((value) {
@@ -86,26 +86,16 @@ class _ProfilePageState extends State<ProfilePage> {
           physics: BouncingScrollPhysics(),
           children: [
             Container(
-              height: SizeConfig.screenHeight * 0.1,
+              height: kToolbarHeight,
             ),
             Consumer<BaseUtil>(
               builder: (ctx, bp, child) {
-                return FlipCard(
-                  key: cardKey,
-                  direction: FlipDirection.VERTICAL,
-                  // default
-                  speed: 800,
-                  flipOnTouch: false,
-                  front: UserProfileCard(),
-                  back: UserEditProfileCard(
-                    oldname: baseProvider.myUser.name,
-                  ),
-                );
+                return UserProfileCard();
               },
             ),
             Consumer<BaseUtil>(
               builder: (ctx, bp, child) {
-                return showEmailVerifyLink();
+                return const ShowEmailVerifyLink();
               },
             ),
             SizedBox(height: 16),
@@ -115,66 +105,70 @@ class _ProfilePageState extends State<ProfilePage> {
                   Consumer<BaseUtil>(
                     builder: (ctx, bp, child) {
                       return baseProvider.myUser.username == null
-                          ? ProfileTabTile(
-                              leadWidget: Icon(
-                                Icons.account_circle_outlined,
-                                size: SizeConfig.blockSizeHorizontal * 5,
-                                color: UiConstants.primaryColor,
-                              ),
-                              title: "Username",
-                              onPress: () {},
-                              trailWidget: Container(
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  border: Border.all(
-                                      color: Colors.orange, width: 2),
-                                ),
-                                padding: EdgeInsets.symmetric(horizontal: 16),
-                                alignment: Alignment.center,
-                                child: GestureDetector(
+                          ? Column(
+                              children: [
+                                ListTile(
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          SizeConfig.globalMargin * 1.4),
+                                  leading: Icon(
+                                    Icons.account_circle_outlined,
+                                    size: SizeConfig.blockSizeHorizontal * 6,
+                                    color: UiConstants.primaryColor,
+                                  ),
+                                  title: Text(
+                                    "Username",
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: SizeConfig.mediumTextSize,
+                                    ),
+                                  ),
                                   onTap: () {
                                     if (baseProvider.myUser.username == null)
                                       appState.currentAction = PageAction(
                                           state: PageState.addPage,
                                           page: ClaimUsernamePageConfig);
                                   },
-                                  child: Text(
-                                    "Claim",
-                                    style: GoogleFonts.montserrat(
-                                        color: Colors.orange,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: SizeConfig.mediumTextSize),
+                                  trailing: Wrap(
+                                    children: [
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            primary: UiConstants.primaryColor),
+                                        onPressed: () {
+                                          if (baseProvider.myUser.username ==
+                                              null)
+                                            appState.currentAction = PageAction(
+                                                state: PageState.addPage,
+                                                page: ClaimUsernamePageConfig);
+                                        },
+                                        child: Text(
+                                          "Claim",
+                                          style: GoogleFonts.montserrat(
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
+                                Divider()
+                              ],
                             )
                           : SizedBox();
                     },
                   ),
-                  ProfileTabTilePan(
-                    logo: "images/contact-book.png",
-                    title: "PAN Number",
-                    value: baseProvider.myUser.pan,
-                    isHidden: isPanFieldHidden,
-                    isAvailable: (baseProvider.myUser.pan != null &&
-                        baseProvider.myUser.pan.isNotEmpty),
-                    onPress: () {
-                      HapticFeedback.vibrate();
-                      if (baseProvider.myUser.pan != null &&
-                          baseProvider.myUser.pan.isNotEmpty) {
-                        isPanFieldHidden = !isPanFieldHidden;
-                        setState(() {});
-                      } else {
-                        delegate.parseRoute(Uri.parse("d-panInfo"));
-                      }
-                    },
+                  ProfileTabTile(
+                    leadIcon: "images/contact-book.png",
+                    onPress: () => appState.currentAction = PageAction(
+                        state: PageState.addPage,
+                        page: UserProfileDetailsConfig),
+                    title: "Account",
+                    trailWidget: Icon(
+                      Icons.arrow_forward_ios,
+                      color: UiConstants.primaryColor,
+                      size: SizeConfig.blockSizeHorizontal * 4,
+                    ),
                   ),
                   ProfileTabTile(
-                      leadWidget: Image.asset(
-                        "images/transaction.png",
-                        height: SizeConfig.blockSizeHorizontal * 5,
-                      ),
+                      leadIcon: "images/transaction.png",
                       title: "Transactions",
                       trailWidget: Text(
                         "See All",
@@ -187,39 +181,235 @@ class _ProfilePageState extends State<ProfilePage> {
                           state: PageState.addPage,
                           page: TransactionPageConfig)),
                   ProfileTabTile(
-                      leadWidget: Image.asset(
-                        "images/referrals.png",
-                        height: SizeConfig.blockSizeHorizontal * 5,
+                    leadIcon: "images/referrals.png",
+                    title: "Referrals",
+                    trailWidget: Text(
+                      _myReferralCount.toString(),
+                      style: GoogleFonts.montserrat(
+                        color: UiConstants.primaryColor,
+                        fontSize: SizeConfig.mediumTextSize,
                       ),
-                      title: "Referrals",
-                      trailWidget: Text(
-                        _myReferralCount.toString(),
-                        style: GoogleFonts.montserrat(
-                          color: UiConstants.primaryColor,
-                          fontSize: SizeConfig.mediumTextSize,
-                        ),
-                      ),
-                      onPress: () => appState.currentAction = PageAction(
-                          state: PageState.addPage, page: ReferralPageConfig)),
+                    ),
+                    onPress: () => _myReferralCount > 0
+                        ? appState.currentAction = PageAction(
+                            state: PageState.addPage, page: ReferralPageConfig)
+                        : () {},
+                  ),
                 ],
               ),
             ),
-            ShareCard(),
-            Social(),
-            _appVersionRow(),
-            _termsRow(),
+            const ShareCard(),
+            const Social(),
+            const AppVersionRow(),
+            const TermsRow(),
             SizedBox(
               height: 20,
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _appVersionRow() {
+  int get _myReferralCount {
+    if (baseProvider == null ||
+        baseProvider.myReferralInfo == null ||
+        baseProvider.myReferralInfo.refCount == null) return 0;
+    return baseProvider.myReferralInfo.refCount;
+  }
+}
+
+class ShowEmailVerifyLink extends StatelessWidget {
+  const ShowEmailVerifyLink({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    BaseUtil baseProvider = Provider.of<BaseUtil>(context);
+    return baseProvider.myUser.isEmailVerified == null ||
+            baseProvider.myUser.isEmailVerified == false
+        ? InkWell(
+            onTap: () {
+              delegate.appState.currentAction = PageAction(
+                  state: PageState.addPage, page: VerifyEmailPageConfig);
+            },
+            child: const MarqueeText(
+              infoList: [
+                "Your email needs to be verified. Click here to complete this step."
+              ],
+              showBullet: false,
+              textColor: Colors.red,
+            ),
+          )
+        : SizedBox();
+  }
+}
+
+class Social extends StatelessWidget {
+  const Social();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: EdgeInsets.symmetric(vertical: 50),
+        width: SizeConfig.screenWidth,
+        child: Column(children: [
+          Text(
+            "Connect With Us",
+            style: TextStyle(
+              color: UiConstants.textColor,
+              fontSize: SizeConfig.screenHeight * 0.02,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            socialButton("images/svgs/instagram.svg",
+                "https://www.instagram.com/jointhefelloship/"),
+            socialButton("images/svgs/linkedin.svg",
+                "https://www.linkedin.com/company/fellofinance/"),
+            socialButton("images/svgs/mail.svg", "mailto:hello@fello.in"),
+            socialButton("images/svgs/web.svg", "https://fello.in"),
+          ])
+        ]));
+  }
+
+  Widget socialButton(String asset, String url) {
+    return GestureDetector(
+      onTap: () async => BaseUtil.launchUrl(url),
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: UiConstants.primaryColor,
+        ),
+        padding: EdgeInsets.all(12),
+        margin: EdgeInsets.symmetric(horizontal: 6),
+        child: SvgPicture.asset(
+          asset,
+          color: Colors.white,
+          fit: BoxFit.contain,
+          height: SizeConfig.blockSizeVertical * 1.5,
+          width: SizeConfig.blockSizeVertical * 1.5,
+        ),
+      ),
+    );
+  }
+}
+
+class TermsRow extends StatelessWidget {
+  const TermsRow();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          child: InkWell(
+            child: Text(
+              'Terms of Service',
+              style: TextStyle(fontSize: SizeConfig.smallTextSize*1.2,
+                  color: Colors.grey, decoration: TextDecoration.underline),
+            ),
+            onTap: () {
+              Haptic.vibrate();
+              BaseUtil.launchUrl('https://fello.in/policy/tnc');
+
+              // delegate.appState.currentAction =
+              //     PageAction(state: PageState.addPage, page: TncPageConfig);
+            },
+          ),
+        ),
+        Text(
+          '•',
+          style: TextStyle(color: Colors.grey),
+        ),
+        Padding(
+          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          child: InkWell(
+            child: Text(
+              'Privacy Policy',
+              style: TextStyle(fontSize: SizeConfig.smallTextSize*1.2,
+                  color: Colors.grey, decoration: TextDecoration.underline),
+            ),
+            onTap: () {
+              Haptic.vibrate();
+              BaseUtil.launchUrl('https://fello.in/policy/privacy');
+              // delegate.appState.currentAction = PageAction(
+              //     state: PageState.addPage, page: RefPolicyPageConfig);
+            },
+          ),
+        ),
+        Text(
+          '•',
+          style: TextStyle(color: Colors.grey),
+        ),
+        Padding(
+          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          child: InkWell(
+            child: Text(
+              'Referral Policy',
+              style: TextStyle(fontSize: SizeConfig.smallTextSize*1.2,
+                  color: Colors.grey, decoration: TextDecoration.underline),
+            ),
+            onTap: () {
+              Haptic.vibrate();
+              // BaseUtil.launchUrl('https://fello.in/policy/privacy');
+              delegate.appState.currentAction = PageAction(
+                  state: PageState.addPage, page: RefPolicyPageConfig);
+            },
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class AppVersionRow extends StatelessWidget {
+  const AppVersionRow();
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
-      child: Row(
+      child:
+          // Row(
+          //   crossAxisAlignment: CrossAxisAlignment.center,
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     Image.asset(
+          //       "images/fello-short-logo.png",
+          //       color: Colors.grey,
+          //       width: SizeConfig.cardTitleTextSize * 0.9,
+          //       height: SizeConfig.cardTitleTextSize * 0.9,
+          //     ),
+          //     SizedBox(width: 4),
+          //     Column(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       crossAxisAlignment: CrossAxisAlignment.start,
+          //       children: [
+          //         Text(
+          //           "Version 1.0.2",
+          //           style: TextStyle(
+          //               fontSize: SizeConfig.mediumTextSize,
+          //               fontWeight: FontWeight.w700,
+          //               color: Colors.grey),
+          //         ),
+          //         SizedBox(
+          //           height: 4,
+          //         ),
+          //         Text(
+          //           "Made for India ❤",
+          //           style: TextStyle(
+          //             fontSize: SizeConfig.smallTextSize,
+          //             color: Colors.black54,
+          //           ),
+          //         ),
+          //       ],
+          //     )
+          //   ],
+          // ),
+          Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -246,167 +436,17 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-
-  Widget _termsRow() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
-          child: InkWell(
-            child: Text(
-              'Terms of Service',
-              style: TextStyle(
-                  color: Colors.grey, decoration: TextDecoration.underline),
-            ),
-            onTap: () {
-              HapticFeedback.vibrate();
-              appState.currentAction =
-                  PageAction(state: PageState.addPage, page: TncPageConfig);
-            },
-          ),
-        ),
-        Text(
-          '•',
-          style: TextStyle(color: Colors.grey),
-        ),
-        Padding(
-          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
-          child: InkWell(
-            child: Text(
-              'Referral Policy',
-              style: TextStyle(
-                  color: Colors.grey, decoration: TextDecoration.underline),
-            ),
-            onTap: () {
-              HapticFeedback.vibrate();
-              // Navigator.of(context).pushNamed('/faq').then(
-              //       (value) => Navigator.pushNamed(
-              //         context,
-              //         ('/refpolicy'),
-              //       ),
-              //     );
-              appState.currentAction = PageAction(
-                  state: PageState.addPage, page: RefPolicyPageConfig);
-            },
-          ),
-        )
-      ],
-    );
-  }
-
-  int get _myReferralCount {
-    if (baseProvider == null ||
-        baseProvider.myReferralInfo == null ||
-        baseProvider.myReferralInfo.refCount == null) return 0;
-    return baseProvider.myReferralInfo.refCount;
-  }
-
-  Widget showEmailVerifyLink() {
-    return baseProvider.myUser.isEmailVerified == null ||
-            baseProvider.myUser.isEmailVerified == false
-        ? InkWell(
-            onTap: () {
-              appState.currentAction = PageAction(
-                  state: PageState.addPage, page: VerifyEmailPageConfig);
-            },
-            child: Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.symmetric(
-                  vertical: 16, horizontal: SizeConfig.blockSizeHorizontal * 5),
-              width:
-                  SizeConfig.screenWidth - SizeConfig.blockSizeHorizontal * 16,
-              child: MarqueeWidget(
-                pauseDuration: Duration(seconds: 1),
-                animationDuration: Duration(seconds: 2),
-                backDuration: Duration(seconds: 2),
-                direction: Axis.horizontal,
-                child: Text(
-                  "Your email needs to be verified. Click here to complete this step.",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    color: Colors.red[300],
-                    fontSize: SizeConfig.mediumTextSize,
-                  ),
-                ),
-              ),
-            ),
-          )
-        : SizedBox();
-  }
-}
-
-class Social extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        margin: EdgeInsets.symmetric(vertical: 50),
-        width: SizeConfig.screenWidth,
-        child: Column(children: [
-          Text(
-            "Connect With Us",
-            style: TextStyle(
-              color: UiConstants.textColor,
-              fontSize: SizeConfig.screenHeight * 0.02,
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            socialButton("images/svgs/instagram.svg",
-                "https://www.instagram.com/fellofinance/"),
-            socialButton("images/svgs/linkedin.svg",
-                "https://www.linkedin.com/company/fellofinance/"),
-            socialButton(
-                "images/svgs/whatsapp.svg",
-                Platform.isAndroid
-                    ? "https://wa.me/${917993252690}/?text=Hello Fello"
-                    : "https://api.whatsapp.com/send?phone=${917993252690}=Hello Fello"),
-            socialButton("images/svgs/mail.svg", "mailto:hello@fello.in"),
-            socialButton("images/svgs/web.svg", "https://fello.in"),
-          ])
-        ]));
-  }
-
-  Widget socialButton(String asset, String url) {
-    return GestureDetector(
-      onTap: () async => launchUrl(url),
-      child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: UiConstants.primaryColor,
-        ),
-        padding: EdgeInsets.all(12),
-        margin: EdgeInsets.symmetric(horizontal: 6),
-        child: SvgPicture.asset(
-          asset,
-          color: Colors.white,
-          fit: BoxFit.contain,
-          height: SizeConfig.blockSizeVertical * 1.5,
-          width: SizeConfig.blockSizeVertical * 1.5,
-        ),
-      ),
-    );
-  }
-}
-
-void launchUrl(String url) async {
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
-  }
 }
 
 class ShareCard extends StatelessWidget {
+  const ShareCard();
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin:
-          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
+      margin: EdgeInsets.symmetric(horizontal: SizeConfig.globalMargin),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
           gradient: new LinearGradient(
             colors: [
               Color(0xff4E4376),
@@ -417,15 +457,10 @@ class ShareCard extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Color(0xff4E4376).withOpacity(0.3),
-              offset: Offset(5, 5),
-              blurRadius: 10,
-            ),
-            BoxShadow(
-              color: Color(0xff2B5876).withOpacity(0.3),
-              offset: Offset(5, 5),
-              blurRadius: 10,
-            ),
+                color: Color(0xff4E4376).withOpacity(0.2),
+                offset: Offset(20, 5),
+                blurRadius: 20,
+                spreadRadius: 10),
           ]),
       width: double.infinity,
       child: Stack(
@@ -444,35 +479,99 @@ class ShareCard extends StatelessWidget {
           ),
           Container(
             width: double.infinity,
-            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5),
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.globalMargin,
+                vertical: SizeConfig.globalMargin * 1.6),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Both get ₹ 25 on every referral",
-                  style: TextStyle(
-                      color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          offset: Offset(5, 5),
-                          color: Colors.black26,
-                          blurRadius: 10,
-                        )
-                      ],
-                      fontWeight: FontWeight.w700,
-                      fontSize: SizeConfig.cardTitleTextSize),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Invite your friends to Fello",
+                        style: TextStyle(
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                offset: Offset(5, 5),
+                                color: Colors.black26,
+                                blurRadius: 10,
+                              )
+                            ],
+                            fontWeight: FontWeight.w700,
+                            fontSize: SizeConfig.cardTitleTextSize),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        showModalBottomSheet(
+                            isDismissible: false,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  topRight: Radius.circular(16)),
+                            ),
+                            // backgroundColor: Colors.transparent,
+                            context: context,
+                            builder: (ctx) {
+                              AppState.screenStack.add(ScreenItem.dialog);
+                              return ShareInfoModalSheet();
+                            });
+                      },
+                      child: Icon(
+                        Icons.info_outline,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                    )
+                  ],
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 24,
                 ),
-                Text(
-                  "You and your friend also receive 10 game tickets that week!",
-                  style: TextStyle(
-                      color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+                RichText(
+                  text: new TextSpan(
+                    children: [
+                      new TextSpan(
+                        text: 'Both you and your friend receive ',
+                        style: GoogleFonts.montserrat(
+                            color: Colors.white,
+                            fontSize: SizeConfig.mediumTextSize * 1.2),
+                      ),
+                      new TextSpan(
+                        text: '₹ 25',
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            fontSize: SizeConfig.mediumTextSize * 1.2),
+                      ),
+                      new TextSpan(
+                        text: ' and ',
+                        style: GoogleFonts.montserrat(
+                            color: Colors.white,
+                            fontSize: SizeConfig.mediumTextSize * 1.2),
+                      ),
+                      new TextSpan(
+                        text: '10 gaming tickets',
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            fontSize: SizeConfig.mediumTextSize * 1.2),
+                      ),
+                      new TextSpan(
+                        text: ' for every successful referral!',
+                        style: GoogleFonts.montserrat(
+                            color: Colors.white,
+                            fontSize: SizeConfig.mediumTextSize * 1.2),
+                      )
+                    ],
+                  ),
                 ),
-                SizedBox(height: 20),
-                ShareOptions(),
+                const SizedBox(height: 24),
+                const ShareOptions(),
               ],
             ),
           )
@@ -483,6 +582,8 @@ class ShareCard extends StatelessWidget {
 }
 
 class ShareOptions extends StatefulWidget {
+  const ShareOptions();
+
   @override
   _ShareOptionsState createState() => _ShareOptionsState();
 }
@@ -492,6 +593,7 @@ class _ShareOptionsState extends State<ShareOptions> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   RazorpayModel rProvider;
+  FcmListener fcmProvider;
   String referral_bonus =
       BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
   String referral_ticket_bonus = BaseRemoteConfig.remoteConfig
@@ -521,6 +623,7 @@ class _ShareOptionsState extends State<ShareOptions> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     rProvider = Provider.of<RazorpayModel>(context, listen: false);
+    fcmProvider = Provider.of<FcmListener>(context, listen: false);
     _init();
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -562,6 +665,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                     size: 18.0,
                   ),
             onTap: () async {
+              fcmProvider.addSubscription(FcmTopic.REFERRER);
               BaseAnalytics.analytics.logShare(
                   contentType: 'referral',
                   itemId: baseProvider.myUser.uid,
@@ -588,11 +692,18 @@ class _ShareOptionsState extends State<ShareOptions> {
             splashColor: Colors.orange.withOpacity(0.5),
           ),
         ),
-        SizedBox(width: 10),
+        (Platform.isIOS)
+            ? SizedBox(width: 10)
+            : Text(
+                "---",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
         (Platform.isIOS)
             ? Text('')
             : Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 decoration: BoxDecoration(
                   border: Border.all(
                     width: 2,
@@ -606,16 +717,16 @@ class _ShareOptionsState extends State<ShareOptions> {
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              'SHARE ON WHATSAPP',
-                              style: GoogleFonts.montserrat(
-                                fontSize: SizeConfig.mediumTextSize * 0.9,
-                                color: Colors.white,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
+                            // Text(
+                            //   'WHATSAPP',
+                            //   style: GoogleFonts.montserrat(
+                            //     fontSize: SizeConfig.mediumTextSize * 0.9,
+                            //     color: Colors.white,
+                            //   ),
+                            // ),
+                            // SizedBox(
+                            //   width: 5,
+                            // ),
                             SvgPicture.asset(
                               "images/svgs/whatsapp.svg",
                               color: Colors.white,
@@ -629,6 +740,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                         ),
                   onTap: () async {
                     ////////////////////////////////
+                    fcmProvider.addSubscription(FcmTopic.REFERRER);
                     BaseAnalytics.analytics.logShare(
                         contentType: 'referral',
                         itemId: baseProvider.myUser.uid,
@@ -649,22 +761,35 @@ class _ShareOptionsState extends State<ShareOptions> {
                       return;
                     else
                       log.debug(url);
-
-                    FlutterShareMe()
-                        .shareToWhatsApp(msg: _shareMsg + url)
-                        .then((flag) {
-                      log.debug(flag);
-                    }).catchError((err) {
-                      log.error('Share to whatsapp failed');
-                      log.error(err);
+                    try {
                       FlutterShareMe()
-                          .shareToWhatsApp4Biz(msg: _shareMsg + url)
-                          .then((value) {
-                        log.debug(value);
-                      }).catchError((err) {
-                        log.error('Share to whatsapp biz failed as well');
+                          .shareToWhatsApp(msg: _shareMsg + url)
+                          .then((flag) {
+                        if (flag == "false") {
+                          FlutterShareMe()
+                              .shareToWhatsApp4Biz(msg: _shareMsg + url)
+                              .then((flag) {
+                            log.debug(flag);
+                            if (flag == "false") {
+                              baseProvider.showNegativeAlert(
+                                  "Whatsapp not detected",
+                                  "Please use other option to share.",
+                                  context);
+                            }
+                          });
+                        }
                       });
-                    });
+                    } catch (e) {
+                      log.debug(e.toString());
+                    }
+
+                    // FlutterShareMe()
+                    //     .shareToWhatsApp4Biz(msg: _shareMsg + url)
+                    //     .then((value) {
+                    //   log.debug(value);
+                    // }).catchError((err) {
+                    //   log.error('Share to whatsapp biz failed as well');
+                    // });
                   },
                   highlightColor: Colors.orange.withOpacity(0.5),
                   splashColor: Colors.orange.withOpacity(0.5),
@@ -715,78 +840,31 @@ class _ShareOptionsState extends State<ShareOptions> {
   }
 }
 
-class CardButton extends StatelessWidget {
-  final Function onPressed;
-  final String text;
-  final IconData icon;
-  final List<Color> gradient;
-
-  CardButton({this.gradient, this.icon, this.onPressed, this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(
-          border: Border.all(
-            width: 2,
-            color: Colors.white,
-          ),
-          color: Colors.transparent,
-          boxShadow: [
-            BoxShadow(
-                color: gradient[0].withOpacity(0.2),
-                blurRadius: 20,
-                offset: Offset(5, 5),
-                spreadRadius: 10),
-          ],
-          borderRadius: BorderRadius.circular(100),
-        ),
-        child: Row(
-          children: [
-            Text(
-              text,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: SizeConfig.screenWidth * 0.035),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Icon(
-              icon,
-              color: Colors.white,
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class ProfileTabTile extends StatelessWidget {
-  final String title;
-  final Widget leadWidget, trailWidget;
+  final String title, leadIcon;
+  final Widget trailWidget;
   final Function onPress;
 
-  ProfileTabTile({this.leadWidget, this.onPress, this.title, this.trailWidget});
+  const ProfileTabTile(
+      {this.leadIcon, this.onPress, this.title, this.trailWidget});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onPress,
       child: Container(
-        padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.blockSizeHorizontal * 5),
+        padding:
+            EdgeInsets.symmetric(horizontal: SizeConfig.globalMargin * 1.6),
         child: Column(
           children: [
             SizedBox(height: SizeConfig.blockSizeHorizontal * 4),
             Row(
               children: [
-                leadWidget,
-                SizedBox(width: SizeConfig.blockSizeHorizontal * 5),
+                Image.asset(
+                  leadIcon,
+                  height: SizeConfig.blockSizeHorizontal * 5,
+                ),
+                SizedBox(width: SizeConfig.globalMargin),
                 Text(
                   title,
                   style: GoogleFonts.montserrat(
@@ -806,329 +884,129 @@ class ProfileTabTile extends StatelessWidget {
   }
 }
 
-class ProfileTabTilePan extends StatelessWidget {
-  final String logo, title, value;
-  final bool isHidden;
-  final bool isAvailable;
-  final Function onPress;
-
-  ProfileTabTilePan(
-      {this.logo,
-      this.onPress,
-      this.title,
-      this.value,
-      this.isHidden,
-      this.isAvailable});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.blockSizeHorizontal * 5,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(height: SizeConfig.blockSizeHorizontal * 4),
-          Row(
-            children: [
-              Image.asset(
-                logo,
-                height: SizeConfig.blockSizeHorizontal * 5,
-              ),
-              SizedBox(
-                width: SizeConfig.blockSizeHorizontal * 5,
-              ),
-              Text(
-                title,
-                style: GoogleFonts.montserrat(
-                  color: UiConstants.textColor,
-                  fontSize: SizeConfig.mediumTextSize,
-                ),
-              ),
-              Spacer(),
-              isAvailable
-                  ? Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          isHidden ? '**********' : value,
-                          style: GoogleFonts.montserrat(
-                            color: UiConstants.primaryColor,
-                            fontSize: SizeConfig.mediumTextSize,
-                          ),
-                        ),
-                        InkWell(
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
-                              child: Icon(
-                                Icons.remove_red_eye_outlined,
-                                color: UiConstants.primaryColor,
-                              )),
-                          onTap: onPress,
-                        )
-                      ],
-                    )
-                  : Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          ' - ',
-                          style: GoogleFonts.montserrat(
-                            color: UiConstants.primaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: SizeConfig.mediumTextSize,
-                          ),
-                        ),
-                        InkWell(
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
-                              child: Icon(
-                                Icons.info_outline,
-                                size: SizeConfig.largeTextSize,
-                                color: UiConstants.primaryColor,
-                              )),
-                          onTap: onPress,
-                        )
-                      ],
-                    ),
-            ],
-          ),
-          SizedBox(height: SizeConfig.blockSizeHorizontal * 4),
-          Divider()
-        ],
-      ),
-    );
-  }
-}
-
-class UserProfileCard extends StatefulWidget {
-  @override
-  _UserProfileCardState createState() => _UserProfileCardState();
-}
-
-class _UserProfileCardState extends State<UserProfileCard> {
+class UserProfileCard extends StatelessWidget {
   BaseUtil baseProvider;
   DBModel dbProvider;
-  bool isImageLoading = false;
-  double picSize = SizeConfig.screenWidth * 0.24;
-
-  Future<void> getProfilePicUrl() async {
-    try {
-      baseProvider.myUserDpUrl =
-          await dbProvider.getUserDP(baseProvider.myUser.uid);
-      if (baseProvider.myUserDpUrl != null) {
-        setState(() {
-          isImageLoading = false;
-        });
-        print("got the image");
-      }
-    } catch (e) {}
-  }
+  final double picSize = SizeConfig.screenWidth * 0.24;
 
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    if (baseProvider.myUserDpUrl == null) {
-      isImageLoading = true;
-      getProfilePicUrl();
-    }
-    return Container(
-      width: SizeConfig.screenWidth,
-      height: SizeConfig.screenHeight * 0.24,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(
-            "images/profile-card.png",
+    return InkWell(
+      onTap: () => delegate.appState.currentAction =
+          PageAction(state: PageState.addPage, page: UserProfileDetailsConfig),
+      child: Container(
+        width: SizeConfig.screenWidth,
+        height: SizeConfig.screenWidth * 0.4,
+        decoration: BoxDecoration(
+          gradient: new LinearGradient(
+            colors: [Color(0xff299F8F), UiConstants.primaryColor],
+            begin: Alignment.bottomLeft,
+            end: Alignment.topCenter,
           ),
-          fit: BoxFit.fill,
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
         ),
-      ),
-      margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.blockSizeHorizontal * 4,
-      ),
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              SizedBox(
-                height: 12,
-              ),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: SizeConfig.blockSizeHorizontal * 5,
-                    ),
-                    Container(
-                      height: picSize,
-                      width: picSize,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                      child: Stack(
-                        children: [
-                          isImageLoading
-                              ? Image.asset(
-                                  "images/profile.png",
+        margin: EdgeInsets.symmetric(
+          horizontal: SizeConfig.globalMargin,
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+          child: CustomPaint(
+            painter: ShapePainter(),
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.blockSizeHorizontal * 4,
+                  vertical: SizeConfig.blockSizeHorizontal * 2.5),
+              child: Column(
+                children: [
+                  Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: picSize,
+                        width: picSize,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                        ),
+                        child: baseProvider.myUserDpUrl == null
+                            ? Image.asset(
+                                "images/profile.png",
+                                height: picSize,
+                                width: picSize,
+                                fit: BoxFit.cover,
+                              )
+                            : ClipOval(
+                                child: CachedNetworkImage(
+                                  imageUrl: baseProvider.myUserDpUrl,
                                   height: picSize,
                                   width: picSize,
                                   fit: BoxFit.cover,
-                                )
-                              : ClipOval(
-                                  child: CachedNetworkImage(
-                                    imageUrl: baseProvider.myUserDpUrl,
-                                    height: picSize,
-                                    width: picSize,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: InkWell(
-                              onTap: () async {
-                                var _status = await Permission.photos.status;
-                                if (_status.isUndetermined ||
-                                    _status.isRestricted ||
-                                    _status.isLimited ||
-                                    _status.isDenied) {
-                                  showDialog(
-                                      context: context,
-                                      builder: (ctx) {
-                                        return ConfirmActionDialog(
-                                            title: "Request Permission",
-                                            description:
-                                                "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
-                                            buttonText: "Continue",
-                                            asset: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 8),
-                                              child: Image.asset(
-                                                  "images/gallery.png",
-                                                  height:
-                                                      SizeConfig.screenWidth *
-                                                          0.24),
-                                            ),
-                                            confirmAction: () {
-                                              Navigator.pop(context);
-                                              chooseprofilePicture();
-                                            },
-                                            cancelAction: () =>
-                                                Navigator.pop(context));
-                                      });
-                                } else if (_status.isGranted) {
-                                  chooseprofilePicture();
-                                } else {
-                                  baseProvider.showNegativeAlert(
-                                      'Permission Unavailable',
-                                      'Please enable permission from settings to continue',
-                                      context);
-                                }
-                              },
-                              child: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                radius: SizeConfig.blockSizeHorizontal * 4,
-                                child: Icon(
-                                  Icons.photo_camera_rounded,
-                                  color: UiConstants.primaryColor,
-                                  size: SizeConfig.blockSizeHorizontal * 4,
                                 ),
                               ),
-                            ),
-                          ),
-                        ],
                       ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.blockSizeHorizontal * 5,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: SizeConfig.screenWidth * 0.5,
-                          child: Text(
-                            baseProvider.myUser.name,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: SizeConfig.cardTitleTextSize,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        baseProvider.myUser.username != null
-                            ? Padding(
-                                padding: EdgeInsets.only(top: 4),
-                                child: Text(
-                                  "@${baseProvider.myUser.username.replaceAll('@', '.')}",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: SizeConfig.mediumTextSize,
-                                  ),
+                      SizedBox(
+                        width: SizeConfig.globalMargin,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: SizeConfig.screenWidth * 0.5,
+                              child: Text(
+                                baseProvider.myUser.name,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: SizeConfig.cardTitleTextSize,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                              )
-                            : SizedBox(
-                                height: 8,
                               ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Member since ${_getUserMembershipDate()}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: SizeConfig.smallTextSize,
-                    ),
+                            ),
+                            baseProvider.myUser.username != null
+                                ? Padding(
+                                    padding: EdgeInsets.only(top: 4),
+                                    child: Text(
+                                      "@${baseProvider.myUser.username.replaceAll('@', '.')}",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: SizeConfig.mediumTextSize,
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox(
+                                    height: 8,
+                                  ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Member since ${_getUserMembershipDate()}',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: SizeConfig.smallTextSize,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              SizedBox(
-                height: 16,
-              )
-            ],
-          ),
-          Positioned(
-            top: 4,
-            right: 4,
-            child: IconButton(
-              onPressed: () {
-                cardKey.currentState.toggleCard();
-              },
-              icon: Icon(
-                Icons.edit_outlined,
-                color: Colors.white,
-              ),
             ),
-          )
-        ],
+          ),
+        ),
       ),
     );
-  }
-
-  chooseprofilePicture() async {
-    final temp = await ImagePicker().getImage(source: ImageSource.gallery);
-    if (temp != null) {
-      HapticFeedback.vibrate();
-      print("--------------------------------->" + temp.path);
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => ChangeProfilePicture(
-          image: File(temp.path),
-        ),
-      );
-    }
   }
 
   String _getUserMembershipDate() {
@@ -1155,174 +1033,5 @@ class _UserProfileCardState extends State<UserProfileCard> {
     } else {
       return '\'Unavailable\'';
     }
-  }
-}
-
-class UserEditProfileCard extends StatefulWidget {
-  final String oldname;
-
-  UserEditProfileCard({this.oldname});
-
-  @override
-  _UserEditProfileCardState createState() => _UserEditProfileCardState();
-}
-
-class _UserEditProfileCardState extends State<UserEditProfileCard> {
-  bool isUploading = false;
-  TextEditingController _nameController;
-  BaseUtil baseProvider;
-  DBModel dbProvider;
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    _nameController = new TextEditingController(text: widget.oldname);
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    dbProvider = Provider.of<DBModel>(context, listen: false);
-    return Container(
-      width: SizeConfig.screenWidth,
-      height: SizeConfig.screenHeight * 0.24,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(
-            "images/profile-card.png",
-          ),
-          fit: BoxFit.fill,
-        ),
-      ),
-      margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.blockSizeHorizontal * 4,
-      ),
-      padding:
-          EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 5),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Form(
-            key: _formKey,
-            child: Container(
-              width: SizeConfig.screenWidth,
-              height: SizeConfig.blockSizeVertical * 5,
-              padding: EdgeInsets.only(
-                  left: SizeConfig.blockSizeHorizontal * 2, bottom: 8),
-              child: TextFormField(
-                cursorColor: Colors.white,
-                controller: _nameController,
-                maxLines: 1,
-                style: GoogleFonts.montserrat(
-                  color: Colors.white,
-                  fontSize: SizeConfig.cardTitleTextSize,
-                  fontWeight: FontWeight.w500,
-                ),
-                validator: (val) {
-                  if (val.trim() == "") return "Name cannot be empty";
-                  return null;
-                },
-                decoration: InputDecoration(
-                  border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2),
-                  ),
-                  errorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red, width: 2),
-                  ),
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red, width: 2),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              TextButton(
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    FocusScope.of(context).unfocus();
-                    setState(() {
-                      isUploading = !isUploading;
-                    });
-                    // baseProvider.myUser.name = _nameController.text.trim();
-                    baseProvider.setName(_nameController.text.trim());
-                    dbProvider.updateUser(baseProvider.myUser).then((flag) {
-                      setState(() {
-                        isUploading = false;
-                      });
-                      if (flag) {
-                        cardKey.currentState.toggleCard();
-                        baseProvider.showPositiveAlert('Complete',
-                            'Your details have been updated', context);
-                      } else {
-                        baseProvider.showNegativeAlert(
-                            'Failed',
-                            'Your details could not be updated at the moment',
-                            context);
-                      }
-                    });
-                  }
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: isUploading
-                      ? SpinKitThreeBounce(
-                          color: UiConstants.spinnerColor2,
-                          size: 18.0,
-                        )
-                      : Text(
-                          "Update",
-                          style: GoogleFonts.montserrat(
-                            color: Colors.white,
-                            fontSize: SizeConfig.mediumTextSize,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  FocusScope.of(context).unfocus();
-                  cardKey.currentState.toggleCard();
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Text(
-                    "Cancel",
-                    style: GoogleFonts.montserrat(
-                      color: Colors.white,
-                      fontSize: SizeConfig.mediumTextSize,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    );
   }
 }

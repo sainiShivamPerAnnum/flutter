@@ -3,24 +3,27 @@ import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
+import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
+import 'package:felloapp/ui/modals/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
 import 'package:felloapp/ui/pages/tabs/profile/profile_screen.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcase_widget.dart';
 
 class Root extends StatefulWidget {
   @override
@@ -39,51 +42,40 @@ class _RootState extends State<Root> {
   List<Widget> _viewsByIndex;
   List<bool> _showFocuses = List.filled(4, false);
   bool _isInitialized = false;
+  bool showTag = true;
+  double tagWidth = 0;
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       AppState().setRootLoadValue = true;
+      tagWidth = SizeConfig.screenWidth / 2;
     });
     _initDynamicLinks();
     //Declare some buttons for our tab bar
     _navBarItems = [
+      NavBarItemData("Home", Icons.home, SizeConfig.screenWidth * 0.25,
+          "images/svgs/home.svg", _showFocuses[0]),
+      NavBarItemData("Play", Icons.games, SizeConfig.screenWidth * 0.24,
+          "images/svgs/game.svg", _showFocuses[1]),
       NavBarItemData(
-          "Home", Icons.home, 110, "images/svgs/home.svg", _showFocuses[0]),
-      NavBarItemData(
-          "Play", Icons.games, 110, "images/svgs/game.svg", _showFocuses[1]),
-      NavBarItemData("Save", Icons.wallet_giftcard, 115, "images/svgs/save.svg",
+          "Save",
+          Icons.wallet_giftcard,
+          SizeConfig.screenWidth * 0.24,
+          "images/svgs/save.svg",
           _showFocuses[2]),
-      NavBarItemData("Profile", Icons.verified_user, 115,
-          "images/svgs/profile.svg", _showFocuses[3]),
+      NavBarItemData(
+          "Profile",
+          Icons.verified_user,
+          SizeConfig.screenWidth * 0.25,
+          "images/svgs/profile.svg",
+          _showFocuses[3]),
     ];
-
     //Create the views which will be mapped to the indices for our nav btns
     _viewsByIndex = <Widget>[
       HomePage(),
-      ShowCaseWidget(
-        builder: Builder(
-          builder: (context) => GamePage(),
-        ),
-        onFinish: () {
-          baseProvider.show_game_tutorial = false;
-          _navBarItems[1].showFocus = false;
-          lclDbProvider.saveHomeTutorialComplete = true;
-          setState(() {});
-        },
-      ),
-      ShowCaseWidget(
-        builder: Builder(
-          builder: (context) => FinancePage(),
-        ),
-        onFinish: () {
-          baseProvider.show_finance_tutorial = false;
-          _navBarItems[2].showFocus = false;
-          baseProvider.show_game_tutorial = true;
-          _navBarItems[1].showFocus = true;
-          setState(() {});
-        },
-      ),
+      GamePage(),
+      FinancePage(),
       ProfilePage(),
     ];
     super.initState();
@@ -96,21 +88,12 @@ class _RootState extends State<Root> {
     fcmProvider.addIncomingMessageListener(null);
   }
 
-  Color getBurgerBorder() {
-    if (appState.getCurrentTabIndex == 0 || appState.getCurrentTabIndex == 1) {
-      return Colors.white;
-    } else {
-      return Colors.black;
-    }
+  void toggleTag() {
+    print("got here");
+    setState(() {
+      showTag = !showTag;
+    });
   }
-
-  // String getBurgerImage() {
-  //   if (appState.getCurrentTabIndex == 0 || appState.getCurrentTabIndex == 1) {
-  //     return "images/menu-white.png";
-  //   } else {
-  //     return "images/menu.png";
-  //   }
-  // }
 
   _initAdhocNotifications() {
     if (fcmProvider != null && baseProvider != null) {
@@ -124,18 +107,43 @@ class _RootState extends State<Root> {
     }
   }
 
+  void _showSecurityBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0))),
+        backgroundColor: UiConstants.bottomNavBarColor,
+        builder: (context) {
+          return const SecurityModalSheet();
+        });
+  }
+
   _initialize() {
     if (!_isInitialized) {
       _isInitialized = true;
-      lclDbProvider.isHomeTutorialComplete.then((value) {
-        if (value == 0) {
+      lclDbProvider.showHomeTutorial.then((value) {
+        if (value) {
           //show tutorial
-          baseProvider.show_finance_tutorial = true;
-          _navBarItems[2].showFocus = true;
+          lclDbProvider.setShowHomeTutorial = false;
+          delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
           setState(() {});
         }
       });
+
       _initAdhocNotifications();
+      // show security modal
+      if (baseProvider.show_security_prompt &&
+          baseProvider.myUser.isAugmontOnboarded &&
+          baseProvider.myUser.userPreferences
+                  .getPreference(Preferences.APPLOCK) ==
+              0) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _showSecurityBottomSheet();
+          lclDbProvider.updateSecurityPrompt(false);
+        });
+      }
       baseProvider.isUnreadFreshchatSupportMessages().then((flag) {
         if (flag) {
           baseProvider.showPositiveAlert('You have unread support messages',
@@ -171,57 +179,49 @@ class _RootState extends State<Root> {
     // final GlobalKey<ScaffoldState> _scaffoldKey =
     //     new GlobalKey<ScaffoldState>();
     return Scaffold(
-      backgroundColor: UiConstants.bottomNavBarColor,
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          Container(
-            width: double.infinity,
-            //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
-            child: AnimatedSwitcher(
-              duration: Duration(milliseconds: 350),
-              //Pass the current accent color down as a theme, so our overscroll indicator matches the btn color
-              child: Theme(
-                data: ThemeData(accentColor: accentColor),
-                child: contentView,
+        backgroundColor: UiConstants.bottomNavBarColor,
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [
+            Container(
+              width: double.infinity,
+              //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
+              child: AnimatedSwitcher(
+                duration: Duration(milliseconds: 350),
+                //Pass the current accent color down as a theme, so our overscroll indicator matches the btn color
+                child: Theme(
+                  data: ThemeData(accentColor: accentColor),
+                  child: contentView,
+                ),
               ),
             ),
-          ),
-          SafeArea(
-            child: GestureDetector(
-              onTap: () {
-                HapticFeedback.vibrate();
-                delegate.parseRoute(Uri.parse("d-ham"));
-              },
-              child: Container(
-                height: SizeConfig.blockSizeVertical * 5,
-                width: SizeConfig.blockSizeVertical * 5,
-                margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.blockSizeHorizontal * 5,
-                  vertical: kToolbarHeight * 0.4,
-                ),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: getBurgerBorder(), width: 2),
-                ),
-                alignment: Alignment.center,
-                child: Container(
-                  height: SizeConfig.blockSizeVertical * 1.4,
-                  child: Image.asset(
-                    "images/menu.png",
-                    color: (appState.getCurrentTabIndex == 0 ||
-                            appState.getCurrentTabIndex == 1)
+            Positioned(
+              top: SizeConfig.blockSizeHorizontal * 2,
+              right: SizeConfig.blockSizeHorizontal * 2,
+              child: SafeArea(
+                child: InkWell(
+                  child: SvgPicture.asset(
+                    "images/support-log.svg",
+                    height: kToolbarHeight * 0.6,
+                    color: (appState.getCurrentTabIndex == 0)
                         ? Colors.white
-                        : Colors.black,
+                        : Color(0xff4C4C4C),
                   ),
+                  //icon: Icon(Icons.contact_support_outlined),
+                  // iconSize: kToolbarHeight * 0.5,
+
+                  onTap: () {
+                    Haptic.vibrate();
+                    delegate.appState.currentAction = PageAction(
+                        state: PageState.addPage, page: SupportPageConfig);
+                  },
                 ),
               ),
             ),
-          )
-        ],
-      ),
-      bottomNavigationBar: navBar, //Pass our custom navBar into the scaffold
-    );
+          ],
+        ),
+        bottomNavigationBar: navBar //Pass our custom navBar into the scaffold
+        );
   }
 
   void _handleNavBtnTapped(int index) {

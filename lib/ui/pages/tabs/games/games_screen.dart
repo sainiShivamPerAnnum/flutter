@@ -13,22 +13,17 @@ import 'package:felloapp/ui/dialogs/ticket_details_dialog.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'package:felloapp/ui/elements/Parallax-card/game_card_list.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
-import 'package:felloapp/ui/elements/week-winners.dart';
-import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/ui/elements/week-winners_board.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcase_widget.dart';
 
 class GamePage extends StatefulWidget {
-  // final ValueChanged<int> tabChange;
-
-  // GamePage({this.tabChange});
-
   @override
   _GamePageState createState() => _GamePageState();
 }
@@ -41,9 +36,6 @@ class _GamePageState extends State<GamePage> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   AppState appState;
-
-  GlobalKey _showcaseHeader = GlobalKey();
-  GlobalKey _showcaseFooter = GlobalKey();
 
   PageController _controller;
 
@@ -88,7 +80,7 @@ class _GamePageState extends State<GamePage> {
     // });
   }
 
-  Future<void> _onTicketsRefresh() async {
+  Future<void> _onTicketsRefresh() {
     //TODO ADD LOADER
     return dbProvider
         .getUserTicketWallet(baseProvider.myUser.uid)
@@ -104,17 +96,9 @@ class _GamePageState extends State<GamePage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
-    if (baseProvider.show_game_tutorial) {
-      Timer(const Duration(milliseconds: 2100), () {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          ShowCaseWidget.of(context)
-              .startShowCase([_showcaseHeader, _showcaseFooter]);
-        });
-      });
-    }
     return RefreshIndicator(
       onRefresh: () async {
-        await _onTicketsRefresh();
+        _onTicketsRefresh();
       },
       child: Container(
         decoration: BoxDecoration(
@@ -157,8 +141,9 @@ class _GamePageState extends State<GamePage> {
                             flex: 2,
                           ),
                           InkWell(
-                            onTap: () {
-                              HapticFeedback.vibrate();
+                            onTap: () async {
+                              Haptic.vibrate();
+                              AppState.screenStack.add(ScreenItem.dialog);
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) =>
@@ -166,143 +151,29 @@ class _GamePageState extends State<GamePage> {
                                         baseProvider.userTicketWallet),
                               );
                             },
-                            child: BaseUtil.buildShowcaseWrapper(
-                              _showcaseHeader,
-                              'Your game tickets appear here. You receive 1 game ticket for every ₹${Constants.INVESTMENT_AMOUNT_FOR_TICKET} you save. You can also click here to see a further breakdown.',
-                              TicketCount(baseProvider.userTicketWallet
-                                  .getActiveTickets()),
-                            ),
+                            child: TicketCount(baseProvider.userTicketWallet
+                                .getActiveTickets()),
                           ),
-                          Spacer(
+                          const Spacer(
                             flex: 1,
                           ),
-                          BaseUtil.buildShowcaseWrapper(
-                            _showcaseFooter,
-                            'Use the tickets to play exciting weekly games and win fun prizes!',
-                            GameCardList(
-                              games: _gameList,
-                              onGameChange: _handleGameChange,
-                            ),
+                          GameCardList(
+                            games: _gameList,
+                            onGameChange: _handleGameChange,
                           ),
-                          Spacer(
+                          const Spacer(
                             flex: 1,
                           ),
-                          Container(
-                            height: SizeConfig.screenHeight * 0.2,
-                            width: SizeConfig.screenWidth,
-                            child: ListView(
-                              shrinkWrap: true,
-                              itemExtent: SizeConfig.screenWidth * 0.8,
-                              scrollDirection: Axis.horizontal,
-                              physics: BouncingScrollPhysics(),
-                              children: [
-                                GameCard(
-                                  gradient: [
-                                    Color(0xffACB6E5),
-                                    Color(0xff74EBD5),
-                                  ],
-                                  title: "Want more tickets?",
-                                  action: [
-                                    GameOfferCardButton(
-                                      onPressed: () => delegate
-                                          .parseRoute(Uri.parse("finance")),
 
-                                      ///TODO remove post testing
-                                      // onPressed: () => showDialog(
-                                      //   context: context,
-                                      //   barrierDismissible: false,
-                                      //   builder: (ctx) {
-                                      //     return Center(
-                                      //       child: Material(
-                                      //         color: Colors.transparent,
-                                      //         child: Stack(
-                                      //           children: [
-                                      //             Center(child: FCard()),
-                                      //           ],
-                                      //         ),
-                                      //       ),
-                                      //     );
-                                      //   },
-                                      // ),
-                                      title: "Invest",
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    GameOfferCardButton(
-                                      onPressed: () => delegate
-                                          .parseRoute(Uri.parse("profile")),
-                                      title: "Share",
-                                    ),
-                                  ],
-                                ),
-                                GameCard(
-                                  gradient: [
-                                    Color(0xffD4AC5B),
-                                    Color(0xffDECBA4),
-                                  ],
-                                  title: "Share your thoughts",
-                                  action: [
-                                    GameOfferCardButton(
-                                      onPressed: () {
-                                        AppState.screenStack
-                                            .add(ScreenItem.dialog);
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              WillPopScope(
-                                            onWillPop: () {
-                                              backButtonDispatcher
-                                                  .didPopRoute();
-                                              return Future.value(true);
-                                            },
-                                            child: FeedbackDialog(
-                                              title: "Tell us what you think",
-                                              description:
-                                                  "We'd love to hear from you",
-                                              buttonText: "Submit",
-                                              dialogAction: (String fdbk) {
-                                                if (fdbk != null &&
-                                                    fdbk.isNotEmpty) {
-                                                  //feedback submission allowed even if user not signed in
-                                                  dbProvider
-                                                      .submitFeedback(
-                                                          (baseProvider.firebaseUser ==
-                                                                      null ||
-                                                                  baseProvider
-                                                                          .firebaseUser
-                                                                          .uid ==
-                                                                      null)
-                                                              ? 'UNKNOWN'
-                                                              : baseProvider
-                                                                  .firebaseUser
-                                                                  .uid,
-                                                          fdbk)
-                                                      .then((flag) {
-                                                    backButtonDispatcher
-                                                        .didPopRoute();
-                                                    if (flag) {
-                                                      baseProvider
-                                                          .showPositiveAlert(
-                                                              'Thank You',
-                                                              'We appreciate your feedback!',
-                                                              context);
-                                                    }
-                                                  });
-                                                }
-                                              },
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      title: "Feedback",
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                          Spacer(
+                          /////////TODO HACKY CODE - WRITTEN TO MANAGE TABLET SIZE DIMENSIONS
+                          (SizeConfig.screenWidth >= 1200)
+                              ? Transform.translate(
+                                  offset:
+                                      Offset(0, -SizeConfig.screenWidth * 0.08),
+                                  child: const IdeaSection())
+                              : const IdeaSection(),
+                          /////////////////////////////////////////////////////////////
+                          const Spacer(
                             flex: 1,
                           )
                         ],
@@ -316,8 +187,8 @@ class _GamePageState extends State<GamePage> {
                         Container(
                           height: kToolbarHeight * 0.8,
                         ),
-                        WeekWinnerBoard(),
-                        Leaderboard(),
+                        const WeekWinnerBoard(),
+                        const Leaderboard(),
                       ],
                     ),
                   )
@@ -355,7 +226,7 @@ class _GamePageState extends State<GamePage> {
                             'images/lottie/swipeup.json',
                             height: SizeConfig.screenHeight * 0.05,
                           ),
-                          Text(
+                          const Text(
                             "Swipe up to see prizes and leaderboards",
                             style: TextStyle(
                               fontSize: 8,
@@ -373,10 +244,102 @@ class _GamePageState extends State<GamePage> {
   }
 }
 
+class IdeaSection extends StatelessWidget {
+  const IdeaSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    final dbProvider = Provider.of<DBModel>(context, listen: false);
+    return Container(
+      height: SizeConfig.screenHeight * 0.16,
+      width: SizeConfig.screenWidth,
+      child: ListView(
+        shrinkWrap: true,
+        itemExtent: SizeConfig.screenWidth * 0.8,
+        scrollDirection: Axis.horizontal,
+        physics: BouncingScrollPhysics(),
+        children: [
+          GameCard(
+            gradient: const [
+              Color(0xffACB6E5),
+              Color(0xff74EBD5),
+            ],
+            title: "Want more tickets?",
+            action: [
+              GameOfferCardButton(
+                onPressed: () =>
+                    delegate.parseRoute(Uri.parse("finance/augDetails")),
+                title: "Invest",
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              GameOfferCardButton(
+                onPressed: () => delegate.parseRoute(Uri.parse("profile")),
+                title: "Share",
+              ),
+            ],
+          ),
+          GameCard(
+            gradient: const [
+              Color(0xffD4AC5B),
+              Color(0xffDECBA4),
+            ],
+            title: "Share your thoughts",
+            action: [
+              GameOfferCardButton(
+                onPressed: () {
+                  AppState.screenStack.add(ScreenItem.dialog);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => WillPopScope(
+                      onWillPop: () {
+                        backButtonDispatcher.didPopRoute();
+                        return Future.value(true);
+                      },
+                      child: FeedbackDialog(
+                        title: "Tell us what you think",
+                        description: "We'd love to hear from you",
+                        buttonText: "Submit",
+                        dialogAction: (String fdbk) {
+                          if (fdbk != null && fdbk.isNotEmpty) {
+                            //feedback submission allowed even if user not signed in
+                            dbProvider
+                                .submitFeedback(
+                                    (baseProvider.firebaseUser == null ||
+                                            baseProvider.firebaseUser.uid ==
+                                                null)
+                                        ? 'UNKNOWN'
+                                        : baseProvider.firebaseUser.uid,
+                                    fdbk)
+                                .then((flag) {
+                              backButtonDispatcher.didPopRoute();
+                              if (flag) {
+                                baseProvider.showPositiveAlert('Thank You',
+                                    'We appreciate your feedback!', context);
+                              }
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                  );
+                },
+                title: "Feedback",
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
 class TicketCount extends StatefulWidget {
   final int totalCount;
 
-  TicketCount(this.totalCount);
+  const TicketCount(this.totalCount);
 
   @override
   _TicketCountState createState() => _TicketCountState();
@@ -388,6 +351,8 @@ class _TicketCountState extends State<TicketCount>
   Animation<double> _animation;
   double _latestBegin;
   double _latestEnd;
+  double tagWidth = 0, tagHeight = 0, tagOpacity = 1;
+  bool showTag = false;
 
   @override
   void dispose() {
@@ -398,10 +363,39 @@ class _TicketCountState extends State<TicketCount>
   @override
   void initState() {
     super.initState();
+
     _controller =
         AnimationController(duration: Duration(seconds: 2), vsync: this);
     _latestBegin = 0;
     _latestEnd = widget.totalCount + .0;
+    if (AppState.isFirstTime) animateTag();
+  }
+
+  animateTag() {
+    showTag = true;
+    Future.delayed(Duration(milliseconds: 2500), () {
+      if (mounted)
+        setState(() {
+          tagWidth = SizeConfig.screenWidth * 0.7;
+          tagHeight = SizeConfig.cardTitleTextSize * 1.2;
+        });
+    }).then((_) {
+      Future.delayed(Duration(milliseconds: 2500), () {
+        if (mounted)
+          setState(() {
+            tagWidth = 0;
+            tagHeight = 0;
+          });
+        AppState.isFirstTime = false;
+      }).then((value) {
+        Future.delayed(Duration(seconds: 2), () {
+          if (mounted)
+            setState(() {
+              showTag = false;
+            });
+        });
+      });
+    });
   }
 
   @override
@@ -437,10 +431,49 @@ class _TicketCountState extends State<TicketCount>
               fontWeight: FontWeight.w500,
             ),
           ),
-          Text(
-            "Tickets",
-            style: TextStyle(
-                color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                " Tickets",
+                style: TextStyle(
+                    color: Colors.white, fontSize: SizeConfig.mediumTextSize),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 1),
+                child: Icon(
+                  Icons.info_outline,
+                  color: Colors.white60,
+                  size: SizeConfig.mediumTextSize,
+                ),
+              )
+            ],
+          ),
+          AnimatedContainer(
+            duration: Duration(milliseconds: 600),
+            margin: EdgeInsets.only(top: 10, left: 50, right: 50),
+            width: tagWidth,
+            height: tagHeight,
+            curve: Curves.bounceOut,
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+              color: Colors.yellow[100],
+            ),
+            alignment: Alignment.center,
+            child: AnimatedOpacity(
+              opacity: tagOpacity,
+              duration: Duration(seconds: 1),
+              child: Text(
+                "🏁 ₹ 100 saved = 1 Ticket",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: SizeConfig.mediumTextSize,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 2,
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -453,7 +486,7 @@ class GameCard extends StatelessWidget {
   final List<Color> gradient;
   final List<Widget> action;
 
-  GameCard({this.buttonText, this.title, this.gradient, this.action});
+  const GameCard({this.buttonText, this.title, this.gradient, this.action});
 
   @override
   Widget build(BuildContext context) {
@@ -461,11 +494,11 @@ class GameCard extends StatelessWidget {
       children: [
         Container(
           margin: EdgeInsets.only(
-            left: SizeConfig.blockSizeHorizontal * 5,
+            left: SizeConfig.globalMargin,
           ),
           padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(8),
               gradient: new LinearGradient(
                 colors: gradient,
                 begin: Alignment.bottomLeft,
@@ -484,7 +517,7 @@ class GameCard extends StatelessWidget {
                 ),
               ]),
           width: SizeConfig.screenWidth * 0.8,
-          height: SizeConfig.screenHeight * 0.16,
+          height: SizeConfig.screenHeight * 0.14,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -519,7 +552,7 @@ class GameOfferCardButton extends StatelessWidget {
   final Function onPressed;
   final String title;
 
-  GameOfferCardButton({this.onPressed, this.title});
+  const GameOfferCardButton({this.onPressed, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -534,13 +567,6 @@ class GameOfferCardButton extends StatelessWidget {
               color: Colors.white,
             ),
             color: Colors.transparent,
-            // boxShadow: [
-            //   BoxShadow(
-            //       color: gradient[0].withOpacity(0.2),
-            //       blurRadius: 20,
-            //       offset: Offset(5, 5),
-            //       spreadRadius: 10),
-            // ],
             borderRadius: BorderRadius.circular(100),
           ),
           child: Text(

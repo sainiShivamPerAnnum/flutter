@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +115,7 @@ class IciciRedemptionOtpDialogState extends State<IciciRedemptionOtpDialog> {
                               size: 18.0,
                             ),
                       onPressed: () {
-                        HapticFeedback.vibrate();
+                        Haptic.vibrate();
                         if (!baseProvider.isRedemptionOtpInProgress &&
                             otpController.text.length == 5) {
                           widget.otpEntered(otpController.text);

@@ -6,14 +6,13 @@ class SizeConfig {
   static double screenHeight;
   static double blockSizeHorizontal;
   static double blockSizeVertical;
-
   static double smallTextSize;
   static double mediumTextSize;
   static double largeTextSize;
   static double cardTitleTextSize;
-
+  static double cardBorderRadius;
+  static double globalMargin;
   static BorderRadius homeViewBorder;
-
   static bool isGamefirstTime;
 
   void init(BuildContext context) {
@@ -26,6 +25,8 @@ class SizeConfig {
     mediumTextSize = blockSizeHorizontal * 3.2;
     largeTextSize = blockSizeHorizontal * 5;
     cardTitleTextSize = blockSizeHorizontal * 7;
+    cardBorderRadius = 12;
+    globalMargin = blockSizeHorizontal * 3;
     isGamefirstTime = true;
 
     homeViewBorder = BorderRadius.only(

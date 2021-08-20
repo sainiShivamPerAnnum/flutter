@@ -28,8 +28,8 @@ class UsernameState extends State<Username> {
   final _formKey = GlobalKey<FormState>();
 
   Future<bool> validate() async {
+    username = usernameController.text.trim();
     setState(() {
-      username = usernameController.text.trim().replaceAll('.', '@');
       isLoading = true;
     });
     if (username == "" || username == null)
@@ -37,7 +37,8 @@ class UsernameState extends State<Username> {
         isValid = null;
       });
     else if (regex.hasMatch(username)) {
-      bool res = await dbProvider.checkIfUsernameIsAvailable(username);
+      bool res = await dbProvider
+          .checkIfUsernameIsAvailable(username.replaceAll('.', '@'));
       setState(() {
         isValid = res;
       });
@@ -62,11 +63,11 @@ class UsernameState extends State<Username> {
         ),
       );
     } else if (isValid == true)
-      return Text("$username is available",
+      return Text("${usernameController.text.trim()} is available",
           style: TextStyle(
               color: UiConstants.primaryColor, fontWeight: FontWeight.w500));
     else if (isValid == false)
-      return Text("$username is not available",
+      return Text("${usernameController.text.trim()} is not available",
           style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500));
     return SizedBox(
       height: 16,
@@ -92,8 +93,8 @@ class UsernameState extends State<Username> {
                 ),
               ),
             ),
-            Text("This is going to be your unique ID✨"),
-            SizedBox(
+            const Text("This is going to be your unique ID✨"),
+            const SizedBox(
               height: 16,
             ),
             Form(
@@ -132,27 +133,28 @@ class UsernameState extends State<Username> {
               child: showResult(),
             ),
             SizedBox(height: SizeConfig.screenHeight * .1),
-            Text(
+            const Text(
               "Rules for a valid username",
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 16,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
-            RuleTile(rule: "• must be more than 4 and less than 20 letters"),
-            RuleTile(
+            const RuleTile(
+                rule: "• must be more than 4 and less than 20 letters"),
+            const RuleTile(
                 rule:
                     "• only lowercase alphabets, numbers and dot(.) symbols allowed."),
-            RuleTile(
+            const RuleTile(
                 rule:
                     "• consecutive dot(.) are not allowed. example: abc..xyz is an invalid username"),
-            RuleTile(
+            const RuleTile(
                 rule:
                     "• dot(.) are not allowed at the beginning and at the end example: .abc , abcd. are invalid usernames "),
-            SizedBox(
+            const SizedBox(
               height: kToolbarHeight * 2,
             )
           ],
@@ -167,7 +169,7 @@ class UsernameState extends State<Username> {
 class RuleTile extends StatelessWidget {
   final String rule;
 
-  RuleTile({this.rule});
+  const RuleTile({this.rule});
 
   @override
   Widget build(BuildContext context) {

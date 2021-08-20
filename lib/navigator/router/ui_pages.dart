@@ -5,44 +5,64 @@ const String SplashPath = '/splash';
 const String LoginPath = '/login';
 const String OnboardPath = '/onboard';
 const String RootPath = '/approot';
-const String EditProfilePath = '/editProfile';
+const String UserProfileDetailsPath = '/userProfileDetails';
 const String MfDetailsPath = '/mfDetails';
 const String AugDetailsPath = '/augDetails';
 const String TransactionPath = '/tran';
 const String ReferralPath = '/referral';
-const String TambolaHomePath = '/tambolaHome';
 const String TncPath = '/tnc';
 const String FaqPath = '/faq';
 const String AugOnboardingPath = '/augOnboard';
 const String AugWithdrawalPath = '/augWithdrawal';
 const String EditAugBankDetailsPath = '/editAugBankDetails';
-const String TambolaTicketsPath = '/tambolaTickets';
 const String ReferralPolicyPath = '/refPolicy';
 const String ChatSupportPath = '/chatSupport';
 const String ClaimUsernamePath = '/claimUsername';
 const String VerifyEmailPath = '/verifyEmail';
+const String SupportPath = '/support';
+const String UpdateRequiredPath = '/updateRequired';
+const String WalkThroughPath = '/walkThrough';
+const String WalkThroughCompletedPath = '/walkThroughCompleted';
+const String YourFundsPath = '/yourFunds';
+
+// For testing
+const String THome = '/tHome';
+const String TWalkthrough = 'tWalkthrough';
+const String TShowAllTickets = 'tShowAllTickets';
+const String TPickDraw = 'tPickDraw';
+const String TWeeklyResult = 'tWeeklyResult';
+const String TSummaryDetails = 'tSummaryDetails';
 
 enum Pages {
   Splash,
   Login,
   Onboard,
   Root,
-  EditProfile,
+  UserProfileDetails,
   MfDetails,
   AugDetails,
   Transaction,
   Referral,
-  TambolaHome,
   Tnc,
   Faq,
   AugOnboard,
+  UpdateRequired,
   AugWithdrawal,
   EditAugBankDetails,
-  TambolaTickets,
   RefPolicy,
   ChatSupport,
   ClaimUsername,
-  VerifyEmail
+  VerifyEmail,
+  Support,
+  WalkThrough,
+  WalkThroughCompleted,
+  YourFunds,
+  THome,
+  TWeeklyResult,
+  TWalkthrough,
+  TPickDraw,
+  TShowAllTickets,
+  TSummaryDetails
 }
 
 class PageConfiguration {
@@ -78,10 +98,10 @@ PageConfiguration OnboardPageConfig = PageConfiguration(
   path: OnboardPath,
   uiPage: Pages.Onboard,
 );
-PageConfiguration EditProfileConfig = PageConfiguration(
+PageConfiguration UserProfileDetailsConfig = PageConfiguration(
   key: 'EditProfile',
-  path: EditProfilePath,
-  uiPage: Pages.EditProfile,
+  path: UserProfileDetailsPath,
+  uiPage: Pages.UserProfileDetails,
 );
 PageConfiguration MfDetailsPageConfig = PageConfiguration(
   key: 'MfDetails',
@@ -102,16 +122,6 @@ PageConfiguration ReferralPageConfig = PageConfiguration(
   key: 'Referral',
   path: ReferralPath,
   uiPage: Pages.Referral,
-);
-PageConfiguration TambolaHomePageConfig = PageConfiguration(
-  key: 'TambolaHome',
-  path: TambolaHomePath,
-  uiPage: Pages.TambolaHome,
-);
-PageConfiguration TambolaTicketsPageConfig = PageConfiguration(
-  key: 'TambolaTickets',
-  path: TambolaTicketsPath,
-  uiPage: Pages.TambolaTickets,
 );
 
 PageConfiguration TncPageConfig = PageConfiguration(
@@ -152,6 +162,11 @@ PageConfiguration ChatSupportPageConfig = PageConfiguration(
   path: ChatSupportPath,
   uiPage: Pages.ChatSupport,
 );
+PageConfiguration UpdateRequiredConfig = PageConfiguration(
+  key: 'UpdateRequired',
+  path: UpdateRequiredPath,
+  uiPage: Pages.UpdateRequired,
+);
 PageConfiguration ClaimUsernamePageConfig = PageConfiguration(
   key: 'ClaimUsername',
   path: ClaimUsernamePath,
@@ -161,4 +176,51 @@ PageConfiguration VerifyEmailPageConfig = PageConfiguration(
   key: 'VerifyEmail',
   path: VerifyEmailPath,
   uiPage: Pages.VerifyEmail,
+);
+PageConfiguration SupportPageConfig = PageConfiguration(
+  key: 'Support',
+  path: SupportPath,
+  uiPage: Pages.Support,
+);
+PageConfiguration WalkThroughConfig = PageConfiguration(
+  key: 'WalkThrough',
+  path: WalkThroughPath,
+  uiPage: Pages.WalkThrough,
+);
+PageConfiguration YourFundsConfig = PageConfiguration(
+  key: 'YourFunds',
+  path: YourFundsPath,
+  uiPage: Pages.YourFunds,
+);
+
+PageConfiguration THomePageConfig = PageConfiguration(
+  key: 'THome',
+  path: THome,
+  uiPage: Pages.THome,
+);
+PageConfiguration TWeeklyResultPageConfig = PageConfiguration(
+  key: 'TWeeklyResult',
+  path: TWeeklyResult,
+  uiPage: Pages.TWeeklyResult,
+);
+PageConfiguration TPickDrawPageConfig = PageConfiguration(
+  key: 'TPickDraw',
+  path: TPickDraw,
+  uiPage: Pages.TPickDraw,
+);
+PageConfiguration TShowAllTicketsPageConfig = PageConfiguration(
+  key: 'TShowAllTickets',
+  path: TShowAllTickets,
+  uiPage: Pages.TShowAllTickets,
+);
+PageConfiguration TWalkthroughPageConfig = PageConfiguration(
+  key: 'TWalkthrough',
+  path: TWalkthrough,
+  uiPage: Pages.TWalkthrough,
+);
+
+PageConfiguration TSummaryDetailsPageConfig = PageConfiguration(
+  key: 'TSummaryDetails',
+  path: TSummaryDetails,
+  uiPage: Pages.TSummaryDetails,
 );

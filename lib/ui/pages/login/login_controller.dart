@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
@@ -8,29 +7,29 @@ import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/elements/Buttons/large_button.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/username.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class LoginController extends StatefulWidget {
   final int initPage;
   static String mobileno;
+
   LoginController({this.initPage});
 
   @override
@@ -108,7 +107,8 @@ class _LoginControllerState extends State<LoginController>
   Future<void> _verifyPhone() async {
     final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
       log.debug("Phone number hasnt been auto verified yet");
-      _otpScreenKey.currentState.onOtpAutoDetectTimeout();
+      if (_otpScreenKey.currentState != null)
+        _otpScreenKey.currentState.onOtpAutoDetectTimeout();
     };
 
     final PhoneCodeSent smsCodeSent = (String verId, [int forceCodeResend]) {
@@ -119,7 +119,7 @@ class _LoginControllerState extends State<LoginController>
         ///this is the first time that the otp was requested
         baseProvider.isLoginNextInProgress = false;
         _controller.animateToPage(OtpInputScreen.index,
-            duration: Duration(seconds: 2), curve: Curves.easeInToLinear);
+            duration: Duration(seconds: 1), curve: Curves.easeInToLinear);
         setState(() {});
       } else {
         ///the otp was requested to be resent
@@ -181,18 +181,9 @@ class _LoginControllerState extends State<LoginController>
     fcmProvider = Provider.of<FcmListener>(context, listen: false);
     appStateProvider = Provider.of<AppState>(context, listen: false);
     return Scaffold(
-      // appBar: BaseUtil.getAppBar(),
-
       body: SafeArea(
           child: Stack(
         children: <Widget>[
-          // LinearProgressIndicator(
-          //   value: _formProgress,
-          //   backgroundColor: Colors.transparent,
-          //   valueColor: AlwaysStoppedAnimation<Color>(
-          //     UiConstants.primaryColor.withBlue(150),
-          //   ),
-          // ),
           Positioned(
             top: kToolbarHeight / 3,
             child: Container(
@@ -259,7 +250,6 @@ class _LoginControllerState extends State<LoginController>
                   ],
                 );
               }),
-
           Align(
             alignment: Alignment.bottomCenter,
             child: Column(
@@ -267,7 +257,7 @@ class _LoginControllerState extends State<LoginController>
               children: [
                 (_currentPage == MobileInputScreen.index)
                     ? Padding(
-                        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                         child: RichText(
                           text: new TextSpan(
                             children: [
@@ -285,15 +275,18 @@ class _LoginControllerState extends State<LoginController>
                                     decoration: TextDecoration.underline),
                                 recognizer: new TapGestureRecognizer()
                                   ..onTap = () {
-                                    HapticFeedback.vibrate();
-                                    appStateProvider.currentAction = PageAction(
-                                        state: PageState.addPage,
-                                        page: TncPageConfig);
+                                    Haptic.vibrate();
+                                    BaseUtil.launchUrl(
+                                        'https://fello.in/policy/tnc');
+                                    // appStateProvider.currentAction = PageAction(
+                                    //     state: PageState.addPage,
+                                    //     page: TncPageConfig);
                                   },
                               ),
                             ],
                           ),
-                        ))
+                        ),
+                      )
                     : Container(),
                 Container(
                   width: SizeConfig.screenWidth,
@@ -305,43 +298,53 @@ class _LoginControllerState extends State<LoginController>
                       new Container(
                         width: SizeConfig.screenWidth -
                             SizeConfig.blockSizeHorizontal * 10,
-                        height: 50.0,
-                        decoration: BoxDecoration(
-                          gradient: new LinearGradient(
-                              colors: [
-                                UiConstants.primaryColor,
-                                UiConstants.primaryColor.withBlue(200),
-                              ],
-                              begin: Alignment(0.5, -1.0),
-                              end: Alignment(0.5, 1.0)),
-                          borderRadius: new BorderRadius.circular(10.0),
+                        child: LargeButton(
+                          child: (!baseProvider.isLoginNextInProgress)
+                              ? Text(
+                                  _currentPage == Username.index
+                                      ? 'FINISH'
+                                      : 'NEXT',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .button
+                                      .copyWith(color: Colors.white),
+                                )
+                              : SpinKitThreeBounce(
+                                  color: UiConstants.spinnerColor2,
+                                  size: 18.0,
+                                ),
+                          onTap: () {
+                            if (!baseProvider.isLoginNextInProgress)
+                              _processScreenInput(_currentPage);
+                          },
                         ),
-                        child: new Material(
-                          child: MaterialButton(
-                            child: (!baseProvider.isLoginNextInProgress)
-                                ? Text(
-                                    _currentPage == Username.index
-                                        ? 'FINISH'
-                                        : 'NEXT',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .button
-                                        .copyWith(color: Colors.white),
-                                  )
-                                : SpinKitThreeBounce(
-                                    color: UiConstants.spinnerColor2,
-                                    size: 18.0,
-                                  ),
-                            onPressed: () {
-                              if (!baseProvider.isLoginNextInProgress)
-                                _processScreenInput(_currentPage);
-                            },
-                            highlightColor: Colors.white30,
-                            splashColor: Colors.white30,
-                          ),
-                          color: Colors.transparent,
-                          borderRadius: new BorderRadius.circular(30.0),
-                        ),
+
+                        // Material(
+                        //   child: MaterialButton(
+                        //     child: (!baseProvider.isLoginNextInProgress)
+                        //         ? Text(
+                        //             _currentPage == Username.index
+                        //                 ? 'FINISH'
+                        //                 : 'NEXT',
+                        //             style: Theme.of(context)
+                        //                 .textTheme
+                        //                 .button
+                        //                 .copyWith(color: Colors.white),
+                        //           )
+                        //         : SpinKitThreeBounce(
+                        //             color: UiConstants.spinnerColor2,
+                        //             size: 18.0,
+                        //           ),
+                        //     onPressed: () {
+                        //       if (!baseProvider.isLoginNextInProgress)
+                        //         _processScreenInput(_currentPage);
+                        //     },
+                        //     highlightColor: Colors.white30,
+                        //     splashColor: Colors.white30,
+                        //   ),
+                        //   color: Colors.transparent,
+                        //   borderRadius: new BorderRadius.circular(30.0),
+                        // ),
                       ),
                     ],
                   ),
@@ -385,7 +388,7 @@ class _LoginControllerState extends State<LoginController>
             bool flag = await baseProvider.authenticateUser(baseProvider
                 .generateAuthCredential(_augmentedVerificationId, otp));
             if (flag) {
-              AppState.unsavedChanges = true;
+              AppState.isOnboardingInProgress = true;
               _otpScreenKey.currentState.onOtpReceived();
               _onSignInSuccess();
             } else {
@@ -412,6 +415,13 @@ class _LoginControllerState extends State<LoginController>
                   'Email field empty', 'Please enter a valid email', context);
               return false;
             }
+            print(
+                "Email entered is -----------> ${_nameScreenKey.currentState.email}");
+            // if (await httpProvider
+            //     .isEmailNotRegistered(_nameScreenKey.currentState.email))
+            //     {
+
+            //     }
             if (_nameScreenKey.currentState.selectedDate == null) {
               baseProvider.showNegativeAlert('Invalid Date of Birth',
                   'Please enter a valid date of birth', context);
@@ -427,6 +437,7 @@ class _LoginControllerState extends State<LoginController>
                   'Invalid details', 'Please enter all the fields', context);
               return false;
             }
+            FocusScope.of(_nameScreenKey.currentContext).unfocus();
             baseProvider.isLoginNextInProgress = true;
             setState(() {});
             if (baseProvider.myUser == null) {
@@ -461,10 +472,14 @@ class _LoginControllerState extends State<LoginController>
 
             bool isInv = _nameScreenKey.currentState.isInvested;
             if (isInv != null) baseProvider.myUser.isInvested = isInv;
-            baseProvider.isLoginNextInProgress = false;
-            setState(() {});
-            _controller.animateToPage(Username.index,
-                duration: Duration(seconds: 2), curve: Curves.easeInToLinear);
+
+            Future.delayed(Duration(seconds: 1), () {
+              baseProvider.isLoginNextInProgress = false;
+              setState(() {});
+            }).then((value) {
+              _controller.animateToPage(Username.index,
+                  duration: Duration(seconds: 1), curve: Curves.easeInToLinear);
+            });
           }
           break;
         }
@@ -566,14 +581,16 @@ class _LoginControllerState extends State<LoginController>
       baseProvider.myUser = user ??
           BaseUser.newUser(baseProvider.firebaseUser.uid, this.userMobile);
       //Move to name input page
-      //set 'tutorial shown' flag to false to ensure tutorial gets shown to the user
-      lclDbProvider.saveHomeTutorialComplete = false;
+      lclDbProvider.setShowHomeTutorial = true;
+      lclDbProvider.setShowTambolaTutorial = true;
       _controller.animateToPage(NameInputScreen.index,
-          duration: Duration(seconds: 2), curve: Curves.easeInToLinear);
+          duration: Duration(seconds: 1), curve: Curves.easeInToLinear);
       //_nameScreenKey.currentState.showEmailOptions();
     } else {
       ///Existing user
       await BaseAnalytics.analytics.logLogin(loginMethod: 'phonenumber');
+      lclDbProvider.setShowHomeTutorial = false;
+      lclDbProvider.setShowTambolaTutorial = false;
       log.debug("User details available: Name: " + user.name);
       baseProvider.myUser = user;
       _onSignUpComplete();
@@ -595,7 +612,7 @@ class _LoginControllerState extends State<LoginController>
 
   _onChangeNumberRequest() {
     if (!baseProvider.isLoginNextInProgress) {
-      AppState.unsavedChanges = false;
+      AppState.isOnboardingInProgress = false;
       _controller.animateToPage(MobileInputScreen.index,
           duration: Duration(milliseconds: 300), curve: Curves.easeInToLinear);
     }
@@ -608,7 +625,7 @@ class _LoginControllerState extends State<LoginController>
 
     await baseProvider.init();
     await fcmProvider.setupFcm();
-    AppState.unsavedChanges = false;
+    AppState.isOnboardingInProgress = false;
     appStateProvider.currentAction =
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
     baseProvider.showPositiveAlert(
@@ -625,7 +642,7 @@ class ProgressBarItem extends StatelessWidget {
   final int index;
   final IconData icon;
 
-  ProgressBarItem({this.value, this.index, this.icon});
+  const ProgressBarItem({this.value, this.index, this.icon});
 
   @override
   Widget build(BuildContext context) {

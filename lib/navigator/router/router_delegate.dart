@@ -4,22 +4,30 @@ import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
+import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
-import 'package:felloapp/ui/pages/hamburger/hamburger_screen.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
+import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/root.dart';
-import 'package:felloapp/ui/pages/tabs/finance/edit_augmont_bank_details.dart';
-import 'package:felloapp/ui/pages/tabs/finance/gold_details_page.dart';
-import 'package:felloapp/ui/pages/tabs/finance/mf_details_page.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola-cards.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola-home.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/summary_tickets_display.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_result.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/show_all_tickets.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/tambola-home.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/tambola_walkthrough.dart';
+import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
+import '../../ui/pages/tabs/finance/augmont/augmont-details.dart';
+import '../../ui/pages/tabs/finance/augmont/edit_augmont_bank_details.dart';
+import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
+import '../../ui/pages/tabs/finance/icici/mf_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/claim_username.dart';
 import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions.dart';
+import 'package:felloapp/ui/pages/tabs/profile/user_profile_details.dart';
 import 'package:felloapp/ui/pages/tabs/profile/verify_email.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:flutter/cupertino.dart';
@@ -140,9 +148,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Onboard:
           _addPageData(GetStartedPage(), OnboardPageConfig);
           break;
-        // case Pages.EditProfile:
-        //   _addPageData(EditProfile(), EditProfileConfig);
-        //   break;
+        case Pages.UserProfileDetails:
+          _addPageData(UserProfileDetails(), UserProfileDetailsConfig);
+          break;
         case Pages.MfDetails:
           _addPageData(MFDetailsPage(), MfDetailsPageConfig);
           break;
@@ -155,9 +163,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Referral:
           _addPageData(ReferralsPage(), ReferralPageConfig);
           break;
-        case Pages.TambolaHome:
-          _addPageData(TambolaHome(), TambolaHomePageConfig);
-          break;
+
         case Pages.Tnc:
           _addPageData(TnC(), TncPageConfig);
           break;
@@ -167,8 +173,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.EditAugBankDetails:
           _addPageData(EditAugmontBankDetail(), EditAugBankDetailsPageConfig);
           break;
-        case Pages.TambolaTickets:
-          _addPageData(TambolaCardsList(), TambolaTicketsPageConfig);
+
+        case Pages.UpdateRequired:
+          _addPageData(UpdateRequiredScreen(), UpdateRequiredConfig);
           break;
         case Pages.RefPolicy:
           _addPageData(ReferralPolicy(), RefPolicyPageConfig);
@@ -182,7 +189,34 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.VerifyEmail:
           _addPageData(VerifyEmail(), VerifyEmailPageConfig);
           break;
+        case Pages.Support:
+          _addPageData(SupportPage(), SupportPageConfig);
+          break;
+        case Pages.WalkThrough:
+          _addPageData(WalkThroughPage(), WalkThroughConfig);
+          break;
 
+        case Pages.YourFunds:
+          _addPageData(YourFunds(), YourFundsConfig);
+          break;
+        case Pages.THome:
+          _addPageData(TambolaHome(), THomePageConfig);
+          break;
+        case Pages.TPickDraw:
+          _addPageData(PicksDraw(), TPickDrawPageConfig);
+          break;
+        case Pages.TShowAllTickets:
+          _addPageData(ShowAllTickets(), TShowAllTicketsPageConfig);
+          break;
+        case Pages.TWalkthrough:
+          _addPageData(Walkthrough(), TWalkthroughPageConfig);
+          break;
+        case Pages.TWeeklyResult:
+          _addPageData(WeeklyResult(), TWeeklyResultPageConfig);
+          break;
+        case Pages.TSummaryDetails:
+          _addPageData(SummaryTicketsDisplay(), TSummaryDetailsPageConfig);
+          break;
         default:
           break;
       }
@@ -254,8 +288,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.Root:
         RootPageConfig.currentPageAction = action;
         break;
-      case Pages.EditProfile:
-        EditProfileConfig.currentPageAction = action;
+      case Pages.UserProfileDetails:
+        UserProfileDetailsConfig.currentPageAction = action;
         break;
       case Pages.MfDetails:
         MfDetailsPageConfig.currentPageAction = action;
@@ -269,9 +303,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.Referral:
         ReferralPageConfig.currentPageAction = action;
         break;
-      case Pages.TambolaHome:
-        TambolaHomePageConfig.currentPageAction = action;
-        break;
+
       case Pages.Tnc:
         TncPageConfig.currentPageAction = action;
         break;
@@ -287,9 +319,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.EditAugBankDetails:
         EditAugBankDetailsPageConfig.currentPageAction = action;
         break;
-      case Pages.TambolaTickets:
-        TambolaTicketsPageConfig.currentPageAction = action;
-        break;
+
       case Pages.RefPolicy:
         RefPolicyPageConfig.currentPageAction = action;
         break;
@@ -301,6 +331,36 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.VerifyEmail:
         VerifyEmailPageConfig.currentPageAction = action;
+        break;
+      case Pages.Support:
+        SupportPageConfig.currentPageAction = action;
+        break;
+      case Pages.WalkThrough:
+        WalkThroughConfig.currentPageAction = action;
+        break;
+      // case Pages.WalkThroughCompleted:
+      //   WalkThroughCompletedConfig.currentPageAction = action;
+      //   break;
+      case Pages.YourFunds:
+        YourFundsConfig.currentPageAction = action;
+        break;
+      case Pages.THome:
+        THomePageConfig.currentPageAction = action;
+        break;
+      case Pages.TPickDraw:
+        TPickDrawPageConfig.currentPageAction = action;
+        break;
+      case Pages.TShowAllTickets:
+        TShowAllTicketsPageConfig.currentPageAction = action;
+        break;
+      case Pages.TWalkthrough:
+        TWalkthroughPageConfig.currentPageAction = action;
+        break;
+      case Pages.TWeeklyResult:
+        TWeeklyResultPageConfig.currentPageAction = action;
+        break;
+      case Pages.TSummaryDetails:
+        TSummaryDetailsPageConfig.currentPageAction = action;
         break;
 
       default:
@@ -377,12 +437,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         dialogWidget = GamePoll();
         break;
       case "aboutUs":
-        dialogWidget = AboutUsDialog();
-        break;
-
-      case "ham":
-        dialogWidget = HamburgerMenu();
-        barrierDismissable = false;
+        dialogWidget = const AboutUsDialog();
         break;
       case "panInfo":
         dialogWidget = MoreInfoDialog(
@@ -409,7 +464,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   void screenCheck(String screenKey) {
-    PageConfiguration pageConfiguration = null;
+    PageConfiguration pageConfiguration;
     switch (screenKey) {
       case 'dashboard':
         appState.setCurrentTabIndex = 0;
@@ -428,7 +483,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         appState.setCurrentTabIndex = 3;
         break;
       case 'editProfile':
-        pageConfiguration = EditProfileConfig;
+        pageConfiguration = UserProfileDetailsConfig;
         break;
       case 'mfDetails':
         pageConfiguration = MfDetailsPageConfig;
@@ -443,7 +498,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = ReferralPageConfig;
         break;
       case 'tambolaHome':
-        pageConfiguration = TambolaHomePageConfig;
+        pageConfiguration = THomePageConfig;
         break;
       case 'tnc':
         pageConfiguration = TncPageConfig;
@@ -463,6 +518,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'verifyEmail':
         pageConfiguration = VerifyEmailPageConfig;
         break;
+      case 'walkthrough':
+        pageConfiguration = WalkThroughConfig;
       // case 'tambolaTickets':
       //   pageConfiguration = TambolaTicketsPageConfig;
       //   break;
@@ -472,75 +529,3 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     }
   }
 }
-
-// Push screen with data
-// pushWidget(Details(int.parse(uri.pathSegments[1])), DetailsPageConfig);
-
-//  else if (uri.pathSegments.length == 1) {
-//   final path = uri.pathSegments[0];
-//   switch (path) {
-//     case 'splash':
-//       replaceAll(SplashPageConfig);
-//       showDialog(
-//           context: navigatorKey.currentContext,
-//           builder: (ctx) => GuideDialog());
-//       break;
-//     case 'login':
-//       replaceAll(LoginPageConfig);
-//       break;
-//     case 'onboard':
-//       replaceAll(OnboardPageConfig);
-//       break;
-//     case 'root':
-//       replaceAll(RootPageConfig);
-//       break;
-//     case 'editProfile':
-//       setPath([
-//         _createPage(Root(), RootPageConfig),
-//         _createPage(EditProfile(), EditProfileConfig),
-//       ]);
-//       break;
-//     case 'mfDetails':
-//       setPath([
-//         _createPage(Root(), RootPageConfig),
-//         _createPage(MFDetailsPage(), EditProfileConfig),
-//       ]);
-//       break;
-//     case 'augDetails':
-//       setPath([
-//         _createPage(Root(), RootPageConfig),
-//         _createPage(AugmontDetailsPage(), EditProfileConfig),
-//       ]);
-//       break;
-//     case 'tran':
-//       setPath([
-//         _createPage(Root(), RootPageConfig),
-//         _createPage(Transactions(), EditProfileConfig),
-//       ]);
-//       break;
-//     case 'referral':
-//       setPath([
-//         _createPage(Root(), RootPageConfig),
-//         _createPage(ReferralsPage(), EditProfileConfig),
-//       ]);
-//       break;
-//     case 'tambolaHome':
-//       setPath([
-//         _createPage(Root(), RootPageConfig),
-//         _createPage(TambolaHome(), EditProfileConfig),
-//       ]);
-//       break;
-//     case 'tnc':
-//       setPath([
-//         _createPage(Root(), RootPageConfig),
-//         _createPage(TnC(), TncPageConfig),
-//       ]);
-//       break;
-//     case 'faq':
-//       setPath([
-//         _createPage(Root(), RootPageConfig),
-//         _createPage(FAQPage(), FaqPageConfig),
-//       ]);
-//       break;
-//   }
-// }

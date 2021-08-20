@@ -90,16 +90,29 @@ class AugmontModel extends ChangeNotifier {
       log.debug(resMap[CreateUser.resStatusCode].toString());
       resMap["flag"] = QUERY_PASSED;
 
+      ///create augmont detail object
       _baseProvider.augmontDetail = UserAugmontDetail.newUser(
           _uid, _uname, stateId, bankHolderName, bankAccNo, ifsc);
-      // _baseProvider.myUser.isAugmontOnboarded = true;
-      _baseProvider.updateAugmontOnboarded(true);
-      if (_baseProvider.myUser.pan == null ||
-          _baseProvider.myUser.pan.isEmpty ||
-          _baseProvider.myUser.pan != pan) _baseProvider.myUser.pan = pan;
-      await _dbModel.updateUserAugmontDetails(
+      bool _p = false, _a = false;
+
+      ///add the pan number
+      if (_baseProvider.userRegdPan == null ||
+          _baseProvider.userRegdPan.isEmpty ||
+          _baseProvider.userRegdPan != pan) {
+        _baseProvider.userRegdPan = pan;
+        _p = await _baseProvider.panService
+            .saveUserPan(_baseProvider.userRegdPan);
+      }
+
+      ///push the augmont detail object
+      _a = await _dbModel.updateUserAugmontDetails(
           _baseProvider.myUser.uid, _baseProvider.augmontDetail);
-      await _dbModel.updateUser(_baseProvider.myUser);
+
+      ///switch augmont onboarding to true and notify listeners if everything goes in order
+      if (_p && _a) {
+        _baseProvider.updateAugmontOnboarded(true);
+        await _dbModel.updateUser(_baseProvider.myUser);
+      }
 
       return _baseProvider.augmontDetail;
     }
@@ -279,7 +292,9 @@ class AugmontModel extends ChangeNotifier {
         !resMap[INTERNAL_FAIL_FLAG] ||
         resMap[SubmitGoldPurchase.resTranId] == null) {
       log.error('Query Failed');
-      var _failMap = {'txnDocId': _baseProvider.currentAugmontTxn.docKey};
+      Map<String, dynamic> _failMap = {
+        'txnDocId': _baseProvider.currentAugmontTxn.docKey
+      };
       await _dbModel.logFailure(_baseProvider.myUser.uid,
           FailType.UserAugmontPurchaseFailed, _failMap);
       bool flag = await _dbModel.updateUserTransaction(
@@ -307,7 +322,9 @@ class AugmontModel extends ChangeNotifier {
 
   _onPaymentFailed() async {
     log.error('Query Failed');
-    var _failMap = {'txnDocId': _baseProvider.currentAugmontTxn.docKey};
+    Map<String, dynamic> _failMap = {
+      'txnDocId': _baseProvider.currentAugmontTxn.docKey
+    };
     await _dbModel.logFailure(_baseProvider.myUser.uid,
         FailType.UserRazorpayPurchaseFailed, _failMap);
     _baseProvider.currentAugmontTxn.tranStatus =
@@ -485,7 +502,9 @@ class AugmontModel extends ChangeNotifier {
     _baseProvider.currentAugmontTxn = null;
     _augmontTxnProcessListener = null;
 
-    _baseProvider.userMiniTxnList =
+    _baseProvider.userMiniTxnList = null;
+    _baseProvider.hasMoreTransactionListDocuments = true;
+    _baseProvider.lastTransactionListDocument =
         null; //this is to ensure that the transactions list gets refreshed
   }
 

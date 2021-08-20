@@ -3,16 +3,21 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/model/FeedCard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
-import 'package:felloapp/ui/dialogs/guide_dialog.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/elements/tambola-global/tambola_daily_draw_timer.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
+import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -24,9 +29,11 @@ class _HomePageState extends State<HomePage> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   AppState appState;
+  LocalDBModel _localDBModel;
   bool _isInit = false;
 
   Future<void> getProfilePicUrl() async {
+    if (baseProvider == null || baseProvider.myUser == null) return;
     baseProvider.myUserDpUrl =
         await dbProvider.getUserDP(baseProvider.myUser.uid);
     if (baseProvider.myUserDpUrl != null) {
@@ -62,10 +69,14 @@ class _HomePageState extends State<HomePage> {
   _init() {
     if (!baseProvider.isHomeCardsFetched) {
       dbProvider.getHomeCards().then((cards) {
-        baseProvider.feedCards = cards;
-        _isInit = true;
-        baseProvider.isHomeCardsFetched = true;
-        setState(() {});
+        if (cards.length > 0) {
+          baseProvider.feedCards = cards;
+          _isInit = true;
+          baseProvider.isHomeCardsFetched = true;
+          setState(() {});
+        } else {
+          setState(() {});
+        }
       });
     }
   }
@@ -75,11 +86,13 @@ class _HomePageState extends State<HomePage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
+    _localDBModel = Provider.of<LocalDBModel>(context, listen: false);
+
     if (baseProvider.myUserDpUrl == null) {
       isImageLoading = true;
       getProfilePicUrl();
     }
-    if (!_isInit) {
+    if (!_isInit || baseProvider.feedCards.length == 0) {
       _init();
     }
     return Container(
@@ -90,8 +103,8 @@ class _HomePageState extends State<HomePage> {
         child: Stack(
           children: [
             Container(
-              height: SizeConfig.screenHeight * 0.45,
-              width: double.infinity,
+              height: SizeConfig.screenHeight * 0.36,
+              width: SizeConfig.screenWidth,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("images/home-asset.png"),
@@ -102,16 +115,15 @@ class _HomePageState extends State<HomePage> {
             SafeArea(
               child: ClipRRect(
                 borderRadius: SizeConfig.homeViewBorder,
-                child: Padding(
+                child: ListView(
+                  controller: AppState.homeCardListController,
+                  physics: BouncingScrollPhysics(),
                   padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.blockSizeHorizontal * 5),
-                  child: ListView(
-                    controller: AppState.homeCardListController,
-                    physics: BouncingScrollPhysics(),
-                    children: (!baseProvider.isHomeCardsFetched)
-                        ? _buildLoadingFeed()
-                        : _buildHomeFeed(baseProvider.feedCards),
-                  ),
+                      horizontal: SizeConfig.blockSizeHorizontal * 1.6),
+                  children: (!baseProvider.isHomeCardsFetched ||
+                          baseProvider.feedCards.length == 0)
+                      ? _buildLoadingFeed()
+                      : _buildHomeFeed(baseProvider.feedCards),
                 ),
               ),
             )
@@ -125,7 +137,7 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _buildLoadingFeed() {
     return [
       Container(
-        height: kToolbarHeight,
+        height: SizeConfig.screenHeight * 0.04,
       ),
       _buildProfileRow(),
       Padding(
@@ -138,147 +150,269 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Widget> _buildHomeFeed(List<FeedCard> cards) {
+    if (cards.length == 0) {
+      return [
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: TextButton.icon(
+            onPressed: _init,
+            icon: Icon(
+              Icons.refresh,
+              color: Colors.white,
+            ),
+            label: Text(
+              "Click to reload",
+              style: GoogleFonts.montserrat(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        )
+      ];
+    }
     List<Widget> _widget = [
       Container(
-        height: kToolbarHeight,
+        height: SizeConfig.screenHeight * 0.02,
       ),
       _buildProfileRow(),
     ];
+
+    ///reorder learn card
     for (FeedCard card in cards) {
-      _widget.add(HomeCard(
-        title: card.title,
-        asset: card.assetLocalLink,
-        subtitle: card.subtitle,
-        buttonText: card.btnText,
-        onPressed: () async {
-          HapticFeedback.vibrate();
-          delegate.parseRoute(Uri.parse(card.actionUri));
-        },
-        gradient: [
-          Color(card.clrCodeA),
-          Color(card.clrCodeB),
-        ],
-        // "0/d-guide"
-        //   "3"
-        //   "1/d-gamePoll"
-        //   "2/augDetails/editProfile/d-aboutus"
-      ));
+      if (card.type == Constants.LEARN_FEED_CARD_TYPE) {
+        DateTime _now = DateTime.now();
+        DateTime _lastWeek = _now.subtract(Duration(days: 7));
+        if (baseProvider.userCreationTimestamp.isBefore(_lastWeek)) {
+          card.id = 200;
+        }
+      }
+    }
+    if (cards != null && cards.isNotEmpty)
+      cards.sort((a, b) => a.id.compareTo(b.id));
+
+    ///add to widgets
+    for (FeedCard card in cards) {
+      _widget.add(_buildFeedCard(card));
     }
 
     return _widget;
   }
 
-  Widget _buildProfileRow() {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      margin: EdgeInsets.only(
-        top: SizeConfig.screenWidth * 0.10,
-        bottom: SizeConfig.screenWidth * 0.08,
-      ),
-      width: double.infinity,
-      child: Row(
-        children: [
-          Container(
-            height: SizeConfig.screenWidth * 0.25,
-            width: SizeConfig.screenWidth * 0.25,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.white,
-                  width: 3,
-                )),
-            child: isImageLoading
-                ? Image.asset(
-                    "images/profile.png",
-                    fit: BoxFit.cover,
-                  )
-                : ClipOval(
-                    child: CachedNetworkImage(
-                      imageUrl: baseProvider.myUserDpUrl,
-                      fit: BoxFit.cover,
-                    ),
+  Widget _buildFeedCard(FeedCard card) {
+    if (card == null) return Container();
+    switch (card.type) {
+      case Constants.LEARN_FEED_CARD_TYPE:
+        return BaseHomeCard(
+          asset: card.assetLocalLink,
+          gradient: [
+            Color(card.clrCodeA),
+            Color(card.clrCodeB),
+          ],
+          child: BaseHomeCardContent(
+            shadowColor: Color(card.clrCodeB),
+            title: card.title,
+            subtitle: card.subtitle,
+            buttonText: card.btnText,
+            isHighlighted: false,
+            onPressed: () async {
+              Haptic.vibrate();
+              delegate.parseRoute(Uri.parse(card.actionUri));
+            },
+          ),
+        );
+
+      case Constants.TAMBOLA_FEED_CARD_TYPE:
+        return BaseHomeCard(
+          asset: card.assetLocalLink,
+          gradient: [
+            Color(card.clrCodeA),
+            Color(card.clrCodeB),
+          ],
+          child: TambolaCardContent(
+            shadowColor: Color(card.clrCodeA),
+            title: card.title,
+            subtitle: card.subtitle,
+            buttonText: card.btnText,
+            isHighlighted: false,
+            onPressed: () async {
+              Haptic.vibrate();
+              delegate.appState.setCurrentTabIndex = 1;
+              if (await baseProvider.getDrawaStatus()) {
+                await _localDBModel
+                    .saveDailyPicksAnimStatus(DateTime.now().weekday)
+                    .then(
+                      (value) => print(
+                          "Daily Picks Draw Animation Save Status Code: $value"),
+                    );
+                delegate.appState.setCurrentTabIndex = 1;
+                delegate.appState.currentAction = PageAction(
+                  state: PageState.addWidget,
+                  page: TPickDrawPageConfig,
+                  widget: PicksDraw(
+                    picks: baseProvider.todaysPicks ??
+                        List.filled(baseProvider.dailyPicksCount, -1),
                   ),
+                );
+              } else
+                delegate.appState.currentAction =
+                    PageAction(state: PageState.addPage, page: THomePageConfig);
+            },
           ),
-          SizedBox(
-            width: 30,
+        );
+      case Constants.PRIZE_FEED_CARD_TYPE:
+        return BaseHomeCard(
+          asset: card.assetLocalLink,
+          gradient: [
+            Color(card.clrCodeA),
+            Color(card.clrCodeB),
+          ],
+          child: PrizeCardContent(
+            shadowColor: Color(card.clrCodeA),
+            title: card.title,
+            subtitle: card.subtitle,
+            buttonText: card.btnText,
+            isHighlighted: false,
+            dataMap: card.dataMap,
+            onPressed: () async {
+              Haptic.vibrate();
+              delegate.appState.setCurrentTabIndex = 1;
+              delegate.appState.setCurrentGameTabIndex = 1;
+            },
           ),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  getGreeting().toUpperCase(),
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: SizeConfig.largeTextSize),
-                ),
-                SizedBox(height: 5),
-                FittedBox(
-                  child: Text(
-                    baseProvider.myUser.name,
-                    maxLines: 1,
-                    textAlign: TextAlign.start,
+        );
+      case Constants.DEFAULT_FEED_CARD_TYPE:
+      default:
+        return BaseHomeCard(
+          asset: card.assetLocalLink,
+          gradient: [
+            Color(card.clrCodeA),
+            Color(card.clrCodeB),
+          ],
+          child: BaseHomeCardContent(
+            shadowColor: Color(card.clrCodeA),
+            title: card.title,
+            subtitle: card.subtitle,
+            buttonText: card.btnText,
+            isHighlighted: false,
+            onPressed: () {
+              Haptic.vibrate();
+              delegate.parseRoute(Uri.parse(card.actionUri));
+            },
+          ),
+        );
+    }
+  }
+
+  Widget _buildProfileRow() {
+    return InkWell(
+      onTap: () {
+        delegate.appState.currentAction = PageAction(
+            state: PageState.addPage, page: UserProfileDetailsConfig);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        margin: EdgeInsets.symmetric(
+            horizontal: SizeConfig.globalMargin,
+            vertical: SizeConfig.blockSizeHorizontal * 6),
+        width: double.infinity,
+        child: Row(
+          children: [
+            Container(
+              height: SizeConfig.screenWidth * 0.16,
+              width: SizeConfig.screenWidth * 0.16,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 3,
+                  )),
+              child: baseProvider.myUserDpUrl == null
+                  ? Image.asset(
+                      "images/profile.png",
+                      fit: BoxFit.cover,
+                    )
+                  : ClipOval(
+                      child: CachedNetworkImage(
+                        imageUrl: baseProvider.myUserDpUrl,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+            ),
+            SizedBox(
+              width: 16,
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    getGreeting(),
                     style: TextStyle(
                         color: Colors.white,
-                        fontSize: SizeConfig.largeTextSize),
+                        fontWeight: FontWeight.w700,
+                        fontSize: SizeConfig.largeTextSize * 1.2),
                   ),
-                ),
-              ],
-            ),
-          )
-        ],
+                  const SizedBox(height: 5),
+                  FittedBox(
+                    child: Text(
+                      baseProvider.myUser?.name ?? 'NA',
+                      maxLines: 1,
+                      textAlign: TextAlign.start,
+                      style: GoogleFonts.montserrat(
+                          color: Colors.white,
+                          fontSize: SizeConfig.largeTextSize),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 }
 
-class HomeCard extends StatelessWidget {
-  final String asset, title, subtitle, buttonText;
-  final Function onPressed;
+class BaseHomeCard extends StatelessWidget {
+  final String asset;
   final List<Color> gradient;
-
-  HomeCard(
-      {this.asset,
-      this.buttonText,
-      this.onPressed,
-      this.subtitle,
-      this.title,
-      this.gradient});
-
+  final Widget child;
+  BaseHomeCard({
+    this.asset,
+    this.gradient,
+    this.child,
+  });
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-        bottom: 20,
-      ),
+          bottom: 20,
+          left: SizeConfig.globalMargin,
+          right: SizeConfig.globalMargin),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          gradient: new LinearGradient(
-            colors: gradient,
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-          ),
-          boxShadow: [
-            BoxShadow(
+        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+        gradient: new LinearGradient(
+          colors: gradient,
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+        ),
+        boxShadow: [
+          BoxShadow(
               color: gradient[0].withOpacity(0.3),
-              offset: Offset(5, 5),
-              blurRadius: 10,
-            ),
-            BoxShadow(
-              color: gradient[1].withOpacity(0.3),
-              offset: Offset(5, 5),
-              blurRadius: 10,
-            ),
-          ]),
+              offset: Offset(0, 5),
+              blurRadius: 5,
+              spreadRadius: 2),
+        ],
+      ),
       width: double.infinity,
       child: Stack(
         children: [
           Positioned(
-            right: 10,
+            right: 0,
             bottom: 0,
             child: Opacity(
               opacity: 0.3,
@@ -290,74 +424,333 @@ class HomeCard extends StatelessWidget {
             ),
           ),
           Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(SizeConfig.screenWidth * 0.06),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                      color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          offset: Offset(5, 5),
-                          color: Colors.black26,
-                          blurRadius: 10,
-                        )
-                      ],
-                      fontWeight: FontWeight.w700,
-                      fontSize: SizeConfig.cardTitleTextSize),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                      color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          color: gradient[0],
-                          offset: Offset(1, 1),
-                        ),
-                      ],
-                      fontSize: SizeConfig.mediumTextSize * 1.3,
-                      fontWeight: FontWeight.w400),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: onPressed,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 2,
-                        color: Colors.white,
-                      ),
-                      color: Colors.transparent,
-                      boxShadow: [
-                        BoxShadow(
-                            color: gradient[0].withOpacity(0.2),
-                            blurRadius: 20,
-                            offset: Offset(5, 5),
-                            spreadRadius: 10),
-                      ],
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: Text(
-                      buttonText,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: SizeConfig.mediumTextSize * 1.3),
-                    ),
-                  ),
+              width: double.infinity,
+              padding: EdgeInsets.all(SizeConfig.screenWidth * 0.06),
+              child: child)
+        ],
+      ),
+    );
+  }
+}
+
+class BaseHomeCardContent extends StatelessWidget {
+  final String title, subtitle, buttonText;
+  final Function onPressed;
+  bool isHighlighted;
+  final Color shadowColor;
+
+  BaseHomeCardContent({
+    this.buttonText,
+    this.isHighlighted,
+    this.onPressed,
+    this.subtitle,
+    this.title,
+    this.shadowColor,
+  });
+  @override
+  Widget build(BuildContext context) {
+    LocalDBModel localDbProvider =
+        Provider.of<LocalDBModel>(context, listen: false);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title.replaceAll("<br/>", "\n"),
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              shadows: [
+                Shadow(
+                  offset: Offset(5, 5),
+                  color: Colors.black26,
+                  blurRadius: 10,
                 )
               ],
+              fontSize: SizeConfig.cardTitleTextSize),
+        ),
+        SizedBox(
+          height: SizeConfig.blockSizeVertical,
+        ),
+        Container(
+          width: SizeConfig.screenWidth * 0.6,
+          child: Text(
+            subtitle,
+            style: TextStyle(
+                color: Colors.white,
+                // shadows: [
+                //   Shadow(
+                //     color: shadowColor,
+                //     offset: Offset(1, 1),
+                //   ),
+                // ],
+                fontSize: SizeConfig.mediumTextSize * 1.1,
+                fontWeight: FontWeight.w700),
+          ),
+        ),
+        SizedBox(
+          height: SizeConfig.blockSizeVertical * 1.5,
+        ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(100),
+          child: GestureDetector(
+            onTap: onPressed,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 2,
+                  color: Colors.white,
+                ),
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Text(
+                buttonText,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: SizeConfig.mediumTextSize * 1.3),
+              ),
             ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class TambolaCardContent extends StatelessWidget {
+  BaseUtil baseProvider;
+  LocalDBModel _localDBModel;
+  final String title, subtitle, buttonText;
+  final Function onPressed;
+  bool isHighlighted;
+  final Color shadowColor;
+
+  TambolaCardContent({
+    this.buttonText,
+    this.isHighlighted,
+    this.onPressed,
+    this.subtitle,
+    this.title,
+    this.shadowColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context);
+    _localDBModel = Provider.of<LocalDBModel>(context);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title.replaceAll('<br/>', '\n'),
+          style: TextStyle(
+              color: Colors.white,
+              shadows: [
+                Shadow(
+                  offset: Offset(5, 5),
+                  color: Colors.black26,
+                  blurRadius: 10,
+                )
+              ],
+              fontWeight: FontWeight.w700,
+              fontSize: SizeConfig.cardTitleTextSize),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          subtitle,
+          style: TextStyle(
+              color: Colors.white,
+              shadows: [
+                Shadow(
+                  color: shadowColor,
+                  offset: Offset(1, 1),
+                ),
+              ],
+              fontSize: SizeConfig.mediumTextSize * 1.1,
+              fontWeight: FontWeight.w700),
+        ),
+        SizedBox(
+          height: 30,
+        ),
+        InkWell(
+          onTap: onPressed,
+          child: DailyPicksTimer(
+            alignment: MainAxisAlignment.start,
+            bgColor: Color(0xff127C56).withOpacity(0.5),
+            replacementWidget: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 2,
+                  color: Colors.white,
+                ),
+                color: Colors.transparent,
+                boxShadow: [
+                  BoxShadow(
+                      color: Color(0xff197163).withOpacity(0.2),
+                      blurRadius: 20,
+                      offset: Offset(5, 5),
+                      spreadRadius: 10),
+                ],
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Text(
+                buttonText,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: SizeConfig.mediumTextSize * 1.3),
+              ),
+            ),
+            additionalWidget: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text(
+                "Today's draws coming in",
+                style: TextStyle(
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        color: Color(0xff343A40),
+                        offset: Offset(1, 1),
+                      ),
+                    ],
+                    fontSize: SizeConfig.mediumTextSize,
+                    fontWeight: FontWeight.w500),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class PrizeCardContent extends StatelessWidget {
+  final String title, subtitle, buttonText;
+  final Function onPressed;
+  bool isHighlighted;
+  final Color shadowColor;
+  final Map<String, dynamic> dataMap;
+  List<Widget> coreContent;
+
+  PrizeCardContent({
+    this.buttonText,
+    this.isHighlighted,
+    this.onPressed,
+    this.subtitle,
+    this.title,
+    this.shadowColor,
+    this.dataMap,
+  });
+
+  getCoreContent() {
+    coreContent = [];
+    dataMap.forEach((key, value) {
+      coreContent.add(getSection(value['value'], value['key']));
+    });
+    coreContent = coreContent.reversed.toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    getCoreContent();
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // SizedBox(
+        //   height: 20,
+        // ),
+        Text(
+          title.replaceAll('<br/>', '\n'),
+          style: GoogleFonts.montserrat(
+            color: Colors.white,
+            shadows: [
+              Shadow(
+                color: shadowColor,
+                offset: Offset(1, 1),
+              ),
+            ],
+            fontWeight: FontWeight.w500,
+            fontSize: SizeConfig.mediumTextSize * 1.5,
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Row(children: coreContent),
+        SizedBox(
+          height: 20,
+        ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(100),
+          child: Shimmer(
+            enabled: isHighlighted,
+            direction: ShimmerDirection.fromLeftToRight(),
+            child: GestureDetector(
+              onTap: onPressed,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 2,
+                    color: Colors.white,
+                  ),
+                  color: Colors.transparent,
+                  boxShadow: [
+                    BoxShadow(
+                        color: shadowColor.withOpacity(0.2),
+                        blurRadius: 20,
+                        offset: Offset(5, 5),
+                        spreadRadius: 10),
+                  ],
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Text(
+                  buttonText,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: SizeConfig.mediumTextSize * 1.3),
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  getSection(String title, String subtitle) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FittedBox(
+            child: Text(
+              title,
+              style: TextStyle(
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                      offset: Offset(5, 5),
+                      color: Colors.black26,
+                      blurRadius: 10,
+                    )
+                  ],
+                  fontWeight: FontWeight.w700,
+                  fontSize: SizeConfig.cardTitleTextSize),
+            ),
+          ),
+          SizedBox(height: 10),
+          Text(
+            subtitle,
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: SizeConfig.mediumTextSize * 1.1,
+                fontWeight: FontWeight.w500),
           )
         ],
       ),

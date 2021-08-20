@@ -1,3 +1,4 @@
+import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -32,5 +33,41 @@ InputDecoration inputFieldDecoration(String hintText) {
     disabledBorder: InputBorder.none,
     focusedErrorBorder: InputBorder.none,
     hintText: hintText,
+  );
+}
+
+InputDecoration augmontFieldInputDecoration(String hintText) {
+  return InputDecoration(
+    focusColor: augmontGoldPalette.primaryColor,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(
+        color: augmontGoldPalette.secondaryColor,
+      ),
+    ),
+    // labelStyle: GoogleFonts.montserrat(color: augmontGoldPalette.primaryColor2),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(
+        color: augmontGoldPalette.primaryColor,
+      ),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(
+        color: augmontGoldPalette.primaryColor,
+      ),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Colors.red,
+      ),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Colors.red,
+      ),
+    ),
+    labelText: hintText,
   );
 }

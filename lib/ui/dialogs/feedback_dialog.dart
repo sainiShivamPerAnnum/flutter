@@ -1,7 +1,9 @@
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class FeedbackDialog extends StatefulWidget {
   final String title, description, buttonText;
@@ -67,7 +69,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
             children: <Widget>[
               Text(
                 widget.title,
-                style: TextStyle(
+                style: GoogleFonts.montserrat(
                   fontSize: 24.0,
                   fontWeight: FontWeight.w700,
                 ),
@@ -76,7 +78,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
               Text(
                 widget.description,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: GoogleFonts.montserrat(
                   fontSize: 16.0,
                 ),
               ),
@@ -108,13 +110,16 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
                 alignment: Alignment.bottomRight,
                 child: TextButton(
                   onPressed: () {
-                    HapticFeedback.vibrate();
+                    Haptic.vibrate();
                     log.debug('DialogAction clicked');
                     if (_formKey.currentState.validate()) {
                       widget.dialogAction(fdbkController.text);
                     }
                   },
-                  child: Text(widget.buttonText),
+                  child: Text(
+                    widget.buttonText,
+                    style: GoogleFonts.montserrat(),
+                  ),
                 ),
               ),
             ],

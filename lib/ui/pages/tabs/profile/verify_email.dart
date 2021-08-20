@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -33,7 +34,7 @@ class VerifyEmailState extends State<VerifyEmail> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   String generatedOTP;
-
+  HttpModel httpProvider;
   bool _isContinueWithGoogle = false;
   bool _isGoogleLoginInProcess = false;
   bool _isOtpSent = false;
@@ -153,7 +154,18 @@ class VerifyEmailState extends State<VerifyEmail> {
     sendEmail();
   }
 
-  sendEmail() {
+  sendEmail() async {
+    if (!await httpProvider.isEmailNotRegistered(
+        baseProvider.myUser.uid, email.text.trim())) {
+      setState(() {
+        _isProcessing = false;
+      });
+      baseProvider.showNegativeAlert(
+          "Email already registered", "Please try with another email", context);
+
+      return;
+    }
+
     if (formKey.currentState.validate()) {
       dbProvider
           .sendEmailToVerifyEmail(email.text.trim(), generatedOTP)
@@ -212,37 +224,44 @@ class VerifyEmailState extends State<VerifyEmail> {
     try {
       if (await _gSignIn.isSignedIn()) await _gSignIn.signOut();
       print('Signed out');
-    }catch(e) {
+    } catch (e) {
       print('Failed to signout: $e');
     }
     final GoogleSignInAccount googleUser = await _gSignIn.signIn();
     if (googleUser != null) {
-      email.text = googleUser.email;
-      baseProvider.myUser.email = googleUser.email;
-      baseProvider.setEmailVerified();
-      bool res = await dbProvider.updateUser(baseProvider.myUser);
-      if (res) {
-        setState(() {
+      if (await httpProvider.isEmailNotRegistered(
+          baseProvider.myUser.uid, googleUser.email)) {
+        email.text = googleUser.email;
+        baseProvider.myUser.email = googleUser.email;
+        baseProvider.setEmailVerified();
+        bool res = await dbProvider.updateUser(baseProvider.myUser);
+        if (res) {
+          setState(() {
+            _isGoogleLoginInProcess = false;
+          });
+          baseProvider.showPositiveAlert(
+              "Success", "Email Verified successfully", context);
+          Navigator.pop(context);
+          backButtonDispatcher.didPopRoute();
+        } else {
           _isGoogleLoginInProcess = false;
-        });
-        baseProvider.showPositiveAlert(
-            "Success", "Email Verified successfully", context);
-        Navigator.pop(context);
-        backButtonDispatcher.didPopRoute();
+          baseProvider.showNegativeAlert("Oops! we ran into problem",
+              "Email cannot be verified at the moment", context);
+        }
       } else {
-        baseProvider.showNegativeAlert("Oops! we ran into problem",
-            "Email cannot be verified at the moment", context);
+        _isGoogleLoginInProcess = false;
+        baseProvider.showNegativeAlert("Email already registered",
+            "Please try with another email", context);
       }
     } else {
-      setState(() {
-        _isGoogleLoginInProcess = false;
-      });
+      _isGoogleLoginInProcess = false;
       baseProvider.showNegativeAlert("No account selected",
           "Please choose an account from the list", context);
     }
+    setState(() {});
   }
 
-  confirmAction() {
+  confirmAction() async {
     if (!_isVerifying && !_isProcessing) {
       if (_isOtpSent)
         verifyOtp();
@@ -255,8 +274,9 @@ class VerifyEmailState extends State<VerifyEmail> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    httpProvider = Provider.of<HttpModel>(context, listen: false);
     return Scaffold(
-      appBar: BaseUtil.getAppBar(context),
+      appBar: BaseUtil.getAppBar(context, "Verify Email"),
       body: Stack(
         children: [
           Container(

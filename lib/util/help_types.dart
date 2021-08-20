@@ -1,4 +1,4 @@
-enum HelpType{
+enum HelpType {
   TxnTimeTooLongHelp,
   TxnRequestNotReceivedHelp,
   TxnHowToHelp,

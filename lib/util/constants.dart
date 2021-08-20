@@ -15,7 +15,7 @@ class Constants {
   static final String COLN_CREDENTIALS = "credentials";
   static final String COLN_POLLS = "polls";
   static final String COLN_LEADERBOARD = "leaderboard";
-  static final String COLN_HOMECARDS = "feed";
+  static final String COLN_HOMECARDS = "homefeed";
   static final String COLN_EMAILOTPREQUESTS = "emailotprequests";
 
   //Sub-collections
@@ -24,6 +24,7 @@ class Constants {
   static final String SUBCOLN_USER_ICICI_DETAILS = "icici";
   static final String SUBCOLN_USER_AUGMONT_DETAILS = "augmont";
   static final String SUBCOLN_USER_KYC_DETAILS = "kyc";
+  static final String SUBCOLN_USER_PRTD = "prtd";
   static final String SUBCOLN_USER_TXNS = "txns";
   static final String SUBCOLN_USER_WALLET = "wallet";
   static final String SUBCOLN_USER_POLL_RESPONSES = "poll";
@@ -43,17 +44,26 @@ class Constants {
   static const int FULL_HOUSE_COMPLETED = 4;
 
   static const String POLL_NEXTGAME_ID = "nextgame";
+  static const String POLL_FOLLOWUPGAME_ID = "followupgame";
+
+  //home feed
+  static const String LEARN_FEED_CARD_TYPE = 'L';
+  static const String PRIZE_FEED_CARD_TYPE = 'P';
+  static const String TAMBOLA_FEED_CARD_TYPE = 'T';
+  static const String DEFAULT_FEED_CARD_TYPE = 'T';
 
   static const int REFERRAL_TICKET_BONUS = 10;
   static const int REFERRAL_AMT_BONUS = 25;
-  static const int TOTAL_DRAWS = 35;
+
+  // static const int TOTAL_DRAWS = 35;
   static const int NEW_USER_TICKET_COUNT = 5;
   static const int MAX_TICKET_GEN_PER_REQUEST = 30;
   static const int KYC_UNTESTED = 0;
   static const int KYC_INVALID = 1;
   static const int KYC_VALID = 2;
   static const int INVESTMENT_AMOUNT_FOR_TICKET = 100;
-  static const int AUG_GOLD_WITHDRAW_OFFSET = 1; //no of days to wait before withdrawal
+  static const int AUG_GOLD_WITHDRAW_OFFSET =
+      1; //no of days to wait before withdrawal
   static const int UNLOCK_REFERRAL_AMT = 300;
   static final DateTime VERSION_2_RELEASE_DATE = DateTime(2021, 4, 1);
 

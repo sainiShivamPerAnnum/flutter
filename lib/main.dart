@@ -5,7 +5,6 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
-import 'package:felloapp/core/ops/kyc_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
@@ -29,7 +28,11 @@ FelloBackButtonDispatcher backButtonDispatcher;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  try {
+    await Firebase.initializeApp();
+  } catch (e) {
+    print(e.toString());
+  }
   FirebaseMessaging.onBackgroundMessage(FcmListener.backgroundMessageHandler);
   setupLocator();
   runApp(MyApp());
@@ -50,22 +53,6 @@ class _MyAppState extends State<MyApp> {
     backButtonDispatcher = FelloBackButtonDispatcher(delegate);
   }
 
-  static const MaterialColor kPrimaryColor = MaterialColor(
-    0xff2EB19F,
-    const <int, Color>{
-      50: const Color(0xff2EB19F),
-      100: const Color(0xff2EB19F),
-      200: const Color(0xff2EB19F),
-      300: const Color(0xff2EB19F),
-      400: const Color(0xff2EB19F),
-      500: const Color(0xff2EB19F),
-      600: const Color(0xff2EB19F),
-      700: const Color(0xff2EB19F),
-      800: const Color(0xff2EB19F),
-      900: const Color(0xff2EB19F),
-    },
-  );
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -74,7 +61,6 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => locator<LocalDBModel>()),
         ChangeNotifierProvider(create: (_) => locator<HttpModel>()),
         ChangeNotifierProvider(create: (_) => locator<ICICIModel>()),
-        ChangeNotifierProvider(create: (_) => locator<KYCModel>()),
         ChangeNotifierProvider(create: (_) => locator<RazorpayModel>()),
         ChangeNotifierProvider(create: (_) => locator<AugmontModel>()),
         ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),
@@ -87,11 +73,10 @@ class _MyAppState extends State<MyApp> {
         title: Constants.APP_NAME,
         theme: ThemeData(
           primaryColor: UiConstants.primaryColor,
-          primarySwatch: kPrimaryColor,
+          primarySwatch: UiConstants.kPrimaryColor,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           textTheme: GoogleFonts.montserratTextTheme(),
           inputDecorationTheme: InputDecorationTheme(
-            //labelStyle: TextStyle(color: UiConstants.primaryColor),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
                   color: UiConstants.primaryColor.withOpacity(0.3), width: 1),

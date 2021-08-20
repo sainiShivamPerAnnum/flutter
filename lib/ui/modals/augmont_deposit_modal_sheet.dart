@@ -1,12 +1,17 @@
+import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
+import 'package:felloapp/main.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/dialogs/success-dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:slider_button/slider_button.dart';
 
@@ -44,6 +50,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
   String _errorMessage;
   double _width;
   AugmontModel augmontProvider;
+  int validDuration = 120;
+  Timer validityTimer;
 
   _initFields() {
     if (baseProvider != null) {
@@ -52,6 +60,15 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
       try {
         int t = (_isEnabledStr != null) ? int.parse(_isEnabledStr) : 1;
         _isDepositsEnabled = (t == 1);
+        validityTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+          if (validDuration == 0) {
+            timer.cancel();
+            backButtonDispatcher.didPopRoute();
+          }
+          setState(() {
+            validDuration--;
+          });
+        });
       } catch (e) {
         _isDepositsEnabled = true;
       }
@@ -70,25 +87,14 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     _width = MediaQuery.of(context).size.width;
     if (!_isInitialized) _initFields();
-    return Container(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      margin: EdgeInsets.only(left: 18, right: 18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(18),
-          topRight: Radius.circular(18),
+    return new Wrap(
+      children: <Widget>[
+        new Padding(
+          padding: EdgeInsets.fromLTRB(
+              25.0, 15.0, 25.0, 25 + MediaQuery.of(context).viewInsets.bottom),
+          child: _depositDialog(),
         ),
-      ),
-      child: new Wrap(
-        children: <Widget>[
-          new Padding(
-            padding: const EdgeInsets.fromLTRB(25.0, 25.0, 25.0, 25.0),
-            child: _depositDialog(),
-          ),
-        ],
-      ),
+      ],
     );
   }
 
@@ -111,7 +117,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                     width: 10,
                   ),
                   Text(
-                    "Gold Deposit",
+                    "Buy Digital Gold",
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       height: 1.5,
@@ -124,7 +130,14 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                       Icons.clear_rounded,
                       size: 30,
                     ),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      if (_isDepositInProgress) {
+                        // do nothing
+                      } else {
+                        validityTimer.cancel();
+                        backButtonDispatcher.didPopRoute();
+                      }
+                    },
                   )
                 ],
               ),
@@ -133,34 +146,48 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
               endIndent: SizeConfig.screenWidth * 0.3,
             ),
             _buildRateCard(),
-            InputField(
-              child: TextFormField(
-                autofocus: false,
-                controller: _amtController,
-                keyboardType: TextInputType.number,
-                decoration: inputFieldDecoration("Enter an amount"),
-                validator: (value) {
-                  Pattern pattern = "^[0-9]*\$";
-                  RegExp amRegex = RegExp(pattern);
-                  if (value.isEmpty)
-                    return 'Please enter an amount';
-                  else if (!amRegex.hasMatch(value))
-                    return 'Please enter a valid amount';
+            Theme(
+              data: ThemeData.light().copyWith(
+                  textTheme: GoogleFonts.montserratTextTheme(),
+                  colorScheme: ColorScheme.light(
+                      primary: augmontGoldPalette.primaryColor)),
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 8),
+                child: TextFormField(
+                  autofocus: false,
+                  controller: _amtController,
+                  keyboardType: TextInputType.number,
+                  cursorColor: augmontGoldPalette.primaryColor,
+                  decoration: augmontFieldInputDecoration("Enter an amount"),
+                  validator: (value) {
+                    Pattern pattern = "^[0-9]*\$";
+                    RegExp amRegex = RegExp(pattern);
+                    if (value.isEmpty)
+                      return 'Please enter an amount';
+                    else if (!amRegex.hasMatch(value))
+                      return 'Please enter a valid amount';
 
-                  int amount = int.parse(value);
-                  if (amount < 10)
-                    return 'Minimum deposit amount is ₹10 per transaction';
-                  else if (amount > 20000)
-                    return 'Max deposit of ₹20000 allowed per transaction';
-                  else
-                    return null;
-                },
-                onChanged: (String val) {
-                  setState(() {});
-                },
+                    int amount = int.parse(value);
+                    if (amount < 10)
+                      return 'Minimum deposit amount is ₹10 per transaction';
+                    else if (amount > 20000)
+                      return 'Max deposit of ₹20000 allowed per transaction';
+                    else
+                      return null;
+                  },
+                  onChanged: (String val) {
+                    setState(() {});
+                  },
+                ),
               ),
             ),
             _buildPurchaseDescriptionCard(_getDouble(_amtController.text)),
+            SizedBox(
+              height: SizeConfig.screenWidth * 0.01,
+            ),
+            SizedBox(
+              height: SizeConfig.screenWidth * 0.01,
+            ),
             Wrap(
               spacing: 20,
               children: [
@@ -168,7 +195,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                   label: Text("How does this work?"),
                   backgroundColor: UiConstants.chipColor,
                   onPressed: () {
-                    HapticFeedback.vibrate();
+                    Haptic.vibrate();
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => MoreInfoDialog(
@@ -181,7 +208,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                   label: Text("How long does it take?"),
                   backgroundColor: UiConstants.chipColor,
                   onPressed: () {
-                    HapticFeedback.vibrate();
+                    Haptic.vibrate();
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => MoreInfoDialog(
@@ -217,6 +244,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                         //widget.onDepositConfirmed();
                         if (depositformKey3.currentState.validate()) {
                           _isDepositInProgress = true;
+                          validityTimer.cancel();
                           setState(() {});
                           widget.onDepositConfirmed(
                               _getTaxIncludedAmount(_amtController.text));
@@ -239,7 +267,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                       dismissThresholds: 0.8,
                       icon: Icon(
                         Icons.arrow_forward_ios,
-                        color: UiConstants.primaryColor,
+                        color: augmontGoldPalette.primaryColor,
                       ),
                     ),
                   )
@@ -248,7 +276,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                 ? Padding(
                     padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
                     child: SpinKitRing(
-                      color: UiConstants.primaryColor,
+                      color: augmontGoldPalette.primaryColor,
                       size: 38.0,
                     ),
                   )
@@ -265,7 +293,14 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                           style: TextStyle(
                               fontSize: 16, color: UiConstants.accentColor)),
                     ))
-                : Container()
+                : Container(),
+            // Center(
+            //   child: Text(
+            //     'Gold rate valid for ${Duration(seconds: validDuration).inMinutes.toString().padLeft(2,'0')}:${Duration(seconds: validDuration%60).inSeconds.toString().padLeft(2,'0')}s',
+            //     style: TextStyle(fontWeight: FontWeight.w400, color: Colors.blueGrey),
+            //     textAlign: TextAlign.center,
+            //   )
+            // ),
           ],
         ),
       ),
@@ -303,7 +338,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _buildRateRow(
+          _buildRateRow2(
               'Rate per gram:',
               '₹${widget.currentRates.goldBuyPrice.toStringAsFixed(2)}',
               'This is the current price of 1 gram of gold'),
@@ -320,6 +355,65 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     );
   }
 
+  Widget _buildRateRow2(String title, String value, String info) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
+            ),
+          ),
+          Expanded(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InkWell(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      value,
+                      style:
+                          TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.grey,
+                      size: SizeConfig.mediumTextSize * 1.4,
+                    )
+                  ],
+                ),
+                onTap: () {
+                  Haptic.vibrate();
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) => MoreInfoDialog(
+                            title: title,
+                            text: info,
+                          ));
+                },
+              ),
+              Text(
+                'Valid for ${Duration(seconds: validDuration).inMinutes.toString().padLeft(2, '0')}:${Duration(seconds: validDuration % 60).inSeconds.toString().padLeft(2, '0')}s',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400, color: Colors.blueGrey),
+                textAlign: TextAlign.start,
+              )
+            ],
+          ))
+        ],
+      ),
+    );
+  }
+
   Widget _buildRateRow(String title, String value, String info) {
     return Padding(
       padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
@@ -329,37 +423,37 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
           Expanded(
             child: Text(
               title,
-              style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),
+              style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
             ),
           ),
           Expanded(
-              child: Row(
-            children: [
-              Text(
-                value,
-                style: TextStyle(fontSize: SizeConfig.mediumTextSize*1.2),
-              ),
-              SizedBox(
-                width: 4,
-              ),
-              InkWell(
-                child: Icon(
-                  Icons.info_outline,
-                  color: Colors.grey,
-                  size: SizeConfig.mediumTextSize*1.4,
-                ),
+              child: InkWell(
                 onTap: () {
-                  HapticFeedback.vibrate();
+                  Haptic.vibrate();
                   showDialog(
                       context: context,
                       builder: (BuildContext context) => MoreInfoDialog(
-                            title: title,
-                            text: info,
-                          ));
+                        title: title,
+                        text: info,
+                      ));
                 },
-              )
-            ],
-          ))
+                child: Row(
+                  children: [
+                    Text(
+                      value,
+                      style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.grey,
+                      size: SizeConfig.mediumTextSize * 1.4,
+                    )
+                  ],
+                ),
+              ))
         ],
       ),
     );
@@ -403,20 +497,23 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
   onDepositComplete(bool flag) {
     _isDepositInProgress = false;
     setState(() {});
-    Navigator.of(context).pop();
+
     if (flag) {
       // baseProvider.showPositiveAlert(
       //     'SUCCESS', 'You gold deposit was confirmed!', context);
-      HapticFeedback.vibrate();
+      Haptic.vibrate();
       showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (BuildContext context) => SuccessDialog(),
       );
-    } else
+    } else {
+      backButtonDispatcher.didPopRoute();
       baseProvider.showNegativeAlert(
           'Failed',
           'Your gold deposit failed. Please try again or contact us if you are facing issues',
           context,
           seconds: 5);
+    }
   }
 }

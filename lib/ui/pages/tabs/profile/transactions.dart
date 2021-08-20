@@ -2,11 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -199,17 +200,7 @@ class _TransactionsState extends State<Transactions> {
       isInit = false;
     }
     return Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(
-            color: Colors.white, //change your color here
-          ),
-          title: Text(
-            "Transactions",
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
+        appBar: BaseUtil.getAppBar(context, "Transactions"),
         body: Container(
           padding: EdgeInsets.only(right: SizeConfig.blockSizeHorizontal * 3),
           child: Column(
@@ -232,7 +223,7 @@ class _TransactionsState extends State<Transactions> {
                       decoration: BoxDecoration(
                         border: Border.all(
                             width: 2, color: UiConstants.primaryColor),
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
@@ -284,7 +275,7 @@ class _TransactionsState extends State<Transactions> {
                       decoration: BoxDecoration(
                         border: Border.all(
                             width: 2, color: UiConstants.primaryColor),
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(
@@ -366,13 +357,15 @@ class _TransactionsState extends State<Transactions> {
     for (int index = 0; index < filteredList.length; index++) {
       _tiles.add(ListTile(
         onTap: () {
-          HapticFeedback.vibrate();
-          if (filteredList[index].tranStatus !=
-              UserTransaction.TRAN_STATUS_CANCELLED)
-            showDialog(
-                context: context,
-                builder: (BuildContext context) =>
-                    TransactionDetailsDialog(filteredList[index]));
+          Haptic.vibrate();
+          // if (filteredList[index].tranStatus !=
+          //     UserTransaction.TRAN_STATUS_CANCELLED)
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                AppState.screenStack.add(ScreenItem.dialog);
+                return TransactionDetailsDialog(filteredList[index]);
+              });
         },
         dense: true,
         leading: Container(

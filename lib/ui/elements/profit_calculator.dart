@@ -3,13 +3,21 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class ProfitCalculator extends StatefulWidget {
+  final List<Color> invGradient, retGradient;
+  final double calFactor;
+
+  const ProfitCalculator({
+    @required this.calFactor,
+    @required this.invGradient,
+    @required this.retGradient,
+  });
   @override
   _ProfitCalculatorState createState() => _ProfitCalculatorState();
 }
 
 class _ProfitCalculatorState extends State<ProfitCalculator> {
   TextEditingController inputPrice = new TextEditingController();
-  int months = 1;
+  int months = 12;
   double price = 1000;
   double outputprice = 1007;
   List<double> chipAmountList = [100, 500, 1000, 5000];
@@ -31,14 +39,13 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
 
   @override
   Widget build(BuildContext context) {
-    double _height = MediaQuery.of(context).size.height;
-    outputprice = price + price * (0.06 / 12) * months;
+    outputprice = price + price * widget.calFactor * months;
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: _height * 0.02,
+        horizontal: SizeConfig.globalMargin,
       ),
       width: double.infinity,
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -60,7 +67,7 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
               fontSize: SizeConfig.largeTextSize,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 16,
           ),
           Row(
@@ -71,10 +78,7 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
                   children: [
                     Text("Investment Amount"),
                     CalculatorCapsule(
-                      gradColors: [
-                        UiConstants.primaryColor.withGreen(190),
-                        UiConstants.primaryColor
-                      ],
+                      gradColors: widget.invGradient,
                       child: TextField(
                         controller: inputPrice,
                         cursorColor: Colors.black,
@@ -84,6 +88,9 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
                           contentPadding: EdgeInsets.only(
                               left: 15, bottom: 11, top: 11, right: 15),
                           hintText: price.toString(),
+                          hintStyle: TextStyle(
+                            fontSize: SizeConfig.mediumTextSize * 1.2,
+                          ),
                           enabledBorder:
                               OutlineInputBorder(borderSide: BorderSide.none),
                           focusedBorder:
@@ -106,14 +113,14 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
                   children: [
                     Text("Return Amount"),
                     CalculatorCapsule(
-                      gradColors: [
-                        Colors.blueGrey[600],
-                        Colors.blueGrey,
-                      ],
+                      gradColors: widget.retGradient,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 16.0),
                         child: Text(
                           outputprice.truncateToDouble().toString(),
+                          style: TextStyle(
+                              fontSize: SizeConfig.mediumTextSize * 1.2,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     )
@@ -149,13 +156,13 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
             max: 36,
             min: 0,
             divisions: 18,
-            activeColor: UiConstants.primaryColor,
-            inactiveColor: UiConstants.primaryColor,
+            activeColor: widget.retGradient[0],
+            inactiveColor: widget.retGradient[1],
           ),
           Text(
             '*Projected returns based on past 6 month performance',
             style: TextStyle(
-                color: Colors.blueGrey[600],
+                color: widget.invGradient[1],
                 fontSize: SizeConfig.smallTextSize * 1.2),
           )
         ],
