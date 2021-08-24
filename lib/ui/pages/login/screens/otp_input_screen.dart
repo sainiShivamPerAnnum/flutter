@@ -34,6 +34,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
   bool _autoDetectingOtp = true;
   bool _isResendClicked = false;
   bool _isTriesExceeded = false;
+  bool showResendOption = false;
   final _pinEditingController = new TextEditingController();
   FocusNode focusNode;
   String mobileNo;
@@ -57,6 +58,11 @@ class OtpInputScreenState extends State<OtpInputScreen> {
     if (mounted) {
       Future.delayed(Duration(seconds: 2), () {
         FocusScope.of(context).requestFocus(focusNode);
+      });
+      Future.delayed(Duration(seconds: 7), () {
+        setState(() {
+          showResendOption = true;
+        });
       });
     }
     super.didChangeDependencies();
@@ -86,18 +92,20 @@ class OtpInputScreenState extends State<OtpInputScreen> {
               const SizedBox(
                 height: 16,
               ),
-              InkWell(
-                child: Text(
-                  "Change Number ?",
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                onTap: () {
-                  widget.changeNumber();
-                },
-              ),
+              _autoDetectingOtp && !_isTriesExceeded
+                  ? SizedBox()
+                  : InkWell(
+                      child: Text(
+                        "Change Number ?",
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      onTap: () {
+                        widget.changeNumber();
+                      },
+                    ),
               const SizedBox(
                 height: 24,
               ),
@@ -132,7 +140,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
               const SizedBox(
                 height: 16,
               ),
-              (!_autoDetectingOtp && !_isTriesExceeded)
+              (showResendOption && !_isTriesExceeded)
                   ? Row(
                       children: [
                         Text(
@@ -174,7 +182,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Spacer(),
-                  (_autoDetectingOtp)
+                  (!showResendOption)
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -189,7 +197,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
                             SizedBox(
                               height: 8,
                             ),
-                            Text(_loaderMessage)
+                            //Text(_loaderMessage)
                           ],
                         )
                       : Container(),

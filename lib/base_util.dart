@@ -21,6 +21,8 @@ import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
@@ -597,6 +599,25 @@ class BaseUtil extends ChangeNotifier {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  void openTambolaHome() async {
+    delegate.appState.setCurrentTabIndex = 1;
+    if (await getDrawaStatus()) {
+      await _lModel.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
+            (value) =>
+                print("Daily Picks Draw Animation Save Status Code: $value"),
+          );
+      delegate.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        page: TPickDrawPageConfig,
+        widget: PicksDraw(
+          picks: todaysPicks ?? List.filled(dailyPicksCount, -1),
+        ),
+      );
+    } else
+      delegate.appState.currentAction =
+          PageAction(state: PageState.addPage, page: THomePageConfig);
   }
 
   bool isOldCustomer() {
