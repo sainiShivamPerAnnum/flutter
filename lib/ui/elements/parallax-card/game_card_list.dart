@@ -53,7 +53,7 @@ class GameCardListState extends State<GameCardList>
       () => baseProvider.openTambolaHome(),
       () {
         Haptic.vibrate();
-        delegate.parseRoute(Uri.parse("d-gamePoll"));
+        AppState.delegate.parseRoute(Uri.parse("d-gamePoll"));
       },
     ];
 

@@ -268,15 +268,16 @@ class IdeaSection extends StatelessWidget {
             title: "Want more tickets?",
             action: [
               GameOfferCardButton(
-                onPressed: () =>
-                    delegate.parseRoute(Uri.parse("finance/augDetails")),
+                onPressed: () => AppState.delegate
+                    .parseRoute(Uri.parse("finance/augDetails")),
                 title: "Invest",
               ),
               const SizedBox(
                 width: 10,
               ),
               GameOfferCardButton(
-                onPressed: () => delegate.parseRoute(Uri.parse("profile")),
+                onPressed: () =>
+                    AppState.delegate.parseRoute(Uri.parse("profile")),
                 title: "Share",
               ),
             ],
@@ -295,7 +296,7 @@ class IdeaSection extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) => WillPopScope(
                       onWillPop: () {
-                        backButtonDispatcher.didPopRoute();
+                        AppState.backButtonDispatcher.didPopRoute();
                         return Future.value(true);
                       },
                       child: FeedbackDialog(
@@ -314,7 +315,7 @@ class IdeaSection extends StatelessWidget {
                                         : baseProvider.firebaseUser.uid,
                                     fdbk)
                                 .then((flag) {
-                              backButtonDispatcher.didPopRoute();
+                              AppState.backButtonDispatcher.didPopRoute();
                               if (flag) {
                                 baseProvider.showPositiveAlert('Thank You',
                                     'We appreciate your feedback!', context);

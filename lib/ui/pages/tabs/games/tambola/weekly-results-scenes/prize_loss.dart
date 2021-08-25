@@ -1,4 +1,5 @@
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -67,9 +68,9 @@ class Loser extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        backButtonDispatcher.didPopRoute();
-                        backButtonDispatcher.didPopRoute();
-                        delegate.appState.setCurrentTabIndex = 3;
+                        AppState.backButtonDispatcher.didPopRoute();
+                        AppState.backButtonDispatcher.didPopRoute();
+                        AppState.delegate.appState.setCurrentTabIndex = 3;
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Color(0xff272727),
@@ -92,9 +93,9 @@ class Loser extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        backButtonDispatcher.didPopRoute();
-                        backButtonDispatcher.didPopRoute();
-                        delegate.appState.setCurrentTabIndex = 2;
+                        AppState.backButtonDispatcher.didPopRoute();
+                        AppState.backButtonDispatcher.didPopRoute();
+                        AppState.delegate.appState.setCurrentTabIndex = 2;
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Color(0xff53C5AE),

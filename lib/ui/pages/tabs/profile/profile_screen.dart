@@ -28,6 +28,7 @@ import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 // import 'package:share/share.dart';
 import 'package:share_plus/share_plus.dart';
@@ -229,7 +230,7 @@ class ShowEmailVerifyLink extends StatelessWidget {
             baseProvider.myUser.isEmailVerified == false
         ? InkWell(
             onTap: () {
-              delegate.appState.currentAction = PageAction(
+              AppState.delegate.appState.currentAction = PageAction(
                   state: PageState.addPage, page: VerifyEmailPageConfig);
             },
             child: const MarqueeText(
@@ -316,7 +317,7 @@ class TermsRow extends StatelessWidget {
               Haptic.vibrate();
               BaseUtil.launchUrl('https://fello.in/policy/tnc');
 
-              // delegate.appState.currentAction =
+              // AppState.delegate.appState.currentAction =
               //     PageAction(state: PageState.addPage, page: TncPageConfig);
             },
           ),
@@ -336,7 +337,7 @@ class TermsRow extends StatelessWidget {
             onTap: () {
               Haptic.vibrate();
               BaseUtil.launchUrl('https://fello.in/policy/privacy');
-              // delegate.appState.currentAction = PageAction(
+              // AppState.delegate.appState.currentAction = PageAction(
               //     state: PageState.addPage, page: RefPolicyPageConfig);
             },
           ),
@@ -874,7 +875,7 @@ class UserProfileCard extends StatelessWidget {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     return InkWell(
-      onTap: () => delegate.appState.currentAction =
+      onTap: () => AppState.delegate.appState.currentAction =
           PageAction(state: PageState.addPage, page: UserProfileDetailsConfig),
       child: Container(
         width: SizeConfig.screenWidth,
@@ -990,26 +991,9 @@ class UserProfileCard extends StatelessWidget {
   }
 
   String _getUserMembershipDate() {
-    List<String> months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ];
     if (baseProvider.userCreationTimestamp != null) {
-      int month = baseProvider.userCreationTimestamp.month;
-      int year = baseProvider.userCreationTimestamp.year;
-      int yearShort = year % 2000;
-
-      return '${months[month - 1]}\'$yearShort';
+      return DateFormat("MMMM, yyyy")
+          .format(baseProvider.userCreationTimestamp);
     } else {
       return '\'Unavailable\'';
     }

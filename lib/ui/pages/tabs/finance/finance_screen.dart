@@ -70,7 +70,7 @@ class _FinancePageState extends State<FinancePage>
                 context: context,
                 builder: (BuildContext context) => WillPopScope(
                   onWillPop: () async {
-                    backButtonDispatcher.didPopRoute();
+                    AppState.backButtonDispatcher.didPopRoute();
                     return Future.value(true);
                   },
                   child: Dialog(

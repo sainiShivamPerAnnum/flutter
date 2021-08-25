@@ -456,7 +456,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           builder: (ctx) {
             return WillPopScope(
                 onWillPop: () {
-                  backButtonDispatcher.didPopRoute();
+                  AppState.backButtonDispatcher.didPopRoute();
                   print("Popped the dialog");
                   return Future.value(true);
                 },

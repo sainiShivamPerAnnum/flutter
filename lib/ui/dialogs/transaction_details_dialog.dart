@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -38,7 +39,8 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
             UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
         widget._transaction.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
         widget._transaction.tranStatus ==
-            UserTransaction.TRAN_STATUS_COMPLETE && Platform.isAndroid) {
+            UserTransaction.TRAN_STATUS_COMPLETE &&
+        Platform.isAndroid) {
       _showInvoiceButton = true;
     }
   }
@@ -50,7 +52,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
     _width = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: () async {
-        backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher.didPopRoute();
         return true;
       },
       child: Dialog(

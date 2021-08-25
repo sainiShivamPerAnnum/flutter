@@ -504,7 +504,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
     new Timer(const Duration(milliseconds: 1000), () {
       baseProvider.isAugmontRegnCompleteAnimateInProgress = false;
       setState(() {});
-      backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher.didPopRoute();
       baseProvider.showPositiveAlert(
           'Registration Successful', 'You can now make a deposit!', context);
     });

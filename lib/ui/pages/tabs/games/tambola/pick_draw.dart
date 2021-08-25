@@ -70,7 +70,7 @@ class _PicksDrawState extends State<PicksDraw> {
                 color: Color(0xff150E56),
               ),
               onPressed: () {
-                delegate.appState.currentAction =
+                AppState.delegate.appState.currentAction =
                     PageAction(state: PageState.replace, page: THomePageConfig);
               },
             )

@@ -74,7 +74,7 @@ class Walkthrough extends StatelessWidget {
                 height: kToolbarHeight * 0.6, color: Colors.white),
             onTap: () {
               HapticFeedback.vibrate();
-              delegate.appState.currentAction =
+              AppState.delegate.appState.currentAction =
                   PageAction(state: PageState.addPage, page: SupportPageConfig);
             },
           ),

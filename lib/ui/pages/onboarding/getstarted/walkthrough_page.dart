@@ -21,12 +21,11 @@ class WalkThroughPage extends StatefulWidget {
 class _WalkThroughPageState extends State<WalkThroughPage> {
   List<String> _videoURLS;
   static final TextStyle normStyle = GoogleFonts.montserrat(
-      fontSize: SizeConfig.mediumTextSize*1.4,
-      color: Colors.black);
+      fontSize: SizeConfig.mediumTextSize * 1.4, color: Colors.black);
   static final TextStyle boldStyle = GoogleFonts.montserrat(
       color: Colors.black,
       fontWeight: FontWeight.bold,
-      fontSize: SizeConfig.mediumTextSize*1.4);
+      fontSize: SizeConfig.mediumTextSize * 1.4);
   List<RichText> _content = [
     RichText(
       text: new TextSpan(
@@ -239,7 +238,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                       child: (_currentIndex != _content.length - 1)
                           ? GestureDetector(
                               onTap: () {
-                                backButtonDispatcher.didPopRoute();
+                                AppState.backButtonDispatcher.didPopRoute();
                               },
                               child: Text(
                                 'Skip >',
@@ -274,7 +273,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                                             fontWeight: FontWeight.bold),
                                   ),
                                   onTap: () {
-                                    backButtonDispatcher.didPopRoute();
+                                    AppState.backButtonDispatcher.didPopRoute();
                                   },
                                 ))
                             : SizedBox(

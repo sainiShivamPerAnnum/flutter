@@ -47,8 +47,8 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
     int startMon =
         DateTime.utc(DateTime.now().year, 1, startDate).toLocal().month;
     int endMon = DateTime.utc(DateTime.now().year, 1, endDate).toLocal().month;
-    String startMonth = BaseUtil.getMonthName(startMon);
-    String endMonth = BaseUtil.getMonthName(endMon);
+    String startMonth = BaseUtil.getMonthName(monthNum: startMon);
+    String endMonth = BaseUtil.getMonthName(monthNum: endMon);
 
     return ["$startDay $startMonth", "$endDay $endMonth"];
   }

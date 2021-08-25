@@ -59,7 +59,6 @@ class _TambolaHomeState extends State<TambolaHome> {
   List<TicketSummaryCardModel> ticketSummaryData;
 
   List<Ticket> _tambolaBoardViews, _topFiveTambolaBoards = [];
-  List<TambolaBoard> _bestTambolaBoards;
   List<Widget> balls = [];
 
   var rnd = new Random();
@@ -305,7 +304,7 @@ class _TambolaHomeState extends State<TambolaHome> {
                         baseProvider.userWeeklyBoards.forEach((board) {
                           _tambolaBoardViews.add(_buildBoardView(board));
                         });
-                        delegate.appState.currentAction = PageAction(
+                        AppState.delegate.appState.currentAction = PageAction(
                           state: PageState.addWidget,
                           page: TShowAllTicketsPageConfig,
                           widget: ShowAllTickets(
@@ -399,8 +398,7 @@ class _TambolaHomeState extends State<TambolaHome> {
         ),
       );
     } else {
-      if (_topFiveTambolaBoards.isEmpty ||
-          baseProvider.userWeeklyBoards.length < 5) {
+      if (_topFiveTambolaBoards.isEmpty) {
         _topFiveTambolaBoards = [];
         _refreshBestBoards().forEach((element) {
           _topFiveTambolaBoards.add(_buildBoardView(element));
@@ -528,7 +526,7 @@ class _TambolaHomeState extends State<TambolaHome> {
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      delegate.appState.currentAction =
+                                      AppState.delegate.appState.currentAction =
                                           PageAction(
                                         state: PageState.addWidget,
                                         page: TSummaryDetailsPageConfig,
@@ -676,7 +674,7 @@ class _TambolaHomeState extends State<TambolaHome> {
     log.debug('Resultant wins: ${ticketCodeWinIndex.toString()}');
 
     if (!_winnerDialogCalled)
-      delegate.appState.currentAction = PageAction(
+      AppState.delegate.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: TWeeklyResultPageConfig,
         widget: WeeklyResult(
@@ -959,10 +957,10 @@ class _TambolaHomeState extends State<TambolaHome> {
       } else {
         if (length == 1)
           output =
-              "Ticket #${firstCard.board.getTicketNumber()} is less than 3 numbers away from completing their $category!";
+              "Ticket #${firstCard.board.getTicketNumber()} is just 2 numbers away from completing their $category!";
         else
           output =
-              "$length of your tickets are less than 3 numbers away from completing its $category.";
+              "$length of your tickets are just 2 numbers away from completing its $category.";
       }
     } else {
       if (length == 1)
@@ -976,6 +974,7 @@ class _TambolaHomeState extends State<TambolaHome> {
   }
 
   List<TambolaBoard> _refreshBestBoards() {
+    List<TambolaBoard> _bestTambolaBoards = [];
     // If boards are empty
     if (baseProvider.userWeeklyBoards == null ||
         baseProvider.userWeeklyBoards.isEmpty) {
@@ -1167,7 +1166,7 @@ class _GameAppBarState extends State<GameAppBar> {
               Center(
                   child: IconButton(
                 onPressed: () {
-                  delegate.appState.currentAction = PageAction(
+                  AppState.delegate.appState.currentAction = PageAction(
                       state: PageState.addPage, page: TWalkthroughPageConfig);
                   lclDbModel.setShowTambolaTutorial = false;
                 },

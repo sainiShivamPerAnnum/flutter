@@ -125,7 +125,7 @@ class _TicketState extends State<FCard> {
                       ? setState(() {
                           _isOpen = false;
                         })
-                      : backButtonDispatcher.didPopRoute();
+                      : AppState.backButtonDispatcher.didPopRoute();
                 }
               }),
         ),
@@ -637,7 +637,7 @@ class _CloseCardState extends State<CloseCard> {
                   children: [
                     InkWell(
                       onTap: () {
-                        backButtonDispatcher.didPopRoute();
+                        AppState.backButtonDispatcher.didPopRoute();
                         AppState.screenStack.add(ScreenItem.dialog);
                         showDialog(
                           context: context,
@@ -737,8 +737,8 @@ class _CloseCardState extends State<CloseCard> {
         } else {
           ImageGallerySaver.saveFile(imageFile.path);
         }
-        backButtonDispatcher.didPopRoute();
-        backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher.didPopRoute();
         baseProvider.showPositiveAlert("Saved Successfulyy",
             "Share card saved successfully to the gallery", context);
       }
@@ -746,7 +746,7 @@ class _CloseCardState extends State<CloseCard> {
       setState(() {
         isSaving = false;
       });
-      backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher.didPopRoute();
       print(e.toString());
       baseProvider.showNegativeAlert(
           "Task Failed", "Unable to save the picture at the moment", context);
@@ -828,7 +828,7 @@ class _CloseCardState extends State<CloseCard> {
 //                       children: [
 //                         IconButton(
 //                             onPressed: () =>
-//                                 backButtonDispatcher.didPopRoute(),
+//                                 AppState.backButtonDispatcher.didPopRoute(),
 //                             icon: Icon(Icons.close_rounded,
 //                                 color: Colors.white)),
 //                         Padding(

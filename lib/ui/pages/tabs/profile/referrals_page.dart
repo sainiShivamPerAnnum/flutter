@@ -7,6 +7,7 @@ import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ReferralsPage extends StatefulWidget {
@@ -140,39 +141,39 @@ class _ReferralsPageState extends State<ReferralsPage> {
           ],
         ),
         child: Container(
-          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
-          width: double.infinity,
-          child : Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ListTile(
-              title: Text(
-                rDetail.userName ?? '',
-                maxLines : 1,
-                overflow: TextOverflow.clip,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: SizeConfig.cardTitleTextSize,
-                  fontWeight: FontWeight.w500,
+            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ListTile(
+                  title: Text(
+                    rDetail.userName ?? '',
+                    maxLines: 1,
+                    overflow: TextOverflow.clip,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: SizeConfig.cardTitleTextSize,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  trailing: Text(
+                    'Referred on ${_getUserMembershipDate(rDetail.timestamp)}',
+                    maxLines: 2,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: SizeConfig.smallTextSize * 1.3,
+                    ),
+                  ),
                 ),
-              ),
-              trailing : Text(
-                'Referred on ${_getUserMembershipDate(rDetail.timestamp)}',
-                maxLines: 2,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: SizeConfig.smallTextSize * 1.3,
+                Text(
+                  _getBonusText(rDetail),
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-            ),
-            Text(
-              _getBonusText(rDetail),
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ],)
-        ),
+              ],
+            )),
       ),
     );
   }
@@ -198,28 +199,9 @@ class _ReferralsPageState extends State<ReferralsPage> {
   }
 
   String _getUserMembershipDate(Timestamp tmp) {
-    List<String> months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ];
     if (tmp != null) {
       DateTime _dt = tmp.toDate();
-      int day = _dt.day;
-      int month = _dt.month;
-      int year = _dt.year;
-      int yearShort = year % 2000;
-
-      return '${day.toString()} ${months[month - 1]}\'$yearShort';
+      return DateFormat("dd MMM, yyyy").format(_dt);
     } else {
       return '\'Unavailable\'';
     }

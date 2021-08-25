@@ -135,8 +135,9 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                       Icons.arrow_back_rounded,
                                       color: Colors.white,
                                     ),
-                                    onPressed: () =>
-                                        backButtonDispatcher.didPopRoute(),
+                                    onPressed: () => AppState
+                                        .backButtonDispatcher
+                                        .didPopRoute(),
                                   ),
                                   Spacer(),
                                   Text(
@@ -425,7 +426,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                       context: context,
                       builder: (BuildContext dialogContext) => WillPopScope(
                         onWillPop: () {
-                          backButtonDispatcher.didPopRoute();
+                          AppState.backButtonDispatcher.didPopRoute();
                           return Future.value(true);
                         },
                         child: ConfirmActionDialog(
@@ -437,14 +438,15 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             baseProvider.signOut().then((flag) {
                               if (flag) {
                                 //log.debug('Sign out process complete');
-                                backButtonDispatcher.didPopRoute();
-                                delegate.appState.currentAction = PageAction(
-                                    state: PageState.replaceAll,
-                                    page: SplashPageConfig);
+                                AppState.backButtonDispatcher.didPopRoute();
+                                AppState.delegate.appState.currentAction =
+                                    PageAction(
+                                        state: PageState.replaceAll,
+                                        page: SplashPageConfig);
                                 baseProvider.showPositiveAlert('Signed out',
                                     'Hope to see you soon', context);
                               } else {
-                                backButtonDispatcher.didPopRoute();
+                                AppState.backButtonDispatcher.didPopRoute();
                                 baseProvider.showNegativeAlert(
                                     'Sign out failed',
                                     'Couldn\'t signout. Please try again',
@@ -455,7 +457,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                           },
                           cancelAction: () {
                             Haptic.vibrate();
-                            backButtonDispatcher.didPopRoute();
+                            AppState.backButtonDispatcher.didPopRoute();
                           },
                         ),
                       ),
@@ -500,7 +502,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
         children: [
           ElevatedButton(
             onPressed: () {
-              delegate.appState.currentAction = PageAction(
+              AppState.delegate.appState.currentAction = PageAction(
                 state: PageState.addWidget,
                 widget: AugmontOnboarding(),
                 page: AugOnboardPageConfig,

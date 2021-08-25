@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +47,7 @@ class ShareInfoModalSheet extends StatelessWidget {
                     SizedBox(width: SizeConfig.blockSizeHorizontal * 5),
                     IconButton(
                       onPressed: () {
-                        backButtonDispatcher.didPopRoute();
+                        AppState.backButtonDispatcher.didPopRoute();
                       },
                       icon: Icon(
                         Icons.close,
@@ -106,7 +107,7 @@ class ShareInfoModalSheet extends StatelessWidget {
                                   if (await canLaunch(url)) {
                                     BaseUtil.launchUrl(url);
                                   } else {
-                                    backButtonDispatcher.didPopRoute();
+                                    AppState.backButtonDispatcher.didPopRoute();
                                   }
                                 },
                                 child: Text(

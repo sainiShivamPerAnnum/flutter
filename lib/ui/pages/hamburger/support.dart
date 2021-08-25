@@ -132,7 +132,8 @@ class _SupportPageState extends State<SupportPage> {
                           icon: Icon(
                             Icons.arrow_back_rounded,
                           ),
-                          onPressed: () => backButtonDispatcher.didPopRoute(),
+                          onPressed: () =>
+                              AppState.backButtonDispatcher.didPopRoute(),
                         ),
                         Spacer(),
                         Image.asset(
