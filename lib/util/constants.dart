@@ -70,7 +70,7 @@ class Constants {
   ///STAGES - IMPORTANT
   static const AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;
   static const FreshchatStage activeFreshchatStage = FreshchatStage.DEV;
-  static const AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.PROD;
+  static const AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.DEV;
   static const SignzyStage activeSignzyStage = SignzyStage.PROD;
-  static const RazorpayStage activeRazorpayStage = RazorpayStage.PROD;
+  static const RazorpayStage activeRazorpayStage = RazorpayStage.DEV;
 }

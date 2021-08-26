@@ -205,7 +205,7 @@ class BaseUtil extends ChangeNotifier {
 
       ///prefill pan details if available
       panService = new PanService();
-      if (myUser.isSimpleKycVerified ||
+      if (myUser.isSimpleKycVerified != null && myUser.isSimpleKycVerified ||
           (myUser.isSimpleKycVerified == null && myUser.isAugmontOnboarded)) {
         userRegdPan = await panService.getUserPan();
       }

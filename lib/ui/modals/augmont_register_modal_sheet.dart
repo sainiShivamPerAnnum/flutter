@@ -1,14 +1,11 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/main.dart';
-import 'package:felloapp/ui/dialogs/augmont_regn_security_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/augmont_state_list.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
@@ -19,6 +16,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AugmontRegisterModalSheet extends StatefulWidget {
   AugmontRegisterModalSheet({Key key}) : super(key: key);
@@ -68,17 +66,41 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Center(
-          child: Text(
-            'Digital Gold Registration',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w700,
-              color: augmontGoldPalette.primaryColor,
+        Row(
+          children: [
+            Text(
+              'Augmont Registration',
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.w700,
+                color: augmontGoldPalette.primaryColor,
+              ),
             ),
-          ),
+            Spacer(),
+            IconButton(
+              icon: Icon(
+                Icons.clear_rounded,
+                size: 30,
+              ),
+              onPressed: () {
+                backButtonDispatcher.didPopRoute();
+              },
+            )
+          ],
         ),
+        // Center(
+        //   child: Text(
+        //     'Digital Gold Registration',
+        //     textAlign: TextAlign.center,
+        //     style: TextStyle(
+        //       fontSize: 28,
+        //       fontWeight: FontWeight.w700,
+        //       color: augmontGoldPalette.primaryColor,
+        //     ),
+        //   ),
+        // ),
         SizedBox(
           height: 24,
         ),
@@ -160,9 +182,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
             borderRadius: new BorderRadius.circular(30.0),
           ),
         ),
-        SizedBox(
-          height: 30,
-        ),
+        AugmontInfoTiles()
       ],
     );
   }
@@ -205,7 +225,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
   }
 }
 
-class KycInfoTiles extends StatelessWidget {
+class AugmontInfoTiles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BaseUtil baseProvider = Provider.of<BaseUtil>(context, listen: false);
@@ -219,20 +239,18 @@ class KycInfoTiles extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextButton.icon(
-                icon: Text("🔒"),
-                onPressed: () {
+                icon: Text("💰"),
+                onPressed: () async {
                   Haptic.vibrate();
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) =>
-                          AugmontRegnSecurityDialog(
-                            text: Assets.infoAugmontRegnSecurity,
-                            imagePath: 'images/aes256.png',
-                            title: 'Security > Rest',
-                          ));
+                  const url = "https://www.augmont.com/about-us";
+                  if (await canLaunch(url))
+                    await launch(url);
+                  else
+                    baseProvider.showNegativeAlert('Failed to launch URL',
+                        'Please try again in sometime', context);
                 },
                 label: Text(
-                  'Note on Security',
+                  'More about Augmont',
                   style: TextStyle(
                       fontSize: SizeConfig.smallTextSize * 1.3,
                       decoration: TextDecoration.underline,

@@ -256,7 +256,8 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
       else
         baseProvider.showNegativeAlert('Registration failed',
             veriDetails['reason'] ?? 'Please try again', context);
-      baseProvider.isAugmontRegnInProgress = false;
+
+      baseProvider.isSimpleKycInProgress = false;
       setState(() {});
       return;
     }
