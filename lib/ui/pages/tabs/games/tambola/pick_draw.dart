@@ -1,14 +1,13 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rive/rive.dart' as rive;
 
 class PicksDraw extends StatefulWidget {
-  final List<int> picks;
-  const PicksDraw({Key key, @required this.picks}) : super(key: key);
-
   @override
   _PicksDrawState createState() => _PicksDrawState();
 }
@@ -20,6 +19,7 @@ class _PicksDrawState extends State<PicksDraw> {
   double textPos = -10;
   bool showTxt = false;
   double ringWidth = 0;
+  BaseUtil baseProvider;
 
   showPicksDraw() {
     setState(() {
@@ -60,6 +60,7 @@ class _PicksDrawState extends State<PicksDraw> {
 
   @override
   Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context);
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: showTxt
@@ -164,84 +165,96 @@ class _PicksDrawState extends State<PicksDraw> {
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
-                                    children: widget.picks
-                                        .map(
-                                          (e) => AnimatedContainer(
-                                            curve: Curves.easeIn,
-                                            height: radius,
-                                            width: radius,
-                                            duration: Duration(seconds: 1),
-                                            decoration: BoxDecoration(
-                                              color: Colors.black,
-                                              shape: BoxShape.circle,
-                                              gradient: RadialGradient(
-                                                center: Alignment(-0.8, -0.6),
-                                                colors: [
-                                                  Color(0xff515E63),
-                                                  Colors.black
-                                                ],
-                                                radius: 1.0,
-                                              ),
-                                            ),
-                                            alignment: Alignment.center,
-                                            child: Transform.scale(
-                                              scale: opacity,
-                                              child: Stack(
-                                                children: [
-                                                  Align(
-                                                    alignment: Alignment.center,
-                                                    child: AnimatedContainer(
-                                                      height: ringWidth,
-                                                      width: ringWidth,
-                                                      duration:
-                                                          Duration(seconds: 1),
-                                                      curve: Curves.easeIn,
-                                                      decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                          color: Colors.white,
-                                                          width: 0.5,
+                                    children: baseProvider.todaysPicks ??
+                                        List.filled(
+                                                baseProvider.dailyPicksCount, 0)
+                                            .map(
+                                              (e) => AnimatedContainer(
+                                                curve: Curves.easeIn,
+                                                height: radius,
+                                                width: radius,
+                                                duration: Duration(seconds: 1),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black,
+                                                  shape: BoxShape.circle,
+                                                  gradient: RadialGradient(
+                                                    center:
+                                                        Alignment(-0.8, -0.6),
+                                                    colors: [
+                                                      Color(0xff515E63),
+                                                      Colors.black
+                                                    ],
+                                                    radius: 1.0,
+                                                  ),
+                                                ),
+                                                alignment: Alignment.center,
+                                                child: Transform.scale(
+                                                  scale: opacity,
+                                                  child: Stack(
+                                                    children: [
+                                                      Align(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child:
+                                                            AnimatedContainer(
+                                                          height: ringWidth,
+                                                          width: ringWidth,
+                                                          duration: Duration(
+                                                              seconds: 1),
+                                                          curve: Curves.easeIn,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            border: Border.all(
+                                                              color:
+                                                                  Colors.white,
+                                                              width: 0.5,
+                                                            ),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        100),
+                                                          ),
                                                         ),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(100),
                                                       ),
-                                                    ),
+                                                      AnimatedOpacity(
+                                                        duration: Duration(
+                                                            milliseconds: 500),
+                                                        curve: Curves
+                                                            .easeInOutBack,
+                                                        opacity: opacity,
+                                                        child: Container(
+                                                          height: radius,
+                                                          width: radius,
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: showTxt
+                                                              ? FittedBox(
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  child: Text(
+                                                                    e.toString() ??
+                                                                        "-",
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          20,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w700,
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              : SizedBox(),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                  AnimatedOpacity(
-                                                    duration: Duration(
-                                                        milliseconds: 500),
-                                                    curve: Curves.easeInOutBack,
-                                                    opacity: opacity,
-                                                    child: Container(
-                                                      height: radius,
-                                                      width: radius,
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: showTxt
-                                                          ? FittedBox(
-                                                              fit: BoxFit.cover,
-                                                              child: Text(
-                                                                e.toString(),
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                ),
-                                                              ),
-                                                            )
-                                                          : SizedBox(),
-                                                    ),
-                                                  ),
-                                                ],
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
+                                            )
+                                            .toList(),
                                   ),
                                 ),
                               ],

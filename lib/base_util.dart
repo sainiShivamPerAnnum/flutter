@@ -21,6 +21,8 @@ import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
@@ -216,7 +218,6 @@ class BaseUtil extends ChangeNotifier {
       }
 
       await getProfilePicUrl();
-      await fetchWeeklyPicks();
 
       ///Freshchat utils
       freshchatKeys = await _dbModel.getActiveFreshchatKey();
@@ -243,6 +244,8 @@ class BaseUtil extends ChangeNotifier {
             _myUser.uid, FailType.DailyPickParseFailed, errorDetails);
         _dailyPickCount = 3;
       }
+
+      await fetchWeeklyPicks(forcedRefresh: false);
 
       ///pick zerobalance asset
       Random rnd = new Random();
@@ -326,7 +329,8 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  fetchWeeklyPicks() async {
+  fetchWeeklyPicks({bool forcedRefresh}) async {
+    if (forcedRefresh) weeklyDrawFetched = false;
     if (!weeklyDrawFetched) {
       try {
         log.debug('Requesting for weekly picks');
@@ -338,7 +342,33 @@ class BaseUtil extends ChangeNotifier {
         notifyListeners();
       } catch (e) {
         log.error('$e');
+      switch (DateTime.now().weekday) {
+        case 1:
+          todaysPicks = weeklyDigits.mon;
+          break;
+        case 2:
+          todaysPicks = weeklyDigits.tue;
+          break;
+        case 3:
+          todaysPicks = weeklyDigits.wed;
+          break;
+        case 4:
+          todaysPicks = weeklyDigits.thu;
+          break;
+        case 5:
+          todaysPicks = weeklyDigits.fri;
+          break;
+        case 6:
+          todaysPicks = weeklyDigits.sat;
+          break;
+        case 7:
+          todaysPicks = weeklyDigits.sun;
+          break;
       }
+      if (todaysPicks == null) {
+        log.debug("Today's picks are not generated yet");
+      }
+      notifyListeners();
     }
   }
 
@@ -427,33 +457,10 @@ class BaseUtil extends ChangeNotifier {
     )..show(context);
   }
 
-  Future<bool> getDrawaStatus() async {
+  Future<bool> getDrawStatus() async {
     // CHECKING IF THE PICK ARE DRAWN OR NOT
-    if (!weeklyDrawFetched || weeklyDigits == null) await fetchWeeklyPicks();
-    if (weeklyDrawFetched && weeklyDigits != null)
-      switch (DateTime.now().weekday) {
-        case 1:
-          todaysPicks = weeklyDigits.mon;
-          break;
-        case 2:
-          todaysPicks = weeklyDigits.tue;
-          break;
-        case 3:
-          todaysPicks = weeklyDigits.wed;
-          break;
-        case 4:
-          todaysPicks = weeklyDigits.thu;
-          break;
-        case 5:
-          todaysPicks = weeklyDigits.fri;
-          break;
-        case 6:
-          todaysPicks = weeklyDigits.sat;
-          break;
-        case 7:
-          todaysPicks = weeklyDigits.sun;
-          break;
-      }
+    if (!weeklyDrawFetched || weeklyDigits == null)
+      await fetchWeeklyPicks(forcedRefresh: true);
     //CHECKING FOR THE FIRST TIME OPENING OF TAMBOLA AFTER THE PICKS ARE DRAWN FOR THIS PARTICULAR DAY
     notifyListeners();
     if (todaysPicks != null &&
@@ -608,6 +615,20 @@ class BaseUtil extends ChangeNotifier {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  void openTambolaHome() async {
+    delegate.appState.setCurrentTabIndex = 1;
+    if (await getDrawStatus()) {
+      await _lModel.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
+            (value) =>
+                print("Daily Picks Draw Animation Save Status Code: $value"),
+          );
+      delegate.appState.currentAction =
+          PageAction(state: PageState.addPage, page: TPickDrawPageConfig);
+    } else
+      delegate.appState.currentAction =
+          PageAction(state: PageState.addPage, page: THomePageConfig);
   }
 
   bool isOldCustomer() {

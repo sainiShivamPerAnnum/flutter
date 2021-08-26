@@ -237,26 +237,7 @@ class _HomePageState extends State<HomePage> {
             isHighlighted: false,
             onPressed: () async {
               Haptic.vibrate();
-              delegate.appState.setCurrentTabIndex = 1;
-              if (await baseProvider.getDrawaStatus()) {
-                await _localDBModel
-                    .saveDailyPicksAnimStatus(DateTime.now().weekday)
-                    .then(
-                      (value) => print(
-                          "Daily Picks Draw Animation Save Status Code: $value"),
-                    );
-                delegate.appState.setCurrentTabIndex = 1;
-                delegate.appState.currentAction = PageAction(
-                  state: PageState.addWidget,
-                  page: TPickDrawPageConfig,
-                  widget: PicksDraw(
-                    picks: baseProvider.todaysPicks ??
-                        List.filled(baseProvider.dailyPicksCount, -1),
-                  ),
-                );
-              } else
-                delegate.appState.currentAction =
-                    PageAction(state: PageState.addPage, page: THomePageConfig);
+              baseProvider.openTambolaHome();
             },
           ),
         );
@@ -478,12 +459,6 @@ class BaseHomeCardContent extends StatelessWidget {
             subtitle,
             style: TextStyle(
                 color: Colors.white,
-                // shadows: [
-                //   Shadow(
-                //     color: shadowColor,
-                //     offset: Offset(1, 1),
-                //   ),
-                // ],
                 fontSize: SizeConfig.mediumTextSize * 1.1,
                 fontWeight: FontWeight.w700),
           ),
