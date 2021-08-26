@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/modals/simple_kyc_modal_sheet.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -26,15 +27,14 @@ class AugmontWithdrawScreen extends StatefulWidget {
   final String bankIfsc;
   final ValueChanged<Map<String, double>> onAmountConfirmed;
 
-  AugmontWithdrawScreen(
-      {Key key,
-      this.passbookBalance,
-      this.withdrawableGoldQnty,
-      this.sellRate,
-      this.bankHolderName,
-      this.bankAccNo,
-      this.bankIfsc,
-      this.onAmountConfirmed})
+  AugmontWithdrawScreen({Key key,
+    this.passbookBalance,
+    this.withdrawableGoldQnty,
+    this.sellRate,
+    this.bankHolderName,
+    this.bankAccNo,
+    this.bankIfsc,
+    this.onAmountConfirmed})
       : super(key: key);
 
   @override
@@ -50,19 +50,27 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
   String _errorMessage;
   bool _isLoading = false;
   double _width;
+  bool _isInitialised = false;
+
   final TextStyle tTextStyle =
-      TextStyle(fontSize: 18, fontWeight: FontWeight.w300);
+  TextStyle(fontSize: 18, fontWeight: FontWeight.w300);
   final TextStyle gTextStyle =
-      TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+  TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+
 
   @override
   Widget build(BuildContext context) {
-    _width = MediaQuery.of(context).size.width;
+    _width = MediaQuery
+        .of(context)
+        .size
+        .width;
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Theme
+            .of(context)
+            .scaffoldBackgroundColor,
         elevation: 0,
         actions: [
           Padding(
@@ -78,7 +86,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                             : Text('Edit Bank Info')),
                     decoration: BoxDecoration(
                       border:
-                          Border.all(color: augmontGoldPalette.primaryColor),
+                      Border.all(color: augmontGoldPalette.primaryColor),
                       borderRadius: BorderRadius.circular(10),
                     ),
                   );
@@ -116,40 +124,9 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Align(
-              //   alignment: Alignment.topRight,
-              //   child: Padding(
-              //     padding: EdgeInsets.fromLTRB(0, 5, 5, 0),
-              //     child: MaterialButton(
-              //       child: Consumer<BaseUtil>(
-              //         builder: (ctx, bp, child) {
-              //           return Container(
-              //             child: Padding(
-              //                 padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-              //                 child: _checkBankInfoMissing
-              //                     ? Text('Add Bank Info')
-              //                     : Text('Edit Bank Info')),
-              //             decoration: BoxDecoration(
-              //               border: Border.all(color: UiConstants.primaryColor),
-              //               borderRadius: BorderRadius.circular(10),
-              //             ),
-              //           );
-              //         },
-              //       ),
-              //       onPressed: () {
-              //         // Navigator.push(
-              //         //   context,
-              //         //   MaterialPageRoute(
-              //         //     builder: (ctx) => EditAugmontBankDetail(),
-              //         //   ),
-              //         // );
-              //         appState.currentAction = PageAction(
-              //             state: PageState.addPage,
-              //             page: EditAugBankDetailsPageConfig);
-              //       },
-              //     ),
-              //   ),
-              // ),
+              (_checkKycMissing)?_addKycInfoWidget():Container(),
+              (_checkKycMissing)?SizedBox(height: SizeConfig.blockSizeVertical*2,):Container(),
+              (_checkBankInfoMissing)?_addBankInfoWidget():Container(),
               SizedBox(
                 child: Image(
                   image: AssetImage(Assets.onboardingSlide[1]),
@@ -168,105 +145,108 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
               ),
               (_isLoading)
                   ? Padding(
-                      padding: EdgeInsets.all(30),
-                      child: SpinKitWave(
-                        color: UiConstants.primaryColor,
-                      ))
+                  padding: EdgeInsets.all(30),
+                  child: SpinKitWave(
+                    color: UiConstants.primaryColor,
+                  ))
                   : Container(),
               (_errorMessage != null && !_isLoading)
                   ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: _width * 0.7,
-                          child: Text('Error: $_errorMessage',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.redAccent, fontSize: 16)),
-                        )
-                      ],
-                    )
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: _width * 0.7,
+                    child: Text('Error: $_errorMessage',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.redAccent, fontSize: 16)),
+                  )
+                ],
+              )
                   : Container(),
               SizedBox(
                 height: 10,
               ),
               (!_isLoading)
                   ? _buildRow('Current Gold Selling Rate: ',
-                      '₹${widget.sellRate} per gram')
+                  '₹${widget.sellRate} per gram')
                   : Container(),
               (!_isLoading)
                   ? SizedBox(
-                      height: 5,
-                    )
+                height: 5,
+              )
                   : Container(),
               (!_isLoading)
                   ? _buildRow('Total Gold Owned: ',
-                      '${baseProvider.userFundWallet.augGoldQuantity.toStringAsFixed(4)} grams')
+                  '${baseProvider.userFundWallet.augGoldQuantity
+                      .toStringAsFixed(4)} grams')
                   : Container(),
               (!_isLoading &&
-                      widget.withdrawableGoldQnty !=
-                          baseProvider.userFundWallet.augGoldQuantity)
+                  widget.withdrawableGoldQnty !=
+                      baseProvider.userFundWallet.augGoldQuantity)
                   ? _buildLockedGoldRow('Total Gold available for withdrawal: ',
-                      '${widget.withdrawableGoldQnty.toStringAsFixed(4)} grams')
+                  '${widget.withdrawableGoldQnty.toStringAsFixed(4)} grams')
                   : Container(),
               (!_isLoading)
                   ? SizedBox(
-                      height: 5,
-                    )
+                height: 5,
+              )
                   : Container(),
               (!_isLoading)
                   ? _buildRow('Total withdrawable balance: ',
-                      '${widget.withdrawableGoldQnty.toStringAsFixed(4)} * ${widget.sellRate} = ₹${_getTotalGoldAvailable().toStringAsFixed(3)}')
+                  '${widget.withdrawableGoldQnty.toStringAsFixed(4)} * ${widget
+                      .sellRate} = ₹${_getTotalGoldAvailable().toStringAsFixed(
+                      3)}')
                   : Container(),
               (!_isLoading)
                   ? SizedBox(
-                      height: 30,
-                    )
+                height: 30,
+              )
                   : Container(),
               (!_isLoading)
                   ? Container(
-                      margin: EdgeInsets.only(top: 12),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Theme(
-                              data: ThemeData.light().copyWith(
-                                  textTheme: GoogleFonts.montserratTextTheme(),
-                                  colorScheme: ColorScheme.light(
-                                      primary:
-                                          augmontGoldPalette.primaryColor)),
-                              child: TextField(
-                                controller: _quantityController,
-                                keyboardType: TextInputType.number,
-                                readOnly: false,
-                                enabled: true,
-                                autofocus: false,
-                                decoration: augmontFieldInputDecoration(
-                                    'Quantity (in grams)'),
-                                onChanged: (value) {
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
+                margin: EdgeInsets.only(top: 12),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Theme(
+                        data: ThemeData.light().copyWith(
+                            textTheme: GoogleFonts.montserratTextTheme(),
+                            colorScheme: ColorScheme.light(
+                                primary:
+                                augmontGoldPalette.primaryColor)),
+                        child: TextField(
+                          controller: _quantityController,
+                          keyboardType: TextInputType.number,
+                          readOnly: false,
+                          enabled: true,
+                          autofocus: false,
+                          decoration: augmontFieldInputDecoration(
+                              'Quantity (in grams)'),
+                          onChanged: (value) {
+                            setState(() {});
+                          },
+                        ),
                       ),
-                    )
+                    ),
+                  ],
+                ),
+              )
                   : Container(),
               (!_isLoading)
                   ? Padding(
-                      padding: EdgeInsets.only(top: 10),
-                      child: _getGoldAmount(_quantityController.text),
-                    )
+                padding: EdgeInsets.only(top: 10),
+                child: _getGoldAmount(_quantityController.text),
+              )
                   : Container(),
               (!_isLoading && _amountError != null)
                   ? Container(
-                      margin: EdgeInsets.only(top: 4, left: 12),
-                      child: Text(
-                        _amountError,
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    )
+                margin: EdgeInsets.only(top: 4, left: 12),
+                child: Text(
+                  _amountError,
+                  style: TextStyle(color: Colors.red),
+                ),
+              )
                   : Container(),
               SizedBox(
                 height: 25,
@@ -274,24 +254,93 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
               (!_isLoading) ? _buildSubmitButton(context) : Container(),
               (!_isLoading)
                   ? Padding(
-                      padding: EdgeInsets.only(
-                        top: 10,
-                      ),
-                      child: Text(
-                        'All withdrawals are processed within 2 business working days.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.blueGrey[600],
-                            fontSize: SizeConfig.mediumTextSize,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    )
+                padding: EdgeInsets.only(
+                  top: 10,
+                ),
+                child: Text(
+                  'All withdrawals are processed within 2 business working days.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.blueGrey[600],
+                      fontSize: SizeConfig.mediumTextSize,
+                      fontWeight: FontWeight.w400),
+                ),
+              )
                   : Container(),
               SizedBox(
                 height: 10,
               ),
             ],
           )),
+    );
+  }
+
+  Widget _addKycInfoWidget() {
+    return InkWell(
+      onTap: () {
+        AppState.screenStack.add(ScreenItem.dialog);
+        showModalBottomSheet(
+            isDismissible: false,
+            // backgroundColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            context: context,
+            isScrollControlled: true,
+            builder: (context) {
+              return SimpleKycModalSheet();
+            });
+      },
+      child: Container(
+        width: SizeConfig.screenWidth * 0.8,
+        decoration: BoxDecoration(
+          color: Colors.amber[200],
+          borderRadius: BorderRadius.circular(SizeConfig.blockSizeVertical),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.info_outline,
+                size: SizeConfig.mediumTextSize,
+              ),
+              Text('\t\tComplete KYC')
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _addBankInfoWidget() {
+    return InkWell(
+      onTap: () {
+        appState.currentAction = PageAction(
+            state: PageState.addPage,
+            page: EditAugBankDetailsPageConfig);
+      },
+      child: Container(
+        width: SizeConfig.screenWidth * 0.8,
+        decoration: BoxDecoration(
+          color: Colors.amber[200],
+          borderRadius: BorderRadius.circular(SizeConfig.blockSizeVertical),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.info_outline,
+                size: SizeConfig.mediumTextSize,
+              ),
+              Text('\t\tAdd Bank Info')
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -351,7 +400,10 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
     ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
 
     return Container(
-      width: MediaQuery.of(context).size.width - 40,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width - 40,
       height: 50.0,
       decoration: BoxDecoration(
         gradient: _gradient,
@@ -364,7 +416,8 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
             children: [
               Text(
                 'WITHDRAW ',
-                style: Theme.of(context)
+                style: Theme
+                    .of(context)
                     .textTheme
                     .button
                     .copyWith(color: Colors.white),
@@ -376,7 +429,10 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
             if (_checkBankInfoMissing) {
               baseProvider.showNegativeAlert('Bank Details Missing',
                   'Please enter your bank details', context);
-            } else {
+            } else if (_checkKycMissing) {
+              baseProvider.showNegativeAlert('KYC not completed',
+                  'Please complete your KYC', context);
+            }else {
               if (widget.withdrawableGoldQnty == 0.0) {
                 return;
               }
@@ -396,25 +452,26 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                     "Are you sure you want to continue? $qnt grams of digital gold shall be processed.";
                 showDialog(
                   context: context,
-                  builder: (ctx) => ConfirmActionDialog(
-                    title: "Please confirm your action",
-                    description: _confirmMsg,
-                    buttonText: "Withdraw",
-                    cancelBtnText: 'Cancel',
-                    confirmAction: () {
-                      Navigator.of(context).pop();
-                      _isLoading = true;
-                      setState(() {});
-                      widget.onAmountConfirmed({
-                        'withdrawal_quantity': qnt,
-                      });
-                      return true;
-                    },
-                    cancelAction: () {
-                      Navigator.of(context).pop();
-                      return false;
-                    },
-                  ),
+                  builder: (ctx) =>
+                      ConfirmActionDialog(
+                        title: "Please confirm your action",
+                        description: _confirmMsg,
+                        buttonText: "Withdraw",
+                        cancelBtnText: 'Cancel',
+                        confirmAction: () {
+                          Navigator.of(context).pop();
+                          _isLoading = true;
+                          setState(() {});
+                          widget.onAmountConfirmed({
+                            'withdrawal_quantity': qnt,
+                          });
+                          return true;
+                        },
+                        cancelAction: () {
+                          Navigator.of(context).pop();
+                          return false;
+                        },
+                      ),
                 );
               }
             }
@@ -435,6 +492,12 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
           baseProvider.augmontDetail.bankHolderName == null ||
           baseProvider.augmontDetail.ifsc.isEmpty ||
           baseProvider.augmontDetail.ifsc == null);
+
+  bool get _checkKycMissing =>
+      ((baseProvider.myUser.isSimpleKycVerified != null &&
+          baseProvider.myUser.isSimpleKycVerified == false) ||
+          baseProvider.myUser.isSimpleKycVerified == null &&
+              baseProvider.myUser.isAugmontOnboarded == false);
 
   _buildRow(String title, String value) {
     return ListTile(
@@ -502,13 +565,16 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
             Haptic.vibrate();
             showDialog(
               context: context,
-              builder: (context) => new AlertDialog(
+              builder: (context) =>
+              new AlertDialog(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(UiConstants.padding),
                 ),
                 title: new Text(title),
                 content: Text(
-                    'All gold deposits are available for withdrawal after ${Constants.AUG_GOLD_WITHDRAW_OFFSET * 24} hours. The ${_rem_gold.toStringAsFixed(4)} grams can be withdrawn tomorrow.'),
+                    'All gold deposits are available for withdrawal after ${Constants
+                        .AUG_GOLD_WITHDRAW_OFFSET * 24} hours. The ${_rem_gold
+                        .toStringAsFixed(4)} grams can be withdrawn tomorrow.'),
                 actions: <Widget>[
                   new TextButton(
                     onPressed: () {

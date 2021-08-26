@@ -515,9 +515,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                   context: context,
                   isScrollControlled: true,
                   builder: (context) {
-                    return SimpleKycModalSheet(
-                      currentRates: baseProvider.augmontGoldRates,
-                    );
+                    return SimpleKycModalSheet();
                   });
             },
             child: Text(

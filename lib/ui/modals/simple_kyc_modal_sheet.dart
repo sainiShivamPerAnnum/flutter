@@ -25,11 +25,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class SimpleKycModalSheet extends StatefulWidget {
-  final ValueChanged<double> onDepositConfirmed;
-  final AugmontRates currentRates;
-
-  SimpleKycModalSheet({Key key, this.onDepositConfirmed, this.currentRates})
-      : super(key: key);
+  SimpleKycModalSheet({Key key}) : super(key: key);
 
   SimpleKycModalSheetState createState() => SimpleKycModalSheetState();
 }
@@ -42,7 +38,6 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
   var heightOfModalBottomSheet = 100.0;
   BaseUtil baseProvider;
   final depositformKey3 = GlobalKey<FormState>();
-  bool _isInitialized = false;
   AugmontModel augmontProvider;
   ICICIModel iProvider;
   HttpModel httpProvider;
@@ -374,7 +369,7 @@ class KycInfoTiles extends StatelessWidget {
                       fontSize: SizeConfig.smallTextSize * 1.3,
                       decoration: TextDecoration.underline,
                       color:
-                      augmontGoldPalette.secondaryColor.withOpacity(0.8)),
+                          augmontGoldPalette.secondaryColor.withOpacity(0.8)),
                 ),
               ),
             ],
