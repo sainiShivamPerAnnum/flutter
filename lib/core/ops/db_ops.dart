@@ -341,7 +341,7 @@ class DBModel extends ChangeNotifier {
       //there should only be one document for a week
       if (querySnapshot != null && querySnapshot.docs.length == 1) {
         DocumentSnapshot snapshot = querySnapshot.docs[0];
-        if (snapshot.exists && snapshot.data() == null) {
+        if (snapshot.exists && snapshot.data() != null) {
           _detail = TambolaWinnersDetail.fromMap(snapshot.data(), snapshot.id);
         }
       }
