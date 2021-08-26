@@ -1317,6 +1317,7 @@ class _FaqSectionState extends State<FaqSection> {
   }
 
   _buildPrizePodium() {
+    List<Map<String, String>> _faqList = _buildFaqList();
     List<String> faqLeadIcons = [
       "images/svgs/howitworks.svg",
       "images/svgs/cash-distribution.svg",
@@ -1333,12 +1334,12 @@ class _FaqSectionState extends State<FaqSection> {
             dividerColor: Colors.grey.withOpacity(0.2),
             elevation: 0,
             children: List.generate(
-              Assets.tambolaFaqList.length,
+              _faqList.length,
               (index) => ExpansionPanel(
                 canTapOnHeader: true,
                 headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
                     faqLeadIcons[index],
-                    Assets.tambolaFaqList[index].keys.first),
+                    _faqList[index].keys.first),
                 isExpanded: detStatus[index],
                 body: Container(
                   alignment: Alignment.centerLeft,
@@ -1347,7 +1348,7 @@ class _FaqSectionState extends State<FaqSection> {
                     right: SizeConfig.blockSizeHorizontal * 6,
                   ),
                   child: Text(
-                    Assets.tambolaFaqList[index].values.first,
+                    _faqList[index].values.first,
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       height: 1.5,
@@ -1391,6 +1392,27 @@ class _FaqSectionState extends State<FaqSection> {
         ],
       ),
     );
+  }
+
+  List<Map<String, String>> _buildFaqList() {
+    return [
+      {
+        'How does one participate in Tambola?':
+        '- Everyday, ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT)} random numbers are picked.\n\n- The matching numbers on your tickets get automatically crossed, starting from the day they were generated.\n\n- On Sunday, your tickets are processed to see if they matched a category.'
+      },
+      {
+        'How does one win the game?':
+        '- Every Sunday, your winning tickets get processed, and the winnings for that week are shared with you in the next few days. \n\n- If there are more than 1 winners for a category, the prize amount gets equally distributed amongst all the category winners.'
+      },
+      {
+        'How can I redeem my winnings?':
+        '- If you\'re a tambola winner, your reward gets credited to your Fello wallet in a few days. \n\n- Once credited, you can choose how you would like to redeem it. It could be as digital gold or as Amazon pay balance.'
+      },
+      {
+        'How can I maximize my winnings ?':
+        'As traditional tambola goes, the more tickets you have, the better your odds of stealing a category! 💪\n'
+      },
+    ];
   }
 }
 

@@ -98,6 +98,7 @@ class BaseUtil extends ChangeNotifier {
       isRedemptionOtpInProgress,
       isAugmontRegnInProgress,
       isAugmontRegnCompleteAnimateInProgress,
+      isSimpleKycInProgress,
       isIciciDepositRouteLogicInProgress,
       isEditAugmontBankDetailInProgress,
       isAugDepositRouteLogicInProgress,
@@ -130,6 +131,7 @@ class BaseUtil extends ChangeNotifier {
     isRedemptionOtpInProgress = false;
     isAugmontRegnInProgress = false;
     isAugmontRegnCompleteAnimateInProgress = false;
+    isSimpleKycInProgress = false;
     isIciciDepositRouteLogicInProgress = false;
     isEditAugmontBankDetailInProgress = false;
     isAugDepositRouteLogicInProgress = false;
@@ -201,11 +203,16 @@ class BaseUtil extends ChangeNotifier {
       // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
       // _payService = locator<PaymentService>();
 
-      ///prefill augmont and pan details if available
+      ///prefill pan details if available
       panService = new PanService();
+      if (myUser.isSimpleKycVerified != null && myUser.isSimpleKycVerified ||
+          (myUser.isSimpleKycVerified == null && myUser.isAugmontOnboarded)) {
+        userRegdPan = await panService.getUserPan();
+      }
+
+      ///prefill augmont details if available
       if (myUser.isAugmontOnboarded) {
         augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
-        userRegdPan = await panService.getUserPan();
       }
 
       await getProfilePicUrl();
@@ -222,8 +229,8 @@ class BaseUtil extends ChangeNotifier {
       /// Fetch this weeks' Dailypicks count
       String _dpc = BaseRemoteConfig.remoteConfig
           .getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT);
-      if (_dpc == null || _dpc.isEmpty) _dpc = '5';
-      _dailyPickCount = 5;
+      if (_dpc == null || _dpc.isEmpty) _dpc = '3';
+      _dailyPickCount = 3;
       try {
         _dailyPickCount = int.parse(_dpc);
       } catch (e) {
@@ -234,7 +241,7 @@ class BaseUtil extends ChangeNotifier {
         };
         _dbModel.logFailure(
             _myUser.uid, FailType.DailyPickParseFailed, errorDetails);
-        _dailyPickCount = 5;
+        _dailyPickCount = 3;
       }
 
       ///pick zerobalance asset
@@ -321,13 +328,17 @@ class BaseUtil extends ChangeNotifier {
 
   fetchWeeklyPicks() async {
     if (!weeklyDrawFetched) {
-      log.debug('Requesting for weekly picks');
-      DailyPick _picks = await _dbModel.getWeeklyPicks();
-      weeklyDrawFetched = true;
-      if (_picks != null) {
-        weeklyDigits = _picks;
+      try {
+        log.debug('Requesting for weekly picks');
+        DailyPick _picks = await _dbModel.getWeeklyPicks();
+        weeklyDrawFetched = true;
+        if (_picks != null) {
+          weeklyDigits = _picks;
+        }
+        notifyListeners();
+      } catch (e) {
+        log.error('$e');
       }
-      notifyListeners();
     }
   }
 
