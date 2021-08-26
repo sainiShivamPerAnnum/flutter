@@ -10,7 +10,6 @@ import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
@@ -104,7 +103,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
     }
 
     try {
-      var res = await uploadTask;
+      TaskSnapshot res = await uploadTask;
       String url = await res.ref.getDownloadURL();
       if (url != null) {
         baseProvider.isProfilePictureUpdated = true;
