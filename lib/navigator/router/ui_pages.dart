@@ -62,7 +62,7 @@ enum Pages {
   TWalkthrough,
   TPickDraw,
   TShowAllTickets,
-  TSummaryDetails
+  TSummaryDetails,
 }
 
 class PageConfiguration {

@@ -1,0 +1,249 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/AugGoldRates.dart';
+import 'package:felloapp/core/model/UserAugmontDetail.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/ops/http_ops.dart';
+import 'package:felloapp/core/ops/icici_ops.dart';
+import 'package:felloapp/main.dart';
+import 'package:felloapp/ui/dialogs/augmont_regn_security_dialog.dart';
+import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/augmont_state_list.dart';
+import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/palettes.dart';
+import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/ui_constants.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
+
+class AugmontRegisterModalSheet extends StatefulWidget {
+  AugmontRegisterModalSheet({Key key}) : super(key: key);
+
+  AugmontRegisterModalSheetState createState() =>
+      AugmontRegisterModalSheetState();
+}
+
+class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
+  AugmontRegisterModalSheetState();
+
+  Log log = new Log('AugmontRegisterModalSheet');
+  var heightOfModalBottomSheet = 100.0;
+  BaseUtil baseProvider;
+  final depositformKey3 = GlobalKey<FormState>();
+  bool _isInitialized = false;
+  AugmontModel augmontProvider;
+  ICICIModel iProvider;
+  HttpModel httpProvider;
+  DBModel dbProvider;
+  static String stateChosenValue;
+
+  Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    augmontProvider = Provider.of<AugmontModel>(context, listen: false);
+    iProvider = Provider.of<ICICIModel>(context, listen: false);
+    httpProvider = Provider.of<HttpModel>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    return new Wrap(
+      children: <Widget>[
+        new Padding(
+          padding: EdgeInsets.fromLTRB(
+              25.0, 15.0, 25.0, 25 + MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            child: Padding(
+                padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5),
+                child: _formContent(context)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _formContent(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(
+          child: Text(
+            'Digital Gold Registration',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.w700,
+              color: augmontGoldPalette.primaryColor,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 24,
+        ),
+        TextFormField(
+          decoration: augmontFieldInputDecoration(baseProvider.myUser.mobile),
+          enabled: false,
+        ),
+        SizedBox(height: 16),
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 4,
+          ),
+          decoration: BoxDecoration(
+            border: Border.all(color: augmontGoldPalette.primaryColor),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: DropdownButtonFormField(
+            decoration: InputDecoration(
+              border: InputBorder.none,
+            ),
+            menuMaxHeight: SizeConfig.screenHeight * 0.5,
+            iconEnabledColor: augmontGoldPalette.primaryColor,
+            hint: Text("Which state do you live in?"),
+            value: stateChosenValue,
+            onChanged: (String newVal) {
+              setState(() {
+                stateChosenValue = newVal;
+                print(newVal);
+              });
+            },
+            items: AugmontResources.augmontStateList
+                .map(
+                  (e) => DropdownMenuItem(
+                    value: e["id"],
+                    child: Text(
+                      e["name"],
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        ),
+        SizedBox(height: 24),
+        Container(
+          width: SizeConfig.screenWidth,
+          height: 50.0,
+          decoration: BoxDecoration(
+            gradient: new LinearGradient(colors: [
+              augmontGoldPalette.primaryColor,
+              augmontGoldPalette.primaryColor2
+              // UiConstants.primaryColor,
+              // UiConstants.primaryColor.withBlue(200),
+            ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
+            borderRadius: new BorderRadius.circular(10.0),
+          ),
+          child: new Material(
+            child: MaterialButton(
+              child: (!baseProvider.isAugmontRegnInProgress &&
+                      !baseProvider.isAugmontRegnCompleteAnimateInProgress)
+                  ? Text(
+                      'REGISTER',
+                      style: Theme.of(context)
+                          .textTheme
+                          .button
+                          .copyWith(color: Colors.white),
+                    )
+                  : SpinKitThreeBounce(
+                      color: UiConstants.spinnerColor2,
+                      size: 18.0,
+                    ),
+              onPressed: () async {
+                _onSubmit();
+              },
+              highlightColor: Colors.white30,
+              splashColor: Colors.white30,
+            ),
+            color: Colors.transparent,
+            borderRadius: new BorderRadius.circular(30.0),
+          ),
+        ),
+        SizedBox(
+          height: 30,
+        ),
+      ],
+    );
+  }
+
+  void _onSubmit() async {
+    if (!_preVerifyInputs()) {
+      return;
+    }
+    baseProvider.isAugmontRegnInProgress = true;
+    setState(() {});
+
+    ///now register the augmont user
+    UserAugmontDetail detail = await augmontProvider.createSimpleUser(
+        baseProvider.myUser.mobile, stateChosenValue);
+    if (detail == null) {
+      baseProvider.showNegativeAlert('Registration Failed',
+          'Failed to regsiter at the moment. Please try again.', context);
+      baseProvider.isAugmontRegnInProgress = false;
+      setState(() {});
+      return;
+    } else {
+      ///show completion animation
+      baseProvider.showPositiveAlert('Registration Successful',
+          'You are successfully registered!', context);
+      baseProvider.isAugmontRegnInProgress = false;
+      setState(() {});
+      backButtonDispatcher.didPopRoute();
+    }
+    setState(() {});
+    return;
+  }
+
+  bool _preVerifyInputs() {
+    if (stateChosenValue == null || stateChosenValue.isEmpty) {
+      baseProvider.showNegativeAlert('State missing',
+          'Kindly enter your current residential state', context);
+      return false;
+    }
+    return true;
+  }
+}
+
+class KycInfoTiles extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    BaseUtil baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    return Positioned(
+      bottom: 0,
+      child: Container(
+        width: SizeConfig.screenWidth,
+        padding: EdgeInsets.symmetric(vertical: 10),
+        child: IntrinsicHeight(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton.icon(
+                icon: Text("🔒"),
+                onPressed: () {
+                  Haptic.vibrate();
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          AugmontRegnSecurityDialog(
+                            text: Assets.infoAugmontRegnSecurity,
+                            imagePath: 'images/aes256.png',
+                            title: 'Security > Rest',
+                          ));
+                },
+                label: Text(
+                  'Note on Security',
+                  style: TextStyle(
+                      fontSize: SizeConfig.smallTextSize * 1.3,
+                      decoration: TextDecoration.underline,
+                      color:
+                          augmontGoldPalette.secondaryColor.withOpacity(0.8)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
