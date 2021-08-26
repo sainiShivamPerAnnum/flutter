@@ -521,7 +521,7 @@ class BaseUtil extends ChangeNotifier {
 
       //TODO better fix required
       ///IMP: When a user signs out and attempts
-      /// to sign in again without closing the app,
+      /// to sign in again without closing the apcp,
       /// the old variables are still in effect
       /// resetting them like below for now
       _myUser = null;
