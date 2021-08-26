@@ -266,12 +266,7 @@ class _TambolaHomeState extends State<TambolaHome> {
                                   ),
                                 )),
                       !isShowingAllPicks
-                          ? CurrentPicks(
-                              // dailyPickTextList: dailyPickTextList,
-                              digits: _getDailyPickData(
-                                  baseProvider.weeklyDigits,
-                                  DateTime.now().weekday),
-                            )
+                          ? const CurrentPicks()
                           : WeeklyPicks(
                               weeklyDraws: baseProvider.weeklyDigits,
                             ),
@@ -1183,13 +1178,10 @@ class _GameAppBarState extends State<GameAppBar> {
 }
 
 class CurrentPicks extends StatelessWidget {
-  //final List<String> dailyPickTextList;
-  final List<int> digits;
-
-  const CurrentPicks({Key key, this.digits}) : super(key: key);
-
+  const CurrentPicks();
   @override
   Widget build(BuildContext context) {
+    BaseUtil baseProvider = Provider.of<BaseUtil>(context);
     return Expanded(
       child: Container(
         margin: EdgeInsets.only(top: 10),
@@ -1202,57 +1194,59 @@ class CurrentPicks extends StatelessWidget {
                 width: SizeConfig.screenWidth,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: digits
-                      .map(
-                        (e) => Container(
-                          height: SizeConfig.screenWidth * 0.12,
-                          width: SizeConfig.screenWidth * 0.12,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            shape: BoxShape.circle,
-                            gradient: RadialGradient(
-                              center: Alignment(-0.8, -0.6),
-                              colors: [Color(0xff515E63), Colors.black],
-                              radius: 1.0,
-                            ),
-                          ),
-                          alignment: Alignment.center,
-                          child: Stack(
-                            children: [
-                              Align(
-                                alignment: Alignment.center,
-                                child: Container(
-                                  height: SizeConfig.screenWidth * 0.09,
-                                  width: SizeConfig.screenWidth * 0.09,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.white,
-                                      width: 0.5,
-                                    ),
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
+                  children: baseProvider.todaysPicks ??
+                      List.filled(baseProvider.dailyPicksCount, 0)
+                          .map(
+                            (e) => Container(
+                              height: SizeConfig.screenWidth * 0.12,
+                              width: SizeConfig.screenWidth * 0.12,
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                shape: BoxShape.circle,
+                                gradient: RadialGradient(
+                                  center: Alignment(-0.8, -0.6),
+                                  colors: [Color(0xff515E63), Colors.black],
+                                  radius: 1.0,
                                 ),
                               ),
-                              Container(
-                                height: SizeConfig.screenWidth * 0.12,
-                                width: SizeConfig.screenWidth * 0.12,
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.all(8),
-                                child: FittedBox(
-                                  child: Text(
-                                    e.toString(),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.white,
-                                        fontSize: SizeConfig.largeTextSize),
+                              alignment: Alignment.center,
+                              child: Stack(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: Container(
+                                      height: SizeConfig.screenWidth * 0.09,
+                                      width: SizeConfig.screenWidth * 0.09,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.white,
+                                          width: 0.5,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      )
-                      .toList(),
+                                  Container(
+                                    height: SizeConfig.screenWidth * 0.12,
+                                    width: SizeConfig.screenWidth * 0.12,
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.all(8),
+                                    child: FittedBox(
+                                      child: Text(
+                                        e.toString() ?? "-",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white,
+                                            fontSize: SizeConfig.largeTextSize),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                          .toList(),
                 ),
               ),
             ),

@@ -5,10 +5,12 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
@@ -24,10 +26,11 @@ class ChangeProfilePicture extends StatefulWidget {
 }
 
 class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
+  Log log = new Log('ChangeProfilePicture');
+  final FirebaseStorage storage = FirebaseStorage.instance;
   BaseUtil baseProvider;
   DBModel dbProvider;
   bool isUploading = false;
-  bool isUploaded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -47,39 +50,72 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
   }
 
   Future<File> testCompressAndGetFile(File file, String targetPath) async {
-    return file;
+    try {
+      int quality = 50;
+      double filesize = file.lengthSync() / (1024 * 1024);
+      if (filesize < 1) {
+        quality = 75;
+      }
+      var result = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path,
+        targetPath,
+        quality: quality,
+        rotate: 0,
+      );
+
+      print(file.lengthSync());
+      print(result.lengthSync());
+
+      return result;
+    } catch (e) {
+      log.error(e.toString());
+      return file;
+    }
   }
 
   Future<bool> updatePicture(BuildContext context) async {
-    bool isUploaded = false;
-    Directory tempdir = await getTemporaryDirectory();
+    Directory supportDir;
+    UploadTask uploadTask;
+    try {
+      supportDir = await getApplicationSupportDirectory();
+    } catch (e1) {
+      log.error('Support Directory not found');
+      log.error('$e1');
+      return false;
+    }
+
     String imageName = widget.image.path.split("/").last;
-    String targetPath = "${tempdir.path}/c-$imageName";
+    String targetPath = "${supportDir.path}/c-$imageName";
     print("temp path: " + targetPath);
     print("orignal path: " + widget.image.path);
-    // await testCompressAndGetFile(File(widget.image.path), targetPath);
-    Reference ref = FirebaseStorage.instance.ref().child('dps').child(baseProvider.myUser.uid).child('image');
-    final metadata = SettableMetadata(
-        contentType: 'image/jpg',
-        customMetadata: {'picked-file-path': targetPath});
-    File _dp = File(targetPath);
-    UploadTask uploadTask;
+
+    File compressedFile =
+        await testCompressAndGetFile(File(widget.image.path), targetPath);
 
     try {
-      if(_dp != null)uploadTask = ref.putFile(_dp);
-      var res = await uploadTask;
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref =
+          storage.ref().child("dps/${baseProvider.myUser.uid}/image");
+      uploadTask = ref.putFile(compressedFile);
+    } catch (e2) {
+      log.error('putFile Failed. Reference Error');
+      log.error('$e2');
+      return false;
+    }
+
+    try {
+      TaskSnapshot res = await uploadTask;
       String url = await res.ref.getDownloadURL();
       if (url != null) {
-        isUploaded = true;
         baseProvider.isProfilePictureUpdated = true;
-        //baseProvider.myUsefurDpUrl = url;
         baseProvider.setDisplayPictureUrl(url);
-        print(url);
-      }
-      return isUploaded;
+        log.debug('Final DP Uri: $url');
+        return true;
+      } else
+        return false;
     } catch (e) {
       if (baseProvider.myUser.uid != null) {
-        var errorDetails = {
+        Map<String, dynamic> errorDetails = {
           'Error message': 'Method call to upload picture failed',
         };
         dbProvider.logFailure(baseProvider.myUser.uid,
