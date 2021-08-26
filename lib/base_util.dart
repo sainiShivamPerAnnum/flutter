@@ -211,7 +211,6 @@ class BaseUtil extends ChangeNotifier {
       }
 
       await getProfilePicUrl();
-      await fetchWeeklyPicks();
 
       ///Freshchat utils
       freshchatKeys = await _dbModel.getActiveFreshchatKey();
@@ -238,6 +237,8 @@ class BaseUtil extends ChangeNotifier {
             _myUser.uid, FailType.DailyPickParseFailed, errorDetails);
         _dailyPickCount = 5;
       }
+
+      await fetchWeeklyPicks(forcedRefresh: false);
 
       ///pick zerobalance asset
       Random rnd = new Random();
@@ -321,13 +322,40 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  fetchWeeklyPicks() async {
+  fetchWeeklyPicks({bool forcedRefresh}) async {
+    if (forcedRefresh) weeklyDrawFetched = false;
     if (!weeklyDrawFetched) {
       log.debug('Requesting for weekly picks');
       DailyPick _picks = await _dbModel.getWeeklyPicks();
       weeklyDrawFetched = true;
       if (_picks != null) {
         weeklyDigits = _picks;
+      }
+      switch (DateTime.now().weekday) {
+        case 1:
+          todaysPicks = weeklyDigits.mon;
+          break;
+        case 2:
+          todaysPicks = weeklyDigits.tue;
+          break;
+        case 3:
+          todaysPicks = weeklyDigits.wed;
+          break;
+        case 4:
+          todaysPicks = weeklyDigits.thu;
+          break;
+        case 5:
+          todaysPicks = weeklyDigits.fri;
+          break;
+        case 6:
+          todaysPicks = weeklyDigits.sat;
+          break;
+        case 7:
+          todaysPicks = weeklyDigits.sun;
+          break;
+      }
+      if (todaysPicks == null) {
+        log.debug("Today's picks are not generated yet");
       }
       notifyListeners();
     }
@@ -418,33 +446,10 @@ class BaseUtil extends ChangeNotifier {
     )..show(context);
   }
 
-  Future<bool> getDrawaStatus() async {
+  Future<bool> getDrawStatus() async {
     // CHECKING IF THE PICK ARE DRAWN OR NOT
-    if (!weeklyDrawFetched || weeklyDigits == null) await fetchWeeklyPicks();
-    if (weeklyDrawFetched && weeklyDigits != null)
-      switch (DateTime.now().weekday) {
-        case 1:
-          todaysPicks = weeklyDigits.mon;
-          break;
-        case 2:
-          todaysPicks = weeklyDigits.tue;
-          break;
-        case 3:
-          todaysPicks = weeklyDigits.wed;
-          break;
-        case 4:
-          todaysPicks = weeklyDigits.thu;
-          break;
-        case 5:
-          todaysPicks = weeklyDigits.fri;
-          break;
-        case 6:
-          todaysPicks = weeklyDigits.sat;
-          break;
-        case 7:
-          todaysPicks = weeklyDigits.sun;
-          break;
-      }
+    if (!weeklyDrawFetched || weeklyDigits == null)
+      await fetchWeeklyPicks(forcedRefresh: true);
     //CHECKING FOR THE FIRST TIME OPENING OF TAMBOLA AFTER THE PICKS ARE DRAWN FOR THIS PARTICULAR DAY
     notifyListeners();
     if (todaysPicks != null &&
@@ -603,18 +608,13 @@ class BaseUtil extends ChangeNotifier {
 
   void openTambolaHome() async {
     delegate.appState.setCurrentTabIndex = 1;
-    if (await getDrawaStatus()) {
+    if (await getDrawStatus()) {
       await _lModel.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
             (value) =>
                 print("Daily Picks Draw Animation Save Status Code: $value"),
           );
-      delegate.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        page: TPickDrawPageConfig,
-        widget: PicksDraw(
-          picks: todaysPicks ?? List.filled(dailyPicksCount, -1),
-        ),
-      );
+      delegate.appState.currentAction =
+          PageAction(state: PageState.addPage, page: TPickDrawPageConfig);
     } else
       delegate.appState.currentAction =
           PageAction(state: PageState.addPage, page: THomePageConfig);
