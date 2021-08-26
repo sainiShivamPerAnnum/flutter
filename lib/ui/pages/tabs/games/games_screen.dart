@@ -81,6 +81,7 @@ class _GamePageState extends State<GamePage> {
   }
 
   Future<void> _onTicketsRefresh() {
+    print('SCREEN WIDTH IOS: ${SizeConfig.screenWidth}');
     //TODO ADD LOADER
     return dbProvider
         .getUserTicketWallet(baseProvider.myUser.uid)
@@ -166,7 +167,7 @@ class _GamePageState extends State<GamePage> {
                           ),
 
                           //TODO HACKY CODE - REMOVING IDEA SECTION TO MANAGE TABLET SIZE DIMENSIONS
-                          (SizeConfig.screenWidth >= 1000)
+                          (SizeConfig.screenWidth >= 800)
                               ? Container()
                               : const IdeaSection(),
                           /////////////////////////////////////////////////////////////
