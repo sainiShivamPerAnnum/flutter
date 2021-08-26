@@ -491,7 +491,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
           'Not onboarded', 'You havent been onboarded to Augmont yet', context);
     } else if (baseProvider.userFundWallet.augGoldQuantity == null ||
         baseProvider.userFundWallet.augGoldQuantity == 0) {
-      baseProvider.showNegativeAlert('No balance',
+      baseProvider.showNegativeAlert('No Balance Available',
           'Your Augmont wallet has no balance presently', context);
     } else {
       baseProvider.isAugWithdrawRouteLogicInProgress = true;

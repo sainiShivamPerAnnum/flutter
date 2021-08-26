@@ -155,14 +155,14 @@ class AugmontModel extends ChangeNotifier {
       ///create augmont detail object
       _baseProvider.augmontDetail =
           UserAugmontDetail.newUser(_uid, _uname, stateId, '', '', '');
-      bool _p = false, _a = false;
+      bool _a = false;
 
       ///push the augmont detail object
       _a = await _dbModel.updateUserAugmontDetails(
           _baseProvider.myUser.uid, _baseProvider.augmontDetail);
 
       ///switch augmont onboarding to true and notify listeners if everything goes in order
-      if (_p && _a) {
+      if (_a) {
         _baseProvider.updateAugmontOnboarded(true);
         await _dbModel.updateUser(_baseProvider.myUser);
       }
