@@ -470,8 +470,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
   }
 
   Widget getPanContent() {
-    // if (baseProvider.userRegdPan != null && baseProvider.userRegdPan != "") {
-    if (false) {
+    if (baseProvider.userRegdPan != null && baseProvider.userRegdPan != "") {
       return InkWell(
         onTap: showHidePan,
         child: Row(
@@ -500,11 +499,6 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
         children: [
           ElevatedButton(
             onPressed: () {
-              // delegate.appState.currentAction = PageAction(
-              //   state: PageState.addWidget,
-              //   widget: SimpleKyc(),
-              //   page: SimpleKycPageConfig,
-              // );
               AppState.screenStack.add(ScreenItem.dialog);
               showModalBottomSheet(
                   isDismissible: false,
