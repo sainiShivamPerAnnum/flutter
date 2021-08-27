@@ -49,11 +49,10 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
       children: <Widget>[
         new Padding(
           padding: EdgeInsets.fromLTRB(
-              SizeConfig.globalMargin * 2,
-              25.0,
-              SizeConfig.globalMargin * 2,
-              25 + MediaQuery.of(context).viewInsets.bottom),
-          child: _formContent(context),
+              25.0, 15.0, 25.0, 25 + MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            child: _formContent(context),
+          ),
         ),
       ],
     );
@@ -107,7 +106,8 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
           height: 24,
         ),
         TextFormField(
-          decoration: augmontFieldInputDecoration(baseProvider.myUser.mobile),
+          decoration: augmontFieldInputDecoration(
+              baseProvider.myUser.mobile, Icons.phone),
           enabled: false,
         ),
         SizedBox(height: 16),

@@ -331,11 +331,9 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  bool get checkKycMissing =>
-      ((myUser.isSimpleKycVerified != null &&
+  bool get checkKycMissing => ((myUser.isSimpleKycVerified != null &&
           myUser.isSimpleKycVerified == false) ||
-          myUser.isSimpleKycVerified == null &&
-              myUser.isAugmontOnboarded == false);
+      myUser.isSimpleKycVerified == null && myUser.isAugmontOnboarded == false);
 
   fetchWeeklyPicks({bool forcedRefresh}) async {
     if (forcedRefresh) weeklyDrawFetched = false;
@@ -347,9 +345,6 @@ class BaseUtil extends ChangeNotifier {
         if (_picks != null) {
           weeklyDigits = _picks;
         }
-        notifyListeners();
-      } catch (e) {
-        log.error('$e');
         switch (DateTime.now().weekday) {
           case 1:
             todaysPicks = weeklyDigits.mon;
@@ -377,6 +372,8 @@ class BaseUtil extends ChangeNotifier {
           log.debug("Today's picks are not generated yet");
         }
         notifyListeners();
+      } catch (e) {
+        log.error('$e');
       }
     }
   }
@@ -762,6 +759,11 @@ class BaseUtil extends ChangeNotifier {
 
   void setName(String newName) {
     myUser.name = newName;
+    notifyListeners();
+  }
+
+  void setKycVerified(bool val) {
+    myUser.isSimpleKycVerified = val;
     notifyListeners();
   }
 

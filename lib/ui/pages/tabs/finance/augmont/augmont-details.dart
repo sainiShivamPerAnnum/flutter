@@ -88,7 +88,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
   ICICIModel iProvider;
   AppState appState;
   GlobalKey<AugmontDepositModalSheetState> _modalKey2 = GlobalKey();
-  GlobalKey<AugmontOnboardingState> _onboardingKey = GlobalKey();
+  // GlobalKey<AugmontOnboardingState> _onboardingKey = GlobalKey();
   GlobalKey<AugmontWithdrawScreenState> _withdrawalDialogKey2 = GlobalKey();
   double containerHeight = 10;
   double _withdrawableGoldQnty;

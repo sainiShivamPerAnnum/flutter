@@ -146,18 +146,19 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                             ),
                           )
                         : Container(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    (widget.customMessage != null && widget.customMessage.isNotEmpty)?Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        widget.customMessage,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w200,
-                            fontSize: SizeConfig.mediumTextSize*1.2),
-                      ),
-                    ):Container(),
+                    (widget.customMessage != null &&
+                            widget.customMessage.isNotEmpty)
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 20.0),
+                            child: Text(
+                              widget.customMessage,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: SizeConfig.mediumTextSize,
+                              ),
+                            ),
+                          )
+                        : Container(),
                     IntrinsicHeight(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -170,12 +171,14 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                               child: Text(
                                 'CANCEL',
                                 style: TextStyle(
+                                    fontSize: SizeConfig.largeTextSize,
                                     color: augmontGoldPalette.secondaryColor),
                               )),
                           VerticalDivider(
                             thickness: 1,
                             width: 20,
-                            color: augmontGoldPalette.secondaryColor,
+                            color: augmontGoldPalette.secondaryColor
+                                .withOpacity(0.3),
                           ),
                           TextButton(
                             onPressed: () {
@@ -185,6 +188,7 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                             child: Text(
                               'CONFIRM',
                               style: TextStyle(
+                                  fontSize: SizeConfig.largeTextSize,
                                   fontWeight: FontWeight.w700,
                                   color: widget.dialogColor),
                             ),
