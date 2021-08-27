@@ -310,6 +310,7 @@ class AugmontOnboardingState extends State<AugmontOnboarding> {
                             bankAccNo: "",
                             bankIfsc: "",
                             bankName: "",
+                            dialogColor: augmontGoldPalette.primaryColor2,
                             onAccept: () async {
                               ///finally now register the augmont user
                               UserAugmontDetail detail =

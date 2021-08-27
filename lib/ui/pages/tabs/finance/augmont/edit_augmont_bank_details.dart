@@ -5,6 +5,7 @@ import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,9 +15,10 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class EditAugmontBankDetail extends StatefulWidget {
-  final String prevImage;
+  final bool isWithdrawFlow;
+  final VoidCallback addBankComplete;
 
-  EditAugmontBankDetail({this.prevImage});
+  EditAugmontBankDetail({this.isWithdrawFlow, this.addBankComplete});
 
   @override
   _EditAugmontBankDetailState createState() => _EditAugmontBankDetailState();
@@ -101,10 +103,13 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: BaseUtil.getAppBar(context, null),
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          elevation: 0,
+        ),
         body: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.blockSizeHorizontal * 5, vertical: 20),
+              horizontal: SizeConfig.blockSizeHorizontal * 5, vertical: 10),
           child: Form(
               key: _formKey,
               child: Column(
@@ -114,7 +119,9 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                   Padding(
                     padding: EdgeInsets.all(8),
                     child: Text(
-                      'Update your bank account details',
+                      (baseProvider.augmontDetail.bankAccNo == '')
+                          ? 'Enter your bank account details'
+                          : 'Update your bank account details',
                       style: TextStyle(
                           fontSize: SizeConfig.largeTextSize,
                           fontWeight: FontWeight.w600),
@@ -143,7 +150,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       prefixIcon: Icon(Icons.person),
-                      focusColor: UiConstants.primaryColor,
+                      focusColor: augmontGoldPalette.primaryColor2,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -166,7 +173,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: 'Bank Account Number',
-                      focusColor: UiConstants.primaryColor,
+                      focusColor: augmontGoldPalette.primaryColor2,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -188,7 +195,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Confirm Bank Account Number',
-                      focusColor: UiConstants.primaryColor,
+                      focusColor: augmontGoldPalette.primaryColor2,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -210,7 +217,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     textCapitalization: TextCapitalization.characters,
                     decoration: InputDecoration(
                       labelText: 'Bank IFSC Code',
-                      focusColor: UiConstants.primaryColor,
+                      focusColor: augmontGoldPalette.primaryColor2,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -231,8 +238,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       gradient: new LinearGradient(colors: [
-                        UiConstants.primaryColor,
-                        UiConstants.primaryColor.withBlue(200),
+                        augmontGoldPalette.primaryColor,
+                        augmontGoldPalette.primaryColor2
                       ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
                       borderRadius: new BorderRadius.circular(10.0),
                     ),
@@ -240,7 +247,9 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                       child: MaterialButton(
                         child: (!baseProvider.isEditAugmontBankDetailInProgress)
                             ? Text(
-                                'UPDATE',
+                                (baseProvider.augmontDetail.bankAccNo == '')
+                                    ? 'WITHDRAW'
+                                    : 'UPDATE',
                                 style: Theme.of(context)
                                     .textTheme
                                     .button
@@ -330,6 +339,9 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
               bankIfsc: pBankIfsc,
               bankName: bankDetail[GetBankDetail.resBankName],
               bankBranchName: bankDetail[GetBankDetail.resBranchName],
+              dialogColor: augmontGoldPalette.primaryColor2,
+              customMessage:
+              (widget.isWithdrawFlow)?'Are you sure you want to continue? ${baseProvider.activeGoldWithdrawalQuantity.toString()} grams of digital gold shall be processed.':'',
               onAccept: () async {
                 ///FINALLY NOW UPDATE THE BANK DETAILS
                 // baseProvider.augmontDetail.bankHolderName = pBankHolderName;
@@ -341,17 +353,22 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     .updateUserAugmontDetails(
                         baseProvider.myUser.uid, baseProvider.augmontDetail)
                     .then((flag) {
-                  baseProvider.isEditAugmontBankDetailInProgress = false;
-                  setState(() {});
-                  if (flag) {
-                    _goBack();
-                    baseProvider.showPositiveAlert(
-                        'Complete', 'Your details have been updated', context);
+                  if (widget.isWithdrawFlow) {
+                    baseProvider.isEditAugmontBankDetailInProgress = false;
+                    widget.addBankComplete();
                   } else {
-                    baseProvider.showNegativeAlert(
-                        'Failed',
-                        'Your details could not be updated at the moment. Please try again',
-                        context);
+                    baseProvider.isEditAugmontBankDetailInProgress = false;
+                    setState(() {});
+                    if (flag) {
+                      _goBack();
+                      baseProvider.showPositiveAlert('Complete',
+                          'Your details have been updated', context);
+                    } else {
+                      baseProvider.showNegativeAlert(
+                          'Failed',
+                          'Your details could not be updated at the moment. Please try again',
+                          context);
+                    }
                   }
                 });
               },

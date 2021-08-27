@@ -83,6 +83,8 @@ class BaseUtil extends ChangeNotifier {
   ReferralDetail myReferralInfo;
   static PackageInfo packageInfo;
   Map<String, dynamic> freshchatKeys;
+  double activeGoldWithdrawalQuantity;
+  int withdrawFlowStackCount;
 
   /// Objects for Transaction list Pagination
   DocumentSnapshot lastTransactionListDocument;
@@ -328,6 +330,12 @@ class BaseUtil extends ChangeNotifier {
               fontSize: SizeConfig.largeTextSize)),
     );
   }
+
+  bool get checkKycMissing =>
+      ((myUser.isSimpleKycVerified != null &&
+          myUser.isSimpleKycVerified == false) ||
+          myUser.isSimpleKycVerified == null &&
+              myUser.isAugmontOnboarded == false);
 
   fetchWeeklyPicks({bool forcedRefresh}) async {
     if (forcedRefresh) weeklyDrawFetched = false;

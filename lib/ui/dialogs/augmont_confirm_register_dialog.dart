@@ -20,6 +20,8 @@ class AugmontConfirmRegnDialog extends StatefulWidget {
   final String bankBranchName;
   final Function onAccept;
   final Function onReject;
+  final Color dialogColor;
+  final String customMessage;
 
   AugmontConfirmRegnDialog(
       {this.panNumber,
@@ -30,7 +32,9 @@ class AugmontConfirmRegnDialog extends StatefulWidget {
       this.bankHolderName,
       this.bankBranchName,
       this.onAccept,
-      this.onReject});
+      this.onReject,
+      this.dialogColor,
+      this.customMessage});
 
   @override
   State createState() => AugmontConfirmRegnDialogState();
@@ -102,7 +106,7 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                       style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w700,
-                          color: augmontGoldPalette.primaryColor2),
+                          color: widget.dialogColor),
                     ),
                     SizedBox(
                       height: 10,
@@ -145,6 +149,7 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                     SizedBox(
                       height: 20,
                     ),
+                    (widget.customMessage != null && widget.customMessage.isNotEmpty)?Text(widget.customMessage):Container(),
                     IntrinsicHeight(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -173,7 +178,7 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                               'CONFIRM',
                               style: TextStyle(
                                   fontWeight: FontWeight.w700,
-                                  color: augmontGoldPalette.primaryColor),
+                                  color: widget.dialogColor),
                             ),
                           ),
                         ],

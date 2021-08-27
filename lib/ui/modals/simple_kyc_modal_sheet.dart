@@ -77,13 +77,15 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
               padding: const EdgeInsets.only(bottom: 0),
               child: Row(
                 children: [
-                  Text(
-                    'KYC Verification',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                      color: augmontGoldPalette.primaryColor,
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      'KYC Verification',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
+                          color: UiConstants.primaryColor),
                     ),
                   ),
                   Spacer(),
@@ -93,6 +95,7 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
                       size: 30,
                     ),
                     onPressed: () {
+                      if(baseProvider.isSimpleKycInProgress)return;
                       backButtonDispatcher.didPopRoute();
                     },
                   )
@@ -104,8 +107,7 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
             ),
             SizedBox(height: 16),
             TextFormField(
-              cursorColor: augmontGoldPalette.primaryColor,
-              decoration: augmontFieldInputDecoration("PAN Card Number"),
+              decoration: InputDecoration(labelText: "PAN Card Number"),
               controller: _panInput,
               autofocus: false,
               textCapitalization: TextCapitalization.characters,
@@ -114,7 +116,7 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
             SizedBox(height: 16),
             TextFormField(
               decoration:
-                  augmontFieldInputDecoration('Your name as per your PAN Card'),
+              InputDecoration(labelText: 'Your name as per your PAN Card'),
               controller: _panHolderNameInput,
               keyboardType: TextInputType.name,
               textCapitalization: TextCapitalization.characters,
@@ -130,8 +132,8 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
               height: 50.0,
               decoration: BoxDecoration(
                 gradient: new LinearGradient(colors: [
-                  augmontGoldPalette.primaryColor,
-                  augmontGoldPalette.primaryColor2
+                  UiConstants.primaryColor,
+                  UiConstants.primaryColor.withBlue(700)
                   // UiConstants.primaryColor,
                   // UiConstants.primaryColor.withBlue(200),
                 ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
@@ -141,16 +143,16 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
                 child: MaterialButton(
                   child: (!baseProvider.isSimpleKycInProgress)
                       ? Text(
-                          'DONE',
-                          style: Theme.of(context)
-                              .textTheme
-                              .button
-                              .copyWith(color: Colors.white),
-                        )
+                    'DONE',
+                    style: Theme.of(context)
+                        .textTheme
+                        .button
+                        .copyWith(color: Colors.white),
+                  )
                       : SpinKitThreeBounce(
-                          color: UiConstants.spinnerColor2,
-                          size: 18.0,
-                        ),
+                    color: UiConstants.spinnerColor2,
+                    size: 18.0,
+                  ),
                   onPressed: () async {
                     _onSubmit();
                   },
@@ -198,6 +200,7 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
           bankAccNo: "",
           bankIfsc: "",
           bankName: "",
+          dialogColor: UiConstants.primaryColor,
           onAccept: () async {
             bool _p = true;
             bool _q = true;
