@@ -135,12 +135,12 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
             items: AugmontResources.augmontStateList
                 .map(
                   (e) => DropdownMenuItem(
-                    value: e["id"],
-                    child: Text(
-                      e["name"],
-                    ),
-                  ),
-                )
+                value: e["id"],
+                child: Text(
+                  e["name"],
+                ),
+              ),
+            )
                 .toList(),
           ),
         ),
@@ -160,18 +160,18 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
           child: new Material(
             child: MaterialButton(
               child: (!baseProvider.isAugmontRegnInProgress &&
-                      !baseProvider.isAugmontRegnCompleteAnimateInProgress)
+                  !baseProvider.isAugmontRegnCompleteAnimateInProgress)
                   ? Text(
-                      'REGISTER',
-                      style: Theme.of(context)
-                          .textTheme
-                          .button
-                          .copyWith(color: Colors.white),
-                    )
+                'REGISTER',
+                style: Theme.of(context)
+                    .textTheme
+                    .button
+                    .copyWith(color: Colors.white),
+              )
                   : SpinKitThreeBounce(
-                      color: UiConstants.spinnerColor2,
-                      size: 18.0,
-                    ),
+                color: UiConstants.spinnerColor2,
+                size: 18.0,
+              ),
               onPressed: () async {
                 _onSubmit();
               },

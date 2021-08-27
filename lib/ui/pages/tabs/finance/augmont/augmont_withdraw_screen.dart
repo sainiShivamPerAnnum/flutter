@@ -470,6 +470,8 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
               //     'KYC not completed', 'Please complete your KYC', context);
             } else {
               if (widget.withdrawableGoldQnty == 0.0) {
+                baseProvider.showNegativeAlert(
+                    'Unable to process', 'Your withdrawable balance is low', context);
                 return;
               }
               final amtErr = _validateAmount(_quantityController.text);
