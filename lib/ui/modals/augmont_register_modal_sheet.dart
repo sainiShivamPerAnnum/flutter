@@ -182,7 +182,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
             borderRadius: new BorderRadius.circular(30.0),
           ),
         ),
-        AugmontInfoTiles()
+        //AugmontInfoTiles()
       ],
     );
   }
