@@ -451,29 +451,29 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                 baseProvider.activeGoldWithdrawalQuantity =
                     double.parse(_quantityController.text);
                 if (_checkBankInfoMissing) {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (ctx) => EditAugmontBankDetail(
-                      isWithdrawFlow: true,
-                      addBankComplete: () {
-                        baseProvider.withdrawFlowStackCount = 2;
-                        widget.onAmountConfirmed({
-                          'withdrawal_quantity': baseProvider.activeGoldWithdrawalQuantity,
-                        });
-                      },
-                    ),
-                  ));
-                  // appState.currentAction = PageAction(
-                  //     state: PageState.addPage,
-                  //     page: EditAugBankDetailsPageConfig,
-                  //     widget: EditAugmontBankDetail(
-                  //       isWithdrawFlow: true,
-                  //       addBankComplete: () {
-                  //         baseProvider.withdrawFlowStackCount = 2;
-                  //         widget.onAmountConfirmed({
-                  //           'withdrawal_quantity': baseProvider.activeGoldWithdrawalQuantity,
-                  //         });
-                  //       },
-                  //     ));
+                  // Navigator.push(context, MaterialPageRoute(
+                  //   builder: (ctx) => EditAugmontBankDetail(
+                  //     isWithdrawFlow: true,
+                  //     addBankComplete: () {
+                  //       baseProvider.withdrawFlowStackCount = 2;
+                  //       widget.onAmountConfirmed({
+                  //         'withdrawal_quantity': baseProvider.activeGoldWithdrawalQuantity,
+                  //       });
+                  //     },
+                  //   ),
+                  // ));
+                  appState.currentAction = PageAction(
+                      state: PageState.addWidget,
+                      page: EditAugBankDetailsPageConfig,
+                      widget: EditAugmontBankDetail(
+                        isWithdrawFlow: true,
+                        addBankComplete: () {
+                          baseProvider.withdrawFlowStackCount = 2;
+                          widget.onAmountConfirmed({
+                            'withdrawal_quantity': baseProvider.activeGoldWithdrawalQuantity,
+                          });
+                        },
+                      ));
                 } else {
                   String _confirmMsg =
                       "Are you sure you want to continue? ${baseProvider.activeGoldWithdrawalQuantity} grams of digital gold shall be processed.";

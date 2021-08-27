@@ -18,7 +18,7 @@ class EditAugmontBankDetail extends StatefulWidget {
   final bool isWithdrawFlow;
   final VoidCallback addBankComplete;
 
-  EditAugmontBankDetail({this.isWithdrawFlow, this.addBankComplete});
+  EditAugmontBankDetail({this.isWithdrawFlow=false, this.addBankComplete});
 
   @override
   _EditAugmontBankDetailState createState() => _EditAugmontBankDetailState();
