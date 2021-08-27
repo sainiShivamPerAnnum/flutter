@@ -107,6 +107,7 @@ class BaseUtil extends ChangeNotifier {
       isEditAugmontBankDetailInProgress,
       isAugDepositRouteLogicInProgress,
       isAugWithdrawRouteLogicInProgress,
+      isAugWithdrawalInProgress,
       isAugmontRealTimeBalanceFetched,
       isWeekWinnersFetched,
       isPrizeLeadersFetched,
@@ -140,6 +141,7 @@ class BaseUtil extends ChangeNotifier {
     isEditAugmontBankDetailInProgress = false;
     isAugDepositRouteLogicInProgress = false;
     isAugWithdrawRouteLogicInProgress = false;
+    isAugWithdrawalInProgress = false;
     isAugmontRealTimeBalanceFetched = false;
     isWeekWinnersFetched = false;
     isPrizeLeadersFetched = false;
@@ -570,6 +572,8 @@ class BaseUtil extends ChangeNotifier {
       isOtpResendCount = 0;
       show_security_prompt = false;
       delegate.appState.setCurrentTabIndex = 0;
+      activeGoldWithdrawalQuantity = 0;
+      withdrawFlowStackCount = 1;
       _setRuntimeDefaults();
 
       return true;

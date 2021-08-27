@@ -415,6 +415,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
   }
 
   onTransactionProcessed(bool flag) {
+    baseProvider.activeGoldWithdrawalQuantity = 0;
     _isLoading = false;
     setState(() {});
     if (baseProvider.withdrawFlowStackCount == 1)
@@ -466,12 +467,10 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
             Haptic.vibrate();
             if (baseProvider.checkKycMissing) {
               _controller.forward().then((value) => _controller.reverse());
-              // baseProvider.showNegativeAlert(
-              //     'KYC not completed', 'Please complete your KYC', context);
             } else {
               if (widget.withdrawableGoldQnty == 0.0) {
-                baseProvider.showNegativeAlert(
-                    'Unable to process', 'Your withdrawable balance is low', context);
+                baseProvider.showNegativeAlert('Unable to process',
+                    'Your withdrawable balance is low', context);
                 return;
               }
               final amtErr = _validateAmount(_quantityController.text);
@@ -488,17 +487,6 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
                 baseProvider.activeGoldWithdrawalQuantity =
                     double.parse(_quantityController.text);
                 if (_checkBankInfoMissing) {
-                  // Navigator.push(context, MaterialPageRoute(
-                  //   builder: (ctx) => EditAugmontBankDetail(
-                  //     isWithdrawFlow: true,
-                  //     addBankComplete: () {
-                  //       baseProvider.withdrawFlowStackCount = 2;
-                  //       widget.onAmountConfirmed({
-                  //         'withdrawal_quantity': baseProvider.activeGoldWithdrawalQuantity,
-                  //       });
-                  //     },
-                  //   ),
-                  // ));
                   appState.currentAction = PageAction(
                       state: PageState.addWidget,
                       page: EditAugBankDetailsPageConfig,
