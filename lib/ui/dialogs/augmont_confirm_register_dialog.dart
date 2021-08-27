@@ -149,7 +149,15 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                     SizedBox(
                       height: 20,
                     ),
-                    (widget.customMessage != null && widget.customMessage.isNotEmpty)?Text(widget.customMessage):Container(),
+                    (widget.customMessage != null && widget.customMessage.isNotEmpty)?Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        widget.customMessage,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w200,
+                            fontSize: SizeConfig.mediumTextSize*1.2),
+                      ),
+                    ):Container(),
                     IntrinsicHeight(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,

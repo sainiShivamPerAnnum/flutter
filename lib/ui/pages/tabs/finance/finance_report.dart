@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
@@ -351,7 +352,7 @@ class _YourFundsState extends State<YourFunds> {
         double _w = await dbProvider
             .getNonWithdrawableAugGoldQuantity(baseProvider.myUser.uid);
         _withdrawableGoldQnty = (_w != null)
-            ? _liveGoldQuantityBalance - _w
+            ? math.max(_liveGoldQuantityBalance - _w, 0)
             : _liveGoldQuantityBalance;
       } catch (e) {
         log.error('Failed to fetch non withdrawable gold quantity');

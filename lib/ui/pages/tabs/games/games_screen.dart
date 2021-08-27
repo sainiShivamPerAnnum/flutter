@@ -152,8 +152,8 @@ class _GamePageState extends State<GamePage> {
                                         baseProvider.userTicketWallet),
                               );
                             },
-                            child: TicketCount(baseProvider.userTicketWallet
-                                .getActiveTickets()),
+                            child: (baseProvider.userTicketWallet != null)?TicketCount(baseProvider.userTicketWallet
+                                .getActiveTickets()):Container(),
                           ),
                           const Spacer(
                             flex: 1,
