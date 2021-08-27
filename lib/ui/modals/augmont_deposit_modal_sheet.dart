@@ -158,7 +158,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                   controller: _amtController,
                   keyboardType: TextInputType.number,
                   cursorColor: augmontGoldPalette.primaryColor,
-                  decoration: augmontFieldInputDecoration("Enter an amount"),
+                  decoration:
+                      augmontFieldInputDecoration("Enter an amount", null),
                   validator: (value) {
                     Pattern pattern = "^[0-9]*\$";
                     RegExp amRegex = RegExp(pattern);

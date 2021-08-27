@@ -43,7 +43,8 @@ class AugmontWithdrawScreen extends StatefulWidget {
   State createState() => AugmontWithdrawScreenState();
 }
 
-class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
+class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
+    with SingleTickerProviderStateMixin {
   final Log log = new Log('AugmontWithdrawScreen');
   TextEditingController _quantityController = TextEditingController();
   BaseUtil baseProvider;
@@ -53,11 +54,42 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
   bool _isLoading = false;
   double _width;
   bool _isInitialised = false;
+  double _scale;
+  AnimationController _controller;
+
+  var scaleAnimation;
 
   final TextStyle tTextStyle =
       TextStyle(fontSize: 18, fontWeight: FontWeight.w300);
   final TextStyle gTextStyle =
       TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(
+        milliseconds: 200,
+      ),
+      // lowerBound: 0.0,
+      // upperBound: 0.1,
+    )..addListener(() {
+        setState(() {});
+      });
+
+    scaleAnimation = new Tween(
+      begin: 1.0,
+      end: 1.2,
+    ).animate(
+        new CurvedAnimation(parent: _controller, curve: Curves.bounceOut));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -209,7 +241,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                                 enabled: true,
                                 autofocus: false,
                                 decoration: augmontFieldInputDecoration(
-                                    'Quantity (in grams)'),
+                                    'Quantity (in grams)', null),
                                 onChanged: (value) {
                                   setState(() {});
                                 },
@@ -310,38 +342,39 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
             });
       },
       child: Container(
-        width: SizeConfig.screenWidth * 0.8,
-        decoration: BoxDecoration(
-          color: Colors.amber[200],
-          borderRadius: BorderRadius.circular(SizeConfig.blockSizeVertical),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+        height: SizeConfig.cardTitleTextSize * 2,
+        alignment: Alignment.center,
+        child: Transform.scale(
+          scale: scaleAnimation.value,
+          child: Container(
+            width: SizeConfig.screenWidth * 0.8,
+            decoration: BoxDecoration(
+              color: Colors.amber[200],
+              borderRadius: BorderRadius.circular(SizeConfig.blockSizeVertical),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   Icon(
                     Icons.info_outline,
                     size: SizeConfig.mediumTextSize,
                   ),
+                  Spacer(),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      'Complete your KYC to withdraw',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Spacer(),
+                  SizedBox()
                 ],
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Complete your KYC to withdraw',
-                    textAlign: TextAlign.center,
-                  )
-                ],
-              )
-            ],
+            ),
           ),
         ),
       ),
@@ -384,8 +417,9 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
   onTransactionProcessed(bool flag) {
     _isLoading = false;
     setState(() {});
-    if(baseProvider.withdrawFlowStackCount == 1)Navigator.of(context).pop();
-    else{
+    if (baseProvider.withdrawFlowStackCount == 1)
+      Navigator.of(context).pop();
+    else {
       Navigator.of(context).pop();
       Navigator.of(context).pop();
     }
@@ -431,8 +465,9 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
           onPressed: () async {
             Haptic.vibrate();
             if (baseProvider.checkKycMissing) {
-              baseProvider.showNegativeAlert(
-                  'KYC not completed', 'Please complete your KYC', context);
+              _controller.forward().then((value) => _controller.reverse());
+              // baseProvider.showNegativeAlert(
+              //     'KYC not completed', 'Please complete your KYC', context);
             } else {
               if (widget.withdrawableGoldQnty == 0.0) {
                 return;
@@ -470,7 +505,8 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                         addBankComplete: () {
                           baseProvider.withdrawFlowStackCount = 2;
                           widget.onAmountConfirmed({
-                            'withdrawal_quantity': baseProvider.activeGoldWithdrawalQuantity,
+                            'withdrawal_quantity':
+                                baseProvider.activeGoldWithdrawalQuantity,
                           });
                         },
                       ));
@@ -490,7 +526,8 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen> {
                         setState(() {});
                         baseProvider.withdrawFlowStackCount = 1;
                         widget.onAmountConfirmed({
-                          'withdrawal_quantity': baseProvider.activeGoldWithdrawalQuantity,
+                          'withdrawal_quantity':
+                              baseProvider.activeGoldWithdrawalQuantity,
                         });
                         return true;
                       },

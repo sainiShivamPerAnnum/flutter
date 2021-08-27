@@ -95,7 +95,7 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
                       size: 30,
                     ),
                     onPressed: () {
-                      if(baseProvider.isSimpleKycInProgress)return;
+                      if (baseProvider.isSimpleKycInProgress) return;
                       backButtonDispatcher.didPopRoute();
                     },
                   )
@@ -116,7 +116,7 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
             SizedBox(height: 16),
             TextFormField(
               decoration:
-              InputDecoration(labelText: 'Your name as per your PAN Card'),
+                  InputDecoration(labelText: 'Your name as per your PAN Card'),
               controller: _panHolderNameInput,
               keyboardType: TextInputType.name,
               textCapitalization: TextCapitalization.characters,
@@ -143,16 +143,16 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
                 child: MaterialButton(
                   child: (!baseProvider.isSimpleKycInProgress)
                       ? Text(
-                    'DONE',
-                    style: Theme.of(context)
-                        .textTheme
-                        .button
-                        .copyWith(color: Colors.white),
-                  )
+                          'DONE',
+                          style: Theme.of(context)
+                              .textTheme
+                              .button
+                              .copyWith(color: Colors.white),
+                        )
                       : SpinKitThreeBounce(
-                    color: UiConstants.spinnerColor2,
-                    size: 18.0,
-                  ),
+                          color: UiConstants.spinnerColor2,
+                          size: 18.0,
+                        ),
                   onPressed: () async {
                     _onSubmit();
                   },
@@ -177,6 +177,7 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
     if (!_preVerifyInputs()) {
       return;
     }
+    FocusScope.of(context).unfocus();
     baseProvider.isSimpleKycInProgress = true;
     setState(() {});
 
@@ -216,6 +217,7 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
             if (baseProvider.myUser.isSimpleKycVerified == null ||
                 !baseProvider.myUser.isSimpleKycVerified) {
               baseProvider.myUser.isSimpleKycVerified = true;
+              baseProvider.setKycVerified(true);
               _q = await dbProvider.updateUser(baseProvider.myUser);
             }
             if (!_p || !_q) {
@@ -343,40 +345,35 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
 class KycInfoTiles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    BaseUtil baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    return Positioned(
-      bottom: 0,
-      child: Container(
-        width: SizeConfig.screenWidth,
-        padding: EdgeInsets.symmetric(vertical: 10),
-        child: IntrinsicHeight(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton.icon(
-                icon: Text("🔒"),
-                onPressed: () {
-                  Haptic.vibrate();
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) =>
-                          AugmontRegnSecurityDialog(
-                            text: Assets.infoAugmontRegnSecurity,
-                            imagePath: 'images/aes256.png',
-                            title: 'Security > Rest',
-                          ));
-                },
-                label: Text(
-                  'Note on Security',
-                  style: TextStyle(
-                      fontSize: SizeConfig.smallTextSize * 1.3,
-                      decoration: TextDecoration.underline,
-                      color:
-                          augmontGoldPalette.secondaryColor.withOpacity(0.8)),
-                ),
+    return Container(
+      width: SizeConfig.screenWidth,
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: IntrinsicHeight(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton.icon(
+              icon: Text("🔒"),
+              onPressed: () {
+                Haptic.vibrate();
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) =>
+                        AugmontRegnSecurityDialog(
+                          text: Assets.infoAugmontRegnSecurity,
+                          imagePath: 'images/aes256.png',
+                          title: 'Security > Rest',
+                        ));
+              },
+              label: Text(
+                'Note on Security',
+                style: TextStyle(
+                    fontSize: SizeConfig.smallTextSize * 1.3,
+                    decoration: TextDecoration.underline,
+                    color: augmontGoldPalette.secondaryColor.withOpacity(0.8)),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

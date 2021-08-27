@@ -277,7 +277,7 @@ class BaseUser {
     _isInvested = value;
   }
 
-  bool get isSimpleKycVerified  => _isSimpleKycVerified;
+  bool get isSimpleKycVerified => _isSimpleKycVerified;
 
   set isSimpleKycVerified(bool value) {
     _isSimpleKycVerified = value;
