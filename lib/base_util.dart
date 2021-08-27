@@ -211,8 +211,7 @@ class BaseUtil extends ChangeNotifier {
 
       ///prefill pan details if available
       panService = new PanService();
-      if (myUser.isSimpleKycVerified != null && myUser.isSimpleKycVerified ||
-          (myUser.isSimpleKycVerified == null && myUser.isAugmontOnboarded)) {
+      if (!checkKycMissing) {
         userRegdPan = await panService.getUserPan();
       }
 
@@ -333,9 +332,16 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  bool get checkKycMissing => ((myUser.isSimpleKycVerified != null &&
-          myUser.isSimpleKycVerified == false) ||
-      myUser.isSimpleKycVerified == null && myUser.isAugmontOnboarded == false);
+  bool get checkKycMissing {
+    bool skFlag = (myUser.isSimpleKycVerified != null && myUser.isSimpleKycVerified == true);
+    bool augFlag = false;
+    if(myUser.isAugmontOnboarded) {
+        final DateTime _dt = new DateTime(2021, 8, 28);
+        //if the person regd for augmont before v2.5.4 release, then their kyc is complete
+       augFlag = (augmontDetail != null && augmontDetail.createdTime != null && augmontDetail.createdTime.toDate().isBefore(_dt));
+    }
+    return (!skFlag && !augFlag);
+  }
 
   fetchWeeklyPicks({bool forcedRefresh}) async {
     if (forcedRefresh) weeklyDrawFetched = false;

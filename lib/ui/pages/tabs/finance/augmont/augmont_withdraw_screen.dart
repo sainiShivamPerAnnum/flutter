@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/services.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -236,7 +239,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
                                           augmontGoldPalette.primaryColor)),
                               child: TextField(
                                 controller: _quantityController,
-                                keyboardType: TextInputType.number,
+                                keyboardType: (Platform.isAndroid)?TextInputType.number:TextInputType.numberWithOptions(decimal: true),
                                 readOnly: false,
                                 enabled: true,
                                 autofocus: false,
