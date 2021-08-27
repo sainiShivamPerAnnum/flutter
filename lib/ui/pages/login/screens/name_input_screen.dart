@@ -157,8 +157,8 @@ class NameInputScreenState extends State<NameInputScreen> {
 
           Reference ref =
               storage.ref().child("dps/${baseProvider.myUser.uid}/image");
-          UploadTask uploadTask = ref.putData(bytes);
           try {
+            UploadTask uploadTask = ref.putData(bytes);
             var res = await uploadTask;
             String url = await res.ref.getDownloadURL();
             if (url != null) {

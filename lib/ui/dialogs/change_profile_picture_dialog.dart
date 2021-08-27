@@ -10,7 +10,6 @@ import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
@@ -50,27 +49,8 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
   }
 
   Future<File> testCompressAndGetFile(File file, String targetPath) async {
-    try {
-      int quality = 50;
-      double filesize = file.lengthSync() / (1024 * 1024);
-      if (filesize < 1) {
-        quality = 75;
-      }
-      var result = await FlutterImageCompress.compressAndGetFile(
-        file.absolute.path,
-        targetPath,
-        quality: quality,
-        rotate: 0,
-      );
-
-      print(file.lengthSync());
-      print(result.lengthSync());
-
-      return result;
-    } catch (e) {
-      log.error(e.toString());
-      return file;
-    }
+    //Flutter Image compress not working on IOS
+    return file;
   }
 
   Future<bool> updatePicture(BuildContext context) async {
