@@ -1194,59 +1194,58 @@ class CurrentPicks extends StatelessWidget {
                 width: SizeConfig.screenWidth,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: baseProvider.todaysPicks ??
-                      List.filled(baseProvider.dailyPicksCount, 0)
-                          .map(
-                            (e) => Container(
-                              height: SizeConfig.screenWidth * 0.12,
-                              width: SizeConfig.screenWidth * 0.12,
-                              decoration: BoxDecoration(
-                                color: Colors.black,
-                                shape: BoxShape.circle,
-                                gradient: RadialGradient(
-                                  center: Alignment(-0.8, -0.6),
-                                  colors: [Color(0xff515E63), Colors.black],
-                                  radius: 1.0,
+                  children: (baseProvider.todaysPicks ??
+                          List.filled(baseProvider.dailyPicksCount, 0))
+                      .map(
+                        (e) => Container(
+                          height: SizeConfig.screenWidth * 0.12,
+                          width: SizeConfig.screenWidth * 0.12,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            shape: BoxShape.circle,
+                            gradient: RadialGradient(
+                              center: Alignment(-0.8, -0.6),
+                              colors: [Color(0xff515E63), Colors.black],
+                              radius: 1.0,
+                            ),
+                          ),
+                          alignment: Alignment.center,
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment.center,
+                                child: Container(
+                                  height: SizeConfig.screenWidth * 0.09,
+                                  width: SizeConfig.screenWidth * 0.09,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 0.5,
+                                    ),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
                                 ),
                               ),
-                              alignment: Alignment.center,
-                              child: Stack(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Container(
-                                      height: SizeConfig.screenWidth * 0.09,
-                                      width: SizeConfig.screenWidth * 0.09,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.white,
-                                          width: 0.5,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                      ),
-                                    ),
+                              Container(
+                                height: SizeConfig.screenWidth * 0.12,
+                                width: SizeConfig.screenWidth * 0.12,
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.all(8),
+                                child: FittedBox(
+                                  child: Text(
+                                    e.toString() ?? "-",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                        fontSize: SizeConfig.largeTextSize),
                                   ),
-                                  Container(
-                                    height: SizeConfig.screenWidth * 0.12,
-                                    width: SizeConfig.screenWidth * 0.12,
-                                    alignment: Alignment.center,
-                                    padding: EdgeInsets.all(8),
-                                    child: FittedBox(
-                                      child: Text(
-                                        e.toString() ?? "-",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.white,
-                                            fontSize: SizeConfig.largeTextSize),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          )
-                          .toList(),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
             ),
@@ -1332,8 +1331,7 @@ class _FaqSectionState extends State<FaqSection> {
               (index) => ExpansionPanel(
                 canTapOnHeader: true,
                 headerBuilder: (ctx, isOpen) => _prizeFAQHeader(
-                    faqLeadIcons[index],
-                    _faqList[index].keys.first),
+                    faqLeadIcons[index], _faqList[index].keys.first),
                 isExpanded: detStatus[index],
                 body: Container(
                   alignment: Alignment.centerLeft,
@@ -1392,19 +1390,19 @@ class _FaqSectionState extends State<FaqSection> {
     return [
       {
         'How does one participate in Tambola?':
-        '- Everyday, ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT)} random numbers are picked.\n\n- The matching numbers on your tickets get automatically crossed, starting from the day they were generated.\n\n- On Sunday, your tickets are processed to see if they matched a category.'
+            '- Everyday, ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT)} random numbers are picked.\n\n- The matching numbers on your tickets get automatically crossed, starting from the day they were generated.\n\n- On Sunday, your tickets are processed to see if they matched a category.'
       },
       {
         'How does one win the game?':
-        '- Every Sunday, your winning tickets get processed, and the winnings for that week are shared with you in the next few days. \n\n- If there are more than 1 winners for a category, the prize amount gets equally distributed amongst all the category winners.'
+            '- Every Sunday, your winning tickets get processed, and the winnings for that week are shared with you in the next few days. \n\n- If there are more than 1 winners for a category, the prize amount gets equally distributed amongst all the category winners.'
       },
       {
         'How can I redeem my winnings?':
-        '- If you\'re a tambola winner, your reward gets credited to your Fello wallet in a few days. \n\n- Once credited, you can choose how you would like to redeem it. It could be as digital gold or as Amazon pay balance.'
+            '- If you\'re a tambola winner, your reward gets credited to your Fello wallet in a few days. \n\n- Once credited, you can choose how you would like to redeem it. It could be as digital gold or as Amazon pay balance.'
       },
       {
         'How can I maximize my winnings ?':
-        'As traditional tambola goes, the more tickets you have, the better your odds of stealing a category! 💪\n'
+            'As traditional tambola goes, the more tickets you have, the better your odds of stealing a category! 💪\n'
       },
     ];
   }

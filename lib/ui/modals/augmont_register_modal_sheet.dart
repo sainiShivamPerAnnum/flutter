@@ -51,9 +51,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
           padding: EdgeInsets.fromLTRB(
               25.0, 15.0, 25.0, 25 + MediaQuery.of(context).viewInsets.bottom),
           child: Container(
-            child: Padding(
-                padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5),
-                child: _formContent(context)),
+            child: _formContent(context),
           ),
         ),
       ],
@@ -68,14 +66,17 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
       children: [
         Row(
           children: [
-            Text(
-              'Augmont Registration',
-              maxLines: 2,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w700,
-                color: augmontGoldPalette.primaryColor,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                'Augmont Registration',
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
+                  color: augmontGoldPalette.primaryColor,
+                ),
               ),
             ),
             Spacer(),
@@ -105,7 +106,8 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
           height: 24,
         ),
         TextFormField(
-          decoration: augmontFieldInputDecoration(baseProvider.myUser.mobile),
+          decoration: augmontFieldInputDecoration(
+              baseProvider.myUser.mobile, Icons.phone),
           enabled: false,
         ),
         SizedBox(height: 16),
@@ -120,9 +122,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
           ),
           child: DropdownButtonFormField(
             decoration: InputDecoration(
-              border: InputBorder.none,
-            ),
-            menuMaxHeight: SizeConfig.screenHeight * 0.5,
+                border: InputBorder.none, enabledBorder: InputBorder.none),
             iconEnabledColor: augmontGoldPalette.primaryColor,
             hint: Text("Which state do you live in?"),
             value: stateChosenValue,
@@ -135,12 +135,12 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
             items: AugmontResources.augmontStateList
                 .map(
                   (e) => DropdownMenuItem(
-                    value: e["id"],
-                    child: Text(
-                      e["name"],
-                    ),
-                  ),
-                )
+                value: e["id"],
+                child: Text(
+                  e["name"],
+                ),
+              ),
+            )
                 .toList(),
           ),
         ),
@@ -160,18 +160,18 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
           child: new Material(
             child: MaterialButton(
               child: (!baseProvider.isAugmontRegnInProgress &&
-                      !baseProvider.isAugmontRegnCompleteAnimateInProgress)
+                  !baseProvider.isAugmontRegnCompleteAnimateInProgress)
                   ? Text(
-                      'REGISTER',
-                      style: Theme.of(context)
-                          .textTheme
-                          .button
-                          .copyWith(color: Colors.white),
-                    )
+                'REGISTER',
+                style: Theme.of(context)
+                    .textTheme
+                    .button
+                    .copyWith(color: Colors.white),
+              )
                   : SpinKitThreeBounce(
-                      color: UiConstants.spinnerColor2,
-                      size: 18.0,
-                    ),
+                color: UiConstants.spinnerColor2,
+                size: 18.0,
+              ),
               onPressed: () async {
                 _onSubmit();
               },

@@ -83,6 +83,8 @@ class BaseUtil extends ChangeNotifier {
   ReferralDetail myReferralInfo;
   static PackageInfo packageInfo;
   Map<String, dynamic> freshchatKeys;
+  double activeGoldWithdrawalQuantity;
+  int withdrawFlowStackCount;
 
   /// Objects for Transaction list Pagination
   DocumentSnapshot lastTransactionListDocument;
@@ -105,6 +107,7 @@ class BaseUtil extends ChangeNotifier {
       isEditAugmontBankDetailInProgress,
       isAugDepositRouteLogicInProgress,
       isAugWithdrawRouteLogicInProgress,
+      isAugWithdrawalInProgress,
       isAugmontRealTimeBalanceFetched,
       isWeekWinnersFetched,
       isPrizeLeadersFetched,
@@ -138,6 +141,7 @@ class BaseUtil extends ChangeNotifier {
     isEditAugmontBankDetailInProgress = false;
     isAugDepositRouteLogicInProgress = false;
     isAugWithdrawRouteLogicInProgress = false;
+    isAugWithdrawalInProgress = false;
     isAugmontRealTimeBalanceFetched = false;
     isWeekWinnersFetched = false;
     isPrizeLeadersFetched = false;
@@ -329,6 +333,10 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
+  bool get checkKycMissing => ((myUser.isSimpleKycVerified != null &&
+          myUser.isSimpleKycVerified == false) ||
+      myUser.isSimpleKycVerified == null && myUser.isAugmontOnboarded == false);
+
   fetchWeeklyPicks({bool forcedRefresh}) async {
     if (forcedRefresh) weeklyDrawFetched = false;
     if (!weeklyDrawFetched) {
@@ -339,9 +347,6 @@ class BaseUtil extends ChangeNotifier {
         if (_picks != null) {
           weeklyDigits = _picks;
         }
-        notifyListeners();
-      } catch (e) {
-        log.error('$e');
         switch (DateTime.now().weekday) {
           case 1:
             todaysPicks = weeklyDigits.mon;
@@ -369,6 +374,8 @@ class BaseUtil extends ChangeNotifier {
           log.debug("Today's picks are not generated yet");
         }
         notifyListeners();
+      } catch (e) {
+        log.error('$e');
       }
     }
   }
@@ -565,6 +572,8 @@ class BaseUtil extends ChangeNotifier {
       isOtpResendCount = 0;
       show_security_prompt = false;
       delegate.appState.setCurrentTabIndex = 0;
+      activeGoldWithdrawalQuantity = 0;
+      withdrawFlowStackCount = 1;
       _setRuntimeDefaults();
 
       return true;
@@ -754,6 +763,11 @@ class BaseUtil extends ChangeNotifier {
 
   void setName(String newName) {
     myUser.name = newName;
+    notifyListeners();
+  }
+
+  void setKycVerified(bool val) {
+    myUser.isSimpleKycVerified = val;
     notifyListeners();
   }
 

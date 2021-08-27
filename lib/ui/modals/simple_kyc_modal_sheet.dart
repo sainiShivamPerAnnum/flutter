@@ -77,13 +77,15 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
               padding: const EdgeInsets.only(bottom: 0),
               child: Row(
                 children: [
-                  Text(
-                    'KYC Verification',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                      color: augmontGoldPalette.primaryColor,
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      'KYC Verification',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
+                          color: UiConstants.primaryColor),
                     ),
                   ),
                   Spacer(),
@@ -93,6 +95,7 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
                       size: 30,
                     ),
                     onPressed: () {
+                      if (baseProvider.isSimpleKycInProgress) return;
                       backButtonDispatcher.didPopRoute();
                     },
                   )
@@ -104,8 +107,7 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
             ),
             SizedBox(height: 16),
             TextFormField(
-              cursorColor: augmontGoldPalette.primaryColor,
-              decoration: augmontFieldInputDecoration("PAN Card Number"),
+              decoration: InputDecoration(labelText: "PAN Card Number"),
               controller: _panInput,
               autofocus: false,
               textCapitalization: TextCapitalization.characters,
@@ -114,7 +116,7 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
             SizedBox(height: 16),
             TextFormField(
               decoration:
-                  augmontFieldInputDecoration('Your name as per your PAN Card'),
+                  InputDecoration(labelText: 'Your name as per your PAN Card'),
               controller: _panHolderNameInput,
               keyboardType: TextInputType.name,
               textCapitalization: TextCapitalization.characters,
@@ -130,8 +132,8 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
               height: 50.0,
               decoration: BoxDecoration(
                 gradient: new LinearGradient(colors: [
-                  augmontGoldPalette.primaryColor,
-                  augmontGoldPalette.primaryColor2
+                  UiConstants.primaryColor,
+                  UiConstants.primaryColor.withBlue(700)
                   // UiConstants.primaryColor,
                   // UiConstants.primaryColor.withBlue(200),
                 ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
@@ -175,6 +177,7 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
     if (!_preVerifyInputs()) {
       return;
     }
+    FocusScope.of(context).unfocus();
     baseProvider.isSimpleKycInProgress = true;
     setState(() {});
 
@@ -198,6 +201,7 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
           bankAccNo: "",
           bankIfsc: "",
           bankName: "",
+          dialogColor: UiConstants.primaryColor,
           onAccept: () async {
             bool _p = true;
             bool _q = true;
@@ -213,6 +217,7 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
             if (baseProvider.myUser.isSimpleKycVerified == null ||
                 !baseProvider.myUser.isSimpleKycVerified) {
               baseProvider.myUser.isSimpleKycVerified = true;
+              baseProvider.setKycVerified(true);
               _q = await dbProvider.updateUser(baseProvider.myUser);
             }
             if (!_p || !_q) {
@@ -340,40 +345,35 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
 class KycInfoTiles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    BaseUtil baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    return Positioned(
-      bottom: 0,
-      child: Container(
-        width: SizeConfig.screenWidth,
-        padding: EdgeInsets.symmetric(vertical: 10),
-        child: IntrinsicHeight(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton.icon(
-                icon: Text("🔒"),
-                onPressed: () {
-                  Haptic.vibrate();
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) =>
-                          AugmontRegnSecurityDialog(
-                            text: Assets.infoAugmontRegnSecurity,
-                            imagePath: 'images/aes256.png',
-                            title: 'Security > Rest',
-                          ));
-                },
-                label: Text(
-                  'Note on Security',
-                  style: TextStyle(
-                      fontSize: SizeConfig.smallTextSize * 1.3,
-                      decoration: TextDecoration.underline,
-                      color:
-                          augmontGoldPalette.secondaryColor.withOpacity(0.8)),
-                ),
+    return Container(
+      width: SizeConfig.screenWidth,
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: IntrinsicHeight(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton.icon(
+              icon: Text("🔒"),
+              onPressed: () {
+                Haptic.vibrate();
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) =>
+                        AugmontRegnSecurityDialog(
+                          text: Assets.infoAugmontRegnSecurity,
+                          imagePath: 'images/aes256.png',
+                          title: 'Security > Rest',
+                        ));
+              },
+              label: Text(
+                'Note on Security',
+                style: TextStyle(
+                    fontSize: SizeConfig.smallTextSize * 1.3,
+                    decoration: TextDecoration.underline,
+                    color: augmontGoldPalette.secondaryColor.withOpacity(0.8)),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
