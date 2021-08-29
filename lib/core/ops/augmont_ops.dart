@@ -1,13 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
+import 'package:felloapp/core/model/invoice.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/service/augmont_invoice_service.dart';
+import 'package:felloapp/core/service/pdf_invoice_api.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
@@ -15,7 +18,9 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 class AugmontModel extends ChangeNotifier {
   final Log log = new Log('AugmontModel');
@@ -483,9 +488,83 @@ class AugmontModel extends ChangeNotifier {
       log.debug(resMap[GetInvoice.resTransactionId].toString());
       resMap["flag"] = QUERY_PASSED;
 
-      String _path = await _pdfService.generateInvoice(resMap);
-      return _path;
+      final pdfFile =
+          await PdfInvoiceApi.generate(await generateInvoiceContent());
+      return pdfFile.path;
+      //String _path = await _pdfService.generateInvoice(resMap);
+      //return _path;
     }
+  }
+
+  Future<Invoice> generateInvoiceContent() async {
+    final date = DateTime.now();
+    final dueDate = date.add(Duration(days: 7));
+    final bgImage = await getImageFileFromAssets("invoice_bg.jpg");
+    final brokerLogo = await getImageFileFromAssets("fello_logo.png");
+    final sellerLogo = await getImageFileFromAssets("aug-logo.png");
+    final invoice = Invoice(
+      bgImage: bgImage,
+      brokerLogo: brokerLogo,
+      sellerLogo: sellerLogo,
+      supplier: Supplier(
+        name: 'Augmont GoldTech Pvt Ltd.',
+        GSTIN: "GSTIN: ABC12342453DFE",
+      ),
+      customer: Customer(
+        name: 'Arab Kumar',
+        address: 'arabkumar1000@gmail.com',
+      ),
+      info: InvoiceInfo(
+        date: date,
+        dueDate: dueDate,
+        description: 'Description',
+        number: '${DateTime.now().year}-9999',
+      ),
+      items: [
+        InvoiceItem(
+          description: 'Gold 24K 99.9%',
+          grams: 0.0041,
+          rate: "4849.83(INR/gm)",
+          amount: 19.98,
+        ),
+        InvoiceItem(
+          description: 'Net Total',
+          grams: 0.0041,
+          rate: "",
+          amount: 19.98,
+        ),
+        InvoiceItem(
+          description: 'CGST',
+          grams: 0,
+          rate: "1.5%",
+          amount: 0.29,
+        ),
+        InvoiceItem(
+          description: 'SGST',
+          grams: 0,
+          rate: "1.50%",
+          amount: 0.29,
+        ),
+        InvoiceItem(
+          description: 'NEST',
+          grams: 0,
+          rate: "0.00%",
+          amount: 0.00,
+        ),
+      ],
+    );
+    return invoice;
+  }
+
+  Future<File> getImageFileFromAssets(String path) async {
+    print(path);
+    final byteData = await rootBundle.load('images/$path');
+
+    final file = File('${(await getTemporaryDirectory()).path}/$path');
+    await file.writeAsBytes(byteData.buffer
+        .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+
+    return file;
   }
 
   String _constructRequest(String subPath, Map<String, String> params) {
