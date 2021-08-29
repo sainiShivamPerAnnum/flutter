@@ -82,6 +82,8 @@ class BaseUtil extends ChangeNotifier {
   ReferralDetail myReferralInfo;
   static PackageInfo packageInfo;
   Map<String, dynamic> freshchatKeys;
+  double activeGoldWithdrawalQuantity;
+  int withdrawFlowStackCount;
 
   /// Objects for Transaction list Pagination
   DocumentSnapshot lastTransactionListDocument;
@@ -99,10 +101,12 @@ class BaseUtil extends ChangeNotifier {
       isRedemptionOtpInProgress,
       isAugmontRegnInProgress,
       isAugmontRegnCompleteAnimateInProgress,
+      isSimpleKycInProgress,
       isIciciDepositRouteLogicInProgress,
       isEditAugmontBankDetailInProgress,
       isAugDepositRouteLogicInProgress,
       isAugWithdrawRouteLogicInProgress,
+      isAugWithdrawalInProgress,
       isAugmontRealTimeBalanceFetched,
       isWeekWinnersFetched,
       isPrizeLeadersFetched,
@@ -131,10 +135,12 @@ class BaseUtil extends ChangeNotifier {
     isRedemptionOtpInProgress = false;
     isAugmontRegnInProgress = false;
     isAugmontRegnCompleteAnimateInProgress = false;
+    isSimpleKycInProgress = false;
     isIciciDepositRouteLogicInProgress = false;
     isEditAugmontBankDetailInProgress = false;
     isAugDepositRouteLogicInProgress = false;
     isAugWithdrawRouteLogicInProgress = false;
+    isAugWithdrawalInProgress = false;
     isAugmontRealTimeBalanceFetched = false;
     isWeekWinnersFetched = false;
     isPrizeLeadersFetched = false;
@@ -202,11 +208,15 @@ class BaseUtil extends ChangeNotifier {
       // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
       // _payService = locator<PaymentService>();
 
-      ///prefill augmont and pan details if available
+      ///prefill pan details if available
       panService = new PanService();
+      if (!checkKycMissing) {
+        userRegdPan = await panService.getUserPan();
+      }
+
+      ///prefill augmont details if available
       if (myUser.isAugmontOnboarded) {
         augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
-        userRegdPan = await panService.getUserPan();
       }
 
       await getProfilePicUrl();
@@ -222,8 +232,8 @@ class BaseUtil extends ChangeNotifier {
       /// Fetch this weeks' Dailypicks count
       String _dpc = BaseRemoteConfig.remoteConfig
           .getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT);
-      if (_dpc == null || _dpc.isEmpty) _dpc = '5';
-      _dailyPickCount = 5;
+      if (_dpc == null || _dpc.isEmpty) _dpc = '3';
+      _dailyPickCount = 3;
       try {
         _dailyPickCount = int.parse(_dpc);
       } catch (e) {
@@ -234,7 +244,7 @@ class BaseUtil extends ChangeNotifier {
         };
         _dbModel.logFailure(
             _myUser.uid, FailType.DailyPickParseFailed, errorDetails);
-        _dailyPickCount = 5;
+        _dailyPickCount = 3;
       }
 
       await fetchWeeklyPicks(forcedRefresh: false);
@@ -321,42 +331,60 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
+  bool get checkKycMissing {
+    bool skFlag = (myUser.isSimpleKycVerified != null &&
+        myUser.isSimpleKycVerified == true);
+    bool augFlag = false;
+    if (myUser.isAugmontOnboarded) {
+      final DateTime _dt = new DateTime(2021, 8, 28);
+      //if the person regd for augmont before v2.5.4 release, then their kyc is complete
+      augFlag = (augmontDetail != null &&
+          augmontDetail.createdTime != null &&
+          augmontDetail.createdTime.toDate().isBefore(_dt));
+    }
+    return (!skFlag && !augFlag);
+  }
+
   fetchWeeklyPicks({bool forcedRefresh}) async {
     if (forcedRefresh) weeklyDrawFetched = false;
     if (!weeklyDrawFetched) {
-      log.debug('Requesting for weekly picks');
-      DailyPick _picks = await _dbModel.getWeeklyPicks();
-      weeklyDrawFetched = true;
-      if (_picks != null) {
-        weeklyDigits = _picks;
+      try {
+        log.debug('Requesting for weekly picks');
+        DailyPick _picks = await _dbModel.getWeeklyPicks();
+        weeklyDrawFetched = true;
+        if (_picks != null) {
+          weeklyDigits = _picks;
+        }
+        switch (DateTime.now().weekday) {
+          case 1:
+            todaysPicks = weeklyDigits.mon;
+            break;
+          case 2:
+            todaysPicks = weeklyDigits.tue;
+            break;
+          case 3:
+            todaysPicks = weeklyDigits.wed;
+            break;
+          case 4:
+            todaysPicks = weeklyDigits.thu;
+            break;
+          case 5:
+            todaysPicks = weeklyDigits.fri;
+            break;
+          case 6:
+            todaysPicks = weeklyDigits.sat;
+            break;
+          case 7:
+            todaysPicks = weeklyDigits.sun;
+            break;
+        }
+        if (todaysPicks == null) {
+          log.debug("Today's picks are not generated yet");
+        }
+        notifyListeners();
+      } catch (e) {
+        log.error('$e');
       }
-      switch (DateTime.now().weekday) {
-        case 1:
-          todaysPicks = weeklyDigits.mon;
-          break;
-        case 2:
-          todaysPicks = weeklyDigits.tue;
-          break;
-        case 3:
-          todaysPicks = weeklyDigits.wed;
-          break;
-        case 4:
-          todaysPicks = weeklyDigits.thu;
-          break;
-        case 5:
-          todaysPicks = weeklyDigits.fri;
-          break;
-        case 6:
-          todaysPicks = weeklyDigits.sat;
-          break;
-        case 7:
-          todaysPicks = weeklyDigits.sun;
-          break;
-      }
-      if (todaysPicks == null) {
-        log.debug("Today's picks are not generated yet");
-      }
-      notifyListeners();
     }
   }
 
@@ -516,7 +544,7 @@ class BaseUtil extends ChangeNotifier {
 
       //TODO better fix required
       ///IMP: When a user signs out and attempts
-      /// to sign in again without closing the app,
+      /// to sign in again without closing the apcp,
       /// the old variables are still in effect
       /// resetting them like below for now
       _myUser = null;
@@ -741,6 +769,11 @@ class BaseUtil extends ChangeNotifier {
 
   void setName(String newName) {
     myUser.name = newName;
+    notifyListeners();
+  }
+
+  void setKycVerified(bool val) {
+    myUser.isSimpleKycVerified = val;
     notifyListeners();
   }
 

@@ -311,7 +311,9 @@ class TermsRow extends StatelessWidget {
             child: Text(
               'Terms of Service',
               style: TextStyle(
-                  color: Colors.grey, decoration: TextDecoration.underline),
+                  fontSize: SizeConfig.smallTextSize * 1.2,
+                  color: Colors.grey,
+                  decoration: TextDecoration.underline),
             ),
             onTap: () {
               Haptic.vibrate();
@@ -332,13 +334,37 @@ class TermsRow extends StatelessWidget {
             child: Text(
               'Privacy Policy',
               style: TextStyle(
-                  color: Colors.grey, decoration: TextDecoration.underline),
+                  fontSize: SizeConfig.smallTextSize * 1.2,
+                  color: Colors.grey,
+                  decoration: TextDecoration.underline),
             ),
             onTap: () {
               Haptic.vibrate();
               BaseUtil.launchUrl('https://fello.in/policy/privacy');
               // AppState.delegate.appState.currentAction = PageAction(
               //     state: PageState.addPage, page: RefPolicyPageConfig);
+            },
+          ),
+        ),
+        Text(
+          '•',
+          style: TextStyle(color: Colors.grey),
+        ),
+        Padding(
+          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          child: InkWell(
+            child: Text(
+              'Referral Policy',
+              style: TextStyle(
+                  fontSize: SizeConfig.smallTextSize * 1.2,
+                  color: Colors.grey,
+                  decoration: TextDecoration.underline),
+            ),
+            onTap: () {
+              Haptic.vibrate();
+              // BaseUtil.launchUrl('https://fello.in/policy/privacy');
+              AppState.delegate.appState.currentAction = PageAction(
+                  state: PageState.addPage, page: RefPolicyPageConfig);
             },
           ),
         )
@@ -804,9 +830,9 @@ class _ShareOptionsState extends State<ShareOptions> {
         shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
       ),
       iosParameters: IosParameters(
-        bundleId: 'in.fello.felloappiOS',
-        minimumVersion: '0',
-      ),
+          bundleId: 'in.fello.felloappiOS',
+          minimumVersion: '0',
+          appStoreId: '1558445254'),
     );
 
     Uri url;

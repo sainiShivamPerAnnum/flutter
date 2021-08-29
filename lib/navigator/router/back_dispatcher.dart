@@ -12,6 +12,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate _routerDelegate;
   DBModel _dbModel = locator<DBModel>();
   BaseUtil _baseUtil = locator<BaseUtil>();
+
   FelloBackButtonDispatcher(this._routerDelegate) : super();
 
   Future<bool> _confirmExit(
@@ -36,6 +37,10 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   Future<bool> didPopRoute() {
     // If user is in the profile page and preferences are changed
     if (AppState.unsavedPrefs) {
+      if (_baseUtil != null &&
+          _baseUtil.myUser != null &&
+          _baseUtil.myUser.uid != null &&
+          _baseUtil.myUser.userPreferences != null)
       _dbModel
           .updateUserPreferences(
               _baseUtil.myUser.uid, _baseUtil.myUser.userPreferences)

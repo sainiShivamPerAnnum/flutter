@@ -20,6 +20,8 @@ class AugmontConfirmRegnDialog extends StatefulWidget {
   final String bankBranchName;
   final Function onAccept;
   final Function onReject;
+  final Color dialogColor;
+  final String customMessage;
 
   AugmontConfirmRegnDialog(
       {this.panNumber,
@@ -30,7 +32,9 @@ class AugmontConfirmRegnDialog extends StatefulWidget {
       this.bankHolderName,
       this.bankBranchName,
       this.onAccept,
-      this.onReject});
+      this.onReject,
+      this.dialogColor,
+      this.customMessage});
 
   @override
   State createState() => AugmontConfirmRegnDialogState();
@@ -102,7 +106,7 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                       style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w700,
-                          color: augmontGoldPalette.primaryColor2),
+                          color: widget.dialogColor),
                     ),
                     SizedBox(
                       height: 10,
@@ -142,9 +146,19 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                             ),
                           )
                         : Container(),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    (widget.customMessage != null &&
+                            widget.customMessage.isNotEmpty)
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 20.0),
+                            child: Text(
+                              widget.customMessage,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: SizeConfig.mediumTextSize,
+                              ),
+                            ),
+                          )
+                        : Container(),
                     IntrinsicHeight(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -157,12 +171,14 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                               child: Text(
                                 'CANCEL',
                                 style: TextStyle(
+                                    fontSize: SizeConfig.largeTextSize,
                                     color: augmontGoldPalette.secondaryColor),
                               )),
                           VerticalDivider(
                             thickness: 1,
                             width: 20,
-                            color: augmontGoldPalette.secondaryColor,
+                            color: augmontGoldPalette.secondaryColor
+                                .withOpacity(0.3),
                           ),
                           TextButton(
                             onPressed: () {
@@ -172,8 +188,9 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                             child: Text(
                               'CONFIRM',
                               style: TextStyle(
+                                  fontSize: SizeConfig.largeTextSize,
                                   fontWeight: FontWeight.w700,
-                                  color: augmontGoldPalette.primaryColor),
+                                  color: widget.dialogColor),
                             ),
                           ),
                         ],

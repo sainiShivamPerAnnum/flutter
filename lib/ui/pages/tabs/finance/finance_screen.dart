@@ -7,7 +7,6 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/dialogs/integrated_icici_disabled_dialog.dart';
 import 'package:felloapp/ui/elements/plots/funds_chart_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
@@ -105,7 +104,8 @@ class _FinancePageState extends State<FinancePage>
                               height: 16,
                             ),
                             Text(
-                              "ICICI Prudential Fund",
+                              "ICICI Prudential Liquid Mutual Fund",
+                              textAlign: TextAlign.center,
                               style: GoogleFonts.montserrat(
                                 color: Colors.white,
                                 fontSize: SizeConfig.cardTitleTextSize,

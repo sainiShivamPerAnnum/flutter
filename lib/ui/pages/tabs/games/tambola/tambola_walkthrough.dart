@@ -1,3 +1,4 @@
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -12,8 +13,8 @@ import 'package:google_fonts/google_fonts.dart';
 class Walkthrough extends StatelessWidget {
   const Walkthrough({Key key}) : super(key: key);
 
-  static const List<String> dailyPicks = [
-    "Starting Monday, 5 random numbers are picked everyday from 1 to 90 at 6pm."
+  static List<String> dailyPicks = [
+    "Starting Monday, ${BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT)} random numbers are picked everyday from 1 to 90 at 6pm."
   ];
   static const List<String> tambolatickets = [
     "Your Tambola tickets are refreshed every Monday. Each ticket comprises of 15 randomly placed numbers.",

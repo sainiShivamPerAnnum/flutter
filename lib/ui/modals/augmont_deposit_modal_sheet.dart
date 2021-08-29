@@ -159,7 +159,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                   controller: _amtController,
                   keyboardType: TextInputType.number,
                   cursorColor: augmontGoldPalette.primaryColor,
-                  decoration: augmontFieldInputDecoration("Enter an amount"),
+                  decoration:
+                      augmontFieldInputDecoration("Enter an amount", null),
                   validator: (value) {
                     Pattern pattern = "^[0-9]*\$";
                     RegExp amRegex = RegExp(pattern);
@@ -306,6 +307,12 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    validityTimer.cancel();
   }
 
   double _getTaxIncludedAmount(String amt) {

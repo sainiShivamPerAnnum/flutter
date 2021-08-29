@@ -81,6 +81,7 @@ class _GamePageState extends State<GamePage> {
   }
 
   Future<void> _onTicketsRefresh() {
+    print('SCREEN WIDTH IOS: ${SizeConfig.screenWidth}');
     //TODO ADD LOADER
     return dbProvider
         .getUserTicketWallet(baseProvider.myUser.uid)
@@ -151,8 +152,8 @@ class _GamePageState extends State<GamePage> {
                                         baseProvider.userTicketWallet),
                               );
                             },
-                            child: TicketCount(baseProvider.userTicketWallet
-                                .getActiveTickets()),
+                            child: (baseProvider.userTicketWallet != null)?TicketCount(baseProvider.userTicketWallet
+                                .getActiveTickets()):Container(),
                           ),
                           const Spacer(
                             flex: 1,
@@ -165,12 +166,9 @@ class _GamePageState extends State<GamePage> {
                             flex: 1,
                           ),
 
-                          /////////TODO HACKY CODE - WRITTEN TO MANAGE TABLET SIZE DIMENSIONS
-                          (SizeConfig.screenWidth >= 1200)
-                              ? Transform.translate(
-                                  offset:
-                                      Offset(0, -SizeConfig.screenWidth * 0.08),
-                                  child: const IdeaSection())
+                          //TODO HACKY CODE - REMOVING IDEA SECTION TO MANAGE TABLET SIZE DIMENSIONS
+                          (SizeConfig.screenWidth >= 800)
+                              ? Container()
                               : const IdeaSection(),
                           /////////////////////////////////////////////////////////////
                           const Spacer(
