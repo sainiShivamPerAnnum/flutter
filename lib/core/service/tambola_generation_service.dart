@@ -191,8 +191,8 @@ class TambolaGenerationService extends ChangeNotifier {
     log.error('Ticket generation failed at one or many steps');
     if (baseProvider.myUser.uid != null) {
       Map<String, dynamic> errorDetails = {
-        'Error message': 'Tickete generation failed at one or many steps',
-        'Atomic Ticket Generation Left Count':
+        'error_msg': 'Ticket generation failed at one or many steps',
+        'atmoic_ticket_gen_left_count':
             BaseUtil.atomicTicketGenerationLeftCount.toString()
       };
       dbProvider.logFailure(baseProvider.myUser.uid,
