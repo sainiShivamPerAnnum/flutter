@@ -17,7 +17,6 @@ import 'package:logger/logger.dart';
 
 GetIt locator = GetIt.instance;
 
-
 void setupLocator() {
   locator.registerLazySingleton(() => Api());
   locator.registerLazySingleton(() => LocalApi());
@@ -32,6 +31,6 @@ void setupLocator() {
   locator.registerLazySingleton(() => FcmHandler());
   locator.registerLazySingleton(() => PaymentService());
   locator.registerLazySingleton(() => AppState());
-  locator.registerSingleton(() => Logger());
+  locator.registerLazySingleton(() => Logger());
   //....
 }
