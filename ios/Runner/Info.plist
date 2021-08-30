@@ -40,6 +40,12 @@
 				<string>fello.in/app/referral</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb1086597418534091</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
@@ -91,5 +97,13 @@
 		<string>https://fello.in/download/app</string>
 		<string>https://fello.in/app/referral</string>
 	</array>
+	<key>FacebookAppID</key>
+    <string>1086597418534091</string>
+    <key>FacebookDisplayName</key>
+    <string>Fello</string>
+    <key>FacebookAutoLogAppEventsEnabled</key>
+    <true/>
+    <key>FacebookAdvertiserIDCollectionEnabled</key>
+    <true/>
 </dict>
 </plist>
