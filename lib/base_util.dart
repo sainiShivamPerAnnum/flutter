@@ -21,6 +21,8 @@ import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
@@ -81,6 +83,8 @@ class BaseUtil extends ChangeNotifier {
   ReferralDetail myReferralInfo;
   static PackageInfo packageInfo;
   Map<String, dynamic> freshchatKeys;
+  double activeGoldWithdrawalQuantity;
+  int withdrawFlowStackCount;
 
   /// Objects for Transaction list Pagination
   DocumentSnapshot lastTransactionListDocument;
@@ -98,10 +102,12 @@ class BaseUtil extends ChangeNotifier {
       isRedemptionOtpInProgress,
       isAugmontRegnInProgress,
       isAugmontRegnCompleteAnimateInProgress,
+      isSimpleKycInProgress,
       isIciciDepositRouteLogicInProgress,
       isEditAugmontBankDetailInProgress,
       isAugDepositRouteLogicInProgress,
       isAugWithdrawRouteLogicInProgress,
+      isAugWithdrawalInProgress,
       isAugmontRealTimeBalanceFetched,
       isWeekWinnersFetched,
       isPrizeLeadersFetched,
@@ -130,10 +136,12 @@ class BaseUtil extends ChangeNotifier {
     isRedemptionOtpInProgress = false;
     isAugmontRegnInProgress = false;
     isAugmontRegnCompleteAnimateInProgress = false;
+    isSimpleKycInProgress = false;
     isIciciDepositRouteLogicInProgress = false;
     isEditAugmontBankDetailInProgress = false;
     isAugDepositRouteLogicInProgress = false;
     isAugWithdrawRouteLogicInProgress = false;
+    isAugWithdrawalInProgress = false;
     isAugmontRealTimeBalanceFetched = false;
     isWeekWinnersFetched = false;
     isPrizeLeadersFetched = false;
@@ -201,15 +209,18 @@ class BaseUtil extends ChangeNotifier {
       // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
       // _payService = locator<PaymentService>();
 
-      ///prefill augmont and pan details if available
+      ///prefill pan details if available
       panService = new PanService();
-      if (myUser.isAugmontOnboarded) {
-        augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
+      if (!checkKycMissing) {
         userRegdPan = await panService.getUserPan();
       }
 
+      ///prefill augmont details if available
+      if (myUser.isAugmontOnboarded) {
+        augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
+      }
+
       await getProfilePicUrl();
-      await fetchWeeklyPicks();
 
       ///Freshchat utils
       freshchatKeys = await _dbModel.getActiveFreshchatKey();
@@ -222,8 +233,8 @@ class BaseUtil extends ChangeNotifier {
       /// Fetch this weeks' Dailypicks count
       String _dpc = BaseRemoteConfig.remoteConfig
           .getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT);
-      if (_dpc == null || _dpc.isEmpty) _dpc = '5';
-      _dailyPickCount = 5;
+      if (_dpc == null || _dpc.isEmpty) _dpc = '3';
+      _dailyPickCount = 3;
       try {
         _dailyPickCount = int.parse(_dpc);
       } catch (e) {
@@ -234,8 +245,10 @@ class BaseUtil extends ChangeNotifier {
         };
         _dbModel.logFailure(
             _myUser.uid, FailType.DailyPickParseFailed, errorDetails);
-        _dailyPickCount = 5;
+        _dailyPickCount = 3;
       }
+
+      await fetchWeeklyPicks(forcedRefresh: false);
 
       ///pick zerobalance asset
       Random rnd = new Random();
@@ -319,15 +332,57 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  fetchWeeklyPicks() async {
+  bool get checkKycMissing {
+    bool skFlag = (myUser.isSimpleKycVerified != null && myUser.isSimpleKycVerified == true);
+    bool augFlag = false;
+    if(myUser.isAugmontOnboarded) {
+        final DateTime _dt = new DateTime(2021, 8, 28);
+        //if the person regd for augmont before v2.5.4 release, then their kyc is complete
+       augFlag = (augmontDetail != null && augmontDetail.createdTime != null && augmontDetail.createdTime.toDate().isBefore(_dt));
+    }
+    return (!skFlag && !augFlag);
+  }
+
+  fetchWeeklyPicks({bool forcedRefresh}) async {
+    if (forcedRefresh) weeklyDrawFetched = false;
     if (!weeklyDrawFetched) {
-      log.debug('Requesting for weekly picks');
-      DailyPick _picks = await _dbModel.getWeeklyPicks();
-      weeklyDrawFetched = true;
-      if (_picks != null) {
-        weeklyDigits = _picks;
+      try {
+        log.debug('Requesting for weekly picks');
+        DailyPick _picks = await _dbModel.getWeeklyPicks();
+        weeklyDrawFetched = true;
+        if (_picks != null) {
+          weeklyDigits = _picks;
+        }
+        switch (DateTime.now().weekday) {
+          case 1:
+            todaysPicks = weeklyDigits.mon;
+            break;
+          case 2:
+            todaysPicks = weeklyDigits.tue;
+            break;
+          case 3:
+            todaysPicks = weeklyDigits.wed;
+            break;
+          case 4:
+            todaysPicks = weeklyDigits.thu;
+            break;
+          case 5:
+            todaysPicks = weeklyDigits.fri;
+            break;
+          case 6:
+            todaysPicks = weeklyDigits.sat;
+            break;
+          case 7:
+            todaysPicks = weeklyDigits.sun;
+            break;
+        }
+        if (todaysPicks == null) {
+          log.debug("Today's picks are not generated yet");
+        }
+        notifyListeners();
+      } catch (e) {
+        log.error('$e');
       }
-      notifyListeners();
     }
   }
 
@@ -416,33 +471,10 @@ class BaseUtil extends ChangeNotifier {
     )..show(context);
   }
 
-  Future<bool> getDrawaStatus() async {
+  Future<bool> getDrawStatus() async {
     // CHECKING IF THE PICK ARE DRAWN OR NOT
-    if (!weeklyDrawFetched || weeklyDigits == null) await fetchWeeklyPicks();
-    if (weeklyDrawFetched && weeklyDigits != null)
-      switch (DateTime.now().weekday) {
-        case 1:
-          todaysPicks = weeklyDigits.mon;
-          break;
-        case 2:
-          todaysPicks = weeklyDigits.tue;
-          break;
-        case 3:
-          todaysPicks = weeklyDigits.wed;
-          break;
-        case 4:
-          todaysPicks = weeklyDigits.thu;
-          break;
-        case 5:
-          todaysPicks = weeklyDigits.fri;
-          break;
-        case 6:
-          todaysPicks = weeklyDigits.sat;
-          break;
-        case 7:
-          todaysPicks = weeklyDigits.sun;
-          break;
-      }
+    if (!weeklyDrawFetched || weeklyDigits == null)
+      await fetchWeeklyPicks(forcedRefresh: true);
     //CHECKING FOR THE FIRST TIME OPENING OF TAMBOLA AFTER THE PICKS ARE DRAWN FOR THIS PARTICULAR DAY
     notifyListeners();
     if (todaysPicks != null &&
@@ -510,7 +542,7 @@ class BaseUtil extends ChangeNotifier {
 
       //TODO better fix required
       ///IMP: When a user signs out and attempts
-      /// to sign in again without closing the app,
+      /// to sign in again without closing the apcp,
       /// the old variables are still in effect
       /// resetting them like below for now
       _myUser = null;
@@ -546,6 +578,8 @@ class BaseUtil extends ChangeNotifier {
       isOtpResendCount = 0;
       show_security_prompt = false;
       delegate.appState.setCurrentTabIndex = 0;
+      activeGoldWithdrawalQuantity = 0;
+      withdrawFlowStackCount = 1;
       _setRuntimeDefaults();
 
       return true;
@@ -597,6 +631,20 @@ class BaseUtil extends ChangeNotifier {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  void openTambolaHome() async {
+    delegate.appState.setCurrentTabIndex = 1;
+    if (await getDrawStatus()) {
+      await _lModel.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
+            (value) =>
+                print("Daily Picks Draw Animation Save Status Code: $value"),
+          );
+      delegate.appState.currentAction =
+          PageAction(state: PageState.addPage, page: TPickDrawPageConfig);
+    } else
+      delegate.appState.currentAction =
+          PageAction(state: PageState.addPage, page: THomePageConfig);
   }
 
   bool isOldCustomer() {
@@ -721,6 +769,11 @@ class BaseUtil extends ChangeNotifier {
 
   void setName(String newName) {
     myUser.name = newName;
+    notifyListeners();
+  }
+
+  void setKycVerified(bool val) {
+    myUser.isSimpleKycVerified = val;
     notifyListeners();
   }
 

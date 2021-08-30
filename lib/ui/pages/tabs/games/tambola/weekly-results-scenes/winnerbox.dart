@@ -8,20 +8,20 @@ class WinnerBox extends StatelessWidget {
   const WinnerBox({Key key, this.winningsmap}) : super(key: key);
   getValue(int val) {
     switch (val) {
-      case 1:
-        return "Full House";
+      case 0:
+        return "Corners";
         break;
-      case 2:
+      case 1:
         return "Top Row";
         break;
-      case 3:
+      case 2:
         return "Bottom Row";
         break;
-      case 4:
+      case 3:
         return "Middle Row";
         break;
-      case 5:
-        return "Corner";
+      case 4:
+        return "Full House";
         break;
     }
   }

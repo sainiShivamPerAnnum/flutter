@@ -36,7 +36,43 @@ InputDecoration inputFieldDecoration(String hintText) {
   );
 }
 
-InputDecoration augmontFieldInputDecoration(String hintText) {
+InputDecoration augmontFieldInputDecoration(String hintText, IconData icon) {
+  if (icon != null)
+    return InputDecoration(
+      prefixIcon: Icon(icon),
+      focusColor: augmontGoldPalette.primaryColor,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(
+          color: augmontGoldPalette.secondaryColor,
+        ),
+      ),
+      // labelStyle: GoogleFonts.montserrat(color: augmontGoldPalette.primaryColor2),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(
+          color: augmontGoldPalette.primaryColor,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(
+          color: augmontGoldPalette.primaryColor,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.red,
+        ),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.red,
+        ),
+      ),
+      labelText: hintText,
+    );
+
   return InputDecoration(
     focusColor: augmontGoldPalette.primaryColor,
     border: OutlineInputBorder(

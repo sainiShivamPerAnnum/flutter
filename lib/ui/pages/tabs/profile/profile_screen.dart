@@ -825,6 +825,7 @@ class _ShareOptionsState extends State<ShareOptions> {
       iosParameters: IosParameters(
         bundleId: 'in.fello.felloappiOS',
         minimumVersion: '0',
+        appStoreId:'1558445254'
       ),
     );
 

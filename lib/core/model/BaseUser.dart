@@ -25,6 +25,7 @@ class BaseUser {
   bool _isInvested;
   bool _isIciciOnboarded;
   bool _isAugmontOnboarded;
+  bool _isSimpleKycVerified;
   int _isKycVerified;
   String _pendingTxnId;
   bool _isIciciEnabled;
@@ -54,6 +55,7 @@ class BaseUser {
   static final String fldIsInvested = "mIsInvested";
   static final String fldIsIciciOnboarded = "mIsIciciOnboarded";
   static final String fldIsAugmontOnboarded = "mIsAugmontOnboarded";
+  static final String fldIsSimpleKycVerified = "mIsSimpleKycVerified";
   static final String fldIsKycVerified = "mIsKycVerified";
   static final String fldPendingTxnId = "mPendingTxnId";
   static final String fldIsIciciEnabled = "mIsIciciEnabled";
@@ -75,6 +77,7 @@ class BaseUser {
       this._isInvested,
       this._isIciciOnboarded,
       this._isAugmontOnboarded,
+      this._isSimpleKycVerified,
       this._isKycVerified,
       this._pendingTxnId,
       this._isIciciEnabled,
@@ -96,6 +99,7 @@ class BaseUser {
             0,
             null,
             null,
+            false,
             false,
             false,
             false,
@@ -123,6 +127,7 @@ class BaseUser {
             data[fldIsInvested] ?? false,
             data[fldIsIciciOnboarded] ?? false,
             data[fldIsAugmontOnboarded] ?? false,
+            data[fldIsSimpleKycVerified],
             data[fldIsKycVerified] ?? Constants.KYC_UNTESTED,
             data[fldPendingTxnId],
             data[fldIsIciciEnabled],
@@ -146,6 +151,7 @@ class BaseUser {
       fldIsInvested: _isInvested,
       fldIsIciciOnboarded: _isIciciOnboarded,
       fldIsAugmontOnboarded: _isAugmontOnboarded,
+      fldIsSimpleKycVerified: _isSimpleKycVerified,
       fldIsKycVerified: _isKycVerified,
       fldPendingTxnId: _pendingTxnId,
       fldUsername: _username,
@@ -269,6 +275,12 @@ class BaseUser {
 
   set isInvested(bool value) {
     _isInvested = value;
+  }
+
+  bool get isSimpleKycVerified => _isSimpleKycVerified;
+
+  set isSimpleKycVerified(bool value) {
+    _isSimpleKycVerified = value;
   }
 
   int get isKycVerified => _isKycVerified;

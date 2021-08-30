@@ -158,7 +158,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                   controller: _amtController,
                   keyboardType: TextInputType.number,
                   cursorColor: augmontGoldPalette.primaryColor,
-                  decoration: augmontFieldInputDecoration("Enter an amount"),
+                  decoration:
+                      augmontFieldInputDecoration("Enter an amount", null),
                   validator: (value) {
                     Pattern pattern = "^[0-9]*\$";
                     RegExp amRegex = RegExp(pattern);
@@ -307,6 +308,12 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     );
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    validityTimer.cancel();
+  }
+
   double _getTaxIncludedAmount(String amt) {
     if (amt == null || amt.isEmpty) return null;
     double t = 0;
@@ -428,32 +435,32 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
           ),
           Expanded(
               child: InkWell(
-                onTap: () {
-                  Haptic.vibrate();
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) => MoreInfoDialog(
+            onTap: () {
+              Haptic.vibrate();
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => MoreInfoDialog(
                         title: title,
                         text: info,
                       ));
-                },
-                child: Row(
-                  children: [
-                    Text(
-                      value,
-                      style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
-                    ),
-                    SizedBox(
-                      width: 4,
-                    ),
-                    Icon(
-                      Icons.info_outline,
-                      color: Colors.grey,
-                      size: SizeConfig.mediumTextSize * 1.4,
-                    )
-                  ],
+            },
+            child: Row(
+              children: [
+                Text(
+                  value,
+                  style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
                 ),
-              ))
+                SizedBox(
+                  width: 4,
+                ),
+                Icon(
+                  Icons.info_outline,
+                  color: Colors.grey,
+                  size: SizeConfig.mediumTextSize * 1.4,
+                )
+              ],
+            ),
+          ))
         ],
       ),
     );

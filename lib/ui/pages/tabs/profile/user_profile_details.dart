@@ -12,13 +12,12 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/update_name_dialog.dart';
-import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
+import 'package:felloapp/ui/modals/simple_kyc_modal_sheet.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
@@ -500,14 +499,21 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
         children: [
           ElevatedButton(
             onPressed: () {
-              delegate.appState.currentAction = PageAction(
-                state: PageState.addWidget,
-                widget: AugmontOnboarding(),
-                page: AugOnboardPageConfig,
-              );
+              AppState.screenStack.add(ScreenItem.dialog);
+              showModalBottomSheet(
+                  isDismissible: false,
+                  // backgroundColor: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) {
+                    return SimpleKycModalSheet();
+                  });
             },
             child: Text(
-              "Register",
+              "Verify",
               style: TextStyle(color: Colors.white),
             ),
           ),
