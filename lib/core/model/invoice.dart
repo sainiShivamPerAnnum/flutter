@@ -9,6 +9,8 @@ class Invoice {
   final File bgImage;
   final File sellerLogo;
   final File brokerLogo;
+  final Description description;
+  final String total;
 
   const Invoice(
       {@required this.info,
@@ -17,28 +19,26 @@ class Invoice {
       @required this.items,
       @required this.bgImage,
       @required this.brokerLogo,
-      @required this.sellerLogo});
+      @required this.description,
+      @required this.sellerLogo,
+      @required this.total});
 }
 
 class InvoiceInfo {
-  final String description;
   final String number;
-  final DateTime date;
-  final DateTime dueDate;
+  final String date;
 
   const InvoiceInfo({
-    @required this.description,
     @required this.number,
     @required this.date,
-    @required this.dueDate,
   });
 }
 
 class InvoiceItem {
   final String description;
-  final double grams;
+  final String grams;
   final String rate;
-  final double amount;
+  final String amount;
 
   const InvoiceItem({
     @required this.description,
@@ -65,5 +65,17 @@ class Supplier {
   const Supplier({
     @required this.name,
     @required this.GSTIN,
+  });
+}
+
+class Description {
+  final String metal;
+  final String trnId;
+  final String hsn;
+
+  const Description({
+    @required this.metal,
+    @required this.hsn,
+    @required this.trnId,
   });
 }

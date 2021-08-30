@@ -488,83 +488,12 @@ class AugmontModel extends ChangeNotifier {
       log.debug(resMap[GetInvoice.resTransactionId].toString());
       resMap["flag"] = QUERY_PASSED;
 
-      final pdfFile =
-          await PdfInvoiceApi.generate(await generateInvoiceContent());
-      return pdfFile.path;
-      //String _path = await _pdfService.generateInvoice(resMap);
-      //return _path;
+      // final pdfFile =
+      //     await PdfInvoiceApi.generate(await generateInvoiceContent());
+      // return pdfFile.path;
+      String _path = await _pdfService.generateInvoice(resMap);
+      return _path;
     }
-  }
-
-  Future<Invoice> generateInvoiceContent() async {
-    final date = DateTime.now();
-    final dueDate = date.add(Duration(days: 7));
-    final bgImage = await getImageFileFromAssets("invoice_bg.jpg");
-    final brokerLogo = await getImageFileFromAssets("fello_logo.png");
-    final sellerLogo = await getImageFileFromAssets("aug-logo.png");
-    final invoice = Invoice(
-      bgImage: bgImage,
-      brokerLogo: brokerLogo,
-      sellerLogo: sellerLogo,
-      supplier: Supplier(
-        name: 'Augmont GoldTech Pvt Ltd.',
-        GSTIN: "GSTIN: ABC12342453DFE",
-      ),
-      customer: Customer(
-        name: 'Arab Kumar',
-        address: 'arabkumar1000@gmail.com',
-      ),
-      info: InvoiceInfo(
-        date: date,
-        dueDate: dueDate,
-        description: 'Description',
-        number: '${DateTime.now().year}-9999',
-      ),
-      items: [
-        InvoiceItem(
-          description: 'Gold 24K 99.9%',
-          grams: 0.0041,
-          rate: "4849.83(INR/gm)",
-          amount: 19.98,
-        ),
-        InvoiceItem(
-          description: 'Net Total',
-          grams: 0.0041,
-          rate: "",
-          amount: 19.98,
-        ),
-        InvoiceItem(
-          description: 'CGST',
-          grams: 0,
-          rate: "1.5%",
-          amount: 0.29,
-        ),
-        InvoiceItem(
-          description: 'SGST',
-          grams: 0,
-          rate: "1.50%",
-          amount: 0.29,
-        ),
-        InvoiceItem(
-          description: 'NEST',
-          grams: 0,
-          rate: "0.00%",
-          amount: 0.00,
-        ),
-      ],
-    );
-    return invoice;
-  }
-
-  Future<File> getImageFileFromAssets(String path) async {
-    print(path);
-    final byteData = await rootBundle.load('images/$path');
-
-    final file = File('${(await getTemporaryDirectory()).path}/$path');
-    await file.writeAsBytes(byteData.buffer
-        .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-
-    return file;
   }
 
   String _constructRequest(String subPath, Map<String, String> params) {

@@ -30,7 +30,7 @@ class PdfInvoiceApi {
         SizedBox(height: 2 * PdfPageFormat.cm),
         buildTitle(invoice),
         buildHeader(invoice),
-        buildDescription(invoice.info),
+        buildDescription(invoice.description),
         SizedBox(height: PdfPageFormat.cm),
         buildInvoice(invoice),
         Divider(endIndent: 2 * PdfPageFormat.cm, indent: 2 * PdfPageFormat.cm),
@@ -103,7 +103,7 @@ class PdfInvoiceApi {
     ];
     final data = <String>[
       info.number,
-      Utils.formatDate(info.date),
+      info.date,
     ];
 
     return Column(
@@ -117,9 +117,9 @@ class PdfInvoiceApi {
     );
   }
 
-  static Widget buildDescription(InvoiceInfo info) {
+  static Widget buildDescription(Description inDes) {
     final titles = <String>['Metal:', 'Transaction ID:', 'HSN Code:'];
-    final data = <String>["GOLD", "1232399SHKFH78398SKJK", "711491"];
+    final data = <String>[inDes.metal, inDes.trnId, inDes.hsn];
     List<Widget> children = List.generate(titles.length, (index) {
       final title = titles[index];
       final value = data[index];
@@ -243,7 +243,7 @@ class PdfInvoiceApi {
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
-                  value: Utils.formatPrice(total),
+                  value: invoice.total,
                   unite: true,
                 ),
                 SizedBox(height: 2 * PdfPageFormat.mm),
@@ -321,7 +321,7 @@ class PdfInvoiceApi {
   }
 }
 
-class Utils {
-  static formatPrice(double price) => '\$ ${price.toStringAsFixed(2)}';
-  static formatDate(DateTime date) => DateFormat.yMd().format(date);
-}
+// class Utils {
+//   static formatPrice(double price) => '\$ ${price.toStringAsFixed(2)}';
+//   static formatDate(DateTime date) => DateFormat.yMd().format(date);
+// }
