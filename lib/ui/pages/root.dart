@@ -209,7 +209,8 @@ class _RootState extends State<Root> {
                       onTap: () {
                         Haptic.vibrate();
                         delegate.appState.currentAction = PageAction(
-                            state: PageState.addPage, page: SupportPageConfig);
+                            state: PageState.addPage,
+                            page: NotificationsConfig);
                       },
                     ),
                     SizedBox(

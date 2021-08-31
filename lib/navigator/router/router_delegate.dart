@@ -11,6 +11,7 @@ import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
+import 'package:felloapp/ui/pages/notifications/notifications.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
@@ -224,6 +225,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.TSummaryDetails:
           _addPageData(SummaryTicketsDisplay(), TSummaryDetailsPageConfig);
           break;
+            case Pages.Notifications:
+          _addPageData(NotficationsPage(), NotificationsConfig);
+          break;
         default:
           break;
       }
@@ -368,6 +372,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.TSummaryDetails:
         TSummaryDetailsPageConfig.currentPageAction = action;
+        break;
+             case Pages.Notifications:
+        NotificationsConfig.currentPageAction = action;
         break;
 
       default:
