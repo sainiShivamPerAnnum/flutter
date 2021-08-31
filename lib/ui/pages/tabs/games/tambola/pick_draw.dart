@@ -204,6 +204,9 @@ class _PicksDrawState extends State<PicksDraw> {
                                                           color: Colors.white,
                                                           width: 0.5,
                                                         ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(100),
                                                       ),
                                                     ),
                                                   ),
