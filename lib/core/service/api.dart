@@ -4,13 +4,16 @@ import 'package:felloapp/core/model/ReferralDetail.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 
+
 class Api {
   Log log = new Log("Api");
+
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final rdb.FirebaseDatabase _realtimeDatabase = rdb.FirebaseDatabase.instance;
@@ -26,6 +29,15 @@ class Api {
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_FCM);
     return ref.doc(Constants.DOC_USER_FCM_TOKEN).set(data);
+  }
+
+  Future<QuerySnapshot> getNotifications(String userId) async {
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_ALERTS);
+
+    return ref.orderBy('created_time').limit(10).get();
   }
 
   Future<DocumentSnapshot> getUserById(String id) {
