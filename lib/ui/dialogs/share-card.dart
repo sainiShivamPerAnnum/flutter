@@ -285,7 +285,7 @@ class _ShareCardState extends State<ShareCard> {
     } catch (e) {
       if (baseProvider.myUser.uid != null) {
         Map<String, dynamic> errorDetails = {
-          'Error message': 'Share reward card creation failed'
+          'error_msg': 'Share reward card creation failed'
         };
         dbProvider.logFailure(baseProvider.myUser.uid,
             FailType.FelloRewardCardShareFailed, errorDetails);
@@ -317,7 +317,7 @@ class _ShareCardState extends State<ShareCard> {
           ).catchError((onError) {
             if (baseProvider.myUser.uid != null) {
               Map<String, dynamic> errorDetails = {
-                'Error message': 'Share reward card in card.dart failed'
+                'error_msg': 'Share reward card in card.dart failed'
               };
               dbProvider.logFailure(baseProvider.myUser.uid,
                   FailType.FelloRewardCardShareFailed, errorDetails);
@@ -338,7 +338,7 @@ class _ShareCardState extends State<ShareCard> {
           ).catchError((onError) {
             if (baseProvider.myUser.uid != null) {
               Map<String, dynamic> errorDetails = {
-                'Error message': 'Share reward card in card.dart failed'
+                'error_msg': 'Share reward card in card.dart failed'
               };
               dbProvider.logFailure(baseProvider.myUser.uid,
                   FailType.FelloRewardCardShareFailed, errorDetails);

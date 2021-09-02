@@ -44,7 +44,7 @@ dependencies:
   in_app_update: ^2.0.0
   device_info : ^2.0.2
   image_gallery_saver: ^1.6.9
-
+  flutter_facebook_sdk: ^1.0.0
   #ui packages
   camera: ^0.8.1+7
   cached_network_image: ^3.1.0

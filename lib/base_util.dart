@@ -240,8 +240,7 @@ class BaseUtil extends ChangeNotifier {
       } catch (e) {
         log.error('key parsing failed: ' + e.toString());
         Map<String, String> errorDetails = {
-          'User number': _myUser.mobile,
-          'Error message': e.toString()
+          'error_msg': e.toString()
         };
         _dbModel.logFailure(
             _myUser.uid, FailType.DailyPickParseFailed, errorDetails);
@@ -816,7 +815,7 @@ class BaseUtil extends ChangeNotifier {
       notifyListeners(); //might cause ui error if screen no longer active
     }).catchError((err) {
       if (_myUser.uid != null) {
-        var errorDetails = {'Error message': err.toString()};
+        var errorDetails = {'error_msg': err.toString()};
         _dbModel.logFailure(
             _myUser.uid, FailType.UserAugmontBalanceUpdateFailed, errorDetails);
       }
