@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/model/FeedCard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -13,6 +15,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,6 +30,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool isImageLoading = false;
   BaseUtil baseProvider;
+  ConnectivityStatus _connectivityStatus;
   DBModel dbProvider;
   AppState appState;
   LocalDBModel _localDBModel;
@@ -86,6 +90,8 @@ class _HomePageState extends State<HomePage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
+    _connectivityStatus =
+        Provider.of<ConnectivityStatus>(context, listen: true);
     _localDBModel = Provider.of<LocalDBModel>(context, listen: false);
 
     if (baseProvider.myUserDpUrl == null) {
@@ -110,6 +116,10 @@ class _HomePageState extends State<HomePage> {
                   image: AssetImage("images/home-asset.png"),
                   fit: BoxFit.cover,
                 ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 60.0, left: 8),
+                child: Text(_connectivityStatus.toString()),
               ),
             ),
             SafeArea(
