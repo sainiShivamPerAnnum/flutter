@@ -23,7 +23,6 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
   @override
   void initState() {
     _controller = ScrollController();
-    _weekPrizeWinnersList = [];
     super.initState();
   }
 
@@ -63,6 +62,8 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
         if (vObj != null && vObj.isWinnerListAvailable) {
           baseProvider.tambolaWinnersDetail = vObj;
           _weekPrizeWinnersList = vObj.winnerList;
+          _weekPrizeWinnersList.sort((a, b) => (a.prize).compareTo(b.prize));
+          _weekPrizeWinnersList = _weekPrizeWinnersList.reversed.toList();
         }
         baseProvider.isWeekWinnersFetched = true;
         if (isLoading) {
@@ -70,9 +71,12 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
           setState(() {});
         }
       });
+    } else {
+      _weekPrizeWinnersList = baseProvider.tambolaWinnersDetail.winnerList;
+      _weekPrizeWinnersList.sort((a, b) => (a.prize).compareTo(b.prize));
+      _weekPrizeWinnersList = _weekPrizeWinnersList.reversed.toList();
     }
-    _weekPrizeWinnersList.sort((a, b) => (a.prize).compareTo(b.prize));
-    _weekPrizeWinnersList = _weekPrizeWinnersList.reversed.toList();
+
     return Expanded(
       child: Container(
         margin: EdgeInsets.symmetric(
@@ -168,7 +172,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                                     backgroundColor: Colors.transparent,
                                     child: Text(
                                       '#${i + 1}',
-                                      style: TextStyle(
+                                      style: GoogleFonts.montserrat(
                                         fontWeight: FontWeight.w700,
                                         fontSize: SizeConfig.mediumTextSize,
                                         color: Colors.white,
@@ -182,14 +186,14 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
                                   // ),
                                   title: Text(
                                     "${_weekPrizeWinnersList[i].name[0].toUpperCase()}${_weekPrizeWinnersList[i].name.substring(1).toLowerCase()}",
-                                    style: TextStyle(
+                                    style: GoogleFonts.montserrat(
                                       color: Colors.white,
                                       fontSize: SizeConfig.mediumTextSize,
                                     ),
                                   ),
                                   trailing: Text(
                                     "₹ ${_weekPrizeWinnersList[i].prize.toString()}",
-                                    style: TextStyle(
+                                    style: GoogleFonts.montserrat(
                                       color: Colors.white,
                                       fontSize: SizeConfig.largeTextSize,
                                       fontWeight: FontWeight.w500,

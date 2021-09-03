@@ -70,7 +70,7 @@ class AugmontInvoiceService {
   }
 
   Future<Invoice> _generateInvoiceContent(Map<String, dynamic> data) async {
-    final bgImage = await _getImageFileFromAssets("invoice_bg.jpg");
+    final bgImage = await _getImageFileFromAssets("invoice_bg.png");
     final brokerLogo = await _getImageFileFromAssets("fello_logo.png");
     final sellerLogo = await _getImageFileFromAssets("aug-logo.png");
     final invoice = Invoice(

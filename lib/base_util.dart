@@ -21,7 +21,6 @@ import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';

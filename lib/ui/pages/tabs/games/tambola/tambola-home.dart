@@ -338,7 +338,6 @@ class _TambolaHomeState extends State<TambolaHome> {
                   baseProvider.weeklyDrawFetched,
                   baseProvider.userWeeklyBoards,
                   _activeTambolaCardCount),
-              GoldenTicketChip(),
               PrizeSection(),
               FaqSection()
             ],
@@ -1174,91 +1173,6 @@ class _GameAppBarState extends State<GameAppBar> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class GoldenTicketChip extends StatelessWidget {
-  const GoldenTicketChip({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        InkWell(
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (ctx) => Dialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Container(
-                  padding: EdgeInsets.all(SizeConfig.globalMargin),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(height: 20),
-                      Text(
-                        "Claim Golden Ticket",
-                        style: TextStyle(fontSize: SizeConfig.largeTextSize),
-                      ),
-                      SizedBox(height: 20),
-                      Image.network(
-                        "https://img.freepik.com/free-vector/vintage-golden-cinema-tickets-movie-pass-template_1017-23457.jpg?size=626&ext=jpg&uid=P35674521",
-                        height: SizeConfig.screenWidth * 0.6,
-                        width: SizeConfig.screenWidth * 0.6,
-                      ),
-                      SizedBox(height: 10),
-                      TextField(
-                        decoration: InputDecoration(
-                            hintText: "Enter the coupon code here"),
-                      ),
-                      SizedBox(height: 6),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: Text('Claim'),
-                      ),
-                      SizedBox(height: 20),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: Shimmer(
-              child: Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: Colors.yellow[100],
-                  image: DecorationImage(
-                      image: NetworkImage(
-                          "https://img.freepik.com/free-vector/gold-foil-background-golden-metal-holographic_186921-52.jpg?size=626&ext=jpg&uid=P35674521"),
-                      fit: BoxFit.cover),
-                ),
-                alignment: Alignment.center,
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    "Claim Golden Ticket Here",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: SizeConfig.mediumTextSize,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 2,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
