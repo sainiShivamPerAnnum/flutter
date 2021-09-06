@@ -11,6 +11,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_daily_draw_timer.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
+import 'package:felloapp/ui/widgets/network_sensitivity.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -117,10 +118,6 @@ class _HomePageState extends State<HomePage> {
                   fit: BoxFit.cover,
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 60.0, left: 8),
-                child: Text(_connectivityStatus.toString()),
-              ),
             ),
             SafeArea(
               child: ClipRRect(
@@ -160,6 +157,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Widget> _buildHomeFeed(List<FeedCard> cards) {
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context);
+
     if (cards.length == 0) {
       return [
         Align(
@@ -182,6 +182,7 @@ class _HomePageState extends State<HomePage> {
       ];
     }
     List<Widget> _widget = [
+      if (connectivityStatus == ConnectivityStatus.Offline) NetworkBar(),
       Container(
         height: SizeConfig.screenHeight * 0.02,
       ),
