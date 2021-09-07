@@ -112,20 +112,20 @@ class DBModel extends ChangeNotifier {
   }
 
   Future<List<AlertModel>> getUserNotifications(String userId) async {
-    List<AlertModel> alerts;
+    List<AlertModel> alerts = [];
     logger.d("user id - $userId");
     try {
       QuerySnapshot querySnapshot = await _api.getNotifications(userId);
-      querySnapshot.docs.map((doc) {
-        alerts.add(
-          AlertModel.fromJson(
-            doc.data(),
-          ),
-        );
-      });
+
+      for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        AlertModel alert = AlertModel.fromMap(documentSnapshot.data());
+        logger.d(alert.subtitile);
+        alerts.add(alert);
+      }
     } catch (e) {
-      logger.d(e);
+      logger.e(e);
     }
+
     return alerts;
   }
 

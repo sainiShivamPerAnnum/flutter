@@ -23,33 +23,40 @@ class _NotficationsPageState extends State<NotficationsPage> {
         future: dbProvider.getUserNotifications(baseProvider.firebaseUser.uid),
         builder: (context, AsyncSnapshot<List<AlertModel>> snapshot) {
           List<AlertModel> alerts = snapshot.data;
+
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
               print(snapshot.error);
               return Container();
             }
 
-            return ListView.builder(
-              itemBuilder: (context, index) => Column(
-                children: [
-                  ListTile(
-                    title: Text(
-                      alerts[index].title ?? "Title",
-                      style: TextStyle(
-                        color: UiConstants.textColor,
-                        fontSize: SizeConfig.screenHeight * 0.02,
-                      ),
+            return alerts.isEmpty
+                ? Center(
+                    child: Text("No notifications"),
+                  )
+                : ListView.builder(
+                    itemBuilder: (context, index) => Column(
+                      children: [
+                        ListTile(
+                          title: Text(
+                            alerts[index].title ?? "Title",
+                            style: TextStyle(
+                              color: UiConstants.textColor,
+                              fontSize: SizeConfig.screenHeight * 0.02,
+                            ),
+                          ),
+                          subtitle: Text(alerts[index].subtitile ?? "Subtitle"),
+                          trailing: Text('4:00 PM'),
+                        ),
+                        Divider(),
+                      ],
                     ),
-                    subtitle: Text(alerts[index].subtitile ?? "Subtitle"),
-                    trailing: Text('4:00 PM'),
-                  ),
-                  Divider(),
-                ],
-              ),
-              itemCount: alerts.length ?? 1,
-            );
+                    itemCount: alerts?.length ?? 0,
+                  );
           } else {
-            return CircularProgressIndicator();
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }
         },
       ),

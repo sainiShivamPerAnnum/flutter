@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class AlertModel {
   String actionUri;
-  DateTime createdTime;
+  Timestamp createdTime;
   String subtitile;
   String title;
 
@@ -8,7 +10,7 @@ class AlertModel {
 
   AlertModel.fromJson(Map<String, dynamic> json) {
     actionUri = json['actionUri'];
-    createdTime = json['created_time'].toDate();
+    createdTime = json['created_time'];
     subtitile = json['subtitile'];
     title = json['title'];
   }
@@ -34,8 +36,8 @@ class AlertModel {
   factory AlertModel.fromMap(Map<String, dynamic> map) {
     return AlertModel(
       actionUri: map['actionUri'],
-      createdTime: DateTime.fromMillisecondsSinceEpoch(map['createdTime']),
-      subtitile: map['subtitile'],
+      createdTime: map['created_time'],
+      subtitile: map['subtitle'],
       title: map['title'],
     );
   }

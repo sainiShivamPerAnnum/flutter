@@ -33,16 +33,15 @@ class Api {
     return ref.doc(Constants.DOC_USER_FCM_TOKEN).set(data);
   }
 
-  getNotifications(String userId) async {
-    QuerySnapshot snapshot;
+  Future<QuerySnapshot> getNotifications(String userId) async {
+    Future<QuerySnapshot> snapshot;
     ref = _db
         .collection(Constants.COLN_USERS)
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_ALERTS);
 
     try {
-      snapshot = await ref.orderBy('created_time').limit(10).get();
-      logger.d(snapshot);
+      snapshot = ref.get();
     } catch (e) {
       logger.e(e);
     }
