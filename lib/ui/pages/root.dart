@@ -200,10 +200,16 @@ class _RootState extends State<Root> {
               right: SizeConfig.blockSizeHorizontal * 2,
               child: SafeArea(
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     InkWell(
-                      child: Icon(Icons.notifications,
-                          size: kToolbarHeight * 0.47, color: Colors.white),
+                      child: Icon(
+                        Icons.notifications,
+                        size: kToolbarHeight * 0.44,
+                        color: (appState.getCurrentTabIndex == 0)
+                            ? Colors.white
+                            : Color(0xff4C4C4C),
+                      ),
                       //icon: Icon(Icons.contact_support_outlined),
                       // iconSize: kToolbarHeight * 0.5,
                       onTap: () {
