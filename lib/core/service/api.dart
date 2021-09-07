@@ -9,7 +9,7 @@ import 'package:felloapp/util/logger.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
-
+import 'package:logger/logger.dart';
 
 class Api {
   Log log = new Log("Api");
@@ -17,6 +17,8 @@ class Api {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final rdb.FirebaseDatabase _realtimeDatabase = rdb.FirebaseDatabase.instance;
+
+  final logger = locator<Logger>();
 
   String path;
   CollectionReference ref;
@@ -31,13 +33,21 @@ class Api {
     return ref.doc(Constants.DOC_USER_FCM_TOKEN).set(data);
   }
 
-  Future<QuerySnapshot> getNotifications(String userId) async {
+  getNotifications(String userId) async {
+    QuerySnapshot snapshot;
     ref = _db
         .collection(Constants.COLN_USERS)
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_ALERTS);
 
-    return ref.orderBy('created_time').limit(10).get();
+    try {
+      snapshot = await ref.orderBy('created_time').limit(10).get();
+      logger.d(snapshot);
+    } catch (e) {
+      logger.e(e);
+    }
+
+    return snapshot;
   }
 
   Future<DocumentSnapshot> getUserById(String id) {
