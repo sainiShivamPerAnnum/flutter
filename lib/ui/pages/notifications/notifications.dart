@@ -39,13 +39,13 @@ class _NotficationsPageState extends State<NotficationsPage> {
                       children: [
                         ListTile(
                           title: Text(
-                            alerts[index].title ?? "Title",
+                            alerts[index].title.toUpperCase() ?? "Title",
                             style: TextStyle(
                               color: UiConstants.textColor,
                               fontSize: SizeConfig.screenHeight * 0.02,
                             ),
                           ),
-                          subtitle: Text(alerts[index].subtitile ?? "Subtitle"),
+                          subtitle: Text(alerts[index].subtitle ?? "Subtitle"),
                           trailing: Text('4:00 PM'),
                         ),
                         Divider(),

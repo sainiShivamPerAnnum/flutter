@@ -33,19 +33,28 @@ class Api {
     return ref.doc(Constants.DOC_USER_FCM_TOKEN).set(data);
   }
 
-  Future<QuerySnapshot> getNotifications(String userId) async {
+  Future<QuerySnapshot> getUserNotifications(String userId) async {
     Future<QuerySnapshot> snapshot;
     ref = _db
         .collection(Constants.COLN_USERS)
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_ALERTS);
-
     try {
       snapshot = ref.get();
     } catch (e) {
       logger.e(e);
     }
+    return snapshot;
+  }
 
+  Future<QuerySnapshot> getAnnoucements() async {
+    Future<QuerySnapshot> snapshot;
+    ref = _db.collection(Constants.COLN_ANNOUNCEMENTS);
+    try {
+      snapshot = ref.get();
+    } catch (e) {
+      logger.e(e);
+    }
     return snapshot;
   }
 

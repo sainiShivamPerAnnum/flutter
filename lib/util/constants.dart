@@ -6,6 +6,7 @@ class Constants {
 
   //Collections
   static final String COLN_USERS = "users";
+  static final String COLN_ANNOUNCEMENTS = "announcements";
   static final String COLN_TICKETREQUEST = "ticketrequests";
   static final String COLN_DAILYPICKS = "dailypicks";
   static final String COLN_WINNERS = "winners";
