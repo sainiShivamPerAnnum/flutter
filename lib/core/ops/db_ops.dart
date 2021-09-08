@@ -142,6 +142,9 @@ class DBModel extends ChangeNotifier {
     notifications.addAll(alerts);
     notifications.addAll(announcements);
 
+    notifications
+        .sort((a, b) => a.createdTime.seconds.compareTo(b.createdTime.seconds));
+
     // for (int i = 0; i < (alerts.length + announcements.length); i++) {
 
     // }

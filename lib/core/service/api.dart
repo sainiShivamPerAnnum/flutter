@@ -40,7 +40,7 @@ class Api {
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_ALERTS);
     try {
-      snapshot = ref.get();
+      snapshot = ref.orderBy('created_time').limit(20).get();
     } catch (e) {
       logger.e(e);
     }
@@ -51,7 +51,7 @@ class Api {
     Future<QuerySnapshot> snapshot;
     ref = _db.collection(Constants.COLN_ANNOUNCEMENTS);
     try {
-      snapshot = ref.get();
+      snapshot = ref.orderBy('created_time').limit(20).get();
     } catch (e) {
       logger.e(e);
     }
