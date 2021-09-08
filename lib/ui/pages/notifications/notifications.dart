@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/time_ago.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -46,7 +47,13 @@ class _NotficationsPageState extends State<NotficationsPage> {
                             ),
                           ),
                           subtitle: Text(alerts[index].subtitle ?? "Subtitle"),
-                          trailing: Text('4:00 PM'),
+                          trailing: Text(
+                            TimeAgo.timeAgoSinceDate(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                      alerts[index].createdTime.seconds * 1000)
+                                  .toString(),
+                            ),
+                          ),
                         ),
                         Divider(),
                       ],
