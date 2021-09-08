@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
@@ -19,6 +21,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
   BaseUtil baseProvider;
   ScrollController _controller;
   List<WeekWinner> _weekPrizeWinnersList;
+  List<String> week;
 
   @override
   void initState() {
@@ -32,10 +35,10 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
     super.dispose();
   }
 
-  List<String> getWeek() {
+  getWeek() {
     int weekNumber = int.tryParse(BaseRemoteConfig.remoteConfig
         .getString(BaseRemoteConfig.WEEK_NUMBER)); //12
-    print(weekNumber);
+    log("weekNumber: $weekNumber");
     var date = ((weekNumber - 2) * 7);
     var weekEnd = DateTime.utc(DateTime.now().year, 1, date).toLocal().weekday;
     var startDate = date - (weekEnd - 1);
@@ -49,21 +52,22 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
     String startMonth = BaseUtil.getMonthName(monthNum: startMon);
     String endMonth = BaseUtil.getMonthName(monthNum: endMon);
 
-    return ["$startDay $startMonth", "$endDay $endMonth"];
+    week = ["$startDay $startMonth", "$endDay $endMonth"];
   }
 
-  @override
-  Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    dbProvider = Provider.of<DBModel>(context, listen: false);
-    if (!baseProvider.isWeekWinnersFetched) {
+  getWeekWinnerList() {
+    if (!baseProvider.isWeekWinnersFetched ||
+        baseProvider.tambolaWinnersDetail == null) {
       isLoading = true;
       dbProvider.getWeeklyWinners().then((TambolaWinnersDetail vObj) {
+        log("winners details fetched");
         if (vObj != null && vObj.isWinnerListAvailable) {
           baseProvider.tambolaWinnersDetail = vObj;
           _weekPrizeWinnersList = vObj.winnerList;
           _weekPrizeWinnersList.sort((a, b) => (a.prize).compareTo(b.prize));
           _weekPrizeWinnersList = _weekPrizeWinnersList.reversed.toList();
+        } else {
+          _weekPrizeWinnersList = [];
         }
         baseProvider.isWeekWinnersFetched = true;
         if (isLoading) {
@@ -76,7 +80,14 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
       _weekPrizeWinnersList.sort((a, b) => (a.prize).compareTo(b.prize));
       _weekPrizeWinnersList = _weekPrizeWinnersList.reversed.toList();
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    if (week == null) getWeek();
+    if (_weekPrizeWinnersList == null) getWeekWinnerList();
     return Expanded(
       child: Container(
         margin: EdgeInsets.symmetric(
@@ -119,7 +130,7 @@ class _WeekWinnerBoardState extends State<WeekWinnerBoard> {
             ),
             SizedBox(height: 10),
             Text(
-              "Tambola Winners for week: ${getWeek()[0]} to ${getWeek()[1]}",
+              "Tambola Winners for week: ${week[0]} to ${week[1]}",
               //TODO CHANGE BASED ON WEEK
               style: TextStyle(
                   color: Colors.white, fontSize: SizeConfig.smallTextSize),

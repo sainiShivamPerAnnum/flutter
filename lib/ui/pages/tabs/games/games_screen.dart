@@ -250,8 +250,8 @@ class IdeaSection extends StatelessWidget {
         children: [
           GameCard(
             gradient: const [
-              Color(0xff4776E6),
-              Color(0xff8E54E9),
+              Color(0xffACB6E5),
+              Color(0xff74EBD5),
             ],
             title: "Want more tickets?",
             action: [
@@ -270,26 +270,26 @@ class IdeaSection extends StatelessWidget {
               ),
             ],
           ),
+          // GameCard(
+          //   gradient: const [
+          //  Color(0xff4776E6),
+          //     Color(0xff8E54E9),
+          //   ],
+          //   title: "Have a Golden Ticket?",
+          //   action: [
+          //     GameOfferCardButton(
+          //       onPressed: () {
+          //         AppState.delegate
+          //             .parseRoute(Uri.parse("games/d-goldenTicket"));
+          //       },
+          //       title: "Redeem",
+          //     ),
+          //   ],
+          // ),
           GameCard(
             gradient: const [
               Color(0xffFFCF41),
               Color(0xffDE8806),
-            ],
-            title: "Have a Golden Ticket?",
-            action: [
-              GameOfferCardButton(
-                onPressed: () {
-                  AppState.delegate
-                      .parseRoute(Uri.parse("games/d-goldenTicket"));
-                },
-                title: "Redeem",
-              ),
-            ],
-          ),
-          GameCard(
-            gradient: const [
-              Color(0xffACB6E5),
-              Color(0xff74EBD5),
             ],
             title: "Share your thoughts",
             action: [
