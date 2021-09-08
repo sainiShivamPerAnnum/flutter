@@ -18,6 +18,7 @@
         android:label="Fello"
         android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_circle">
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="in.fello.felloapp"

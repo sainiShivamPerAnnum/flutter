@@ -30,7 +30,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     } catch (err) {
       if (baseProvider.myUser.uid != null) {
         Map<String, dynamic> errorDetails = {
-          'Error message': 'Fetching gold rates for api for line chart failed',
+          'error_msg': 'Fetching gold rates for api for line chart failed',
         };
         dbProvider.logFailure(baseProvider.myUser.uid,
             FailType.GoldRateFetchFailed, errorDetails);
