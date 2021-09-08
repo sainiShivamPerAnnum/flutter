@@ -9,6 +9,7 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
+import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/dialogs/ticket_details_dialog.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'package:felloapp/ui/elements/Parallax-card/game_card_list.dart';
@@ -136,11 +137,8 @@ class _GamePageState extends State<GamePage> {
                     borderRadius: SizeConfig.homeViewBorder,
                     child: Container(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Spacer(
-                            flex: 2,
-                          ),
                           InkWell(
                             onTap: () async {
                               Haptic.vibrate();
@@ -152,28 +150,20 @@ class _GamePageState extends State<GamePage> {
                                         baseProvider.userTicketWallet),
                               );
                             },
-                            child: (baseProvider.userTicketWallet != null)?TicketCount(baseProvider.userTicketWallet
-                                .getActiveTickets()):Container(),
+                            child: (baseProvider.userTicketWallet != null)
+                                ? TicketCount(baseProvider.userTicketWallet
+                                    .getActiveTickets())
+                                : Container(),
                           ),
-                          const Spacer(
-                            flex: 1,
-                          ),
+
                           GameCardList(
                             games: _gameList,
                             onGameChange: _handleGameChange,
                           ),
-                          const Spacer(
-                            flex: 1,
-                          ),
 
                           //TODO HACKY CODE - REMOVING IDEA SECTION TO MANAGE TABLET SIZE DIMENSIONS
-                          (SizeConfig.screenWidth >= 800)
-                              ? Container()
-                              : const IdeaSection(),
+                          if (SizeConfig.screenWidth < 800) const IdeaSection(),
                           /////////////////////////////////////////////////////////////
-                          const Spacer(
-                            flex: 1,
-                          )
                         ],
                       ),
                     ),
@@ -266,23 +256,40 @@ class IdeaSection extends StatelessWidget {
             title: "Want more tickets?",
             action: [
               GameOfferCardButton(
-                onPressed: () =>
-                    delegate.parseRoute(Uri.parse("finance/augDetails")),
+                onPressed: () => AppState.delegate
+                    .parseRoute(Uri.parse("finance/augDetails")),
                 title: "Invest",
               ),
               const SizedBox(
                 width: 10,
               ),
               GameOfferCardButton(
-                onPressed: () => delegate.parseRoute(Uri.parse("profile")),
+                onPressed: () =>
+                    AppState.delegate.parseRoute(Uri.parse("profile")),
                 title: "Share",
               ),
             ],
           ),
+          // GameCard(
+          //   gradient: const [
+          //  Color(0xff4776E6),
+          //     Color(0xff8E54E9),
+          //   ],
+          //   title: "Have a Golden Ticket?",
+          //   action: [
+          //     GameOfferCardButton(
+          //       onPressed: () {
+          //         AppState.delegate
+          //             .parseRoute(Uri.parse("games/d-goldenTicket"));
+          //       },
+          //       title: "Redeem",
+          //     ),
+          //   ],
+          // ),
           GameCard(
             gradient: const [
-              Color(0xffD4AC5B),
-              Color(0xffDECBA4),
+              Color(0xffFFCF41),
+              Color(0xffDE8806),
             ],
             title: "Share your thoughts",
             action: [
@@ -293,7 +300,7 @@ class IdeaSection extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) => WillPopScope(
                       onWillPop: () {
-                        backButtonDispatcher.didPopRoute();
+                        AppState.backButtonDispatcher.didPopRoute();
                         return Future.value(true);
                       },
                       child: FeedbackDialog(
@@ -312,7 +319,7 @@ class IdeaSection extends StatelessWidget {
                                         : baseProvider.firebaseUser.uid,
                                     fdbk)
                                 .then((flag) {
-                              backButtonDispatcher.didPopRoute();
+                              AppState.backButtonDispatcher.didPopRoute();
                               if (flag) {
                                 baseProvider.showPositiveAlert('Thank You',
                                     'We appreciate your feedback!', context);
@@ -327,7 +334,7 @@ class IdeaSection extends StatelessWidget {
                 title: "Feedback",
               ),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -554,25 +561,24 @@ class GameOfferCardButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onPressed,
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          decoration: BoxDecoration(
-            border: Border.all(
-              width: 2,
-              color: Colors.white,
-            ),
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(100),
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.blockSizeHorizontal * 6, vertical: 8),
+        decoration: BoxDecoration(
+          border: Border.all(
+            width: 2,
+            color: Colors.white,
           ),
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Colors.white, fontSize: SizeConfig.mediumTextSize),
-          ),
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white, fontSize: SizeConfig.mediumTextSize),
         ),
       ),
     );

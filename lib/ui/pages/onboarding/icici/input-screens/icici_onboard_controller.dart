@@ -14,6 +14,7 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-screens/income_details.
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/otp_verification.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/pan_details.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-screens/personal_details.dart';
+import 'package:intl/intl.dart';
 import '../../../tabs/finance/icici/mf_details_page.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -671,7 +672,7 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     String appid = baseProvider.iciciDetail.appId;
     String panNumber = baseProvider.iciciDetail.panNumber;
     String dobStr = (dob != null)
-        ? '${dob.day}-${getMonth(dob.month)}-${dob.year}'
+        ? DateFormat('dd-MMM-yyyy').format(DateTime.now())
         : null; //29-Aug-1996
     if (appid != null &&
         panNumber != null &&
@@ -1373,36 +1374,5 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
     );
 
     return adultDate.isBefore(today);
-  }
-
-  String getMonth(int mt) {
-    switch (mt) {
-      case 1:
-        return 'Jan';
-      case 2:
-        return 'Feb';
-      case 3:
-        return 'Mar';
-      case 4:
-        return 'Apr';
-      case 5:
-        return 'May';
-      case 6:
-        return 'June';
-      case 7:
-        return 'July';
-      case 8:
-        return 'Aug';
-      case 9:
-        return 'Sep';
-      case 10:
-        return 'Oct';
-      case 11:
-        return 'Nov';
-      case 12:
-        return 'Dec';
-      default:
-        return 'Jan';
-    }
   }
 }

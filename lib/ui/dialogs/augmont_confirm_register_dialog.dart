@@ -60,7 +60,7 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     return WillPopScope(
         onWillPop: () async {
-          backButtonDispatcher.didPopRoute();
+          AppState.backButtonDispatcher.didPopRoute();
           baseProvider.isAugmontRegnInProgress = false;
           print(AppState.screenStack);
           return false;
@@ -165,7 +165,7 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                         children: [
                           TextButton(
                               onPressed: () {
-                                backButtonDispatcher.didPopRoute();
+                                AppState.backButtonDispatcher.didPopRoute();
                                 widget.onReject();
                               },
                               child: Text(
@@ -182,7 +182,7 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                           ),
                           TextButton(
                             onPressed: () {
-                              backButtonDispatcher.didPopRoute();
+                              AppState.backButtonDispatcher.didPopRoute();
                               widget.onAccept();
                             },
                             child: Text(

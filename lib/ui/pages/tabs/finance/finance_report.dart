@@ -125,7 +125,8 @@ class _YourFundsState extends State<YourFunds> {
                             icon: Icon(
                               Icons.arrow_back_rounded,
                             ),
-                            onPressed: () => backButtonDispatcher.didPopRoute(),
+                            onPressed: () =>
+                                AppState.backButtonDispatcher.didPopRoute(),
                           ),
                           Spacer(),
                           Image.asset(
@@ -421,7 +422,7 @@ class _YourFundsState extends State<YourFunds> {
       } else {
         baseProvider.isAugWithdrawRouteLogicInProgress = false;
         setState(() {});
-        delegate.appState.currentAction = PageAction(
+        AppState.delegate.appState.currentAction = PageAction(
           state: PageState.addWidget,
           page: AugWithdrawalPageConfig,
           widget: AugmontWithdrawScreen(

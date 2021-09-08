@@ -23,6 +23,7 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Root extends StatefulWidget {
@@ -127,7 +128,7 @@ class _RootState extends State<Root> {
         if (value) {
           //show tutorial
           lclDbProvider.setShowHomeTutorial = false;
-          delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
+          AppState.delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
           setState(() {});
         }
       });
@@ -212,7 +213,7 @@ class _RootState extends State<Root> {
 
                   onTap: () {
                     Haptic.vibrate();
-                    delegate.appState.currentAction = PageAction(
+                    AppState.delegate.appState.currentAction = PageAction(
                         state: PageState.addPage, page: SupportPageConfig);
                   },
                 ),

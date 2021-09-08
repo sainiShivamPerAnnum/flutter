@@ -23,6 +23,7 @@ class FcmListener extends ChangeNotifier {
   LocalDBModel _lModel = locator<LocalDBModel>();
   DBModel _dbModel = locator<DBModel>();
   FcmHandler _handler = locator<FcmHandler>();
+  AppState _appState = locator<AppState>();
   FirebaseMessaging _fcm;
   bool _tambolaDrawNotifications = true; //TODO
   bool isTambolaNotificationLoading = false;
@@ -144,7 +145,6 @@ class FcmListener extends ChangeNotifier {
         _baseUtil.userFundWallet.augGoldBalance > 300)
       addSubscription(FcmTopic.FREQUENTFLYER)
           .then((value) => log.debug("Added frequent flyer subscription"));
-
 
     if (_baseUtil.userTicketWallet != null &&
         _baseUtil.userTicketWallet.getActiveTickets() > 0 &&
