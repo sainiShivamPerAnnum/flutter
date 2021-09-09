@@ -1,4 +1,5 @@
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly-results-scenes/winnerbox.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
@@ -107,9 +108,9 @@ class _PrizePWinState extends State<PrizePWin> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  backButtonDispatcher.didPopRoute();
-                  backButtonDispatcher.didPopRoute();
-                  delegate.appState.setCurrentTabIndex = 2;
+                  AppState.backButtonDispatcher.didPopRoute();
+                  AppState.backButtonDispatcher.didPopRoute();
+                  AppState.delegate.appState.setCurrentTabIndex = 2;
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Color(0xff53C5AE),

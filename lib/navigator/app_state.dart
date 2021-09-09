@@ -1,4 +1,6 @@
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/router/back_dispatcher.dart';
+import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,7 +31,6 @@ class PageAction {
 class AppState extends ChangeNotifier {
   int _rootIndex = 0;
   int _gameTabIndex = 0;
-
   int _gameIndex = 0;
   static ScrollController homeCardListController = ScrollController();
   static String _fcmData;
@@ -39,8 +40,11 @@ class AppState extends ChangeNotifier {
   static bool unsavedPrefs = false;
   static bool isOnboardingInProgress = false;
   static List<ScreenItem> screenStack = [];
+  static FelloRouterDelegate delegate;
+  static FelloBackButtonDispatcher backButtonDispatcher;
 
   PageAction _currentAction = PageAction();
+  // BackButtonDispatcher backButtonDispatcher;
 
   scrollHome(int cardNo) {
     double scrollDepth = SizeConfig.screenHeight * 0.2 * cardNo;

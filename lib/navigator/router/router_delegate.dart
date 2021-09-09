@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/ui/dialogs/aboutus_dialog.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
+import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
@@ -434,7 +435,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   void dialogCheck(String dialogKey) {
-    Widget dialogWidget = null;
+    Widget dialogWidget;
     bool barrierDismissable = true;
     switch (dialogKey) {
       case 'guide':
@@ -452,6 +453,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           title: 'Where is my PAN Number used?',
         );
         break;
+      case "goldenTicket":
+        dialogWidget = GoldenTicketClaimDialog();
+        barrierDismissable = false;
+        break;
     }
     if (dialogWidget != null) {
       AppState.screenStack.add(ScreenItem.dialog);
@@ -461,7 +466,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           builder: (ctx) {
             return WillPopScope(
                 onWillPop: () {
-                  backButtonDispatcher.didPopRoute();
+                  AppState.backButtonDispatcher.didPopRoute();
                   print("Popped the dialog");
                   return Future.value(true);
                 },

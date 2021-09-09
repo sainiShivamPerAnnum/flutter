@@ -69,7 +69,7 @@ class NameInputScreenState extends State<NameInputScreen> {
         builder: (ctx) {
           return WillPopScope(
             onWillPop: () async {
-              backButtonDispatcher.didPopRoute();
+              AppState.backButtonDispatcher.didPopRoute();
               return true;
             },
             child: Wrap(

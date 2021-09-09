@@ -60,7 +60,7 @@ class _ShareCardState extends State<ShareCard> {
 
     return WillPopScope(
       onWillPop: () async {
-        backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher.didPopRoute();
         return Future.value(true);
       },
       child: Stack(
@@ -291,7 +291,7 @@ class _ShareCardState extends State<ShareCard> {
             FailType.FelloRewardCardShareFailed, errorDetails);
       }
 
-      backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher.didPopRoute();
       print(e.toString());
       baseProvider.showNegativeAlert(
           "Task Failed", "Unable to capture the card at the moment", context);
@@ -304,7 +304,7 @@ class _ShareCardState extends State<ShareCard> {
       setState(() {
         isCapturing = false;
       });
-      if(Platform.isAndroid) {
+      if (Platform.isAndroid) {
         final directory = (await getExternalStorageDirectory()).path;
         String dt = DateTime.now().toString();
         File imgg = new File('$directory/fello-reward-$dt.png');

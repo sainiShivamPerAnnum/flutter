@@ -7,6 +7,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base_util.dart';
@@ -153,7 +154,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                         fontWeight: FontWeight.bold,
                         fontSize: SizeConfig.smallTextSize,
                       ),
-                      getTitles: (value) => getvalue(value),
+                      //  getTitles: (value) => getvalue(value),
                     ),
                     leftTitles: SideTitles(margin: 0)),
                 gridData: FlGridData(
@@ -291,71 +292,25 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   getDate(LineBarSpot lbs) {
     DateTime time =
         graphPoints.firstWhere((element) => element.rate == lbs.y).timestamp;
-    String showText;
-    switch (time.month) {
-      case 1:
-        showText = "Jan";
-        break;
-      case 2:
-        showText = "Feb";
-        break;
-      case 3:
-        showText = "Mar";
-        break;
-      case 4:
-        showText = "Apr";
-        break;
-      case 5:
-        showText = "May";
-        break;
-      case 6:
-        showText = "Jun";
-        break;
-      case 7:
-        showText = "July";
-        break;
-      case 8:
-        showText = "Aug";
-        break;
-      case 9:
-        showText = "Sep";
-        break;
-      case 10:
-        showText = "Oct";
-        break;
-      case 11:
-        showText = "Nov";
-        break;
-      case 12:
-        showText = "Dec";
-        break;
-    }
-    return time.day.toString() + " " + showText + " " + time.year.toString();
+    return DateFormat('dd MMM, yyyy').format(time);
   }
 
-  getvalue(double value) {
-    switch (_selectedFrequency) {
-      case 0:
-        return value.toString();
-        break;
-      case 1:
-        return value.toString();
-        break;
-      case 2:
-        return value.toString();
-        break;
-      case 3:
-        if (value % 2 == 0)
-          return value.toString();
-        else
-          return '';
-        break;
-      case 4:
-        if (value % 3 == 0)
-          return value.toString();
-        else
-          return '';
-        break;
-    }
-  }
+  // getvalue(double value) {
+  //   switch (_selectedFrequency) {
+  //     case 3:
+  //       if (value % 2 == 0)
+  //         return value.toString();
+  //       else
+  //         return '';
+  //       break;
+  //     case 4:
+  //       if (value % 3 == 0)
+  //         return value.toString();
+  //       else
+  //         return '';
+  //       break;
+  //     default:
+  //       return value.toString();
+  //   }
+  // }
 }

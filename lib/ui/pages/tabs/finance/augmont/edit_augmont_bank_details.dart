@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/augmont_confirm_register_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
@@ -93,11 +94,11 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
               buttonText: "Yes",
               cancelBtnText: 'Cancel',
               confirmAction: () {
-                backButtonDispatcher.didPopRoute();
-                backButtonDispatcher.didPopRoute();
+                AppState.backButtonDispatcher.didPopRoute();
+                AppState.backButtonDispatcher.didPopRoute();
               },
               cancelAction: () {
-                backButtonDispatcher.didPopRoute();
+                AppState.backButtonDispatcher.didPopRoute();
               },
             ),
           ));

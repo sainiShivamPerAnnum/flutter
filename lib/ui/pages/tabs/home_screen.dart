@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
           baseProvider.isHomeCardsFetched = true;
           setState(() {});
         } else {
-          setState(() {});
+          if (mounted) setState(() {});
         }
       });
     }
@@ -228,7 +228,7 @@ class _HomePageState extends State<HomePage> {
             isHighlighted: false,
             onPressed: () async {
               Haptic.vibrate();
-              delegate.parseRoute(Uri.parse(card.actionUri));
+              AppState.delegate.parseRoute(Uri.parse(card.actionUri));
             },
           ),
         );
@@ -268,8 +268,8 @@ class _HomePageState extends State<HomePage> {
             dataMap: card.dataMap,
             onPressed: () async {
               Haptic.vibrate();
-              delegate.appState.setCurrentTabIndex = 1;
-              delegate.appState.setCurrentGameTabIndex = 1;
+              AppState.delegate.appState.setCurrentTabIndex = 1;
+              AppState.delegate.appState.setCurrentGameTabIndex = 1;
             },
           ),
         );
@@ -289,7 +289,7 @@ class _HomePageState extends State<HomePage> {
             isHighlighted: false,
             onPressed: () {
               Haptic.vibrate();
-              delegate.parseRoute(Uri.parse(card.actionUri));
+              AppState.delegate.parseRoute(Uri.parse(card.actionUri));
             },
           ),
         );
@@ -299,7 +299,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildProfileRow() {
     return InkWell(
       onTap: () {
-        delegate.appState.currentAction = PageAction(
+        AppState.delegate.appState.currentAction = PageAction(
             state: PageState.addPage, page: UserProfileDetailsConfig);
       },
       child: Container(

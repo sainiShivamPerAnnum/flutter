@@ -5,6 +5,7 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/dialogs/success-dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
@@ -63,7 +64,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         validityTimer = Timer.periodic(Duration(seconds: 1), (timer) {
           if (validDuration == 0) {
             timer.cancel();
-            backButtonDispatcher.didPopRoute();
+            AppState.backButtonDispatcher.didPopRoute();
           }
           setState(() {
             validDuration--;
@@ -135,7 +136,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                         // do nothing
                       } else {
                         validityTimer.cancel();
-                        backButtonDispatcher.didPopRoute();
+                        AppState.backButtonDispatcher.didPopRoute();
                       }
                     },
                   )
@@ -515,7 +516,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         builder: (BuildContext context) => SuccessDialog(),
       );
     } else {
-      backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher.didPopRoute();
       baseProvider.showNegativeAlert(
           'Failed',
           'Your gold deposit failed. Please try again or contact us if you are facing issues',
