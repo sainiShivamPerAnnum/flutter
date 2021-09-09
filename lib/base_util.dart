@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
@@ -33,6 +34,7 @@ import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'core/base_remote_config.dart';
 import 'core/model/TambolaBoard.dart';
@@ -237,9 +239,7 @@ class BaseUtil extends ChangeNotifier {
         _dailyPickCount = int.parse(_dpc);
       } catch (e) {
         log.error('key parsing failed: ' + e.toString());
-        Map<String, String> errorDetails = {
-          'error_msg': e.toString()
-        };
+        Map<String, String> errorDetails = {'error_msg': e.toString()};
         _dbModel.logFailure(
             _myUser.uid, FailType.DailyPickParseFailed, errorDetails);
         _dailyPickCount = 3;
@@ -981,4 +981,18 @@ class BaseUtil extends ChangeNotifier {
   }
 
   int get dailyPicksCount => _dailyPickCount;
+}
+
+Future<bool> isOfflineSnackBar(BuildContext context) async {
+  ConnectivityStatus connectivityStatus =
+      Provider.of<ConnectivityStatus>(context, listen: false);
+  BaseUtil baseProvider = Provider.of<BaseUtil>(context, listen: false);
+
+  if (connectivityStatus == ConnectivityStatus.Offline) {
+    await baseProvider.showNegativeAlert(
+        'Offline', 'Please connect to internet', context,
+        seconds: 3);
+    return true;
+  } else
+    return false;
 }
