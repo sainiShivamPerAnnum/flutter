@@ -216,7 +216,7 @@ class _RootState extends State<Root> {
                       // iconSize: kToolbarHeight * 0.5,
                       onTap: () {
                         Haptic.vibrate();
-                        delegate.appState.currentAction = PageAction(
+                        AppState.delegate.appState.currentAction = PageAction(
                             state: PageState.addPage,
                             page: NotificationsConfig);
                       },
@@ -236,7 +236,7 @@ class _RootState extends State<Root> {
                       // iconSize: kToolbarHeight * 0.5,
                       onTap: () {
                         Haptic.vibrate();
-                        delegate.appState.currentAction = PageAction(
+                        AppState.delegate.appState.currentAction = PageAction(
                             state: PageState.addPage, page: SupportPageConfig);
                       },
                     ),
