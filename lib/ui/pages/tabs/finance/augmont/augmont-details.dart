@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
@@ -202,6 +203,8 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                   size: 18.0,
                 ),
           onPressed: () async {
+            if (await baseProvider.isOfflineSnackBar(context)) return;
+
             Haptic.vibrate();
             baseProvider.isAugDepositRouteLogicInProgress = true;
             setState(() {});
@@ -264,6 +267,8 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                   size: 18.0,
                 ),
           onPressed: () async {
+            if (await baseProvider.isOfflineSnackBar(context)) return;
+
             if (!baseProvider.isAugWithdrawRouteLogicInProgress) {
               Haptic.vibrate();
               _onWithdrawalClicked();

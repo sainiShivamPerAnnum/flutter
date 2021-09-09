@@ -2,12 +2,14 @@ import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/plots/funds_chart_view.dart';
+import 'package:felloapp/ui/widgets/network_bar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -140,6 +142,8 @@ class _FinancePageState extends State<FinancePage>
     dbProvider = Provider.of<DBModel>(context, listen: false);
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context);
     if (!baseProvider.isAugmontRealTimeBalanceFetched) {
       baseProvider.refreshFunds();
       //_updateAugmontBalance();
@@ -165,6 +169,8 @@ class _FinancePageState extends State<FinancePage>
         child: SafeArea(
           child: Stack(
             children: [
+              if (connectivityStatus == ConnectivityStatus.Offline)
+                NetworkBar(textColor: Colors.black),
               ClipRRect(
                 borderRadius: SizeConfig.homeViewBorder,
                 child: Padding(

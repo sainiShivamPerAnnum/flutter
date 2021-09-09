@@ -8,6 +8,7 @@ import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -31,6 +32,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => FcmHandler());
   locator.registerLazySingleton(() => PaymentService());
   locator.registerLazySingleton(() => AppState());
+  locator.registerLazySingleton(() => ConnectivityService());
   locator.registerLazySingleton(() => Logger());
   //....
 }

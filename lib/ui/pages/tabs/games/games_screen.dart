@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
@@ -15,6 +16,7 @@ import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'package:felloapp/ui/elements/Parallax-card/game_card_list.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
 import 'package:felloapp/ui/elements/week-winners_board.dart';
+import 'package:felloapp/ui/widgets/network_bar.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -98,6 +100,8 @@ class _GamePageState extends State<GamePage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context);
     return RefreshIndicator(
       onRefresh: () async {
         _onTicketsRefresh();
@@ -139,6 +143,11 @@ class _GamePageState extends State<GamePage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
+                          if (connectivityStatus == ConnectivityStatus.Offline)
+                            NetworkBar(),
+                          Spacer(
+                            flex: 2,
+                          ),
                           InkWell(
                             onTap: () async {
                               Haptic.vibrate();
@@ -154,6 +163,9 @@ class _GamePageState extends State<GamePage> {
                                 ? TicketCount(baseProvider.userTicketWallet
                                     .getActiveTickets())
                                 : Container(),
+                          ),
+                          const Spacer(
+                            flex: 1,
                           ),
 
                           GameCardList(

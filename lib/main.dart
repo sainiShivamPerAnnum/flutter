@@ -1,4 +1,6 @@
 //Flutter imports
+import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:flutter/material.dart';
 
 //Pub imports
@@ -29,10 +31,9 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
 
 
-
-
 void main() async {
   setupLocator();
+
   final logger = locator<Logger>();
   WidgetsFlutterBinding.ensureInitialized();
   try {
@@ -78,6 +79,11 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => locator<FcmListener>()),
         ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
         ChangeNotifierProvider(create: (_) => locator<PaymentService>()),
+        StreamProvider<ConnectivityStatus>(
+          create: (_) =>
+              ConnectivityService().connectionStatusController.stream,
+          initialData: ConnectivityStatus.Offline,
+        ),
         ChangeNotifierProvider(create: (_) => appState),
       ],
       child: MaterialApp.router(

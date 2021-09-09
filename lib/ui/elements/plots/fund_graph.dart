@@ -1,5 +1,7 @@
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/widgets/network_bar.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -60,6 +62,8 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   @override
   Widget build(BuildContext context) {
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context, listen: false);
     if (_dataPointsState == "loading") {
       _getDataPoints().then((value) {
         if (value != null) {
@@ -85,10 +89,14 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         width: double.infinity,
         child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: SpinKitThreeBounce(
-              color: augmontGoldPalette.primaryColor,
-              size: 30.0,
-            )),
+            child: connectivityStatus == ConnectivityStatus.Offline
+                ? NetworkBar(
+                    textColor: Colors.black,
+                  )
+                : SpinKitThreeBounce(
+                    color: augmontGoldPalette.primaryColor,
+                    size: 30.0,
+                  )),
       );
     }
     if (_dataPointsState == "done") {

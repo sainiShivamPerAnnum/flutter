@@ -10,10 +10,19 @@ PODS:
     - Firebase/Firestore (= 8.5.0)
     - firebase_core
     - Flutter
+  - connectivity (0.0.1):
+    - Flutter
+    - Reachability
   - device_info (0.0.1):
     - Flutter
   - device_unlock (0.0.1):
     - Flutter
+  - FBSDKCoreKit (9.1.0):
+    - FBSDKCoreKit/Basics (= 9.1.0)
+    - FBSDKCoreKit/Core (= 9.1.0)
+  - FBSDKCoreKit/Basics (9.1.0)
+  - FBSDKCoreKit/Core (9.1.0):
+    - FBSDKCoreKit/Basics
   - Firebase/Analytics (8.5.0):
     - Firebase/Core
   - Firebase/Auth (8.5.0):
@@ -166,6 +175,9 @@ PODS:
     - FirebaseCore (~> 8.0)
     - GTMSessionFetcher/Core (~> 1.5)
   - Flutter (1.0.0)
+  - flutter_facebook_sdk (0.0.1):
+    - FBSDKCoreKit (~> 9.1.0)
+    - Flutter
   - flutter_html_to_pdf (0.0.1):
     - Flutter
   - flutter_image_compress (0.0.1):
@@ -264,6 +276,7 @@ PODS:
   - razorpay_flutter (1.1.10):
     - Flutter
     - razorpay-pod
+  - Reachability (3.2)
   - SDWebImage (5.11.1):
     - SDWebImage/Core (= 5.11.1)
   - SDWebImage/Core (5.11.1)
@@ -293,6 +306,7 @@ PODS:
 DEPENDENCIES:
   - camera (from `.symlinks/plugins/camera/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
+  - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - device_unlock (from `.symlinks/plugins/device_unlock/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
@@ -307,6 +321,7 @@ DEPENDENCIES:
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - FirebaseFirestore (from `https://github.com/invertase/firestore-ios-sdk-frameworks.git`, tag `8.5.0`)
   - Flutter (from `Flutter`)
+  - flutter_facebook_sdk (from `.symlinks/plugins/flutter_facebook_sdk/ios`)
   - flutter_html_to_pdf (from `.symlinks/plugins/flutter_html_to_pdf/ios`)
   - flutter_image_compress (from `.symlinks/plugins/flutter_image_compress/ios`)
   - flutter_share_me (from `.symlinks/plugins/flutter_share_me/ios`)
@@ -332,6 +347,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AppAuth
+    - FBSDKCoreKit
     - Firebase
     - FirebaseABTesting
     - FirebaseAnalytics
@@ -360,6 +376,7 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - razorpay-pod
+    - Reachability
     - SDWebImage
     - SDWebImageWebPCoder
 
@@ -368,6 +385,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/camera/ios"
   cloud_firestore:
     :path: ".symlinks/plugins/cloud_firestore/ios"
+  connectivity:
+    :path: ".symlinks/plugins/connectivity/ios"
   device_info:
     :path: ".symlinks/plugins/device_info/ios"
   device_unlock:
@@ -397,6 +416,8 @@ EXTERNAL SOURCES:
     :tag: 8.5.0
   Flutter:
     :path: Flutter
+  flutter_facebook_sdk:
+    :path: ".symlinks/plugins/flutter_facebook_sdk/ios"
   flutter_html_to_pdf:
     :path: ".symlinks/plugins/flutter_html_to_pdf/ios"
   flutter_image_compress:
@@ -449,8 +470,10 @@ SPEC CHECKSUMS:
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
   camera: 3164201dc344383e62282964016528c4f5a9ad50
   cloud_firestore: 6c39ac9ddba0365bb45a6a45425f48ad2eef9c58
+  connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   device_unlock: 9f2f6f1abfc70eac689ba9fe3a835f761af5e635
+  FBSDKCoreKit: a00fe2efd780c195a5e09201bf51c56106245b40
   Firebase: ff8c73105b90e33e1dc6c8e5445d7adc2ccdc7c1
   firebase_analytics: acb1cb1884db717051ca2b6f1b054a854b1676cc
   firebase_auth: 625b66efbbf3dde9066a39401d8652e790a6d4c1
@@ -477,6 +500,7 @@ SPEC CHECKSUMS:
   FirebaseRemoteConfig: 693c1f150408e9a727daf4d8c55c7f9c29ef9ad5
   FirebaseStorage: 2c176ca64a68b45bddc3c7d4d2c0c839927ad92c
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  flutter_facebook_sdk: 82c8d10c6226b66de5459d6115ab02d1ecd66cd9
   flutter_html_to_pdf: 0fd9f8d04f335d68b06a7c4ab5fc85d22e1ef91b
   flutter_image_compress: fd2b476345226e1a10ea352fa306af95704642c1
   flutter_share_me: dd04bcb65a595f76bd2fa0537df08fffc5a04903
@@ -503,6 +527,7 @@ SPEC CHECKSUMS:
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   razorpay-pod: 7991bc0823d0f4b2934b4ea87967d54d2e284e2c
   razorpay_flutter: 84b3bfd206ae9c9c2a9ba585524a1b3d8102b6c1
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
   share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
