@@ -55,16 +55,18 @@ class OtpInputScreenState extends State<OtpInputScreen> {
 
   @override
   void didChangeDependencies() {
-    if (mounted) {
+    if (mounted)
       Future.delayed(Duration(seconds: 2), () {
         FocusScope.of(context).requestFocus(focusNode);
       });
+
+    if (mounted)
       Future.delayed(Duration(seconds: 7), () {
         setState(() {
           showResendOption = true;
         });
       });
-    }
+
     super.didChangeDependencies();
   }
 

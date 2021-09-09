@@ -270,22 +270,22 @@ class IdeaSection extends StatelessWidget {
               ),
             ],
           ),
-          // GameCard(
-          //   gradient: const [
-          //  Color(0xff4776E6),
-          //     Color(0xff8E54E9),
-          //   ],
-          //   title: "Have a Golden Ticket?",
-          //   action: [
-          //     GameOfferCardButton(
-          //       onPressed: () {
-          //         AppState.delegate
-          //             .parseRoute(Uri.parse("games/d-goldenTicket"));
-          //       },
-          //       title: "Redeem",
-          //     ),
-          //   ],
-          // ),
+          GameCard(
+            gradient: const [
+              Color(0xff4776E6),
+              Color(0xff8E54E9),
+            ],
+            title: "Golden Ticket Dialog",
+            action: [
+              GameOfferCardButton(
+                onPressed: () {
+                  AppState.delegate
+                      .parseRoute(Uri.parse("games/d-goldenTicket"));
+                },
+                title: "Show",
+              ),
+            ],
+          ),
           GameCard(
             gradient: const [
               Color(0xffFFCF41),
