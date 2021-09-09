@@ -91,7 +91,7 @@ class _RootState extends State<Root> {
   }
 
   void toggleTag() {
-    print("got here");
+    print("show tag toggled");
     setState(() {
       showTag = !showTag;
     });
@@ -201,22 +201,46 @@ class _RootState extends State<Root> {
               top: SizeConfig.blockSizeHorizontal * 2,
               right: SizeConfig.blockSizeHorizontal * 2,
               child: SafeArea(
-                child: InkWell(
-                  child: SvgPicture.asset(
-                    "images/support-log.svg",
-                    height: kToolbarHeight * 0.6,
-                    color: (appState.getCurrentTabIndex == 0)
-                        ? Colors.white
-                        : Color(0xff4C4C4C),
-                  ),
-                  //icon: Icon(Icons.contact_support_outlined),
-                  // iconSize: kToolbarHeight * 0.5,
-
-                  onTap: () {
-                    Haptic.vibrate();
-                    AppState.delegate.appState.currentAction = PageAction(
-                        state: PageState.addPage, page: SupportPageConfig);
-                  },
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      child: Icon(
+                        Icons.notifications,
+                        size: kToolbarHeight * 0.44,
+                        color: (appState.getCurrentTabIndex == 0)
+                            ? Colors.white
+                            : Color(0xff4C4C4C),
+                      ),
+                      //icon: Icon(Icons.contact_support_outlined),
+                      // iconSize: kToolbarHeight * 0.5,
+                      onTap: () {
+                        Haptic.vibrate();
+                        AppState.delegate.appState.currentAction = PageAction(
+                            state: PageState.addPage,
+                            page: NotificationsConfig);
+                      },
+                    ),
+                    SizedBox(
+                      width: kToolbarHeight * 0.2,
+                    ),
+                    InkWell(
+                      child: SvgPicture.asset(
+                        "images/support-log.svg",
+                        height: kToolbarHeight * 0.6,
+                        color: (appState.getCurrentTabIndex == 0)
+                            ? Colors.white
+                            : Color(0xff4C4C4C),
+                      ),
+                      //icon: Icon(Icons.contact_support_outlined),
+                      // iconSize: kToolbarHeight * 0.5,
+                      onTap: () {
+                        Haptic.vibrate();
+                        AppState.delegate.appState.currentAction = PageAction(
+                            state: PageState.addPage, page: SupportPageConfig);
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
