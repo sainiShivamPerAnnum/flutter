@@ -187,7 +187,10 @@ class LogoFadeIn extends State<SplashScreen> {
                       maintainState: true,
                       visible: _isSlowConnection,
                       child: connectivityStatus == ConnectivityStatus.Offline
-                          ? Text('No active internet connection')
+                          ? Text('No active internet connection',
+                              style: TextStyle(
+                                  color: Colors.grey[800],
+                                  fontSize: SizeConfig.mediumTextSize))
                           : BreathingText(
                               alertText:
                                   'Connection is taking longer than usual',
