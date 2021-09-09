@@ -116,7 +116,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
     } catch (e) {
       if (baseProvider.myUser.uid != null) {
         Map<String, dynamic> errorDetails = {
-          'Error message': 'Method call to upload picture failed',
+          'error_msg': 'Method call to upload picture failed',
         };
         dbProvider.logFailure(baseProvider.myUser.uid,
             FailType.ProfilePictureUpdateFailed, errorDetails);

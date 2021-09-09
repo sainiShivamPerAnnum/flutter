@@ -19,10 +19,8 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
@@ -240,8 +238,7 @@ class BaseUtil extends ChangeNotifier {
       } catch (e) {
         log.error('key parsing failed: ' + e.toString());
         Map<String, String> errorDetails = {
-          'User number': _myUser.mobile,
-          'Error message': e.toString()
+          'error_msg': e.toString()
         };
         _dbModel.logFailure(
             _myUser.uid, FailType.DailyPickParseFailed, errorDetails);
@@ -316,7 +313,7 @@ class BaseUtil extends ChangeNotifier {
           color: Colors.white,
         ),
         onPressed: () {
-          backButtonDispatcher.didPopRoute();
+          AppState.backButtonDispatcher.didPopRoute();
         },
       ),
       elevation: 1.0,
@@ -333,12 +330,15 @@ class BaseUtil extends ChangeNotifier {
   }
 
   bool get checkKycMissing {
-    bool skFlag = (myUser.isSimpleKycVerified != null && myUser.isSimpleKycVerified == true);
+    bool skFlag = (myUser.isSimpleKycVerified != null &&
+        myUser.isSimpleKycVerified == true);
     bool augFlag = false;
-    if(myUser.isAugmontOnboarded) {
-        final DateTime _dt = new DateTime(2021, 8, 28);
-        //if the person regd for augmont before v2.5.4 release, then their kyc is complete
-       augFlag = (augmontDetail != null && augmontDetail.createdTime != null && augmontDetail.createdTime.toDate().isBefore(_dt));
+    if (myUser.isAugmontOnboarded) {
+      final DateTime _dt = new DateTime(2021, 8, 28);
+      //if the person regd for augmont before v2.5.4 release, then their kyc is complete
+      augFlag = (augmontDetail != null &&
+          augmontDetail.createdTime != null &&
+          augmontDetail.createdTime.toDate().isBefore(_dt));
     }
     return (!skFlag && !augFlag);
   }
@@ -414,7 +414,7 @@ class BaseUtil extends ChangeNotifier {
             blurRadius: 3.0,
           )
         ],
-      )..show(delegate.navigatorKey.currentContext);
+      )..show(AppState.delegate.navigatorKey.currentContext);
     });
   }
 
@@ -442,7 +442,7 @@ class BaseUtil extends ChangeNotifier {
             blurRadius: 3.0,
           )
         ],
-      )..show(delegate.navigatorKey.currentContext);
+      )..show(AppState.delegate.navigatorKey.currentContext);
     });
   }
 
@@ -577,9 +577,7 @@ class BaseUtil extends ChangeNotifier {
       hasMoreTransactionListDocuments = true;
       isOtpResendCount = 0;
       show_security_prompt = false;
-      delegate.appState.setCurrentTabIndex = 0;
-      activeGoldWithdrawalQuantity = 0;
-      withdrawFlowStackCount = 1;
+      AppState.delegate.appState.setCurrentTabIndex = 0;
       _setRuntimeDefaults();
 
       return true;
@@ -634,16 +632,16 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void openTambolaHome() async {
-    delegate.appState.setCurrentTabIndex = 1;
+    AppState.delegate.appState.setCurrentTabIndex = 1;
     if (await getDrawStatus()) {
       await _lModel.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
             (value) =>
                 print("Daily Picks Draw Animation Save Status Code: $value"),
           );
-      delegate.appState.currentAction =
+      AppState.delegate.appState.currentAction =
           PageAction(state: PageState.addPage, page: TPickDrawPageConfig);
     } else
-      delegate.appState.currentAction =
+      AppState.delegate.appState.currentAction =
           PageAction(state: PageState.addPage, page: THomePageConfig);
   }
 
@@ -816,7 +814,7 @@ class BaseUtil extends ChangeNotifier {
       notifyListeners(); //might cause ui error if screen no longer active
     }).catchError((err) {
       if (_myUser.uid != null) {
-        var errorDetails = {'Error message': err.toString()};
+        var errorDetails = {'error_msg': err.toString()};
         _dbModel.logFailure(
             _myUser.uid, FailType.UserAugmontBalanceUpdateFailed, errorDetails);
       }
@@ -879,47 +877,50 @@ class BaseUtil extends ChangeNotifier {
   //   return false;
   // }
 
-  static String getMonthName(int monthNum) {
+  static String getMonthName({@required int monthNum, bool trim = true}) {
+    String res = "January";
     switch (monthNum) {
       case 1:
-        return "Jan";
+        res = "January";
         break;
       case 2:
-        return "Feb";
+        res = "February";
         break;
       case 3:
-        return "Mar";
+        res = "March";
         break;
       case 4:
-        return "Apr";
+        res = "April";
         break;
       case 5:
-        return "May";
+        res = "May";
         break;
       case 6:
-        return "June";
+        res = "June";
         break;
       case 7:
-        return "July";
+        res = "July";
         break;
       case 8:
-        return "Aug";
+        res = "August";
         break;
       case 9:
-        return "Sept";
+        res = "September";
         break;
       case 10:
-        return "Oct";
+        res = "October";
         break;
       case 11:
-        return "Nov";
+        res = "November";
         break;
       case 12:
-        return "Dec";
+        res = "December";
         break;
       default:
-        return "Month";
+        res = "Janurary";
     }
+    if (trim) return res.substring(0, 3);
+    return res;
   }
 
   BaseUser get myUser => _myUser;

@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +85,7 @@ class SuccessDialog extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      backButtonDispatcher.didPopRoute();
+                      AppState.backButtonDispatcher.didPopRoute();
                     },
                   ),
                 ),
@@ -114,8 +115,8 @@ class SuccessDialog extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      backButtonDispatcher.didPopRoute();
-                      backButtonDispatcher.didPopRoute();
+                      AppState.backButtonDispatcher.didPopRoute();
+                      AppState.backButtonDispatcher.didPopRoute();
                       // baseProvider.showRefreshIndicator(context);
                     },
                   ),

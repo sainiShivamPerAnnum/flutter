@@ -181,7 +181,7 @@ class GuideDialog extends StatelessWidget {
                                 .copyWith(color: Colors.white),
                           ),
                           onPressed: () {
-                            backButtonDispatcher.didPopRoute();
+                            AppState.backButtonDispatcher.didPopRoute();
                             appState.currentAction = PageAction(
                                 state: PageState.addPage,
                                 page: ChatSupportPageConfig);

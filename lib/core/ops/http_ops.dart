@@ -308,4 +308,44 @@ class HttpModel extends ChangeNotifier {
       return '';
     }
   }
+
+  ///Returns the number of tickets that need to be added to user's balance
+  Future<int> postGoldenTicketRedemption(
+      String userId, String goldenTicketId) async {
+    if (_baseUtil == null || _baseUtil.firebaseUser == null) return -1;
+    String idToken = await _baseUtil.firebaseUser.getIdToken();
+    log.debug('Fetched user IDToken: ' + idToken);
+    try {
+      Uri _uri = Uri.https(ASIA_BASE_URI, '/goldenTicketOps/prod/api/redeemGoldenTicket',
+          {'uid': userId, 'gtid': goldenTicketId});
+      http.Response _response = await http.post(_uri,
+          headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
+      log.debug(_response.body);
+      if (_response.statusCode == 200) {
+        try {
+          Map<String, dynamic> parsed = jsonDecode(_response.body);
+          if (parsed != null && parsed['add_tickets_count'] != null) {
+            try {
+              log.debug(parsed['add_tickets_count'].toString());
+              int userTicketUpdateCount =
+              BaseUtil.toInt(parsed['add_tickets_count']);
+              return userTicketUpdateCount;
+            } catch (ee) {
+              return -1;
+            }
+          } else {
+            return -1;
+          }
+        } catch (err) {
+          log.error('Failed to parse ticket update count');
+          return -1;
+        }
+      } else {
+        return -1;
+      }
+    } catch (e) {
+      log.error('Http post failed: ' + e.toString());
+      return -1;
+    }
+  }
 }

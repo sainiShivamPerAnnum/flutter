@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/login/screens/username.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -45,7 +46,7 @@ class _ClaimUsernameState extends State<ClaimUsername> {
               });
               baseProvider.showPositiveAlert(
                   "Success!", "Username updated successfully", context);
-              backButtonDispatcher.didPopRoute();
+              AppState.backButtonDispatcher.didPopRoute();
             } else {
               setState(() {
                 _isUpdating = false;

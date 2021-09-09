@@ -415,13 +415,7 @@ class _LoginControllerState extends State<LoginController>
                   'Email field empty', 'Please enter a valid email', context);
               return false;
             }
-            print(
-                "Email entered is -----------> ${_nameScreenKey.currentState.email}");
-            // if (await httpProvider
-            //     .isEmailNotRegistered(_nameScreenKey.currentState.email))
-            //     {
 
-            //     }
             if (_nameScreenKey.currentState.selectedDate == null) {
               baseProvider.showNegativeAlert('Invalid Date of Birth',
                   'Please enter a valid date of birth', context);
@@ -447,10 +441,8 @@ class _LoginControllerState extends State<LoginController>
                   formatMobileNumber(baseProvider.firebaseUser.phoneNumber));
             }
             //baseProvider.myUser.name = nameInScreen.getName();
-            baseProvider.myUser.name = _nameScreenKey.currentState.name;
-            print(baseProvider.myUser.name);
-            //String email = nameInScreen.getEmail();
-            String email = _nameScreenKey.currentState.email;
+            baseProvider.myUser.name = _nameScreenKey.currentState.name.trim();
+            String email = _nameScreenKey.currentState.email.trim();
             if (email != null && email.isNotEmpty) {
               baseProvider.myUser.email = email;
             }
@@ -458,7 +450,7 @@ class _LoginControllerState extends State<LoginController>
             String dob = "${_nameScreenKey.currentState.selectedDate.toLocal()}"
                 .split(" ")[0];
 
-            baseProvider.myUser.dob = dob;
+            baseProvider.myUser.dob = dob.trim();
 
             int gender = _nameScreenKey.currentState.gen;
             if (gender != null) {

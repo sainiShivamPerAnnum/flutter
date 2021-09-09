@@ -71,7 +71,7 @@ class _PicksDrawState extends State<PicksDraw> {
                 color: Color(0xff150E56),
               ),
               onPressed: () {
-                delegate.appState.currentAction =
+                AppState.delegate.appState.currentAction =
                     PageAction(state: PageState.replace, page: THomePageConfig);
               },
             )
@@ -189,9 +189,8 @@ class _PicksDrawState extends State<PicksDraw> {
                                             ),
                                             alignment: Alignment.center,
                                             child: Transform.scale(
-                                              scale: opacity,
-                                              child: Stack(
-                                                children: [
+                                                scale: opacity,
+                                                child: Stack(children: [
                                                   Align(
                                                     alignment: Alignment.center,
                                                     child: AnimatedContainer(
@@ -241,9 +240,7 @@ class _PicksDrawState extends State<PicksDraw> {
                                                           : SizedBox(),
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                            ),
+                                                ])),
                                           ),
                                         )
                                         .toList(),

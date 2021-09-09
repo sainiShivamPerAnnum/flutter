@@ -28,9 +28,6 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
 
-// final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
-FelloRouterDelegate delegate;
-FelloBackButtonDispatcher backButtonDispatcher;
 
 
 
@@ -56,11 +53,15 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final appState = AppState();
   final parser = FelloParser();
+  FelloRouterDelegate delegate;
+  FelloBackButtonDispatcher backButtonDispatcher;
 
   _MyAppState() {
     delegate = FelloRouterDelegate(appState);
     delegate.setNewRoutePath(SplashPageConfig);
     backButtonDispatcher = FelloBackButtonDispatcher(delegate);
+    AppState.backButtonDispatcher = backButtonDispatcher;
+    AppState.delegate = delegate;
   }
 
   @override

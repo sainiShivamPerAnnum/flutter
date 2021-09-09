@@ -49,6 +49,8 @@ class Constants {
   static const String POLL_NEXTGAME_ID = "nextgame";
   static const String POLL_FOLLOWUPGAME_ID = "followupgame";
 
+  static const String GOLDENTICKET_DYNAMICLINK_PREFIX = "https://fello.in/goldenticket";
+
   //home feed
   static const String LEARN_FEED_CARD_TYPE = 'L';
   static const String PRIZE_FEED_CARD_TYPE = 'P';
@@ -73,7 +75,7 @@ class Constants {
   ///STAGES - IMPORTANT
   static const AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;
   static const FreshchatStage activeFreshchatStage = FreshchatStage.DEV;
-  static const AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.PROD;
+  static const AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.DEV;
   static const SignzyStage activeSignzyStage = SignzyStage.PROD;
-  static const RazorpayStage activeRazorpayStage = RazorpayStage.PROD;
+  static const RazorpayStage activeRazorpayStage = RazorpayStage.DEV;
 }

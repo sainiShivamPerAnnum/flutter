@@ -29,7 +29,7 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
     _width = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: () async {
-        backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher.didPopRoute();
         return true;
       },
       child: Dialog(
