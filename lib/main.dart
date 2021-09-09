@@ -1,3 +1,14 @@
+//Flutter imports
+import 'package:flutter/material.dart';
+
+//Pub imports
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:logger/logger.dart';
+
+//Project imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/fcm_listener.dart';
@@ -16,22 +27,21 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
+
+
 
 
 void main() async {
+  setupLocator();
+  final logger = locator<Logger>();
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await Firebase.initializeApp();
+    logger.d("Firebase Initialised");
   } catch (e) {
-    print(e.toString());
+    logger.e(e.toString());
   }
   FirebaseMessaging.onBackgroundMessage(FcmListener.backgroundMessageHandler);
-  setupLocator();
   runApp(MyApp());
 }
 
@@ -72,50 +82,54 @@ class _MyAppState extends State<MyApp> {
       ],
       child: MaterialApp.router(
         title: Constants.APP_NAME,
-        theme: ThemeData(
-          primaryColor: UiConstants.primaryColor,
-          primarySwatch: UiConstants.kPrimaryColor,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          textTheme: GoogleFonts.montserratTextTheme(),
-          inputDecorationTheme: InputDecorationTheme(
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: UiConstants.primaryColor.withOpacity(0.3), width: 1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            disabledBorder: OutlineInputBorder(
-              borderSide:
-                  BorderSide(color: Colors.grey.withOpacity(0.3), width: 1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: UiConstants.primaryColor,
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.red.withOpacity(0.3),
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.red.withOpacity(0.3),
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
+        theme: _felloTheme(),
         debugShowCheckedModeBanner: false,
         backButtonDispatcher: backButtonDispatcher,
         routerDelegate: delegate,
         routeInformationParser: parser,
       ),
     );
+  }
+
+  ThemeData _felloTheme() {
+    return ThemeData(
+        primaryColor: UiConstants.primaryColor,
+        primarySwatch: UiConstants.kPrimaryColor,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        textTheme: GoogleFonts.montserratTextTheme(),
+        inputDecorationTheme: InputDecorationTheme(
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+                color: UiConstants.primaryColor.withOpacity(0.3), width: 1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          disabledBorder: OutlineInputBorder(
+            borderSide:
+                BorderSide(color: Colors.grey.withOpacity(0.3), width: 1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: UiConstants.primaryColor,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.red.withOpacity(0.3),
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.red.withOpacity(0.3),
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      );
   }
 }
