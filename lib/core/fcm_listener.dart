@@ -253,7 +253,7 @@ class FcmListener extends ChangeNotifier {
             FailType.TambolaDrawNotificationSettingFailed, errorDetails);
       }
       _baseUtil.showNegativeAlert(
-          "Error", "Please try again", delegate.navigatorKey.currentContext);
+          "Error", "Please try again", AppState.delegate.navigatorKey.currentContext);
     }
   }
 }
