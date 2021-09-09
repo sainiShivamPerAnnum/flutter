@@ -132,7 +132,8 @@ class _SupportPageState extends State<SupportPage> {
                           icon: Icon(
                             Icons.arrow_back_rounded,
                           ),
-                          onPressed: () => backButtonDispatcher.didPopRoute(),
+                          onPressed: () =>
+                              AppState.backButtonDispatcher.didPopRoute(),
                         ),
                         Spacer(),
                         Image.asset(
@@ -522,7 +523,7 @@ class _SupportPageState extends State<SupportPage> {
                                     context);
                                 if (baseProvider.myUser.uid != null) {
                                   Map<String, dynamic> errorDetails = {
-                                    'Error Message':
+                                    'error_msg':
                                         'Placing a call request failed',
                                     'Phone Number':
                                         _requestCallPhoneController.text.trim(),

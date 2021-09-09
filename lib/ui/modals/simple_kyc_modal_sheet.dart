@@ -96,7 +96,7 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
                     ),
                     onPressed: () {
                       if (baseProvider.isSimpleKycInProgress) return;
-                      backButtonDispatcher.didPopRoute();
+                      AppState.backButtonDispatcher.didPopRoute();
                     },
                   )
                 ],
@@ -231,7 +231,7 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
                   'You are successfully verified!', context);
               baseProvider.isSimpleKycInProgress = false;
               setState(() {});
-              backButtonDispatcher.didPopRoute();
+              AppState.backButtonDispatcher.didPopRoute();
             }
           },
           onReject: () {

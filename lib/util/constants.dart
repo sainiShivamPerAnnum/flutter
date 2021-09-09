@@ -6,6 +6,7 @@ class Constants {
 
   //Collections
   static final String COLN_USERS = "users";
+  static final String COLN_ANNOUNCEMENTS = "announcements";
   static final String COLN_TICKETREQUEST = "ticketrequests";
   static final String COLN_DAILYPICKS = "dailypicks";
   static final String COLN_WINNERS = "winners";
@@ -28,6 +29,8 @@ class Constants {
   static final String SUBCOLN_USER_TXNS = "txns";
   static final String SUBCOLN_USER_WALLET = "wallet";
   static final String SUBCOLN_USER_POLL_RESPONSES = "poll";
+  static final String SUBCOLN_USER_ALERTS = "alerts";
+
 
   //Sub-collection docs
   static final String DOC_USER_FCM_TOKEN = "client_token";
@@ -45,6 +48,8 @@ class Constants {
 
   static const String POLL_NEXTGAME_ID = "nextgame";
   static const String POLL_FOLLOWUPGAME_ID = "followupgame";
+
+  static const String GOLDENTICKET_DYNAMICLINK_PREFIX = "https://fello.in/goldenticket";
 
   //home feed
   static const String LEARN_FEED_CARD_TYPE = 'L';
@@ -70,7 +75,7 @@ class Constants {
   ///STAGES - IMPORTANT
   static const AWSIciciStage activeAwsIciciStage = AWSIciciStage.PROD;
   static const FreshchatStage activeFreshchatStage = FreshchatStage.DEV;
-  static const AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.PROD;
+  static const AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.DEV;
   static const SignzyStage activeSignzyStage = SignzyStage.PROD;
-  static const RazorpayStage activeRazorpayStage = RazorpayStage.PROD;
+  static const RazorpayStage activeRazorpayStage = RazorpayStage.DEV;
 }

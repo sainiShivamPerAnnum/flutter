@@ -1,4 +1,5 @@
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -21,7 +22,7 @@ class IntegratedIciciDisabledState extends State<IntegratedIciciDisabled> {
     _width = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: () {
-        backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher.didPopRoute();
         return Future.value(true);
       },
       child: Dialog(

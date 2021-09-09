@@ -192,7 +192,7 @@ class UserTicketWallet {
       int endDay = DateTime.utc(DateTime.now().year, 1, endDate).toLocal().day;
       int endMon =
           DateTime.utc(DateTime.now().year, 1, endDate).toLocal().month;
-      String endMonth = BaseUtil.getMonthName(endMon);
+      String endMonth = BaseUtil.getMonthName(monthNum: endMon);
 
       return '$endDay $endMonth';
     } catch (e) {

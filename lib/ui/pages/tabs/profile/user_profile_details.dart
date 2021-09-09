@@ -6,7 +6,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
@@ -134,8 +133,9 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                       Icons.arrow_back_rounded,
                                       color: Colors.white,
                                     ),
-                                    onPressed: () =>
-                                        backButtonDispatcher.didPopRoute(),
+                                    onPressed: () => AppState
+                                        .backButtonDispatcher
+                                        .didPopRoute(),
                                   ),
                                   Spacer(),
                                   Text(
@@ -179,6 +179,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                 ),
                                 child: InkWell(
                                   onTap: () async {
+                                    if (await baseProvider.isOfflineSnackBar(context))
+                                      return;
                                     var _status =
                                         await Permission.photos.status;
                                     if (_status.isRestricted ||
@@ -226,7 +228,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             ),
                             FittedBox(
                               child: TextButton.icon(
-                                onPressed: () {
+                                onPressed: () async {
+                                  if (await baseProvider.isOfflineSnackBar(context)) return;
                                   AppState.screenStack.add(ScreenItem.dialog);
                                   showDialog(
                                       barrierDismissible: false,
@@ -418,13 +421,14 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                       fontWeight: FontWeight.w300,
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
+                    if (await baseProvider.isOfflineSnackBar(context)) return;
                     AppState.screenStack.add(ScreenItem.dialog);
                     showDialog(
                       context: context,
                       builder: (BuildContext dialogContext) => WillPopScope(
                         onWillPop: () {
-                          backButtonDispatcher.didPopRoute();
+                          AppState.backButtonDispatcher.didPopRoute();
                           return Future.value(true);
                         },
                         child: ConfirmActionDialog(
@@ -436,14 +440,15 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             baseProvider.signOut().then((flag) {
                               if (flag) {
                                 //log.debug('Sign out process complete');
-                                backButtonDispatcher.didPopRoute();
-                                delegate.appState.currentAction = PageAction(
-                                    state: PageState.replaceAll,
-                                    page: SplashPageConfig);
+                                AppState.backButtonDispatcher.didPopRoute();
+                                AppState.delegate.appState.currentAction =
+                                    PageAction(
+                                        state: PageState.replaceAll,
+                                        page: SplashPageConfig);
                                 baseProvider.showPositiveAlert('Signed out',
                                     'Hope to see you soon', context);
                               } else {
-                                backButtonDispatcher.didPopRoute();
+                                AppState.backButtonDispatcher.didPopRoute();
                                 baseProvider.showNegativeAlert(
                                     'Sign out failed',
                                     'Couldn\'t signout. Please try again',
@@ -454,7 +459,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                           },
                           cancelAction: () {
                             Haptic.vibrate();
-                            backButtonDispatcher.didPopRoute();
+                            AppState.backButtonDispatcher.didPopRoute();
                           },
                         ),
                       ),
@@ -498,7 +503,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
       return Wrap(
         children: [
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
+              if (await baseProvider.isOfflineSnackBar(context)) return;
               AppState.screenStack.add(ScreenItem.dialog);
               showModalBottomSheet(
                   isDismissible: false,

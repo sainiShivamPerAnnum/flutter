@@ -5,6 +5,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/augmont_state_list.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -86,7 +87,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
                 size: 30,
               ),
               onPressed: () {
-                backButtonDispatcher.didPopRoute();
+                AppState.backButtonDispatcher.didPopRoute();
               },
             )
           ],
@@ -135,12 +136,12 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
             items: AugmontResources.augmontStateList
                 .map(
                   (e) => DropdownMenuItem(
-                value: e["id"],
-                child: Text(
-                  e["name"],
-                ),
-              ),
-            )
+                    value: e["id"],
+                    child: Text(
+                      e["name"],
+                    ),
+                  ),
+                )
                 .toList(),
           ),
         ),
@@ -160,18 +161,18 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
           child: new Material(
             child: MaterialButton(
               child: (!baseProvider.isAugmontRegnInProgress &&
-                  !baseProvider.isAugmontRegnCompleteAnimateInProgress)
+                      !baseProvider.isAugmontRegnCompleteAnimateInProgress)
                   ? Text(
-                'REGISTER',
-                style: Theme.of(context)
-                    .textTheme
-                    .button
-                    .copyWith(color: Colors.white),
-              )
+                      'REGISTER',
+                      style: Theme.of(context)
+                          .textTheme
+                          .button
+                          .copyWith(color: Colors.white),
+                    )
                   : SpinKitThreeBounce(
-                color: UiConstants.spinnerColor2,
-                size: 18.0,
-              ),
+                      color: UiConstants.spinnerColor2,
+                      size: 18.0,
+                    ),
               onPressed: () async {
                 _onSubmit();
               },
@@ -209,7 +210,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
           'You are successfully registered!', context);
       baseProvider.isAugmontRegnInProgress = false;
       setState(() {});
-      backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher.didPopRoute();
     }
     setState(() {});
     return;
