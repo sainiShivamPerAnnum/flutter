@@ -186,7 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     onPress: () async {
-                      if (await isOfflineSnackBar(context)) return;
+                      if (await baseProvider.isOfflineSnackBar(context)) return;
                       appState.currentAction = PageAction(
                           state: PageState.addPage,
                           page: TransactionPageConfig);
@@ -683,7 +683,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                     size: 18.0,
                   ),
             onTap: () async {
-              if (await isOfflineSnackBar(context)) return;
+              if (await baseProvider.isOfflineSnackBar(context)) return;
               fcmProvider.addSubscription(FcmTopic.REFERRER);
               BaseAnalytics.analytics.logShare(
                   contentType: 'referral',
@@ -759,7 +759,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                         ),
                   onTap: () async {
                     ////////////////////////////////
-                    if (await isOfflineSnackBar(context)) return;
+                    if (await baseProvider.isOfflineSnackBar(context)) return;
                     fcmProvider.addSubscription(FcmTopic.REFERRER);
                     BaseAnalytics.analytics.logShare(
                         contentType: 'referral',

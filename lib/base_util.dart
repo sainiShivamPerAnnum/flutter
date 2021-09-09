@@ -981,18 +981,16 @@ class BaseUtil extends ChangeNotifier {
   }
 
   int get dailyPicksCount => _dailyPickCount;
-}
 
-Future<bool> isOfflineSnackBar(BuildContext context) async {
-  ConnectivityStatus connectivityStatus =
-      Provider.of<ConnectivityStatus>(context, listen: false);
-  BaseUtil baseProvider = Provider.of<BaseUtil>(context, listen: false);
+  Future<bool> isOfflineSnackBar(BuildContext context) async {
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context, listen: false);
 
-  if (connectivityStatus == ConnectivityStatus.Offline) {
-    await baseProvider.showNegativeAlert(
-        'Offline', 'Please connect to internet', context,
-        seconds: 3);
-    return true;
+    if (connectivityStatus == ConnectivityStatus.Offline) {
+      await showNegativeAlert('Offline', 'Please connect to internet', context,
+          seconds: 3);
+      return true;
+    }
+    return false;
   }
-  return false;
 }

@@ -6,7 +6,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
@@ -180,7 +179,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                 ),
                                 child: InkWell(
                                   onTap: () async {
-                                    if (await isOfflineSnackBar(context))
+                                    if (await baseProvider.isOfflineSnackBar(context))
                                       return;
                                     var _status =
                                         await Permission.photos.status;
@@ -230,7 +229,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             FittedBox(
                               child: TextButton.icon(
                                 onPressed: () async {
-                                  if (await isOfflineSnackBar(context)) return;
+                                  if (await baseProvider.isOfflineSnackBar(context)) return;
                                   AppState.screenStack.add(ScreenItem.dialog);
                                   showDialog(
                                       barrierDismissible: false,
@@ -423,7 +422,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                     ),
                   ),
                   onPressed: () async {
-                    if (await isOfflineSnackBar(context)) return;
+                    if (await baseProvider.isOfflineSnackBar(context)) return;
                     AppState.screenStack.add(ScreenItem.dialog);
                     showDialog(
                       context: context,
@@ -505,7 +504,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
         children: [
           ElevatedButton(
             onPressed: () async {
-              if (await isOfflineSnackBar(context)) return;
+              if (await baseProvider.isOfflineSnackBar(context)) return;
               AppState.screenStack.add(ScreenItem.dialog);
               showModalBottomSheet(
                   isDismissible: false,
