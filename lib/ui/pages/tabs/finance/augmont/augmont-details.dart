@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
@@ -172,6 +173,8 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
   }
 
   Widget _buildSaveButton() {
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context);
     return Container(
       width: SizeConfig.screenWidth,
       height: MediaQuery.of(context).size.height * 0.07,
@@ -202,6 +205,13 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                   size: 18.0,
                 ),
           onPressed: () async {
+            print(connectivityStatus);
+            if (connectivityStatus == ConnectivityStatus.Offline) {
+              baseProvider.showNegativeAlert(
+                  'Offline', 'Please connect to internet', context,
+                  seconds: 3);
+              return;
+            }
             Haptic.vibrate();
             baseProvider.isAugDepositRouteLogicInProgress = true;
             setState(() {});
