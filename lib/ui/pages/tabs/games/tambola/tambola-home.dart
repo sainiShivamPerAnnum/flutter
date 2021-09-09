@@ -4,13 +4,13 @@ import 'dart:math';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/tambola_generation_service.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/tambola-global/prize_section.dart';
@@ -20,7 +20,7 @@ import 'package:felloapp/ui/elements/tambola-global/weekly_picks.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/summary_tickets_display.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_result.dart';
-import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/ui/widgets/network_bar.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/palettes.dart';
@@ -289,7 +289,8 @@ class _TambolaHomeState extends State<TambolaHome> {
                     ),
                     Spacer(),
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
+                        if (await isOfflineSnackBar(context)) return;
                         _tambolaBoardViews = [];
                         baseProvider.userWeeklyBoards.forEach((board) {
                           _tambolaBoardViews.add(_buildBoardView(board));
@@ -343,6 +344,8 @@ class _TambolaHomeState extends State<TambolaHome> {
 
   Widget _buildCards(bool fetchedFlag, bool drawFetchedFlag,
       List<TambolaBoard> boards, int count) {
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context, listen: false);
     Widget _widget;
     if (!fetchedFlag || !drawFetchedFlag) {
       _widget = Padding(
@@ -373,14 +376,19 @@ class _TambolaHomeState extends State<TambolaHome> {
                     children: [
                       Padding(
                         padding: EdgeInsets.all(10),
-                        child: SpinKitWave(color: UiConstants.primaryColor),
+                        child: connectivityStatus == ConnectivityStatus.Offline
+                            ? NetworkBar(
+                                textColor: Colors.black,
+                              )
+                            : SpinKitWave(color: UiConstants.primaryColor),
                       ),
-                      Text(
-                        'Your tickets are being generated..',
-                        style: TextStyle(
-                          fontSize: SizeConfig.mediumTextSize,
+                      if (connectivityStatus != ConnectivityStatus.Offline)
+                        Text(
+                          'Your tickets are being generated..',
+                          style: TextStyle(
+                            fontSize: SizeConfig.mediumTextSize,
+                          ),
                         ),
-                      )
                     ],
                   )
                 : Text('No tickets yet'),

@@ -268,7 +268,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                 ),
           onPressed: () async {
             if (await isOfflineSnackBar(context)) return;
-            
+
             if (!baseProvider.isAugWithdrawRouteLogicInProgress) {
               Haptic.vibrate();
               _onWithdrawalClicked();

@@ -993,6 +993,6 @@ Future<bool> isOfflineSnackBar(BuildContext context) async {
         'Offline', 'Please connect to internet', context,
         seconds: 3);
     return true;
-  } else
-    return false;
+  }
+  return false;
 }

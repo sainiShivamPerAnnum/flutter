@@ -180,6 +180,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                 ),
                                 child: InkWell(
                                   onTap: () async {
+                                    if (await isOfflineSnackBar(context))
+                                      return;
                                     var _status =
                                         await Permission.photos.status;
                                     if (_status.isRestricted ||
@@ -227,7 +229,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             ),
                             FittedBox(
                               child: TextButton.icon(
-                                onPressed: () {
+                                onPressed: () async {
+                                  if (await isOfflineSnackBar(context)) return;
                                   AppState.screenStack.add(ScreenItem.dialog);
                                   showDialog(
                                       barrierDismissible: false,
@@ -419,7 +422,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                       fontWeight: FontWeight.w300,
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
+                    if (await isOfflineSnackBar(context)) return;
                     AppState.screenStack.add(ScreenItem.dialog);
                     showDialog(
                       context: context,
@@ -500,7 +504,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
       return Wrap(
         children: [
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
+              if (await isOfflineSnackBar(context)) return;
               AppState.screenStack.add(ScreenItem.dialog);
               showModalBottomSheet(
                   isDismissible: false,
