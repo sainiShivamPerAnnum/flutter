@@ -6,6 +6,7 @@ class Constants {
 
   //Collections
   static final String COLN_USERS = "users";
+  static final String COLN_ANNOUNCEMENTS = "announcements";
   static final String COLN_TICKETREQUEST = "ticketrequests";
   static final String COLN_DAILYPICKS = "dailypicks";
   static final String COLN_WINNERS = "winners";
@@ -28,6 +29,8 @@ class Constants {
   static final String SUBCOLN_USER_TXNS = "txns";
   static final String SUBCOLN_USER_WALLET = "wallet";
   static final String SUBCOLN_USER_POLL_RESPONSES = "poll";
+  static final String SUBCOLN_USER_ALERTS = "alerts";
+
 
   //Sub-collection docs
   static final String DOC_USER_FCM_TOKEN = "client_token";

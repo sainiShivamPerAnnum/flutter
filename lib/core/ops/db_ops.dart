@@ -19,6 +19,7 @@ import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/model/UserIciciDetail.dart';
 import 'package:felloapp/core/model/UserTicketWallet.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
+import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
@@ -30,11 +31,13 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:synchronized/synchronized.dart';
+import 'package:logger/logger.dart';
 
 class DBModel extends ChangeNotifier {
   Api _api = locator<Api>();
   Lock _lock = new Lock();
   final Log log = new Log("DBModel");
+  final logger = locator<Logger>();
   ValueChanged<TicketRequest> _ticketRequestListener;
   FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -106,6 +109,45 @@ class DBModel extends ChangeNotifier {
       log.error("Failed to update user preference field: $e");
       return false;
     }
+  }
+
+  Future<List<AlertModel>> getUserNotifications(String userId) async {
+    List<AlertModel> alerts = [];
+    List<AlertModel> announcements = [];
+    List<AlertModel> notifications = [];
+    logger.d("user id - $userId");
+
+    try {
+      QuerySnapshot querySnapshot = await _api.getUserNotifications(userId);
+      for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        AlertModel alert = AlertModel.fromMap(documentSnapshot.data());
+        logger.d(alert.subtitle);
+        alerts.add(alert);
+      }
+    } catch (e) {
+      logger.e(e);
+    }
+
+    try {
+      QuerySnapshot querySnapshot = await _api.getAnnoucements();
+      for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        AlertModel announcement = AlertModel.fromMap(documentSnapshot.data());
+        logger.d(announcement.subtitle);
+        announcements.add(announcement);
+      }
+    } catch (e) {
+      logger.e(e);
+    }
+
+    notifications.addAll(alerts);
+    notifications.addAll(announcements);
+
+    notifications
+        .sort((a, b) => a.createdTime.seconds.compareTo(b.createdTime.seconds));
+
+   
+
+    return notifications;
   }
 
   /// return obj:

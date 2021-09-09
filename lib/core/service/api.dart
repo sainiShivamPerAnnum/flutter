@@ -4,16 +4,21 @@ import 'package:felloapp/core/model/ReferralDetail.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
 
 class Api {
   Log log = new Log("Api");
+
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final rdb.FirebaseDatabase _realtimeDatabase = rdb.FirebaseDatabase.instance;
+
+  final logger = locator<Logger>();
 
   String path;
   CollectionReference ref;
@@ -26,6 +31,31 @@ class Api {
         .doc(userId)
         .collection(Constants.SUBCOLN_USER_FCM);
     return ref.doc(Constants.DOC_USER_FCM_TOKEN).set(data);
+  }
+
+  Future<QuerySnapshot> getUserNotifications(String userId) async {
+    Future<QuerySnapshot> snapshot;
+    ref = _db
+        .collection(Constants.COLN_USERS)
+        .doc(userId)
+        .collection(Constants.SUBCOLN_USER_ALERTS);
+    try {
+      snapshot = ref.orderBy('created_time').limit(20).get();
+    } catch (e) {
+      logger.e(e);
+    }
+    return snapshot;
+  }
+
+  Future<QuerySnapshot> getAnnoucements() async {
+    Future<QuerySnapshot> snapshot;
+    ref = _db.collection(Constants.COLN_ANNOUNCEMENTS);
+    try {
+      snapshot = ref.orderBy('created_time').limit(20).get();
+    } catch (e) {
+      logger.e(e);
+    }
+    return snapshot;
   }
 
   Future<DocumentSnapshot> getUserById(String id) {
