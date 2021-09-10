@@ -119,7 +119,7 @@ class _LoginControllerState extends State<LoginController>
         ///this is the first time that the otp was requested
         baseProvider.isLoginNextInProgress = false;
         _controller.animateToPage(OtpInputScreen.index,
-            duration: Duration(seconds: 1), curve: Curves.easeInToLinear);
+            duration: Duration(milliseconds: 1500), curve: Curves.easeInToLinear);
         setState(() {});
       } else {
         ///the otp was requested to be resent
@@ -168,7 +168,7 @@ class _LoginControllerState extends State<LoginController>
         phoneNumber: this._verificationId,
         codeAutoRetrievalTimeout: autoRetrieve,
         codeSent: smsCodeSent,
-        timeout: const Duration(seconds: 2),
+        timeout: const Duration(seconds: 12),
         verificationCompleted: verifiedSuccess,
         verificationFailed: veriFailed);
   }
