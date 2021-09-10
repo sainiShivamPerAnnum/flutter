@@ -258,10 +258,10 @@ class _RootState extends State<Root> {
 
   _processDynamicLink(String userId, Uri deepLink) async {
     String _uri = deepLink.toString();
-    if(_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
+    if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
       //Golden ticket dynamic link
       int flag = await _submitGoldenTicket(userId, _uri);
-    }else {
+    } else {
       //Referral dynamic link
       int addUserTicketCount = await _submitReferral(
           baseProvider.myUser.uid, baseProvider.myUser.name, _uri);
@@ -297,19 +297,19 @@ class _RootState extends State<Root> {
     }
   }
 
-  Future<int> _submitGoldenTicket(String userId, String deepLink) async{
-    try{
+  Future<int> _submitGoldenTicket(String userId, String deepLink) async {
+    try {
       String prefix = "https://fello.in/goldenticket/";
-      if(!deepLink.startsWith(prefix)) return -1;
+      if (!deepLink.startsWith(prefix)) return -1;
       String docId = deepLink.replaceAll(prefix, '');
-      if(docId != null && docId.isNotEmpty) {
+      if (docId != null && docId.isNotEmpty) {
         return httpModel.postGoldenTicketRedemption(userId, docId).then((flag) {
           log.debug('Flag is $flag');
           return flag;
         });
       }
       return -1;
-    }catch(e) {
+    } catch (e) {
       log.error('$e');
       return -1;
     }

@@ -125,7 +125,7 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                                 children: [
                                   AnimatedOpacity(
                                     opacity: stampOpacity,
-                                    duration: Duration(seconds: 2),
+                                    duration: Duration(seconds: 1),
                                     child: Image.asset(
                                       "images/gtredeem.png",
                                       color: Color(0xff08715E),
@@ -150,28 +150,27 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                         Column(
                           children: [
                             Text(
-                              "Redeem Success",
+                              "Golden Ticket",
                               style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: SizeConfig.largeTextSize),
                             ),
                             Container(
                               padding: EdgeInsets.symmetric(
-                                  vertical: 8,
+                                  vertical: 12,
                                   horizontal: SizeConfig.screenWidth * 0.05),
                               child: Text(
-                                "Your prize tickets are credited to your account",
+                                "You have successfully redeemed your golden ticket. Tickets will be credited shortly",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: SizeConfig.mediumTextSize,
+                                  color: Colors.black45,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: SizeConfig.globalMargin,
-                        )
+                        SizedBox()
                       ],
                     ),
                   ),
