@@ -1,4 +1,6 @@
 import 'package:confetti/confetti.dart';
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
@@ -10,8 +12,11 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class GoldenTicketClaimDialog extends StatefulWidget {
+  final int ticketCount;
+  GoldenTicketClaimDialog({@required this.ticketCount});
   @override
   _GoldenTicketClaimDialogState createState() =>
       _GoldenTicketClaimDialogState();
@@ -20,12 +25,15 @@ class GoldenTicketClaimDialog extends StatefulWidget {
 class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
   bool showConfetti, showStamp;
   double stampOpacity = 0;
+  DBModel dbProvider;
+  BaseUtil baseProvider;
 
   @override
   void initState() {
     showConfetti = false;
     showStamp = false;
-    animateStamp();
+    print(widget.ticketCount);
+    if (widget.ticketCount > 0) animateStamp();
     super.initState();
   }
 
@@ -62,6 +70,8 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
 
   @override
   Widget build(BuildContext context) {
+    dbProvider = Provider.of<DBModel>(context, listen: false);
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
     return Theme(
       data: ThemeData(
           primaryColor: UiConstants.primaryColor,
@@ -78,101 +88,150 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                   ),
                   backgroundColor: Color(0xffFFFEF3),
                   child: Container(
+                    padding: EdgeInsets.all(SizeConfig.globalMargin),
                     height: SizeConfig.screenWidth * 0.84,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(SizeConfig.globalMargin),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(16),
-                              topRight: Radius.circular(16),
-                            ),
-                            color: Color(0xff08715E),
-                          ),
-                          alignment: Alignment.center,
-                          height: SizeConfig.cardTitleTextSize * 2,
-                          child: Text(
-                            "🎉 Congratulations! 🎊",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: SizeConfig.largeTextSize,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: SizeConfig.globalMargin,
-                        ),
-                        Container(
-                          width: SizeConfig.screenWidth,
-                          height: SizeConfig.screenWidth * 0.4,
-                          child: Stack(
+                    child: widget.ticketCount > 0
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    "images/gticket.png",
-                                    width: SizeConfig.screenWidth / 1.5,
+                              Container(
+                                padding:
+                                    EdgeInsets.all(SizeConfig.globalMargin),
+                                alignment: Alignment.center,
+                                height: SizeConfig.cardTitleTextSize * 2,
+                                child: Text(
+                                  "🎉 Paarty Bro!! 🎊",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: UiConstants.primaryColor,
+                                    fontSize: SizeConfig.largeTextSize * 1.2,
+                                    fontWeight: FontWeight.w700,
                                   ),
-                                ],
+                                ),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              SizedBox(
+                                height: SizeConfig.globalMargin,
+                              ),
+                              Container(
+                                width: SizeConfig.screenWidth,
+                                height: SizeConfig.screenWidth * 0.4,
+                                child: Stack(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          "images/gticket.png",
+                                          width: SizeConfig.screenWidth / 1.5,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        AnimatedOpacity(
+                                          opacity: stampOpacity,
+                                          duration: Duration(seconds: 1),
+                                          child: Image.asset(
+                                            "images/gtredeem.png",
+                                            color: Color(0xff08715E),
+                                            width: SizeConfig.screenWidth / 2.4,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    if (showStamp)
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Lottie.asset(
+                                              "images/lottie/stamp.json",
+                                              repeat: false,
+                                              frameRate: FrameRate(60),
+                                              width:
+                                                  SizeConfig.screenWidth / 1.8),
+                                        ],
+                                      )
+                                  ],
+                                ),
+                              ),
+                              Column(
                                 children: [
-                                  AnimatedOpacity(
-                                    opacity: stampOpacity,
-                                    duration: Duration(seconds: 1),
-                                    child: Image.asset(
-                                      "images/gtredeem.png",
-                                      color: Color(0xff08715E),
-                                      width: SizeConfig.screenWidth / 2.4,
+                                  Text(
+                                    "You got ${widget.ticketCount} free tickets",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: SizeConfig.largeTextSize),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 12,
+                                        horizontal:
+                                            SizeConfig.screenWidth * 0.05),
+                                    child: Text(
+                                      "You have successfully redeemed your golden ticket. Tickets will be credited shortly",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: SizeConfig.mediumTextSize,
+                                        color: Colors.black45,
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
-                              if (showStamp)
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Lottie.asset("images/lottie/stamp.json",
-                                        repeat: false,
-                                        frameRate: FrameRate(60),
-                                        width: SizeConfig.screenWidth / 1.8),
-                                  ],
-                                )
+                              SizedBox()
                             ],
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              "Golden Ticket",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: SizeConfig.largeTextSize),
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 12,
-                                  horizontal: SizeConfig.screenWidth * 0.05),
-                              child: Text(
-                                "You have successfully redeemed your golden ticket. Tickets will be credited shortly",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: SizeConfig.mediumTextSize,
-                                  color: Colors.black45,
+                          )
+                        : Column(
+                            children: [
+                              Container(
+                                padding:
+                                    EdgeInsets.all(SizeConfig.globalMargin),
+                                alignment: Alignment.center,
+                                height: SizeConfig.cardTitleTextSize * 2,
+                                child: Text(
+                                  "Redeem Failed",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.red[800],
+                                    fontSize: SizeConfig.largeTextSize * 1.2,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox()
-                      ],
-                    ),
+                              Expanded(
+                                child: Image.asset("images/gt-not-found.png"),
+                              ),
+                              Column(
+                                children: [
+                                  SizedBox(height: 10),
+                                  Text(
+                                    "Try again",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: SizeConfig.largeTextSize),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 12,
+                                        horizontal:
+                                            SizeConfig.screenWidth * 0.05),
+                                    child: Text(
+                                      "We were unable to redeem your golden ticket at the moment. please give it another try",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: SizeConfig.mediumTextSize,
+                                        color: Colors.black45,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                   ),
                 ),
                 Material(
@@ -183,6 +242,12 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                         icon: Icon(Icons.close, color: Colors.grey),
                         onPressed: () {
                           AppState.backButtonDispatcher.didPopRoute();
+                          return dbProvider
+                              .getUserTicketWallet(baseProvider.myUser.uid)
+                              .then((value) {
+                            if (value != null)
+                              baseProvider.userTicketWallet = value;
+                          });
                         }),
                   ),
                 ),

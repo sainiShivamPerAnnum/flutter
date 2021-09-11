@@ -97,7 +97,7 @@ class _GamePageState extends State<GamePage> {
   @override
   Widget build(BuildContext context) {
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
     ConnectivityStatus connectivityStatus =
@@ -145,9 +145,7 @@ class _GamePageState extends State<GamePage> {
                         children: [
                           if (connectivityStatus == ConnectivityStatus.Offline)
                             NetworkBar(),
-                          Spacer(
-                            flex: 2,
-                          ),
+
                           InkWell(
                             onTap: () async {
                               Haptic.vibrate();
@@ -163,9 +161,6 @@ class _GamePageState extends State<GamePage> {
                                 ? TicketCount(baseProvider.userTicketWallet
                                     .getActiveTickets())
                                 : Container(),
-                          ),
-                          const Spacer(
-                            flex: 1,
                           ),
 
                           GameCardList(
@@ -291,8 +286,13 @@ class IdeaSection extends StatelessWidget {
             action: [
               GameOfferCardButton(
                 onPressed: () {
-                  AppState.delegate
-                      .parseRoute(Uri.parse("games/d-goldenTicket"));
+                  AppState.screenStack.add(ScreenItem.dialog);
+                  showDialog(
+                    context: context,
+                    builder: (_) => GoldenTicketClaimDialog(
+                      ticketCount: 100,
+                    ),
+                  );
                 },
                 title: "Show",
               ),
