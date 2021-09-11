@@ -30,7 +30,6 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
 
-
 void main() async {
   setupLocator();
 
@@ -81,8 +80,8 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => locator<PaymentService>()),
         StreamProvider<ConnectivityStatus>(
           create: (_) =>
-              ConnectivityService().connectionStatusController.stream,
-          initialData: ConnectivityStatus.Offline,
+              locator<ConnectivityService>().connectionStatusController.stream,
+          initialData: ConnectivityStatus.Cellular,
         ),
         ChangeNotifierProvider(create: (_) => appState),
       ],
@@ -99,43 +98,42 @@ class _MyAppState extends State<MyApp> {
 
   ThemeData _felloTheme() {
     return ThemeData(
-        primaryColor: UiConstants.primaryColor,
-        primarySwatch: UiConstants.kPrimaryColor,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        textTheme: GoogleFonts.montserratTextTheme(),
-        inputDecorationTheme: InputDecorationTheme(
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-                color: UiConstants.primaryColor.withOpacity(0.3), width: 1),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          disabledBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(color: Colors.grey.withOpacity(0.3), width: 1),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: UiConstants.primaryColor,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.red.withOpacity(0.3),
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.red.withOpacity(0.3),
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
+      primaryColor: UiConstants.primaryColor,
+      primarySwatch: UiConstants.kPrimaryColor,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      textTheme: GoogleFonts.montserratTextTheme(),
+      inputDecorationTheme: InputDecorationTheme(
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+              color: UiConstants.primaryColor.withOpacity(0.3), width: 1),
+          borderRadius: BorderRadius.circular(10),
         ),
-      );
+        disabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey.withOpacity(0.3), width: 1),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: UiConstants.primaryColor,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.red.withOpacity(0.3),
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.red.withOpacity(0.3),
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
   }
 }
