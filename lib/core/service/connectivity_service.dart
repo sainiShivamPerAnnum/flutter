@@ -2,15 +2,17 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:flutter/foundation.dart';
 
-class ConnectivityService {
+class ConnectivityService extends ChangeNotifier {
   StreamController<ConnectivityStatus> connectionStatusController =
       StreamController<ConnectivityStatus>();
 
   ConnectivityService() {
     print("Inside connectivity constructor");
+    Connectivity connectivity = Connectivity();
     try {
-      Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
         print("Inside connectivity onConnectivityChanged");
         //Conversion of result into enum
         var connectivityStatus = _getStatusFromResult(result);
@@ -20,6 +22,7 @@ class ConnectivityService {
     } catch (e) {
       print("Network connectivity error - $e");
     }
+    notifyListeners();
   }
 
   ConnectivityStatus _getStatusFromResult(ConnectivityResult result) {
