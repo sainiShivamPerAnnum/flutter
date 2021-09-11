@@ -290,7 +290,7 @@ class IdeaSection extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (_) => GoldenTicketClaimDialog(
-                      ticketCount: 100,
+                      ticketCount: 0,
                     ),
                   );
                 },

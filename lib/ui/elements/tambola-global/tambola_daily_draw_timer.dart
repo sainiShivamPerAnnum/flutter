@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -110,7 +111,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
         height: SizeConfig.screenWidth * 0.14,
         width: SizeConfig.screenWidth * 0.14,
         decoration: BoxDecoration(
-          color: widget.bgColor ?? Color(0xff206A5D),
+          color: widget.bgColor ?? Colors.black.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
         ),
         alignment: Alignment.center,

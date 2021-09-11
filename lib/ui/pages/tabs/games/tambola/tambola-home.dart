@@ -212,18 +212,13 @@ class _TambolaHomeState extends State<TambolaHome> {
                   duration: Duration(seconds: 1),
                   curve: Curves.ease,
                   decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("images/Tambola/tranbg.png"),
-                      fit: BoxFit.cover,
-                    ),
-                    borderRadius:
-                        BorderRadius.circular(SizeConfig.cardBorderRadius),
-                    gradient: LinearGradient(
-                      colors: [Color(0xff34C3A7), Color(0xff4AB474)],
-                      begin: Alignment.bottomRight,
-                      end: Alignment.topLeft,
-                    ),
-                  ),
+                      image: DecorationImage(
+                        image: AssetImage("images/Tambola/tranbg.png"),
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.cardBorderRadius),
+                      color: UiConstants.primaryColor),
                   margin: EdgeInsets.all(SizeConfig.globalMargin),
                   child: Column(
                     children: [
@@ -290,7 +285,8 @@ class _TambolaHomeState extends State<TambolaHome> {
                     Spacer(),
                     InkWell(
                       onTap: () async {
-                        if (await baseProvider.isOfflineSnackBar(context)) return;
+                        if (await baseProvider.isOfflineSnackBar(context))
+                          return;
                         _tambolaBoardViews = [];
                         baseProvider.userWeeklyBoards.forEach((board) {
                           _tambolaBoardViews.add(_buildBoardView(board));
@@ -499,7 +495,7 @@ class _TambolaHomeState extends State<TambolaHome> {
       _widget = ticketSummaryData.isEmpty
           ? SizedBox()
           : Container(
-              height: SizeConfig.screenWidth * 0.4,
+              height: SizeConfig.screenWidth * 0.36,
               width: SizeConfig.screenWidth,
               margin: EdgeInsets.symmetric(
                   vertical: SizeConfig.blockSizeHorizontal * 2),
@@ -510,33 +506,30 @@ class _TambolaHomeState extends State<TambolaHome> {
                 children: List.generate(
                   ticketSummaryData.length,
                   (index) => Container(
-                    height: SizeConfig.screenWidth * 0.4,
                     width: SizeConfig.screenWidth,
-                    margin: EdgeInsets.only(
-                        right: SizeConfig.blockSizeHorizontal * 3),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: ticketSummaryData[index].color,
-                      image: DecorationImage(
-                        image: NetworkImage(ticketSummaryData[index].bgAsset),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: SizeConfig.screenWidth * 0.8,
-                          width: SizeConfig.screenWidth,
-                          decoration: BoxDecoration(
-                              color: ticketSummaryData[index]
-                                  .color
-                                  .withOpacity(0.4),
-                              borderRadius: BorderRadius.circular(8)),
+                    alignment: Alignment.center,
+                    child: Container(
+                      margin: ticketSummaryData.length == 1
+                          ? EdgeInsets.all(0)
+                          : EdgeInsets.only(
+                              right: SizeConfig.blockSizeHorizontal * 3),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: ticketSummaryData[index].color,
+                        image: DecorationImage(
+                          image: NetworkImage(ticketSummaryData[index].bgAsset),
+                          fit: BoxFit.cover,
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.blockSizeHorizontal * 3,
-                            vertical: SizeConfig.blockSizeHorizontal * 2,
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color:
+                              ticketSummaryData[index].color.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(
+                            SizeConfig.globalMargin,
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -545,57 +538,49 @@ class _TambolaHomeState extends State<TambolaHome> {
                               Text(
                                 ticketSummaryData[index].data[0].title,
                                 style: TextStyle(
-                                  fontSize: SizeConfig.largeTextSize,
+                                  fontSize: SizeConfig.mediumTextSize * 1.2,
                                   color: Colors.white,
                                   height: 1.6,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
-                              // checkForMoreItems(ticketSummaryData[index]),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      AppState.delegate.appState.currentAction =
-                                          PageAction(
-                                        state: PageState.addWidget,
-                                        page: TSummaryDetailsPageConfig,
-                                        widget: SummaryTicketsDisplay(
-                                          summary: ticketSummaryData[index],
-                                        ),
-                                      );
-                                    },
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      width: SizeConfig.screenWidth * 0.8,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 16, vertical: 8),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.white,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                      ),
-                                      child: Text(
-                                        ticketSummaryData[index].data.length ==
-                                                1
-                                            ? "Show ticket(s)"
-                                            : "Show All",
-                                        style: TextStyle(
-                                          fontSize: SizeConfig.mediumTextSize,
-                                          color: Colors.white,
-                                        ),
-                                      ),
+                              InkWell(
+                                onTap: () {
+                                  AppState.delegate.appState.currentAction =
+                                      PageAction(
+                                    state: PageState.addWidget,
+                                    page: TSummaryDetailsPageConfig,
+                                    widget: SummaryTicketsDisplay(
+                                      summary: ticketSummaryData[index],
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  width: SizeConfig.screenWidth * 0.3,
+                                  alignment: Alignment.center,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 10),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.white,
+                                    ),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: Text(
+                                    ticketSummaryData[index].data.length == 1
+                                        ? "Show ticket(s)"
+                                        : "Show All",
+                                    style: TextStyle(
+                                      fontSize: SizeConfig.mediumTextSize,
+                                      color: Colors.white,
                                     ),
                                   ),
-                                ],
+                                ),
                               )
                             ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
@@ -958,7 +943,7 @@ class _TambolaHomeState extends State<TambolaHome> {
       } else {
         if (length == 1)
           output =
-              "Ticket #${firstCard.board.getTicketNumber()} is just 2 numbers away from completing their $category!";
+              "Ticket #${firstCard.board.getTicketNumber()} is just 2 numbers away from completing its $category!";
         else
           output =
               "$length of your tickets are just 2 numbers away from completing its $category.";
