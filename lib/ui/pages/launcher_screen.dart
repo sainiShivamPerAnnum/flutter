@@ -154,7 +154,7 @@ class LogoFadeIn extends State<SplashScreen> {
     //if(!_timer.isActive)initialize();
     SizeConfig().init(context);
     ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityStatus>(context, listen: false);
+        Provider.of<ConnectivityStatus>(context, listen: true);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

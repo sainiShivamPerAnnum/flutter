@@ -10,6 +10,7 @@ class UserTicketWallet {
   int _initTck;
   int _prizeTck; //recurring prize tickets
   int _refTck; //recurring referral tickets
+  int _goldenRewTck;  //tickets earned through golden ticket. recurring
   List<NonRecurringTicket> _activeNRTck;
   List<LockedTicket> _lockedTck;
 
@@ -18,6 +19,7 @@ class UserTicketWallet {
   static final String fldInitTckCount = 'gINIT';
   static final String fldPrizeRecurringTckCount = 'gPRIZE';
   static final String fldReferralRecurringTckCount = 'gREF';
+  static final String fldGoldenRewardTckCount = 'gGOLDEN_TCK';
 
   static final String fldPrizeNonRecurringPrefix = 'gPRIZE';
   static final String fldReferralNonRecurringPrefix = 'gREF';
@@ -29,9 +31,9 @@ class UserTicketWallet {
   static final String fldActiveTicketGenerationKey = 'gGEN_ACTIVE_KEY';
 
   UserTicketWallet(this._augGold99Tck, this._icici1565Tck, this._initTck,
-      this._prizeTck, this._refTck, this._activeNRTck, this._lockedTck);
+      this._prizeTck, this._refTck, this._goldenRewTck, this._activeNRTck, this._lockedTck);
 
-  UserTicketWallet.newTicketWallet() : this(0, 0, 0, 0, 0, [], []);
+  UserTicketWallet.newTicketWallet() : this(0, 0, 0, 0, 0, 0, [], []);
 
   UserTicketWallet.fromMap(Map<String, dynamic> tMap) {
     _initTck =
@@ -48,7 +50,9 @@ class UserTicketWallet {
     _refTck = (_isValidField(tMap[fldReferralRecurringTckCount]))
         ? tMap[fldReferralRecurringTckCount]
         : 0;
-
+    _goldenRewTck = (_isValidField(tMap[fldGoldenRewardTckCount]))
+        ? tMap[fldGoldenRewardTckCount]
+        : 0;
     _buildNonRecurringTicketBalance(tMap);
     _buildLockedTicketBalance(tMap);
   }
@@ -57,7 +61,7 @@ class UserTicketWallet {
   ///this DOESNT include the locked tickets
   int getActiveTickets() {
     int _baseCount =
-        _augGold99Tck + _icici1565Tck + _prizeTck + _initTck + _refTck;
+        _augGold99Tck + _icici1565Tck + _prizeTck + _initTck + _refTck + _goldenRewTck;
     if (_activeNRTck != null && _activeNRTck.length > 0) {
       for (NonRecurringTicket ticketCnt in _activeNRTck) {
         _baseCount = _baseCount + ticketCnt.tckCount;
@@ -242,6 +246,12 @@ class UserTicketWallet {
 
   set augGold99Tck(int value) {
     _augGold99Tck = value;
+  }
+
+  int get goldenRewTck => _goldenRewTck;
+
+  set goldenRewTck(int value) {
+    _goldenRewTck = value;
   }
 }
 

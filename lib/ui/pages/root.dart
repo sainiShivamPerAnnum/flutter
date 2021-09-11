@@ -10,6 +10,8 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/modals/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
@@ -282,10 +284,10 @@ class _RootState extends State<Root> {
 
   _processDynamicLink(String userId, Uri deepLink) async {
     String _uri = deepLink.toString();
-    if(_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
+    if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
       //Golden ticket dynamic link
       int flag = await _submitGoldenTicket(userId, _uri);
-    }else {
+    } else {
       //Referral dynamic link
       int addUserTicketCount = await _submitReferral(
           baseProvider.myUser.uid, baseProvider.myUser.name, _uri);
@@ -321,19 +323,52 @@ class _RootState extends State<Root> {
     }
   }
 
-  Future<int> _submitGoldenTicket(String userId, String deepLink) async{
-    try{
+  Future<int> _submitGoldenTicket(String userId, String deepLink) async {
+    try {
       String prefix = "https://fello.in/goldenticket/";
-      if(!deepLink.startsWith(prefix)) return -1;
+      if (!deepLink.startsWith(prefix)) return -1;
       String docId = deepLink.replaceAll(prefix, '');
-      if(docId != null && docId.isNotEmpty) {
-        return httpModel.postGoldenTicketRedemption(userId, docId).then((flag) {
-          log.debug('Flag is $flag');
-          return flag;
+      if (docId != null && docId.isNotEmpty) {
+        return httpModel
+            .postGoldenTicketRedemption(userId, docId)
+            .then((redemptionMap) {
+          // log.debug('Flag is ${tckCount.toString()}');
+          if (redemptionMap != null &&
+              redemptionMap['flag'] &&
+              redemptionMap['count'] > 0) {
+            AppState.screenStack.add(ScreenItem.dialog);
+            return showDialog(
+              context: context,
+              builder: (_) => GoldenTicketClaimDialog(
+                ticketCount: redemptionMap['count'],
+              ),
+            );
+            // return showDialog(
+            //     context: context,
+            //     builder: (BuildContext context) => MoreInfoDialog(
+            //           text: 'Your Golden Ticket was successfully redeemed!',
+            //           title:
+            //               'You have been rewarded ${redemptionMap['count'].toString()} free Tambola tickets',
+            //         ));
+          } else {
+            AppState.screenStack.add(ScreenItem.dialog);
+            return showDialog(
+              context: context,
+              builder: (_) => GoldenTicketClaimDialog(
+                ticketCount: 0,
+              ),
+            );
+            // return showDialog(
+            //     context: context,
+            //     builder: (BuildContext context) => MoreInfoDialog(
+            //           text: redemptionMap['fail_msg'],
+            //           title: 'Your Golden Ticket could not be redeemed',
+            //         ));
+          }
         });
       }
       return -1;
-    }catch(e) {
+    } catch (e) {
       log.error('$e');
       return -1;
     }

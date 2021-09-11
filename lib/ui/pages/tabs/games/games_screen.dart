@@ -97,7 +97,7 @@ class _GamePageState extends State<GamePage> {
   @override
   Widget build(BuildContext context) {
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
     ConnectivityStatus connectivityStatus =
@@ -145,9 +145,7 @@ class _GamePageState extends State<GamePage> {
                         children: [
                           if (connectivityStatus == ConnectivityStatus.Offline)
                             NetworkBar(),
-                          Spacer(
-                            flex: 2,
-                          ),
+
                           InkWell(
                             onTap: () async {
                               Haptic.vibrate();
@@ -163,9 +161,6 @@ class _GamePageState extends State<GamePage> {
                                 ? TicketCount(baseProvider.userTicketWallet
                                     .getActiveTickets())
                                 : Container(),
-                          ),
-                          const Spacer(
-                            flex: 1,
                           ),
 
                           GameCardList(
@@ -282,22 +277,27 @@ class IdeaSection extends StatelessWidget {
               ),
             ],
           ),
-          // GameCard(
-          //   gradient: const [
-          //  Color(0xff4776E6),
-          //     Color(0xff8E54E9),
-          //   ],
-          //   title: "Have a Golden Ticket?",
-          //   action: [
-          //     GameOfferCardButton(
-          //       onPressed: () {
-          //         AppState.delegate
-          //             .parseRoute(Uri.parse("games/d-goldenTicket"));
-          //       },
-          //       title: "Redeem",
-          //     ),
-          //   ],
-          // ),
+          GameCard(
+            gradient: const [
+              Color(0xff4776E6),
+              Color(0xff8E54E9),
+            ],
+            title: "Golden Ticket Dialog",
+            action: [
+              GameOfferCardButton(
+                onPressed: () {
+                  AppState.screenStack.add(ScreenItem.dialog);
+                  showDialog(
+                    context: context,
+                    builder: (_) => GoldenTicketClaimDialog(
+                      ticketCount: 100,
+                    ),
+                  );
+                },
+                title: "Show",
+              ),
+            ],
+          ),
           GameCard(
             gradient: const [
               Color(0xffFFCF41),
