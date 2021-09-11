@@ -79,9 +79,13 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
         ChangeNotifierProvider(create: (_) => locator<PaymentService>()),
         StreamProvider<ConnectivityStatus>(
-          create: (_) =>
-              locator<ConnectivityService>().connectionStatusController.stream,
-          initialData: ConnectivityStatus.Cellular,
+          create: (_) {
+            ConnectivityService connectivityService =
+                locator<ConnectivityService>();
+            connectivityService.initialLoad();
+            return connectivityService.connectionStatusController.stream;
+          },
+          initialData: ConnectivityStatus.Offline,
         ),
         ChangeNotifierProvider(create: (_) => appState),
       ],
