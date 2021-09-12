@@ -106,12 +106,14 @@ class _LoginControllerState extends State<LoginController>
 
   Future<void> _verifyPhone() async {
     final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
+      log.debug('::AUTO_RETRIEVE::INVOKED');
       log.debug("Phone number hasnt been auto verified yet");
       if (_otpScreenKey.currentState != null)
         _otpScreenKey.currentState.onOtpAutoDetectTimeout();
     };
 
     final PhoneCodeSent smsCodeSent = (String verId, [int forceCodeResend]) {
+      log.debug('::SMS_CODE_SENT::INVOKED');
       this._augmentedVerificationId = verId;
       log.debug(
           "User mobile number format verified. Sending otp and verifying");
@@ -129,6 +131,7 @@ class _LoginControllerState extends State<LoginController>
 
     final PhoneVerificationCompleted verifiedSuccess =
         (AuthCredential user) async {
+      log.debug('::VERIFIED_SUCCESS::INVOKED');
       log.debug("Verified automagically!");
       if (!baseProvider.isLoginNextInProgress) {
         baseProvider.isLoginNextInProgress = true;
@@ -153,6 +156,8 @@ class _LoginControllerState extends State<LoginController>
 
     final PhoneVerificationFailed veriFailed =
         (FirebaseAuthException exception) {
+      log.debug('::VERIFIED_FAILED::INVOKED');
+      log.error(exception.stackTrace.toString());
       //codes: 'quotaExceeded'
       if (exception.code == 'quotaExceeded') {
         log.error("Quota for otps exceeded");
@@ -168,7 +173,7 @@ class _LoginControllerState extends State<LoginController>
         phoneNumber: this._verificationId,
         codeAutoRetrievalTimeout: autoRetrieve,
         codeSent: smsCodeSent,
-        timeout: const Duration(seconds: 2),
+        timeout: const Duration(seconds: 30),
         verificationCompleted: verifiedSuccess,
         verificationFailed: veriFailed);
   }

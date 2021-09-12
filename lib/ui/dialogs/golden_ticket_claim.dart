@@ -1,10 +1,6 @@
-import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
-import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +12,9 @@ import 'package:provider/provider.dart';
 
 class GoldenTicketClaimDialog extends StatefulWidget {
   final int ticketCount;
+
   GoldenTicketClaimDialog({@required this.ticketCount});
+
   @override
   _GoldenTicketClaimDialogState createState() =>
       _GoldenTicketClaimDialogState();
