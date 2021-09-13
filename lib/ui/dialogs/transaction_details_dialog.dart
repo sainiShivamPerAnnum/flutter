@@ -40,8 +40,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
             UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
         widget._transaction.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
         widget._transaction.tranStatus ==
-            UserTransaction.TRAN_STATUS_COMPLETE &&
-        Platform.isAndroid) {
+            UserTransaction.TRAN_STATUS_COMPLETE) {
       _showInvoiceButton = true;
     }
   }
