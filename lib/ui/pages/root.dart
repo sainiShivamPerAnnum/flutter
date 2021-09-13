@@ -356,6 +356,7 @@ class _RootState extends State<Root> {
               context: context,
               builder: (_) => GoldenTicketClaimDialog(
                 ticketCount: 0,
+                failMsg: redemptionMap['fail_msg'],
               ),
             );
             // return showDialog(

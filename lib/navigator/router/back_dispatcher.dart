@@ -40,13 +40,13 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           _baseUtil.myUser != null &&
           _baseUtil.myUser.uid != null &&
           _baseUtil.myUser.userPreferences != null)
-      _dbModel
-          .updateUserPreferences(
-              _baseUtil.myUser.uid, _baseUtil.myUser.userPreferences)
-          .then((value) {
-        AppState.unsavedPrefs = false;
-        print("Preferences updated");
-      });
+        _dbModel
+            .updateUserPreferences(
+                _baseUtil.myUser.uid, _baseUtil.myUser.userPreferences)
+            .then((value) {
+          AppState.unsavedPrefs = false;
+          print("Preferences updated");
+        });
       return _routerDelegate.popRoute();
     }
     // If onboarding is in progress

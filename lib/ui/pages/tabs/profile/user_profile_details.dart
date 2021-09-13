@@ -179,8 +179,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                 ),
                                 child: InkWell(
                                   onTap: () async {
-                                    if (await baseProvider.isOfflineSnackBar(context))
-                                      return;
+                                    if (await baseProvider
+                                        .isOfflineSnackBar(context)) return;
                                     var _status =
                                         await Permission.photos.status;
                                     if (_status.isRestricted ||
@@ -229,7 +229,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             FittedBox(
                               child: TextButton.icon(
                                 onPressed: () async {
-                                  if (await baseProvider.isOfflineSnackBar(context)) return;
+                                  if (await baseProvider
+                                      .isOfflineSnackBar(context)) return;
                                   AppState.screenStack.add(ScreenItem.dialog);
                                   showDialog(
                                       barrierDismissible: false,

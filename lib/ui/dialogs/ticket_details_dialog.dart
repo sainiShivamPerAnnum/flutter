@@ -96,10 +96,10 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
                         : Container(),
                     (widget._userTicketWallet.goldenRewTck > 0)
                         ? _addListField(
-                        'Earned from Golden Ticket:',
-                        '',
-                        widget._userTicketWallet.goldenRewTck,
-                        'Refreshes every Monday')
+                            'Earned from Golden Ticket:',
+                            '',
+                            widget._userTicketWallet.goldenRewTck,
+                            'Refreshes every Monday')
                         : Container(),
                     (widget._userTicketWallet.refTck > 0)
                         ? _addListField(

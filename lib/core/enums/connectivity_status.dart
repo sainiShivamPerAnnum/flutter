@@ -1,5 +1,1 @@
-enum ConnectivityStatus{
-  Wifi,
-  Cellular,
-  Offline
-}
+enum ConnectivityStatus { Wifi, Cellular, Offline }

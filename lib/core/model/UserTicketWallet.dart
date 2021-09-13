@@ -10,7 +10,7 @@ class UserTicketWallet {
   int _initTck;
   int _prizeTck; //recurring prize tickets
   int _refTck; //recurring referral tickets
-  int _goldenRewTck;  //tickets earned through golden ticket. recurring
+  int _goldenRewTck; //tickets earned through golden ticket. recurring
   List<NonRecurringTicket> _activeNRTck;
   List<LockedTicket> _lockedTck;
 
@@ -30,8 +30,15 @@ class UserTicketWallet {
   static final String fldTicketGenerationCount = 'gGEN_LEFT_COUNT';
   static final String fldActiveTicketGenerationKey = 'gGEN_ACTIVE_KEY';
 
-  UserTicketWallet(this._augGold99Tck, this._icici1565Tck, this._initTck,
-      this._prizeTck, this._refTck, this._goldenRewTck, this._activeNRTck, this._lockedTck);
+  UserTicketWallet(
+      this._augGold99Tck,
+      this._icici1565Tck,
+      this._initTck,
+      this._prizeTck,
+      this._refTck,
+      this._goldenRewTck,
+      this._activeNRTck,
+      this._lockedTck);
 
   UserTicketWallet.newTicketWallet() : this(0, 0, 0, 0, 0, 0, [], []);
 
@@ -60,8 +67,12 @@ class UserTicketWallet {
   ///all recurring tickets and all the non recurring tickets from this week
   ///this DOESNT include the locked tickets
   int getActiveTickets() {
-    int _baseCount =
-        _augGold99Tck + _icici1565Tck + _prizeTck + _initTck + _refTck + _goldenRewTck;
+    int _baseCount = _augGold99Tck +
+        _icici1565Tck +
+        _prizeTck +
+        _initTck +
+        _refTck +
+        _goldenRewTck;
     if (_activeNRTck != null && _activeNRTck.length > 0) {
       for (NonRecurringTicket ticketCnt in _activeNRTck) {
         _baseCount = _baseCount + ticketCnt.tckCount;
