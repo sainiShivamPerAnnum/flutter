@@ -182,9 +182,10 @@ class _HomePageState extends State<HomePage> {
       ];
     }
     List<Widget> _widget = [
-      if (connectivityStatus == ConnectivityStatus.Offline) NetworkBar(),
       Container(
-        height: SizeConfig.screenHeight * 0.02,
+        height: connectivityStatus == ConnectivityStatus.Offline
+            ? kToolbarHeight
+            : SizeConfig.screenHeight * 0.02,
       ),
       _buildProfileRow(),
     ];

@@ -447,28 +447,35 @@ class BaseUtil extends ChangeNotifier {
   }
 
   showNoInternetAlert(BuildContext context) {
-    Flushbar(
-      flushbarPosition: FlushbarPosition.TOP,
-      flushbarStyle: FlushbarStyle.FLOATING,
-      icon: Icon(
-        Icons.error,
-        size: 28.0,
-        color: Colors.white,
-      ),
-      margin: EdgeInsets.all(10),
-      borderRadius: 8,
-      title: "No Internet",
-      message: "Please check your network connection and try again",
-      duration: Duration(seconds: 2),
-      backgroundColor: Colors.red,
-      boxShadows: [
-        BoxShadow(
-          color: Colors.red[800],
-          offset: Offset(0.0, 2.0),
-          blurRadius: 3.0,
-        )
-      ],
-    )..show(context);
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context, listen: false);
+
+    if (connectivityStatus == ConnectivityStatus.Offline) {
+      Flushbar(
+        flushbarPosition: FlushbarPosition.TOP,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        icon: Icon(
+          Icons.error,
+          size: 28.0,
+          color: Colors.white,
+        ),
+        margin: EdgeInsets.all(10),
+        borderRadius: 8,
+        title: "No Internet",
+        message: "Please check your network connection and try again",
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.red,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.red[800],
+            offset: Offset(0.0, 2.0),
+            blurRadius: 3.0,
+          )
+        ],
+      )..show(context);
+      return true;
+    }
+    return false;
   }
 
   Future<bool> getDrawStatus() async {

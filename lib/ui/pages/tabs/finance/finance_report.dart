@@ -331,6 +331,7 @@ class _YourFundsState extends State<YourFunds> {
   Widget _addKycInfoWidget() {
     return InkWell(
       onTap: () {
+        if (baseProvider.showNoInternetAlert(context)) return;
         AppState.screenStack.add(ScreenItem.dialog);
         showModalBottomSheet(
             isDismissible: false,
@@ -379,6 +380,7 @@ class _YourFundsState extends State<YourFunds> {
 
   _onWithdrawalClicked() async {
     HapticFeedback.vibrate();
+    if (baseProvider.showNoInternetAlert(context)) return;
     baseProvider.augmontDetail = (baseProvider.augmontDetail == null)
         ? (await dbProvider.getUserAugmontDetails(baseProvider.myUser.uid))
         : baseProvider.augmontDetail;

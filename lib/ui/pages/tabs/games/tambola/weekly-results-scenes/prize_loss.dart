@@ -2,6 +2,7 @@ import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Loser extends StatelessWidget {
@@ -45,9 +46,10 @@ class Loser extends StatelessWidget {
                   ),
                 ),
               ),
-              Image.network(
-                "https://img.freepik.com/free-vector/business-consulting-comfortable-way-success-goal-cup-achievement-stair-step-comfort-businessman-lift_1284-42010.jpg?size=338&ext=jpg&uid=P35674521",
-                height: SizeConfig.screenWidth * 0.6,
+              Spacer(),
+              SvgPicture.asset(
+                "images/svgs/tambola-lose.svg",
+                width: SizeConfig.screenWidth * 0.8,
               ),
               Spacer(),
               Padding(
@@ -129,7 +131,7 @@ class Loser extends StatelessWidget {
                     ),
                     Expanded(
                         child: Text(
-                      "₹ 100 = 1 ticket",
+                      "₹ 100 saved = 1 ticket",
                       textAlign: TextAlign.center,
                     ))
                   ],

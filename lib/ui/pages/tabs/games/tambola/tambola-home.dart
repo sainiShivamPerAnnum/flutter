@@ -70,7 +70,8 @@ class _TambolaHomeState extends State<TambolaHome> {
 
   bool ticketsBeingGenerated = false;
   bool dailyPickHeaderWithTimings = false;
-
+  int ticketGenerationTryCount = 0;
+  bool showCardSummary = true;
   //List<String> dailyPickTextList = [];
   PageController _summaryController = PageController(viewportFraction: 0.94);
 
@@ -134,32 +135,43 @@ class _TambolaHomeState extends State<TambolaHome> {
     }
 
     ///check if new tambola tickets need to be generated
-    bool _isGenerating = await _tambolaTicketService
-        .processTicketGenerationRequirement(_activeTambolaCardCount);
-    if (_isGenerating) {
-      setState(() {
-        ticketsBeingGenerated = true;
-      });
-      _tambolaTicketService.setTambolaTicketGenerationResultListener((flag) {
+    if (ticketGenerationTryCount < 3) {
+      ticketGenerationTryCount += 1;
+      bool _isGenerating = await _tambolaTicketService
+          .processTicketGenerationRequirement(_activeTambolaCardCount);
+      if (_isGenerating) {
         setState(() {
-          ticketsBeingGenerated = false;
+          ticketsBeingGenerated = true;
         });
-        if (flag == TambolaGenerationService.GENERATION_COMPLETE) {
-          //new tickets have arrived
-          _refreshTambolaTickets();
-          baseProvider.showPositiveAlert('Tickets successfully generated 🥳',
-              'Your weekly odds are now way better!', context);
-        } else if (flag ==
-            TambolaGenerationService.GENERATION_PARTIALLY_COMPLETE) {
-          _refreshTambolaTickets();
-          baseProvider.showPositiveAlert('Tickets partially generated',
-              'The remaining tickets shall soon be credited', context);
-        } else {
-          baseProvider.showNegativeAlert(
-              'Tickets generation failed',
-              'The issue has been noted and your tickets will soon be credited',
-              context);
-        }
+        _tambolaTicketService.setTambolaTicketGenerationResultListener((flag) {
+          setState(() {
+            ticketsBeingGenerated = false;
+          });
+          if (flag == TambolaGenerationService.GENERATION_COMPLETE) {
+            //new tickets have arrived
+            _refreshTambolaTickets();
+            baseProvider.showPositiveAlert('Tickets successfully generated 🥳',
+                'Your weekly odds are now way better!', context);
+          } else if (flag ==
+              TambolaGenerationService.GENERATION_PARTIALLY_COMPLETE) {
+            _refreshTambolaTickets();
+            baseProvider.showPositiveAlert('Tickets partially generated',
+                'The remaining tickets shall soon be credited', context);
+          } else {
+            baseProvider.showNegativeAlert(
+                'Tickets generation failed',
+                'The issue has been noted and your tickets will soon be credited',
+                context);
+          }
+        });
+      }
+    }
+
+    ///check whether to show summary cards or not
+    DateTime today = DateTime.now();
+    if (today.weekday == 7 && today.hour > 18) {
+      setState(() {
+        showCardSummary = false;
       });
     }
 
@@ -263,11 +275,12 @@ class _TambolaHomeState extends State<TambolaHome> {
                   ),
                 ),
               ),
-              _buildTicketSummaryCards(
-                  baseProvider.weeklyTicksFetched,
-                  baseProvider.weeklyDrawFetched,
-                  baseProvider.userWeeklyBoards,
-                  _activeTambolaCardCount),
+              if (showCardSummary)
+                _buildTicketSummaryCards(
+                    baseProvider.weeklyTicksFetched,
+                    baseProvider.weeklyDrawFetched,
+                    baseProvider.userWeeklyBoards,
+                    _activeTambolaCardCount),
               Container(
                 margin: EdgeInsets.symmetric(
                     horizontal: SizeConfig.blockSizeHorizontal * 3,
@@ -285,19 +298,25 @@ class _TambolaHomeState extends State<TambolaHome> {
                     Spacer(),
                     InkWell(
                       onTap: () async {
-                        if (await baseProvider.isOfflineSnackBar(context))
+                        if (await baseProvider.showNoInternetAlert(context))
                           return;
                         _tambolaBoardViews = [];
                         baseProvider.userWeeklyBoards.forEach((board) {
                           _tambolaBoardViews.add(_buildBoardView(board));
                         });
-                        AppState.delegate.appState.currentAction = PageAction(
-                          state: PageState.addWidget,
-                          page: TShowAllTicketsPageConfig,
-                          widget: ShowAllTickets(
-                            tambolaBoardView: _tambolaBoardViews,
-                          ),
-                        );
+                        if (_tambolaBoardViews.isNotEmpty)
+                          AppState.delegate.appState.currentAction = PageAction(
+                            state: PageState.addWidget,
+                            page: TShowAllTicketsPageConfig,
+                            widget: ShowAllTickets(
+                              tambolaBoardView: _tambolaBoardViews,
+                            ),
+                          );
+                        else
+                          baseProvider.showNegativeAlert(
+                              "No Tickets to show",
+                              "Currently there are no tickets available",
+                              context);
                       },
                       highlightColor: UiConstants.primaryColor.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(100),
@@ -341,9 +360,16 @@ class _TambolaHomeState extends State<TambolaHome> {
   Widget _buildCards(bool fetchedFlag, bool drawFetchedFlag,
       List<TambolaBoard> boards, int count) {
     ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityStatus>(context, listen: false);
+        Provider.of<ConnectivityStatus>(context);
     Widget _widget;
-    if (!fetchedFlag || !drawFetchedFlag) {
+    if (connectivityStatus == ConnectivityStatus.Offline)
+      _widget = Container(
+        height: SizeConfig.screenHeight * 0.2,
+        child: NetworkBar(
+          textColor: Colors.black87,
+        ),
+      );
+    else if (!fetchedFlag || !drawFetchedFlag) {
       _widget = Padding(
         //Loader
         padding: EdgeInsets.all(10),

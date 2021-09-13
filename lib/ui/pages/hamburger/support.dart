@@ -1,3 +1,4 @@
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -40,6 +41,8 @@ class _SupportPageState extends State<SupportPage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context);
     if (!isInit) {
       init();
     }
@@ -223,7 +226,10 @@ class _SupportPageState extends State<SupportPage> {
                     ),
                     onTap: () {
                       Haptic.vibrate();
-                      _showRequestCallSheet();
+                      if (connectivityStatus != ConnectivityStatus.Offline)
+                        _showRequestCallSheet();
+                      else
+                        baseProvider.showNoInternetAlert(context);
                     },
                   ),
                   Padding(
@@ -287,8 +293,8 @@ class _SupportPageState extends State<SupportPage> {
         context: context,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30.0),
-                topRight: Radius.circular(30.0))),
+                topLeft: Radius.circular(SizeConfig.cardBorderRadius),
+                topRight: Radius.circular(SizeConfig.cardBorderRadius))),
         backgroundColor: UiConstants.bottomNavBarColor,
         isScrollControlled: true,
         builder: (context) {
@@ -297,32 +303,39 @@ class _SupportPageState extends State<SupportPage> {
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom),
               child: Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.blockSizeHorizontal * 5,
-                    vertical: 20),
+                padding: EdgeInsets.all(SizeConfig.globalMargin),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ListTile(
-                        title: Center(
-                            child: Text(
-                          'Request a callback',
-                          style: Theme.of(context).textTheme.headline5.copyWith(
-                              color: UiConstants.primaryColor,
-                              fontSize: SizeConfig.largeTextSize * 1.2,
-                              fontWeight: FontWeight.bold),
-                        )),
-                        trailing: GestureDetector(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Request a callback',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(
+                                    color: UiConstants.primaryColor,
+                                    fontSize: SizeConfig.largeTextSize * 1.2,
+                                    fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        GestureDetector(
                           child: Icon(
                             Icons.close,
-                            size: SizeConfig.blockSizeVertical * 4,
+                            size: 30,
                           ),
                           onTap: () {
                             Navigator.of(context).pop();
                           },
-                        )),
+                        ),
+                      ],
+                    ),
                     SizedBox(
                       height: SizeConfig.blockSizeVertical * 3.5,
                     ),

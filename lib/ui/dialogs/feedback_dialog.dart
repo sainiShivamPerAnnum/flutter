@@ -1,9 +1,12 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class FeedbackDialog extends StatefulWidget {
   final String title, description, buttonText;
@@ -29,17 +32,22 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
 
   @override
   Widget build(BuildContext context) {
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context);
+    BaseUtil baseProvider = Provider.of<BaseUtil>(context, listen: false);
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(UiConstants.padding),
       ),
       elevation: 0.0,
       backgroundColor: Colors.transparent,
-      child: dialogContent(context),
+      child: dialogContent(context, connectivityStatus, baseProvider),
     );
   }
 
-  dialogContent(BuildContext context) {
+  dialogContent(BuildContext context, ConnectivityStatus connectivityStatus,
+      BaseUtil baseProvider) {
     return Stack(
       children: <Widget>[
         //...bottom card part,
@@ -112,7 +120,9 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
                   onPressed: () {
                     Haptic.vibrate();
                     log.debug('DialogAction clicked');
-                    if (_formKey.currentState.validate()) {
+                    if (connectivityStatus == ConnectivityStatus.Offline)
+                      baseProvider.showNoInternetAlert(context);
+                    else if (_formKey.currentState.validate()) {
                       widget.dialogAction(fdbkController.text);
                     }
                   },

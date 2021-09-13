@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -18,6 +19,7 @@ import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
 import 'package:felloapp/ui/pages/tabs/profile/profile_screen.dart';
+import 'package:felloapp/ui/widgets/network_bar.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
@@ -166,6 +168,8 @@ class _RootState extends State<Root> {
     fcmProvider = Provider.of<FcmHandler>(context, listen: false);
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context);
     _initialize();
     var accentColor = UiConstants.primaryColor;
 
@@ -199,6 +203,21 @@ class _RootState extends State<Root> {
                 ),
               ),
             ),
+            if (connectivityStatus == ConnectivityStatus.Offline)
+              Positioned(
+                child: SafeArea(
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: kToolbarHeight,
+                    width: SizeConfig.screenWidth,
+                    child: NetworkBar(
+                      textColor: (appState.getCurrentTabIndex == 0)
+                          ? Colors.white
+                          : Color(0xff4C4C4C),
+                    ),
+                  ),
+                ),
+              ),
             Positioned(
               top: SizeConfig.blockSizeHorizontal * 2,
               right: SizeConfig.blockSizeHorizontal * 2,
@@ -209,7 +228,7 @@ class _RootState extends State<Root> {
                     InkWell(
                       child: Icon(
                         Icons.notifications,
-                        size: kToolbarHeight * 0.44,
+                        size: kToolbarHeight * 0.5,
                         color: (appState.getCurrentTabIndex == 0)
                             ? Colors.white
                             : Color(0xff4C4C4C),

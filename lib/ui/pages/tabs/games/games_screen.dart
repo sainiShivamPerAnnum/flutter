@@ -143,9 +143,6 @@ class _GamePageState extends State<GamePage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          if (connectivityStatus == ConnectivityStatus.Offline)
-                            NetworkBar(),
-
                           InkWell(
                             onTap: () async {
                               Haptic.vibrate();
@@ -246,6 +243,7 @@ class IdeaSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final baseProvider = Provider.of<BaseUtil>(context, listen: false);
     final dbProvider = Provider.of<DBModel>(context, listen: false);
+
     return Container(
       height: SizeConfig.screenHeight * 0.16,
       width: SizeConfig.screenWidth,
@@ -322,6 +320,7 @@ class IdeaSection extends StatelessWidget {
                         dialogAction: (String fdbk) {
                           if (fdbk != null && fdbk.isNotEmpty) {
                             //feedback submission allowed even if user not signed in
+
                             dbProvider
                                 .submitFeedback(
                                     (baseProvider.firebaseUser == null ||
@@ -335,6 +334,11 @@ class IdeaSection extends StatelessWidget {
                               if (flag) {
                                 baseProvider.showPositiveAlert('Thank You',
                                     'We appreciate your feedback!', context);
+                              } else {
+                                baseProvider.showNegativeAlert(
+                                    "Please try again",
+                                    "We were unable to get your feedback",
+                                    context);
                               }
                             });
                           }

@@ -142,8 +142,7 @@ class _FinancePageState extends State<FinancePage>
     dbProvider = Provider.of<DBModel>(context, listen: false);
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
-    ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityStatus>(context);
+
     if (!baseProvider.isAugmontRealTimeBalanceFetched) {
       baseProvider.refreshFunds();
       //_updateAugmontBalance();
@@ -169,8 +168,6 @@ class _FinancePageState extends State<FinancePage>
         child: SafeArea(
           child: Stack(
             children: [
-              if (connectivityStatus == ConnectivityStatus.Offline)
-                NetworkBar(textColor: Colors.black),
               ClipRRect(
                 borderRadius: SizeConfig.homeViewBorder,
                 child: Padding(

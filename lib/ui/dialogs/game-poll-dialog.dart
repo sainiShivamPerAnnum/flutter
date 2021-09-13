@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/widgets/network_bar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -25,6 +27,7 @@ class _GamePollState extends State<GamePoll> {
   int userVote;
   List<String> pollItems;
 
+  ConnectivityStatus connectivityStatus;
   vote() {
     setState(() {
       isVoted = true;
@@ -66,8 +69,7 @@ class _GamePollState extends State<GamePoll> {
     dbProvider.addUserPollResponse(baseProvider.myUser.uid, index).then((flag) {
       if (!flag) {
         Map<String, dynamic> errorDetails = {
-          'error_msg':
-              'Adding user poll response in game-poll-dialog failed'
+          'error_msg': 'Adding user poll response in game-poll-dialog failed'
         };
         dbProvider.logFailure(
             baseProvider.myUser.uid, FailType.GameVoteFailed, errorDetails);
@@ -97,7 +99,9 @@ class _GamePollState extends State<GamePoll> {
       pollList.add(GameTile(
         isVoted: isVoted,
         ontap: () {
-          if (!isVoted) {
+          if (connectivityStatus == ConnectivityStatus.Offline) {
+            baseProvider.showNoInternetAlert(context);
+          } else if (!isVoted) {
             Haptic.vibrate();
             addPollVote(_item.id);
           }
@@ -112,10 +116,13 @@ class _GamePollState extends State<GamePoll> {
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
+    connectivityStatus = Provider.of<ConnectivityStatus>(context);
+
     if (pollDetails == null) {
       getPollDetails();
       getPollResponse();
     }
+
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
       child: Dialog(

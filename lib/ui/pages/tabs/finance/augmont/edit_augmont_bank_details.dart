@@ -95,11 +95,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
               cancelBtnText: 'Cancel',
               confirmAction: () {
                 AppState.backButtonDispatcher.didPopRoute();
-                AppState.backButtonDispatcher.didPopRoute();
               },
-              cancelAction: () {
-                AppState.backButtonDispatcher.didPopRoute();
-              },
+              cancelAction: () {},
             ),
           ));
         }
@@ -281,6 +278,9 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                   size: 18.0,
                                 ),
                           onPressed: () {
+                            FocusScope.of(context).unfocus();
+                            if (baseProvider.showNoInternetAlert(context))
+                              return;
                             if (_formKey.currentState.validate()) {
                               _onUpdateClicked();
                             }

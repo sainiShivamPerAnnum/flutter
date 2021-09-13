@@ -59,8 +59,6 @@ class _ProfilePageState extends State<ProfilePage> {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
     httpProvider = Provider.of<HttpModel>(context, listen: false);
-    ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityStatus>(context);
 
     if (!baseProvider.userReferralInfoFetched)
       dbProvider.getUserReferralInfo(baseProvider.myUser.uid).then((value) {
@@ -89,10 +87,6 @@ class _ProfilePageState extends State<ProfilePage> {
         child: ListView(
           physics: BouncingScrollPhysics(),
           children: [
-            if (connectivityStatus == ConnectivityStatus.Offline)
-              NetworkBar(
-                textColor: Colors.black,
-              ),
             Container(
               height: kToolbarHeight,
             ),
@@ -186,7 +180,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     onPress: () async {
-                      if (await baseProvider.isOfflineSnackBar(context)) return;
+                      if (await baseProvider.showNoInternetAlert(context))
+                        return;
                       appState.currentAction = PageAction(
                           state: PageState.addPage,
                           page: TransactionPageConfig);
@@ -683,7 +678,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                     size: 18.0,
                   ),
             onTap: () async {
-              if (await baseProvider.isOfflineSnackBar(context)) return;
+              if (await baseProvider.showNoInternetAlert(context)) return;
               fcmProvider.addSubscription(FcmTopic.REFERRER);
               BaseAnalytics.analytics.logShare(
                   contentType: 'referral',
@@ -759,7 +754,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                         ),
                   onTap: () async {
                     ////////////////////////////////
-                    if (await baseProvider.isOfflineSnackBar(context)) return;
+                    if (await baseProvider.showNoInternetAlert(context)) return;
                     fcmProvider.addSubscription(FcmTopic.REFERRER);
                     BaseAnalytics.analytics.logShare(
                         contentType: 'referral',

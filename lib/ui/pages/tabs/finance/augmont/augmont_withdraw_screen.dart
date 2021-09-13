@@ -239,7 +239,10 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
                                           augmontGoldPalette.primaryColor)),
                               child: TextField(
                                 controller: _quantityController,
-                                keyboardType: (Platform.isAndroid)?TextInputType.number:TextInputType.numberWithOptions(decimal: true),
+                                keyboardType: (Platform.isAndroid)
+                                    ? TextInputType.number
+                                    : TextInputType.numberWithOptions(
+                                        decimal: true),
                                 readOnly: false,
                                 enabled: true,
                                 autofocus: false,
@@ -299,29 +302,23 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
   }
 
   Widget _addBankInfoWidget() {
-    return InkWell(
-      onTap: () {
-        appState.currentAction = PageAction(
-            state: PageState.addPage, page: EditAugBankDetailsPageConfig);
-      },
-      child: Container(
-        width: SizeConfig.screenWidth,
-        decoration: BoxDecoration(
-          color: Colors.amber[100],
-          borderRadius: BorderRadius.circular(4),
-        ),
-        alignment: Alignment.centerLeft,
-        margin: EdgeInsets.symmetric(vertical: 10),
-        child: Padding(
-          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              'You will be asked for your bank information in next step',
-              style: TextStyle(
-                  fontSize: SizeConfig.smallTextSize * 1.2,
-                  color: Colors.black54),
-            ),
+    return Container(
+      width: SizeConfig.screenWidth,
+      decoration: BoxDecoration(
+        color: Colors.amber[100],
+        borderRadius: BorderRadius.circular(4),
+      ),
+      alignment: Alignment.centerLeft,
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Padding(
+        padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            'You will be asked for your bank information in next step',
+            style: TextStyle(
+                fontSize: SizeConfig.smallTextSize * 1.2,
+                color: Colors.black54),
           ),
         ),
       ),
@@ -468,6 +465,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
           ),
           onPressed: () async {
             Haptic.vibrate();
+            if (baseProvider.showNoInternetAlert(context)) return;
             if (baseProvider.checkKycMissing) {
               _controller.forward().then((value) => _controller.reverse());
             } else {

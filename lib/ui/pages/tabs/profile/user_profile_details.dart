@@ -179,8 +179,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                 ),
                                 child: InkWell(
                                   onTap: () async {
-                                    if (await baseProvider.isOfflineSnackBar(context))
-                                      return;
+                                    if (await baseProvider
+                                        .showNoInternetAlert(context)) return;
                                     var _status =
                                         await Permission.photos.status;
                                     if (_status.isRestricted ||
@@ -229,7 +229,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             FittedBox(
                               child: TextButton.icon(
                                 onPressed: () async {
-                                  if (await baseProvider.isOfflineSnackBar(context)) return;
+                                  if (await baseProvider
+                                      .showNoInternetAlert(context)) return;
                                   AppState.screenStack.add(ScreenItem.dialog);
                                   showDialog(
                                       barrierDismissible: false,
@@ -387,7 +388,9 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             value: (baseProvider.myUser.userPreferences
                                     .getPreference(Preferences.APPLOCK) ==
                                 1),
-                            onChanged: (val) {
+                            onChanged: (val) async {
+                              if (await baseProvider
+                                  .showNoInternetAlert(context)) return;
                               baseProvider.flipSecurityValue(val);
                             }),
                       ),
@@ -400,7 +403,10 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                         .getPreference(
                                             Preferences.TAMBOLANOTIFICATIONS) ==
                                     1),
-                                onChanged: (val) {
+                                onChanged: (val) async {
+                                  if (await baseProvider
+                                      .showNoInternetAlert(context)) return;
+
                                   fcmProvider
                                       .toggleTambolaDrawNotificationStatus(val);
                                 }),
@@ -422,7 +428,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                     ),
                   ),
                   onPressed: () async {
-                    if (await baseProvider.isOfflineSnackBar(context)) return;
+                    if (await baseProvider.showNoInternetAlert(context)) return;
                     AppState.screenStack.add(ScreenItem.dialog);
                     showDialog(
                       context: context,
@@ -504,7 +510,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
         children: [
           ElevatedButton(
             onPressed: () async {
-              if (await baseProvider.isOfflineSnackBar(context)) return;
+              if (await baseProvider.showNoInternetAlert(context)) return;
               AppState.screenStack.add(ScreenItem.dialog);
               showModalBottomSheet(
                   isDismissible: false,

@@ -203,7 +203,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                   size: 18.0,
                 ),
           onPressed: () async {
-            if (await baseProvider.isOfflineSnackBar(context)) return;
+            if (await baseProvider.showNoInternetAlert(context)) return;
 
             Haptic.vibrate();
             baseProvider.isAugDepositRouteLogicInProgress = true;
@@ -267,7 +267,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                   size: 18.0,
                 ),
           onPressed: () async {
-            if (await baseProvider.isOfflineSnackBar(context)) return;
+            if (await baseProvider.showNoInternetAlert(context)) return;
 
             if (!baseProvider.isAugWithdrawRouteLogicInProgress) {
               Haptic.vibrate();
