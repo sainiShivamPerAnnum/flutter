@@ -97,7 +97,6 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-<<<<<<< Updated upstream
 	<key>FirebaseDynamicLinksCustomDomains</key>
 	<array>
 		<string>https://fello.in/download/app</string>
@@ -113,7 +112,5 @@
     <true/>
     <key>FacebookAdvertiserIDCollectionEnabled</key>
     <true/>
-=======
->>>>>>> Stashed changes
 </dict>
 </plist>
