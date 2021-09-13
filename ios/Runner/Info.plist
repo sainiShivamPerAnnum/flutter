@@ -37,7 +37,7 @@
 			<string>dynamiclink</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fello.in/app/referral</string>
+				<string>fello.page.link</string>
 			</array>
 		</dict>
 		<dict>
@@ -51,6 +51,11 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
+	<key>FirebaseDynamicLinksCustomDomains</key>
+	<array>
+		<string>https://fello.in/download/app</string>
+		<string>https://fello.in/app/referral</string>
+	</array>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>itms-beta</string>
