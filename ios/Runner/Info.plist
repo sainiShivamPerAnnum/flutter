@@ -40,12 +40,6 @@
 				<string>fello.page.link</string>
 			</array>
 		</dict>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>fb523292952050769</string>
-			</array>
-		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
@@ -55,6 +49,7 @@
 	<array>
 		<string>https://fello.in/download/app</string>
 		<string>https://fello.in/app/referral</string>
+		<string>https://fello.in/claim/goldenticket</string>
 	</array>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
@@ -101,16 +96,7 @@
 	<array>
 		<string>https://fello.in/download/app</string>
 		<string>https://fello.in/app/referral</string>
+		<string>https://fello.in/claim/goldenticket</string>
 	</array>
-	<key>FacebookAppID</key>
-    <string>523292952050769</string>
-    <key>FacebookClientToken</key>
-    <string>bb20099c8e8eb3c3ad3bb4338626b0c8</string>
-    <key>FacebookDisplayName</key>
-    <string>Fello</string>
-    <key>FacebookAutoLogAppEventsEnabled</key>
-    <true/>
-    <key>FacebookAdvertiserIDCollectionEnabled</key>
-    <true/>
 </dict>
 </plist>
