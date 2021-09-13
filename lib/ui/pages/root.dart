@@ -344,7 +344,7 @@ class _RootState extends State<Root> {
 
   Future<int> _submitGoldenTicket(String userId, String deepLink) async {
     try {
-      String prefix = "https://fello.in/goldenticket/";
+      String prefix = "https://fello.in/goldenticketdynlnk/";
       if (!deepLink.startsWith(prefix)) return -1;
       String docId = deepLink.replaceAll(prefix, '');
       if (docId != null && docId.isNotEmpty) {
@@ -362,27 +362,15 @@ class _RootState extends State<Root> {
                 ticketCount: redemptionMap['count'],
               ),
             );
-            // return showDialog(
-            //     context: context,
-            //     builder: (BuildContext context) => MoreInfoDialog(
-            //           text: 'Your Golden Ticket was successfully redeemed!',
-            //           title:
-            //               'You have been rewarded ${redemptionMap['count'].toString()} free Tambola tickets',
-            //         ));
           } else {
             AppState.screenStack.add(ScreenItem.dialog);
             return showDialog(
               context: context,
               builder: (_) => GoldenTicketClaimDialog(
                 ticketCount: 0,
+                failMsg: redemptionMap['fail_msg'],
               ),
             );
-            // return showDialog(
-            //     context: context,
-            //     builder: (BuildContext context) => MoreInfoDialog(
-            //           text: redemptionMap['fail_msg'],
-            //           title: 'Your Golden Ticket could not be redeemed',
-            //         ));
           }
         });
       }

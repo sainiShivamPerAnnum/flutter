@@ -310,41 +310,41 @@ class _ShareCardState extends State<ShareCard> {
         File imgg = new File('$directory/fello-reward-$dt.png');
         imgg.writeAsBytesSync(image);
         Share.shareFiles(
-            [imgg.path],
-            subject: 'Fello Rewards',
-            text:
-                'Fello is a really rewarding way to play games and invest in assets! Save and play with me and get rewarded: https://fello.in/download/app',
-          ).catchError((onError) {
-            if (baseProvider.myUser.uid != null) {
-              Map<String, dynamic> errorDetails = {
-                'error_msg': 'Share reward card in card.dart failed'
-              };
-              dbProvider.logFailure(baseProvider.myUser.uid,
-                  FailType.FelloRewardCardShareFailed, errorDetails);
-            }
-            print(onError);
-          });
-      } else if(Platform.isIOS) {
+          [imgg.path],
+          subject: 'Fello Rewards',
+          text:
+              'Fello is a really rewarding way to play games and invest in assets! Save and play with me and get rewarded: https://fello.in/download/app',
+        ).catchError((onError) {
+          if (baseProvider.myUser.uid != null) {
+            Map<String, dynamic> errorDetails = {
+              'error_msg': 'Share reward card in card.dart failed'
+            };
+            dbProvider.logFailure(baseProvider.myUser.uid,
+                FailType.FelloRewardCardShareFailed, errorDetails);
+          }
+          print(onError);
+        });
+      } else if (Platform.isIOS) {
         final directory = (await getTemporaryDirectory());
         if (!await directory.exists()) await directory.create(recursive: true);
         String dt = DateTime.now().toString();
         File imgg = new File('${directory.path}/fello-reward-$dt.png');
         imgg.writeAsBytesSync(image);
         Share.shareFiles(
-            [imgg.path],
-            subject: 'Fello Rewards',
-            text:
-                'Fello is a really rewarding way to play games and invest in assets! Save and play with me and get rewarded: https://fello.in/download/app',
-          ).catchError((onError) {
-            if (baseProvider.myUser.uid != null) {
-              Map<String, dynamic> errorDetails = {
-                'error_msg': 'Share reward card in card.dart failed'
-              };
-              dbProvider.logFailure(baseProvider.myUser.uid,
-                  FailType.FelloRewardCardShareFailed, errorDetails);
-            }
-            print(onError);
-          });
+          [imgg.path],
+          subject: 'Fello Rewards',
+          text:
+              'Fello is a really rewarding way to play games and invest in assets! Save and play with me and get rewarded: https://fello.in/download/app',
+        ).catchError((onError) {
+          if (baseProvider.myUser.uid != null) {
+            Map<String, dynamic> errorDetails = {
+              'error_msg': 'Share reward card in card.dart failed'
+            };
+            dbProvider.logFailure(baseProvider.myUser.uid,
+                FailType.FelloRewardCardShareFailed, errorDetails);
+          }
+          print(onError);
+        });
       }
     } catch (e) {
       // backButtonDispatcher.didPopRoute();

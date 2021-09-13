@@ -98,7 +98,6 @@ class _FundsChartViewState extends State<FundsChartView> {
           description: [
             "This is the amount you've earned as rewards playing games and through successful referrals!"
           ],
-
           fundAmount: widget.userFundWallet.prizeBalance,
           logo: "images/fello_logo.png",
           isHighlighted: widget.userFundWallet.isPrizeBalanceUnclaimed()),

@@ -1,7 +1,6 @@
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 
-
 class NetworkBar extends StatelessWidget {
   final textColor;
   NetworkBar({this.textColor});

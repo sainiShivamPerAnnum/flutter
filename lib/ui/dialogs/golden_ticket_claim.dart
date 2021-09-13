@@ -1,22 +1,20 @@
-import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
-import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
-import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class GoldenTicketClaimDialog extends StatefulWidget {
   final int ticketCount;
-  GoldenTicketClaimDialog({@required this.ticketCount});
+  final String failMsg;
+
+  GoldenTicketClaimDialog({@required this.ticketCount, this.failMsg});
+
   @override
   _GoldenTicketClaimDialogState createState() =>
       _GoldenTicketClaimDialogState();
@@ -89,7 +87,7 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                   backgroundColor: Color(0xffFFFEF3),
                   child: Container(
                     padding: EdgeInsets.all(SizeConfig.globalMargin),
-                    height: SizeConfig.screenWidth * 0.84,
+                    height: SizeConfig.screenWidth * 0.85,
                     child: widget.ticketCount > 0
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,7 +98,7 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                                 alignment: Alignment.center,
                                 height: SizeConfig.cardTitleTextSize * 2,
                                 child: Text(
-                                  "🎉 Paarty Bro!! 🎊",
+                                  "Congratulations! 🎉 ",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: UiConstants.primaryColor,
@@ -161,7 +159,7 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                               Column(
                                 children: [
                                   Text(
-                                    "You got ${widget.ticketCount} free tickets",
+                                    "You won ${widget.ticketCount} free tickets",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: SizeConfig.largeTextSize),
@@ -172,7 +170,7 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                                         horizontal:
                                             SizeConfig.screenWidth * 0.05),
                                     child: Text(
-                                      "You have successfully redeemed your golden ticket. Tickets will be credited shortly",
+                                      "Your Golden Ticket has been successfully redeemed. Tickets have been credited to your wallet.",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: SizeConfig.mediumTextSize,
@@ -209,7 +207,7 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                                 children: [
                                   SizedBox(height: 10),
                                   Text(
-                                    "Try again",
+                                    "Rewards were not credited",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: SizeConfig.largeTextSize),
@@ -220,7 +218,8 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                                         horizontal:
                                             SizeConfig.screenWidth * 0.05),
                                     child: Text(
-                                      "We were unable to redeem your golden ticket at the moment. please give it another try",
+                                      widget.failMsg ??
+                                          'There was an issue with your Golden Ticket',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: SizeConfig.mediumTextSize,
