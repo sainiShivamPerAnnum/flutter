@@ -226,7 +226,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.TSummaryDetails:
           _addPageData(SummaryTicketsDisplay(), TSummaryDetailsPageConfig);
           break;
-            case Pages.Notifications:
+        case Pages.Notifications:
           _addPageData(NotficationsPage(), NotificationsConfig);
           break;
         default:
@@ -374,7 +374,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.TSummaryDetails:
         TSummaryDetailsPageConfig.currentPageAction = action;
         break;
-             case Pages.Notifications:
+      case Pages.Notifications:
         NotificationsConfig.currentPageAction = action;
         break;
 

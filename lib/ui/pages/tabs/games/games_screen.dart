@@ -279,27 +279,6 @@ class IdeaSection extends StatelessWidget {
           ),
           GameCard(
             gradient: const [
-              Color(0xff4776E6),
-              Color(0xff8E54E9),
-            ],
-            title: "Golden Ticket Dialog",
-            action: [
-              GameOfferCardButton(
-                onPressed: () {
-                  AppState.screenStack.add(ScreenItem.dialog);
-                  showDialog(
-                    context: context,
-                    builder: (_) => GoldenTicketClaimDialog(
-                      ticketCount: 100,
-                    ),
-                  );
-                },
-                title: "Show",
-              ),
-            ],
-          ),
-          GameCard(
-            gradient: const [
               Color(0xffFFCF41),
               Color(0xffDE8806),
             ],

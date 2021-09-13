@@ -766,7 +766,6 @@ class _CloseCardState extends State<CloseCard> {
   }
 }
 
-
 // Positioned(
 //               bottom: 0,
 //               child: Container(

@@ -325,7 +325,7 @@ class _RootState extends State<Root> {
 
   Future<int> _submitGoldenTicket(String userId, String deepLink) async {
     try {
-      String prefix = "https://fello.in/goldenticket/";
+      String prefix = "https://fello.in/goldenticketdynlnk/";
       if (!deepLink.startsWith(prefix)) return -1;
       String docId = deepLink.replaceAll(prefix, '');
       if (docId != null && docId.isNotEmpty) {
@@ -356,6 +356,7 @@ class _RootState extends State<Root> {
               context: context,
               builder: (_) => GoldenTicketClaimDialog(
                 ticketCount: 0,
+                failMsg: redemptionMap['fail_msg'],
               ),
             );
             // return showDialog(

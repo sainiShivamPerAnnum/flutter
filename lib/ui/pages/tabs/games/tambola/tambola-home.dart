@@ -290,7 +290,8 @@ class _TambolaHomeState extends State<TambolaHome> {
                     Spacer(),
                     InkWell(
                       onTap: () async {
-                        if (await baseProvider.isOfflineSnackBar(context)) return;
+                        if (await baseProvider.isOfflineSnackBar(context))
+                          return;
                         _tambolaBoardViews = [];
                         baseProvider.userWeeklyBoards.forEach((board) {
                           _tambolaBoardViews.add(_buildBoardView(board));

@@ -31,7 +31,6 @@ class Constants {
   static final String SUBCOLN_USER_POLL_RESPONSES = "poll";
   static final String SUBCOLN_USER_ALERTS = "alerts";
 
-
   //Sub-collection docs
   static final String DOC_USER_FCM_TOKEN = "client_token";
   static final String DOC_USER_ICICI_DETAIL = "detail";
@@ -49,7 +48,8 @@ class Constants {
   static const String POLL_NEXTGAME_ID = "nextgame";
   static const String POLL_FOLLOWUPGAME_ID = "followupgame";
 
-  static const String GOLDENTICKET_DYNAMICLINK_PREFIX = "https://fello.in/goldenticket";
+  static const String GOLDENTICKET_DYNAMICLINK_PREFIX =
+      "https://fello.in/goldenticket";
 
   //home feed
   static const String LEARN_FEED_CARD_TYPE = 'L';
@@ -69,7 +69,7 @@ class Constants {
   static const int INVESTMENT_AMOUNT_FOR_TICKET = 100;
   static const int AUG_GOLD_WITHDRAW_OFFSET =
       1; //no of days to wait before withdrawal
-  static const int UNLOCK_REFERRAL_AMT = 300;
+  static const int UNLOCK_REFERRAL_AMT = 100;
   static final DateTime VERSION_2_RELEASE_DATE = DateTime(2021, 4, 1);
 
   ///STAGES - IMPORTANT

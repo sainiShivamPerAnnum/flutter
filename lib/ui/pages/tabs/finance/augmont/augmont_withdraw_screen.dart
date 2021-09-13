@@ -239,7 +239,10 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
                                           augmontGoldPalette.primaryColor)),
                               child: TextField(
                                 controller: _quantityController,
-                                keyboardType: (Platform.isAndroid)?TextInputType.number:TextInputType.numberWithOptions(decimal: true),
+                                keyboardType: (Platform.isAndroid)
+                                    ? TextInputType.number
+                                    : TextInputType.numberWithOptions(
+                                        decimal: true),
                                 readOnly: false,
                                 enabled: true,
                                 autofocus: false,
