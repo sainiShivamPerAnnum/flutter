@@ -171,8 +171,8 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () {
-                                AppState.backButtonDispatcher.didPopRoute();
                                 widget.onReject();
+                                AppState.backButtonDispatcher.didPopRoute();
                               },
                               style: ButtonStyle(
                                 backgroundColor:
@@ -195,18 +195,19 @@ class AugmontConfirmRegnDialogState extends State<AugmontConfirmRegnDialog> {
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () {
-                                widget.onAccept();
                                 AppState.backButtonDispatcher.didPopRoute();
+
+                                widget.onAccept();
                               },
                               style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(Colors.amber),
+                                backgroundColor: MaterialStateProperty.all(
+                                    widget.dialogColor),
                               ),
                               child: FittedBox(
                                 child: Text(
                                   "Confirm",
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color: Colors.white,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),

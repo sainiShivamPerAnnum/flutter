@@ -353,6 +353,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
     }
 
     ///NOW SHOW CONFIRMATION DIALOG TO USER
+    AppState.screenStack.add(ScreenItem.dialog);
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -382,10 +383,11 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     widget.addBankComplete();
                   } else {
                     baseProvider.isEditAugmontBankDetailInProgress = false;
-                    // setState(() {});
+                    setState(() {});
                     if (flag) {
                       baseProvider.showPositiveAlert('Complete',
                           'Your details have been updated', context);
+                      AppState.backButtonDispatcher.didPopRoute();
                     } else {
                       baseProvider.showNegativeAlert(
                           'Failed',

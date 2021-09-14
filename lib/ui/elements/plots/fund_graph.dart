@@ -243,6 +243,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                           fontWeight: index == _selectedFrequency
                               ? FontWeight.w700
                               : FontWeight.w300,
+                          fontSize: SizeConfig.mediumTextSize,
                           color: index == _selectedFrequency
                               ? Colors.white
                               : Colors.black45,

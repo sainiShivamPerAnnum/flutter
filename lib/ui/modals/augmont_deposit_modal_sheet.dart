@@ -194,7 +194,12 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
               spacing: 20,
               children: [
                 ActionChip(
-                  label: Text("How does this work?"),
+                  label: Text(
+                    "How does this work?",
+                    style: TextStyle(
+                      fontSize: SizeConfig.mediumTextSize,
+                    ),
+                  ),
                   backgroundColor: UiConstants.chipColor,
                   onPressed: () {
                     Haptic.vibrate();
@@ -207,7 +212,12 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                   },
                 ),
                 ActionChip(
-                  label: Text("How long does it take?"),
+                  label: Text(
+                    "How long does it take?",
+                    style: TextStyle(
+                      fontSize: SizeConfig.mediumTextSize,
+                    ),
+                  ),
                   backgroundColor: UiConstants.chipColor,
                   onPressed: () {
                     Haptic.vibrate();
@@ -412,7 +422,9 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
               Text(
                 'Valid for ${Duration(seconds: validDuration).inMinutes.toString().padLeft(2, '0')}:${Duration(seconds: validDuration % 60).inSeconds.toString().padLeft(2, '0')}s',
                 style: TextStyle(
-                    fontWeight: FontWeight.w400, color: Colors.blueGrey),
+                    fontWeight: FontWeight.w400,
+                    color: Colors.blueGrey,
+                    fontSize: SizeConfig.smallTextSize),
                 textAlign: TextAlign.start,
               )
             ],

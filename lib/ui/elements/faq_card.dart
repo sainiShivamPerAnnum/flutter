@@ -75,8 +75,8 @@ class FAQCardState extends State<FAQCard> {
                   isExpanded: detStatus[index],
                   body: Container(
                     alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(
-                      right: SizeConfig.blockSizeHorizontal * 6,
+                    margin: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.blockSizeHorizontal * 6,
                     ),
                     child: Text(
                       widget.faqResponses[index],
@@ -103,7 +103,8 @@ class FAQCardState extends State<FAQCard> {
 
   _prizeFAQHeader(String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: EdgeInsets.only(
+          top: 10, bottom: 10, left: SizeConfig.blockSizeHorizontal * 5),
       child: Text(
         title,
         style: TextStyle(
