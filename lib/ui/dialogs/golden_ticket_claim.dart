@@ -89,7 +89,7 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                   backgroundColor: Color(0xffFFFEF3),
                   child: Container(
                     padding: EdgeInsets.all(SizeConfig.globalMargin),
-                    height: SizeConfig.screenWidth * 0.9,
+                    height: SizeConfig.screenWidth,
                     child: widget.ticketCount > 0
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -160,14 +160,21 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                               ),
                               Column(
                                 children: [
-                                  Text(
-                                    widget.cashPrize != null &&
-                                            widget.cashPrize > 0
-                                        ? "You won ${widget.ticketCount} free tickets and ₹ ${widget.cashPrize} worth of Digital Gold"
-                                        : "You won ${widget.ticketCount} free tickets",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: SizeConfig.largeTextSize),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal:
+                                            SizeConfig.globalMargin / 2),
+                                    child: Text(
+                                      widget.cashPrize != null &&
+                                              widget.cashPrize > 0
+                                          ? "You won ${widget.ticketCount} free tickets and ₹ ${widget.cashPrize} worth of Cash prize"
+                                          : "You won ${widget.ticketCount} free tickets",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize:
+                                              SizeConfig.largeTextSize * 0.9),
+                                    ),
                                   ),
                                   Container(
                                     padding: EdgeInsets.symmetric(

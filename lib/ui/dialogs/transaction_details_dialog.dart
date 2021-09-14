@@ -77,7 +77,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
     } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
       return "Referral Bonus";
     }
-    return 'Fund Name';
+    return 'Fello Rewards';
   }
 
   String _getAugmontGoldGrams(double gms) =>
@@ -207,12 +207,12 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                             children: [
                               referralTile(
                                 'Sell Rate:',
-                                '₹ ${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm',
+                                '₹ ${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice] ?? "N/A"}/gm',
                                 Colors.redAccent.withOpacity(0.6),
                               ),
                               referralTile(
                                 'Gold Sold:',
-                                '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm])} grams',
+                                '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm] ?? 'N/A')} grams',
                                 Colors.redAccent.withOpacity(0.6),
                               )
                             ],

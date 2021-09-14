@@ -245,7 +245,7 @@ class IdeaSection extends StatelessWidget {
     final dbProvider = Provider.of<DBModel>(context, listen: false);
 
     return Container(
-      height: SizeConfig.screenHeight * 0.12,
+      height: SizeConfig.screenHeight * 0.16,
       width: SizeConfig.screenWidth,
       child: ListView(
         shrinkWrap: true,
@@ -517,7 +517,7 @@ class GameCard extends StatelessWidget {
                 ),
               ]),
           width: SizeConfig.screenWidth * 0.8,
-          height: SizeConfig.screenHeight * 0.2,
+          height: SizeConfig.screenHeight * 0.14,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
