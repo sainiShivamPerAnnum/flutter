@@ -504,6 +504,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
                 } else {
                   String _confirmMsg =
                       "Are you sure you want to continue? ${baseProvider.activeGoldWithdrawalQuantity} grams of digital gold shall be processed.";
+                  AppState.screenStack.add(ScreenItem.dialog);
                   showDialog(
                     context: context,
                     builder: (ctx) => ConfirmActionDialog(
@@ -512,7 +513,6 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
                       buttonText: "Withdraw",
                       cancelBtnText: 'Cancel',
                       confirmAction: () {
-                        Navigator.of(context).pop();
                         _isLoading = true;
                         setState(() {});
                         baseProvider.withdrawFlowStackCount = 1;
@@ -523,7 +523,6 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
                         return true;
                       },
                       cancelAction: () {
-                        Navigator.of(context).pop();
                         return false;
                       },
                     ),
