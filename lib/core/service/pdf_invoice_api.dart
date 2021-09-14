@@ -39,7 +39,8 @@ class PdfInvoiceApi {
       footer: (context) => buildFooter(invoice),
     ));
 
-    return PdfApi.saveDocument(name: 'my_invoice.pdf', pdf: pdf);
+    return PdfApi.saveDocument(
+        name: "fello_invoice_no_${invoice.info.number}", pdf: pdf);
   }
 
   static Widget buildHeader(Invoice invoice) => Container(

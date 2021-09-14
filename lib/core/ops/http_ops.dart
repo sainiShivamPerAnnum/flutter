@@ -335,11 +335,19 @@ class HttpModel extends ChangeNotifier {
         //redemption successful
         try {
           Map<String, dynamic> parsed = jsonDecode(_response.body);
-          if (parsed != null && parsed['gtck_count'] != null) {
+          if (parsed != null &&
+              parsed['gtck_count'] != null &&
+              parsed['gamt_win'] != null) {
             try {
               log.debug(parsed['gtck_count'].toString());
+              log.debug(parsed['gamt_win'].toString());
               int goldenTckRewardCount = BaseUtil.toInt(parsed['gtck_count']);
-              return {'flag': true, 'count': goldenTckRewardCount};
+              int goldenTckRewardAmt = BaseUtil.toInt(parsed['gamt_win']);
+              return {
+                'flag': true,
+                'count': goldenTckRewardCount,
+                'amt': goldenTckRewardAmt
+              };
             } catch (ee) {
               log.error('$ee');
             }

@@ -245,7 +245,7 @@ class IdeaSection extends StatelessWidget {
     final dbProvider = Provider.of<DBModel>(context, listen: false);
 
     return Container(
-      height: SizeConfig.screenHeight * 0.16,
+      height: SizeConfig.screenHeight * 0.12,
       width: SizeConfig.screenWidth,
       child: ListView(
         shrinkWrap: true,
@@ -449,32 +449,33 @@ class _TicketCountState extends State<TicketCount>
               )
             ],
           ),
-          AnimatedContainer(
-            duration: Duration(milliseconds: 600),
-            margin: EdgeInsets.only(top: 10, left: 50, right: 50),
-            width: tagWidth,
-            height: tagHeight,
-            curve: Curves.bounceOut,
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              color: Colors.yellow[100],
-            ),
-            alignment: Alignment.center,
-            child: AnimatedOpacity(
-              opacity: tagOpacity,
-              duration: Duration(seconds: 1),
-              child: Text(
-                "🏁 ₹ 100 saved = 1 Ticket",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: SizeConfig.mediumTextSize,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 2,
+          if (showTag)
+            AnimatedContainer(
+              duration: Duration(milliseconds: 600),
+              margin: EdgeInsets.only(top: 10, left: 50, right: 50),
+              width: tagWidth,
+              height: tagHeight,
+              curve: Curves.bounceOut,
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: Colors.yellow[100],
+              ),
+              alignment: Alignment.center,
+              child: AnimatedOpacity(
+                opacity: tagOpacity,
+                duration: Duration(seconds: 1),
+                child: Text(
+                  "🏁 ₹ 100 saved = 1 Ticket",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: SizeConfig.mediumTextSize,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 2,
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );
@@ -494,8 +495,7 @@ class GameCard extends StatelessWidget {
       children: [
         Container(
           margin: EdgeInsets.only(
-            left: SizeConfig.globalMargin,
-          ),
+              left: SizeConfig.globalMargin, right: SizeConfig.globalMargin),
           padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
@@ -517,7 +517,7 @@ class GameCard extends StatelessWidget {
                 ),
               ]),
           width: SizeConfig.screenWidth * 0.8,
-          height: SizeConfig.screenHeight * 0.14,
+          height: SizeConfig.screenHeight * 0.2,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
