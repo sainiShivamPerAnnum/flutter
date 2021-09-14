@@ -77,7 +77,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
             textAlign: TextAlign.center,
             style: GoogleFonts.montserrat(fontSize: SizeConfig.mediumTextSize),
           ),
-          Spacer(),
+          SizedBox(height: 16.0),
           Form(
             key: _formKey,
             child: TextFormField(
@@ -110,7 +110,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
                   ),
                 )),
           ),
-          Spacer(),
+          SizedBox(height: 16.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [

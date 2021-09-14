@@ -254,6 +254,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                     child: SliderButton(
                       action: () {
                         //widget.onDepositConfirmed();
+                        FocusScope.of(context).unfocus();
                         if (depositformKey3.currentState.validate()) {
                           _isDepositInProgress = true;
                           validityTimer.cancel();
@@ -521,6 +522,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     if (flag) {
       // baseProvider.showPositiveAlert(
       //     'SUCCESS', 'You gold deposit was confirmed!', context);
+      AppState.screenStack.add(ScreenItem.dialog);
       Haptic.vibrate();
       showDialog(
         context: context,
