@@ -257,7 +257,7 @@ class _PicksDrawState extends State<PicksDraw> {
                     padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.blockSizeHorizontal * 10),
                     child: Text(
-                      "Let's see how many numbers matched your tickets...",
+                      "Find out how many numbers matched today..",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
