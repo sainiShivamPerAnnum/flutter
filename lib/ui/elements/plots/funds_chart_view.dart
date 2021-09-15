@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/chartFundItem.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/card.dart';
+import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/chart_values_options.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/legend_options.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/pie_chart.dart';
@@ -212,7 +213,19 @@ class _FundsChartViewState extends State<FundsChartView> {
                 )
               ],
             ),
-            Icon(Icons.info, color: Colors.grey)
+            IconButton(
+                icon: Icon(Icons.info),
+                onPressed: () {
+                  AppState.screenStack.add(ScreenItem.dialog);
+                  return showDialog(
+                    context: context,
+                    builder: (_) => GoldenTicketClaimDialog(
+                      ticketCount: 0,
+                      failMsg: "abc",
+                    ),
+                  );
+                },
+                color: Colors.grey)
           ],
         ),
       ),

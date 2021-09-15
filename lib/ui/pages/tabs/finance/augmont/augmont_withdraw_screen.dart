@@ -193,7 +193,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
                 height: 10,
               ),
               (!_isLoading)
-                  ? _buildRow('Current Gold Selling Rate: ',
+                  ? _buildRow('Current Gold Selling Rate',
                       '₹${widget.sellRate} per gram')
                   : Container(),
               (!_isLoading)
@@ -202,13 +202,13 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
                     )
                   : Container(),
               (!_isLoading)
-                  ? _buildRow('Total Gold Owned: ',
+                  ? _buildRow('Total Gold Owned',
                       '${baseProvider.userFundWallet.augGoldQuantity.toStringAsFixed(4)} grams')
                   : Container(),
               (!_isLoading &&
                       widget.withdrawableGoldQnty !=
                           baseProvider.userFundWallet.augGoldQuantity)
-                  ? _buildLockedGoldRow('Total Gold available for withdrawal: ',
+                  ? _buildLockedGoldRow('Total Gold available for withdrawal',
                       '${widget.withdrawableGoldQnty.toStringAsFixed(4)} grams')
                   : Container(),
               (!_isLoading)
@@ -217,7 +217,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
                     )
                   : Container(),
               (!_isLoading)
-                  ? _buildRow('Total withdrawable balance: ',
+                  ? _buildRow('Total withdrawable balance',
                       '${widget.withdrawableGoldQnty.toStringAsFixed(4)} * ${widget.sellRate} = ₹${_getTotalGoldAvailable().toStringAsFixed(3)}')
                   : Container(),
               (!_isLoading)
@@ -504,6 +504,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
                 } else {
                   String _confirmMsg =
                       "Are you sure you want to continue? ${baseProvider.activeGoldWithdrawalQuantity} grams of digital gold shall be processed.";
+                  AppState.screenStack.add(ScreenItem.dialog);
                   showDialog(
                     context: context,
                     builder: (ctx) => ConfirmActionDialog(
@@ -512,7 +513,6 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
                       buttonText: "Withdraw",
                       cancelBtnText: 'Cancel',
                       confirmAction: () {
-                        Navigator.of(context).pop();
                         _isLoading = true;
                         setState(() {});
                         baseProvider.withdrawFlowStackCount = 1;
@@ -523,7 +523,6 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
                         return true;
                       },
                       cancelAction: () {
-                        Navigator.of(context).pop();
                         return false;
                       },
                     ),

@@ -152,57 +152,62 @@ class _TicketState extends State<FCard> {
           Radius.circular(15),
         ),
       ),
-      child: Container(
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
+      child: Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset(
-                  "images/fello-dark.png",
-                  width: SizeConfig.screenWidth * 0.12,
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    child:
+                        Lottie.asset("images/lottie/clap.json", repeat: false),
+                  ),
                 ),
+                FittedBox(
+                  fit: BoxFit.contain,
+                  child: Text(
+                    "Congratulations",
+                    style: GoogleFonts.megrim(
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                            offset: Offset(2, 2),
+                            color: Colors.white24,
+                            blurRadius: 2,
+                          )
+                        ],
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 3,
+                        fontSize: SizeConfig.cardTitleTextSize),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  "Your current prize balance is:",
+                  style: GoogleFonts.montserrat(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: SizeConfig.mediumTextSize,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                )
               ],
             ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.all(10),
-                child: Lottie.asset("images/lottie/clap.json", repeat: false),
+          ),
+          Row(
+            children: [
+              Image.asset(
+                "images/fello-dark.png",
+                width: SizeConfig.screenWidth * 0.12,
               ),
-            ),
-            FittedBox(
-              fit: BoxFit.contain,
-              child: Text(
-                "Congratulations",
-                style: GoogleFonts.megrim(
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        offset: Offset(2, 2),
-                        color: Colors.white24,
-                        blurRadius: 2,
-                      )
-                    ],
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 3,
-                    fontSize: SizeConfig.cardTitleTextSize),
-              ),
-            ),
-            SizedBox(height: 20),
-            Text(
-              "Your current prize balance is:",
-              style: GoogleFonts.montserrat(
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-                fontSize: SizeConfig.mediumTextSize,
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            )
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -346,7 +351,7 @@ class _TicketState extends State<FCard> {
                     ),
                     child: FittedBox(
                       child: Text(
-                        "Amazon Gift Card ",
+                        "Amazon Gift Card",
                         style: GoogleFonts.montserrat(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
@@ -396,11 +401,10 @@ class _TicketState extends State<FCard> {
                     ),
                     child: FittedBox(
                       child: Text(
-                        "Digital Gold ",
+                        "    Digital Gold    ",
                         style: GoogleFonts.montserrat(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,
-                          fontSize: 14,
                         ),
                       ),
                     ),

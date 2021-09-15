@@ -32,7 +32,12 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
       },
       child: Chip(
         backgroundColor: UiConstants.chipColor,
-        label: Text("+${amt.toInt()}"),
+        label: Text(
+          "+${amt.toInt()}",
+          style: TextStyle(
+            fontSize: SizeConfig.mediumTextSize * 0.9,
+          ),
+        ),
       ),
     );
   }
@@ -76,7 +81,12 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Investment Amount"),
+                    Text(
+                      "Investment Amount",
+                      style: TextStyle(
+                        fontSize: SizeConfig.mediumTextSize,
+                      ),
+                    ),
                     CalculatorCapsule(
                       gradColors: widget.invGradient,
                       child: TextField(
@@ -111,7 +121,12 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Return Amount"),
+                    Text(
+                      "Return Amount",
+                      style: TextStyle(
+                        fontSize: SizeConfig.mediumTextSize,
+                      ),
+                    ),
                     CalculatorCapsule(
                       gradColors: widget.retGradient,
                       child: Padding(
@@ -144,7 +159,12 @@ class _ProfitCalculatorState extends State<ProfitCalculator> {
           SizedBox(
             height: 16,
           ),
-          Text("Select No of Months: $months"),
+          Text(
+            "Select No of Months: $months",
+            style: TextStyle(
+              fontSize: SizeConfig.mediumTextSize,
+            ),
+          ),
           Slider(
             value: months.toDouble(),
             onChanged: (val) {

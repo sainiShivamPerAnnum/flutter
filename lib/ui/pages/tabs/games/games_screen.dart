@@ -449,32 +449,33 @@ class _TicketCountState extends State<TicketCount>
               )
             ],
           ),
-          AnimatedContainer(
-            duration: Duration(milliseconds: 600),
-            margin: EdgeInsets.only(top: 10, left: 50, right: 50),
-            width: tagWidth,
-            height: tagHeight,
-            curve: Curves.bounceOut,
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              color: Colors.yellow[100],
-            ),
-            alignment: Alignment.center,
-            child: AnimatedOpacity(
-              opacity: tagOpacity,
-              duration: Duration(seconds: 1),
-              child: Text(
-                "🏁 ₹ 100 saved = 1 Ticket",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: SizeConfig.mediumTextSize,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 2,
+          if (showTag)
+            AnimatedContainer(
+              duration: Duration(milliseconds: 600),
+              margin: EdgeInsets.only(top: 10, left: 50, right: 50),
+              width: tagWidth,
+              height: tagHeight,
+              curve: Curves.bounceOut,
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: Colors.yellow[100],
+              ),
+              alignment: Alignment.center,
+              child: AnimatedOpacity(
+                opacity: tagOpacity,
+                duration: Duration(seconds: 1),
+                child: Text(
+                  "🏁 ₹ 100 saved = 1 Ticket",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: SizeConfig.mediumTextSize,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 2,
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );
@@ -494,8 +495,7 @@ class GameCard extends StatelessWidget {
       children: [
         Container(
           margin: EdgeInsets.only(
-            left: SizeConfig.globalMargin,
-          ),
+              left: SizeConfig.globalMargin, right: SizeConfig.globalMargin),
           padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),

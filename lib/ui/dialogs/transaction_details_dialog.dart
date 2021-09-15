@@ -77,7 +77,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
     } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
       return "Referral Bonus";
     }
-    return 'Fund Name';
+    return 'Fello Rewards';
   }
 
   String _getAugmontGoldGrams(double gms) =>
@@ -119,193 +119,208 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
           ),
         ),
         Container(
-          height: SizeConfig.screenHeight * 0.55,
+          height: SizeConfig.screenHeight * 0.4,
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 10),
-                Text(
-                  "Transaction Amount",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: SizeConfig.smallTextSize,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 8),
-                  child: Text(
-                    '₹ ${widget._transaction.amount.toStringAsFixed(2)}',
+          child: ListView(
+            shrinkWrap: true,
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                children: [
+                  SizedBox(height: 10),
+                  Text(
+                    "Transaction Amount",
                     style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: SizeConfig.cardTitleTextSize * 2,
+                      color: Colors.grey,
+                      fontSize: SizeConfig.smallTextSize,
                     ),
                   ),
-                ),
-                Divider(
-                  color: getFlagColor().withOpacity(0.7),
-                  height: 0,
-                  endIndent: SizeConfig.screenWidth * 0.1,
-                  indent: SizeConfig.screenWidth * 0.1,
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  margin: EdgeInsets.only(bottom: 24),
-                  decoration: BoxDecoration(
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 8),
+                    child: Text(
+                      '₹ ${widget._transaction.amount.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: SizeConfig.cardTitleTextSize * 2,
+                      ),
+                    ),
+                  ),
+                  Divider(
                     color: getFlagColor().withOpacity(0.7),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(8),
-                      bottomRight: Radius.circular(8),
+                    height: 0,
+                    endIndent: SizeConfig.screenWidth * 0.1,
+                    indent: SizeConfig.screenWidth * 0.1,
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    margin: EdgeInsets.only(bottom: 24),
+                    decoration: BoxDecoration(
+                      color: getFlagColor().withOpacity(0.7),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(8),
+                        bottomRight: Radius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      widget._transaction.type.toUpperCase(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        letterSpacing: 3,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
-                  child: Text(
-                    widget._transaction.type.toUpperCase(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      letterSpacing: 3,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding:
-                      EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5),
-                  margin: EdgeInsets.only(bottom: 20),
-                  child: Column(
-                    children: [
-                      (widget._transaction.subType ==
-                                  UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                              widget._transaction.type ==
-                                  UserTransaction.TRAN_TYPE_DEPOSIT)
-                          ? Row(
-                              children: [
-                                referralTile(
-                                    'Purchase Rate:',
-                                    '₹ ${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm',
-                                    UiConstants.primaryColor),
-                                referralTile(
-                                    'Gold Purchased:',
-                                    '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm])} grams',
-                                    UiConstants.primaryColor)
-                              ],
-                            )
-                          : Container(),
-                      (widget._transaction.subType ==
-                                  UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
-                              widget._transaction.type ==
-                                  UserTransaction.TRAN_TYPE_WITHDRAW)
-                          ? Row(
-                              children: [
-                                referralTile(
-                                  'Sell Rate:',
+                ],
+              ),
+              Container(
+                padding:
+                    EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5),
+                margin: EdgeInsets.only(bottom: 20),
+                child: Column(
+                  children: [
+                    (widget._transaction.subType ==
+                                UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
+                            widget._transaction.type ==
+                                UserTransaction.TRAN_TYPE_DEPOSIT)
+                        ? Row(
+                            children: [
+                              referralTile(
+                                  'Purchase Rate:',
                                   '₹ ${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm',
-                                  Colors.redAccent.withOpacity(0.6),
-                                ),
-                                referralTile(
-                                  'Gold Sold:',
+                                  UiConstants.primaryColor),
+                              referralTile(
+                                  'Gold Purchased:',
                                   '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm])} grams',
-                                  Colors.redAccent.withOpacity(0.6),
-                                )
-                              ],
-                            )
-                          : Container(),
-                      (widget._transaction.type !=
-                              UserTransaction.TRAN_TYPE_WITHDRAW)
-                          ? referralTileWide(
-                              'Tickets Added:',
-                              '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
-                              UiConstants.primaryColor)
-                          : referralTileWide(
-                              'Tickets Reduced:',
-                              '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
-                              Colors.redAccent.withOpacity(0.6),
-                            ),
-                      (widget._transaction.subType ==
-                              UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
-                          ? referralTileWide(
-                              'Closing Gold Balance:',
-                              widget._transaction.augmnt[UserTransaction
-                                          .subFldAugTotalGoldGm] ==
-                                      null
-                                  ? "Unavailable"
-                                  : '${widget._transaction.augmnt[UserTransaction.subFldAugTotalGoldGm] ?? 'Unavailable'} grams',
-                              UiConstants.primaryColor)
-                          : Container(),
-                      (widget._transaction.closingBalance > 0)
-                          ? referralTileWide(
-                              'Overall Closing Balance:',
-                              '₹${widget._transaction.closingBalance.toStringAsFixed(2) ?? 'Unavailable'}',
-                              UiConstants.primaryColor)
-                          : Container(),
-                      widget._transaction.tranStatus != null
-                          ? referralTileWide('Transaction Status',
-                              widget._transaction.tranStatus, getFlagColor())
-                          : Container()
-                    ],
-                  ),
+                                  UiConstants.primaryColor)
+                            ],
+                          )
+                        : Container(),
+                    (widget._transaction.subType ==
+                                UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
+                            widget._transaction.type ==
+                                UserTransaction.TRAN_TYPE_WITHDRAW)
+                        ? Row(
+                            children: [
+                              referralTile(
+                                'Sell Rate:',
+                                '₹ ${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice] ?? "N/A"}/gm',
+                                Colors.redAccent.withOpacity(0.6),
+                              ),
+                              referralTile(
+                                'Gold Sold:',
+                                '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm] ?? 'N/A')} grams',
+                                Colors.redAccent.withOpacity(0.6),
+                              )
+                            ],
+                          )
+                        : Container(),
+                    (widget._transaction.type !=
+                            UserTransaction.TRAN_TYPE_WITHDRAW)
+                        ? referralTileWide(
+                            'Tickets Added:',
+                            '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
+                            UiConstants.primaryColor)
+                        : referralTileWide(
+                            'Tickets Reduced:',
+                            '${widget._transaction.ticketUpCount ?? 'Unavailable'}',
+                            Colors.redAccent.withOpacity(0.6),
+                          ),
+                    (widget._transaction.subType ==
+                            UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD)
+                        ? referralTileWide(
+                            'Closing Gold Balance:',
+                            widget._transaction.augmnt[
+                                        UserTransaction.subFldAugTotalGoldGm] ==
+                                    null
+                                ? "Unavailable"
+                                : '${widget._transaction.augmnt[UserTransaction.subFldAugTotalGoldGm] ?? 'Unavailable'} grams',
+                            UiConstants.primaryColor)
+                        : Container(),
+                    (widget._transaction.closingBalance > 0)
+                        ? referralTileWide(
+                            'Overall Closing Balance:',
+                            '₹${widget._transaction.closingBalance.toStringAsFixed(2) ?? 'Unavailable'}',
+                            UiConstants.primaryColor)
+                        : Container(),
+                    widget._transaction.tranStatus != null
+                        ? referralTileWide('Transaction Status',
+                            widget._transaction.tranStatus, getFlagColor())
+                        : Container()
+                  ],
                 ),
-                (_showInvoiceButton && !_isInvoiceLoading)
-                    ? ElevatedButton(
-                        child: Padding(
-                          padding: EdgeInsets.all(4),
-                          child: Text(
+              ),
+              SizedBox(
+                height: 20,
+              )
+            ],
+          ),
+        ),
+        if (_showInvoiceButton)
+          Container(
+            margin: EdgeInsets.only(top: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  child: Padding(
+                    padding: EdgeInsets.all(4),
+                    child: !_isInvoiceLoading
+                        ? Text(
                             'Download Invoice',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: SizeConfig.mediumTextSize),
+                          )
+                        : SpinKitThreeBounce(
+                            color: Colors.white,
+                            size: 18.0,
                           ),
-                        ),
-                        onPressed: () async {
-                          if (widget._transaction
-                                  .augmnt[UserTransaction.subFldAugTranId] !=
-                              null) {
-                            _isInvoiceLoading = true;
-                            setState(() {});
-                            String trnId = widget._transaction
-                                .augmnt[UserTransaction.subFldAugTranId];
-                            augmontProvider
-                                .generatePurchaseInvoicePdf(trnId)
-                                .then((generatedPdfFilePath) {
-                              _isInvoiceLoading = false;
-                              setState(() {});
-                              if (generatedPdfFilePath != null) {
-                                OpenFile.open(generatedPdfFilePath);
-                              } else {
-                                baseProvider.showNegativeAlert(
-                                    'Invoice could\'nt be loaded',
-                                    'Please try again in some time',
-                                    context);
-                              }
-                            });
-                          } else {
-                            baseProvider.showNegativeAlert(
-                                'Invoice could\'nt be loaded',
-                                'Please try again in some time',
-                                context);
-                          }
-                        },
-                      )
-                    : Container(),
-                (_showInvoiceButton && _isInvoiceLoading)
-                    ? Padding(
-                        padding: EdgeInsets.all(20),
-                        child: SpinKitThreeBounce(
-                          color: UiConstants.primaryColor,
-                          size: 18.0,
-                        ))
-                    : Container(),
-                SizedBox(
-                  height: 20,
-                )
+                  ),
+                  onPressed: () async {
+                    if (widget._transaction
+                            .augmnt[UserTransaction.subFldAugTranId] !=
+                        null) {
+                      _isInvoiceLoading = true;
+                      setState(() {});
+                      String trnId = widget
+                          ._transaction.augmnt[UserTransaction.subFldAugTranId];
+                      augmontProvider
+                          .generatePurchaseInvoicePdf(trnId)
+                          .then((generatedPdfFilePath) {
+                        _isInvoiceLoading = false;
+                        setState(() {});
+                        if (generatedPdfFilePath != null) {
+                          OpenFile.open(generatedPdfFilePath);
+                        } else {
+                          baseProvider.showNegativeAlert(
+                              'Invoice could\'nt be loaded',
+                              'Please try again in some time',
+                              context);
+                        }
+                      });
+                    } else {
+                      baseProvider.showNegativeAlert(
+                          'Invoice could\'nt be loaded',
+                          'Please try again in some time',
+                          context);
+                    }
+                  },
+                ),
+                // if (_showInvoiceButton && _isInvoiceLoading)
+                //   Padding(
+                //     padding: EdgeInsets.all(20),
+                //     child: SpinKitThreeBounce(
+                //       color: Colors.white,
+                //       size: 18.0,
+                //     ),
+                //   ),
               ],
             ),
           ),
-        ),
       ],
     );
   }

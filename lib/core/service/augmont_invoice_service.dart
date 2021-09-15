@@ -88,7 +88,7 @@ class AugmontInvoiceService {
         info: InvoiceInfo(
           date: data[GetInvoice.resDate] != null
               ? DateFormat("dd MMM, yyyy").format(
-                  DateFormat("dd-mm-yyyy").parse(data[GetInvoice.resDate]))
+                  DateFormat("dd-MM-yyyy").parse(data[GetInvoice.resDate]))
               : 'N/A',
           number: data[GetInvoice.resInvoiceNumber] ?? 'N/A',
         ),

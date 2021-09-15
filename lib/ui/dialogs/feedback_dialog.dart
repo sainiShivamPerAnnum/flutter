@@ -1,7 +1,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/palettes.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,7 +43,6 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(UiConstants.padding),
       ),
-      elevation: 0.0,
       backgroundColor: Colors.transparent,
       child: dialogContent(context, connectivityStatus, baseProvider),
     );
@@ -48,103 +50,103 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
 
   dialogContent(BuildContext context, ConnectivityStatus connectivityStatus,
       BaseUtil baseProvider) {
-    return Stack(
-      children: <Widget>[
-        //...bottom card part,
-        Container(
-          padding: EdgeInsets.only(
-            //top: UiConstants.avatarRadius + UiConstants.padding,
-            top: UiConstants.padding + 30,
-            bottom: UiConstants.padding,
-            left: UiConstants.padding,
-            right: UiConstants.padding,
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.globalMargin,
+        vertical: SizeConfig.globalMargin * 2,
+      ),
+      decoration: new BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment:
+            CrossAxisAlignment.start, // To make the card compact
+        children: <Widget>[
+          Text(
+            widget.title,
+            style: GoogleFonts.montserrat(
+              fontSize: SizeConfig.largeTextSize,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-          //margin: EdgeInsets.only(top: UiConstants.avatarRadius),
-          decoration: new BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(UiConstants.padding),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10.0,
-                offset: const Offset(0.0, 10.0),
-              ),
-            ],
+          SizedBox(height: 8.0),
+          Text(
+            widget.description,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.montserrat(fontSize: SizeConfig.mediumTextSize),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min, // To make the card compact
-            children: <Widget>[
-              Text(
-                widget.title,
-                style: GoogleFonts.montserrat(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(height: 16.0),
-              Text(
-                widget.description,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.montserrat(
-                  fontSize: 16.0,
-                ),
-              ),
-              SizedBox(height: 16.0),
-              Form(
-                key: _formKey,
-                child: TextFormField(
-                    enableSuggestions: true,
-                    keyboardType: TextInputType.multiline,
-                    autofocus: true,
-                    maxLines: 6,
-                    controller: fdbkController,
-                    validator: (value) {
-                      return (value == null || value.isEmpty)
-                          ? 'Please add some feedback'
-                          : null;
-                    },
-                    decoration: new InputDecoration(
-                      labelText: "Feedback",
-                      //fillColor: Colors.white,
-                      border: new OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(25.0),
-                        borderSide: new BorderSide(),
-                      ),
-                    )),
-              ),
-              SizedBox(height: 16.0),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: TextButton(
-                  onPressed: () {
-                    Haptic.vibrate();
-                    log.debug('DialogAction clicked');
-                    if (connectivityStatus == ConnectivityStatus.Offline)
-                      baseProvider.showNoInternetAlert(context);
-                    else if (_formKey.currentState.validate()) {
-                      widget.dialogAction(fdbkController.text);
-                    }
-                  },
-                  child: Text(
-                    widget.buttonText,
-                    style: GoogleFonts.montserrat(),
+          SizedBox(height: 16.0),
+          Form(
+            key: _formKey,
+            child: TextFormField(
+                enableSuggestions: true,
+                keyboardType: TextInputType.multiline,
+                autofocus: true,
+                maxLines: 3,
+                controller: fdbkController,
+                validator: (value) {
+                  return (value == null || value.isEmpty)
+                      ? 'Please add some feedback'
+                      : null;
+                },
+                cursorColor: UiConstants.primaryColor,
+                decoration: new InputDecoration(
+                  labelText: "Feedback",
+                  //fillColor: Colors.white,
+                  labelStyle: GoogleFonts.montserrat(
+                    color: UiConstants.primaryColor,
                   ),
+                  focusedBorder: new OutlineInputBorder(
+                    borderRadius:
+                        new BorderRadius.circular(SizeConfig.cardBorderRadius),
+                    borderSide: new BorderSide(color: UiConstants.primaryColor),
+                  ),
+                  border: new OutlineInputBorder(
+                    borderRadius:
+                        new BorderRadius.circular(SizeConfig.cardBorderRadius),
+                    borderSide: new BorderSide(color: UiConstants.primaryColor),
+                  ),
+                )),
+          ),
+          SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: augmontGoldPalette.secondaryColor),
+                onPressed: () {
+                  AppState.backButtonDispatcher.didPopRoute();
+                },
+                child: Text(
+                  "Cancel",
+                  style: GoogleFonts.montserrat(color: Colors.white),
+                ),
+              ),
+              SizedBox(width: 16),
+              ElevatedButton(
+                style:
+                    ElevatedButton.styleFrom(primary: UiConstants.primaryColor),
+                onPressed: () {
+                  Haptic.vibrate();
+                  log.debug('DialogAction clicked');
+                  if (connectivityStatus == ConnectivityStatus.Offline)
+                    baseProvider.showNoInternetAlert(context);
+                  else if (_formKey.currentState.validate()) {
+                    widget.dialogAction(fdbkController.text);
+                  }
+                },
+                child: Text(
+                  widget.buttonText,
+                  style: GoogleFonts.montserrat(color: Colors.white),
                 ),
               ),
             ],
           ),
-        ),
-        //...top circlular image part,
-//        Positioned(
-//          left: UiConstants.padding,
-//          right: UiConstants.padding,
-//          child: CircleAvatar(
-//            backgroundColor: Colors.blueAccent,
-//            radius: UiConstants.avatarRadius,
-//          ),
-//        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -225,23 +225,24 @@ class _RootState extends State<Root> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    InkWell(
-                      child: Icon(
-                        Icons.notifications,
-                        size: kToolbarHeight * 0.5,
-                        color: (appState.getCurrentTabIndex == 0)
-                            ? Colors.white
-                            : Color(0xff4C4C4C),
+                    if (appState.getCurrentTabIndex == 3)
+                      InkWell(
+                        child: Icon(
+                          Icons.notifications,
+                          size: kToolbarHeight * 0.5,
+                          color: (appState.getCurrentTabIndex == 0)
+                              ? Colors.white
+                              : Color(0xff4C4C4C),
+                        ),
+                        //icon: Icon(Icons.contact_support_outlined),
+                        // iconSize: kToolbarHeight * 0.5,
+                        onTap: () {
+                          Haptic.vibrate();
+                          AppState.delegate.appState.currentAction = PageAction(
+                              state: PageState.addPage,
+                              page: NotificationsConfig);
+                        },
                       ),
-                      //icon: Icon(Icons.contact_support_outlined),
-                      // iconSize: kToolbarHeight * 0.5,
-                      onTap: () {
-                        Haptic.vibrate();
-                        AppState.delegate.appState.currentAction = PageAction(
-                            state: PageState.addPage,
-                            page: NotificationsConfig);
-                      },
-                    ),
                     SizedBox(
                       width: kToolbarHeight * 0.2,
                     ),
@@ -360,6 +361,7 @@ class _RootState extends State<Root> {
               context: context,
               builder: (_) => GoldenTicketClaimDialog(
                 ticketCount: redemptionMap['count'],
+                cashPrize: redemptionMap['amt'],
               ),
             );
           } else {

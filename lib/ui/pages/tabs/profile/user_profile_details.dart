@@ -383,7 +383,13 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                       ),
                       SizedBox(height: 8),
                       ListTile(
-                        title: Text("App Lock"),
+                        title: Text(
+                          "App Lock",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: SizeConfig.mediumTextSize,
+                          ),
+                        ),
                         trailing: Switch.adaptive(
                             value: (baseProvider.myUser.userPreferences
                                     .getPreference(Preferences.APPLOCK) ==
@@ -395,7 +401,13 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             }),
                       ),
                       ListTile(
-                        title: Text("Tambola Draw Notifications"),
+                        title: Text(
+                          "Tambola Draw Notifications",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: SizeConfig.mediumTextSize,
+                          ),
+                        ),
                         trailing: fcmProvider.isTambolaNotificationLoading
                             ? CircularProgressIndicator()
                             : Switch.adaptive(
@@ -514,7 +526,6 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
               AppState.screenStack.add(ScreenItem.dialog);
               showModalBottomSheet(
                   isDismissible: false,
-                  // backgroundColor: Colors.transparent,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
