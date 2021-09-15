@@ -40,7 +40,7 @@ class PdfInvoiceApi {
     ));
 
     return PdfApi.saveDocument(
-        name: "fello_invoice_no_${invoice.info.number}", pdf: pdf);
+        name: "fello_invoice_no_${invoice.info.number}.pdf", pdf: pdf);
   }
 
   static Widget buildHeader(Invoice invoice) => Container(
