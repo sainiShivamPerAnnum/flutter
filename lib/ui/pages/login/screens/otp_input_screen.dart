@@ -66,7 +66,7 @@ class OtpInputScreenState extends State<OtpInputScreen> {
           setState(() {
             showResendOption = true;
           });
-        }catch(e) {
+        } catch (e) {
           log.error('Screen no longer active');
         }
       });
