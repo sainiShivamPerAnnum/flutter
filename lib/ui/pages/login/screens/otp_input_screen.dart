@@ -61,10 +61,14 @@ class OtpInputScreenState extends State<OtpInputScreen> {
       });
 
     if (mounted)
-      Future.delayed(Duration(seconds: 7), () {
-        setState(() {
-          showResendOption = true;
-        });
+      Future.delayed(Duration(seconds: 30), () {
+        try {
+          setState(() {
+            showResendOption = true;
+          });
+        }catch(e) {
+          log.error('Screen no longer active');
+        }
       });
 
     super.didChangeDependencies();
