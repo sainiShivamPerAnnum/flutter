@@ -76,6 +76,8 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
       return "Tambola Win";
     } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
       return "Referral Bonus";
+    } else if (type == UserTransaction.TRAN_SUBTYPE_GLDN_TCK) {
+      return "Golden Ticket";
     }
     return 'Fello Rewards';
   }

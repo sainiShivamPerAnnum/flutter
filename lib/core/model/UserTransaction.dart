@@ -77,6 +77,7 @@ class UserTransaction {
   static const String TRAN_SUBTYPE_AUGMONT_GOLD = 'AUGGOLD99';
   static const String TRAN_SUBTYPE_TAMBOLA_WIN = 'TMB_WIN';
   static const String TRAN_SUBTYPE_REF_BONUS = 'REF_BONUS';
+  static const String TRAN_SUBTYPE_GLDN_TCK = 'GLD_TCK_WIN';
 
   UserTransaction(
       this._docKey,
