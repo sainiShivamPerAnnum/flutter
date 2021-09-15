@@ -119,7 +119,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
           ),
         ),
         Container(
-          height: SizeConfig.screenHeight * 0.4,
+          height: SizeConfig.screenHeight * 0.54,
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -190,11 +190,11 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                             children: [
                               referralTile(
                                   'Purchase Rate:',
-                                  '₹ ${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice]}/gm',
+                                  '₹ ${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice] ?? 'N/A'}/gm',
                                   UiConstants.primaryColor),
                               referralTile(
                                   'Gold Purchased:',
-                                  '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm])} grams',
+                                  '${_getAugmontGoldGrams(widget._transaction.augmnt[UserTransaction.subFldAugCurrentGoldGm] ?? 'N/A')} grams',
                                   UiConstants.primaryColor)
                             ],
                           )
@@ -207,7 +207,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                             children: [
                               referralTile(
                                 'Sell Rate:',
-                                '₹ ${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice] ?? "N/A"}/gm',
+                                '₹ ${widget._transaction.augmnt[UserTransaction.subFldAugLockPrice] ?? 'N/A'}/gm',
                                 Colors.redAccent.withOpacity(0.6),
                               ),
                               referralTile(
@@ -254,73 +254,70 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                 ),
               ),
               SizedBox(
-                height: 20,
-              )
-            ],
-          ),
-        ),
-        if (_showInvoiceButton)
-          Container(
-            margin: EdgeInsets.only(top: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  child: Padding(
-                    padding: EdgeInsets.all(4),
-                    child: !_isInvoiceLoading
-                        ? Text(
-                            'Download Invoice',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: SizeConfig.mediumTextSize),
-                          )
-                        : SpinKitThreeBounce(
-                            color: Colors.white,
-                            size: 18.0,
-                          ),
-                  ),
-                  onPressed: () async {
-                    if (widget._transaction
-                            .augmnt[UserTransaction.subFldAugTranId] !=
-                        null) {
-                      _isInvoiceLoading = true;
-                      setState(() {});
-                      String trnId = widget
-                          ._transaction.augmnt[UserTransaction.subFldAugTranId];
-                      augmontProvider
-                          .generatePurchaseInvoicePdf(trnId)
-                          .then((generatedPdfFilePath) {
-                        _isInvoiceLoading = false;
-                        setState(() {});
-                        if (generatedPdfFilePath != null) {
-                          OpenFile.open(generatedPdfFilePath);
+                height: 10,
+              ),
+              if (_showInvoiceButton && !_isInvoiceLoading)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      child: Padding(
+                        padding: EdgeInsets.all(4),
+                        child: Text(
+                          'Download Invoice',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: SizeConfig.mediumTextSize),
+                        ),
+                      ),
+                      onPressed: () async {
+                        if (widget._transaction
+                                .augmnt[UserTransaction.subFldAugTranId] !=
+                            null) {
+                          _isInvoiceLoading = true;
+                          setState(() {});
+                          String trnId = widget._transaction
+                              .augmnt[UserTransaction.subFldAugTranId];
+                          augmontProvider
+                              .generatePurchaseInvoicePdf(trnId)
+                              .then((generatedPdfFilePath) {
+                            _isInvoiceLoading = false;
+                            setState(() {});
+                            if (generatedPdfFilePath != null) {
+                              OpenFile.open(generatedPdfFilePath);
+                            } else {
+                              baseProvider.showNegativeAlert(
+                                  'Invoice could\'nt be loaded',
+                                  'Please try again in some time',
+                                  context);
+                            }
+                          });
                         } else {
                           baseProvider.showNegativeAlert(
                               'Invoice could\'nt be loaded',
                               'Please try again in some time',
                               context);
                         }
-                      });
-                    } else {
-                      baseProvider.showNegativeAlert(
-                          'Invoice could\'nt be loaded',
-                          'Please try again in some time',
-                          context);
-                    }
-                  },
+                      },
+                    ),
+                  ],
                 ),
-                // if (_showInvoiceButton && _isInvoiceLoading)
-                //   Padding(
-                //     padding: EdgeInsets.all(20),
-                //     child: SpinKitThreeBounce(
-                //       color: Colors.white,
-                //       size: 18.0,
-                //     ),
-                //   ),
-              ],
-            ),
+              if (_showInvoiceButton && _isInvoiceLoading)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(20),
+                      child: SpinKitThreeBounce(
+                        color: UiConstants.primaryColor,
+                        size: 18.0,
+                      ),
+                    ),
+                  ],
+                ),
+            ],
           ),
+        ),
       ],
     );
   }
