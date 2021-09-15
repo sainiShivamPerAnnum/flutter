@@ -1,14 +1,13 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rive/rive.dart' as rive;
 
 class PicksDraw extends StatefulWidget {
-  final List<int> picks;
-  const PicksDraw({Key key, @required this.picks}) : super(key: key);
-
   @override
   _PicksDrawState createState() => _PicksDrawState();
 }
@@ -20,6 +19,7 @@ class _PicksDrawState extends State<PicksDraw> {
   double textPos = -10;
   bool showTxt = false;
   double ringWidth = 0;
+  BaseUtil baseProvider;
 
   showPicksDraw() {
     setState(() {
@@ -60,6 +60,7 @@ class _PicksDrawState extends State<PicksDraw> {
 
   @override
   Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context);
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: showTxt
@@ -70,7 +71,7 @@ class _PicksDrawState extends State<PicksDraw> {
                 color: Color(0xff150E56),
               ),
               onPressed: () {
-                delegate.appState.currentAction =
+                AppState.delegate.appState.currentAction =
                     PageAction(state: PageState.replace, page: THomePageConfig);
               },
             )
@@ -164,7 +165,10 @@ class _PicksDrawState extends State<PicksDraw> {
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
-                                    children: widget.picks
+                                    children: (baseProvider.todaysPicks ??
+                                            List.filled(
+                                                baseProvider.dailyPicksCount,
+                                                0))
                                         .map(
                                           (e) => AnimatedContainer(
                                             curve: Curves.easeIn,
@@ -185,9 +189,8 @@ class _PicksDrawState extends State<PicksDraw> {
                                             ),
                                             alignment: Alignment.center,
                                             child: Transform.scale(
-                                              scale: opacity,
-                                              child: Stack(
-                                                children: [
+                                                scale: opacity,
+                                                child: Stack(children: [
                                                   Align(
                                                     alignment: Alignment.center,
                                                     child: AnimatedContainer(
@@ -221,7 +224,8 @@ class _PicksDrawState extends State<PicksDraw> {
                                                           ? FittedBox(
                                                               fit: BoxFit.cover,
                                                               child: Text(
-                                                                e.toString(),
+                                                                e.toString() ??
+                                                                    "-",
                                                                 style:
                                                                     TextStyle(
                                                                   color: Colors
@@ -236,9 +240,7 @@ class _PicksDrawState extends State<PicksDraw> {
                                                           : SizedBox(),
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                            ),
+                                                ])),
                                           ),
                                         )
                                         .toList(),
@@ -255,7 +257,7 @@ class _PicksDrawState extends State<PicksDraw> {
                     padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.blockSizeHorizontal * 10),
                     child: Text(
-                      "Let's see how many numbers matched your tickets...",
+                      "Find out how many numbers matched today..",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,

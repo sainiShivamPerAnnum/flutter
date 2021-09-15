@@ -1,9 +1,10 @@
 import 'dart:async';
-
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class DailyPicksTimer extends StatefulWidget {
   final Widget replacementWidget;
@@ -25,6 +26,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
   Timer timer;
   bool showClock = true;
   bool countDown = true;
+  BaseUtil baseProvider;
 
   @override
   void initState() {
@@ -40,7 +42,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
   bool calculateTime() {
     DateTime currentTime = DateTime.now();
     DateTime drawTime = DateTime(DateTime.now().year, DateTime.now().month,
-        DateTime.now().day, 18, 0, 0);
+        DateTime.now().day, 18, 00, 10);
     Duration timeDiff = currentTime.difference(drawTime);
     if (timeDiff.inSeconds < 0) {
       duration = timeDiff.abs();
@@ -49,20 +51,20 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
     return false;
   }
 
-  void addTime() {
+  void addTime() async {
     final addSeconds = countDown ? -1 : 1;
-    setState(() {
-      final seconds = duration.inSeconds + addSeconds;
-      if (seconds < 0) {
-        print("Cancle");
-        setState(() {
-          showClock = false;
-        });
+    final seconds = duration.inSeconds + addSeconds;
+    if (seconds < 0) {
+      await baseProvider.fetchWeeklyPicks(forcedRefresh: true);
+      setState(() {
+        showClock = false;
         timer?.cancel();
-      } else {
+      });
+    } else {
+      setState(() {
         duration = Duration(seconds: seconds);
-      }
-    });
+      });
+    }
   }
 
   @override
@@ -78,6 +80,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
 
   @override
   Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context);
     if (showClock) {
       String twoDigits(int n) => n.toString().padLeft(2, '0');
       final hours = twoDigits(duration.inHours);
@@ -106,7 +109,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
         height: SizeConfig.screenWidth * 0.14,
         width: SizeConfig.screenWidth * 0.14,
         decoration: BoxDecoration(
-          color: widget.bgColor ?? Color(0xff206A5D),
+          color: widget.bgColor ?? Colors.black.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
         ),
         alignment: Alignment.center,

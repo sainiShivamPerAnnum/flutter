@@ -29,7 +29,7 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
     _width = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: () async {
-        backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher.didPopRoute();
         return true;
       },
       child: Dialog(
@@ -92,6 +92,13 @@ class TicketDetailsDialogState extends State<TicketDetailsDialog> {
                             'Prize awarded:',
                             '',
                             widget._userTicketWallet.prizeTck,
+                            'Refreshes every Monday')
+                        : Container(),
+                    (widget._userTicketWallet.goldenRewTck > 0)
+                        ? _addListField(
+                            'Earned from Golden Ticket:',
+                            '',
+                            widget._userTicketWallet.goldenRewTck,
                             'Refreshes every Monday')
                         : Container(),
                     (widget._userTicketWallet.refTck > 0)

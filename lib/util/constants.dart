@@ -6,6 +6,7 @@ class Constants {
 
   //Collections
   static final String COLN_USERS = "users";
+  static final String COLN_ANNOUNCEMENTS = "announcements";
   static final String COLN_TICKETREQUEST = "ticketrequests";
   static final String COLN_DAILYPICKS = "dailypicks";
   static final String COLN_WINNERS = "winners";
@@ -28,6 +29,7 @@ class Constants {
   static final String SUBCOLN_USER_TXNS = "txns";
   static final String SUBCOLN_USER_WALLET = "wallet";
   static final String SUBCOLN_USER_POLL_RESPONSES = "poll";
+  static final String SUBCOLN_USER_ALERTS = "alerts";
 
   //Sub-collection docs
   static final String DOC_USER_FCM_TOKEN = "client_token";
@@ -45,6 +47,9 @@ class Constants {
 
   static const String POLL_NEXTGAME_ID = "nextgame";
   static const String POLL_FOLLOWUPGAME_ID = "followupgame";
+
+  static const String GOLDENTICKET_DYNAMICLINK_PREFIX =
+      "https://fello.in/goldenticket";
 
   //home feed
   static const String LEARN_FEED_CARD_TYPE = 'L';
@@ -64,7 +69,7 @@ class Constants {
   static const int INVESTMENT_AMOUNT_FOR_TICKET = 100;
   static const int AUG_GOLD_WITHDRAW_OFFSET =
       1; //no of days to wait before withdrawal
-  static const int UNLOCK_REFERRAL_AMT = 300;
+  static const int UNLOCK_REFERRAL_AMT = 100;
   static final DateTime VERSION_2_RELEASE_DATE = DateTime(2021, 4, 1);
 
   ///STAGES - IMPORTANT

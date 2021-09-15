@@ -106,12 +106,14 @@ class _LoginControllerState extends State<LoginController>
 
   Future<void> _verifyPhone() async {
     final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
+      log.debug('::AUTO_RETRIEVE::INVOKED');
       log.debug("Phone number hasnt been auto verified yet");
       if (_otpScreenKey.currentState != null)
         _otpScreenKey.currentState.onOtpAutoDetectTimeout();
     };
 
     final PhoneCodeSent smsCodeSent = (String verId, [int forceCodeResend]) {
+      log.debug('::SMS_CODE_SENT::INVOKED');
       this._augmentedVerificationId = verId;
       log.debug(
           "User mobile number format verified. Sending otp and verifying");
@@ -119,7 +121,8 @@ class _LoginControllerState extends State<LoginController>
         ///this is the first time that the otp was requested
         baseProvider.isLoginNextInProgress = false;
         _controller.animateToPage(OtpInputScreen.index,
-            duration: Duration(seconds: 1), curve: Curves.easeInToLinear);
+            duration: Duration(milliseconds: 1500),
+            curve: Curves.easeInToLinear);
         setState(() {});
       } else {
         ///the otp was requested to be resent
@@ -129,6 +132,7 @@ class _LoginControllerState extends State<LoginController>
 
     final PhoneVerificationCompleted verifiedSuccess =
         (AuthCredential user) async {
+      log.debug('::VERIFIED_SUCCESS::INVOKED');
       log.debug("Verified automagically!");
       if (!baseProvider.isLoginNextInProgress) {
         baseProvider.isLoginNextInProgress = true;
@@ -153,6 +157,8 @@ class _LoginControllerState extends State<LoginController>
 
     final PhoneVerificationFailed veriFailed =
         (FirebaseAuthException exception) {
+      log.debug('::VERIFIED_FAILED::INVOKED');
+      log.error(exception.stackTrace.toString());
       //codes: 'quotaExceeded'
       if (exception.code == 'quotaExceeded') {
         log.error("Quota for otps exceeded");
@@ -415,13 +421,7 @@ class _LoginControllerState extends State<LoginController>
                   'Email field empty', 'Please enter a valid email', context);
               return false;
             }
-            print(
-                "Email entered is -----------> ${_nameScreenKey.currentState.email}");
-            // if (await httpProvider
-            //     .isEmailNotRegistered(_nameScreenKey.currentState.email))
-            //     {
 
-            //     }
             if (_nameScreenKey.currentState.selectedDate == null) {
               baseProvider.showNegativeAlert('Invalid Date of Birth',
                   'Please enter a valid date of birth', context);
@@ -447,10 +447,8 @@ class _LoginControllerState extends State<LoginController>
                   formatMobileNumber(baseProvider.firebaseUser.phoneNumber));
             }
             //baseProvider.myUser.name = nameInScreen.getName();
-            baseProvider.myUser.name = _nameScreenKey.currentState.name;
-            print(baseProvider.myUser.name);
-            //String email = nameInScreen.getEmail();
-            String email = _nameScreenKey.currentState.email;
+            baseProvider.myUser.name = _nameScreenKey.currentState.name.trim();
+            String email = _nameScreenKey.currentState.email.trim();
             if (email != null && email.isNotEmpty) {
               baseProvider.myUser.email = email;
             }
@@ -458,7 +456,7 @@ class _LoginControllerState extends State<LoginController>
             String dob = "${_nameScreenKey.currentState.selectedDate.toLocal()}"
                 .split(" ")[0];
 
-            baseProvider.myUser.dob = dob;
+            baseProvider.myUser.dob = dob.trim();
 
             int gender = _nameScreenKey.currentState.gen;
             if (gender != null) {
@@ -570,11 +568,12 @@ class _LoginControllerState extends State<LoginController>
     BaseUser user = await dbProvider.getUser(baseProvider.firebaseUser.uid);
     //user variable is pre cast into User object
     //dbProvider.logDeviceId(fUser.uid); //TODO do someday
-    if (baseProvider.isLoginNextInProgress == true) {
-      baseProvider.isLoginNextInProgress = false;
-      setState(() {});
-    }
     if (user == null || (user != null && user.hasIncompleteDetails())) {
+      if (baseProvider.isLoginNextInProgress == true) {
+        baseProvider.isLoginNextInProgress = false;
+        setState(() {});
+      }
+
       ///First time user!
       log.debug(
           "No existing user details found or found incomplete details for user. Moving to details page");
@@ -619,13 +618,16 @@ class _LoginControllerState extends State<LoginController>
   }
 
   Future _onSignUpComplete() async {
-    baseProvider.isLoginNextInProgress = false;
     await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
     await BaseAnalytics.logUserProfile(baseProvider.myUser);
 
     await baseProvider.init();
     await fcmProvider.setupFcm();
     AppState.isOnboardingInProgress = false;
+    if (baseProvider.isLoginNextInProgress == true) {
+      baseProvider.isLoginNextInProgress = false;
+      setState(() {});
+    }
     appStateProvider.currentAction =
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
     baseProvider.showPositiveAlert(

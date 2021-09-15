@@ -1,13 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
+import 'package:felloapp/core/model/invoice.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/service/augmont_invoice_service.dart';
+import 'package:felloapp/core/service/pdf_invoice_api.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
@@ -15,7 +18,9 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 class AugmontModel extends ChangeNotifier {
   final Log log = new Log('AugmontModel');
@@ -44,10 +49,16 @@ class AugmontModel extends ChangeNotifier {
 
   bool isInit() => (_apiKey != null);
 
-  String _constructUid(String pan) {
+  // String _constructUid(String pan) {
+  //   var rnd = new Random();
+  //   int u = rnd.nextInt(100);
+  //   return 'fello${u.toString()}$pan';
+  // }
+
+  String _constructUid(String mobile) {
     var rnd = new Random();
     int u = rnd.nextInt(100);
-    return 'fello${u.toString()}$pan';
+    return 'fello${u.toString()}$mobile';
   }
 
   String _constructUsername() {
@@ -68,7 +79,7 @@ class AugmontModel extends ChangeNotifier {
       String ifsc) async {
     if (!isInit()) await _init();
 
-    String _uid = _constructUid(pan);
+    String _uid = _constructUid(mobile);
     String _uname = _constructUsername();
     var _params = {
       CreateUser.fldMobile: mobile,
@@ -99,9 +110,11 @@ class AugmontModel extends ChangeNotifier {
       if (_baseProvider.userRegdPan == null ||
           _baseProvider.userRegdPan.isEmpty ||
           _baseProvider.userRegdPan != pan) {
-        _baseProvider.userRegdPan = pan;
-        _p = await _baseProvider.panService
-            .saveUserPan(_baseProvider.userRegdPan);
+        if (pan != null) {
+          _baseProvider.userRegdPan = pan;
+          _p = await _baseProvider.panService
+              .saveUserPan(_baseProvider.userRegdPan);
+        }
       }
 
       ///push the augmont detail object
@@ -110,6 +123,51 @@ class AugmontModel extends ChangeNotifier {
 
       ///switch augmont onboarding to true and notify listeners if everything goes in order
       if (_p && _a) {
+        _baseProvider.updateAugmontOnboarded(true);
+        await _dbModel.updateUser(_baseProvider.myUser);
+      }
+
+      return _baseProvider.augmontDetail;
+    }
+  }
+
+  Future<UserAugmontDetail> createSimpleUser(
+      String mobile, String stateId) async {
+    if (!isInit()) await _init();
+
+    String _uid = _constructUid(mobile);
+    String _uname = _constructUsername();
+    var _params = {
+      CreateUser.fldMobile: mobile,
+      CreateUser.fldID: _uid,
+      CreateUser.fldUserName: _uname,
+      CreateUser.fldStateId: stateId,
+    };
+
+    var _request = http.Request(
+        'GET', Uri.parse(_constructRequest(CreateUser.path, _params)));
+    _request.headers.addAll(headers);
+    http.StreamedResponse _response = await _request.send();
+
+    final resMap = await _processResponse(_response);
+    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
+      log.error('Query Failed');
+      return null;
+    } else {
+      log.debug(resMap[CreateUser.resStatusCode].toString());
+      resMap["flag"] = QUERY_PASSED;
+
+      ///create augmont detail object
+      _baseProvider.augmontDetail =
+          UserAugmontDetail.newUser(_uid, _uname, stateId, '', '', '');
+      bool _a = false;
+
+      ///push the augmont detail object
+      _a = await _dbModel.updateUserAugmontDetails(
+          _baseProvider.myUser.uid, _baseProvider.augmontDetail);
+
+      ///switch augmont onboarding to true and notify listeners if everything goes in order
+      if (_a) {
         _baseProvider.updateAugmontOnboarded(true);
         await _dbModel.updateUser(_baseProvider.myUser);
       }
@@ -430,6 +488,9 @@ class AugmontModel extends ChangeNotifier {
       log.debug(resMap[GetInvoice.resTransactionId].toString());
       resMap["flag"] = QUERY_PASSED;
 
+      // final pdfFile =
+      //     await PdfInvoiceApi.generate(await generateInvoiceContent());
+      // return pdfFile.path;
       String _path = await _pdfService.generateInvoice(resMap);
       return _path;
     }

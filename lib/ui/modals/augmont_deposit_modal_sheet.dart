@@ -5,6 +5,7 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/dialogs/success-dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
@@ -63,7 +64,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         validityTimer = Timer.periodic(Duration(seconds: 1), (timer) {
           if (validDuration == 0) {
             timer.cancel();
-            backButtonDispatcher.didPopRoute();
+            AppState.backButtonDispatcher.didPopRoute();
           }
           setState(() {
             validDuration--;
@@ -135,7 +136,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                         // do nothing
                       } else {
                         validityTimer.cancel();
-                        backButtonDispatcher.didPopRoute();
+                        AppState.backButtonDispatcher.didPopRoute();
                       }
                     },
                   )
@@ -158,7 +159,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                   controller: _amtController,
                   keyboardType: TextInputType.number,
                   cursorColor: augmontGoldPalette.primaryColor,
-                  decoration: augmontFieldInputDecoration("Enter an amount"),
+                  decoration:
+                      augmontFieldInputDecoration("Enter an amount", null),
                   validator: (value) {
                     Pattern pattern = "^[0-9]*\$";
                     RegExp amRegex = RegExp(pattern);
@@ -192,7 +194,12 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
               spacing: 20,
               children: [
                 ActionChip(
-                  label: Text("How does this work?"),
+                  label: Text(
+                    "How does this work?",
+                    style: TextStyle(
+                      fontSize: SizeConfig.mediumTextSize,
+                    ),
+                  ),
                   backgroundColor: UiConstants.chipColor,
                   onPressed: () {
                     Haptic.vibrate();
@@ -205,7 +212,12 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                   },
                 ),
                 ActionChip(
-                  label: Text("How long does it take?"),
+                  label: Text(
+                    "How long does it take?",
+                    style: TextStyle(
+                      fontSize: SizeConfig.mediumTextSize,
+                    ),
+                  ),
                   backgroundColor: UiConstants.chipColor,
                   onPressed: () {
                     Haptic.vibrate();
@@ -242,6 +254,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                     child: SliderButton(
                       action: () {
                         //widget.onDepositConfirmed();
+                        FocusScope.of(context).unfocus();
                         if (depositformKey3.currentState.validate()) {
                           _isDepositInProgress = true;
                           validityTimer.cancel();
@@ -305,6 +318,12 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    validityTimer.cancel();
   }
 
   double _getTaxIncludedAmount(String amt) {
@@ -404,7 +423,9 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
               Text(
                 'Valid for ${Duration(seconds: validDuration).inMinutes.toString().padLeft(2, '0')}:${Duration(seconds: validDuration % 60).inSeconds.toString().padLeft(2, '0')}s',
                 style: TextStyle(
-                    fontWeight: FontWeight.w400, color: Colors.blueGrey),
+                    fontWeight: FontWeight.w400,
+                    color: Colors.blueGrey,
+                    fontSize: SizeConfig.smallTextSize),
                 textAlign: TextAlign.start,
               )
             ],
@@ -428,32 +449,32 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
           ),
           Expanded(
               child: InkWell(
-                onTap: () {
-                  Haptic.vibrate();
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) => MoreInfoDialog(
+            onTap: () {
+              Haptic.vibrate();
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => MoreInfoDialog(
                         title: title,
                         text: info,
                       ));
-                },
-                child: Row(
-                  children: [
-                    Text(
-                      value,
-                      style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
-                    ),
-                    SizedBox(
-                      width: 4,
-                    ),
-                    Icon(
-                      Icons.info_outline,
-                      color: Colors.grey,
-                      size: SizeConfig.mediumTextSize * 1.4,
-                    )
-                  ],
+            },
+            child: Row(
+              children: [
+                Text(
+                  value,
+                  style: TextStyle(fontSize: SizeConfig.mediumTextSize * 1.2),
                 ),
-              ))
+                SizedBox(
+                  width: 4,
+                ),
+                Icon(
+                  Icons.info_outline,
+                  color: Colors.grey,
+                  size: SizeConfig.mediumTextSize * 1.4,
+                )
+              ],
+            ),
+          ))
         ],
       ),
     );
@@ -501,6 +522,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
     if (flag) {
       // baseProvider.showPositiveAlert(
       //     'SUCCESS', 'You gold deposit was confirmed!', context);
+      AppState.screenStack.add(ScreenItem.dialog);
       Haptic.vibrate();
       showDialog(
         context: context,
@@ -508,7 +530,7 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
         builder: (BuildContext context) => SuccessDialog(),
       );
     } else {
-      backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher.didPopRoute();
       baseProvider.showNegativeAlert(
           'Failed',
           'Your gold deposit failed. Please try again or contact us if you are facing issues',

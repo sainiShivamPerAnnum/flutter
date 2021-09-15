@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +47,7 @@ class ShareInfoModalSheet extends StatelessWidget {
                     SizedBox(width: SizeConfig.blockSizeHorizontal * 5),
                     IconButton(
                       onPressed: () {
-                        backButtonDispatcher.didPopRoute();
+                        AppState.backButtonDispatcher.didPopRoute();
                       },
                       icon: Icon(
                         Icons.close,
@@ -85,7 +86,7 @@ class ShareInfoModalSheet extends StatelessWidget {
                             "Once they signup, both of you receive 10 tickets and ₹25.",
                             SizeConfig.screenWidth * 0.1),
                         referralTile(
-                            "This balance gets unlocked once you make your first investment of atleast ₹100.",
+                            "This balance gets unlocked for both once they make their first investment of atleast ₹100.",
                             SizeConfig.screenWidth * 0.2),
                         SizedBox(height: 20),
                         Container(
@@ -102,11 +103,11 @@ class ShareInfoModalSheet extends StatelessWidget {
                               ),
                               InkWell(
                                 onTap: () async {
-                                  String url = "https://fello.in";
+                                  String url = "https://fello.in/cfo";
                                   if (await canLaunch(url)) {
                                     BaseUtil.launchUrl(url);
                                   } else {
-                                    backButtonDispatcher.didPopRoute();
+                                    AppState.backButtonDispatcher.didPopRoute();
                                   }
                                 },
                                 child: Text(

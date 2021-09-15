@@ -1,18 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:ui' as ui;
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/fold-card.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
-import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -26,8 +21,6 @@ import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-// import 'package:share/share.dart';
-import 'package:share_plus/share_plus.dart';
 
 class FCard extends StatefulWidget {
   static const double nominalOpenHeight = 400;
@@ -58,13 +51,6 @@ class _TicketState extends State<FCard> {
   bool _isPrizeProcessing = false;
   bool _tChoice;
   bool _isclaimed = false;
-
-  LinearGradient cardGradient = const LinearGradient(
-      //colors: [Color(0xff7F00FF), Color(0xffE100FF)],
-      //colors: [Color(0xff01937C), Color(0xffB6C867)],
-      colors: [Color(0xfffbc7d4), Color(0xff9796f0)],
-      begin: Alignment.centerLeft,
-      end: Alignment.centerRight);
 
   Widget get backCard => Container(
         decoration: BoxDecoration(
@@ -125,7 +111,10 @@ class _TicketState extends State<FCard> {
                       ? setState(() {
                           _isOpen = false;
                         })
-                      : backButtonDispatcher.didPopRoute();
+                      : AppState.backButtonDispatcher.didPopRoute();
+                } else {
+                  baseProvider.showNegativeAlert(
+                      "Please wait", "Your prize is being processed", context);
                 }
               }),
         ),
@@ -157,64 +146,68 @@ class _TicketState extends State<FCard> {
     return Container(
       padding: const EdgeInsets.only(top: 10.0, left: 20, right: 10),
       decoration: BoxDecoration(
-        // gradient: cardGradient,
         image: DecorationImage(
             image: AssetImage("images/prize-share-bg.png"), fit: BoxFit.cover),
         borderRadius: BorderRadius.all(
           Radius.circular(15),
         ),
       ),
-      child: Container(
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
+      child: Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset(
-                  "images/fello-dark.png",
-                  width: SizeConfig.screenWidth * 0.12,
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    child:
+                        Lottie.asset("images/lottie/clap.json", repeat: false),
+                  ),
                 ),
+                FittedBox(
+                  fit: BoxFit.contain,
+                  child: Text(
+                    "Congratulations",
+                    style: GoogleFonts.megrim(
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                            offset: Offset(2, 2),
+                            color: Colors.white24,
+                            blurRadius: 2,
+                          )
+                        ],
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 3,
+                        fontSize: SizeConfig.cardTitleTextSize),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  "Your current prize balance is:",
+                  style: GoogleFonts.montserrat(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: SizeConfig.mediumTextSize,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                )
               ],
             ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.all(10),
-                child: Lottie.asset("images/lottie/clap.json", repeat: false),
+          ),
+          Row(
+            children: [
+              Image.asset(
+                "images/fello-dark.png",
+                width: SizeConfig.screenWidth * 0.12,
               ),
-            ),
-            FittedBox(
-              fit: BoxFit.contain,
-              child: Text(
-                "Congratulations",
-                style: GoogleFonts.megrim(
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        offset: Offset(2, 2),
-                        color: Colors.white24,
-                        blurRadius: 2,
-                      )
-                    ],
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 3,
-                    fontSize: SizeConfig.cardTitleTextSize),
-              ),
-            ),
-            SizedBox(height: 20),
-            Text(
-              "Your current prize balance is:",
-              style: GoogleFonts.montserrat(
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-                fontSize: SizeConfig.mediumTextSize,
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            )
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -324,6 +317,8 @@ class _TicketState extends State<FCard> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
+                      if (baseProvider.showNoInternetAlert(context)) return;
+
                       setState(() {
                         _isPrizeProcessing = true;
                       });
@@ -356,7 +351,7 @@ class _TicketState extends State<FCard> {
                     ),
                     child: FittedBox(
                       child: Text(
-                        "Amazon Gift Card ",
+                        "Amazon Gift Card",
                         style: GoogleFonts.montserrat(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
@@ -371,6 +366,7 @@ class _TicketState extends State<FCard> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
+                      if (baseProvider.showNoInternetAlert(context)) return;
                       setState(() {
                         _isPrizeProcessing = true;
                       });
@@ -405,11 +401,10 @@ class _TicketState extends State<FCard> {
                     ),
                     child: FittedBox(
                       child: Text(
-                        "Digital Gold ",
+                        "    Digital Gold    ",
                         style: GoogleFonts.montserrat(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,
-                          fontSize: 14,
                         ),
                       ),
                     ),
@@ -637,7 +632,7 @@ class _CloseCardState extends State<CloseCard> {
                   children: [
                     InkWell(
                       onTap: () {
-                        backButtonDispatcher.didPopRoute();
+                        AppState.backButtonDispatcher.didPopRoute();
                         AppState.screenStack.add(ScreenItem.dialog);
                         showDialog(
                           context: context,
@@ -737,8 +732,8 @@ class _CloseCardState extends State<CloseCard> {
         } else {
           ImageGallerySaver.saveFile(imageFile.path);
         }
-        backButtonDispatcher.didPopRoute();
-        backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher.didPopRoute();
         baseProvider.showPositiveAlert("Saved Successfulyy",
             "Share card saved successfully to the gallery", context);
       }
@@ -746,7 +741,7 @@ class _CloseCardState extends State<CloseCard> {
       setState(() {
         isSaving = false;
       });
-      backButtonDispatcher.didPopRoute();
+      AppState.backButtonDispatcher.didPopRoute();
       print(e.toString());
       baseProvider.showNegativeAlert(
           "Task Failed", "Unable to save the picture at the moment", context);
@@ -765,85 +760,3 @@ class _CloseCardState extends State<CloseCard> {
     }
   }
 }
-
-
-// Positioned(
-//               bottom: 0,
-//               child: Container(
-//                 color: Colors.black.withOpacity(0.8),
-//                 width: SizeConfig.screenWidth,
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                   children: [
-//                     isCapturing
-//                         ? SpinKitCircle(color: Colors.white)
-//                         : Column(
-//                             children: [
-//                               IconButton(
-//                                 onPressed: () async {
-//                                   Uint8List image = await captureCard();
-//                                   if (image != null) shareCard(image);
-//                                 },
-//                                 icon: Icon(Icons.ios_share_rounded,
-//                                     color: Colors.white),
-//                               ),
-//                               Padding(
-//                                 padding: const EdgeInsets.all(8.0),
-//                                 child: Text(
-//                                   "Share",
-//                                   style: GoogleFonts.montserrat(
-//                                     color: Colors.white,
-//                                     fontSize: SizeConfig.mediumTextSize,
-//                                   ),
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                     isSaving
-//                         ? SpinKitCircle(
-//                             color: Colors.white,
-//                           )
-//                         : Column(
-//                             children: [
-//                               IconButton(
-//                                   onPressed: () async {
-//                                     Uint8List image = await captureCard();
-//                                     if (image != null) saveCard(image);
-//                                   },
-//                                   icon: Icon(Icons.save_alt_rounded,
-//                                       color: Colors.white)),
-//                               Padding(
-//                                 padding: const EdgeInsets.all(8.0),
-//                                 child: Text(
-//                                   "Save",
-//                                   style: GoogleFonts.montserrat(
-//                                     color: Colors.white,
-//                                     fontSize: SizeConfig.mediumTextSize,
-//                                   ),
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                     Column(
-//                       children: [
-//                         IconButton(
-//                             onPressed: () =>
-//                                 backButtonDispatcher.didPopRoute(),
-//                             icon: Icon(Icons.close_rounded,
-//                                 color: Colors.white)),
-//                         Padding(
-//                           padding: const EdgeInsets.all(8.0),
-//                           child: Text(
-//                             "Cancel",
-//                             style: GoogleFonts.montserrat(
-//                               color: Colors.white,
-//                               fontSize: SizeConfig.mediumTextSize,
-//                             ),
-//                           ),
-//                         ),
-//                       ],
-//                     )
-//                   ],
-//                 ),
-//               ),
-//             )

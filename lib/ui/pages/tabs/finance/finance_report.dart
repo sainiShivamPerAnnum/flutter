@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
@@ -11,6 +12,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/card.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
+import 'package:felloapp/ui/modals/simple_kyc_modal_sheet.dart';
 import 'package:felloapp/ui/pages/tabs/finance/augmont/augmont_withdraw_screen.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/logger.dart';
@@ -123,7 +125,8 @@ class _YourFundsState extends State<YourFunds> {
                             icon: Icon(
                               Icons.arrow_back_rounded,
                             ),
-                            onPressed: () => backButtonDispatcher.didPopRoute(),
+                            onPressed: () =>
+                                AppState.backButtonDispatcher.didPopRoute(),
                           ),
                           Spacer(),
                           Image.asset(
@@ -262,7 +265,9 @@ class _YourFundsState extends State<YourFunds> {
   }
 
   checkForAction(String fundName, Color color) {
-    if (fundName == "Gold Balance" && widget.userFundWallet.augGoldBalance > 0)
+    if (fundName == "Gold Balance" &&
+        widget.userFundWallet.augGoldBalance > 0 &&
+        baseProvider.myUser.isAugmontOnboarded)
       return ElevatedButton(
         style: ElevatedButton.styleFrom(primary: color),
         onPressed: _onWithdrawalClicked,
@@ -273,16 +278,18 @@ class _YourFundsState extends State<YourFunds> {
       );
     else if (fundName == "Prize Balance" &&
         baseProvider.userFundWallet.prizeBalance > 0) {
-      return ElevatedButton(
-        style: ElevatedButton.styleFrom(primary: color),
-        onPressed: prizeBalanceAction,
-        child: Text(
-          baseProvider.userFundWallet.isPrizeBalanceUnclaimed()
-              ? "Claim Prize"
-              : "Share",
-          style: TextStyle(color: Colors.white),
-        ),
-      );
+      return baseProvider.checkKycMissing
+          ? _addKycInfoWidget()
+          : ElevatedButton(
+              style: ElevatedButton.styleFrom(primary: color),
+              onPressed: prizeBalanceAction,
+              child: Text(
+                baseProvider.userFundWallet.isPrizeBalanceUnclaimed()
+                    ? "Claim Prize"
+                    : "Share",
+                style: TextStyle(color: Colors.white),
+              ),
+            );
     } else
       return SizedBox();
   }
@@ -321,8 +328,59 @@ class _YourFundsState extends State<YourFunds> {
     }
   }
 
+  Widget _addKycInfoWidget() {
+    return InkWell(
+      onTap: () {
+        if (baseProvider.showNoInternetAlert(context)) return;
+        AppState.screenStack.add(ScreenItem.dialog);
+        showModalBottomSheet(
+            isDismissible: false,
+            // backgroundColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            context: context,
+            isScrollControlled: true,
+            builder: (context) {
+              return SimpleKycModalSheet();
+            });
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          color: Color(0xff6389F2).withOpacity(0.5),
+          borderRadius: BorderRadius.circular(SizeConfig.blockSizeVertical),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Icon(
+                Icons.info_outline,
+                size: SizeConfig.mediumTextSize,
+              ),
+              Spacer(),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'Complete your KYC to claim your prize balance',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Spacer(),
+              SizedBox()
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   _onWithdrawalClicked() async {
     HapticFeedback.vibrate();
+    if (baseProvider.showNoInternetAlert(context)) return;
     baseProvider.augmontDetail = (baseProvider.augmontDetail == null)
         ? (await dbProvider.getUserAugmontDetails(baseProvider.myUser.uid))
         : baseProvider.augmontDetail;
@@ -351,7 +409,7 @@ class _YourFundsState extends State<YourFunds> {
         double _w = await dbProvider
             .getNonWithdrawableAugGoldQuantity(baseProvider.myUser.uid);
         _withdrawableGoldQnty = (_w != null)
-            ? _liveGoldQuantityBalance - _w
+            ? math.max(_liveGoldQuantityBalance - _w, 0)
             : _liveGoldQuantityBalance;
       } catch (e) {
         log.error('Failed to fetch non withdrawable gold quantity');
@@ -366,7 +424,7 @@ class _YourFundsState extends State<YourFunds> {
       } else {
         baseProvider.isAugWithdrawRouteLogicInProgress = false;
         setState(() {});
-        delegate.appState.currentAction = PageAction(
+        AppState.delegate.appState.currentAction = PageAction(
           state: PageState.addWidget,
           page: AugWithdrawalPageConfig,
           widget: AugmontWithdrawScreen(

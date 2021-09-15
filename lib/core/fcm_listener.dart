@@ -23,6 +23,7 @@ class FcmListener extends ChangeNotifier {
   LocalDBModel _lModel = locator<LocalDBModel>();
   DBModel _dbModel = locator<DBModel>();
   FcmHandler _handler = locator<FcmHandler>();
+  AppState _appState = locator<AppState>();
   FirebaseMessaging _fcm;
   bool _tambolaDrawNotifications = true; //TODO
   bool isTambolaNotificationLoading = false;
@@ -145,7 +146,6 @@ class FcmListener extends ChangeNotifier {
       addSubscription(FcmTopic.FREQUENTFLYER)
           .then((value) => log.debug("Added frequent flyer subscription"));
 
-
     if (_baseUtil.userTicketWallet != null &&
         _baseUtil.userTicketWallet.getActiveTickets() > 0 &&
         _baseUtil.myUser.userPreferences
@@ -247,13 +247,13 @@ class FcmListener extends ChangeNotifier {
       log.error(e.toString());
       if (_baseUtil.myUser.uid != null) {
         Map<String, dynamic> errorDetails = {
-          'Error Message': 'Changing Tambola Notification Status failed'
+          'error_msg': 'Changing Tambola Notification Status failed'
         };
         _dbModel.logFailure(_baseUtil.myUser.uid,
             FailType.TambolaDrawNotificationSettingFailed, errorDetails);
       }
-      _baseUtil.showNegativeAlert(
-          "Snap!", "Please try again", delegate.navigatorKey.currentContext);
+      _baseUtil.showNegativeAlert("Error", "Please try again",
+          AppState.delegate.navigatorKey.currentContext);
     }
   }
 }

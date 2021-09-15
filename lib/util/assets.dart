@@ -166,37 +166,18 @@ class Assets {
     'For every ₹100 you save, you receive a game ticket that refreshes every week. Our first listed game is Tambola! '
   ];
 
-  static final List<Map<String, String>> tambolaFaqList = [
-    {
-      'How does one participate in Tambola?':
-          '- Everyday, 5 random numbers are picked.\n\n- The matching numbers on your tickets get automatically crossed, starting from the day they were generated.\n\n- On Sunday, your tickets are processed to see if they matched a category.'
-    },
-    {
-      'How does one win the game?':
-          '- Every Sunday, your winning tickets get processed, and the winnings for that week are shared with you in the next few days. \n\n- If there are more than 1 winners for a category, the prize amount gets equally distributed amongst all the category winners.'
-    },
-    {
-      'How can I redeem my winnings?':
-          '- If you\'re a tambola winner, your reward gets credited to your Fello wallet in a few days. \n\n- Once credited, you can choose how you would like to redeem it. It could be as digital gold or as Amazon pay balance.'
-    },
-    {
-      'How can I maximize my winnings ?':
-          'As traditional tambola goes, the more tickets you have, the better your odds of stealing a category! 💪\n'
-    },
-  ];
-
   static final String transactionProcess =
       'Presently, your funds are manually deposited to your linked mutual fund '
       'account along with an email confirmation. \n\nSoon, all deposits and withdrawals placed on Fello will be'
       ' processed directly by your mutual fund of choice. ';
 
-  static final List<String> showCaseDesc = [
-    'Welcome to Fello!\n'
-        'We have added a number of tickets in your account to get you started',
-    'Everyday, 5 numbers are randomly picked from Monday to Sunday. Click the box to see this week\'s numbers',
-    'You receive fresh Tambola tickets every Monday. The ticket numbers are automatically crossed based on the daily picks',
-    'If any of your tickets match one of the 5 categories, you receive fun prizes in your account!'
-  ];
+  // static final List<String> showCaseDesc = [
+  //   'Welcome to Fello!\n'
+  //       'We have added a number of tickets in your account to get you started',
+  //   'Everyday, 5 numbers are randomly picked from Monday to Sunday. Click the box to see this week\'s numbers',
+  //   'You receive fresh Tambola tickets every Monday. The ticket numbers are automatically crossed based on the daily picks',
+  //   'If any of your tickets match one of the 5 categories, you receive fun prizes in your account!'
+  // ];
 
   static final List<String> bottomSheetDesc = [
     'Save more, Win more!',
@@ -236,7 +217,7 @@ class Assets {
   static final String infoAugmontTime =
       'Making a gold purchase is immediate and the gold and tickets get automatically credited once the payment is complete.\n\n Selling your gold is also processed within a few clicks and the amount gets reflected in your bank account within 2 business working days.';
   static final String infoAugmontRegnSecurity =
-      'As per KYC norms, it is necessary to accept a user\'s PAN information before one starts purchasing Gold. Due to this, we prioritised our efforts to add strong security rules to sensitive data: \n\n• Your PAN information is secured and encrypted using the AES-256 standard, and thus is not available for use by anyone else other than you.\n• All requests and messages sent to servers are RSA encrypted, ensuring safe transmission.\n• All transactions and communication with Augmont happen through specific pre-verified IP addresses on the server-side.\n\nThese steps and more ensure a robust security infrastructure for your finances. Feel free to drop us a note if you have any queries!';
+      'As per KYC norms, it is necessary to accept a user\'s PAN information for transacting digital Gold. Due to this, we prioritised our efforts to add strong security rules to sensitive data: \n\n• Your PAN information is secured and encrypted using the AES-256 standard, and thus is not available for use by anyone else other than you.\n• All requests and messages sent to servers are RSA encrypted, ensuring safe transmission.\n• All transactions and communication with Augmont happen through specific pre-verified IP addresses on the server-side.\n\nThese steps and more ensure a robust security infrastructure for your finances. Feel free to drop us a note if you have any queries!';
 
   static const List<String> POLL_NEXT_GAME_LIST = [
     'Financial Quiz',

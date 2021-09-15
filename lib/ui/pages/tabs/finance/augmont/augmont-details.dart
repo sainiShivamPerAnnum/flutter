@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
@@ -17,6 +18,7 @@ import 'package:felloapp/ui/elements/faq_card.dart';
 import 'package:felloapp/ui/elements/plots/fund_graph.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
+import 'package:felloapp/ui/modals/augmont_register_modal_sheet.dart';
 import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
@@ -87,7 +89,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
   ICICIModel iProvider;
   AppState appState;
   GlobalKey<AugmontDepositModalSheetState> _modalKey2 = GlobalKey();
-  GlobalKey<AugmontOnboardingState> _onboardingKey = GlobalKey();
+  // GlobalKey<AugmontOnboardingState> _onboardingKey = GlobalKey();
   GlobalKey<AugmontWithdrawScreenState> _withdrawalDialogKey2 = GlobalKey();
   double containerHeight = 10;
   double _withdrawableGoldQnty;
@@ -201,6 +203,8 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                   size: 18.0,
                 ),
           onPressed: () async {
+            if (await baseProvider.showNoInternetAlert(context)) return;
+
             Haptic.vibrate();
             baseProvider.isAugDepositRouteLogicInProgress = true;
             setState(() {});
@@ -263,6 +267,8 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                   size: 18.0,
                 ),
           onPressed: () async {
+            if (await baseProvider.showNoInternetAlert(context)) return;
+
             if (!baseProvider.isAugWithdrawRouteLogicInProgress) {
               Haptic.vibrate();
               _onWithdrawalClicked();
@@ -308,12 +314,24 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
       //         builder: (context) => AugmontOnboarding(
       //               key: _onboardingKey,
       //             )));
-      appState.currentAction = PageAction(
-          state: PageState.addWidget,
-          widget: AugmontOnboarding(
-            key: _onboardingKey,
+      // appState.currentAction = PageAction(
+      //     state: PageState.addWidget,
+      //     widget: AugmontOnboarding(
+      //       key: _onboardingKey,
+      //     ),
+      //     page: AugOnboardPageConfig);
+      AppState.screenStack.add(ScreenItem.dialog);
+      showModalBottomSheet(
+          isDismissible: false,
+          // backgroundColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
-          page: AugOnboardPageConfig);
+          context: context,
+          isScrollControlled: true,
+          builder: (context) {
+            return AugmontRegisterModalSheet();
+          });
 
       baseProvider.isAugDepositRouteLogicInProgress = false;
       setState(() {});
@@ -477,7 +495,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
           'Not onboarded', 'You havent been onboarded to Augmont yet', context);
     } else if (baseProvider.userFundWallet.augGoldQuantity == null ||
         baseProvider.userFundWallet.augGoldQuantity == 0) {
-      baseProvider.showNegativeAlert('No balance',
+      baseProvider.showNegativeAlert('No Balance Available',
           'Your Augmont wallet has no balance presently', context);
     } else {
       baseProvider.isAugWithdrawRouteLogicInProgress = true;

@@ -4,16 +4,19 @@ import 'dart:ui';
 import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/feedback_dialog.dart';
+import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/dialogs/ticket_details_dialog.dart';
 import 'package:felloapp/ui/elements/Parallax-card/data_model.dart';
 import 'package:felloapp/ui/elements/Parallax-card/game_card_list.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
 import 'package:felloapp/ui/elements/week-winners_board.dart';
+import 'package:felloapp/ui/widgets/network_bar.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -81,6 +84,7 @@ class _GamePageState extends State<GamePage> {
   }
 
   Future<void> _onTicketsRefresh() {
+    print('SCREEN WIDTH IOS: ${SizeConfig.screenWidth}');
     //TODO ADD LOADER
     return dbProvider
         .getUserTicketWallet(baseProvider.myUser.uid)
@@ -93,9 +97,11 @@ class _GamePageState extends State<GamePage> {
   @override
   Widget build(BuildContext context) {
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context);
     return RefreshIndicator(
       onRefresh: () async {
         _onTicketsRefresh();
@@ -135,11 +141,8 @@ class _GamePageState extends State<GamePage> {
                     borderRadius: SizeConfig.homeViewBorder,
                     child: Container(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Spacer(
-                            flex: 2,
-                          ),
                           InkWell(
                             onTap: () async {
                               Haptic.vibrate();
@@ -151,31 +154,20 @@ class _GamePageState extends State<GamePage> {
                                         baseProvider.userTicketWallet),
                               );
                             },
-                            child: TicketCount(baseProvider.userTicketWallet
-                                .getActiveTickets()),
+                            child: (baseProvider.userTicketWallet != null)
+                                ? TicketCount(baseProvider.userTicketWallet
+                                    .getActiveTickets())
+                                : Container(),
                           ),
-                          const Spacer(
-                            flex: 1,
-                          ),
+
                           GameCardList(
                             games: _gameList,
                             onGameChange: _handleGameChange,
                           ),
-                          const Spacer(
-                            flex: 1,
-                          ),
 
-                          /////////TODO HACKY CODE - WRITTEN TO MANAGE TABLET SIZE DIMENSIONS
-                          (SizeConfig.screenWidth >= 1200)
-                              ? Transform.translate(
-                                  offset:
-                                      Offset(0, -SizeConfig.screenWidth * 0.08),
-                                  child: const IdeaSection())
-                              : const IdeaSection(),
+                          //TODO HACKY CODE - REMOVING IDEA SECTION TO MANAGE TABLET SIZE DIMENSIONS
+                          if (SizeConfig.screenWidth < 800) const IdeaSection(),
                           /////////////////////////////////////////////////////////////
-                          const Spacer(
-                            flex: 1,
-                          )
                         ],
                       ),
                     ),
@@ -251,6 +243,7 @@ class IdeaSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final baseProvider = Provider.of<BaseUtil>(context, listen: false);
     final dbProvider = Provider.of<DBModel>(context, listen: false);
+
     return Container(
       height: SizeConfig.screenHeight * 0.16,
       width: SizeConfig.screenWidth,
@@ -268,23 +261,24 @@ class IdeaSection extends StatelessWidget {
             title: "Want more tickets?",
             action: [
               GameOfferCardButton(
-                onPressed: () =>
-                    delegate.parseRoute(Uri.parse("finance/augDetails")),
+                onPressed: () => AppState.delegate
+                    .parseRoute(Uri.parse("finance/augDetails")),
                 title: "Invest",
               ),
               const SizedBox(
                 width: 10,
               ),
               GameOfferCardButton(
-                onPressed: () => delegate.parseRoute(Uri.parse("profile")),
+                onPressed: () =>
+                    AppState.delegate.parseRoute(Uri.parse("profile")),
                 title: "Share",
               ),
             ],
           ),
           GameCard(
             gradient: const [
-              Color(0xffD4AC5B),
-              Color(0xffDECBA4),
+              Color(0xffFFCF41),
+              Color(0xffDE8806),
             ],
             title: "Share your thoughts",
             action: [
@@ -295,7 +289,7 @@ class IdeaSection extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) => WillPopScope(
                       onWillPop: () {
-                        backButtonDispatcher.didPopRoute();
+                        AppState.backButtonDispatcher.didPopRoute();
                         return Future.value(true);
                       },
                       child: FeedbackDialog(
@@ -305,6 +299,7 @@ class IdeaSection extends StatelessWidget {
                         dialogAction: (String fdbk) {
                           if (fdbk != null && fdbk.isNotEmpty) {
                             //feedback submission allowed even if user not signed in
+
                             dbProvider
                                 .submitFeedback(
                                     (baseProvider.firebaseUser == null ||
@@ -314,10 +309,15 @@ class IdeaSection extends StatelessWidget {
                                         : baseProvider.firebaseUser.uid,
                                     fdbk)
                                 .then((flag) {
-                              backButtonDispatcher.didPopRoute();
+                              AppState.backButtonDispatcher.didPopRoute();
                               if (flag) {
                                 baseProvider.showPositiveAlert('Thank You',
                                     'We appreciate your feedback!', context);
+                              } else {
+                                baseProvider.showNegativeAlert(
+                                    "Please try again",
+                                    "We were unable to get your feedback",
+                                    context);
                               }
                             });
                           }
@@ -329,7 +329,7 @@ class IdeaSection extends StatelessWidget {
                 title: "Feedback",
               ),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -449,32 +449,33 @@ class _TicketCountState extends State<TicketCount>
               )
             ],
           ),
-          AnimatedContainer(
-            duration: Duration(milliseconds: 600),
-            margin: EdgeInsets.only(top: 10, left: 50, right: 50),
-            width: tagWidth,
-            height: tagHeight,
-            curve: Curves.bounceOut,
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              color: Colors.yellow[100],
-            ),
-            alignment: Alignment.center,
-            child: AnimatedOpacity(
-              opacity: tagOpacity,
-              duration: Duration(seconds: 1),
-              child: Text(
-                "🏁 ₹ 100 saved = 1 Ticket",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: SizeConfig.mediumTextSize,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 2,
+          if (showTag)
+            AnimatedContainer(
+              duration: Duration(milliseconds: 600),
+              margin: EdgeInsets.only(top: 10, left: 50, right: 50),
+              width: tagWidth,
+              height: tagHeight,
+              curve: Curves.bounceOut,
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: Colors.yellow[100],
+              ),
+              alignment: Alignment.center,
+              child: AnimatedOpacity(
+                opacity: tagOpacity,
+                duration: Duration(seconds: 1),
+                child: Text(
+                  "🏁 ₹ 100 saved = 1 Ticket",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: SizeConfig.mediumTextSize,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 2,
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );
@@ -494,8 +495,7 @@ class GameCard extends StatelessWidget {
       children: [
         Container(
           margin: EdgeInsets.only(
-            left: SizeConfig.globalMargin,
-          ),
+              left: SizeConfig.globalMargin, right: SizeConfig.globalMargin),
           padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
@@ -556,25 +556,24 @@ class GameOfferCardButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onPressed,
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          decoration: BoxDecoration(
-            border: Border.all(
-              width: 2,
-              color: Colors.white,
-            ),
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(100),
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.blockSizeHorizontal * 6, vertical: 8),
+        decoration: BoxDecoration(
+          border: Border.all(
+            width: 2,
+            color: Colors.white,
           ),
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Colors.white, fontSize: SizeConfig.mediumTextSize),
-          ),
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white, fontSize: SizeConfig.mediumTextSize),
         ),
       ),
     );

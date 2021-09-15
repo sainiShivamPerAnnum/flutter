@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -97,7 +98,6 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
           Expanded(
             child: Container(
               child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
                 child: Column(
                   children: [
                     FundInfo(),
@@ -443,6 +443,7 @@ class FundDetailsTable extends StatelessWidget {
 
 class FundGraph extends StatelessWidget {
   FundGraph();
+  BaseUtil baseProvider;
 
   final Map<int, DateTime> dates = {
     1: DateTime.utc(2018, 02, 19),
@@ -490,6 +491,7 @@ class FundGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    baseProvider = Provider.of<BaseUtil>(context, listen: false);
     List<FlSpot> dataItems = [];
     for (int i = 0; i < line1.length; i++) {
       dataItems.add(FlSpot(i.toDouble(), line1[i + 1]));
@@ -534,52 +536,9 @@ class FundGraph extends StatelessWidget {
                   fontSize: SizeConfig.smallTextSize,
                 ),
                 getTitles: (value) {
-                  String showText = "";
                   DateTime date = dates[value.toInt() + 1];
-                  switch (date.month) {
-                    case 1:
-                      showText = "Jan";
-                      break;
-                    case 2:
-                      showText = "Feb";
-                      break;
-                    case 3:
-                      showText = "Mar";
-                      break;
-                    case 4:
-                      showText = "Apr";
-                      break;
-                    case 5:
-                      showText = "May";
-                      break;
-                    case 6:
-                      showText = "Jun";
-                      break;
-                    case 7:
-                      showText = "July";
-                      break;
-                    case 8:
-                      showText = "Aug";
-                      break;
-                    case 9:
-                      showText = "Sep";
-                      break;
-                    case 10:
-                      showText = "Oct";
-                      break;
-                    case 11:
-                      showText = "Nov";
-                      break;
-                    case 12:
-                      showText = "Dec";
-                      break;
-                  }
                   return value % 2 != 0
-                      ? date.day.toString() +
-                          " " +
-                          showText +
-                          "\n" +
-                          date.year.toString()
+                      ? DateFormat('dd MMM\nyyyy').format(date)
                       : "";
                 },
               ),

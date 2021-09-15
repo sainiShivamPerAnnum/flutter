@@ -4,7 +4,7 @@ import 'dart:math' as math;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
-import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -90,7 +90,8 @@ class VerifyEmailState extends State<VerifyEmail> {
                         IconButton(
                           icon: Icon(Icons.close),
                           iconSize: 30,
-                          onPressed: () => backButtonDispatcher.didPopRoute(),
+                          onPressed: () =>
+                              AppState.backButtonDispatcher.didPopRoute(),
                         ),
                       ],
                     ),
@@ -203,7 +204,7 @@ class VerifyEmailState extends State<VerifyEmail> {
       if (res) {
         baseProvider.showPositiveAlert(
             "Email verified", "Thank you for verifying your email", context);
-        backButtonDispatcher.didPopRoute();
+        AppState.backButtonDispatcher.didPopRoute();
       } else {
         baseProvider.showNegativeAlert("Email verification failed",
             "Please try again in sometime", context);
@@ -242,7 +243,7 @@ class VerifyEmailState extends State<VerifyEmail> {
           baseProvider.showPositiveAlert(
               "Success", "Email Verified successfully", context);
           Navigator.pop(context);
-          backButtonDispatcher.didPopRoute();
+          AppState.backButtonDispatcher.didPopRoute();
         } else {
           _isGoogleLoginInProcess = false;
           baseProvider.showNegativeAlert("Oops! we ran into problem",
@@ -422,7 +423,8 @@ class VerifyEmailState extends State<VerifyEmail> {
                                             "Session Expired!",
                                             "Please try again",
                                             context);
-                                        backButtonDispatcher.didPopRoute();
+                                        AppState.backButtonDispatcher
+                                            .didPopRoute();
                                       },
                                       builder: (BuildContext context,
                                           Duration value, Widget child) {

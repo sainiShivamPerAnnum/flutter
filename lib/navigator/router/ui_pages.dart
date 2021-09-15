@@ -24,6 +24,7 @@ const String UpdateRequiredPath = '/updateRequired';
 const String WalkThroughPath = '/walkThrough';
 const String WalkThroughCompletedPath = '/walkThroughCompleted';
 const String YourFundsPath = '/yourFunds';
+const String NotificationsPath = '/notifications';
 
 // For testing
 const String THome = '/tHome';
@@ -62,7 +63,8 @@ enum Pages {
   TWalkthrough,
   TPickDraw,
   TShowAllTickets,
-  TSummaryDetails
+  TSummaryDetails,
+  Notifications,
 }
 
 class PageConfiguration {
@@ -83,6 +85,13 @@ PageConfiguration SplashPageConfig = PageConfiguration(
   path: SplashPath,
   uiPage: Pages.Splash,
 );
+
+PageConfiguration NotificationsConfig = PageConfiguration(
+  key: 'Notifications',
+  path: NotificationsPath,
+  uiPage: Pages.Notifications,
+);
+
 PageConfiguration LoginPageConfig = PageConfiguration(
   key: 'Login',
   path: LoginPath,

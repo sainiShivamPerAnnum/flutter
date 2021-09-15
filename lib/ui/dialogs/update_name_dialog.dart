@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/main.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +115,7 @@ class _UpdateNameDialogState extends State<UpdateNameDialog> {
                                         'Update Succesful',
                                         'Your name has been updated',
                                         context);
-                                    backButtonDispatcher.didPopRoute();
+                                    AppState.backButtonDispatcher.didPopRoute();
                                   } else {
                                     baseProvider.showNegativeAlert(
                                         'Update failed',
@@ -139,7 +140,8 @@ class _UpdateNameDialogState extends State<UpdateNameDialog> {
                           child: ElevatedButton(
                             style:
                                 ElevatedButton.styleFrom(primary: Colors.white),
-                            onPressed: () => backButtonDispatcher.didPopRoute(),
+                            onPressed: () =>
+                                AppState.backButtonDispatcher.didPopRoute(),
                             child: Text(
                               "Cancel",
                               style: GoogleFonts.montserrat(

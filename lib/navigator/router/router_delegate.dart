@@ -1,29 +1,35 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/ui/dialogs/aboutus_dialog.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
+import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
-import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
+import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
 import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
+import 'package:felloapp/ui/pages/notifications/notifications.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
+import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/root.dart';
+import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola/summary_tickets_display.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_result.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/show_all_tickets.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/summary_tickets_display.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/tambola-home.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/tambola_walkthrough.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
+import 'package:felloapp/util/locator.dart';
 import '../../ui/pages/tabs/finance/augmont/augmont-details.dart';
 import '../../ui/pages/tabs/finance/augmont/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
 import '../../ui/pages/tabs/finance/icici/mf_details_page.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_result.dart';
 import 'package:felloapp/ui/pages/tabs/profile/claim_username.dart';
 import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions.dart';
@@ -34,6 +40,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../ui/pages/tabs/finance/augmont/augmont-details.dart';
+import '../../ui/pages/tabs/finance/augmont/edit_augmont_bank_details.dart';
+import '../../ui/pages/tabs/finance/icici/mf_details_page.dart';
 import '../app_state.dart';
 import 'ui_pages.dart';
 
@@ -43,7 +52,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   @override
   final GlobalKey<NavigatorState> navigatorKey;
-
+  BaseUtil _baseUtil = locator<BaseUtil>(); //required to fetch client token
   final AppState appState;
 
   FelloRouterDelegate(this.appState) : navigatorKey = GlobalKey() {
@@ -217,6 +226,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.TSummaryDetails:
           _addPageData(SummaryTicketsDisplay(), TSummaryDetailsPageConfig);
           break;
+        case Pages.Notifications:
+          _addPageData(NotficationsPage(), NotificationsConfig);
+          break;
         default:
           break;
       }
@@ -362,6 +374,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.TSummaryDetails:
         TSummaryDetailsPageConfig.currentPageAction = action;
         break;
+      case Pages.Notifications:
+        NotificationsConfig.currentPageAction = action;
+        break;
 
       default:
         break;
@@ -427,7 +442,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   void dialogCheck(String dialogKey) {
-    Widget dialogWidget = null;
+    Widget dialogWidget;
     bool barrierDismissable = true;
     switch (dialogKey) {
       case 'guide':
@@ -445,6 +460,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           title: 'Where is my PAN Number used?',
         );
         break;
+      case "goldenTicket":
+        dialogWidget = GoldenTicketClaimDialog();
+        barrierDismissable = false;
+        break;
     }
     if (dialogWidget != null) {
       AppState.screenStack.add(ScreenItem.dialog);
@@ -454,7 +473,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           builder: (ctx) {
             return WillPopScope(
                 onWillPop: () {
-                  backButtonDispatcher.didPopRoute();
+                  AppState.backButtonDispatcher.didPopRoute();
                   print("Popped the dialog");
                   return Future.value(true);
                 },
@@ -498,7 +517,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = ReferralPageConfig;
         break;
       case 'tambolaHome':
-        pageConfiguration = THomePageConfig;
+        _baseUtil.openTambolaHome();
         break;
       case 'tnc':
         pageConfiguration = TncPageConfig;

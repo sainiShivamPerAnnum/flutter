@@ -85,6 +85,8 @@ class _TransactionsState extends State<Transactions> {
       return "Tambola Win";
     } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
       return "Referral Bonus";
+    } else if (type == UserTransaction.TRAN_SUBTYPE_GLDN_TCK) {
+      return "Golden Ticket";
     }
     return "Fund Name";
   }

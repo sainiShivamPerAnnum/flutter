@@ -130,7 +130,7 @@ class Ticket extends StatelessWidget {
             height: SizeConfig.screenWidth * 0.95,
             width: SizeConfig.screenWidth * 0.9,
             child: Opacity(
-              opacity: 0.16,
+              opacity: 0.1,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(14),
                 child: Image.asset(

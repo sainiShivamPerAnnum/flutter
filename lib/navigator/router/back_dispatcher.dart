@@ -1,6 +1,5 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/util/locator.dart';
@@ -35,21 +34,32 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
   @override
   Future<bool> didPopRoute() {
-    // If the top item is anything except a scaffold
+    // If user is in the profile page and preferences are changed
     if (AppState.unsavedPrefs) {
       if (_baseUtil != null &&
           _baseUtil.myUser != null &&
           _baseUtil.myUser.uid != null &&
           _baseUtil.myUser.userPreferences != null)
-      _dbModel
-          .updateUserPreferences(
-              _baseUtil.myUser.uid, _baseUtil.myUser.userPreferences)
-          .then((value) {
-        AppState.unsavedPrefs = false;
-        print("Preferences updated");
-      });
+        _dbModel
+            .updateUserPreferences(
+                _baseUtil.myUser.uid, _baseUtil.myUser.userPreferences)
+            .then((value) {
+          AppState.unsavedPrefs = false;
+          print("Preferences updated");
+        });
+      return _routerDelegate.popRoute();
     }
-    if (AppState.screenStack.last == ScreenItem.dialog) {
+    // If onboarding is in progress
+    else if (AppState.isOnboardingInProgress) {
+      BaseUtil().showNegativeAlert(
+          "Exit Onboarding?🕺",
+          "Press back once more to exit",
+          _routerDelegate.navigatorKey.currentContext);
+      AppState.isOnboardingInProgress = false;
+      return Future.value(true);
+    }
+    // If the top item is anything except a scaffold
+    else if (AppState.screenStack.last == ScreenItem.dialog) {
       Navigator.pop(_routerDelegate.navigatorKey.currentContext);
       AppState.screenStack.removeLast();
       print("Current Stack: ${AppState.screenStack}");
@@ -61,22 +71,17 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         _baseUtil.isUserOnboarded) {
       _routerDelegate.appState.setCurrentGameTabIndex = 0;
       _routerDelegate.appState.returnHome();
-    } else if (AppState.isOnboardingInProgress) {
-      BaseUtil().showNegativeAlert(
-          "Exit Onboarding?🕺",
-          "Press back once more to exit",
-          _routerDelegate.navigatorKey.currentContext);
-      AppState.isOnboardingInProgress = false;
-      //return _confirmExit();
-    } else if (AppState.unsavedChanges)
-      return _confirmExit(
-          "You have unsaved changes", "Are you sure you want to exit", () {
-        print(AppState.screenStack);
-        AppState.unsavedChanges = false;
-        didPopRoute();
-        return didPopRoute();
-      });
-    else
-      return _routerDelegate.popRoute();
+      return Future.value(true);
+    }
+    // else if (AppState.unsavedChanges)
+    //   return _confirmExit(
+    //       "You have unsaved changes", "Are you sure you want to exit", () {
+    //     print(AppState.screenStack);
+    //     AppState.unsavedChanges = false;
+    //     didPopRoute();
+    //     return didPopRoute();
+    //   });
+    // else
+    return _routerDelegate.popRoute();
   }
 }

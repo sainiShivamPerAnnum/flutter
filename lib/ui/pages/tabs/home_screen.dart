@@ -1,18 +1,22 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/model/FeedCard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_daily_draw_timer.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
+import 'package:felloapp/ui/widgets/network_bar.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,6 +31,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool isImageLoading = false;
   BaseUtil baseProvider;
+  ConnectivityStatus _connectivityStatus;
   DBModel dbProvider;
   AppState appState;
   LocalDBModel _localDBModel;
@@ -75,7 +80,7 @@ class _HomePageState extends State<HomePage> {
           baseProvider.isHomeCardsFetched = true;
           setState(() {});
         } else {
-          setState(() {});
+          if (mounted) setState(() {});
         }
       });
     }
@@ -86,6 +91,8 @@ class _HomePageState extends State<HomePage> {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
+    _connectivityStatus =
+        Provider.of<ConnectivityStatus>(context, listen: true);
     _localDBModel = Provider.of<LocalDBModel>(context, listen: false);
 
     if (baseProvider.myUserDpUrl == null) {
@@ -150,6 +157,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Widget> _buildHomeFeed(List<FeedCard> cards) {
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context);
+
     if (cards.length == 0) {
       return [
         Align(
@@ -173,7 +183,9 @@ class _HomePageState extends State<HomePage> {
     }
     List<Widget> _widget = [
       Container(
-        height: SizeConfig.screenHeight * 0.02,
+        height: connectivityStatus == ConnectivityStatus.Offline
+            ? kToolbarHeight
+            : SizeConfig.screenHeight * 0.02,
       ),
       _buildProfileRow(),
     ];
@@ -217,7 +229,7 @@ class _HomePageState extends State<HomePage> {
             isHighlighted: false,
             onPressed: () async {
               Haptic.vibrate();
-              delegate.parseRoute(Uri.parse(card.actionUri));
+              AppState.delegate.parseRoute(Uri.parse(card.actionUri));
             },
           ),
         );
@@ -237,26 +249,7 @@ class _HomePageState extends State<HomePage> {
             isHighlighted: false,
             onPressed: () async {
               Haptic.vibrate();
-              delegate.appState.setCurrentTabIndex = 1;
-              if (await baseProvider.getDrawaStatus()) {
-                await _localDBModel
-                    .saveDailyPicksAnimStatus(DateTime.now().weekday)
-                    .then(
-                      (value) => print(
-                          "Daily Picks Draw Animation Save Status Code: $value"),
-                    );
-                delegate.appState.setCurrentTabIndex = 1;
-                delegate.appState.currentAction = PageAction(
-                  state: PageState.addWidget,
-                  page: TPickDrawPageConfig,
-                  widget: PicksDraw(
-                    picks: baseProvider.todaysPicks ??
-                        List.filled(baseProvider.dailyPicksCount, -1),
-                  ),
-                );
-              } else
-                delegate.appState.currentAction =
-                    PageAction(state: PageState.addPage, page: THomePageConfig);
+              baseProvider.openTambolaHome();
             },
           ),
         );
@@ -276,8 +269,8 @@ class _HomePageState extends State<HomePage> {
             dataMap: card.dataMap,
             onPressed: () async {
               Haptic.vibrate();
-              delegate.appState.setCurrentTabIndex = 1;
-              delegate.appState.setCurrentGameTabIndex = 1;
+              AppState.delegate.appState.setCurrentTabIndex = 1;
+              AppState.delegate.appState.setCurrentGameTabIndex = 1;
             },
           ),
         );
@@ -297,7 +290,7 @@ class _HomePageState extends State<HomePage> {
             isHighlighted: false,
             onPressed: () {
               Haptic.vibrate();
-              delegate.parseRoute(Uri.parse(card.actionUri));
+              AppState.delegate.parseRoute(Uri.parse(card.actionUri));
             },
           ),
         );
@@ -307,7 +300,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildProfileRow() {
     return InkWell(
       onTap: () {
-        delegate.appState.currentAction = PageAction(
+        AppState.delegate.appState.currentAction = PageAction(
             state: PageState.addPage, page: UserProfileDetailsConfig);
       },
       child: Container(
@@ -478,12 +471,6 @@ class BaseHomeCardContent extends StatelessWidget {
             subtitle,
             style: TextStyle(
                 color: Colors.white,
-                // shadows: [
-                //   Shadow(
-                //     color: shadowColor,
-                //     offset: Offset(1, 1),
-                //   ),
-                // ],
                 fontSize: SizeConfig.mediumTextSize * 1.1,
                 fontWeight: FontWeight.w700),
           ),

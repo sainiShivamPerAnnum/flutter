@@ -50,29 +50,10 @@ class GameCardListState extends State<GameCardList>
     baseProvider = Provider.of<BaseUtil>(context);
     _localDBModel = Provider.of<LocalDBModel>(context, listen: false);
     gameRoutes = [
-      () async {
-        if (await baseProvider.getDrawaStatus()) {
-          await _localDBModel
-              .saveDailyPicksAnimStatus(DateTime.now().weekday)
-              .then(
-                (value) => print(
-                    "Daily Picks Draw Animation Save Status Code: $value"),
-              );
-          delegate.appState.currentAction = PageAction(
-            state: PageState.addWidget,
-            page: TPickDrawPageConfig,
-            widget: PicksDraw(
-              picks: baseProvider.todaysPicks ??
-                  List.filled(baseProvider.dailyPicksCount, -1),
-            ),
-          );
-        } else
-          delegate.appState.currentAction =
-              PageAction(state: PageState.addPage, page: THomePageConfig);
-      },
+      () => baseProvider.openTambolaHome(),
       () {
         Haptic.vibrate();
-        delegate.parseRoute(Uri.parse("d-gamePoll"));
+        AppState.delegate.parseRoute(Uri.parse("d-gamePoll"));
       },
     ];
 

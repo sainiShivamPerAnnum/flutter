@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
@@ -14,6 +15,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/Texts/marquee_text.dart';
 import 'package:felloapp/ui/elements/custom-art/profile-card.dart';
 import 'package:felloapp/ui/modals/share_info_modal.dart';
+import 'package:felloapp/ui/widgets/network_bar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -28,8 +30,8 @@ import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-// import 'package:share/share.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -168,18 +170,23 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   ProfileTabTile(
-                      leadIcon: "images/transaction.png",
-                      title: "Transactions",
-                      trailWidget: Text(
-                        "See All",
-                        style: GoogleFonts.montserrat(
-                          color: UiConstants.primaryColor,
-                          fontSize: SizeConfig.mediumTextSize,
-                        ),
+                    leadIcon: "images/transaction.png",
+                    title: "Transactions",
+                    trailWidget: Text(
+                      "See All",
+                      style: GoogleFonts.montserrat(
+                        color: UiConstants.primaryColor,
+                        fontSize: SizeConfig.mediumTextSize,
                       ),
-                      onPress: () => appState.currentAction = PageAction(
+                    ),
+                    onPress: () async {
+                      if (await baseProvider.showNoInternetAlert(context))
+                        return;
+                      appState.currentAction = PageAction(
                           state: PageState.addPage,
-                          page: TransactionPageConfig)),
+                          page: TransactionPageConfig);
+                    },
+                  ),
                   ProfileTabTile(
                     leadIcon: "images/referrals.png",
                     title: "Referrals",
@@ -229,7 +236,7 @@ class ShowEmailVerifyLink extends StatelessWidget {
             baseProvider.myUser.isEmailVerified == false
         ? InkWell(
             onTap: () {
-              delegate.appState.currentAction = PageAction(
+              AppState.delegate.appState.currentAction = PageAction(
                   state: PageState.addPage, page: VerifyEmailPageConfig);
             },
             child: const MarqueeText(
@@ -309,14 +316,16 @@ class TermsRow extends StatelessWidget {
           child: InkWell(
             child: Text(
               'Terms of Service',
-              style: TextStyle(fontSize: SizeConfig.smallTextSize*1.2,
-                  color: Colors.grey, decoration: TextDecoration.underline),
+              style: TextStyle(
+                  fontSize: SizeConfig.smallTextSize * 1.2,
+                  color: Colors.grey,
+                  decoration: TextDecoration.underline),
             ),
             onTap: () {
               Haptic.vibrate();
               BaseUtil.launchUrl('https://fello.in/policy/tnc');
 
-              // delegate.appState.currentAction =
+              // AppState.delegate.appState.currentAction =
               //     PageAction(state: PageState.addPage, page: TncPageConfig);
             },
           ),
@@ -330,13 +339,15 @@ class TermsRow extends StatelessWidget {
           child: InkWell(
             child: Text(
               'Privacy Policy',
-              style: TextStyle(fontSize: SizeConfig.smallTextSize*1.2,
-                  color: Colors.grey, decoration: TextDecoration.underline),
+              style: TextStyle(
+                  fontSize: SizeConfig.smallTextSize * 1.2,
+                  color: Colors.grey,
+                  decoration: TextDecoration.underline),
             ),
             onTap: () {
               Haptic.vibrate();
               BaseUtil.launchUrl('https://fello.in/policy/privacy');
-              // delegate.appState.currentAction = PageAction(
+              // AppState.delegate.appState.currentAction = PageAction(
               //     state: PageState.addPage, page: RefPolicyPageConfig);
             },
           ),
@@ -350,13 +361,15 @@ class TermsRow extends StatelessWidget {
           child: InkWell(
             child: Text(
               'Referral Policy',
-              style: TextStyle(fontSize: SizeConfig.smallTextSize*1.2,
-                  color: Colors.grey, decoration: TextDecoration.underline),
+              style: TextStyle(
+                  fontSize: SizeConfig.smallTextSize * 1.2,
+                  color: Colors.grey,
+                  decoration: TextDecoration.underline),
             ),
             onTap: () {
               Haptic.vibrate();
               // BaseUtil.launchUrl('https://fello.in/policy/privacy');
-              delegate.appState.currentAction = PageAction(
+              AppState.delegate.appState.currentAction = PageAction(
                   state: PageState.addPage, page: RefPolicyPageConfig);
             },
           ),
@@ -665,6 +678,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                     size: 18.0,
                   ),
             onTap: () async {
+              if (await baseProvider.showNoInternetAlert(context)) return;
               fcmProvider.addSubscription(FcmTopic.REFERRER);
               BaseAnalytics.analytics.logShare(
                   contentType: 'referral',
@@ -740,6 +754,7 @@ class _ShareOptionsState extends State<ShareOptions> {
                         ),
                   onTap: () async {
                     ////////////////////////////////
+                    if (await baseProvider.showNoInternetAlert(context)) return;
                     fcmProvider.addSubscription(FcmTopic.REFERRER);
                     BaseAnalytics.analytics.logShare(
                         contentType: 'referral',
@@ -823,9 +838,9 @@ class _ShareOptionsState extends State<ShareOptions> {
         shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
       ),
       iosParameters: IosParameters(
-        bundleId: 'in.fello.felloappiOS',
-        minimumVersion: '0',
-      ),
+          bundleId: 'in.fello.felloappiOS',
+          minimumVersion: '0',
+          appStoreId: '1558445254'),
     );
 
     Uri url;
@@ -894,7 +909,7 @@ class UserProfileCard extends StatelessWidget {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     return InkWell(
-      onTap: () => delegate.appState.currentAction =
+      onTap: () => AppState.delegate.appState.currentAction =
           PageAction(state: PageState.addPage, page: UserProfileDetailsConfig),
       child: Container(
         width: SizeConfig.screenWidth,
@@ -1010,26 +1025,9 @@ class UserProfileCard extends StatelessWidget {
   }
 
   String _getUserMembershipDate() {
-    List<String> months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ];
     if (baseProvider.userCreationTimestamp != null) {
-      int month = baseProvider.userCreationTimestamp.month;
-      int year = baseProvider.userCreationTimestamp.year;
-      int yearShort = year % 2000;
-
-      return '${months[month - 1]}\'$yearShort';
+      return DateFormat("MMMM, yyyy")
+          .format(baseProvider.userCreationTimestamp);
     } else {
       return '\'Unavailable\'';
     }

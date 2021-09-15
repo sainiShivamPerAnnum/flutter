@@ -1,5 +1,7 @@
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/ui/widgets/network_bar.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -7,6 +9,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../base_util.dart';
@@ -29,7 +32,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     } catch (err) {
       if (baseProvider.myUser.uid != null) {
         Map<String, dynamic> errorDetails = {
-          'Error message': 'Fetching gold rates for api for line chart failed',
+          'error_msg': 'Fetching gold rates for api for line chart failed',
         };
         dbProvider.logFailure(baseProvider.myUser.uid,
             FailType.GoldRateFetchFailed, errorDetails);
@@ -59,6 +62,8 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   @override
   Widget build(BuildContext context) {
     augmontProvider = Provider.of<AugmontModel>(context, listen: false);
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context, listen: false);
     if (_dataPointsState == "loading") {
       _getDataPoints().then((value) {
         if (value != null) {
@@ -84,10 +89,14 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         width: double.infinity,
         child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: SpinKitThreeBounce(
-              color: augmontGoldPalette.primaryColor,
-              size: 30.0,
-            )),
+            child: connectivityStatus == ConnectivityStatus.Offline
+                ? NetworkBar(
+                    textColor: Colors.black,
+                  )
+                : SpinKitThreeBounce(
+                    color: augmontGoldPalette.primaryColor,
+                    size: 30.0,
+                  )),
       );
     }
     if (_dataPointsState == "done") {
@@ -153,7 +162,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                         fontWeight: FontWeight.bold,
                         fontSize: SizeConfig.smallTextSize,
                       ),
-                      getTitles: (value) => getvalue(value),
+                      //  getTitles: (value) => getvalue(value),
                     ),
                     leftTitles: SideTitles(margin: 0)),
                 gridData: FlGridData(
@@ -234,6 +243,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                           fontWeight: index == _selectedFrequency
                               ? FontWeight.w700
                               : FontWeight.w300,
+                          fontSize: SizeConfig.mediumTextSize,
                           color: index == _selectedFrequency
                               ? Colors.white
                               : Colors.black45,
@@ -291,71 +301,25 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   getDate(LineBarSpot lbs) {
     DateTime time =
         graphPoints.firstWhere((element) => element.rate == lbs.y).timestamp;
-    String showText;
-    switch (time.month) {
-      case 1:
-        showText = "Jan";
-        break;
-      case 2:
-        showText = "Feb";
-        break;
-      case 3:
-        showText = "Mar";
-        break;
-      case 4:
-        showText = "Apr";
-        break;
-      case 5:
-        showText = "May";
-        break;
-      case 6:
-        showText = "Jun";
-        break;
-      case 7:
-        showText = "July";
-        break;
-      case 8:
-        showText = "Aug";
-        break;
-      case 9:
-        showText = "Sep";
-        break;
-      case 10:
-        showText = "Oct";
-        break;
-      case 11:
-        showText = "Nov";
-        break;
-      case 12:
-        showText = "Dec";
-        break;
-    }
-    return time.day.toString() + " " + showText + " " + time.year.toString();
+    return DateFormat('dd MMM, yyyy').format(time);
   }
 
-  getvalue(double value) {
-    switch (_selectedFrequency) {
-      case 0:
-        return value.toString();
-        break;
-      case 1:
-        return value.toString();
-        break;
-      case 2:
-        return value.toString();
-        break;
-      case 3:
-        if (value % 2 == 0)
-          return value.toString();
-        else
-          return '';
-        break;
-      case 4:
-        if (value % 3 == 0)
-          return value.toString();
-        else
-          return '';
-        break;
-    }
-  }
+  // getvalue(double value) {
+  //   switch (_selectedFrequency) {
+  //     case 3:
+  //       if (value % 2 == 0)
+  //         return value.toString();
+  //       else
+  //         return '';
+  //       break;
+  //     case 4:
+  //       if (value % 3 == 0)
+  //         return value.toString();
+  //       else
+  //         return '';
+  //       break;
+  //     default:
+  //       return value.toString();
+  //   }
+  // }
 }

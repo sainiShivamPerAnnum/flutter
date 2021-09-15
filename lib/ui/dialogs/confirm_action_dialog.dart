@@ -1,3 +1,4 @@
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -95,7 +96,7 @@ class _FormDialogState extends State<ConfirmActionDialog> {
                       onPressed: () {
                         Haptic.vibrate();
                         log.debug('DialogAction cancelled');
-
+                        AppState.backButtonDispatcher.didPopRoute();
                         return widget.cancelAction();
                       },
                       child: Text(
@@ -111,6 +112,7 @@ class _FormDialogState extends State<ConfirmActionDialog> {
                       onPressed: () {
                         Haptic.vibrate();
                         log.debug('DialogAction clicked');
+                        AppState.backButtonDispatcher.didPopRoute();
                         return widget.confirmAction();
                       },
                       child: Text(

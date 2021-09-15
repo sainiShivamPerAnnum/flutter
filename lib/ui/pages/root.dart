@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -10,12 +11,16 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/modals/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
 import 'package:felloapp/ui/pages/tabs/profile/profile_screen.dart';
+import 'package:felloapp/ui/widgets/network_bar.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -23,6 +28,7 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Root extends StatefulWidget {
@@ -89,7 +95,7 @@ class _RootState extends State<Root> {
   }
 
   void toggleTag() {
-    print("got here");
+    print("show tag toggled");
     setState(() {
       showTag = !showTag;
     });
@@ -127,7 +133,7 @@ class _RootState extends State<Root> {
         if (value) {
           //show tutorial
           lclDbProvider.setShowHomeTutorial = false;
-          delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
+          AppState.delegate.parseRoute(Uri.parse('dashboard/walkthrough'));
           setState(() {});
         }
       });
@@ -162,6 +168,8 @@ class _RootState extends State<Root> {
     fcmProvider = Provider.of<FcmHandler>(context, listen: false);
     lclDbProvider = Provider.of<LocalDBModel>(context, listen: false);
     appState = Provider.of<AppState>(context, listen: false);
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context);
     _initialize();
     var accentColor = UiConstants.primaryColor;
 
@@ -195,26 +203,66 @@ class _RootState extends State<Root> {
                 ),
               ),
             ),
+            if (connectivityStatus == ConnectivityStatus.Offline)
+              Positioned(
+                child: SafeArea(
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: kToolbarHeight,
+                    width: SizeConfig.screenWidth,
+                    child: NetworkBar(
+                      textColor: (appState.getCurrentTabIndex == 0)
+                          ? Colors.white
+                          : Color(0xff4C4C4C),
+                    ),
+                  ),
+                ),
+              ),
             Positioned(
               top: SizeConfig.blockSizeHorizontal * 2,
               right: SizeConfig.blockSizeHorizontal * 2,
               child: SafeArea(
-                child: InkWell(
-                  child: SvgPicture.asset(
-                    "images/support-log.svg",
-                    height: kToolbarHeight * 0.6,
-                    color: (appState.getCurrentTabIndex == 0)
-                        ? Colors.white
-                        : Color(0xff4C4C4C),
-                  ),
-                  //icon: Icon(Icons.contact_support_outlined),
-                  // iconSize: kToolbarHeight * 0.5,
-
-                  onTap: () {
-                    Haptic.vibrate();
-                    delegate.appState.currentAction = PageAction(
-                        state: PageState.addPage, page: SupportPageConfig);
-                  },
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (appState.getCurrentTabIndex == 3)
+                      InkWell(
+                        child: Icon(
+                          Icons.notifications,
+                          size: kToolbarHeight * 0.5,
+                          color: (appState.getCurrentTabIndex == 0)
+                              ? Colors.white
+                              : Color(0xff4C4C4C),
+                        ),
+                        //icon: Icon(Icons.contact_support_outlined),
+                        // iconSize: kToolbarHeight * 0.5,
+                        onTap: () {
+                          Haptic.vibrate();
+                          AppState.delegate.appState.currentAction = PageAction(
+                              state: PageState.addPage,
+                              page: NotificationsConfig);
+                        },
+                      ),
+                    SizedBox(
+                      width: kToolbarHeight * 0.2,
+                    ),
+                    InkWell(
+                      child: SvgPicture.asset(
+                        "images/support-log.svg",
+                        height: kToolbarHeight * 0.6,
+                        color: (appState.getCurrentTabIndex == 0)
+                            ? Colors.white
+                            : Color(0xff4C4C4C),
+                      ),
+                      //icon: Icon(Icons.contact_support_outlined),
+                      // iconSize: kToolbarHeight * 0.5,
+                      onTap: () {
+                        Haptic.vibrate();
+                        AppState.delegate.appState.currentAction = PageAction(
+                            state: PageState.addPage, page: SupportPageConfig);
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -238,7 +286,7 @@ class _RootState extends State<Root> {
       if (deepLink == null) return null;
 
       log.debug('Received deep link. Process the referral');
-      return _processReferral(baseProvider.myUser.uid, deepLink);
+      return _processDynamicLink(baseProvider.myUser.uid, deepLink);
     }, onError: (OnLinkErrorException e) async {
       log.error('Error in fetching deeplink');
       log.error(e);
@@ -250,29 +298,33 @@ class _RootState extends State<Root> {
     final Uri deepLink = data?.link;
     if (deepLink != null) {
       log.debug('Received deep link. Process the referral');
-      return _processReferral(baseProvider.myUser.uid, deepLink);
+      return _processDynamicLink(baseProvider.myUser.uid, deepLink);
     }
   }
 
-  _processReferral(String userId, Uri deepLink) async {
-    int addUserTicketCount = await _submitReferral(
-        baseProvider.myUser.uid, baseProvider.myUser.name, deepLink);
-    if (addUserTicketCount == null || addUserTicketCount < 0) {
-      log.debug('Processing complete. No extra tickets to be added');
+  _processDynamicLink(String userId, Uri deepLink) async {
+    String _uri = deepLink.toString();
+    if (_uri.startsWith(Constants.GOLDENTICKET_DYNAMICLINK_PREFIX)) {
+      //Golden ticket dynamic link
+      int flag = await _submitGoldenTicket(userId, _uri);
     } else {
-      log.debug('$addUserTicketCount tickets need to be added for the user');
-      //NO LONGER REQUIRED
-      // dbProvider.pushTicketRequest(baseProvider.myUser, addUserTicketCount);
+      //Referral dynamic link
+      int addUserTicketCount = await _submitReferral(
+          baseProvider.myUser.uid, baseProvider.myUser.name, _uri);
+      if (addUserTicketCount == null || addUserTicketCount < 0) {
+        log.debug('Processing complete. No extra tickets to be added');
+      } else {
+        log.debug('$addUserTicketCount tickets need to be added for the user');
+      }
     }
   }
 
   Future<int> _submitReferral(
-      String userId, String userName, Uri deepLink) async {
+      String userId, String userName, String deepLink) async {
     try {
       String prefix = 'https://fello.in/';
-      String dLink = deepLink.toString();
-      if (dLink.startsWith(prefix)) {
-        String referee = dLink.replaceAll(prefix, '');
+      if (deepLink.startsWith(prefix)) {
+        String referee = deepLink.replaceAll(prefix, '');
         log.debug(referee);
         if (prefix.length > 0 && prefix != userId) {
           return httpModel
@@ -287,6 +339,46 @@ class _RootState extends State<Root> {
         return -1;
     } catch (e) {
       log.error(e);
+      return -1;
+    }
+  }
+
+  Future<int> _submitGoldenTicket(String userId, String deepLink) async {
+    try {
+      String prefix = "https://fello.in/goldenticketdynlnk/";
+      if (!deepLink.startsWith(prefix)) return -1;
+      String docId = deepLink.replaceAll(prefix, '');
+      if (docId != null && docId.isNotEmpty) {
+        return httpModel
+            .postGoldenTicketRedemption(userId, docId)
+            .then((redemptionMap) {
+          // log.debug('Flag is ${tckCount.toString()}');
+          if (redemptionMap != null &&
+              redemptionMap['flag'] &&
+              redemptionMap['count'] > 0) {
+            AppState.screenStack.add(ScreenItem.dialog);
+            return showDialog(
+              context: context,
+              builder: (_) => GoldenTicketClaimDialog(
+                ticketCount: redemptionMap['count'],
+                cashPrize: redemptionMap['amt'],
+              ),
+            );
+          } else {
+            AppState.screenStack.add(ScreenItem.dialog);
+            return showDialog(
+              context: context,
+              builder: (_) => GoldenTicketClaimDialog(
+                ticketCount: 0,
+                failMsg: redemptionMap['fail_msg'],
+              ),
+            );
+          }
+        });
+      }
+      return -1;
+    } catch (e) {
+      log.error('$e');
       return -1;
     }
   }

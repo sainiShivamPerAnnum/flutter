@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
@@ -19,8 +20,8 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
@@ -33,6 +34,7 @@ import 'package:flutter/material.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'core/base_remote_config.dart';
 import 'core/model/TambolaBoard.dart';
@@ -81,6 +83,8 @@ class BaseUtil extends ChangeNotifier {
   ReferralDetail myReferralInfo;
   static PackageInfo packageInfo;
   Map<String, dynamic> freshchatKeys;
+  double activeGoldWithdrawalQuantity;
+  int withdrawFlowStackCount;
 
   /// Objects for Transaction list Pagination
   DocumentSnapshot lastTransactionListDocument;
@@ -98,10 +102,12 @@ class BaseUtil extends ChangeNotifier {
       isRedemptionOtpInProgress,
       isAugmontRegnInProgress,
       isAugmontRegnCompleteAnimateInProgress,
+      isSimpleKycInProgress,
       isIciciDepositRouteLogicInProgress,
       isEditAugmontBankDetailInProgress,
       isAugDepositRouteLogicInProgress,
       isAugWithdrawRouteLogicInProgress,
+      isAugWithdrawalInProgress,
       isAugmontRealTimeBalanceFetched,
       isWeekWinnersFetched,
       isPrizeLeadersFetched,
@@ -130,10 +136,12 @@ class BaseUtil extends ChangeNotifier {
     isRedemptionOtpInProgress = false;
     isAugmontRegnInProgress = false;
     isAugmontRegnCompleteAnimateInProgress = false;
+    isSimpleKycInProgress = false;
     isIciciDepositRouteLogicInProgress = false;
     isEditAugmontBankDetailInProgress = false;
     isAugDepositRouteLogicInProgress = false;
     isAugWithdrawRouteLogicInProgress = false;
+    isAugWithdrawalInProgress = false;
     isAugmontRealTimeBalanceFetched = false;
     isWeekWinnersFetched = false;
     isPrizeLeadersFetched = false;
@@ -201,15 +209,18 @@ class BaseUtil extends ChangeNotifier {
       // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
       // _payService = locator<PaymentService>();
 
-      ///prefill augmont and pan details if available
+      ///prefill pan details if available
       panService = new PanService();
-      if (myUser.isAugmontOnboarded) {
-        augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
+      if (!checkKycMissing) {
         userRegdPan = await panService.getUserPan();
       }
 
+      ///prefill augmont details if available
+      if (myUser.isAugmontOnboarded) {
+        augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
+      }
+
       await getProfilePicUrl();
-      await fetchWeeklyPicks();
 
       ///Freshchat utils
       freshchatKeys = await _dbModel.getActiveFreshchatKey();
@@ -222,20 +233,19 @@ class BaseUtil extends ChangeNotifier {
       /// Fetch this weeks' Dailypicks count
       String _dpc = BaseRemoteConfig.remoteConfig
           .getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT);
-      if (_dpc == null || _dpc.isEmpty) _dpc = '5';
-      _dailyPickCount = 5;
+      if (_dpc == null || _dpc.isEmpty) _dpc = '3';
+      _dailyPickCount = 3;
       try {
         _dailyPickCount = int.parse(_dpc);
       } catch (e) {
         log.error('key parsing failed: ' + e.toString());
-        Map<String, String> errorDetails = {
-          'User number': _myUser.mobile,
-          'Error message': e.toString()
-        };
+        Map<String, String> errorDetails = {'error_msg': e.toString()};
         _dbModel.logFailure(
             _myUser.uid, FailType.DailyPickParseFailed, errorDetails);
-        _dailyPickCount = 5;
+        _dailyPickCount = 3;
       }
+
+      await fetchWeeklyPicks(forcedRefresh: false);
 
       ///pick zerobalance asset
       Random rnd = new Random();
@@ -303,7 +313,7 @@ class BaseUtil extends ChangeNotifier {
           color: Colors.white,
         ),
         onPressed: () {
-          backButtonDispatcher.didPopRoute();
+          AppState.backButtonDispatcher.didPopRoute();
         },
       ),
       elevation: 1.0,
@@ -319,15 +329,60 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  fetchWeeklyPicks() async {
+  bool get checkKycMissing {
+    bool skFlag = (myUser.isSimpleKycVerified != null &&
+        myUser.isSimpleKycVerified == true);
+    bool augFlag = false;
+    if (myUser.isAugmontOnboarded) {
+      final DateTime _dt = new DateTime(2021, 8, 28);
+      //if the person regd for augmont before v2.5.4 release, then their kyc is complete
+      augFlag = (augmontDetail != null &&
+          augmontDetail.createdTime != null &&
+          augmontDetail.createdTime.toDate().isBefore(_dt));
+    }
+    return (!skFlag && !augFlag);
+  }
+
+  fetchWeeklyPicks({bool forcedRefresh}) async {
+    if (forcedRefresh) weeklyDrawFetched = false;
     if (!weeklyDrawFetched) {
-      log.debug('Requesting for weekly picks');
-      DailyPick _picks = await _dbModel.getWeeklyPicks();
-      weeklyDrawFetched = true;
-      if (_picks != null) {
-        weeklyDigits = _picks;
+      try {
+        log.debug('Requesting for weekly picks');
+        DailyPick _picks = await _dbModel.getWeeklyPicks();
+        weeklyDrawFetched = true;
+        if (_picks != null) {
+          weeklyDigits = _picks;
+        }
+        switch (DateTime.now().weekday) {
+          case 1:
+            todaysPicks = weeklyDigits.mon;
+            break;
+          case 2:
+            todaysPicks = weeklyDigits.tue;
+            break;
+          case 3:
+            todaysPicks = weeklyDigits.wed;
+            break;
+          case 4:
+            todaysPicks = weeklyDigits.thu;
+            break;
+          case 5:
+            todaysPicks = weeklyDigits.fri;
+            break;
+          case 6:
+            todaysPicks = weeklyDigits.sat;
+            break;
+          case 7:
+            todaysPicks = weeklyDigits.sun;
+            break;
+        }
+        if (todaysPicks == null) {
+          log.debug("Today's picks are not generated yet");
+        }
+        notifyListeners();
+      } catch (e) {
+        log.error('$e');
       }
-      notifyListeners();
     }
   }
 
@@ -359,7 +414,7 @@ class BaseUtil extends ChangeNotifier {
             blurRadius: 3.0,
           )
         ],
-      )..show(delegate.navigatorKey.currentContext);
+      )..show(AppState.delegate.navigatorKey.currentContext);
     });
   }
 
@@ -387,62 +442,46 @@ class BaseUtil extends ChangeNotifier {
             blurRadius: 3.0,
           )
         ],
-      )..show(delegate.navigatorKey.currentContext);
+      )..show(AppState.delegate.navigatorKey.currentContext);
     });
   }
 
   showNoInternetAlert(BuildContext context) {
-    Flushbar(
-      flushbarPosition: FlushbarPosition.TOP,
-      flushbarStyle: FlushbarStyle.FLOATING,
-      icon: Icon(
-        Icons.error,
-        size: 28.0,
-        color: Colors.white,
-      ),
-      margin: EdgeInsets.all(10),
-      borderRadius: 8,
-      title: "No Internet",
-      message: "Please check your network connection and try again",
-      duration: Duration(seconds: 2),
-      backgroundColor: Colors.red,
-      boxShadows: [
-        BoxShadow(
-          color: Colors.red[800],
-          offset: Offset(0.0, 2.0),
-          blurRadius: 3.0,
-        )
-      ],
-    )..show(context);
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context, listen: false);
+
+    if (connectivityStatus == ConnectivityStatus.Offline) {
+      Flushbar(
+        flushbarPosition: FlushbarPosition.TOP,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        icon: Icon(
+          Icons.error,
+          size: 28.0,
+          color: Colors.white,
+        ),
+        margin: EdgeInsets.all(10),
+        borderRadius: 8,
+        title: "No Internet",
+        message: "Please check your network connection and try again",
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.red,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.red[800],
+            offset: Offset(0.0, 2.0),
+            blurRadius: 3.0,
+          )
+        ],
+      )..show(context);
+      return true;
+    }
+    return false;
   }
 
-  Future<bool> getDrawaStatus() async {
+  Future<bool> getDrawStatus() async {
     // CHECKING IF THE PICK ARE DRAWN OR NOT
-    if (!weeklyDrawFetched || weeklyDigits == null) await fetchWeeklyPicks();
-    if (weeklyDrawFetched && weeklyDigits != null)
-      switch (DateTime.now().weekday) {
-        case 1:
-          todaysPicks = weeklyDigits.mon;
-          break;
-        case 2:
-          todaysPicks = weeklyDigits.tue;
-          break;
-        case 3:
-          todaysPicks = weeklyDigits.wed;
-          break;
-        case 4:
-          todaysPicks = weeklyDigits.thu;
-          break;
-        case 5:
-          todaysPicks = weeklyDigits.fri;
-          break;
-        case 6:
-          todaysPicks = weeklyDigits.sat;
-          break;
-        case 7:
-          todaysPicks = weeklyDigits.sun;
-          break;
-      }
+    if (!weeklyDrawFetched || weeklyDigits == null)
+      await fetchWeeklyPicks(forcedRefresh: true);
     //CHECKING FOR THE FIRST TIME OPENING OF TAMBOLA AFTER THE PICKS ARE DRAWN FOR THIS PARTICULAR DAY
     notifyListeners();
     if (todaysPicks != null &&
@@ -510,7 +549,7 @@ class BaseUtil extends ChangeNotifier {
 
       //TODO better fix required
       ///IMP: When a user signs out and attempts
-      /// to sign in again without closing the app,
+      /// to sign in again without closing the apcp,
       /// the old variables are still in effect
       /// resetting them like below for now
       _myUser = null;
@@ -545,7 +584,7 @@ class BaseUtil extends ChangeNotifier {
       hasMoreTransactionListDocuments = true;
       isOtpResendCount = 0;
       show_security_prompt = false;
-      delegate.appState.setCurrentTabIndex = 0;
+      AppState.delegate.appState.setCurrentTabIndex = 0;
       _setRuntimeDefaults();
 
       return true;
@@ -597,6 +636,20 @@ class BaseUtil extends ChangeNotifier {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  void openTambolaHome() async {
+    AppState.delegate.appState.setCurrentTabIndex = 1;
+    if (await getDrawStatus()) {
+      await _lModel.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
+            (value) =>
+                print("Daily Picks Draw Animation Save Status Code: $value"),
+          );
+      AppState.delegate.appState.currentAction =
+          PageAction(state: PageState.addPage, page: TPickDrawPageConfig);
+    } else
+      AppState.delegate.appState.currentAction =
+          PageAction(state: PageState.addPage, page: THomePageConfig);
   }
 
   bool isOldCustomer() {
@@ -724,6 +777,11 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setKycVerified(bool val) {
+    myUser.isSimpleKycVerified = val;
+    notifyListeners();
+  }
+
   void setUsername(String userName) {
     myUser.username = userName;
     notifyListeners();
@@ -763,7 +821,7 @@ class BaseUtil extends ChangeNotifier {
       notifyListeners(); //might cause ui error if screen no longer active
     }).catchError((err) {
       if (_myUser.uid != null) {
-        var errorDetails = {'Error message': err.toString()};
+        var errorDetails = {'error_msg': err.toString()};
         _dbModel.logFailure(
             _myUser.uid, FailType.UserAugmontBalanceUpdateFailed, errorDetails);
       }
@@ -826,47 +884,50 @@ class BaseUtil extends ChangeNotifier {
   //   return false;
   // }
 
-  static String getMonthName(int monthNum) {
+  static String getMonthName({@required int monthNum, bool trim = true}) {
+    String res = "January";
     switch (monthNum) {
       case 1:
-        return "Jan";
+        res = "January";
         break;
       case 2:
-        return "Feb";
+        res = "February";
         break;
       case 3:
-        return "Mar";
+        res = "March";
         break;
       case 4:
-        return "Apr";
+        res = "April";
         break;
       case 5:
-        return "May";
+        res = "May";
         break;
       case 6:
-        return "June";
+        res = "June";
         break;
       case 7:
-        return "July";
+        res = "July";
         break;
       case 8:
-        return "Aug";
+        res = "August";
         break;
       case 9:
-        return "Sept";
+        res = "September";
         break;
       case 10:
-        return "Oct";
+        res = "October";
         break;
       case 11:
-        return "Nov";
+        res = "November";
         break;
       case 12:
-        return "Dec";
+        res = "December";
         break;
       default:
-        return "Month";
+        res = "Janurary";
     }
+    if (trim) return res.substring(0, 3);
+    return res;
   }
 
   BaseUser get myUser => _myUser;
@@ -927,4 +988,16 @@ class BaseUtil extends ChangeNotifier {
   }
 
   int get dailyPicksCount => _dailyPickCount;
+
+  Future<bool> isOfflineSnackBar(BuildContext context) async {
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context, listen: false);
+
+    if (connectivityStatus == ConnectivityStatus.Offline) {
+      await showNegativeAlert('Offline', 'Please connect to internet', context,
+          seconds: 3);
+      return true;
+    }
+    return false;
+  }
 }

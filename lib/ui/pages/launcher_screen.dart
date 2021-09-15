@@ -5,6 +5,7 @@ import 'dart:ui' as ui show Image, instantiateImageCodec;
 import 'package:device_unlock/device_unlock.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -152,6 +153,9 @@ class LogoFadeIn extends State<SplashScreen> {
   Widget build(BuildContext context) {
     //if(!_timer.isActive)initialize();
     SizeConfig().init(context);
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context, listen: true);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -182,12 +186,18 @@ class LogoFadeIn extends State<SplashScreen> {
                       maintainAnimation: true,
                       maintainState: true,
                       visible: _isSlowConnection,
-                      child: BreathingText(
-                        alertText: 'Connection is taking longer than usual',
-                        textStyle: GoogleFonts.montserrat(
-                          fontSize: SizeConfig.mediumTextSize * 1.3,
-                        ),
-                      ),
+                      child: connectivityStatus == ConnectivityStatus.Offline
+                          ? Text('No active internet connection',
+                              style: TextStyle(
+                                  color: Colors.grey[800],
+                                  fontSize: SizeConfig.mediumTextSize))
+                          : BreathingText(
+                              alertText:
+                                  'Connection is taking longer than usual',
+                              textStyle: GoogleFonts.montserrat(
+                                fontSize: SizeConfig.mediumTextSize * 1.3,
+                              ),
+                            ),
                     ),
                   ),
                 ],

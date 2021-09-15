@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: 'none'
 
-version: 2.5.1+24
+version: 2.5.5+28
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -19,11 +19,11 @@ dependencies:
   firebase_in_app_messaging: ^0.5.0+7
   firebase_messaging: ^10.0.4
   firebase_remote_config: ^0.10.0+3
-  firebase_storage: ^10.0.1
+  firebase_storage: ^10.0.2
   google_sign_in: ^5.0.7
 
   #core packages
-#  connectivity: ^3.0.6
+  connectivity_plus: ^1.1.0
 #  flutter_local_notifications: ^8.0.0
   encrypt: ^5.0.0
   flutter_html_to_pdf: ^0.6.1
@@ -31,6 +31,7 @@ dependencies:
   get_it: ^7.2.0
   http: ^0.13.3
   open_file: ^3.2.1
+  intl: ^0.17.0
   path: ^1.8.0
   permission_handler: ^8.1.4+2
   path_provider: ^2.0.2
@@ -44,7 +45,8 @@ dependencies:
   in_app_update: ^2.0.0
   device_info : ^2.0.2
   image_gallery_saver: ^1.6.9
-
+  pdf: ^3.1.0
+  flutter_facebook_sdk: ^1.0.0
   #ui packages
   camera: ^0.8.1+7
   cached_network_image: ^3.1.0
@@ -67,7 +69,6 @@ dependencies:
   sms_autofill: ^2.0.0
   video_player: ^2.1.12
 
-
   flutter:
     sdk: flutter
 
@@ -77,6 +78,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  logger: ^1.0.0
 
 
 flutter:

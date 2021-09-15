@@ -6,19 +6,17 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/update_name_dialog.dart';
-import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
+import 'package:felloapp/ui/modals/simple_kyc_modal_sheet.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
@@ -135,8 +133,9 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                       Icons.arrow_back_rounded,
                                       color: Colors.white,
                                     ),
-                                    onPressed: () =>
-                                        backButtonDispatcher.didPopRoute(),
+                                    onPressed: () => AppState
+                                        .backButtonDispatcher
+                                        .didPopRoute(),
                                   ),
                                   Spacer(),
                                   Text(
@@ -180,6 +179,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                 ),
                                 child: InkWell(
                                   onTap: () async {
+                                    if (await baseProvider
+                                        .showNoInternetAlert(context)) return;
                                     var _status =
                                         await Permission.photos.status;
                                     if (_status.isRestricted ||
@@ -227,7 +228,9 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             ),
                             FittedBox(
                               child: TextButton.icon(
-                                onPressed: () {
+                                onPressed: () async {
+                                  if (await baseProvider
+                                      .showNoInternetAlert(context)) return;
                                   AppState.screenStack.add(ScreenItem.dialog);
                                   showDialog(
                                       barrierDismissible: false,
@@ -380,17 +383,31 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                       ),
                       SizedBox(height: 8),
                       ListTile(
-                        title: Text("App Lock"),
+                        title: Text(
+                          "App Lock",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: SizeConfig.mediumTextSize,
+                          ),
+                        ),
                         trailing: Switch.adaptive(
                             value: (baseProvider.myUser.userPreferences
                                     .getPreference(Preferences.APPLOCK) ==
                                 1),
-                            onChanged: (val) {
+                            onChanged: (val) async {
+                              if (await baseProvider
+                                  .showNoInternetAlert(context)) return;
                               baseProvider.flipSecurityValue(val);
                             }),
                       ),
                       ListTile(
-                        title: Text("Tambola Draw Notifications"),
+                        title: Text(
+                          "Tambola Draw Notifications",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: SizeConfig.mediumTextSize,
+                          ),
+                        ),
                         trailing: fcmProvider.isTambolaNotificationLoading
                             ? CircularProgressIndicator()
                             : Switch.adaptive(
@@ -398,7 +415,10 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                         .getPreference(
                                             Preferences.TAMBOLANOTIFICATIONS) ==
                                     1),
-                                onChanged: (val) {
+                                onChanged: (val) async {
+                                  if (await baseProvider
+                                      .showNoInternetAlert(context)) return;
+
                                   fcmProvider
                                       .toggleTambolaDrawNotificationStatus(val);
                                 }),
@@ -419,13 +439,14 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                       fontWeight: FontWeight.w300,
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
+                    if (await baseProvider.showNoInternetAlert(context)) return;
                     AppState.screenStack.add(ScreenItem.dialog);
                     showDialog(
                       context: context,
                       builder: (BuildContext dialogContext) => WillPopScope(
                         onWillPop: () {
-                          backButtonDispatcher.didPopRoute();
+                          AppState.backButtonDispatcher.didPopRoute();
                           return Future.value(true);
                         },
                         child: ConfirmActionDialog(
@@ -437,14 +458,15 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             baseProvider.signOut().then((flag) {
                               if (flag) {
                                 //log.debug('Sign out process complete');
-                                backButtonDispatcher.didPopRoute();
-                                delegate.appState.currentAction = PageAction(
-                                    state: PageState.replaceAll,
-                                    page: SplashPageConfig);
+                                AppState.backButtonDispatcher.didPopRoute();
+                                AppState.delegate.appState.currentAction =
+                                    PageAction(
+                                        state: PageState.replaceAll,
+                                        page: SplashPageConfig);
                                 baseProvider.showPositiveAlert('Signed out',
                                     'Hope to see you soon', context);
                               } else {
-                                backButtonDispatcher.didPopRoute();
+                                AppState.backButtonDispatcher.didPopRoute();
                                 baseProvider.showNegativeAlert(
                                     'Sign out failed',
                                     'Couldn\'t signout. Please try again',
@@ -455,7 +477,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                           },
                           cancelAction: () {
                             Haptic.vibrate();
-                            backButtonDispatcher.didPopRoute();
+                            AppState.backButtonDispatcher.didPopRoute();
                           },
                         ),
                       ),
@@ -499,15 +521,22 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
       return Wrap(
         children: [
           ElevatedButton(
-            onPressed: () {
-              delegate.appState.currentAction = PageAction(
-                state: PageState.addWidget,
-                widget: AugmontOnboarding(),
-                page: AugOnboardPageConfig,
-              );
+            onPressed: () async {
+              if (await baseProvider.showNoInternetAlert(context)) return;
+              AppState.screenStack.add(ScreenItem.dialog);
+              showModalBottomSheet(
+                  isDismissible: false,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) {
+                    return SimpleKycModalSheet();
+                  });
             },
             child: Text(
-              "Register",
+              "Verify",
               style: TextStyle(color: Colors.white),
             ),
           ),

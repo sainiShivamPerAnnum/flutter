@@ -308,4 +308,76 @@ class HttpModel extends ChangeNotifier {
       return '';
     }
   }
+
+  ///Returns:
+  ///{flag: B,
+  ///count: X,
+  ///fail_msg: Y}
+  Future<Map<String, dynamic>> postGoldenTicketRedemption(
+      String userId, String goldenTicketId) async {
+    if (_baseUtil == null || _baseUtil.firebaseUser == null)
+      return {'flag': false, 'fail_msg': 'Your ticket could not be redeemed'};
+
+    //add auth
+    String idToken = await _baseUtil.firebaseUser.getIdToken();
+    log.debug('Fetched user IDToken: ' + idToken);
+
+    try {
+      Uri _uri = Uri.https(
+          ASIA_BASE_URI,
+          '/goldenTicketOps/prod/api/redeemGoldenTicket',
+          {'user_id': userId, 'gt_id': goldenTicketId});
+      //post request
+      http.Response _response = await http.post(_uri,
+          headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
+      log.debug(_response.body);
+      if (_response.statusCode == 200) {
+        //redemption successful
+        try {
+          Map<String, dynamic> parsed = jsonDecode(_response.body);
+          if (parsed != null &&
+              parsed['gtck_count'] != null &&
+              parsed['gamt_win'] != null) {
+            try {
+              log.debug(parsed['gtck_count'].toString());
+              log.debug(parsed['gamt_win'].toString());
+              int goldenTckRewardCount = BaseUtil.toInt(parsed['gtck_count']);
+              int goldenTckRewardAmt = BaseUtil.toInt(parsed['gamt_win']);
+              return {
+                'flag': true,
+                'count': goldenTckRewardCount,
+                'amt': goldenTckRewardAmt
+              };
+            } catch (ee) {
+              log.error('$ee');
+            }
+          }
+        } catch (err) {
+          log.error('Failed to parse ticket update count');
+          log.error('$err');
+        }
+      } else {
+        try {
+          Map<String, dynamic> parsed = jsonDecode(_response.body);
+          if (parsed != null && parsed['msg'] != null) {
+            try {
+              log.debug(parsed['msg'].toString());
+              return {'flag': false, 'fail_msg': parsed['msg']};
+            } catch (ee) {
+              return {
+                'flag': false,
+                'fail_msg': 'Your ticket could not be redeemed'
+              };
+            }
+          }
+        } catch (err) {
+          log.error('Failed to parse ticket update count');
+          log.error('$err');
+        }
+      }
+    } catch (e) {
+      log.error('Http post failed: ' + e.toString());
+    }
+    return {'flag': false, 'fail_msg': 'Your ticket could not be redeemed'};
+  }
 }
