@@ -120,6 +120,7 @@ class BaseUtil extends ChangeNotifier {
       isReferralLinkBuildInProgressWhatsapp,
       isReferralLinkBuildInProgressOther,
       isHomeCardsFetched,
+      isGoogleSignInProgress,
       show_home_tutorial,
       show_game_tutorial,
       show_finance_tutorial;
@@ -157,6 +158,7 @@ class BaseUtil extends ChangeNotifier {
     show_home_tutorial = false;
     show_game_tutorial = false;
     show_finance_tutorial = false;
+    isGoogleSignInProgress = false;
     isDeviceOffline = false;
     ticketRequestSent = false;
     ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;

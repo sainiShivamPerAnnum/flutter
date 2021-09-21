@@ -47,6 +47,7 @@ dependencies:
   image_gallery_saver: ^1.6.9
   pdf: ^3.1.0
   flutter_facebook_sdk: ^1.0.0
+  webview_flutter: ^2.0.13
   #ui packages
   camera: ^0.8.1+7
   cached_network_image: ^3.1.0

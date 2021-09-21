@@ -63,77 +63,15 @@ class NameInputScreenState extends State<NameInputScreen> {
 
   showEmailOptions() {
     AppState.screenStack.add(ScreenItem.dialog);
+    baseProvider.isGoogleSignInProgress = false;
     showModalBottomSheet(
+        isDismissible: baseProvider.isGoogleSignInProgress ? false : true,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         context: context,
         builder: (ctx) {
-          return WillPopScope(
-            onWillPop: () async {
-              AppState.backButtonDispatcher.didPopRoute();
-              return true;
-            },
-            child: Wrap(
-              children: [
-                Container(
-                  decoration: BoxDecoration(),
-                  padding: EdgeInsets.all(
-                    SizeConfig.blockSizeHorizontal * 5,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Choose an email option",
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 24,
-                        ),
-                      ),
-                      Divider(
-                        height: 32,
-                        thickness: 2,
-                      ),
-                      ListTile(
-                        leading: SvgPicture.asset(
-                          "images/svgs/google.svg",
-                          height: 24,
-                          width: 24,
-                        ),
-                        title: Text("Continue with Google"),
-                        onTap: continueWithGoogle,
-                      ),
-                      Divider(),
-                      ListTile(
-                        leading: Icon(
-                          Icons.alternate_email,
-                          color: UiConstants.primaryColor,
-                        ),
-                        title: Text("Use another email"),
-                        subtitle: Text(
-                          "this option requires an extra step",
-                          style: TextStyle(
-                            fontSize: SizeConfig.smallTextSize * 1.3,
-                            color: Colors.red[300],
-                          ),
-                        ),
-                        onTap: () {
-                          setState(() {
-                            isEmailEntered = true;
-                            _emailEnabled = true;
-                          });
-                          Navigator.pop(context);
-                        },
-                      ),
-                      SizedBox(
-                        height: 24,
-                      )
-                    ],
-                  ),
-                  width: double.infinity,
-                ),
-              ],
-            ),
+          return SignInOptions(
+            onEmailSignIn: continueWithEmail,
+            onGoogleSignIn: continueWithGoogle,
           );
         });
   }
@@ -162,7 +100,6 @@ class NameInputScreenState extends State<NameInputScreen> {
             var res = await uploadTask;
             String url = await res.ref.getDownloadURL();
             if (url != null) {
-              isUploaded = true;
               baseProvider.isProfilePictureUpdated = true;
               baseProvider.setDisplayPictureUrl(url);
               setState(() {
@@ -170,29 +107,51 @@ class NameInputScreenState extends State<NameInputScreen> {
                 isEmailEntered = true;
                 _isContinuedWithGoogle = true;
                 emailText = googleUser.email;
+                baseProvider.isGoogleSignInProgress = false;
               });
             } else {
+              setState(() {
+                baseProvider.isGoogleSignInProgress = false;
+              });
               baseProvider.showNegativeAlert(
                   "Error getting profile picture", "Please try again", context);
             }
           } catch (e) {
+            baseProvider.isGoogleSignInProgress = false;
             baseProvider.showNegativeAlert(
                 "Error uploading profile picture", "Please try again", context);
           }
-          Navigator.pop(context);
+          AppState.backButtonDispatcher.didPopRoute();
         } else {
+          setState(() {
+            baseProvider.isGoogleSignInProgress = false;
+          });
           baseProvider.showNegativeAlert("Email already registered",
               "Please try with another email", context);
         }
       } else {
+        setState(() {
+          baseProvider.isGoogleSignInProgress = false;
+        });
         baseProvider.showNegativeAlert("No account selected",
             "Please choose an account from the list", context);
       }
     } catch (e) {
       print(e.toString());
+      setState(() {
+        baseProvider.isGoogleSignInProgress = false;
+      });
       baseProvider.showNegativeAlert(
           "Oops, we ran into problem", "Please try again", context);
     }
+  }
+
+  continueWithEmail() {
+    setState(() {
+      isEmailEntered = true;
+      _emailEnabled = true;
+    });
+    AppState.backButtonDispatcher.didPopRoute();
   }
 
   void _showAndroidDatePicker() async {
@@ -730,6 +689,97 @@ class DateField extends StatelessWidget {
             letterSpacing: 2,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class SignInOptions extends StatefulWidget {
+  final Function onGoogleSignIn, onEmailSignIn;
+  SignInOptions({this.onEmailSignIn, this.onGoogleSignIn});
+  @override
+  _SignInOptionsState createState() => _SignInOptionsState();
+}
+
+class _SignInOptionsState extends State<SignInOptions> {
+  @override
+  Widget build(BuildContext context) {
+    BaseUtil baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    return WillPopScope(
+      onWillPop: () async {
+        AppState.backButtonDispatcher.didPopRoute();
+        return true;
+      },
+      child: Wrap(
+        children: [
+          Container(
+            decoration: BoxDecoration(),
+            padding: EdgeInsets.all(
+              SizeConfig.blockSizeHorizontal * 5,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Choose an email option",
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 24,
+                  ),
+                ),
+                Divider(
+                  height: 32,
+                  thickness: 2,
+                ),
+                ListTile(
+                  leading: SvgPicture.asset(
+                    "images/svgs/google.svg",
+                    height: 24,
+                    width: 24,
+                  ),
+                  trailing: baseProvider.isGoogleSignInProgress
+                      ? Container(
+                          child: CircularProgressIndicator(),
+                        )
+                      : SizedBox(),
+                  title: Text("Continue with Google"),
+                  onTap: () {
+                    if (!baseProvider.isGoogleSignInProgress) {
+                      setState(() {
+                        baseProvider.isGoogleSignInProgress = true;
+                      });
+                      widget.onGoogleSignIn();
+                    }
+                  },
+                ),
+                Divider(),
+                ListTile(
+                    leading: Icon(
+                      Icons.alternate_email,
+                      color: UiConstants.primaryColor,
+                    ),
+                    title: Text("Use another email"),
+                    subtitle: Text(
+                      "this option requires an extra step",
+                      style: TextStyle(
+                        fontSize: SizeConfig.smallTextSize * 1.3,
+                        color: Colors.red[300],
+                      ),
+                    ),
+                    onTap: () {
+                      if (!baseProvider.isGoogleSignInProgress) {
+                        widget.onEmailSignIn();
+                      }
+                    }),
+                SizedBox(
+                  height: 24,
+                )
+              ],
+            ),
+            width: double.infinity,
+          ),
+        ],
       ),
     );
   }

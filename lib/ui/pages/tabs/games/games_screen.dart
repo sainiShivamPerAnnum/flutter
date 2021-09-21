@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:confetti/confetti.dart';
@@ -25,6 +26,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class GamePage extends StatefulWidget {
   @override
@@ -327,6 +329,17 @@ class IdeaSection extends StatelessWidget {
                   );
                 },
                 title: "Feedback",
+              ),
+              GameOfferCardButton(
+                onPressed: () {
+                  if (Platform.isAndroid)
+                    WebView.platform = SurfaceAndroidWebView();
+
+                  return WebView(
+                    initialUrl: "https://play.famobi.com/om-nom-run",
+                  );
+                },
+                title: "New game",
               ),
             ],
           ),
