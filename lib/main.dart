@@ -1,6 +1,7 @@
 //Flutter imports
 import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
+import 'package:felloapp/ui/pages/tabs/profile/transactions/tran_viewModel.dart';
 import 'package:flutter/material.dart';
 
 //Pub imports

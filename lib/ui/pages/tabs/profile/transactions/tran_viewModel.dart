@@ -20,7 +20,7 @@ enum TranState { Idle, Busy }
 class TranViewModel extends ChangeNotifier {
   int _subfilter = 1;
   int _filter = 1;
-  bool isInit = true;
+  bool _init = true;
   List<UserTransaction> _filteredList;
   final ScrollController _scrollController = ScrollController();
 
@@ -44,14 +44,15 @@ class TranViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  TranState state = TranState.Idle;
+  TranState _state = TranState.Idle;
+  TranState get state => _state;
   final Log dblog = new Log("DBModel");
   final Log bulog = new Log("BaseUtil");
   final dbProvider = locator<DBModel>();
   final baseProvider = locator<BaseUtil>();
 
   setState(TranState newState) {
-    state = newState;
+    _state = newState;
     notifyListeners();
   }
 
@@ -263,7 +264,7 @@ class TranViewModel extends ChangeNotifier {
         ) {
       getTransactions();
     }
-    if (isInit) {
+    if (_init) {
       if (baseProvider.userMiniTxnList != null
           // && baseProvider.userMiniTxnList.isNotEmpty
           ) {
@@ -281,7 +282,7 @@ class TranViewModel extends ChangeNotifier {
           }
         }
       });
-      isInit = false;
+      _init = false;
     }
   }
 }

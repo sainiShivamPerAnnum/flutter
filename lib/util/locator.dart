@@ -35,6 +35,6 @@ void setupLocator() {
   locator.registerLazySingleton(() => AppState());
   locator.registerLazySingleton(() => ConnectivityService());
   locator.registerLazySingleton(() => Logger());
-  locator.registerLazySingleton(() => TranViewModel());
+  locator.registerFactory(() => TranViewModel());
   //....
 }
