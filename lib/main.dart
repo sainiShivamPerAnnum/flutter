@@ -1,6 +1,8 @@
 //Flutter imports
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
+import 'package:firebase_database/firebase_database.dart' as rdb;
 import 'package:flutter/material.dart';
 
 //Pub imports
@@ -37,6 +39,24 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await Firebase.initializeApp();
+    logger.d(Firebase.app().name);
+    logger.d(Firebase.apps.toString());
+
+    final rdb.FirebaseDatabase _realtimeDatabase = rdb.FirebaseDatabase.instance;
+    logger.d(_realtimeDatabase.databaseURL);
+    // logger.d(_realtimeDatabase.app.name);
+    try{
+      rdb.DataSnapshot data = await _realtimeDatabase
+          .reference()
+          .child("usernames")
+          .child('1234')
+          .once();
+    }catch(e2){
+      logger.e(e2.toString());
+    }
+    final _firestore = FirebaseFirestore.instance;
+    final res2 = await _firestore.collection('users').add({'check': 'isright'});
+    logger.d(res2.id);
     logger.d("Firebase Initialised");
   } catch (e) {
     logger.e(e.toString());
