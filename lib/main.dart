@@ -32,31 +32,13 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
 
-void mainInit() async {
+Future mainInit() async {
   setupLocator();
 
   final logger = locator<Logger>();
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await Firebase.initializeApp();
-    logger.d(Firebase.app().name);
-    logger.d(Firebase.apps.toString());
-
-    final rdb.FirebaseDatabase _realtimeDatabase = rdb.FirebaseDatabase.instance;
-    logger.d(_realtimeDatabase.databaseURL);
-    // logger.d(_realtimeDatabase.app.name);
-    try{
-      rdb.DataSnapshot data = await _realtimeDatabase
-          .reference()
-          .child("usernames")
-          .child('1234')
-          .once();
-    }catch(e2){
-      logger.e(e2.toString());
-    }
-    final _firestore = FirebaseFirestore.instance;
-    final res2 = await _firestore.collection('users').add({'check': 'isright'});
-    logger.d(res2.id);
     logger.d("Firebase Initialised");
   } catch (e) {
     logger.e(e.toString());

@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 
 void main() async{
   FlavorConfig(
-      flavor: Flavor.DEV,
+      flavor: Flavor.PROD,
       color: Colors.deepPurpleAccent,
       values: FlavorValues(
-          awsAugmontStage: AWSAugmontStage.DEV,
+          awsAugmontStage: AWSAugmontStage.PROD,
           awsIciciStage: AWSIciciStage.PROD,
           freshchatStage: FreshchatStage.DEV,
-          razorpayStage: RazorpayStage.DEV,
+          razorpayStage: RazorpayStage.PROD,
           signzyStage: SignzyStage.PROD));
   await mainInit();
   runApp(MyApp());

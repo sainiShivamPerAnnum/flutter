@@ -1,7 +1,7 @@
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:flutter/material.dart';
 
-enum Flavor { DEV, QA, PRODUCTION }
+enum Flavor { DEV, QA, PROD }
 
 class FlavorValues {
   FlavorValues(
@@ -41,7 +41,7 @@ class FlavorConfig {
     return _instance;
   }
 
-  static bool isProduction() => _instance.flavor == Flavor.PRODUCTION;
+  static bool isProduction() => _instance.flavor == Flavor.PROD;
 
   static bool isDevelopment() => _instance.flavor == Flavor.DEV;
 

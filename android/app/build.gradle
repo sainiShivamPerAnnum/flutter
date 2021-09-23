@@ -40,9 +40,9 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    lintOptions {
-        disable 'InvalidPackage'
-    }
+//    lintOptions {
+//        disable 'InvalidPackage'
+//    }
 
     defaultConfig {
         applicationId "in.fello.felloapp"
@@ -68,13 +68,32 @@ android {
             useProguard true
 
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
+
         debug {
             signingConfig signingConfigs.debug
         }
 
         release {
             signingConfig signingConfigs.release
+        }
+    }
+
+    flavorDimensions "flavors"
+    productFlavors {
+        dev {
+            dimension "flavors"
+//            applicationIdSuffix ".dev"
+//            versionNameSuffix "-dev"
+        }
+        qa {
+            dimension "flavors"
+//            applicationIdSuffix ".qa"
+//            versionNameSuffix "-qa"
+        }
+        prod {
+            dimension "flavors"
         }
     }
 }
