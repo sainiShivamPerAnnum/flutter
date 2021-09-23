@@ -32,7 +32,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
 
-void main() async {
+void mainInit() async {
   setupLocator();
 
   final logger = locator<Logger>();
@@ -62,7 +62,6 @@ void main() async {
     logger.e(e.toString());
   }
   FirebaseMessaging.onBackgroundMessage(FcmListener.backgroundMessageHandler);
-  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
