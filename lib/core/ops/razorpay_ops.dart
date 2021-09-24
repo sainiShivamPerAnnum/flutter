@@ -3,6 +3,7 @@ import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/razorpay_api_util.dart';
@@ -106,7 +107,7 @@ class RazorpayModel extends ChangeNotifier {
     _currentTxn.rzp[UserTransaction.subFldRzpOrderId] =
         orderDetails['order_id'];
 
-    String _keyId = RZP_KEY[Constants.activeRazorpayStage.value()];
+    String _keyId = RZP_KEY[FlavorConfig.instance.values.razorpayStage.value()];
     var options = {
       'key': _keyId,
       'amount': txn.amount.ceil(),

@@ -5,6 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
@@ -71,7 +72,7 @@ class HttpModel extends ChangeNotifier {
     log.debug('Fetched user IDToken: ' + idToken);
 
     String amx = (amount * 100).round().toString();
-    String _stage = Constants.activeRazorpayStage.value();
+    String _stage = FlavorConfig.instance.values.razorpayStage.value();
     Map<String, dynamic> queryMap = {'amount': amx};
     if (notes != null) queryMap['notes'] = Uri.encodeComponent(notes);
 
@@ -103,7 +104,7 @@ class HttpModel extends ChangeNotifier {
     idToken = await _baseUtil.firebaseUser.getIdToken();
     log.debug('Fetched user IDToken: ' + idToken);
 
-    String _stage = Constants.activeRazorpayStage.value();
+    String _stage = FlavorConfig.instance.values.razorpayStage.value();
     final Uri _uri = Uri.https(
         US_BASE_URI,
         '/razorpayops/$_stage/api/signature',
