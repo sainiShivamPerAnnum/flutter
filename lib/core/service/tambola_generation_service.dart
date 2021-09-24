@@ -36,22 +36,22 @@ class TambolaGenerationService extends ChangeNotifier {
       int currentTambolaBoardCount) async {
     return await _genLock.synchronized(() async {
       ///check if there is atomic field was updated before
-      if (BaseUtil.atomicTicketGenerationLeftCount > 0) return false;
+      if (baseProvider.atomicTicketGenerationLeftCount > 0) return false;
 
-      int _ticketGenerateCount = 0;
+      BaseUtil.ticketGenerateCount = 0;
       if (currentTambolaBoardCount != null &&
           baseProvider.userTicketWallet.getActiveTickets() > 0) {
         if (currentTambolaBoardCount <
             baseProvider.userTicketWallet.getActiveTickets()) {
           log.debug(
               'Currently generated ticket count is less than needed tickets');
-          _ticketGenerateCount =
+          BaseUtil.ticketGenerateCount =
               baseProvider.userTicketWallet.getActiveTickets() -
                   currentTambolaBoardCount;
         }
       }
-      if (_ticketGenerateCount > 0 &&
-          BaseUtil.atomicTicketGenerationLeftCount == 0) {
+      if (BaseUtil.ticketGenerateCount > 0 &&
+          baseProvider.atomicTicketGenerationLeftCount == 0) {
         ///check if there is any active ticket generation in progress presently
         bool _activeTicketGenInProgress = await dbProvider
             .isTicketGenerationInProcess(baseProvider.myUser.uid);
@@ -59,7 +59,8 @@ class TambolaGenerationService extends ChangeNotifier {
           log.debug('Ticket generation already in progress');
           return false;
         } else {
-          BaseUtil.atomicTicketGenerationLeftCount = _ticketGenerateCount;
+          baseProvider.atomicTicketGenerationLeftCount =
+              BaseUtil.ticketGenerateCount;
           _initiateTicketGeneration();
           return true;
         }
@@ -137,14 +138,14 @@ class TambolaGenerationService extends ChangeNotifier {
   }
 
   _initiateTicketGeneration() async {
-    int iterationsRequired = (BaseUtil.atomicTicketGenerationLeftCount /
+    int iterationsRequired = (baseProvider.atomicTicketGenerationLeftCount /
             Constants.MAX_TICKET_GEN_PER_REQUEST)
         .ceil();
 
-    int _countPacket = (BaseUtil.atomicTicketGenerationLeftCount >
+    int _countPacket = (baseProvider.atomicTicketGenerationLeftCount >
             Constants.MAX_TICKET_GEN_PER_REQUEST)
         ? Constants.MAX_TICKET_GEN_PER_REQUEST
-        : BaseUtil.atomicTicketGenerationLeftCount;
+        : baseProvider.atomicTicketGenerationLeftCount;
     _currentSubscription = await dbProvider.subscribeToTicketRequest(
         baseProvider.myUser, _countPacket);
     if (_currentSubscription == null)
@@ -162,12 +163,12 @@ class TambolaGenerationService extends ChangeNotifier {
       _onTicketGenerationRequestFailed();
     } else if (request.status == 'C') {
       _clearVariables();
-      BaseUtil.atomicTicketGenerationLeftCount =
-          BaseUtil.atomicTicketGenerationLeftCount - request.count;
-      if (BaseUtil.atomicTicketGenerationLeftCount == 0) {
+      baseProvider.atomicTicketGenerationLeftCount =
+          baseProvider.atomicTicketGenerationLeftCount - request.count;
+      if (baseProvider.atomicTicketGenerationLeftCount == 0) {
         _onTicketGenerationRequestComplete();
       } else {
-        if (BaseUtil.atomicTicketGenerationLeftCount < 0) {
+        if (baseProvider.atomicTicketGenerationLeftCount < 0) {
           //what the hell happened
           _onTicketGenerationRequestFailed();
         } else {
@@ -193,12 +194,12 @@ class TambolaGenerationService extends ChangeNotifier {
       Map<String, dynamic> errorDetails = {
         'error_msg': 'Ticket generation failed at one or many steps',
         'atmoic_ticket_gen_left_count':
-            BaseUtil.atomicTicketGenerationLeftCount.toString()
+            baseProvider.atomicTicketGenerationLeftCount.toString()
       };
       dbProvider.logFailure(baseProvider.myUser.uid,
           FailType.TambolaTicketGenerationFailed, errorDetails);
     }
-    BaseUtil.atomicTicketGenerationLeftCount =
+    baseProvider.atomicTicketGenerationLeftCount =
         0; // clear this so it can be attempted again
     if (_generationComplete != null) {
       if (_generationStartedAndPartiallyCompleted)

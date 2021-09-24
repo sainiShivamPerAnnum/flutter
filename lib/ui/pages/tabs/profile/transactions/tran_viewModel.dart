@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -13,19 +14,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../../base_util.dart';
-
 enum TranState { Idle, Busy }
+enum TranFilterType { Type, Subtype }
 
 class TranViewModel extends ChangeNotifier {
   int _subfilter = 1;
   int _filter = 1;
   bool _init = true;
+  Map<String, int> _tranTypeFilterItems = {
+    "All": 1,
+    "Deposit": 2,
+    "Withdrawal": 3,
+    "Prize": 4
+  };
+  Map<String, int> _tranSubTypeFilterItems = {
+    "All": 1,
+    "ICICI": 2,
+    "Augmont": 3
+  };
   List<UserTransaction> _filteredList;
   final ScrollController _scrollController = ScrollController();
 
   int get subFilter => _subfilter;
   int get filter => _filter;
+  Map<String, int> get tranTypeFilterItems => _tranTypeFilterItems;
+  Map<String, int> get tranSubTypeFilterItems => _tranSubTypeFilterItems;
   List<UserTransaction> get filteredList => _filteredList;
   ScrollController get tranListController => _scrollController;
 

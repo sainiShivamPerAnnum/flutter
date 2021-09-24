@@ -127,7 +127,8 @@ class BaseUtil extends ChangeNotifier {
   static bool isDeviceOffline, ticketRequestSent, playScreenFirst;
   static int ticketCountBeforeRequest,
       infoSliderIndex,
-      atomicTicketGenerationLeftCount,
+      _atomicTicketGenerationLeftCount,
+      ticketGenerateCount,
       atomicTicketDeletionLeftCount;
 
   _setRuntimeDefaults() {
@@ -164,7 +165,7 @@ class BaseUtil extends ChangeNotifier {
     ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
     infoSliderIndex = 0;
     playScreenFirst = true;
-    atomicTicketGenerationLeftCount = 0;
+    _atomicTicketGenerationLeftCount = 0;
     atomicTicketDeletionLeftCount = 0;
     show_security_prompt = false;
   }
@@ -986,6 +987,13 @@ class BaseUtil extends ChangeNotifier {
 
   set userTicketWallet(UserTicketWallet value) {
     _userTicketWallet = value;
+    notifyListeners();
+  }
+
+  int get atomicTicketGenerationLeftCount => _atomicTicketGenerationLeftCount;
+
+  set atomicTicketGenerationLeftCount(int value) {
+    _atomicTicketGenerationLeftCount = value;
     notifyListeners();
   }
 
