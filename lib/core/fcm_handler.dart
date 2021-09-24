@@ -22,13 +22,15 @@ class FcmHandler extends ChangeNotifier {
         if (this.notifListener != null) this.notifListener(_map);
       }
     }
-    url = data["deep_uri"] ?? '';
-    tab = int.tryParse(data["misc_data"]) ?? 0;
+    try {
+      url = data["deep_uri"] ?? '';
+      print("------------------->" + url);
+      AppState().setFcmData = url;
 
-    print("------------------->" + url);
-    //delegate.appState.setCurrentTabIndex = tab;
-    // print("tab set to ${data["misc"]}");
-    AppState().setFcmData = url;
+      tab = int.tryParse(data["misc_data"]) ?? 0;
+    }catch(e) {
+      log.error('$e');
+    }
     return true;
   }
 

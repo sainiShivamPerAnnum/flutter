@@ -23,10 +23,10 @@ class PanService extends ChangeNotifier {
     }
     String pan_v1;
 
-    ///check if user added their pan in base user
-    if (baseProvider.myUser.pan != null && baseProvider.myUser.pan.isNotEmpty) {
-      pan_v1 = baseProvider.myUser.pan;
-    }
+    // ///check if user added their pan in base user
+    // if (baseProvider.myUser.pan != null && baseProvider.myUser.pan.isNotEmpty) {
+    //   pan_v1 = baseProvider.myUser.pan;
+    // }
 
     ///now check if pan new version available
     Map<String, dynamic> encPan =

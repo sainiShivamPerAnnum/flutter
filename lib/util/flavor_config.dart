@@ -11,7 +11,8 @@ class FlavorValues {
       @required this.signzyStage,
       @required this.razorpayStage,
       @required this.baseUriAsia,
-      @required this.baseUriUS});
+      @required this.baseUriUS,
+      @required this.dynamicLinkPrefix});
 
   final AWSIciciStage awsIciciStage;
   final FreshchatStage freshchatStage;
@@ -20,6 +21,7 @@ class FlavorValues {
   final RazorpayStage razorpayStage;
   final String baseUriAsia;
   final String baseUriUS;
+  final String dynamicLinkPrefix;
 //Add other flavor specific values, e.g database name
 }
 

@@ -12,16 +12,6 @@ class BaseUser {
   String _gender; // 0: Male | 1: Female | -1: Rather Not to say
   String _username;
   String _client_token; //fetched from a subcollection
-  int _ticket_count;
-  int _account_balance;
-  int _deposit_balance;
-  int _prize_balance;
-  double _icici_balance;
-  double _augmont_balance;
-  double _augmont_quantity;
-  int _lifetime_winnings;
-  String _pan;
-  String _age;
   bool _isInvested;
   bool _isIciciOnboarded;
   bool _isAugmontOnboarded;
@@ -70,10 +60,6 @@ class BaseUser {
       this._dob,
       this._gender,
       this._client_token,
-      this._prize_balance,
-      this._lifetime_winnings,
-      this._pan,
-      this._age,
       this._isInvested,
       this._isIciciOnboarded,
       this._isAugmontOnboarded,
@@ -93,10 +79,6 @@ class BaseUser {
             null,
             null,
             null,
-            null,
-            null,
-            0,
-            0,
             null,
             null,
             false,
@@ -120,10 +102,6 @@ class BaseUser {
             data[fldDob],
             data[fldGender],
             client_token,
-            data[fldPriBalance] ?? 0,
-            data[fldLifeTimeWinnings] ?? 0,
-            _decryptPan(data[fldPan]),
-            data[fldAge],
             data[fldIsInvested] ?? false,
             data[fldIsIciciOnboarded] ?? false,
             data[fldIsAugmontOnboarded] ?? false,
@@ -248,18 +226,6 @@ class BaseUser {
     _uid = value;
   }
 
-  String get pan => _pan;
-
-  set pan(String value) {
-    _pan = value;
-  }
-
-  String get age => _age;
-
-  set age(String value) {
-    _age = value;
-  }
-
   bool get isEmailVerified => _isemailVerified;
 
   set isEmailVerified(bool value) {
@@ -288,18 +254,6 @@ class BaseUser {
 
   set isIciciOnboarded(bool value) {
     _isIciciOnboarded = value;
-  }
-
-  int get lifetime_winnings => _lifetime_winnings;
-
-  set lifetime_winnings(int value) {
-    _lifetime_winnings = value;
-  }
-
-  int get prize_balance => _prize_balance;
-
-  set prize_balance(int value) {
-    _prize_balance = value;
   }
 
   String get pendingTxnId => _pendingTxnId;
