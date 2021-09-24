@@ -121,7 +121,8 @@ class _LoginControllerState extends State<LoginController>
         ///this is the first time that the otp was requested
         baseProvider.isLoginNextInProgress = false;
         _controller.animateToPage(OtpInputScreen.index,
-            duration: Duration(milliseconds: 1500), curve: Curves.easeInToLinear);
+            duration: Duration(milliseconds: 1500),
+            curve: Curves.easeInToLinear);
         setState(() {});
       } else {
         ///the otp was requested to be resent
@@ -567,11 +568,12 @@ class _LoginControllerState extends State<LoginController>
     BaseUser user = await dbProvider.getUser(baseProvider.firebaseUser.uid);
     //user variable is pre cast into User object
     //dbProvider.logDeviceId(fUser.uid); //TODO do someday
-    if (baseProvider.isLoginNextInProgress == true) {
-      baseProvider.isLoginNextInProgress = false;
-      setState(() {});
-    }
     if (user == null || (user != null && user.hasIncompleteDetails())) {
+      if (baseProvider.isLoginNextInProgress == true) {
+        baseProvider.isLoginNextInProgress = false;
+        setState(() {});
+      }
+
       ///First time user!
       log.debug(
           "No existing user details found or found incomplete details for user. Moving to details page");
@@ -616,13 +618,16 @@ class _LoginControllerState extends State<LoginController>
   }
 
   Future _onSignUpComplete() async {
-    baseProvider.isLoginNextInProgress = false;
     await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
     await BaseAnalytics.logUserProfile(baseProvider.myUser);
 
     await baseProvider.init();
     await fcmProvider.setupFcm();
     AppState.isOnboardingInProgress = false;
+    if (baseProvider.isLoginNextInProgress == true) {
+      baseProvider.isLoginNextInProgress = false;
+      setState(() {});
+    }
     appStateProvider.currentAction =
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
     baseProvider.showPositiveAlert(

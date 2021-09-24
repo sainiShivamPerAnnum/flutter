@@ -1,9 +1,6 @@
-import 'dart:io';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -76,6 +73,8 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
       return "Tambola Win";
     } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
       return "Referral Bonus";
+    } else if (type == UserTransaction.TRAN_SUBTYPE_GLDN_TCK) {
+      return "Golden Ticket";
     }
     return 'Fello Rewards';
   }

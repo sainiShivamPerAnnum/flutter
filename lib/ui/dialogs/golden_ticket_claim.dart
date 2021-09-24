@@ -167,8 +167,8 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                                     child: Text(
                                       widget.cashPrize != null &&
                                               widget.cashPrize > 0
-                                          ? "You won ${widget.ticketCount} free tickets and ₹ ${widget.cashPrize} worth of Cash prize"
-                                          : "You won ${widget.ticketCount} free tickets",
+                                          ? "You've won ${widget.ticketCount} tambola tickets and ₹ ${widget.cashPrize} in prizes!"
+                                          : "You've won ${widget.ticketCount} tambola tickets!",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontWeight: FontWeight.w700,
@@ -182,7 +182,7 @@ class _GoldenTicketClaimDialogState extends State<GoldenTicketClaimDialog> {
                                         horizontal:
                                             SizeConfig.screenWidth * 0.05),
                                     child: Text(
-                                      "Your Golden Ticket has been successfully redeemed. Tickets have been credited to your wallet.",
+                                      "Your Golden Ticket has been successfully redeemed. Your rewards have been credited to your wallet!",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: SizeConfig.mediumTextSize,
