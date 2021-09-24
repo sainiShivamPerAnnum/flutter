@@ -9,13 +9,17 @@ class FlavorValues {
       @required this.awsAugmontStage,
       @required this.freshchatStage,
       @required this.signzyStage,
-      @required this.razorpayStage});
+      @required this.razorpayStage,
+      @required this.baseUriAsia,
+      @required this.baseUriUS});
 
   final AWSIciciStage awsIciciStage;
   final FreshchatStage freshchatStage;
   final AWSAugmontStage awsAugmontStage;
   final SignzyStage signzyStage;
   final RazorpayStage razorpayStage;
+  final String baseUriAsia;
+  final String baseUriUS;
 //Add other flavor specific values, e.g database name
 }
 

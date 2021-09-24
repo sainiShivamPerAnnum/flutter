@@ -144,16 +144,11 @@ class BaseUser {
       fldEmail: _email,
       fldDob: _dob,
       fldGender: _gender,
-      fldPriBalance: _prize_balance,
-      fldLifeTimeWinnings: _lifetime_winnings,
-      fldPan: _encryptPan(_pan),
-      fldAge: _age,
       fldIsInvested: _isInvested,
       fldIsIciciOnboarded: _isIciciOnboarded,
       fldIsAugmontOnboarded: _isAugmontOnboarded,
       fldIsSimpleKycVerified: _isSimpleKycVerified,
       fldIsKycVerified: _isKycVerified,
-      fldPendingTxnId: _pendingTxnId,
       fldUsername: _username,
       fldIsEmailVerified: _isemailVerified
     };
