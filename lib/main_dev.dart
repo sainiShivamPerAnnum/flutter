@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 void main() async {
   FlavorConfig(
       flavor: Flavor.DEV,
-      color: Colors.deepPurpleAccent,
+      color: Colors.green,
       values: FlavorValues(
           awsAugmontStage: AWSAugmontStage.DEV,
           awsIciciStage: AWSIciciStage.PROD,

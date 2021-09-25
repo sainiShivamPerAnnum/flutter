@@ -5,18 +5,13 @@ import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/model/FeedCard.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/core/service/connectivity_service.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_daily_draw_timer.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
-import 'package:felloapp/ui/widgets/network_bar.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -374,11 +369,13 @@ class BaseHomeCard extends StatelessWidget {
   final String asset;
   final List<Color> gradient;
   final Widget child;
+
   BaseHomeCard({
     this.asset,
     this.gradient,
     this.child,
   });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -440,6 +437,7 @@ class BaseHomeCardContent extends StatelessWidget {
     this.title,
     this.shadowColor,
   });
+
   @override
   Widget build(BuildContext context) {
     LocalDBModel localDbProvider =
