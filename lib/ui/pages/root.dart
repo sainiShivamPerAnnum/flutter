@@ -8,11 +8,10 @@ import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
-import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
+import 'package:felloapp/ui/elements/flavor_banner.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/modals/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
@@ -28,7 +27,6 @@ import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Root extends StatefulWidget {
@@ -186,90 +184,95 @@ class _RootState extends State<Root> {
     //Wrap our custom navbar + contentView with the app Scaffold
     // final GlobalKey<ScaffoldState> _scaffoldKey =
     //     new GlobalKey<ScaffoldState>();
-    return Scaffold(
-        backgroundColor: UiConstants.bottomNavBarColor,
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [
-            Container(
-              width: double.infinity,
-              //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
-              child: AnimatedSwitcher(
-                duration: Duration(milliseconds: 350),
-                //Pass the current accent color down as a theme, so our overscroll indicator matches the btn color
-                child: Theme(
-                  data: ThemeData(accentColor: accentColor),
-                  child: contentView,
-                ),
-              ),
-            ),
-            if (connectivityStatus == ConnectivityStatus.Offline)
-              Positioned(
-                child: SafeArea(
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: kToolbarHeight,
-                    width: SizeConfig.screenWidth,
-                    child: NetworkBar(
-                      textColor: (appState.getCurrentTabIndex == 0)
-                          ? Colors.white
-                          : Color(0xff4C4C4C),
+    return FlavorBanner(
+        child: Scaffold(
+            backgroundColor: UiConstants.bottomNavBarColor,
+            resizeToAvoidBottomInset: false,
+            body: Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
+                  child: AnimatedSwitcher(
+                    duration: Duration(milliseconds: 350),
+                    //Pass the current accent color down as a theme, so our overscroll indicator matches the btn color
+                    child: Theme(
+                      data: ThemeData(accentColor: accentColor),
+                      child: contentView,
                     ),
                   ),
                 ),
-              ),
-            Positioned(
-              top: SizeConfig.blockSizeHorizontal * 2,
-              right: SizeConfig.blockSizeHorizontal * 2,
-              child: SafeArea(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    if (appState.getCurrentTabIndex == 3)
-                      InkWell(
-                        child: Icon(
-                          Icons.notifications,
-                          size: kToolbarHeight * 0.5,
-                          color: (appState.getCurrentTabIndex == 0)
+                if (connectivityStatus == ConnectivityStatus.Offline)
+                  Positioned(
+                    child: SafeArea(
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: kToolbarHeight,
+                        width: SizeConfig.screenWidth,
+                        child: NetworkBar(
+                          textColor: (appState.getCurrentTabIndex == 0)
                               ? Colors.white
                               : Color(0xff4C4C4C),
                         ),
-                        //icon: Icon(Icons.contact_support_outlined),
-                        // iconSize: kToolbarHeight * 0.5,
-                        onTap: () {
-                          Haptic.vibrate();
-                          AppState.delegate.appState.currentAction = PageAction(
-                              state: PageState.addPage,
-                              page: NotificationsConfig);
-                        },
                       ),
-                    SizedBox(
-                      width: kToolbarHeight * 0.2,
                     ),
-                    InkWell(
-                      child: SvgPicture.asset(
-                        "images/support-log.svg",
-                        height: kToolbarHeight * 0.6,
-                        color: (appState.getCurrentTabIndex == 0)
-                            ? Colors.white
-                            : Color(0xff4C4C4C),
-                      ),
-                      //icon: Icon(Icons.contact_support_outlined),
-                      // iconSize: kToolbarHeight * 0.5,
-                      onTap: () {
-                        Haptic.vibrate();
-                        AppState.delegate.appState.currentAction = PageAction(
-                            state: PageState.addPage, page: SupportPageConfig);
-                      },
+                  ),
+                Positioned(
+                  top: SizeConfig.blockSizeHorizontal * 2,
+                  right: SizeConfig.blockSizeHorizontal * 2,
+                  child: SafeArea(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        if (appState.getCurrentTabIndex == 3)
+                          InkWell(
+                            child: Icon(
+                              Icons.notifications,
+                              size: kToolbarHeight * 0.5,
+                              color: (appState.getCurrentTabIndex == 0)
+                                  ? Colors.white
+                                  : Color(0xff4C4C4C),
+                            ),
+                            //icon: Icon(Icons.contact_support_outlined),
+                            // iconSize: kToolbarHeight * 0.5,
+                            onTap: () {
+                              Haptic.vibrate();
+                              AppState.delegate.appState.currentAction =
+                                  PageAction(
+                                      state: PageState.addPage,
+                                      page: NotificationsConfig);
+                            },
+                          ),
+                        SizedBox(
+                          width: kToolbarHeight * 0.2,
+                        ),
+                        InkWell(
+                          child: SvgPicture.asset(
+                            "images/support-log.svg",
+                            height: kToolbarHeight * 0.6,
+                            color: (appState.getCurrentTabIndex == 0)
+                                ? Colors.white
+                                : Color(0xff4C4C4C),
+                          ),
+                          //icon: Icon(Icons.contact_support_outlined),
+                          // iconSize: kToolbarHeight * 0.5,
+                          onTap: () {
+                            Haptic.vibrate();
+                            AppState.delegate.appState.currentAction =
+                                PageAction(
+                                    state: PageState.addPage,
+                                    page: SupportPageConfig);
+                          },
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-        bottomNavigationBar: navBar //Pass our custom navBar into the scaffold
-        );
+            bottomNavigationBar:
+                navBar //Pass our custom navBar into the scaffold
+            ));
   }
 
   void _handleNavBtnTapped(int index) {

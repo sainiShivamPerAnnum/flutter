@@ -24,6 +24,7 @@ import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/help_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -440,7 +441,7 @@ class DBModel extends ChangeNotifier {
       keyIndex = 1;
     }
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'aws-icici', Constants.activeAwsIciciStage.value(), keyIndex);
+        'aws-icici', FlavorConfig.instance.values.awsIciciStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
       Map<String, dynamic> _doc = snapshot.data();
@@ -465,7 +466,7 @@ class DBModel extends ChangeNotifier {
       keyIndex = 1;
     }
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'aws-augmont', Constants.activeAwsAugmontStage.value(), keyIndex);
+        'aws-augmont', FlavorConfig.instance.values.awsAugmontStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
       Map<String, dynamic> _doc = snapshot.data();
@@ -481,7 +482,7 @@ class DBModel extends ChangeNotifier {
   Future<Map<String, String>> getActiveSignzyApiKey() async {
     int keyIndex = 1;
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'signzy', Constants.activeSignzyStage.value(), keyIndex);
+        'signzy', FlavorConfig.instance.values.signzyStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
       Map<String, dynamic> _doc = snapshot.data();
@@ -496,7 +497,7 @@ class DBModel extends ChangeNotifier {
   Future<Map<String, String>> getActiveFreshchatKey() async {
     int keyIndex = 1;
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'freshchat', Constants.activeFreshchatStage.value(), keyIndex);
+        'freshchat', FlavorConfig.instance.values.freshchatStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
       if (snapshot.exists) {

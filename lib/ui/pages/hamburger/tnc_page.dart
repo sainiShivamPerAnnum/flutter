@@ -45,7 +45,7 @@ class _TnCState extends State<TnC> {
           .ref('PolicyFiles/fello_tnc.html')
           .writeToFile(downloadToFile);
     } catch (err) {
-      log.error('Referral policy Download failed');
+      log.error('Referral plauolicy Download failed');
       log.error(err.toString());
       _isLoadComplete = true;
       _downloadFailed = true;

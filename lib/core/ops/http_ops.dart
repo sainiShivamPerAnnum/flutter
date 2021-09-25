@@ -5,6 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +14,8 @@ import 'package:http/http.dart' as http;
 class HttpModel extends ChangeNotifier {
   BaseUtil _baseUtil = locator<BaseUtil>(); //required to fetch client token
   final Log log = new Log('HttpModel');
-  static const String WRAPPED_BASE_URI = 'fello-team.web.app';
-  static const String ASIA_BASE_URI =
-      'asia-south1-fello-d3a9c.cloudfunctions.net';
-  static const String US_BASE_URI =
-      'us-central1-fello-d3a9c.cloudfunctions.net';
+  static final String ASIA_BASE_URI = FlavorConfig.instance.values.baseUriAsia;
+  static final String US_BASE_URI = FlavorConfig.instance.values.baseUriUS;
 
   ///Returns the number of tickets that need to be added to user's balance
   Future<int> postUserReferral(
@@ -26,7 +24,7 @@ class HttpModel extends ChangeNotifier {
     String idToken = await _baseUtil.firebaseUser.getIdToken();
     log.debug('Fetched user IDToken: ' + idToken);
     try {
-      Uri _uri = Uri.https(WRAPPED_BASE_URI, '/validateUserReferral',
+      Uri _uri = Uri.https(US_BASE_URI, '/validateUserReferral',
           {'uid': userId, 'rid': referee, 'uname': userName});
       http.Response _response = await http.post(_uri,
           headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
@@ -71,7 +69,7 @@ class HttpModel extends ChangeNotifier {
     log.debug('Fetched user IDToken: ' + idToken);
 
     String amx = (amount * 100).round().toString();
-    String _stage = Constants.activeRazorpayStage.value();
+    String _stage = FlavorConfig.instance.values.razorpayStage.value();
     Map<String, dynamic> queryMap = {'amount': amx};
     if (notes != null) queryMap['notes'] = Uri.encodeComponent(notes);
 
@@ -103,7 +101,7 @@ class HttpModel extends ChangeNotifier {
     idToken = await _baseUtil.firebaseUser.getIdToken();
     log.debug('Fetched user IDToken: ' + idToken);
 
-    String _stage = Constants.activeRazorpayStage.value();
+    String _stage = FlavorConfig.instance.values.razorpayStage.value();
     final Uri _uri = Uri.https(
         US_BASE_URI,
         '/razorpayops/$_stage/api/signature',

@@ -1,0 +1,111 @@
+{
+  "project_info": {
+    "project_number": "298601110864",
+    "firebase_url": "https://fello-d3a9c.firebaseio.com",
+    "project_id": "fello-d3a9c",
+    "storage_bucket": "fello-d3a9c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298601110864:android:e361ffc4534e7fe09d6055",
+        "android_client_info": {
+          "package_name": "in.fello.felloapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "298601110864-49dpp6jnmqffba2hu2ndae2oag608o1r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.fello.felloapp",
+            "certificate_hash": "d990af91cf8cab8d79ed52b451019be5c394682c"
+          }
+        },
+        {
+          "client_id": "298601110864-6hrmkosu97s820u6il9l7op2o6gvr22i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.fello.felloapp",
+            "certificate_hash": "d6b6988ca925e68b8868895571165241118c937b"
+          }
+        },
+        {
+          "client_id": "298601110864-8cnnegam5mebpie4p3ndidumhno0o9dk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.fello.felloapp",
+            "certificate_hash": "59e1f433d3b2271322bbd05b15fc38d0d29d08e5"
+          }
+        },
+        {
+          "client_id": "298601110864-f9lsiv403bkvs2su7vkgnpe5m647hqee.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.fello.felloapp",
+            "certificate_hash": "0f8d1cf1b666f31cef0a71bc6429c3fa024074f1"
+          }
+        },
+        {
+          "client_id": "298601110864-lh1ee79eemsvf1946ffl0a536j3j42b9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.fello.felloapp",
+            "certificate_hash": "977e1c50e5e52c436e7e600131f7a66f45882d09"
+          }
+        },
+        {
+          "client_id": "298601110864-mddb8rcq87g24nal3rj8mn4d96cv56q7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.fello.felloapp",
+            "certificate_hash": "37edd7961c4701068f27feb687323c3a8d413963"
+          }
+        },
+        {
+          "client_id": "298601110864-qbk704jnuq11gb8coof3gevmqo353ff1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.fello.felloapp",
+            "certificate_hash": "3f03dfa5962aafe987d4ad5fb79f403b0545080a"
+          }
+        },
+        {
+          "client_id": "298601110864-r49ijvh3m7idr68c3mi75111ohg1q7sn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.fello.felloapp",
+            "certificate_hash": "4c8d965cceb1c394b535cbe686b40d0c04dc7140"
+          }
+        },
+        {
+          "client_id": "298601110864-8pn9m8mom2kcahk59hcb5jdebh2kbetd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXQTsPz160NftwN6nNvNw4SVTmkxH2iv4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "298601110864-8pn9m8mom2kcahk59hcb5jdebh2kbetd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "298601110864-bm2ij6psb2o3k7vsag2sbrhdbojcrm38.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "in.fello.felloapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -39,7 +39,6 @@ class NameInputScreenState extends State<NameInputScreen> {
   bool isPlayer = false;
   TextEditingController _nameFieldController;
   TextEditingController _emailFieldController;
-  TextEditingController _ageFieldController;
   TextEditingController _dateFieldController;
   TextEditingController _monthFieldController;
   TextEditingController _yearFieldController;
@@ -191,7 +190,7 @@ class NameInputScreenState extends State<NameInputScreen> {
     } catch (e) {
       print(e.toString());
       baseProvider.showNegativeAlert(
-          "Oops, we ran into problem", "Please try again", context);
+          "Unable to verify", "Please try a different method", context);
     }
   }
 
@@ -227,10 +226,6 @@ class NameInputScreenState extends State<NameInputScreen> {
       _emailFieldController =
           (authProvider.myUser != null && authProvider.myUser.email != null)
               ? new TextEditingController(text: authProvider.myUser.email)
-              : new TextEditingController();
-      _ageFieldController =
-          (authProvider.myUser != null && authProvider.myUser.age != null)
-              ? new TextEditingController(text: authProvider.myUser.age)
               : new TextEditingController();
       _dateFieldController = new TextEditingController();
       _monthFieldController = new TextEditingController();
@@ -609,12 +604,6 @@ class NameInputScreenState extends State<NameInputScreen> {
   set name(String value) {
     //_name = value;
     _nameFieldController.text = value;
-  }
-
-  String get age => _ageFieldController.text;
-
-  set age(String value) {
-    _ageFieldController.text = value;
   }
 
   bool get isInvested => _isInvested;

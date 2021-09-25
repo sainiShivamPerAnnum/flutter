@@ -18,6 +18,7 @@ import 'package:felloapp/ui/modals/share_info_modal.dart';
 import 'package:felloapp/ui/widgets/network_bar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/logger.dart';
@@ -817,7 +818,8 @@ class _ShareOptionsState extends State<ShareOptions> {
   Future<String> _createDynamicLink(
       String userId, bool short, String source) async {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://fello.in/app/referral',
+      uriPrefix:
+          FlavorConfig.instance.values.dynamicLinkPrefix + '/app/referral',
       link: Uri.parse('https://fello.in/$userId'),
       socialMetaTagParameters: SocialMetaTagParameters(
           title: 'Download ${Constants.APP_NAME}',

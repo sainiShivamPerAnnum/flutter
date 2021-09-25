@@ -556,8 +556,6 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
   String getDob() {
     if (baseProvider.myUser.dob != null)
       return baseProvider.myUser.dob;
-    else if (baseProvider.myUser.age != null)
-      return baseProvider.myUser.age;
     else
       return "N/A";
   }
