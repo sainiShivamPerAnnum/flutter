@@ -196,6 +196,7 @@ class BaseUtil extends ChangeNotifier {
 
     isUserOnboarded =
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
+    
     if (isUserOnboarded) {
       ///see if security needs to be shown
       show_security_prompt = await _lModel.showSecurityPrompt();
@@ -231,13 +232,6 @@ class BaseUtil extends ChangeNotifier {
 
       await getProfilePicUrl();
 
-      ///Freshchat utils
-      freshchatKeys = await _dbModel.getActiveFreshchatKey();
-      if (freshchatKeys != null && freshchatKeys.isNotEmpty) {
-        Freshchat.init(freshchatKeys['app_id'], freshchatKeys['app_key'],
-            freshchatKeys['app_domain'],
-            gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
-      }
 
       /// Fetch this weeks' Dailypicks count
       String _dpc = BaseRemoteConfig.remoteConfig

@@ -1,3 +1,15 @@
+//Flutter Imports
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+//Pub Imports
+import 'package:freshchat_sdk/freshchat_sdk.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_svg/svg.dart';
+
+//Project Imports
 import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -7,15 +19,7 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-import '../../../base_util.dart';
-import '../../../main.dart';
+import 'package:felloapp/base_util.dart';
 
 class SupportPage extends StatefulWidget {
   const SupportPage({Key key}) : super(key: key);
@@ -33,7 +37,18 @@ class _SupportPageState extends State<SupportPage> {
 
   void init() {
     _requestCallPhoneController.text = baseProvider.myUser.mobile;
+    enableFlashChat();
     isInit = true;
+  }
+
+  void enableFlashChat() async {
+    ///Freshchat utils
+    final freshchatKeys = await dbProvider.getActiveFreshchatKey();
+    if (freshchatKeys != null && freshchatKeys.isNotEmpty) {
+      Freshchat.init(freshchatKeys['app_id'], freshchatKeys['app_key'],
+          freshchatKeys['app_domain'],
+          gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
+    }
   }
 
   @override
@@ -43,6 +58,7 @@ class _SupportPageState extends State<SupportPage> {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     ConnectivityStatus connectivityStatus =
         Provider.of<ConnectivityStatus>(context);
+
     if (!isInit) {
       init();
     }
