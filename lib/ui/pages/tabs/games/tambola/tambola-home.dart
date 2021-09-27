@@ -208,7 +208,7 @@ class _TambolaHomeState extends State<TambolaHome> {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    baseProvider = Provider.of<BaseUtil>(context);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     fcmProvider = Provider.of<FcmHandler>(context, listen: false);
     localDBModel = Provider.of<LocalDBModel>(context, listen: false);
@@ -399,23 +399,50 @@ class _TambolaHomeState extends State<TambolaHome> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: connectivityStatus == ConnectivityStatus.Offline
-                            ? NetworkBar(
-                                textColor: Colors.black,
-                              )
-                            : SpinKitWave(color: UiConstants.primaryColor),
-                      ),
-                      if (connectivityStatus != ConnectivityStatus.Offline)
-                        Text(
-                          'Your tickets are being generated..',
-                          style: TextStyle(
-                            fontSize: SizeConfig.mediumTextSize,
-                          ),
-                        ),
-                    ],
+                    children: connectivityStatus == ConnectivityStatus.Offline
+                        ? [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: NetworkBar(),
+                            )
+                          ]
+                        : [
+                            Container(
+                              width: SizeConfig.screenWidth * 0.8,
+                              height: 4,
+                              decoration: BoxDecoration(
+                                color:
+                                    UiConstants.primaryColor.withOpacity(0.3),
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: FractionallySizedBox(
+                                heightFactor: 1,
+                                widthFactor: BaseUtil.ticketGenerateCount ==
+                                        baseProvider
+                                            .atomicTicketGenerationLeftCount
+                                    ? 0.1
+                                    : (BaseUtil.ticketGenerateCount -
+                                            baseProvider
+                                                .atomicTicketGenerationLeftCount) /
+                                        BaseUtil.ticketGenerateCount,
+                                alignment: Alignment.centerLeft,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: UiConstants.primaryColor,
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            Text(
+                              'Generated ${BaseUtil.ticketGenerateCount - baseProvider.atomicTicketGenerationLeftCount} of your ${BaseUtil.ticketGenerateCount} tickets',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: SizeConfig.mediumTextSize,
+                              ),
+                            ),
+                          ],
                   )
                 : Text('No tickets yet'),
           ),
@@ -446,8 +473,10 @@ class _TambolaHomeState extends State<TambolaHome> {
               Align(
                 alignment: Alignment.center,
                 child: Container(
+                  width: SizeConfig.screenWidth,
+                  height: 140,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withOpacity(0.7),
                   ),
                   padding: EdgeInsets.all(20),
                   child: Column(
@@ -455,20 +484,43 @@ class _TambolaHomeState extends State<TambolaHome> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: SpinKitWave(color: UiConstants.primaryColor),
+                      Container(
+                        width: SizeConfig.screenWidth * 0.8,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: UiConstants.primaryColor.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: FractionallySizedBox(
+                          heightFactor: 1,
+                          widthFactor: BaseUtil.ticketGenerateCount ==
+                                  baseProvider.atomicTicketGenerationLeftCount
+                              ? 0.1
+                              : (BaseUtil.ticketGenerateCount -
+                                      baseProvider
+                                          .atomicTicketGenerationLeftCount) /
+                                  BaseUtil.ticketGenerateCount,
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: UiConstants.primaryColor,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                          ),
+                        ),
                       ),
+                      SizedBox(height: 16),
                       Text(
-                        'More tickets are being generated. please wait',
+                        'Generated ${BaseUtil.ticketGenerateCount - baseProvider.atomicTicketGenerationLeftCount} of your ${BaseUtil.ticketGenerateCount} tickets',
                         style: TextStyle(
-                            fontSize: SizeConfig.mediumTextSize,
-                            fontWeight: FontWeight.w600),
-                      )
+                          fontWeight: FontWeight.w600,
+                          fontSize: SizeConfig.mediumTextSize,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              )
+              ),
           ],
         ),
       );

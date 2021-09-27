@@ -44,8 +44,10 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
   bool isPanVisible = false;
 
   chooseprofilePicture() async {
-    final temp = await ImagePicker().getImage(source: ImageSource.gallery);
+    final temp = await ImagePicker()
+        .pickImage(source: ImageSource.gallery, imageQuality: 45);
     if (temp != null) {
+      print(File(temp.path).lengthSync() / 1024);
       Haptic.vibrate();
       showDialog(
         context: context,

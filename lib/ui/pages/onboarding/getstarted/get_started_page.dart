@@ -1,5 +1,6 @@
 //Project Imports
 import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/generated/l10n.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/Buttons/large_button.dart';
@@ -24,11 +25,13 @@ class GetStartedPage extends StatefulWidget {
 class _GetStartedPageState extends State<GetStartedPage> {
   List<bool> isVisible = List<bool>.filled(4, false);
   AppState appState;
+  S FT;
   static const Duration animDuration = Duration(milliseconds: 190);
 
   @override
   Widget build(BuildContext context) {
     appState = Provider.of<AppState>(context, listen: false);
+    FT = S.of(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -40,7 +43,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
               child: Padding(
                 padding: EdgeInsets.only(top: SizeConfig.screenHeight * 0.05),
                 child: Text(
-                  'Game based Savings \n & Investments🎉',
+                  FT.onboardTitle,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontWeight: FontWeight.w800,
@@ -96,7 +99,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
       width: (isVisible[3]) ? SizeConfig.screenWidth - 50 : 0,
       child: new LargeButton(
         child: Text(
-          'GET STARTED',
+          FT.onboradButton,
           style:
               Theme.of(context).textTheme.button.copyWith(color: Colors.white),
         ),
@@ -120,7 +123,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
                   padding: EdgeInsets.all(20),
                   child: Center(
                     child: Text(
-                      Assets.getStartedDesc[0],
+                      FT.onboardText1,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -159,7 +162,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
                   padding: EdgeInsets.all(20),
                   child: Center(
                     child: Text(
-                      Assets.getStartedDesc[1],
+                      FT.onboardText2,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -187,7 +190,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
                   padding: EdgeInsets.only(left: 20, right: 20),
                   child: Center(
                     child: Text(
-                      Assets.getStartedDesc[2],
+                      FT.onboardText3,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,

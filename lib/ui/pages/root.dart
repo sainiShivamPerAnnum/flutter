@@ -11,14 +11,16 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
-import 'package:felloapp/ui/elements/flavor_banner.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/modals/security_modal_sheet.dart';
+import 'package:felloapp/ui/pages/f3_dummy_pages/play.dart';
+import 'package:felloapp/ui/pages/f3_dummy_pages/save.dart';
+import 'package:felloapp/ui/pages/f3_dummy_pages/widgets.dart';
+import 'package:felloapp/ui/pages/f3_dummy_pages/win.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
 import 'package:felloapp/ui/pages/tabs/profile/profile_screen.dart';
-import 'package:felloapp/ui/widgets/network_bar.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
@@ -32,15 +34,16 @@ import 'package:flutter/material.dart';
 
 //Pub Imports
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class Root extends StatefulWidget {
   @override
   _RootState createState() => _RootState();
 }
 
-class _RootState extends State<Root> {
+class _RootState extends State<Root> with SingleTickerProviderStateMixin {
   Log log = new Log("Root");
   List<NavBarItemData> _navBarItems;
   BaseUtil baseProvider;
@@ -54,9 +57,21 @@ class _RootState extends State<Root> {
   bool _isInitialized = false;
   bool showTag = true;
   double tagWidth = 0;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  AnimationController animationController;
+
+  //New
+  void _onItemTapped(int index) {
+    setState(() {
+      AppState().setCurrentTabIndex = index;
+    });
+  }
 
   @override
   void initState() {
+    animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       AppState().setRootLoadValue = true;
       tagWidth = SizeConfig.screenWidth / 2;
@@ -164,6 +179,10 @@ class _RootState extends State<Root> {
     }
   }
 
+  showDrawer() {
+    _scaffoldKey.currentState.openDrawer();
+  }
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
@@ -176,6 +195,17 @@ class _RootState extends State<Root> {
         Provider.of<ConnectivityStatus>(context);
     _initialize();
     var accentColor = UiConstants.primaryColor;
+    List<Widget> _pages = <Widget>[
+      Play(
+        isHideBottomNavBar: (isHideBottomNavBar) {
+          isHideBottomNavBar
+              ? animationController.forward()
+              : animationController.reverse();
+        },
+      ),
+      Save(),
+      Win()
+    ];
 
     //Create custom navBar, pass in a list of buttons, and listen for tap event
     var navBar = NavBar(
@@ -188,97 +218,254 @@ class _RootState extends State<Root> {
         context.watch<AppState>().getCurrentTabIndex,
         _viewsByIndex.length - 1)];
     //Wrap our custom navbar + contentView with the app Scaffold
-    // final GlobalKey<ScaffoldState> _scaffoldKey =
-    //     new GlobalKey<ScaffoldState>();
-    return FlavorBanner(
-        child: Scaffold(
-            backgroundColor: UiConstants.bottomNavBarColor,
-            resizeToAvoidBottomInset: false,
-            body: Stack(
-              children: [
-                Container(
-                  width: double.infinity,
-                  //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
-                  child: AnimatedSwitcher(
-                    duration: Duration(milliseconds: 350),
-                    //Pass the current accent color down as a theme, so our overscroll indicator matches the btn color
-                    child: Theme(
-                      data: ThemeData(accentColor: accentColor),
-                      child: contentView,
+
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        backgroundColor: ThemeData().scaffoldBackgroundColor,
+        leading: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: InkWell(
+            onTap: showDrawer,
+            child: CircleAvatar(
+              radius: kToolbarHeight * 0.3,
+              backgroundImage: baseProvider.myUserDpUrl == null
+                  ? AssetImage(
+                      "images/profile.png",
+                    )
+                  : CachedNetworkImageProvider(
+                      baseProvider.myUserDpUrl,
                     ),
+            ),
+          ),
+        ),
+        title: Text(
+          "Hi, ${baseProvider.myUser.name.split(' ').first}",
+          style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.w500, fontSize: SizeConfig.largeTextSize),
+        ),
+        actions: [
+          Container(
+            margin: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: UiConstants.primaryColor),
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              children: [
+                Text(
+                  baseProvider.userTicketWallet.getActiveTickets().toString(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                if (connectivityStatus == ConnectivityStatus.Offline)
-                  Positioned(
-                    child: SafeArea(
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: kToolbarHeight,
-                        width: SizeConfig.screenWidth,
-                        child: NetworkBar(
-                          textColor: (appState.getCurrentTabIndex == 0)
-                              ? Colors.white
-                              : Color(0xff4C4C4C),
-                        ),
-                      ),
-                    ),
-                  ),
-                Positioned(
-                  top: SizeConfig.blockSizeHorizontal * 2,
-                  right: SizeConfig.blockSizeHorizontal * 2,
-                  child: SafeArea(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        if (appState.getCurrentTabIndex == 3)
-                          InkWell(
-                            child: Icon(
-                              Icons.notifications,
-                              size: kToolbarHeight * 0.5,
-                              color: (appState.getCurrentTabIndex == 0)
-                                  ? Colors.white
-                                  : Color(0xff4C4C4C),
-                            ),
-                            //icon: Icon(Icons.contact_support_outlined),
-                            // iconSize: kToolbarHeight * 0.5,
-                            onTap: () {
-                              Haptic.vibrate();
-                              AppState.delegate.appState.currentAction =
-                                  PageAction(
-                                      state: PageState.addPage,
-                                      page: NotificationsConfig);
-                            },
-                          ),
-                        SizedBox(
-                          width: kToolbarHeight * 0.2,
-                        ),
-                        InkWell(
-                          child: SvgPicture.asset(
-                            "images/support-log.svg",
-                            height: kToolbarHeight * 0.6,
-                            color: (appState.getCurrentTabIndex == 0)
-                                ? Colors.white
-                                : Color(0xff4C4C4C),
-                          ),
-                          //icon: Icon(Icons.contact_support_outlined),
-                          // iconSize: kToolbarHeight * 0.5,
-                          onTap: () {
-                            Haptic.vibrate();
-                            AppState.delegate.appState.currentAction =
-                                PageAction(
-                                    state: PageState.addPage,
-                                    page: SupportPageConfig);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
+                SizedBox(width: 8),
+                Icon(
+                  Icons.control_point_rounded,
+                  color: Colors.white,
+                  size: kToolbarHeight / 2.5,
                 ),
               ],
             ),
-            bottomNavigationBar:
-                navBar //Pass our custom navBar into the scaffold
-            ));
+          ),
+          InkWell(
+            child: Icon(
+              Icons.notifications,
+              size: kToolbarHeight * 0.5,
+              color: Color(0xff4C4C4C),
+            ),
+            //icon: Icon(Icons.contact_support_outlined),
+            // iconSize: kToolbarHeight * 0.5,
+            onTap: () {
+              Haptic.vibrate();
+              AppState.delegate.appState.currentAction = PageAction(
+                  state: PageState.addPage, page: NotificationsConfig);
+            },
+          ),
+          SizedBox(
+            width: SizeConfig.globalMargin,
+          )
+        ],
+      ),
+      drawer: Drawer(
+        child: SafeArea(
+          child: Column(
+            children: [
+              SizedBox(height: SizeConfig.globalMargin),
+              ListTile(
+                onTap: () {
+                  AppState.delegate.appState.currentAction = PageAction(
+                      state: PageState.addPage, page: UserProfileDetailsConfig);
+                },
+                leading: CircleAvatar(
+                  radius: kToolbarHeight * 0.5,
+                  backgroundImage: baseProvider.myUserDpUrl == null
+                      ? AssetImage(
+                          "images/profile.png",
+                        )
+                      : CachedNetworkImageProvider(
+                          baseProvider.myUserDpUrl,
+                        ),
+                ),
+                title: Widgets()
+                    .getHeadlineBold(baseProvider.myUser.name, Colors.black),
+                subtitle: Widgets().getBodyLight(
+                    "@${baseProvider.myUser.username}", Colors.black),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              ListTile(
+                title: Widgets().getHeadlineLight("Refer & Earn", Colors.black),
+              ),
+              ListTile(
+                title: Widgets().getHeadlineLight("PAN & KYC", Colors.black),
+              ),
+              ListTile(
+                title: Widgets().getHeadlineLight("Transactions", Colors.black),
+              ),
+              ListTile(
+                title:
+                    Widgets().getHeadlineLight("Help & Support", Colors.black),
+              ),
+              ListTile(
+                title:
+                    Widgets().getHeadlineLight("How it works?", Colors.black),
+              ),
+              ListTile(
+                title: Widgets()
+                    .getHeadlineLight("About Digital Gold", Colors.black),
+              ),
+              SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Widgets().getBodyLight("Version 1.0.0.1", Colors.black),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+      body:
+          IndexedStack(children: _pages, index: AppState().getCurrentTabIndex),
+      bottomNavigationBar: SizeTransition(
+        sizeFactor: animationController,
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.shifting,
+          selectedFontSize: 16,
+          selectedIconTheme:
+              IconThemeData(color: UiConstants.primaryColor, size: 32),
+          selectedItemColor: UiConstants.primaryColor,
+          selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+          unselectedIconTheme: IconThemeData(
+            color: Colors.grey[500],
+          ),
+          unselectedItemColor: Colors.grey[500],
+          currentIndex: AppState().getCurrentTabIndex, //New
+          onTap: _onItemTapped,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.emoji_events_rounded),
+              label: 'Play',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_balance_wallet),
+              label: 'Save',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.celebration_rounded),
+              label: 'Win',
+            ),
+          ],
+        ),
+      ),
+    );
+    // Scaffold(
+    //     backgroundColor: UiConstants.bottomNavBarColor,
+    //     resizeToAvoidBottomInset: false,
+    //     body:
+    // Stack(
+    //   children: [
+    //     Container(
+    //       width: double.infinity,
+    //       //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
+    //       child: AnimatedSwitcher(
+    //         duration: Duration(milliseconds: 350),
+    //         //Pass the current accent color down as a theme, so our overscroll indicator matches the btn color
+    //         child: Theme(
+    //           data: ThemeData(accentColor: accentColor),
+    //           child: contentView,
+    //         ),
+    //       ),
+    //     ),
+    //     if (connectivityStatus == ConnectivityStatus.Offline)
+    //       Positioned(
+    //         child: SafeArea(
+    //           child: Container(
+    //             alignment: Alignment.center,
+    //             height: kToolbarHeight,
+    //             width: SizeConfig.screenWidth,
+    //             child: NetworkBar(
+    //               textColor: (appState.getCurrentTabIndex == 0)
+    //                   ? Colors.white
+    //                   : Color(0xff4C4C4C),
+    //             ),
+    //           ),
+    //         ),
+    //       ),
+    //     Positioned(
+    //       top: SizeConfig.blockSizeHorizontal * 2,
+    //       right: SizeConfig.blockSizeHorizontal * 2,
+    //       child: SafeArea(
+    //         child: Row(
+    //           crossAxisAlignment: CrossAxisAlignment.center,
+    //           children: [
+    //             if (appState.getCurrentTabIndex == 3)
+    // InkWell(
+    //   child: Icon(
+    //     Icons.notifications,
+    //     size: kToolbarHeight * 0.5,
+    //     color: (appState.getCurrentTabIndex == 0)
+    //         ? Colors.white
+    //         : Color(0xff4C4C4C),
+    //   ),
+    //   //icon: Icon(Icons.contact_support_outlined),
+    //   // iconSize: kToolbarHeight * 0.5,
+    //   onTap: () {
+    //     Haptic.vibrate();
+    //     AppState.delegate.appState.currentAction = PageAction(
+    //         state: PageState.addPage,
+    //         page: NotificationsConfig);
+    //   },
+    // ),
+    //             SizedBox(
+    //               width: kToolbarHeight * 0.2,
+    //             ),
+    //             InkWell(
+    //               child: SvgPicture.asset(
+    //                 "images/support-log.svg",
+    //                 height: kToolbarHeight * 0.6,
+    //                 color: (appState.getCurrentTabIndex == 0)
+    //                     ? Colors.white
+    //                     : Color(0xff4C4C4C),
+    //               ),
+    //               //icon: Icon(Icons.contact_support_outlined),
+    //               // iconSize: kToolbarHeight * 0.5,
+    //               onTap: () {
+    //                 Haptic.vibrate();
+    //                 AppState.delegate.appState.currentAction = PageAction(
+    //                     state: PageState.addPage, page: SupportPageConfig);
+    //               },
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     ),
+    //   ],
+    // ),
+    // bottomNavigationBar: navBar //Pass our custom navBar into the scaffold
+    //);
   }
 
   void _handleNavBtnTapped(int index) {

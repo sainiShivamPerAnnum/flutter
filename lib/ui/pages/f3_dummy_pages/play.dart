@@ -1,0 +1,159 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/ui_constants.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class Play extends StatelessWidget {
+  final Function isHideBottomNavBar;
+
+  Play({this.isHideBottomNavBar});
+
+  bool _handleScrollNotification(ScrollNotification notification) {
+    if (notification.depth == 0) {
+      if (notification is UserScrollNotification) {
+        final UserScrollNotification userScroll = notification;
+        switch (userScroll.direction) {
+          case ScrollDirection.forward:
+            isHideBottomNavBar(true);
+            break;
+          case ScrollDirection.reverse:
+            isHideBottomNavBar(false);
+            break;
+          case ScrollDirection.idle:
+            break;
+        }
+      }
+    }
+    return false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(
+          left: SizeConfig.globalMargin,
+          top: SizeConfig.globalMargin,
+          right: SizeConfig.globalMargin),
+      child: NotificationListener<ScrollNotification>(
+        onNotification: _handleScrollNotification,
+        child: ListView(
+          children: [
+            Container(
+              width: SizeConfig.screenWidth,
+              height: 100,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 5,
+                  itemBuilder: (ctx, i) {
+                    return Card(
+                      margin: EdgeInsets.all(8),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Row(
+                          children: [
+                            CircleAvatar(),
+                            SizedBox(
+                              width: 16,
+                            ),
+                            Text(
+                              "Title $i",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: SizeConfig.largeTextSize,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Trending Games",
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: SizeConfig.cardTitleTextSize,
+              ),
+            ),
+            Column(
+              children: List.generate(
+                2,
+                (i) => Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () => BaseUtil().openTambolaHome(),
+                      child: Card(
+                        child: Container(
+                          padding: EdgeInsets.all(36),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                "images/svgs/game.svg",
+                                height: 50,
+                                width: 50,
+                                color: UiConstants.primaryColor,
+                              ),
+                              SizedBox(width: 36),
+                              Text(
+                                "Game ${i + 1}",
+                                style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: SizeConfig.cardTitleTextSize,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            "5 tickets",
+                            style:
+                                TextStyle(fontSize: SizeConfig.largeTextSize),
+                          ),
+                          Spacer(),
+                          Text(
+                            "Prize: 10K",
+                            style: TextStyle(
+                                color: UiConstants.primaryColor,
+                                fontSize: SizeConfig.largeTextSize),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 16,
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Card(
+              margin: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.globalMargin, vertical: 40),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
+                child: Text(
+                  "Want more ticket?",
+                  style: TextStyle(
+                    fontSize: SizeConfig.largeTextSize,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}

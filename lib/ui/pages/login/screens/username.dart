@@ -19,6 +19,7 @@ class UsernameState extends State<Username> {
   BaseUtil baseProvider;
   DBModel dbProvider;
   String username = "";
+  FocusNode focusNode;
 
   final regex = RegExp(r"^(?!\.)(?!.*\.$)(?!.*?\.\.)[a-z0-9.]{4,20}$");
   bool isValid;
@@ -26,6 +27,20 @@ class UsernameState extends State<Username> {
   bool isUpdating = false;
   bool isUpdated = false;
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    focusNode = new FocusNode();
+    focusNode.addListener(
+        () => print('focusNode updated: hasFocus: ${focusNode.hasFocus}'));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
 
   Future<bool> validate() async {
     username = usernameController.text.trim();
@@ -75,6 +90,16 @@ class UsernameState extends State<Username> {
   }
 
   @override
+  void didChangeDependencies() {
+    if (mounted)
+      Future.delayed(Duration(seconds: 2), () {
+        FocusScope.of(context).requestFocus(focusNode);
+      });
+
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
@@ -101,6 +126,7 @@ class UsernameState extends State<Username> {
               key: _formKey,
               child: Container(
                 child: TextFormField(
+                  focusNode: focusNode,
                   controller: usernameController,
                   autofocus: true,
                   cursorColor: Colors.black,

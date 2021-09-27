@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:logger/logger.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 //Project imports
 import 'package:felloapp/base_util.dart';
@@ -29,6 +30,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
+import 'package:felloapp/generated/l10n.dart';
 
 Future mainInit() async {
   setupLocator();
@@ -95,6 +97,13 @@ class _MyAppState extends State<MyApp> {
         backButtonDispatcher: backButtonDispatcher,
         routerDelegate: delegate,
         routeInformationParser: parser,
+        localizationsDelegates: [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
       ),
     );
   }

@@ -54,6 +54,13 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         });
       return _routerDelegate.popRoute();
     }
+    // If the top item is anything except a scaffold
+    else if (AppState.screenStack.last == ScreenItem.dialog) {
+      Navigator.pop(_routerDelegate.navigatorKey.currentContext);
+      AppState.screenStack.removeLast();
+      print("Current Stack: ${AppState.screenStack}");
+      return Future.value(true);
+    }
     // If onboarding is in progress
     else if (AppState.isOnboardingInProgress) {
       BaseUtil().showNegativeAlert(
@@ -63,13 +70,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       AppState.isOnboardingInProgress = false;
       return Future.value(true);
     }
-    // If the top item is anything except a scaffold
-    else if (AppState.screenStack.last == ScreenItem.dialog) {
-      Navigator.pop(_routerDelegate.navigatorKey.currentContext);
-      AppState.screenStack.removeLast();
-      print("Current Stack: ${AppState.screenStack}");
-      return Future.value(true);
-    }
+
     // If the root tab is not 0 at the time of exit
     else if (AppState.screenStack.length == 1 &&
         _routerDelegate.appState.getCurrentTabIndex != 0 &&
