@@ -1,7 +1,20 @@
+//Dart & Flutter Imports
 import 'dart:async';
 import 'dart:math';
+import 'package:flutter/material.dart';
 
+//Pub Imports
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flushbar/flushbar.dart';
+import 'package:freshchat_sdk/freshchat_sdk.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:package_info/package_info.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+//FelloApp Imports
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
@@ -27,20 +40,12 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flushbar/flushbar.dart';
-import 'package:flutter/material.dart';
-import 'package:freshchat_sdk/freshchat_sdk.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:package_info/package_info.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'core/base_remote_config.dart';
-import 'core/model/TambolaBoard.dart';
-import 'core/model/UserAugmontDetail.dart';
-import 'core/ops/augmont_ops.dart';
-import 'util/size_config.dart';
+import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/model/TambolaBoard.dart';
+import 'package:felloapp/core/model/UserAugmontDetail.dart';
+import 'package:felloapp/core/ops/augmont_ops.dart';
+import 'package:felloapp/util/size_config.dart';
+
 
 class BaseUtil extends ChangeNotifier {
   final Log log = new Log("BaseUtil");
