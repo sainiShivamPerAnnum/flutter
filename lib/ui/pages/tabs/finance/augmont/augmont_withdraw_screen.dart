@@ -1,6 +1,4 @@
-import 'dart:io';
-
-import 'package:flutter/services.dart';
+//Project Imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -15,9 +13,16 @@ import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/core/enums/screen_item.dart';
+
+//Dart and Flutter Imports
+import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
+//Pub Imports
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';

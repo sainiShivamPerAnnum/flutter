@@ -1,20 +1,3 @@
-//Dart & Flutter Imports
-import 'dart:async';
-import 'dart:math';
-import 'package:flutter/material.dart';
-
-//Pub Imports
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flushbar/flushbar.dart';
-import 'package:freshchat_sdk/freshchat_sdk.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:package_info/package_info.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:logger/logger.dart';
-
 //Project Imports
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
@@ -46,6 +29,25 @@ import 'package:felloapp/core/model/TambolaBoard.dart';
 import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/util/size_config.dart';
+
+//Dart & Flutter Imports
+import 'dart:async';
+import 'dart:math';
+import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:flutter/material.dart';
+
+//Pub Imports
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flushbar/flushbar.dart';
+import 'package:freshchat_sdk/freshchat_sdk.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:package_info/package_info.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:logger/logger.dart';
+
 
 class BaseUtil extends ChangeNotifier {
   final Log log = new Log("BaseUtil");
@@ -175,14 +177,13 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future init() async {
-    
     logger.i('inside init base util');
-
     _setRuntimeDefaults();
 
     ///analytics
     BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
+    
     //remote config for various remote variables
     print('base util remote config');
     await BaseRemoteConfig.init();

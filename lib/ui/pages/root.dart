@@ -1,8 +1,8 @@
-import 'dart:async';
-import 'dart:math';
-
+//Project Imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -24,8 +24,14 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+
+//Dart & Flutter Imports
+import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
+
+//Pub Imports
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 

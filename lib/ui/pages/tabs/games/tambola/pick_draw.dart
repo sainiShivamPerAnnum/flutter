@@ -1,9 +1,14 @@
+//Project Imports
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/main.dart';
+import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/size_config.dart';
+
+//Dart and Flutter Imports
 import 'package:flutter/material.dart';
+
+//Pub Imports
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart' as rive;
 

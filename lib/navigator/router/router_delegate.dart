@@ -1,5 +1,9 @@
+//Project Imports
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/main.dart';
+import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/core/enums/screen_item.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/aboutus_dialog.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
@@ -17,18 +21,16 @@ import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/root.dart';
+import 'package:felloapp/ui/pages/tabs/finance/augmont/augmont-details.dart';
+import 'package:felloapp/ui/pages/tabs/finance/augmont/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
+import 'package:felloapp/ui/pages/tabs/finance/icici/mf_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/pick_draw.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/summary_tickets_display.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/tambola-home.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/tambola_walkthrough.dart';
-import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/util/locator.dart';
-import '../../ui/pages/tabs/finance/augmont/augmont-details.dart';
-import '../../ui/pages/tabs/finance/augmont/edit_augmont_bank_details.dart';
-import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
-import '../../ui/pages/tabs/finance/icici/mf_details_page.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_result.dart';
 import 'package:felloapp/ui/pages/tabs/profile/claim_username.dart';
 import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
@@ -36,15 +38,12 @@ import 'package:felloapp/ui/pages/tabs/profile/transactions.dart';
 import 'package:felloapp/ui/pages/tabs/profile/user_profile_details.dart';
 import 'package:felloapp/ui/pages/tabs/profile/verify_email.dart';
 import 'package:felloapp/util/assets.dart';
+
+//Flutter Imports
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../ui/pages/tabs/finance/augmont/augmont-details.dart';
-import '../../ui/pages/tabs/finance/augmont/edit_augmont_bank_details.dart';
-import '../../ui/pages/tabs/finance/icici/mf_details_page.dart';
-import '../app_state.dart';
-import 'ui_pages.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {

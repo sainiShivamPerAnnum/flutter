@@ -1,15 +1,18 @@
-import 'dart:math';
-
-import 'package:felloapp/base_util.dart';
+//Project Imports
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/main.dart';
+import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/tambola-global/prize_section.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
+
+//Dart and Flutter Imports
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+//Pub Imports
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 

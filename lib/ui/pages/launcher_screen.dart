@@ -1,11 +1,8 @@
-import 'dart:async';
-import 'dart:typed_data';
-import 'dart:ui' as ui show Image, instantiateImageCodec;
-
-import 'package:device_unlock/device_unlock.dart';
+//Project Imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -16,8 +13,16 @@ import 'package:felloapp/ui/elements/logo/logo_container.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
+
+//Dart and Flutter Imports
+import 'dart:async';
+import 'dart:typed_data';
+import 'dart:ui' as ui show Image, instantiateImageCodec;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+
+//Pub Imports
+import 'package:device_unlock/device_unlock.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 

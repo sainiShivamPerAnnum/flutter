@@ -1,22 +1,20 @@
+//Project imports
+import 'package:felloapp/navigator/router/back_dispatcher.dart';
+import 'package:felloapp/navigator/router/router_delegate.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/core/enums/screen_item.dart';
+
 //Flutter imports
 import 'package:flutter/material.dart';
 
 //Pub imports
 import 'package:shared_preferences/shared_preferences.dart';
 
-//Project imports
-import 'package:felloapp/navigator/router/back_dispatcher.dart';
-import 'package:felloapp/navigator/router/router_delegate.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/util/size_config.dart';
-
 
 
 const String LoggedInKey = 'LoggedIn';
-
-enum PageState { none, addPage, addAll, addWidget, pop, replace, replaceAll }
-enum ScreenItem { page, dialog }
-enum Homeviews { dashboard, games, finance, profile }
 
 var scr = new GlobalKey();
 

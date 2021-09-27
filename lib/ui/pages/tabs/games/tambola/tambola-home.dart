@@ -1,10 +1,9 @@
-import 'dart:async';
-import 'dart:math';
-
+//Project Imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/DailyPick.dart';
 import 'package:felloapp/core/model/TambolaBoard.dart';
@@ -26,13 +25,18 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
+
+//Dart and Flutter Imports
+import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
+
+//Pub Imports
 import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
 
 class TambolaHome extends StatefulWidget {
   const TambolaHome({Key key}) : super(key: key);

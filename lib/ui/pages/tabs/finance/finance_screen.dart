@@ -1,25 +1,28 @@
-import 'dart:math' as math;
-
+//Project Imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
-import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/plots/funds_chart_view.dart';
-import 'package:felloapp/ui/widgets/network_bar.dart';
+import 'package:felloapp/ui/pages/tabs/finance/augmont/augmont-details.dart';
+import 'package:felloapp/ui/pages/tabs/finance/icici/mf_details_page.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
+
+//Dart and Flutter Imports
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
+
+//Pub Imports
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import 'augmont/augmont-details.dart';
-import 'icici/mf_details_page.dart';
 
 class FinancePage extends StatefulWidget {
   @override

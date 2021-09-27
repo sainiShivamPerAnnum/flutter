@@ -1,5 +1,7 @@
-import 'dart:math' as math;
+//Project Imports
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
@@ -7,7 +9,6 @@ import 'package:felloapp/core/model/chartFundItem.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/card.dart';
@@ -17,8 +18,13 @@ import 'package:felloapp/ui/pages/tabs/finance/augmont/augmont_withdraw_screen.d
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
+
+//Dart and Flutter Imports
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+//Pub Imports
 import 'package:provider/provider.dart';
 
 class YourFunds extends StatefulWidget {

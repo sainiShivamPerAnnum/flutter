@@ -1,23 +1,26 @@
-import 'dart:math' as math;
-
+//Project Imports
 import 'package:felloapp/core/base_remote_config.dart';
+import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/model/UserFundWallet.dart';
 import 'package:felloapp/core/model/chartFundItem.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/dialogs/Prize-Card/card.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/chart_values_options.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/legend_options.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/pie_chart.dart';
-import 'package:felloapp/ui/pages/tabs/finance/augmont/augmont-details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
+
+//Flutter & Dart Imports
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
+//Pub Imports
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 

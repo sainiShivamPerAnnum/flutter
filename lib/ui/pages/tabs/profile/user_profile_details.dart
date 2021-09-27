@@ -1,8 +1,7 @@
-import 'dart:io';
-import 'dart:ui';
-
-import 'package:cached_network_image/cached_network_image.dart';
+//Project Imports
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -15,7 +14,14 @@ import 'package:felloapp/ui/modals/simple_kyc_modal_sheet.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
+
+//Flutter & Dart Imports
+import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
+
+//Pub Imports
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';

@@ -1,5 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+//Project Imports
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -7,7 +8,12 @@ import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
+
+//Flutter Imports
 import 'package:flutter/material.dart';
+
+//Pub Imports
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

@@ -1,17 +1,21 @@
-import 'dart:typed_data';
-import 'dart:ui';
-
+//Project Imports
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+
+//Dart and Flutter Imports
+import 'dart:typed_data';
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+//Pub Imports
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';

@@ -1,9 +1,8 @@
-import 'dart:async';
-import 'dart:math' as math;
-
+//Project Imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
@@ -19,7 +18,7 @@ import 'package:felloapp/ui/elements/plots/fund_graph.dart';
 import 'package:felloapp/ui/elements/profit_calculator.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/modals/augmont_register_modal_sheet.dart';
-import 'package:felloapp/ui/pages/onboarding/augmont/augmont_onboarding_page.dart';
+import 'package:felloapp/ui/pages/tabs/finance/augmont/augmont_withdraw_screen.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
@@ -28,14 +27,20 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
+
+//Dart and Flutter Imports
+import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+//Pub Imports
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import 'augmont_withdraw_screen.dart';
+
 
 class AugmontDetailsPage extends StatefulWidget {
   static const int STATUS_UNAVAILABLE = 0;
