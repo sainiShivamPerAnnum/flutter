@@ -13,8 +13,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:logger/logger.dart';
 
-//FelloApp Imports
+//Project Imports
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
@@ -46,12 +47,13 @@ import 'package:felloapp/core/model/UserAugmontDetail.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/util/size_config.dart';
 
-
 class BaseUtil extends ChangeNotifier {
   final Log log = new Log("BaseUtil");
-  DBModel _dbModel = locator<DBModel>();
-  LocalDBModel _lModel = locator<LocalDBModel>();
-  AppState _appState = locator<AppState>();
+  final Logger logger = locator<Logger>();
+  final DBModel _dbModel = locator<DBModel>();
+  final LocalDBModel _lModel = locator<LocalDBModel>();
+  final AppState _appState = locator<AppState>();
+
   BaseUser _myUser;
   UserFundWallet _userFundWallet;
   UserTicketWallet _userTicketWallet;
@@ -173,7 +175,9 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future init() async {
-    print('inside init base util');
+    
+    logger.i('inside init base util');
+
     _setRuntimeDefaults();
 
     ///analytics

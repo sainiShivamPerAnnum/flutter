@@ -1,8 +1,4 @@
 //Flutter imports
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/enums/connectivity_status.dart';
-import 'package:felloapp/core/service/connectivity_service.dart';
-import 'package:firebase_database/firebase_database.dart' as rdb;
 import 'package:flutter/material.dart';
 
 //Pub imports
@@ -31,6 +27,8 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/core/service/connectivity_service.dart';
 
 Future mainInit() async {
   setupLocator();
