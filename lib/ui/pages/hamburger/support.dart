@@ -1,4 +1,5 @@
 //Flutter Imports
+import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -8,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:logger/logger.dart';
 
 //Project Imports
 import 'package:felloapp/core/enums/connectivity_status.dart';
@@ -29,6 +31,7 @@ class SupportPage extends StatefulWidget {
 }
 
 class _SupportPageState extends State<SupportPage> {
+  final Logger logger = locator<Logger>();
   BaseUtil baseProvider;
   AppState appState;
   DBModel dbProvider;
@@ -48,6 +51,7 @@ class _SupportPageState extends State<SupportPage> {
       Freshchat.init(freshchatKeys['app_id'], freshchatKeys['app_key'],
           freshchatKeys['app_domain'],
           gallerySelectionEnabled: true, themeName: 'FreshchatCustomTheme');
+      logger.i("Flash Chat enabled");
     }
   }
 
