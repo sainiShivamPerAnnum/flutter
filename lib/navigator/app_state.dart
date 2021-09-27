@@ -1,11 +1,16 @@
-import 'package:felloapp/main.dart';
-import 'package:felloapp/navigator/router/back_dispatcher.dart';
-import 'package:felloapp/navigator/router/router_delegate.dart';
-import 'package:felloapp/util/size_config.dart';
+//Flutter imports
 import 'package:flutter/material.dart';
+
+//Pub imports
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'router/ui_pages.dart';
+//Project imports
+import 'package:felloapp/navigator/router/back_dispatcher.dart';
+import 'package:felloapp/navigator/router/router_delegate.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/util/size_config.dart';
+
+
 
 const String LoggedInKey = 'LoggedIn';
 
