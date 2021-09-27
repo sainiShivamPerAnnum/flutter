@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:math';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/fcm_handler.dart';
@@ -14,11 +14,13 @@ import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/elements/flavor_banner.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/modals/security_modal_sheet.dart';
+import 'package:felloapp/ui/pages/f3_dummy_pages/play.dart';
+import 'package:felloapp/ui/pages/f3_dummy_pages/save.dart';
+import 'package:felloapp/ui/pages/f3_dummy_pages/win.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
 import 'package:felloapp/ui/pages/tabs/profile/profile_screen.dart';
-import 'package:felloapp/ui/widgets/network_bar.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
@@ -26,7 +28,7 @@ import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class Root extends StatefulWidget {
@@ -48,6 +50,12 @@ class _RootState extends State<Root> {
   bool _isInitialized = false;
   bool showTag = true;
   double tagWidth = 0;
+  //New
+  void _onItemTapped(int index) {
+    setState(() {
+      AppState().setCurrentTabIndex = index;
+    });
+  }
 
   @override
   void initState() {
@@ -158,6 +166,8 @@ class _RootState extends State<Root> {
     }
   }
 
+  List<Widget> _pages = <Widget>[Play(), Save(), Win()];
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
@@ -184,95 +194,175 @@ class _RootState extends State<Root> {
     //Wrap our custom navbar + contentView with the app Scaffold
     // final GlobalKey<ScaffoldState> _scaffoldKey =
     //     new GlobalKey<ScaffoldState>();
-    return FlavorBanner(
-        child: Scaffold(
-            backgroundColor: UiConstants.bottomNavBarColor,
-            resizeToAvoidBottomInset: false,
-            body: Stack(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: ThemeData().scaffoldBackgroundColor,
+        leading: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: CircleAvatar(
+            radius: kToolbarHeight * 0.3,
+            backgroundImage: baseProvider.myUserDpUrl == null
+                ? AssetImage(
+                    "images/profile.png",
+                  )
+                : CachedNetworkImageProvider(
+                    baseProvider.myUserDpUrl,
+                  ),
+          ),
+        ),
+        title: Text(
+          "Hi, ${baseProvider.myUser.name.split(' ').first}",
+          style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.w500, fontSize: SizeConfig.largeTextSize),
+        ),
+        actions: [
+          Container(
+            margin: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: UiConstants.primaryColor),
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
               children: [
-                Container(
-                  width: double.infinity,
-                  //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
-                  child: AnimatedSwitcher(
-                    duration: Duration(milliseconds: 350),
-                    //Pass the current accent color down as a theme, so our overscroll indicator matches the btn color
-                    child: Theme(
-                      data: ThemeData(accentColor: accentColor),
-                      child: contentView,
-                    ),
+                Text(
+                  baseProvider.userTicketWallet.getActiveTickets().toString(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                if (connectivityStatus == ConnectivityStatus.Offline)
-                  Positioned(
-                    child: SafeArea(
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: kToolbarHeight,
-                        width: SizeConfig.screenWidth,
-                        child: NetworkBar(
-                          textColor: (appState.getCurrentTabIndex == 0)
-                              ? Colors.white
-                              : Color(0xff4C4C4C),
-                        ),
-                      ),
-                    ),
-                  ),
-                Positioned(
-                  top: SizeConfig.blockSizeHorizontal * 2,
-                  right: SizeConfig.blockSizeHorizontal * 2,
-                  child: SafeArea(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        if (appState.getCurrentTabIndex == 3)
-                          InkWell(
-                            child: Icon(
-                              Icons.notifications,
-                              size: kToolbarHeight * 0.5,
-                              color: (appState.getCurrentTabIndex == 0)
-                                  ? Colors.white
-                                  : Color(0xff4C4C4C),
-                            ),
-                            //icon: Icon(Icons.contact_support_outlined),
-                            // iconSize: kToolbarHeight * 0.5,
-                            onTap: () {
-                              Haptic.vibrate();
-                              AppState.delegate.appState.currentAction =
-                                  PageAction(
-                                      state: PageState.addPage,
-                                      page: NotificationsConfig);
-                            },
-                          ),
-                        SizedBox(
-                          width: kToolbarHeight * 0.2,
-                        ),
-                        InkWell(
-                          child: SvgPicture.asset(
-                            "images/support-log.svg",
-                            height: kToolbarHeight * 0.6,
-                            color: (appState.getCurrentTabIndex == 0)
-                                ? Colors.white
-                                : Color(0xff4C4C4C),
-                          ),
-                          //icon: Icon(Icons.contact_support_outlined),
-                          // iconSize: kToolbarHeight * 0.5,
-                          onTap: () {
-                            Haptic.vibrate();
-                            AppState.delegate.appState.currentAction =
-                                PageAction(
-                                    state: PageState.addPage,
-                                    page: SupportPageConfig);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
+                SizedBox(width: 8),
+                Icon(
+                  Icons.control_point_rounded,
+                  color: Colors.white,
+                  size: kToolbarHeight / 2.5,
                 ),
               ],
             ),
-            bottomNavigationBar:
-                navBar //Pass our custom navBar into the scaffold
-            ));
+          ),
+          InkWell(
+            child: Icon(
+              Icons.notifications,
+              size: kToolbarHeight * 0.5,
+              color: Color(0xff4C4C4C),
+            ),
+            //icon: Icon(Icons.contact_support_outlined),
+            // iconSize: kToolbarHeight * 0.5,
+            onTap: () {
+              Haptic.vibrate();
+              AppState.delegate.appState.currentAction = PageAction(
+                  state: PageState.addPage, page: NotificationsConfig);
+            },
+          ),
+          SizedBox(
+            width: SizeConfig.globalMargin,
+          )
+        ],
+      ),
+      body: _pages.elementAt(AppState().getCurrentTabIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: AppState().getCurrentTabIndex, //New
+        onTap: _onItemTapped,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.emoji_events_rounded),
+            label: 'Play',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_balance_wallet),
+            label: 'Save',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.celebration_rounded),
+            label: 'Win',
+          ),
+        ],
+      ),
+    );
+    // Scaffold(
+    //     backgroundColor: UiConstants.bottomNavBarColor,
+    //     resizeToAvoidBottomInset: false,
+    //     body:
+    // Stack(
+    //   children: [
+    //     Container(
+    //       width: double.infinity,
+    //       //Wrap the current page in an AnimatedSwitcher for an easy cross-fade effect
+    //       child: AnimatedSwitcher(
+    //         duration: Duration(milliseconds: 350),
+    //         //Pass the current accent color down as a theme, so our overscroll indicator matches the btn color
+    //         child: Theme(
+    //           data: ThemeData(accentColor: accentColor),
+    //           child: contentView,
+    //         ),
+    //       ),
+    //     ),
+    //     if (connectivityStatus == ConnectivityStatus.Offline)
+    //       Positioned(
+    //         child: SafeArea(
+    //           child: Container(
+    //             alignment: Alignment.center,
+    //             height: kToolbarHeight,
+    //             width: SizeConfig.screenWidth,
+    //             child: NetworkBar(
+    //               textColor: (appState.getCurrentTabIndex == 0)
+    //                   ? Colors.white
+    //                   : Color(0xff4C4C4C),
+    //             ),
+    //           ),
+    //         ),
+    //       ),
+    //     Positioned(
+    //       top: SizeConfig.blockSizeHorizontal * 2,
+    //       right: SizeConfig.blockSizeHorizontal * 2,
+    //       child: SafeArea(
+    //         child: Row(
+    //           crossAxisAlignment: CrossAxisAlignment.center,
+    //           children: [
+    //             if (appState.getCurrentTabIndex == 3)
+    // InkWell(
+    //   child: Icon(
+    //     Icons.notifications,
+    //     size: kToolbarHeight * 0.5,
+    //     color: (appState.getCurrentTabIndex == 0)
+    //         ? Colors.white
+    //         : Color(0xff4C4C4C),
+    //   ),
+    //   //icon: Icon(Icons.contact_support_outlined),
+    //   // iconSize: kToolbarHeight * 0.5,
+    //   onTap: () {
+    //     Haptic.vibrate();
+    //     AppState.delegate.appState.currentAction = PageAction(
+    //         state: PageState.addPage,
+    //         page: NotificationsConfig);
+    //   },
+    // ),
+    //             SizedBox(
+    //               width: kToolbarHeight * 0.2,
+    //             ),
+    //             InkWell(
+    //               child: SvgPicture.asset(
+    //                 "images/support-log.svg",
+    //                 height: kToolbarHeight * 0.6,
+    //                 color: (appState.getCurrentTabIndex == 0)
+    //                     ? Colors.white
+    //                     : Color(0xff4C4C4C),
+    //               ),
+    //               //icon: Icon(Icons.contact_support_outlined),
+    //               // iconSize: kToolbarHeight * 0.5,
+    //               onTap: () {
+    //                 Haptic.vibrate();
+    //                 AppState.delegate.appState.currentAction = PageAction(
+    //                     state: PageState.addPage, page: SupportPageConfig);
+    //               },
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     ),
+    //   ],
+    // ),
+    // bottomNavigationBar: navBar //Pass our custom navBar into the scaffold
+    //);
   }
 
   void _handleNavBtnTapped(int index) {
