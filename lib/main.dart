@@ -2,12 +2,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
+import 'package:felloapp/generated/l10n.dart';
 import 'package:firebase_database/firebase_database.dart' as rdb;
 import 'package:flutter/material.dart';
 
 //Pub imports
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:logger/logger.dart';
@@ -97,6 +99,13 @@ class _MyAppState extends State<MyApp> {
         backButtonDispatcher: backButtonDispatcher,
         routerDelegate: delegate,
         routeInformationParser: parser,
+        localizationsDelegates: [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
       ),
     );
   }

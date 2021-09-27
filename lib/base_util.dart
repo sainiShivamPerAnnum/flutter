@@ -483,8 +483,8 @@ class BaseUtil extends ChangeNotifier {
 
   Future<bool> getDrawStatus() async {
     // CHECKING IF THE PICK ARE DRAWN OR NOT
-    if (!weeklyDrawFetched || weeklyDigits == null)
-      await fetchWeeklyPicks(forcedRefresh: true);
+    if ((weeklyDrawFetched != null && !weeklyDrawFetched) ||
+        weeklyDigits == null) await fetchWeeklyPicks(forcedRefresh: true);
     //CHECKING FOR THE FIRST TIME OPENING OF TAMBOLA AFTER THE PICKS ARE DRAWN FOR THIS PARTICULAR DAY
     notifyListeners();
     if (todaysPicks != null &&

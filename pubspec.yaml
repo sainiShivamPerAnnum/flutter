@@ -69,9 +69,12 @@ dependencies:
   slider_button: ^0.6.0
   sms_autofill: ^2.0.0
   video_player: ^2.1.12
+  flutter_localizations:
+    sdk: flutter
 
   flutter:
     sdk: flutter
+
 
 
   cupertino_icons: ^1.0.0
@@ -102,3 +105,6 @@ flutter:
     - family: Cucciolo
       fonts:
         - asset: fonts/Cucciolo Rough.ttf
+flutter_intl:
+  main_locale: en_US
+  enabled: true

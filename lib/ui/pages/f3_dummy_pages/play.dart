@@ -81,7 +81,7 @@ class Play extends StatelessWidget {
             ),
             Column(
               children: List.generate(
-                10,
+                2,
                 (i) => Column(
                   children: [
                     GestureDetector(

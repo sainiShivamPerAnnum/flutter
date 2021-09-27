@@ -8,6 +8,7 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
+import 'package:felloapp/generated/l10n.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/Texts/breathing_text_widget.dart';
@@ -155,7 +156,7 @@ class LogoFadeIn extends State<SplashScreen> {
     SizeConfig().init(context);
     ConnectivityStatus connectivityStatus =
         Provider.of<ConnectivityStatus>(context, listen: true);
-
+    S FT = S.of(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -193,7 +194,7 @@ class LogoFadeIn extends State<SplashScreen> {
                                   fontSize: SizeConfig.mediumTextSize))
                           : BreathingText(
                               alertText:
-                                  'Connection is taking longer than usual',
+                                  FT.splashSlowConnection,
                               textStyle: GoogleFonts.montserrat(
                                 fontSize: SizeConfig.mediumTextSize * 1.3,
                               ),
