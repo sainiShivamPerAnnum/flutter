@@ -16,6 +16,7 @@ import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/modals/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/f3_dummy_pages/play.dart';
 import 'package:felloapp/ui/pages/f3_dummy_pages/save.dart';
+import 'package:felloapp/ui/pages/f3_dummy_pages/widgets.dart';
 import 'package:felloapp/ui/pages/f3_dummy_pages/win.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
@@ -36,7 +37,7 @@ class Root extends StatefulWidget {
   _RootState createState() => _RootState();
 }
 
-class _RootState extends State<Root> {
+class _RootState extends State<Root> with SingleTickerProviderStateMixin {
   Log log = new Log("Root");
   List<NavBarItemData> _navBarItems;
   BaseUtil baseProvider;
@@ -50,6 +51,9 @@ class _RootState extends State<Root> {
   bool _isInitialized = false;
   bool showTag = true;
   double tagWidth = 0;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  AnimationController animationController;
+
   //New
   void _onItemTapped(int index) {
     setState(() {
@@ -59,6 +63,9 @@ class _RootState extends State<Root> {
 
   @override
   void initState() {
+    animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       AppState().setRootLoadValue = true;
       tagWidth = SizeConfig.screenWidth / 2;
@@ -166,7 +173,9 @@ class _RootState extends State<Root> {
     }
   }
 
-  List<Widget> _pages = <Widget>[Play(), Save(), Win()];
+  showDrawer() {
+    _scaffoldKey.currentState.openDrawer();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -180,6 +189,17 @@ class _RootState extends State<Root> {
         Provider.of<ConnectivityStatus>(context);
     _initialize();
     var accentColor = UiConstants.primaryColor;
+    List<Widget> _pages = <Widget>[
+      Play(
+        isHideBottomNavBar: (isHideBottomNavBar) {
+          isHideBottomNavBar
+              ? animationController.forward()
+              : animationController.reverse();
+        },
+      ),
+      Save(),
+      Win()
+    ];
 
     //Create custom navBar, pass in a list of buttons, and listen for tap event
     var navBar = NavBar(
@@ -192,22 +212,25 @@ class _RootState extends State<Root> {
         context.watch<AppState>().getCurrentTabIndex,
         _viewsByIndex.length - 1)];
     //Wrap our custom navbar + contentView with the app Scaffold
-    // final GlobalKey<ScaffoldState> _scaffoldKey =
-    //     new GlobalKey<ScaffoldState>();
+
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: ThemeData().scaffoldBackgroundColor,
         leading: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
-          child: CircleAvatar(
-            radius: kToolbarHeight * 0.3,
-            backgroundImage: baseProvider.myUserDpUrl == null
-                ? AssetImage(
-                    "images/profile.png",
-                  )
-                : CachedNetworkImageProvider(
-                    baseProvider.myUserDpUrl,
-                  ),
+          child: InkWell(
+            onTap: showDrawer,
+            child: CircleAvatar(
+              radius: kToolbarHeight * 0.3,
+              backgroundImage: baseProvider.myUserDpUrl == null
+                  ? AssetImage(
+                      "images/profile.png",
+                    )
+                  : CachedNetworkImageProvider(
+                      baseProvider.myUserDpUrl,
+                    ),
+            ),
           ),
         ),
         title: Text(
@@ -258,24 +281,98 @@ class _RootState extends State<Root> {
           )
         ],
       ),
-      body: _pages.elementAt(AppState().getCurrentTabIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: AppState().getCurrentTabIndex, //New
-        onTap: _onItemTapped,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.emoji_events_rounded),
-            label: 'Play',
+      drawer: Drawer(
+        child: SafeArea(
+          child: Column(
+            children: [
+              SizedBox(height: SizeConfig.globalMargin),
+              ListTile(
+                onTap: () {
+                  AppState.delegate.appState.currentAction = PageAction(
+                      state: PageState.addPage, page: UserProfileDetailsConfig);
+                },
+                leading: CircleAvatar(
+                  radius: kToolbarHeight * 0.5,
+                  backgroundImage: baseProvider.myUserDpUrl == null
+                      ? AssetImage(
+                          "images/profile.png",
+                        )
+                      : CachedNetworkImageProvider(
+                          baseProvider.myUserDpUrl,
+                        ),
+                ),
+                title: Widgets()
+                    .getHeadlineBold(baseProvider.myUser.name, Colors.black),
+                subtitle: Widgets().getBodyLight(
+                    "@${baseProvider.myUser.username}", Colors.black),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              ListTile(
+                title: Widgets().getHeadlineLight("Refer & Earn", Colors.black),
+              ),
+              ListTile(
+                title: Widgets().getHeadlineLight("PAN & KYC", Colors.black),
+              ),
+              ListTile(
+                title: Widgets().getHeadlineLight("Transactions", Colors.black),
+              ),
+              ListTile(
+                title:
+                    Widgets().getHeadlineLight("Help & Support", Colors.black),
+              ),
+              ListTile(
+                title:
+                    Widgets().getHeadlineLight("How it works?", Colors.black),
+              ),
+              ListTile(
+                title: Widgets()
+                    .getHeadlineLight("About Digital Gold", Colors.black),
+              ),
+              SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Widgets().getBodyLight("Version 1.0.0.1", Colors.black),
+                ],
+              )
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_balance_wallet),
-            label: 'Save',
+        ),
+      ),
+      body:
+          IndexedStack(children: _pages, index: AppState().getCurrentTabIndex),
+      bottomNavigationBar: SizeTransition(
+        sizeFactor: animationController,
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.shifting,
+          selectedFontSize: 16,
+          selectedIconTheme:
+              IconThemeData(color: UiConstants.primaryColor, size: 32),
+          selectedItemColor: UiConstants.primaryColor,
+          selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+          unselectedIconTheme: IconThemeData(
+            color: Colors.grey[500],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.celebration_rounded),
-            label: 'Win',
-          ),
-        ],
+          unselectedItemColor: Colors.grey[500],
+          currentIndex: AppState().getCurrentTabIndex, //New
+          onTap: _onItemTapped,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.emoji_events_rounded),
+              label: 'Play',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_balance_wallet),
+              label: 'Save',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.celebration_rounded),
+              label: 'Win',
+            ),
+          ],
+        ),
       ),
     );
     // Scaffold(
