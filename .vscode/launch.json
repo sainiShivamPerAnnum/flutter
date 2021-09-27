@@ -5,17 +5,28 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "felloapp",
+            "name": "felloapp-dev",
             "request": "launch",
             "type": "dart",
             "flutterMode": "debug",
-            "program": "lib/main.dart"
+            "program": "lib/main_dev.dart",
+            "args": [
+                "--flavor",
+                "dev",
+                "--debug"
+              ]
         },
         {
-            "name": "felloapp (profile mode)",
+            "name": "felloapp-prod",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
-        }
+            "program": "lib/main_prod.dart",
+            "args": [
+                "--flavor",
+                "prod",
+                "--debug"
+              ]
+        },
+  
     ]
 }
