@@ -13,10 +13,11 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/modals/security_modal_sheet.dart';
-import 'package:felloapp/ui/pages/f3_dummy_pages/play.dart';
-import 'package:felloapp/ui/pages/f3_dummy_pages/save.dart';
-import 'package:felloapp/ui/pages/f3_dummy_pages/widgets.dart';
-import 'package:felloapp/ui/pages/f3_dummy_pages/win.dart';
+import 'package:felloapp/ui/pages/hometabs/play.dart';
+import 'package:felloapp/ui/pages/hometabs/save.dart';
+import 'package:felloapp/ui/pages/hometabs/widgets.dart';
+import 'package:felloapp/ui/pages/hometabs/win.dart';
+
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
 import 'package:felloapp/ui/pages/tabs/home_screen.dart';
@@ -158,6 +159,7 @@ class _RootState extends State<Root> with SingleTickerProviderStateMixin {
       });
 
       _initAdhocNotifications();
+      baseProvider.getProfilePicture();
       // show security modal
       if (baseProvider.show_security_prompt &&
           baseProvider.myUser.isAugmontOnboarded &&
@@ -185,7 +187,7 @@ class _RootState extends State<Root> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    baseProvider = Provider.of<BaseUtil>(context);
     httpModel = Provider.of<HttpModel>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     fcmProvider = Provider.of<FcmHandler>(context, listen: false);
@@ -349,37 +351,39 @@ class _RootState extends State<Root> with SingleTickerProviderStateMixin {
       ),
       body:
           IndexedStack(children: _pages, index: AppState().getCurrentTabIndex),
-      bottomNavigationBar: SizeTransition(
-        sizeFactor: animationController,
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.shifting,
-          selectedFontSize: 16,
-          selectedIconTheme:
-              IconThemeData(color: UiConstants.primaryColor, size: 32),
-          selectedItemColor: UiConstants.primaryColor,
-          selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-          unselectedIconTheme: IconThemeData(
-            color: Colors.grey[500],
-          ),
-          unselectedItemColor: Colors.grey[500],
-          currentIndex: AppState().getCurrentTabIndex, //New
-          onTap: _onItemTapped,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.emoji_events_rounded),
-              label: 'Play',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.account_balance_wallet),
-              label: 'Save',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.celebration_rounded),
-              label: 'Win',
-            ),
-          ],
+      bottomNavigationBar:
+          // SizeTransition(
+          //   sizeFactor: animationController,
+          //   child:
+          BottomNavigationBar(
+        type: BottomNavigationBarType.shifting,
+        selectedFontSize: 16,
+        selectedIconTheme:
+            IconThemeData(color: UiConstants.primaryColor, size: 32),
+        selectedItemColor: UiConstants.primaryColor,
+        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+        unselectedIconTheme: IconThemeData(
+          color: Colors.grey[500],
         ),
+        unselectedItemColor: Colors.grey[500],
+        currentIndex: AppState().getCurrentTabIndex, //New
+        onTap: _onItemTapped,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.emoji_events_rounded),
+            label: 'Play',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_balance_wallet),
+            label: 'Save',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.celebration_rounded),
+            label: 'Win',
+          ),
+        ],
       ),
+      // ),
     );
     // Scaffold(
     //     backgroundColor: UiConstants.bottomNavBarColor,

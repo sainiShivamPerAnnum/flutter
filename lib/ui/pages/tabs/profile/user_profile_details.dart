@@ -1,10 +1,12 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/cache_type.dart';
 import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
@@ -85,6 +87,11 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
       bankCreds = {"name": "N/A", "number": "N/A", "ifsc": "N/A"};
     }
     return bankCreds;
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override

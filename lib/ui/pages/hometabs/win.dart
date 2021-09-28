@@ -1,4 +1,4 @@
-import 'package:felloapp/ui/pages/f3_dummy_pages/widgets.dart';
+import 'package:felloapp/ui/pages/hometabs/widgets.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';

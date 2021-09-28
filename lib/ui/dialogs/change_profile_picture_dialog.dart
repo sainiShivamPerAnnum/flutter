@@ -3,7 +3,9 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/enums/cache_type.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -89,8 +91,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
     print("temp path: " + targetPath);
     print("orignal path: " + widget.image.path);
 
-    File compressedFile =
-        await testCompressAndGetFile(File(widget.image.path), targetPath);
+    File compressedFile = File(widget.image.path);
 
     try {
       FirebaseStorage storage = FirebaseStorage.instance;
@@ -107,6 +108,8 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
       TaskSnapshot res = await uploadTask;
       String url = await res.ref.getDownloadURL();
       if (url != null) {
+        await CacheManager.writeCache(
+            key: 'dpUrl', value: url, type: CacheType.string);
         baseProvider.isProfilePictureUpdated = true;
         baseProvider.setDisplayPictureUrl(url);
         log.debug('Final DP Uri: $url');

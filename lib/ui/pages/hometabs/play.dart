@@ -23,7 +23,11 @@ class Play extends StatelessWidget {
             isHideBottomNavBar(false);
             break;
           case ScrollDirection.idle:
+            isHideBottomNavBar(true);
+
             break;
+          default:
+            isHideBottomNavBar(false);
         }
       }
     }

@@ -251,9 +251,8 @@ class _TambolaHomeState extends State<TambolaHome> {
                                 fontWeight: FontWeight.w500,
                               ),
                             )
-                          : (_getDailyPickData(baseProvider.weeklyDigits,
-                                      DateTime.now().weekday)[0] >
-                                  0
+                          : (baseProvider.todaysPicks != null &&
+                                  baseProvider.todaysPicks.isNotEmpty
                               ? Text(
                                   "Today's Picks",
                                   style: GoogleFonts.montserrat(

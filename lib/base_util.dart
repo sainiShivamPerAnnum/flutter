@@ -1,5 +1,6 @@
 //Project Imports
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/enums/cache_type.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
@@ -15,6 +16,7 @@ import 'package:felloapp/core/model/UserTicketWallet.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -47,7 +49,6 @@ import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:logger/logger.dart';
-
 
 class BaseUtil extends ChangeNotifier {
   final Log log = new Log("BaseUtil");
@@ -186,7 +187,7 @@ class BaseUtil extends ChangeNotifier {
     ///analytics
     BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
-    
+
     //remote config for various remote variables
     print('base util remote config');
     await BaseRemoteConfig.init();
@@ -200,7 +201,7 @@ class BaseUtil extends ChangeNotifier {
 
     isUserOnboarded =
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
-    
+
     if (isUserOnboarded) {
       ///see if security needs to be shown
       show_security_prompt = await _lModel.showSecurityPrompt();
@@ -234,25 +235,8 @@ class BaseUtil extends ChangeNotifier {
         augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
       }
 
-      await getProfilePicUrl();
-
-
-      /// Fetch this weeks' Dailypicks count
-      String _dpc = BaseRemoteConfig.remoteConfig
-          .getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT);
-      if (_dpc == null || _dpc.isEmpty) _dpc = '3';
-      _dailyPickCount = 3;
-      try {
-        _dailyPickCount = int.parse(_dpc);
-      } catch (e) {
-        log.error('key parsing failed: ' + e.toString());
-        Map<String, String> errorDetails = {'error_msg': e.toString()};
-        _dbModel.logFailure(
-            _myUser.uid, FailType.DailyPickParseFailed, errorDetails);
-        _dailyPickCount = 3;
-      }
-
-      await fetchWeeklyPicks(forcedRefresh: false);
+      // await getProfilePicUrl();
+      setUpDailyPicksCount();
 
       ///pick zerobalance asset
       Random rnd = new Random();
@@ -348,6 +332,23 @@ class BaseUtil extends ChangeNotifier {
           augmontDetail.createdTime.toDate().isBefore(_dt));
     }
     return (!skFlag && !augFlag);
+  }
+
+  setUpDailyPicksCount() {
+    String _dpc = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT);
+    if (_dpc == null || _dpc.isEmpty) _dpc = '3';
+    _dailyPickCount = 3;
+    try {
+      _dailyPickCount = int.parse(_dpc);
+    } catch (e) {
+      log.error('key parsing failed: ' + e.toString());
+      Map<String, String> errorDetails = {'error_msg': e.toString()};
+      _dbModel.logFailure(
+          _myUser.uid, FailType.DailyPickParseFailed, errorDetails);
+      _dailyPickCount = 3;
+    }
+    log.debug("Daily picks count: $_dailyPickCount");
   }
 
   fetchWeeklyPicks({bool forcedRefresh}) async {
@@ -486,14 +487,9 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future<bool> getDrawStatus() async {
-    // CHECKING IF THE PICK ARE DRAWN OR NOT
-    if ((weeklyDrawFetched != null && !weeklyDrawFetched) ||
-        weeklyDigits == null) await fetchWeeklyPicks(forcedRefresh: true);
-    //CHECKING FOR THE FIRST TIME OPENING OF TAMBOLA AFTER THE PICKS ARE DRAWN FOR THIS PARTICULAR DAY
-    notifyListeners();
-    if (todaysPicks != null &&
-        DateTime.now().weekday != await _lModel.getDailyPickAnimLastDay())
-      return true;
+    if (DateTime.now().weekday != await _lModel.getDailyPickAnimLastDay() &&
+        DateTime.now().hour >= 18 &&
+        DateTime.now().hour < 24) return true;
 
     return false;
   }
@@ -625,16 +621,21 @@ class BaseUtil extends ChangeNotifier {
     return 0;
   }
 
-  Future<void> getProfilePicUrl() async {
-    try {
-      if (myUser != null) myUserDpUrl = await _dbModel.getUserDP(myUser.uid);
-      if (myUserDpUrl != null) {
-        print("got the image");
-        notifyListeners();
+  getProfilePicture() async {
+    if (await CacheManager.readCache(key: 'dpUrl') == null) {
+      try {
+        if (myUser != null) myUserDpUrl = await _dbModel.getUserDP(myUser.uid);
+        if (myUserDpUrl != null) {
+          await CacheManager.writeCache(
+              key: 'dpurl', value: myUserDpUrl, type: CacheType.string);
+          setDisplayPictureUrl(myUserDpUrl);
+        }
+      } catch (e) {
+        log.error(e.toString());
       }
-    } catch (e) {
-      log.error(e.toString());
     }
+
+    setDisplayPictureUrl(await CacheManager.readCache(key: 'dpUrl'));
   }
 
   static void launchUrl(String url) async {
@@ -986,6 +987,11 @@ class BaseUtil extends ChangeNotifier {
   }
 
   int get dailyPicksCount => _dailyPickCount;
+
+  set dailyPicksCount(int count) {
+    _dailyPickCount = count;
+    notifyListeners();
+  }
 
   Future<bool> isOfflineSnackBar(BuildContext context) async {
     ConnectivityStatus connectivityStatus =
