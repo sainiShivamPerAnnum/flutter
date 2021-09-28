@@ -5,7 +5,6 @@ import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
-import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
@@ -20,12 +19,9 @@ import 'package:freshchat_sdk/freshchat_sdk.dart';
 class FcmListener extends ChangeNotifier {
   Log log = new Log("FcmListener");
   BaseUtil _baseUtil = locator<BaseUtil>();
-  LocalDBModel _lModel = locator<LocalDBModel>();
   DBModel _dbModel = locator<DBModel>();
   FcmHandler _handler = locator<FcmHandler>();
-  AppState _appState = locator<AppState>();
   FirebaseMessaging _fcm;
-  bool _tambolaDrawNotifications = true; //TODO
   bool isTambolaNotificationLoading = false;
   // /// Create a [AndroidNotificationChannel] for heads up notifications
   // static const AndroidNotificationChannel _androidChannel =
@@ -107,8 +103,12 @@ class FcmListener extends ChangeNotifier {
     }
 
     ///update fcm user token if required
-    if (_baseUtil.myUser != null && _baseUtil.myUser.mobile != null)
-      await _saveDeviceToken();
+    if (_baseUtil.myUser != null && _baseUtil.myUser.mobile != null) {
+      Stream<String> fcmStream = _fcm.onTokenRefresh;
+      fcmStream.listen((token) async {
+        await _saveDeviceToken(token);
+      });
+    }
 
     return _fcm;
   }
@@ -203,12 +203,8 @@ class FcmListener extends ChangeNotifier {
   //   print('Handling a background message ${message.messageId}');
   // }
 
-  _saveDeviceToken() async {
+  _saveDeviceToken(String fcmToken) async {
     bool flag = true;
-    String fcmToken = await _fcm.getToken();
-
-    //TODO: find optimised way to check updated token and save it to DB.
-
     if (fcmToken != null &&
         _baseUtil.myUser != null &&
         _baseUtil.myUser.mobile != null &&
@@ -219,9 +215,6 @@ class FcmListener extends ChangeNotifier {
       _baseUtil.myUser.client_token = fcmToken;
       Freshchat.setPushRegistrationToken(fcmToken);
       flag = await _dbModel.updateClientToken(_baseUtil.myUser, fcmToken);
-      // if (flag)
-      //   await _lModel.saveUser(
-      //       _baseUtil.myUser); //user cache has client token field available
     }
     return flag;
   }
