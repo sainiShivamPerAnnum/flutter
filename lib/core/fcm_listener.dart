@@ -4,7 +4,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
@@ -15,11 +14,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
+import 'package:logger/logger.dart';
 
 class FcmListener extends ChangeNotifier {
   Log log = new Log("FcmListener");
   BaseUtil _baseUtil = locator<BaseUtil>();
   DBModel _dbModel = locator<DBModel>();
+  Logger logger = locator<Logger>();
   FcmHandler _handler = locator<FcmHandler>();
   FirebaseMessaging _fcm;
   bool isTambolaNotificationLoading = false;
@@ -106,6 +107,7 @@ class FcmListener extends ChangeNotifier {
     if (_baseUtil.myUser != null && _baseUtil.myUser.mobile != null) {
       Stream<String> fcmStream = _fcm.onTokenRefresh;
       fcmStream.listen((token) async {
+        logger.d("Updating fcm token");
         await _saveDeviceToken(token);
       });
     }

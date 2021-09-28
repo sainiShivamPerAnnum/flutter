@@ -69,6 +69,7 @@ dependencies:
   slider_button: ^0.6.0
   sms_autofill: ^2.0.0
   video_player: ^2.1.12
+  logger: ^1.0.0
   flutter_localizations:
     sdk: flutter
 
@@ -83,7 +84,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  logger: ^1.0.0
+
 
 
 flutter:
