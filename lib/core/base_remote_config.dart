@@ -3,6 +3,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:logger/logger.dart';
 
 class BaseRemoteConfig {
   static RemoteConfig remoteConfig;
@@ -102,7 +103,8 @@ class BaseRemoteConfig {
   };
 
   static Future<bool> init() async {
-    print('initializing remote config');
+    final Logger logger = locator<Logger>();
+    logger.i('initializing remote config');
     remoteConfig = RemoteConfig.instance;
     try {
       // await remoteConfig.activateFetched();
@@ -112,7 +114,6 @@ class BaseRemoteConfig {
       ));
       await remoteConfig.setDefaults(DEFAULTS);
       //RemoteConfigValue(null, ValueSource.valueStatic);
-
       await remoteConfig.fetchAndActivate();
       return true;
     } catch (exception) {

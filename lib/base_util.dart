@@ -48,7 +48,6 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:logger/logger.dart';
 
-
 class BaseUtil extends ChangeNotifier {
   final Log log = new Log("BaseUtil");
   final Logger logger = locator<Logger>();
@@ -183,80 +182,58 @@ class BaseUtil extends ChangeNotifier {
     logger.i('inside init base util');
     _setRuntimeDefaults();
 
-    ///analytics
+    //Analytics logs app open state.
     BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
-    
+
     //remote config for various remote variables
-    print('base util remote config');
-    await BaseRemoteConfig.init();
+    logger.i('base util remote config');
+    await BaseRemoteConfig.init(); //blocking //try catch missing
+
+    //Appversion //add it seperate method
+    packageInfo = await PackageInfo.fromPlatform();
 
     ///fetch on-boarding status and User details
     firebaseUser = FirebaseAuth.instance.currentUser;
     if (firebaseUser != null) {
       _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
     }
-    packageInfo = await PackageInfo.fromPlatform();
-
     isUserOnboarded =
         (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
-    
+
     if (isUserOnboarded) {
-      ///see if security needs to be shown
+      ///get user creation time
+      _userCreationTimestamp = firebaseUser.metadata.creationTime;
+
+      ///pick zerobalance asset
+      Random rnd = new Random();
+      zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
+
+      ///see if security needs to be shown -> Move to save tab
       show_security_prompt = await _lModel.showSecurityPrompt();
 
-      ///get user wallet
+      await getProfilePicUrl(); //Caching profile image
+
+      ///get user wallet -> Try moving it to view and viewmodel for finance
       _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
       if (_userFundWallet == null) _compileUserWallet();
 
-      ///get user ticket balance
+      ///get user ticket balance --> Try moving it to view and viewmodel for game
       _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
       if (_userTicketWallet == null) {
         await _initiateNewTicketWallet();
       }
 
-      ///get user creation time
-      _userCreationTimestamp = firebaseUser.metadata.creationTime;
-
-      //check if there are any icici deposits txns in process
-      //TODO not required for now
-      // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
-      // _payService = locator<PaymentService>();
-
-      ///prefill pan details if available
+      ///prefill pan details if available --> Profile Section (Show pan number eye)
       panService = new PanService();
       if (!checkKycMissing) {
         userRegdPan = await panService.getUserPan();
       }
 
-      ///prefill augmont details if available
+      ///prefill augmont details if available --> Save Tab
       if (myUser.isAugmontOnboarded) {
         augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
       }
-
-      await getProfilePicUrl();
-
-
-      /// Fetch this weeks' Dailypicks count
-      String _dpc = BaseRemoteConfig.remoteConfig
-          .getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT);
-      if (_dpc == null || _dpc.isEmpty) _dpc = '3';
-      _dailyPickCount = 3;
-      try {
-        _dailyPickCount = int.parse(_dpc);
-      } catch (e) {
-        log.error('key parsing failed: ' + e.toString());
-        Map<String, String> errorDetails = {'error_msg': e.toString()};
-        _dbModel.logFailure(
-            _myUser.uid, FailType.DailyPickParseFailed, errorDetails);
-        _dailyPickCount = 3;
-      }
-
-      await fetchWeeklyPicks(forcedRefresh: false);
-
-      ///pick zerobalance asset
-      Random rnd = new Random();
-      zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
     }
   }
 
@@ -350,49 +327,6 @@ class BaseUtil extends ChangeNotifier {
     return (!skFlag && !augFlag);
   }
 
-  fetchWeeklyPicks({bool forcedRefresh}) async {
-    if (forcedRefresh) weeklyDrawFetched = false;
-    if (!weeklyDrawFetched) {
-      try {
-        log.debug('Requesting for weekly picks');
-        DailyPick _picks = await _dbModel.getWeeklyPicks();
-        weeklyDrawFetched = true;
-        if (_picks != null) {
-          weeklyDigits = _picks;
-        }
-        switch (DateTime.now().weekday) {
-          case 1:
-            todaysPicks = weeklyDigits.mon;
-            break;
-          case 2:
-            todaysPicks = weeklyDigits.tue;
-            break;
-          case 3:
-            todaysPicks = weeklyDigits.wed;
-            break;
-          case 4:
-            todaysPicks = weeklyDigits.thu;
-            break;
-          case 5:
-            todaysPicks = weeklyDigits.fri;
-            break;
-          case 6:
-            todaysPicks = weeklyDigits.sat;
-            break;
-          case 7:
-            todaysPicks = weeklyDigits.sun;
-            break;
-        }
-        if (todaysPicks == null) {
-          log.debug("Today's picks are not generated yet");
-        }
-        notifyListeners();
-      } catch (e) {
-        log.error('$e');
-      }
-    }
-  }
-
   showPositiveAlert(String title, String message, BuildContext context,
       {int seconds}) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -483,6 +417,48 @@ class BaseUtil extends ChangeNotifier {
       return true;
     }
     return false;
+  }
+
+  fetchWeeklyPicks({bool forcedRefresh}) async {
+    if (forcedRefresh) weeklyDrawFetched = false;
+    if (!weeklyDrawFetched) {
+      try {
+        log.debug('Requesting for weekly picks');
+        DailyPick _picks = await _dbModel.getWeeklyPicks();
+        weeklyDrawFetched = true;
+        if (_picks != null) {
+          weeklyDigits = _picks;
+        }
+        switch (DateTime.now().weekday) {
+          case 1:
+            todaysPicks = weeklyDigits.mon;
+            break;
+          case 2:
+            todaysPicks = weeklyDigits.tue;
+            break;
+          case 3:
+            todaysPicks = weeklyDigits.wed;
+            break;
+          case 4:
+            todaysPicks = weeklyDigits.thu;
+            break;
+          case 5:
+            todaysPicks = weeklyDigits.fri;
+            break;
+          case 6:
+            todaysPicks = weeklyDigits.sat;
+            break;
+          case 7:
+            todaysPicks = weeklyDigits.sun;
+            break;
+        }
+        if (todaysPicks == null) {
+          log.debug("Today's picks are not generated yet");
+        }
+      } catch (e) {
+        log.error('$e');
+      }
+    }
   }
 
   Future<bool> getDrawStatus() async {

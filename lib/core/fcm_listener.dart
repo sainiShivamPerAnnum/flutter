@@ -207,6 +207,8 @@ class FcmListener extends ChangeNotifier {
     bool flag = true;
     String fcmToken = await _fcm.getToken();
 
+    //TODO: find optimised way to check updated token and save it to DB.
+
     if (fcmToken != null &&
         _baseUtil.myUser != null &&
         _baseUtil.myUser.mobile != null &&

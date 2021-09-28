@@ -1,8 +1,14 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/core/model/DailyPick.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 
 //Dart and Flutter Imports
@@ -18,6 +24,13 @@ class PicksDraw extends StatefulWidget {
 }
 
 class _PicksDrawState extends State<PicksDraw> {
+  final DBModel _dbModel = locator<DBModel>();
+  final Log log = new Log("BaseUtil");
+  bool weeklyDrawFetched;
+  int _dailyPickCount;
+  List<int> todaysPicks;
+  DailyPick weeklyDigits;
+
   double radius = 0;
   double rowWidth = 0;
   double opacity = 0;
@@ -42,8 +55,50 @@ class _PicksDrawState extends State<PicksDraw> {
     });
   }
 
+  fetchWeeklyPicks({bool forcedRefresh}) async {
+    if (forcedRefresh) weeklyDrawFetched = false;
+    if (!weeklyDrawFetched) {
+      try {
+        log.debug('Requesting for weekly picks');
+        DailyPick _picks = await _dbModel.getWeeklyPicks();
+        weeklyDrawFetched = true;
+        if (_picks != null) {
+          weeklyDigits = _picks;
+        }
+        switch (DateTime.now().weekday) {
+          case 1:
+            todaysPicks = weeklyDigits.mon;
+            break;
+          case 2:
+            todaysPicks = weeklyDigits.tue;
+            break;
+          case 3:
+            todaysPicks = weeklyDigits.wed;
+            break;
+          case 4:
+            todaysPicks = weeklyDigits.thu;
+            break;
+          case 5:
+            todaysPicks = weeklyDigits.fri;
+            break;
+          case 6:
+            todaysPicks = weeklyDigits.sat;
+            break;
+          case 7:
+            todaysPicks = weeklyDigits.sun;
+            break;
+        }
+        if (todaysPicks == null) {
+          log.debug("Today's picks are not generated yet");
+        }
+      } catch (e) {
+        log.error('$e');
+      }
+    }
+  }
+
   @override
-  void initState() {
+  void initState() async {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Future.delayed(Duration(seconds: 1), () {
         showPicksDraw();
@@ -60,6 +115,23 @@ class _PicksDrawState extends State<PicksDraw> {
         });
       });
     });
+
+    /// Fetch this weeks' Dailypicks count //Work with Arab --> Game Open
+    String _dpc = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT);
+    if (_dpc == null || _dpc.isEmpty) _dpc = '3';
+    _dailyPickCount = 3;
+    try {
+      _dailyPickCount = int.parse(_dpc);
+    } catch (e) {
+      log.error('key parsing failed: ' + e.toString());
+      Map<String, String> errorDetails = {'error_msg': e.toString()};
+      // _dbModel.logFailure(
+      //     _myUser.uid, FailType.DailyPickParseFailed, errorDetails);
+      _dailyPickCount = 3;
+    }
+    await fetchWeeklyPicks(forcedRefresh: false);
+
     super.initState();
   }
 
