@@ -35,6 +35,7 @@ import 'package:flutter/material.dart';
 
 //Pub Imports
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -271,7 +272,7 @@ class _RootState extends State<Root> with SingleTickerProviderStateMixin {
           ),
         ),
         title: Text(
-          "Hi, ${baseProvider.myUser.name.split(' ').first}",
+          "Hi, ${baseProvider.myUser.name.split(' ').first ?? "user"}",
           style: GoogleFonts.montserrat(
               fontWeight: FontWeight.w500, fontSize: SizeConfig.largeTextSize),
         ),

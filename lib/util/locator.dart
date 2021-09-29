@@ -17,6 +17,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/tabs/games/dailyPicksDraw/dailyPicksDraw_viewModel.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions/tran_viewModel.dart';
+import 'package:felloapp/ui/pages/tabs/profile/userProfile/userProfile_viewModel.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:logger/logger.dart';
@@ -48,5 +49,7 @@ void setupLocator() {
   //REST
   locator.registerFactory(() => TranViewModel());
   locator.registerFactory(() => DailyPicksDrawModel());
+  locator.registerFactory(() => UserProfileViewModel());
+
   //....
 }

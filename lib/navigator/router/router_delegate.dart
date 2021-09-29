@@ -35,7 +35,7 @@ import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_result.dart';
 import 'package:felloapp/ui/pages/tabs/profile/claim_username.dart';
 import 'package:felloapp/ui/pages/tabs/profile/referrals_page.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions/transactions.dart';
-import 'package:felloapp/ui/pages/tabs/profile/user_profile_details.dart';
+import 'package:felloapp/ui/pages/tabs/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/tabs/profile/verify_email.dart';
 import 'package:felloapp/util/assets.dart';
 

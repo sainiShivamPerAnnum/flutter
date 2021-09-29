@@ -1,4 +1,5 @@
 //Flutter imports
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
 //Pub imports
@@ -30,7 +31,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
-import 'package:felloapp/generated/l10n.dart';
 
 Future mainInit() async {
   setupLocator();

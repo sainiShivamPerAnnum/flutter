@@ -626,15 +626,15 @@ class BaseUtil extends ChangeNotifier {
         if (myUser != null) myUserDpUrl = await _dbModel.getUserDP(myUser.uid);
         if (myUserDpUrl != null) {
           await CacheManager.writeCache(
-              key: 'dpurl', value: myUserDpUrl, type: CacheType.string);
+              key: 'dpUrl', value: myUserDpUrl, type: CacheType.string);
           setDisplayPictureUrl(myUserDpUrl);
+          log.debug("No profile picture found in cache, fetched from server");
         }
       } catch (e) {
         log.error(e.toString());
       }
-    }
-
-    setDisplayPictureUrl(await CacheManager.readCache(key: 'dpUrl'));
+    } else
+      setDisplayPictureUrl(await CacheManager.readCache(key: 'dpUrl'));
   }
 
   static void launchUrl(String url) async {
