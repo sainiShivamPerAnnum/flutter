@@ -235,7 +235,6 @@ class BaseUtil extends ChangeNotifier {
         augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
       }
 
-      // await getProfilePicUrl();
       setUpDailyPicksCount();
 
       ///pick zerobalance asset
@@ -351,7 +350,7 @@ class BaseUtil extends ChangeNotifier {
     log.debug("Daily picks count: $_dailyPickCount");
   }
 
-  fetchWeeklyPicks({bool forcedRefresh}) async {
+  fetchWeeklyPicks({bool forcedRefresh = false}) async {
     if (forcedRefresh) weeklyDrawFetched = false;
     if (!weeklyDrawFetched) {
       try {

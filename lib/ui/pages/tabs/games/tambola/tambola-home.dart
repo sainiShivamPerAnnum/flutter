@@ -113,15 +113,16 @@ class _TambolaHomeState extends State<TambolaHome> {
     }
 
     ///first get the daily picks of this week
-    if (!baseProvider.weeklyDrawFetched) {
-      log.debug('Requesting for weekly picks');
-      DailyPick _picks = await dbProvider.getWeeklyPicks();
-      baseProvider.weeklyDrawFetched = true;
-      if (_picks != null) {
-        baseProvider.weeklyDigits = _picks;
-      }
-      setState(() {});
-    }
+    // if (!baseProvider.weeklyDrawFetched) {
+    //   log.debug('Requesting for weekly picks');
+    //   DailyPick _picks = await dbProvider.getWeeklyPicks();
+    //   baseProvider.weeklyDrawFetched = true;
+    //   if (_picks != null) {
+    //     baseProvider.weeklyDigits = _picks;
+    //   }
+    //   setState(() {});
+    // }
+    baseProvider.fetchWeeklyPicks();
 
     ///next get the tambola tickets of this week
     if (!baseProvider.weeklyTicksFetched) {

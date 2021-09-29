@@ -1,12 +1,15 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/pages/hometabs/widgets.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Save extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    BaseUtil baseProvider = Provider.of<BaseUtil>(context);
     return Container(
       padding: EdgeInsets.only(
           left: SizeConfig.globalMargin,
@@ -61,7 +64,9 @@ class Save extends StatelessWidget {
                       Expanded(
                         child: Widgets().getButton(
                           "Buy",
-                          () {},
+                          () {
+                            print(baseProvider.todaysPicks);
+                          },
                           augmontGoldPalette.primaryColor,
                         ),
                       ),
