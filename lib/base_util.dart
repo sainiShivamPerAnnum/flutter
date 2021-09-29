@@ -17,6 +17,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
@@ -54,6 +55,7 @@ class BaseUtil extends ChangeNotifier {
   final DBModel _dbModel = locator<DBModel>();
   final LocalDBModel _lModel = locator<LocalDBModel>();
   final AppState _appState = locator<AppState>();
+  final UserService _userService = locator<UserService>();
 
   BaseUser _myUser;
   UserFundWallet _userFundWallet;
@@ -188,18 +190,13 @@ class BaseUtil extends ChangeNotifier {
 
     //remote config for various remote variables
     logger.i('base util remote config');
-    await BaseRemoteConfig.init(); //blocking //try catch missing
+    await BaseRemoteConfig.init();
 
-    //Appversion //add it seperate method
-    packageInfo = await PackageInfo.fromPlatform();
+    setPackageInfo();
 
     ///fetch on-boarding status and User details
-    firebaseUser = FirebaseAuth.instance.currentUser;
-    if (firebaseUser != null) {
-      _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
-    }
-    isUserOnboarded =
-        (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
+    firebaseUser = _userService.firebaseUser;
+    isUserOnboarded = await _userService.isUserOnborded;
 
     if (isUserOnboarded) {
       ///get user creation time
@@ -235,6 +232,11 @@ class BaseUtil extends ChangeNotifier {
         augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
       }
     }
+  }
+
+  void setPackageInfo() async {
+    //Appversion //add it seperate method
+    packageInfo = await PackageInfo.fromPlatform();
   }
 
   acceptNotificationsIfAny(BuildContext context) {
