@@ -211,26 +211,30 @@ class BaseUtil extends ChangeNotifier {
 
       await getProfilePicUrl(); //Caching profile image
 
-      ///get user wallet -> Try moving it to view and viewmodel for finance
-      _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
-      if (_userFundWallet == null) _compileUserWallet();
+      setUserDefaults();
+    }
+  }
 
-      ///get user ticket balance --> Try moving it to view and viewmodel for game
-      _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
-      if (_userTicketWallet == null) {
-        await _initiateNewTicketWallet();
-      }
+  void setUserDefaults() async {
+    ///get user wallet -> Try moving it to view and viewmodel for finance
+    _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
+    if (_userFundWallet == null) _compileUserWallet();
 
-      ///prefill pan details if available --> Profile Section (Show pan number eye)
-      panService = new PanService();
-      if (!checkKycMissing) {
-        userRegdPan = await panService.getUserPan();
-      }
+    ///get user ticket balance --> Try moving it to view and viewmodel for game
+    _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
+    if (_userTicketWallet == null) {
+      await _initiateNewTicketWallet();
+    }
 
-      ///prefill augmont details if available --> Save Tab
-      if (myUser.isAugmontOnboarded) {
-        augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
-      }
+    ///prefill pan details if available --> Profile Section (Show pan number eye)
+    panService = new PanService();
+    if (!checkKycMissing) {
+      userRegdPan = await panService.getUserPan();
+    }
+
+    ///prefill augmont details if available --> Save Tab
+    if (myUser.isAugmontOnboarded) {
+      augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
     }
   }
 
