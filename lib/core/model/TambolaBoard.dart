@@ -142,8 +142,8 @@ class TambolaBoard {
     if (calledDigits.contains(cornerB)) cornerCount++;
     if (calledDigits.contains(cornerC)) cornerCount++;
     if (calledDigits.contains(cornerD)) cornerCount++;
-    int digitsLeftToBeAnnounced =
-        _baseUtil.dailyPicksCount * 7 - calledDigits.length;
+    // int digitsLeftToBeAnnounced =
+    //     _baseUtil.dailyPicksCount * 7 - calledDigits.length;
     int cornerLeftCount = 4 - cornerCount;
 
     // if(cornerLeftCount==0) return 'HIT!';

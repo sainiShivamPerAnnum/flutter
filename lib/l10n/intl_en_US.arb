@@ -1,6 +1,8 @@
 {
   "@@locale": "en_US",
-  "splashSlowConnection": "A conexão está demorando mais do que o normal",
+
+  
+  "splashSlowConnection": "Connection taking longer than usual",
 
   "onboardTitle":"Game based Savings \n & Investments🎉",
   "onboardText1":"Save or invest ₹100 and get 1 game ticket every Monday",

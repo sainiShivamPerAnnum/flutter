@@ -35,10 +35,10 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `A conexão está demorando mais do que o normal`
+  /// `Connection taking longer than usual`
   String get splashSlowConnection {
     return Intl.message(
-      'A conexão está demorando mais do que o normal',
+      'Connection taking longer than usual',
       name: 'splashSlowConnection',
       desc: '',
       args: [],

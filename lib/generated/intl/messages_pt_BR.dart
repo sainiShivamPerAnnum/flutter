@@ -51,7 +51,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "resultsPageSafeDosageTitle" : MessageLookupByLibrary.simpleMessage("Limite Seguro Diário"),
     "resultsPageSecondDisclaimer" : MessageLookupByLibrary.simpleMessage("*Se aplica a pessoas com 18 anos ou mais. Essa calculadora não substitui conselhos médicos profissionais."),
     "secondSuggestedDrinkName" : MessageLookupByLibrary.simpleMessage("Espresso (Shot)"),
-    "splashSlowConnection" : MessageLookupByLibrary.simpleMessage("Connecto takin longa ue usal"),
+    "splashSlowConnection" : MessageLookupByLibrary.simpleMessage("A conexão está demorando mais do que o normal"),
     "thirdSuggestedDrinkName" : MessageLookupByLibrary.simpleMessage("Latte (Caneca)")
   };
 }

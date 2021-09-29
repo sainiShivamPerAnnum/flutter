@@ -1,14 +1,14 @@
 {
   "@@locale": "pt_BR",
-  "splashSlowConnection": "Connecto takin longa ue usal",
 
-  "onboardTitle":"Poupança baseada em jogos \n e investimentos🎉",
-  "onboardText1":"Economize ou invista $ 100 e ganhe 1 ingresso de jogo todas as segundas-feiras",
-  "onboardText2":"Use os ingressos para participar de jogos semanais emocionantes",
-  "onboardText3":"Seu dinheiro continua crescendo com grandes retornos enquanto você joga jogos divertidos e ganha prêmios!",
-  "onboradButton":"INICIAR",
+  
+  "splashSlowConnection": "A conexão está demorando mais do que o normal",
 
-
+  "onboardTitle": "Poupança baseada em jogos \n e investimentos🎉",
+  "onboardText1": "Economize ou invista $ 100 e ganhe 1 ingresso de jogo todas as segundas-feiras",
+  "onboardText2": "Use os ingressos para participar de jogos semanais emocionantes",
+  "onboardText3": "Seu dinheiro continua crescendo com grandes retornos enquanto você joga jogos divertidos e ganha prêmios!",
+  "onboradButton": "INICIAR",
   "formPageAppBarTitle": "Calculadora de Morte por Cafeína",
   "firstSuggestedDrinkName": "Café Coado (Xícara)",
   "secondSuggestedDrinkName": "Espresso (Shot)",

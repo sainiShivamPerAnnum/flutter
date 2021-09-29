@@ -1,5 +1,6 @@
 //Project Imports
 import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/enums/cache_type.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
 import 'package:felloapp/core/model/BaseUser.dart';
@@ -15,6 +16,7 @@ import 'package:felloapp/core/model/UserTicketWallet.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -198,6 +200,9 @@ class BaseUtil extends ChangeNotifier {
     firebaseUser = _userService.firebaseUser;
     isUserOnboarded = await _userService.isUserOnborded;
 
+    isUserOnboarded =
+        (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
+
     if (isUserOnboarded) {
       ///get user creation time
       _userCreationTimestamp = firebaseUser.metadata.creationTime;
@@ -209,32 +214,12 @@ class BaseUtil extends ChangeNotifier {
       ///see if security needs to be shown -> Move to save tab
       show_security_prompt = await _lModel.showSecurityPrompt();
 
-      await getProfilePicUrl(); //Caching profile image
+      setUpDailyPicksCount();
 
-      setUserDefaults();
-    }
-  }
-
-  void setUserDefaults() async {
-    ///get user wallet -> Try moving it to view and viewmodel for finance
-    _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
-    if (_userFundWallet == null) _compileUserWallet();
-
-    ///get user ticket balance --> Try moving it to view and viewmodel for game
-    _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
-    if (_userTicketWallet == null) {
-      await _initiateNewTicketWallet();
-    }
-
-    ///prefill pan details if available --> Profile Section (Show pan number eye)
-    panService = new PanService();
-    if (!checkKycMissing) {
-      userRegdPan = await panService.getUserPan();
-    }
-
-    ///prefill augmont details if available --> Save Tab
-    if (myUser.isAugmontOnboarded) {
-      augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
+      ///prefill augmont details if available --> Save Tab
+      if (myUser.isAugmontOnboarded) {
+        augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
+      }
     }
   }
 
@@ -333,6 +318,66 @@ class BaseUtil extends ChangeNotifier {
     return (!skFlag && !augFlag);
   }
 
+  setUpDailyPicksCount() {
+    String _dpc = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT);
+    if (_dpc == null || _dpc.isEmpty) _dpc = '3';
+    _dailyPickCount = 3;
+    try {
+      _dailyPickCount = int.parse(_dpc);
+    } catch (e) {
+      log.error('key parsing failed: ' + e.toString());
+      Map<String, String> errorDetails = {'error_msg': e.toString()};
+      _dbModel.logFailure(
+          _myUser.uid, FailType.DailyPickParseFailed, errorDetails);
+      _dailyPickCount = 3;
+    }
+    log.debug("Daily picks count: $_dailyPickCount");
+  }
+
+  fetchWeeklyPicks({bool forcedRefresh = false}) async {
+    if (forcedRefresh) weeklyDrawFetched = false;
+    if (!weeklyDrawFetched) {
+      try {
+        log.debug('Requesting for weekly picks');
+        DailyPick _picks = await _dbModel.getWeeklyPicks();
+        weeklyDrawFetched = true;
+        if (_picks != null) {
+          weeklyDigits = _picks;
+        }
+        switch (DateTime.now().weekday) {
+          case 1:
+            todaysPicks = weeklyDigits.mon;
+            break;
+          case 2:
+            todaysPicks = weeklyDigits.tue;
+            break;
+          case 3:
+            todaysPicks = weeklyDigits.wed;
+            break;
+          case 4:
+            todaysPicks = weeklyDigits.thu;
+            break;
+          case 5:
+            todaysPicks = weeklyDigits.fri;
+            break;
+          case 6:
+            todaysPicks = weeklyDigits.sat;
+            break;
+          case 7:
+            todaysPicks = weeklyDigits.sun;
+            break;
+        }
+        if (todaysPicks == null) {
+          log.debug("Today's picks are not generated yet");
+        }
+        notifyListeners();
+      } catch (e) {
+        log.error('$e');
+      }
+    }
+  }
+
   showPositiveAlert(String title, String message, BuildContext context,
       {int seconds}) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -425,57 +470,10 @@ class BaseUtil extends ChangeNotifier {
     return false;
   }
 
-  fetchWeeklyPicks({bool forcedRefresh}) async {
-    if (forcedRefresh) weeklyDrawFetched = false;
-    if (!weeklyDrawFetched) {
-      try {
-        log.debug('Requesting for weekly picks');
-        DailyPick _picks = await _dbModel.getWeeklyPicks();
-        weeklyDrawFetched = true;
-        if (_picks != null) {
-          weeklyDigits = _picks;
-        }
-        switch (DateTime.now().weekday) {
-          case 1:
-            todaysPicks = weeklyDigits.mon;
-            break;
-          case 2:
-            todaysPicks = weeklyDigits.tue;
-            break;
-          case 3:
-            todaysPicks = weeklyDigits.wed;
-            break;
-          case 4:
-            todaysPicks = weeklyDigits.thu;
-            break;
-          case 5:
-            todaysPicks = weeklyDigits.fri;
-            break;
-          case 6:
-            todaysPicks = weeklyDigits.sat;
-            break;
-          case 7:
-            todaysPicks = weeklyDigits.sun;
-            break;
-        }
-        if (todaysPicks == null) {
-          log.debug("Today's picks are not generated yet");
-        }
-      } catch (e) {
-        log.error('$e');
-      }
-    }
-  }
-
   Future<bool> getDrawStatus() async {
-    // CHECKING IF THE PICK ARE DRAWN OR NOT
-    if ((weeklyDrawFetched != null && !weeklyDrawFetched) ||
-        weeklyDigits == null) await fetchWeeklyPicks(forcedRefresh: true);
-    //CHECKING FOR THE FIRST TIME OPENING OF TAMBOLA AFTER THE PICKS ARE DRAWN FOR THIS PARTICULAR DAY
-    notifyListeners();
-    if (todaysPicks != null &&
-        DateTime.now().weekday != await _lModel.getDailyPickAnimLastDay())
-      return true;
+    if (DateTime.now().weekday != await _lModel.getDailyPickAnimLastDay() &&
+        DateTime.now().hour >= 18 &&
+        DateTime.now().hour < 24) return true;
 
     return false;
   }
@@ -607,16 +605,21 @@ class BaseUtil extends ChangeNotifier {
     return 0;
   }
 
-  Future<void> getProfilePicUrl() async {
-    try {
-      if (myUser != null) myUserDpUrl = await _dbModel.getUserDP(myUser.uid);
-      if (myUserDpUrl != null) {
-        print("got the image");
-        notifyListeners();
+  getProfilePicture() async {
+    if (await CacheManager.readCache(key: 'dpUrl') == null) {
+      try {
+        if (myUser != null) myUserDpUrl = await _dbModel.getUserDP(myUser.uid);
+        if (myUserDpUrl != null) {
+          await CacheManager.writeCache(
+              key: 'dpurl', value: myUserDpUrl, type: CacheType.string);
+          setDisplayPictureUrl(myUserDpUrl);
+        }
+      } catch (e) {
+        log.error(e.toString());
       }
-    } catch (e) {
-      log.error(e.toString());
     }
+
+    setDisplayPictureUrl(await CacheManager.readCache(key: 'dpUrl'));
   }
 
   static void launchUrl(String url) async {
@@ -968,6 +971,11 @@ class BaseUtil extends ChangeNotifier {
   }
 
   int get dailyPicksCount => _dailyPickCount;
+
+  set dailyPicksCount(int count) {
+    _dailyPickCount = count;
+    notifyListeners();
+  }
 
   Future<bool> isOfflineSnackBar(BuildContext context) async {
     ConnectivityStatus connectivityStatus =
