@@ -483,7 +483,7 @@ class DBModel extends ChangeNotifier {
   Future<SignzyPanLogin> getActiveSignzyPanApiKey() async {
     int keyIndex = 1;
     QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
-        'signzy-pan', Constants.activeSignzyPanStage.value(), keyIndex);
+        'signzy-pan', FlavorConfig.instance.values.signzyPanStage.value(), keyIndex);
     if (querySnapshot != null && querySnapshot.docs.length == 1) {
       DocumentSnapshot snapshot = querySnapshot.docs[0];
       Map<String, dynamic> _doc = snapshot.data();

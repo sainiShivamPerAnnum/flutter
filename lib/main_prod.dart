@@ -13,6 +13,7 @@ void main() async {
           freshchatStage: FreshchatStage.DEV,
           razorpayStage: RazorpayStage.PROD,
           signzyStage: SignzyStage.PROD,
+          signzyPanStage: SignzyPanStage.PROD,
           baseUriUS: 'us-central1-fello-d3a9c.cloudfunctions.net',
           baseUriAsia: 'asia-south1-fello-d3a9c.cloudfunctions.net',
           dynamicLinkPrefix: 'https://fello.in'));
