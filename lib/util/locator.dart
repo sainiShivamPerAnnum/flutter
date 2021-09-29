@@ -12,6 +12,9 @@ import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/tabs/games/dailyPicksDraw/dailyPicksDraw_viewModel.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions/tran_viewModel.dart';
 import 'package:get_it/get_it.dart';
@@ -36,6 +39,13 @@ void setupLocator() {
   locator.registerLazySingleton(() => AppState());
   locator.registerLazySingleton(() => ConnectivityService());
   locator.registerLazySingleton(() => Logger());
+
+  // Hometabs
+  locator.registerFactory(() => PlayViewModel());
+  locator.registerFactory(() => SaveViewModel());
+  locator.registerFactory(() => WinViewModel());
+
+  //REST
   locator.registerFactory(() => TranViewModel());
   locator.registerFactory(() => DailyPicksDrawModel());
   //....

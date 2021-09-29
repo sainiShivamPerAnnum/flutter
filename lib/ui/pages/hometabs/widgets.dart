@@ -19,7 +19,7 @@ class Widgets {
         ),
       );
 
-  getHeadlineBold(String text, Color color) => Text(
+  getHeadlineBold({String text, Color color = Colors.black}) => Text(
         text,
         style: GoogleFonts.montserrat(
             color: color,

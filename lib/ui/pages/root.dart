@@ -13,10 +13,10 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/modals/security_modal_sheet.dart';
-import 'package:felloapp/ui/pages/hometabs/play.dart';
-import 'package:felloapp/ui/pages/hometabs/save.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/widgets.dart';
-import 'package:felloapp/ui/pages/hometabs/win.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 
 import 'package:felloapp/ui/pages/tabs/finance/finance_screen.dart';
 import 'package:felloapp/ui/pages/tabs/games/games_screen.dart';
@@ -185,6 +185,45 @@ class _RootState extends State<Root> with SingleTickerProviderStateMixin {
     _scaffoldKey.currentState.openDrawer();
   }
 
+  showTicketModal() {
+    showModalBottomSheet(
+        context: context,
+        builder: (ctx) {
+          return Container(
+            width: SizeConfig.screenWidth,
+            child: Wrap(
+              children: [
+                Container(
+                  width: SizeConfig.screenWidth,
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  child: Widgets()
+                      .getTitle("Want more tickets?", UiConstants.primaryColor),
+                ),
+                ListTile(
+                  leading: Icon(Icons.account_balance_wallet),
+                  title: Widgets().getHeadlineBold(text: "Save More Money"),
+                  subtitle: Widgets().getHeadlineLight(
+                      "Get 1 ticket for every 100", Colors.black),
+                ),
+                ListTile(
+                  leading: Icon(Icons.share),
+                  title: Widgets().getHeadlineBold(text: "Refer your friends"),
+                  subtitle: Widgets().getHeadlineLight(
+                      "Get 10 tickets per referral", Colors.black),
+                ),
+                ListTile(
+                  leading: Icon(Icons.repeat),
+                  title: Widgets().getHeadlineBold(text: "Set up SIP"),
+                  subtitle: Widgets()
+                      .getHeadlineLight("Earn tickets on the go", Colors.black),
+                )
+              ],
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     baseProvider = Provider.of<BaseUtil>(context);
@@ -197,17 +236,7 @@ class _RootState extends State<Root> with SingleTickerProviderStateMixin {
         Provider.of<ConnectivityStatus>(context);
     _initialize();
     var accentColor = UiConstants.primaryColor;
-    List<Widget> _pages = <Widget>[
-      Play(
-        isHideBottomNavBar: (isHideBottomNavBar) {
-          isHideBottomNavBar
-              ? animationController.forward()
-              : animationController.reverse();
-        },
-      ),
-      Save(),
-      Win()
-    ];
+    List<Widget> _pages = <Widget>[Play(), Save(), Win()];
 
     //Create custom navBar, pass in a list of buttons, and listen for tap event
     var navBar = NavBar(
@@ -247,27 +276,30 @@ class _RootState extends State<Root> with SingleTickerProviderStateMixin {
               fontWeight: FontWeight.w500, fontSize: SizeConfig.largeTextSize),
         ),
         actions: [
-          Container(
-            margin: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: UiConstants.primaryColor),
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
-              children: [
-                Text(
-                  baseProvider.userTicketWallet.getActiveTickets().toString(),
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
+          InkWell(
+            onTap: showTicketModal,
+            child: Container(
+              margin: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: UiConstants.primaryColor),
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                children: [
+                  Text(
+                    baseProvider.userTicketWallet.getActiveTickets().toString(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                SizedBox(width: 8),
-                Icon(
-                  Icons.control_point_rounded,
-                  color: Colors.white,
-                  size: kToolbarHeight / 2.5,
-                ),
-              ],
+                  SizedBox(width: 8),
+                  Icon(
+                    Icons.control_point_rounded,
+                    color: Colors.white,
+                    size: kToolbarHeight / 2.5,
+                  ),
+                ],
+              ),
             ),
           ),
           InkWell(
@@ -309,8 +341,8 @@ class _RootState extends State<Root> with SingleTickerProviderStateMixin {
                           baseProvider.myUserDpUrl,
                         ),
                 ),
-                title: Widgets()
-                    .getHeadlineBold(baseProvider.myUser.name, Colors.black),
+                title: Widgets().getHeadlineBold(
+                    text: baseProvider.myUser.name, color: Colors.black),
                 subtitle: Widgets().getBodyLight(
                     "@${baseProvider.myUser.username}", Colors.black),
               ),
