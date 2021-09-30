@@ -124,7 +124,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
         ),
         Container(
           height: widget.showBeerBanner
-              ? SizeConfig.screenHeight * 0.3
+              ? SizeConfig.screenHeight * 0.34
               : SizeConfig.screenHeight * 0.54,
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
@@ -135,46 +135,6 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
             shrinkWrap: true,
             // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Container(
-              //   width: SizeConfig.screenWidth,
-              //   height: 100,
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.only(
-              //         topLeft: Radius.circular(12),
-              //         topRight: Radius.circular(12)),
-              //     gradient: new LinearGradient(colors: [
-              //       Color(0xff0f0c29),
-              //       Color(0xff302b63),
-              //       Color(0xff24243e)
-              //     ], begin: Alignment.centerLeft, end: Alignment.bottomRight),
-              //     // color: UiConstants.primaryColor,
-              //   ),
-              //   child: Row(
-              //     children: [
-              //       SizedBox(width: SizeConfig.globalMargin),
-              //       Column(
-              //         crossAxisAlignment: CrossAxisAlignment.start,
-              //         mainAxisAlignment: MainAxisAlignment.center,
-              //         children: [
-              //           Text(
-              //             "Claim your free beer before",
-              //             style: TextStyle(
-              //               color: Colors.white,
-              //               fontSize: SizeConfig.mediumTextSize,
-              //             ),
-              //           ),
-              //           SizedBox(
-              //             height: 8,
-              //           ),
-
-              //         ],
-              //       ),
-              //       Spacer(),
-              //       // Lottie.asset("images/lottie/beer1.json",
-              //       //     width: SizeConfig.screenWidth * 0.3),
-              //     ],
-              //   ),
-              // ),
               Column(
                 children: [
                   SizedBox(height: 10),
@@ -368,10 +328,13 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
           Container(
             margin: EdgeInsets.symmetric(vertical: 8),
             width: SizeConfig.screenWidth,
-            height: SizeConfig.screenHeight * 0.16,
+            height: SizeConfig.screenHeight * 0.2,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color: UiConstants.primaryColor,
+              gradient: new LinearGradient(colors: [
+                UiConstants.primaryColor,
+                UiConstants.primaryColor.withBlue(190),
+              ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
             ),
             padding: EdgeInsets.only(
                 right: SizeConfig.globalMargin,
@@ -395,26 +358,31 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                   color: Colors.white.withOpacity(0.5),
                                 ),
                               ),
-                              Text(
-                                baseProvider.myUser.name,
-                                style: GoogleFonts.montserrat(
-                                    color: Colors.white,
-                                    fontSize: SizeConfig.largeTextSize,
-                                    fontWeight: FontWeight.w500),
+                              Container(
+                                width: SizeConfig.screenWidth * 0.5,
+                                child: Text(
+                                  baseProvider.myUser.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.montserrat(
+                                      color: Colors.white,
+                                      fontSize: SizeConfig.largeTextSize,
+                                      fontWeight: FontWeight.w500),
+                                ),
                               ),
                             ]),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Date:",
+                              "Date & Time",
                               style: TextStyle(
                                 fontSize: SizeConfig.smallTextSize,
                                 color: Colors.white.withOpacity(0.5),
                               ),
                             ),
                             Text(
-                              "${_getFormattedDate(widget._transaction.timestamp)} ${_getFormattedTime(widget._transaction.timestamp)}",
+                              "${_getFormattedDate(widget._transaction.timestamp)} || ${_getFormattedTime(widget._transaction.timestamp)}",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: SizeConfig.mediumTextSize,
@@ -422,25 +390,6 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                             ),
                           ],
                         ),
-                        // Column(
-                        //   crossAxisAlignment: CrossAxisAlignment.start,
-                        //   children: [
-                        //     Text(
-                        //       "Time:",
-                        //       style: TextStyle(
-                        //         fontSize: SizeConfig.smallTextSize,
-                        //         color: Colors.white.withOpacity(0.5),
-                        //       ),
-                        //     ),
-                        //     Text(
-                        //       "${_getFormattedTime(widget._transaction.timestamp)}",
-                        //       style: TextStyle(
-                        //           color: Colors.white,
-                        //           fontSize: SizeConfig.mediumTextSize,
-                        //           fontWeight: FontWeight.w700),
-                        //     ),
-                        //   ],
-                        // ),
                         Row(
                           children: [
                             Text(
@@ -457,8 +406,8 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                     end: Duration.zero),
                                 onEnd: () {
                                   print('Timer ended');
-                                  baseProvider.showNegativeAlert(
-                                      "Time out", "No free beer now", context);
+                                  baseProvider.showNegativeAlert("Offer Ended",
+                                      "No free beer now", context);
                                   AppState.backButtonDispatcher.didPopRoute();
                                 },
                                 builder: (BuildContext context, Duration value,
@@ -473,8 +422,8 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                   return Text(
                                     "$minutes:$seconds",
                                     style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: SizeConfig.cardTitleTextSize,
+                                      color: Colors.black,
+                                      fontSize: SizeConfig.largeTextSize,
                                       fontWeight: FontWeight.w700,
                                     ),
                                   );
@@ -484,16 +433,49 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                       ],
                     ),
                     Spacer(),
-                    Lottie.asset(
-                      "images/lottie/beer.json",
-                      height: SizeConfig.screenHeight * 0.14,
-                    ),
+                    Lottie.asset("images/lottie/beer.json",
+                        height: SizeConfig.screenHeight * 0.14,
+                        width: SizeConfig.screenWidth * 0.24),
                   ],
                 ),
                 Positioned(
-                  top: 10,
-                  right: 0,
-                  child: Icon(Icons.info, color: Colors.white),
+                  top: 0,
+                  right: -10,
+                  child: IconButton(
+                    icon: Icon(Icons.info, color: Colors.white),
+                    onPressed: () {
+                      AppState.screenStack.add(ScreenItem.dialog);
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (ctx) {
+                            return WillPopScope(
+                              onWillPop: () async {
+                                AppState.backButtonDispatcher.didPopRoute();
+                                return Future.value(true);
+                              },
+                              child: Container(
+                                width: SizeConfig.screenWidth,
+                                height: SizeConfig.screenHeight * 0.4,
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        IconButton(
+                                          onPressed: () => AppState
+                                              .backButtonDispatcher
+                                              .didPopRoute(),
+                                          icon: Icon(Icons.close),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                    },
+                  ),
                 )
               ],
             ),
@@ -506,7 +488,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
     Duration difference;
     DateTime tTime = DateTime.fromMillisecondsSinceEpoch(
             widget._transaction.timestamp.millisecondsSinceEpoch)
-        .add(Duration(minutes: 10));
+        .add(Duration(seconds: 600));
     difference = tTime.difference(DateTime.now());
 
     return difference;
