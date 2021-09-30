@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/widgets.dart';
+import 'package:felloapp/ui/widgets/buttons/flatButton/flatButton_view.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -145,7 +146,9 @@ class Save extends StatelessWidget {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [Widgets().getTitle("History", Colors.black)],
+                children: [
+                  Widgets().getTitle("Recent Transactions", Colors.black)
+                ],
               ),
               SizedBox(height: 40),
               Row(
@@ -159,11 +162,13 @@ class Save extends StatelessWidget {
                   ),
                   SizedBox(width: 24),
                   Expanded(
-                    child: Widgets().getButton(
-                      "ABXS",
-                      () {},
-                      Colors.grey[300],
-                    ),
+                    child: FBtn(
+                        text: "ABXS", onPressed: () => print("i got executed")),
+                    // Widgets().getButton(
+                    //   "ABXS",
+                    //   () {},
+                    //   Colors.grey[300],
+                    // ),
                   ),
                 ],
               ),

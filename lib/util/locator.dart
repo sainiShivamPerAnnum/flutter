@@ -18,6 +18,7 @@ import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/tabs/games/dailyPicksDraw/dailyPicksDraw_viewModel.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions/tran_viewModel.dart';
 import 'package:felloapp/ui/pages/tabs/profile/userProfile/userProfile_viewModel.dart';
+import 'package:felloapp/ui/widgets/buttons/flatButton/flatButton_viewModel.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:logger/logger.dart';
@@ -50,6 +51,9 @@ void setupLocator() {
   locator.registerFactory(() => TranViewModel());
   locator.registerFactory(() => DailyPicksDrawModel());
   locator.registerFactory(() => UserProfileViewModel());
+
+  //WIDGETS
+  locator.registerFactory(() => FBtnVM());
 
   //....
 }
