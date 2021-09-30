@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
@@ -26,6 +28,7 @@ class _TransactionsState extends State<Transactions> {
   DBModel dbProvider;
   List<UserTransaction> filteredList;
   ScrollController _scrollController = ScrollController();
+  UserTransaction firstAugmontTransaction;
 
   /// Will used to access the Animated list
   // final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
@@ -52,6 +55,7 @@ class _TransactionsState extends State<Transactions> {
         }
         if (tMap['length'] < 30) {
           baseProvider.hasMoreTransactionListDocuments = false;
+          findFirstAugmontTransaction();
         }
         // print(
         //     "---------------------${baseProvider.userMiniTxnList}-----------------");
@@ -59,6 +63,18 @@ class _TransactionsState extends State<Transactions> {
           isLoading = false;
         });
       });
+    }
+  }
+
+  findFirstAugmontTransaction() {
+    try {
+      reversedList = baseProvider.userMiniTxnList.reversed.toList();
+      firstAugmontTransaction =reversedList.firstWhere(
+          (element) =>
+              element.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
+              element.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD);
+    } catch (e) {
+      log("No transaction found");
     }
   }
 
@@ -354,6 +370,12 @@ class _TransactionsState extends State<Transactions> {
         ));
   }
 
+  bool getBeerTicketStatus(UserTransaction transaction) {
+    if (firstAugmontTransaction != null &&
+        firstAugmontTransaction == transaction) return true;
+    return false;
+  }
+
   List<Widget> _getTxns() {
     List<ListTile> _tiles = [];
     for (int index = 0; index < filteredList.length; index++) {
@@ -366,7 +388,8 @@ class _TransactionsState extends State<Transactions> {
               context: context,
               builder: (BuildContext context) {
                 AppState.screenStack.add(ScreenItem.dialog);
-                return TransactionDetailsDialog(filteredList[index]);
+                return TransactionDetailsDialog(filteredList[index],
+                    getBeerTicketStatus(filteredList[index]));
               });
         },
         dense: true,
