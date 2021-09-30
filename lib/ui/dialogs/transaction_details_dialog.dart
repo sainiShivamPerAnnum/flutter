@@ -123,7 +123,9 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
           ),
         ),
         Container(
-          height: SizeConfig.screenHeight * 0.3,
+          height: widget.showBeerBanner
+              ? SizeConfig.screenHeight * 0.3
+              : SizeConfig.screenHeight * 0.54,
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -164,33 +166,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
               //           SizedBox(
               //             height: 8,
               //           ),
-              //           TweenAnimationBuilder<Duration>(
-              //               duration: Duration(minutes: 15),
-              //               tween: Tween(
-              //                   begin: Duration(minutes: 15),
-              //                   end: Duration.zero),
-              //               onEnd: () {
-              //                 print('Timer ended');
-              //                 baseProvider.showNegativeAlert(
-              //                     "Time out", "No free beer now", context);
-              //               },
-              //               builder: (BuildContext context, Duration value,
-              //                   Widget child) {
-              //                 final minutes =
-              //                     (value.inMinutes).toString().padLeft(2, '0');
-              //                 final seconds = (value.inSeconds % 60)
-              //                     .toString()
-              //                     .padLeft(2, '0');
 
-              //                 return Text(
-              //                   "$minutes:$seconds",
-              //                   style: TextStyle(
-              //                     color: Colors.white,
-              //                     fontSize: SizeConfig.cardTitleTextSize,
-              //                     fontWeight: FontWeight.w700,
-              //                   ),
-              //                 );
-              //               }),
               //         ],
               //       ),
               //       Spacer(),
@@ -427,7 +403,6 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                     fontWeight: FontWeight.w500),
                               ),
                             ]),
-
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -439,7 +414,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                               ),
                             ),
                             Text(
-                              "${_getFormattedDate(widget._transaction.timestamp)}",
+                              "${_getFormattedDate(widget._transaction.timestamp)} ${_getFormattedTime(widget._transaction.timestamp)}",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: SizeConfig.mediumTextSize,
@@ -447,37 +422,70 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                             ),
                           ],
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        // Column(
+                        //   crossAxisAlignment: CrossAxisAlignment.start,
+                        //   children: [
+                        //     Text(
+                        //       "Time:",
+                        //       style: TextStyle(
+                        //         fontSize: SizeConfig.smallTextSize,
+                        //         color: Colors.white.withOpacity(0.5),
+                        //       ),
+                        //     ),
+                        //     Text(
+                        //       "${_getFormattedTime(widget._transaction.timestamp)}",
+                        //       style: TextStyle(
+                        //           color: Colors.white,
+                        //           fontSize: SizeConfig.mediumTextSize,
+                        //           fontWeight: FontWeight.w700),
+                        //     ),
+                        //   ],
+                        // ),
+                        Row(
                           children: [
                             Text(
-                              "Time:",
-                              style: TextStyle(
-                                fontSize: SizeConfig.smallTextSize,
-                                color: Colors.white.withOpacity(0.5),
-                              ),
-                            ),
-                            Text(
-                              "${_getFormattedTime(widget._transaction.timestamp)}",
+                              "Offer ends in:  ",
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: SizeConfig.largeTextSize,
-                                  fontWeight: FontWeight.w700),
+                                  fontSize: SizeConfig.mediumTextSize,
+                                  fontWeight: FontWeight.w500),
                             ),
+                            TweenAnimationBuilder<Duration>(
+                                duration: getOfferDuration(),
+                                tween: Tween(
+                                    begin: getOfferDuration(),
+                                    end: Duration.zero),
+                                onEnd: () {
+                                  print('Timer ended');
+                                  baseProvider.showNegativeAlert(
+                                      "Time out", "No free beer now", context);
+                                  AppState.backButtonDispatcher.didPopRoute();
+                                },
+                                builder: (BuildContext context, Duration value,
+                                    Widget child) {
+                                  final minutes = (value.inMinutes)
+                                      .toString()
+                                      .padLeft(2, '0');
+                                  final seconds = (value.inSeconds % 60)
+                                      .toString()
+                                      .padLeft(2, '0');
+
+                                  return Text(
+                                    "$minutes:$seconds",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: SizeConfig.cardTitleTextSize,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  );
+                                }),
                           ],
                         ),
-                        // Text(
-                        //   "Time: ${_getFormattedTime(widget._transaction.timestamp)}",
-                        //   style: TextStyle(
-                        //       color: Colors.white,
-                        //       fontSize: SizeConfig.mediumTextSize,
-                        //       fontWeight: FontWeight.w500),
-                        // ),
                       ],
                     ),
                     Spacer(),
                     Lottie.asset(
-                      "images/lottie/beer1.json",
+                      "images/lottie/beer.json",
                       height: SizeConfig.screenHeight * 0.14,
                     ),
                   ],
@@ -494,16 +502,26 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
     );
   }
 
+  Duration getOfferDuration() {
+    Duration difference;
+    DateTime tTime = DateTime.fromMillisecondsSinceEpoch(
+            widget._transaction.timestamp.millisecondsSinceEpoch)
+        .add(Duration(minutes: 10));
+    difference = tTime.difference(DateTime.now());
+
+    return difference;
+  }
+
   String _getFormattedTime(Timestamp tTime) {
     DateTime now =
         DateTime.fromMillisecondsSinceEpoch(tTime.millisecondsSinceEpoch);
-    return DateFormat('kk:mm:ss').format(now);
+    return DateFormat('kk:mm').format(now);
   }
 
   String _getFormattedDate(Timestamp tTime) {
     DateTime now =
         DateTime.fromMillisecondsSinceEpoch(tTime.millisecondsSinceEpoch);
-    return DateFormat('yyyy-MM-dd').format(now);
+    return DateFormat('dd MMM, yyyy').format(now);
   }
 
   Widget referralTileWide(String title, String value, Color color) {
