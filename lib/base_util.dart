@@ -200,10 +200,13 @@ class BaseUtil extends ChangeNotifier {
     firebaseUser = _userService.firebaseUser;
     isUserOnboarded = await _userService.isUserOnborded;
 
-    isUserOnboarded =
-        (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
+    // isUserOnboarded =
+    //     (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
 
     if (isUserOnboarded) {
+      //set current user
+      myUser = _userService.baseUser;
+
       ///get user creation time
       _userCreationTimestamp = firebaseUser.metadata.creationTime;
 
@@ -214,7 +217,31 @@ class BaseUtil extends ChangeNotifier {
       ///see if security needs to be shown -> Move to save tab
       show_security_prompt = await _lModel.showSecurityPrompt();
 
-      setUpDailyPicksCount();
+      await setUserDefaults();
+    }
+  }
+
+  Future<void> setUserDefaults() async {
+    ///get user wallet -> Try moving it to view and viewmodel for finance
+    _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
+    if (_userFundWallet == null) _compileUserWallet();
+
+    ///get user ticket balance --> Try moving it to view and viewmodel for game
+    _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
+    if (_userTicketWallet == null) {
+      await _initiateNewTicketWallet();
+    }
+
+    ///prefill pan details if available --> Profile Section (Show pan number eye)
+    panService = new PanService();
+    if (!checkKycMissing) {
+      userRegdPan = await panService.getUserPan();
+    }
+    setUpDailyPicksCount();
+
+    ///prefill augmont details if available --> Save Tab
+    if (myUser.isAugmontOnboarded) {
+      augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
 
       ///prefill augmont details if available --> Save Tab
       if (myUser.isAugmontOnboarded) {

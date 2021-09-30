@@ -256,8 +256,7 @@ class _RootState extends State<Root> with SingleTickerProviderStateMixin {
             child: Row(
               children: [
                 Text(
-                  //baseProvider.userTicketWallet.getActiveTickets().toString(),
-                  "5",
+                  baseProvider.userTicketWallet.getActiveTickets().toString(),
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                   ),
