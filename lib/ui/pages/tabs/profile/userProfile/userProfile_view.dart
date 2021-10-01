@@ -42,6 +42,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: remove providers from here
     baseProvider = Provider.of<BaseUtil>(context);
     fcmProvider = Provider.of<FcmListener>(context);
     dbProvider = Provider.of<DBModel>(context, listen: false);
@@ -68,7 +69,6 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             : CachedNetworkImageProvider(
                                 baseProvider.myUserDpUrl,
                               ),
-                        // CachedNetworkImageProvider(baseProvider.myUserDpUrl),
                         fit: BoxFit.cover),
                   ),
                   child: Stack(
