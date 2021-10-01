@@ -3,6 +3,8 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/widgets.dart';
 import 'package:felloapp/ui/widgets/buttons/flatButton/flatButton_view.dart';
+import 'package:felloapp/ui/widgets/buttons/raisedButton/raisedButton_view.dart';
+import 'package:felloapp/ui/widgets/miniTransactionWindow/miniTransCard_view.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -150,20 +152,32 @@ class Save extends StatelessWidget {
                   Widgets().getTitle("Recent Transactions", Colors.black)
                 ],
               ),
+              MiniTransactionCard(),
               SizedBox(height: 40),
               Row(
                 children: [
                   Expanded(
-                    child: Widgets().getButton(
-                      "What is digital Gold",
-                      () {},
-                      Colors.grey[300],
+                    child: RBtn(
+                      text: "What is digital gold?",
+                      onPressed: () async {
+                        await Future.delayed(Duration(seconds: 2));
+                        print("I am a future function");
+                      },
+                      textStyle: TextStyle(
+                        color: Colors.black,
+                        fontSize: SizeConfig.mediumTextSize,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                   SizedBox(width: 24),
                   Expanded(
                     child: FBtn(
-                        text: "ABXS", onPressed: () => print("i got executed")),
+                        text: "ABXS",
+                        onPressed: () async {
+                          await Future.delayed(Duration(seconds: 2));
+                          print("I am a future function");
+                        }),
                     // Widgets().getButton(
                     //   "ABXS",
                     //   () {},

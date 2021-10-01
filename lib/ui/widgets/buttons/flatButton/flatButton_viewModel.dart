@@ -6,10 +6,6 @@ import 'package:felloapp/util/locator.dart';
 
 class FBtnVM extends BaseModel {
   executeOnPress(Function function) async {
-    setState(ViewState.Busy);
     function();
-    Future.delayed(Duration(seconds: 2)).then((value) {
-      setState(ViewState.Idle);
-    });
   }
 }

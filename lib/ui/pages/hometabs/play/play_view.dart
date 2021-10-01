@@ -116,17 +116,20 @@ class Play extends StatelessWidget {
                   ),
                 ),
               ),
-              Card(
-                margin: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.globalMargin, vertical: 40),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
-                  child: Text(
-                    "Want more ticket?",
-                    style: TextStyle(
-                      fontSize: SizeConfig.largeTextSize,
-                      fontWeight: FontWeight.w700,
+              InkWell(
+                onTap: () => model.showTicketModal(context),
+                child: Card(
+                  margin: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.globalMargin, vertical: 40),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 20),
+                    child: Text(
+                      "Want more ticket?",
+                      style: TextStyle(
+                        fontSize: SizeConfig.largeTextSize,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ),

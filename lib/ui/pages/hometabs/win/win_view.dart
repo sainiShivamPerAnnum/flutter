@@ -1,5 +1,7 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/architecture/base_viewmodel.dart';
+import 'package:felloapp/ui/elements/leaderboard.dart';
+import 'package:felloapp/ui/elements/week-winners_board.dart';
 import 'package:felloapp/ui/pages/hometabs/widgets.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/util/palettes.dart';
@@ -95,36 +97,10 @@ class Win extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [Widgets().getTitle("Scoreboard", Colors.black)],
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Table(
-                  // textDirection: TextDirection.rtl,
-                  // defaultVerticalAlignment: TableCellVerticalAlignment.bottom,
-
-                  border: TableBorder.all(
-                      width: 2.0, color: UiConstants.primaryColor),
-                  children: [
-                    TableRow(children: [
-                      Text(
-                        "  Rank",
-                        style: TextStyle(fontWeight: FontWeight.w700),
-                        textScaleFactor: 1.5,
-                      ),
-                      Text("  Name", textScaleFactor: 1.5),
-                    ]),
-                    TableRow(children: [
-                      Text("  1", textScaleFactor: 1.5),
-                      Text("", textScaleFactor: 1.5),
-                    ]),
-                    TableRow(children: [
-                      Text("  2", textScaleFactor: 1.5),
-                      Text("", textScaleFactor: 1.5),
-                    ]),
-                    TableRow(children: [
-                      Text("  3", textScaleFactor: 1.5),
-                      Text("", textScaleFactor: 1.5),
-                    ]),
-                  ],
+              Container(
+                height: SizeConfig.screenHeight,
+                child: Column(
+                  children: [WeekWinnerBoard(), Leaderboard()],
                 ),
               ),
             ],

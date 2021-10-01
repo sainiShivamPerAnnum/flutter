@@ -13,6 +13,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/elements/navbar.dart';
 import 'package:felloapp/ui/modals/security_modal_sheet.dart';
+import 'package:felloapp/ui/modals/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/widgets.dart';
@@ -187,41 +188,11 @@ class _RootState extends State<Root> with SingleTickerProviderStateMixin {
   }
 
   showTicketModal() {
+    AppState.screenStack.add(ScreenItem.dialog);
     showModalBottomSheet(
         context: context,
         builder: (ctx) {
-          return Container(
-            width: SizeConfig.screenWidth,
-            child: Wrap(
-              children: [
-                Container(
-                  width: SizeConfig.screenWidth,
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  child: Widgets()
-                      .getTitle("Want more tickets?", UiConstants.primaryColor),
-                ),
-                ListTile(
-                  leading: Icon(Icons.account_balance_wallet),
-                  title: Widgets().getHeadlineBold(text: "Save More Money"),
-                  subtitle: Widgets().getHeadlineLight(
-                      "Get 1 ticket for every 100", Colors.black),
-                ),
-                ListTile(
-                  leading: Icon(Icons.share),
-                  title: Widgets().getHeadlineBold(text: "Refer your friends"),
-                  subtitle: Widgets().getHeadlineLight(
-                      "Get 10 tickets per referral", Colors.black),
-                ),
-                ListTile(
-                  leading: Icon(Icons.repeat),
-                  title: Widgets().getHeadlineBold(text: "Set up SIP"),
-                  subtitle: Widgets()
-                      .getHeadlineLight("Earn tickets on the go", Colors.black),
-                )
-              ],
-            ),
-          );
+          return WantMoreTicketsModalSheet();
         });
   }
 
