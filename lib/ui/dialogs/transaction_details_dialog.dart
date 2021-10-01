@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
@@ -9,13 +10,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 class TransactionDetailsDialog extends StatefulWidget {
   final UserTransaction _transaction;
+  final bool showBeerBanner;
 
-  TransactionDetailsDialog(this._transaction);
+  TransactionDetailsDialog(this._transaction, this.showBeerBanner);
 
   @override
   State createState() => TransactionDetailsDialogState();
@@ -98,13 +102,14 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
     return Wrap(
       children: [
         Container(
-          height: SizeConfig.screenHeight * 0.12,
+          height: SizeConfig.largeTextSize * 4,
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
               color: Colors.white,
               // border: Border(
               //   bottom: BorderSide(color: Colors.black, width: 2),
               // ),
+
               borderRadius: BorderRadius.circular(12)),
           child: Center(
             child: Text(
@@ -118,7 +123,9 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
           ),
         ),
         Container(
-          height: SizeConfig.screenHeight * 0.54,
+          height: widget.showBeerBanner
+              ? SizeConfig.screenHeight * 0.34
+              : SizeConfig.screenHeight * 0.54,
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -317,8 +324,186 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
             ],
           ),
         ),
+        if (widget.showBeerBanner)
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 8),
+            width: SizeConfig.screenWidth,
+            height: SizeConfig.screenHeight * 0.2,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              gradient: new LinearGradient(colors: [
+                UiConstants.primaryColor,
+                UiConstants.primaryColor.withBlue(190),
+              ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
+            ),
+            padding: EdgeInsets.only(
+                right: SizeConfig.globalMargin,
+                left: SizeConfig.globalMargin * 2),
+            child: Stack(
+              children: [
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Name:",
+                                style: TextStyle(
+                                  fontSize: SizeConfig.smallTextSize,
+                                  color: Colors.white.withOpacity(0.5),
+                                ),
+                              ),
+                              Container(
+                                width: SizeConfig.screenWidth * 0.5,
+                                child: Text(
+                                  baseProvider.myUser.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.montserrat(
+                                      color: Colors.white,
+                                      fontSize: SizeConfig.largeTextSize,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ]),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Date & Time",
+                              style: TextStyle(
+                                fontSize: SizeConfig.smallTextSize,
+                                color: Colors.white.withOpacity(0.5),
+                              ),
+                            ),
+                            Text(
+                              "${_getFormattedDate(widget._transaction.timestamp)} || ${_getFormattedTime(widget._transaction.timestamp)}",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: SizeConfig.mediumTextSize,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "Offer ends in:  ",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: SizeConfig.mediumTextSize,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            TweenAnimationBuilder<Duration>(
+                                duration: getOfferDuration(),
+                                tween: Tween(
+                                    begin: getOfferDuration(),
+                                    end: Duration.zero),
+                                onEnd: () {
+                                  print('Timer ended');
+                                  baseProvider.showNegativeAlert("Offer Ended",
+                                      "No free beer now", context);
+                                  AppState.backButtonDispatcher.didPopRoute();
+                                },
+                                builder: (BuildContext context, Duration value,
+                                    Widget child) {
+                                  final minutes = (value.inMinutes)
+                                      .toString()
+                                      .padLeft(2, '0');
+                                  final seconds = (value.inSeconds % 60)
+                                      .toString()
+                                      .padLeft(2, '0');
+
+                                  return Text(
+                                    "$minutes:$seconds",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: SizeConfig.largeTextSize,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  );
+                                }),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    Lottie.asset("images/lottie/beer.json",
+                        height: SizeConfig.screenHeight * 0.14,
+                        width: SizeConfig.screenWidth * 0.24),
+                  ],
+                ),
+                Positioned(
+                  top: 0,
+                  right: -10,
+                  child: IconButton(
+                    icon: Icon(Icons.info, color: Colors.white),
+                    onPressed: () {
+                      AppState.screenStack.add(ScreenItem.dialog);
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (ctx) {
+                            return WillPopScope(
+                              onWillPop: () async {
+                                AppState.backButtonDispatcher.didPopRoute();
+                                return Future.value(true);
+                              },
+                              child: Container(
+                                width: SizeConfig.screenWidth,
+                                height: SizeConfig.screenHeight * 0.4,
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        IconButton(
+                                          onPressed: () => AppState
+                                              .backButtonDispatcher
+                                              .didPopRoute(),
+                                          icon: Icon(Icons.close),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                    },
+                  ),
+                )
+              ],
+            ),
+          ),
       ],
     );
+  }
+
+  Duration getOfferDuration() {
+    Duration difference;
+    DateTime tTime = DateTime.fromMillisecondsSinceEpoch(
+            widget._transaction.timestamp.millisecondsSinceEpoch)
+        .add(Duration(seconds: 600));
+    difference = tTime.difference(DateTime.now());
+
+    return difference;
+  }
+
+  String _getFormattedTime(Timestamp tTime) {
+    DateTime now =
+        DateTime.fromMillisecondsSinceEpoch(tTime.millisecondsSinceEpoch);
+    return DateFormat('kk:mm').format(now);
+  }
+
+  String _getFormattedDate(Timestamp tTime) {
+    DateTime now =
+        DateTime.fromMillisecondsSinceEpoch(tTime.millisecondsSinceEpoch);
+    return DateFormat('dd MMM, yyyy').format(now);
   }
 
   Widget referralTileWide(String title, String value, Color color) {

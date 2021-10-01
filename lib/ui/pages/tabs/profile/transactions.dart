@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
@@ -52,6 +54,7 @@ class _TransactionsState extends State<Transactions> {
         }
         if (tMap['length'] < 30) {
           baseProvider.hasMoreTransactionListDocuments = false;
+          findFirstAugmontTransaction();
         }
         // print(
         //     "---------------------${baseProvider.userMiniTxnList}-----------------");
@@ -59,6 +62,20 @@ class _TransactionsState extends State<Transactions> {
           isLoading = false;
         });
       });
+    }
+  }
+
+  findFirstAugmontTransaction() {
+    try {
+      List<UserTransaction> reversedList =
+          baseProvider.userMiniTxnList.reversed.toList();
+      baseProvider.firstAugmontTransaction = reversedList.firstWhere(
+          (element) =>
+              element.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
+              element.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE &&
+              element.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD);
+    } catch (e) {
+      log("No transaction found");
     }
   }
 
@@ -362,11 +379,13 @@ class _TransactionsState extends State<Transactions> {
           Haptic.vibrate();
           // if (filteredList[index].tranStatus !=
           //     UserTransaction.TRAN_STATUS_CANCELLED)
+          bool freeBeerStatus = getBeerTicketStatus(filteredList[index]);
           showDialog(
               context: context,
               builder: (BuildContext context) {
                 AppState.screenStack.add(ScreenItem.dialog);
-                return TransactionDetailsDialog(filteredList[index]);
+                return TransactionDetailsDialog(
+                    filteredList[index], freeBeerStatus);
               });
         },
         dense: true,
@@ -420,5 +439,25 @@ class _TransactionsState extends State<Transactions> {
     DateTime now =
         DateTime.fromMillisecondsSinceEpoch(tTime.millisecondsSinceEpoch);
     return DateFormat('yyyy-MM-dd – kk:mm').format(now);
+  }
+
+  bool isOfferStillValid(Timestamp time) {
+    DateTime tTime =
+        DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
+    Duration difference = DateTime.now().difference(tTime);
+    if (difference.inSeconds <= 598) {
+      log("offer Still valid");
+      return true;
+    }
+    log("offer no more valid");
+    return false;
+  }
+
+  bool getBeerTicketStatus(UserTransaction transaction) {
+    if (baseProvider.firstAugmontTransaction != null &&
+        baseProvider.firstAugmontTransaction == transaction &&
+        transaction.amount >= 150.0 &&
+        isOfferStillValid(transaction.timestamp)) return true;
+    return false;
   }
 }
