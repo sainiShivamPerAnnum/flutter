@@ -329,7 +329,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
           Container(
             margin: EdgeInsets.symmetric(vertical: 8),
             width: SizeConfig.screenWidth,
-            height: SizeConfig.screenHeight * 0.24,
+            height: SizeConfig.screenWidth * 0.5,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               gradient: new LinearGradient(colors: [
@@ -421,6 +421,9 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                           height: SizeConfig.screenHeight * 0.14,
                           width: SizeConfig.screenWidth * 0.24),
                     ),
+                    SizedBox(
+                      width: SizeConfig.globalMargin * 2,
+                    )
                   ],
                 ),
                 Positioned(
