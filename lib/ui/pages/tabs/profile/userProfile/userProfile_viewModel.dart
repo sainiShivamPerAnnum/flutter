@@ -1,8 +1,6 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item.dart';
-import 'package:felloapp/core/fcm_listener.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_viewmodel.dart';
@@ -24,8 +22,6 @@ import 'package:lottie/lottie.dart';
 class UserProfileViewModel extends BaseModel {
   final _userService = locator<UserService>();
   BaseUtil _baseUtil = locator<BaseUtil>();
-  DBModel _dbUtil = locator<DBModel>();
-  FcmListener _fcmListener = locator<FcmListener>();
   double picSize;
   String defaultPan = "**********";
   String pan = "**********";
