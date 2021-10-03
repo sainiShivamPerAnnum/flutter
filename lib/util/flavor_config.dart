@@ -9,6 +9,7 @@ class FlavorValues {
       @required this.awsAugmontStage,
       @required this.freshchatStage,
       @required this.signzyStage,
+      @required this.signzyPanStage,
       @required this.razorpayStage,
       @required this.baseUriAsia,
       @required this.baseUriUS,
@@ -18,6 +19,7 @@ class FlavorValues {
   final FreshchatStage freshchatStage;
   final AWSAugmontStage awsAugmontStage;
   final SignzyStage signzyStage;
+  final SignzyPanStage signzyPanStage;
   final RazorpayStage razorpayStage;
   final String baseUriAsia;
   final String baseUriUS;
