@@ -6,7 +6,9 @@ import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/enums/cache_type.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -29,6 +31,7 @@ class ChangeProfilePicture extends StatefulWidget {
 
 class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
   Log log = new Log('ChangeProfilePicture');
+  final _userService = locator<UserService>();
   final FirebaseStorage storage = FirebaseStorage.instance;
   BaseUtil baseProvider;
   DBModel dbProvider;
@@ -111,7 +114,9 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
         await CacheManager.writeCache(
             key: 'dpUrl', value: url, type: CacheType.string);
         baseProvider.isProfilePictureUpdated = true;
-        baseProvider.setDisplayPictureUrl(url);
+        //TODO: Add user service here.
+        _userService.setMyUserDpUrl(url);
+        //baseProvider.setDisplayPictureUrl(url);
         log.debug('Final DP Uri: $url');
         return true;
       } else

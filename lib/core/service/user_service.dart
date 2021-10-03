@@ -18,6 +18,8 @@ class UserService {
   BaseUser get baseUser => _baseUser;
   String get myUserDpUrl => _myUserDpUrl;
 
+  void setMyUserDpUrl(String url) => _myUserDpUrl = url;
+
   bool get isUserOnborded {
     if (_firebaseUser != null && _baseUser != null && _baseUser.uid.isNotEmpty)
       return true;
@@ -41,17 +43,20 @@ class UserService {
   Future<void> setProfilePicture() async {
     if (await CacheManager.readCache(key: 'dpUrl') == null) {
       try {
-        if (_baseUser != null)
+        if (_baseUser != null) {
           _myUserDpUrl = await _dbModel.getUserDP(baseUser.uid);
-        _logger.d("Profile picture updated");
+          _logger.d("Profile picture updated");
+        }
         if (_myUserDpUrl != null) {
           await CacheManager.writeCache(
-              key: 'dpUrl', value: myUserDpUrl, type: CacheType.string);
+              key: 'dpUrl', value: _myUserDpUrl, type: CacheType.string);
           _logger.d("No profile picture found in cache, fetched from server");
         }
       } catch (e) {
         _logger.e(e.toString());
       }
+    } else {
+      _myUserDpUrl = await CacheManager.readCache(key: 'dpUrl');
     }
   }
 }
