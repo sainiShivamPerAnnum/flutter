@@ -445,7 +445,7 @@ class HttpModel extends ChangeNotifier {
         } else if (res.statusCode == 404) {
           throw Exception('PAN not found');
         } else {
-          throw Exception('Failed to get response from Signz Verification Api');
+          throw Exception('Failed to get response from Signzy Verification Api');
         }
       }
     } catch (e) {

@@ -315,7 +315,8 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
         _flag = isPanVerified;
       } catch (e) {
         _flag = false;
-        _reason = e.toString();
+        log.error(e.toString());
+        _reason = 'The name on your PAN card does not match with the entered name. Please try again.';
       }
     }
     if (!_flag) {
