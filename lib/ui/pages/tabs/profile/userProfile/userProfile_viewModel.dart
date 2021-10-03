@@ -21,15 +21,18 @@ import 'package:lottie/lottie.dart';
 
 class UserProfileViewModel extends BaseModel {
   final _userService = locator<UserService>();
-  BaseUtil _baseUtil = locator<BaseUtil>();
+  final BaseUtil _baseUtil = locator<BaseUtil>();
   double picSize;
+
+  //Define this in constants
   String defaultPan = "**********";
   String pan = "**********";
+
   bool isPanVisible = false;
 
   get myUserDpUrl => _userService.myUserDpUrl;
 
-//Model should never user Widgets in it.
+//Model should never user Widgets in it. We should never pass context here...
   chooseprofilePicture(BuildContext context) async {
     final temp = await ImagePicker()
         .pickImage(source: ImageSource.gallery, imageQuality: 45);
