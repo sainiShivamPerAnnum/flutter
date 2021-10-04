@@ -3,6 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/modals/octfest_info_modal.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -328,13 +329,13 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
           Container(
             margin: EdgeInsets.symmetric(vertical: 8),
             width: SizeConfig.screenWidth,
-            height: SizeConfig.screenHeight * 0.2,
+            height: SizeConfig.screenWidth * 0.5,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               gradient: new LinearGradient(colors: [
                 UiConstants.primaryColor,
                 UiConstants.primaryColor.withBlue(190),
-              ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
+              ], begin: Alignment.centerLeft, end: Alignment.bottomRight),
             ),
             padding: EdgeInsets.only(
                 right: SizeConfig.globalMargin,
@@ -347,30 +348,11 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Name:",
-                                style: TextStyle(
-                                  fontSize: SizeConfig.smallTextSize,
-                                  color: Colors.white.withOpacity(0.5),
-                                ),
-                              ),
-                              Container(
-                                width: SizeConfig.screenWidth * 0.5,
-                                child: Text(
-                                  baseProvider.myUser.name,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.montserrat(
-                                      color: Colors.white,
-                                      fontSize: SizeConfig.largeTextSize,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                            ]),
+                        BeerTicketItem(
+                            label: "Name", value: baseProvider.myUser.name),
+                        BeerTicketItem(
+                            label: "Mobile",
+                            value: "+91 ${baseProvider.myUser.mobile}"),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -382,7 +364,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                               ),
                             ),
                             Text(
-                              "${_getFormattedDate(widget._transaction.timestamp)} || ${_getFormattedTime(widget._transaction.timestamp)}",
+                              "${_getFormattedDate(widget._transaction.timestamp)}, ${_getFormattedTime(widget._transaction.timestamp)}",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: SizeConfig.mediumTextSize,
@@ -396,7 +378,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                               "Offer ends in:  ",
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: SizeConfig.mediumTextSize,
+                                  fontSize: SizeConfig.smallTextSize,
                                   fontWeight: FontWeight.w500),
                             ),
                             TweenAnimationBuilder<Duration>(
@@ -422,7 +404,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                   return Text(
                                     "$minutes:$seconds",
                                     style: TextStyle(
-                                      color: Colors.black,
+                                      color: Colors.white,
                                       fontSize: SizeConfig.largeTextSize,
                                       fontWeight: FontWeight.w700,
                                     ),
@@ -433,9 +415,15 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                       ],
                     ),
                     Spacer(),
-                    Lottie.asset("images/lottie/beer.json",
-                        height: SizeConfig.screenHeight * 0.14,
-                        width: SizeConfig.screenWidth * 0.24),
+                    Transform.scale(
+                      scale: 1.4,
+                      child: Lottie.asset("images/lottie/beer.json",
+                          height: SizeConfig.screenHeight * 0.14,
+                          width: SizeConfig.screenWidth * 0.24),
+                    ),
+                    SizedBox(
+                      width: SizeConfig.globalMargin * 2,
+                    )
                   ],
                 ),
                 Positioned(
@@ -448,31 +436,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                       showModalBottomSheet(
                           context: context,
                           builder: (ctx) {
-                            return WillPopScope(
-                              onWillPop: () async {
-                                AppState.backButtonDispatcher.didPopRoute();
-                                return Future.value(true);
-                              },
-                              child: Container(
-                                width: SizeConfig.screenWidth,
-                                height: SizeConfig.screenHeight * 0.4,
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        IconButton(
-                                          onPressed: () => AppState
-                                              .backButtonDispatcher
-                                              .didPopRoute(),
-                                          icon: Icon(Icons.close),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            );
+                            return OctFestInfoModal();
                           });
                     },
                   ),
@@ -490,8 +454,8 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
             widget._transaction.timestamp.millisecondsSinceEpoch)
         .add(Duration(seconds: 600));
     difference = tTime.difference(DateTime.now());
-
     return difference;
+    //return Duration(minutes: 15); //FOR TESTING
   }
 
   String _getFormattedTime(Timestamp tTime) {
@@ -503,7 +467,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
   String _getFormattedDate(Timestamp tTime) {
     DateTime now =
         DateTime.fromMillisecondsSinceEpoch(tTime.millisecondsSinceEpoch);
-    return DateFormat('dd MMM, yyyy').format(now);
+    return DateFormat('dd MMM yyyy').format(now);
   }
 
   Widget referralTileWide(String title, String value, Color color) {
@@ -572,5 +536,38 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
         ),
       ),
     );
+  }
+}
+
+class BeerTicketItem extends StatelessWidget {
+  final String label, value;
+  BeerTicketItem({this.label, @required this.value});
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (label != null)
+            Text(
+              "$label:",
+              style: TextStyle(
+                fontSize: SizeConfig.smallTextSize,
+                color: Colors.white.withOpacity(0.5),
+              ),
+            ),
+          Container(
+            width: SizeConfig.screenWidth * 0.5,
+            child: Text(
+              value,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.montserrat(
+                  color: Colors.white,
+                  fontSize: SizeConfig.largeTextSize,
+                  fontWeight: FontWeight.w500),
+            ),
+          ),
+        ]);
   }
 }
