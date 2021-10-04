@@ -48,7 +48,9 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     picSize = SizeConfig.screenHeight / 4.8;
     return BaseView<UserProfileViewModel>(
-      //onModelReady: (model) {},
+      onModelReady: (model) {
+        print("This is userProfile view - ${model.myUserDpUrl}");
+      },
       builder: (ctx, model, child) => Scaffold(
         backgroundColor: Color(0xffEDEDED),
         body: Container(
@@ -61,14 +63,14 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                   width: SizeConfig.screenWidth,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: baseProvider.myUserDpUrl == null ||
-                                baseProvider.myUserDpUrl == ""
-                            ? AssetImage(
-                                "images/profile.png",
-                              )
-                            : CachedNetworkImageProvider(
-                                baseProvider.myUserDpUrl,
-                              ),
+                        image:
+                            model.myUserDpUrl == null || model.myUserDpUrl == ""
+                                ? AssetImage(
+                                    "images/profile.png",
+                                  )
+                                : CachedNetworkImageProvider(
+                                    model.myUserDpUrl,
+                                  ),
                         fit: BoxFit.cover),
                   ),
                   child: Stack(
@@ -122,13 +124,13 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                   border:
                                       Border.all(color: Colors.white, width: 8),
                                   image: DecorationImage(
-                                      image: baseProvider.myUserDpUrl == null ||
-                                              baseProvider.myUserDpUrl == ""
+                                      image: model.myUserDpUrl == null ||
+                                              model.myUserDpUrl == ""
                                           ? AssetImage(
                                               "images/profile.png",
                                             )
                                           : CachedNetworkImageProvider(
-                                              baseProvider.myUserDpUrl,
+                                              model.myUserDpUrl,
                                             ),
                                       fit: BoxFit.cover),
                                 ),

@@ -8,6 +8,7 @@
 // import 'package:felloapp/core/ops/db_ops.dart';
 // import 'package:felloapp/core/ops/http_ops.dart';
 // import 'package:felloapp/core/ops/lcl_db_ops.dart';
+// import 'package:felloapp/core/service/user_service.dart';
 // import 'package:felloapp/navigator/app_state.dart';
 // import 'package:felloapp/navigator/router/ui_pages.dart';
 // import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
@@ -25,6 +26,7 @@
 // import 'package:felloapp/ui/pages/tabs/profile/profile_screen.dart';
 // import 'package:felloapp/util/constants.dart';
 // import 'package:felloapp/util/haptic.dart';
+// import 'package:felloapp/util/locator.dart';
 // import 'package:felloapp/util/logger.dart';
 // import 'package:felloapp/util/size_config.dart';
 // import 'package:felloapp/util/ui_constants.dart';
@@ -54,6 +56,7 @@
 //   DBModel dbProvider;
 //   FcmHandler fcmProvider;
 //   LocalDBModel lclDbProvider;
+//   UserService userService = locator<UserService>();
 //   AppState appState;
 //   List<Widget> _viewsByIndex;
 //   List<bool> _showFocuses = List.filled(4, false);
@@ -148,7 +151,7 @@
 //         });
 //   }
 
-//   _initialize() {
+//   _initialize() async {
 //     if (!_isInitialized) {
 //       _isInitialized = true;
 //       lclDbProvider.showHomeTutorial.then((value) {
@@ -161,6 +164,10 @@
 //       });
 
 //       _initAdhocNotifications();
+//       //User service initialized;
+//       await userService.init();
+
+//       //TODO: remove base provider get profile picture
 //       baseProvider.getProfilePicture();
 //       // show security modal
 //       if (baseProvider.show_security_prompt &&

@@ -1,8 +1,7 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item.dart';
-import 'package:felloapp/core/fcm_listener.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_viewmodel.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
@@ -21,26 +20,32 @@ import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 
 class UserProfileViewModel extends BaseModel {
-  BaseUtil _baseUtil = locator<BaseUtil>();
-  DBModel _dbUtil = locator<DBModel>();
-  FcmListener _fcmListener = locator<FcmListener>();
+  final _userService = locator<UserService>();
+  final BaseUtil _baseUtil = locator<BaseUtil>();
   double picSize;
+
+  //Define this in constants
   String defaultPan = "**********";
   String pan = "**********";
+
   bool isPanVisible = false;
 
+  get myUserDpUrl => _userService.myUserDpUrl;
+
+//Model should never user Widgets in it. We should never pass context here...
   chooseprofilePicture(BuildContext context) async {
     final temp = await ImagePicker()
         .pickImage(source: ImageSource.gallery, imageQuality: 45);
     if (temp != null) {
       print(File(temp.path).lengthSync() / 1024);
       Haptic.vibrate();
-      showDialog(
+      await showDialog(
         context: context,
         builder: (BuildContext context) => ChangeProfilePicture(
           image: File(temp.path),
         ),
       );
+      notifyListeners();
     }
   }
 

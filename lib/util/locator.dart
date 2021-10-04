@@ -11,6 +11,7 @@ import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
@@ -27,7 +28,6 @@ import 'package:felloapp/ui/widgets/buttons/sellGoldButton/sellGoldBtn_viewModel
 import 'package:felloapp/ui/widgets/drawer/drawer_viewModel.dart';
 import 'package:felloapp/ui/widgets/miniTransactionWindow/miniTransCard_viewModel.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
 import 'package:logger/logger.dart';
 
 GetIt locator = GetIt.instance;
@@ -47,6 +47,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => PaymentService());
   locator.registerLazySingleton(() => AppState());
   locator.registerLazySingleton(() => ConnectivityService());
+  locator.registerLazySingleton(() => UserService());
   locator.registerLazySingleton(() => Logger());
 
   // Hometabs
@@ -56,6 +57,7 @@ void setupLocator() {
 
   //REST
   locator.registerFactory(() => TranViewModel());
+  //TODO: Whats draw model (view or view model) ?
   locator.registerFactory(() => DailyPicksDrawModel());
   locator.registerFactory(() => UserProfileViewModel());
   locator.registerFactory(() => RootViewModel());
