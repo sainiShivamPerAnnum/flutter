@@ -72,6 +72,7 @@ class PageConfiguration {
   final String path;
   final Pages uiPage;
   PageAction currentPageAction;
+  var returnValue;
 
   PageConfiguration(
       {@required this.key,

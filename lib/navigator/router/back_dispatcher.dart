@@ -1,4 +1,6 @@
 //Project Imports
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -9,8 +11,6 @@ import 'package:felloapp/util/locator.dart';
 
 //Flutter Imports
 import 'package:flutter/material.dart';
-
-
 
 class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final FelloRouterDelegate _routerDelegate;
@@ -50,7 +50,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
                 _baseUtil.myUser.uid, _baseUtil.myUser.userPreferences)
             .then((value) {
           AppState.unsavedPrefs = false;
-          print("Preferences updated");
+          log("Preferences updated");
         });
       return _routerDelegate.popRoute();
     }

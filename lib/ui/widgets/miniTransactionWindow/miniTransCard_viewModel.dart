@@ -6,6 +6,7 @@ import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/enums/view_state.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_viewmodel.dart';
@@ -21,27 +22,14 @@ class MiniTransactionCardViewModel extends BaseModel {
   final Log bulog = new Log("BaseUtil");
   final dbProvider = locator<DBModel>();
   final baseProvider = locator<BaseUtil>();
+  final _txnService = locator<TransactionService>();
   AppState appState;
 
-  List<UserTransaction> txnList;
-
-  getTransactions() async {
+  List<UserTransaction> get txnList => _txnService.txnList;
+  getMiniTransactions() async {
     bulog.debug("Getting mini transactions");
     setState(ViewState.Busy);
-    if (baseProvider != null && dbProvider != null) {
-      dbProvider
-          .getFilteredUserTransactions(baseProvider.myUser, null, null,
-              baseProvider.lastTransactionListDocument)
-          .then((Map<String, dynamic> tMap) {
-        if (baseProvider.userMiniTxnList == null ||
-            baseProvider.userMiniTxnList.length == 0) {
-          baseProvider.userMiniTxnList = List.from(tMap['listOfTransactions']);
-          txnList = baseProvider.userMiniTxnList;
-          notifyListeners();
-          bulog.debug("Txnlist length: ${txnList.length}");
-        }
-      });
-    }
+    await _txnService.fetchTransactions();
     setState(ViewState.Idle);
   }
 
