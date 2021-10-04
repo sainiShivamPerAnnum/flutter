@@ -32,7 +32,7 @@ class FBtn extends StatelessWidget {
                     text,
                     style: textStyle,
                   ),
-                  onPressed: () => model.executeOnPress(onPressed),
+                  onPressed: onPressed,
                 )
               : Center(
                   child: CircularProgressIndicator(

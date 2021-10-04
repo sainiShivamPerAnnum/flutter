@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item.dart';
+import 'package:felloapp/core/enums/view_state.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/architecture/base_viewmodel.dart';
 import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -15,10 +17,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
-enum TranState { Idle, Busy }
 enum TranFilterType { Type, Subtype }
 
-class TranViewModel extends ChangeNotifier {
+class TranViewModel extends BaseModel {
   int _subfilter = 1;
   int _filter = 1;
   bool _init = true;
@@ -58,20 +59,14 @@ class TranViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  TranState _state = TranState.Idle;
-  TranState get state => _state;
+  ViewState _state = ViewState.Idle;
   final Log dblog = new Log("DBModel");
   final Log bulog = new Log("BaseUtil");
   final dbProvider = locator<DBModel>();
   final baseProvider = locator<BaseUtil>();
 
-  setState(TranState newState) {
-    _state = newState;
-    notifyListeners();
-  }
-
   getTransactions() {
-    setState(TranState.Busy);
+    setState(ViewState.Busy);
     if (baseProvider != null &&
         dbProvider != null &&
         baseProvider.hasMoreTransactionListDocuments) {
@@ -93,7 +88,7 @@ class TranViewModel extends ChangeNotifier {
         if (tMap['length'] < 30) {
           baseProvider.hasMoreTransactionListDocuments = false;
         }
-        setState(TranState.Idle);
+        setState(ViewState.Idle);
       });
     }
   }
@@ -148,7 +143,7 @@ class TranViewModel extends ChangeNotifier {
   }
 
   filterTransactions() {
-    setState(TranState.Busy);
+    setState(ViewState.Busy);
     filteredList = List.from(baseProvider.userMiniTxnList);
     if (filter != 1 || subFilter != 1) {
       filteredList.clear();
@@ -200,7 +195,7 @@ class TranViewModel extends ChangeNotifier {
         if (addItemFlag) filteredList.add(txn);
       });
     }
-    setState(TranState.Idle);
+    setState(ViewState.Idle);
     return filteredList;
   }
 
@@ -273,15 +268,11 @@ class TranViewModel extends ChangeNotifier {
   }
 
   init() {
-    if (baseProvider.userMiniTxnList == null
-        // || baseProvider.userMiniTxnList.isEmpty
-        ) {
+    if (baseProvider.userMiniTxnList == null) {
       getTransactions();
     }
     if (_init) {
-      if (baseProvider.userMiniTxnList != null
-          // && baseProvider.userMiniTxnList.isNotEmpty
-          ) {
+      if (baseProvider.userMiniTxnList != null) {
         filteredList = List.from(baseProvider.userMiniTxnList);
       } else {
         filteredList = [];
@@ -291,7 +282,7 @@ class TranViewModel extends ChangeNotifier {
                 _scrollController.position.maxScrollExtent &&
             !_scrollController.position.outOfRange) {
           if (baseProvider.hasMoreTransactionListDocuments &&
-              state == TranState.Idle) {
+              state == ViewState.Idle) {
             getTransactions();
           }
         }

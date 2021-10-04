@@ -22,17 +22,13 @@ class MiniTransactionCardViewModel extends BaseModel {
   final dbProvider = locator<DBModel>();
   final baseProvider = locator<BaseUtil>();
   AppState appState;
-  fetchTransactions() async {
-    await getTransactions();
-  }
 
-  List<UserTransaction> get txnList => baseProvider.userMiniTxnList;
+  List<UserTransaction> txnList;
 
-  getTransactions() {
+  getTransactions() async {
+    bulog.debug("Getting mini transactions");
     setState(ViewState.Busy);
-    if (baseProvider != null &&
-        dbProvider != null &&
-        baseProvider.hasMoreTransactionListDocuments) {
+    if (baseProvider != null && dbProvider != null) {
       dbProvider
           .getFilteredUserTransactions(baseProvider.myUser, null, null,
               baseProvider.lastTransactionListDocument)
@@ -40,6 +36,9 @@ class MiniTransactionCardViewModel extends BaseModel {
         if (baseProvider.userMiniTxnList == null ||
             baseProvider.userMiniTxnList.length == 0) {
           baseProvider.userMiniTxnList = List.from(tMap['listOfTransactions']);
+          txnList = baseProvider.userMiniTxnList;
+          notifyListeners();
+          bulog.debug("Txnlist length: ${txnList.length}");
         }
       });
     }

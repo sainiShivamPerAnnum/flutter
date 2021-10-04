@@ -102,7 +102,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
   @override
   Widget build(BuildContext context) {
     _width = MediaQuery.of(context).size.width;
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
+    baseProvider = Provider.of<BaseUtil>(context);
     appState = Provider.of<AppState>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
@@ -470,6 +470,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
           ),
           onPressed: () async {
             Haptic.vibrate();
+            FocusScope.of(context).unfocus();
             if (baseProvider.showNoInternetAlert(context)) return;
             if (baseProvider.checkKycMissing) {
               _controller.forward().then((value) => _controller.reverse());

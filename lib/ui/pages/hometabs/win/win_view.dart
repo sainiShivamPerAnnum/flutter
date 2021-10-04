@@ -36,31 +36,38 @@ class Win extends StatelessWidget {
                           Widgets()
                               .getHeadlineLight("My winnings", Colors.black),
                           Widgets().getHeadlineBold(
-                              text: "\$ 1000", color: UiConstants.primaryColor),
+                              text: "₹ ${model.getUnclaimedPrizeBalance()}",
+                              color: UiConstants.primaryColor),
                         ],
                       ),
+                      // SizedBox(height: 12),
+                      // Widgets().getBodyBold("Redeem for", Colors.black),
                       SizedBox(height: 12),
-                      Widgets().getBodyBold("Redeem for", Colors.black),
-                      SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Widgets().getButton(
-                              "Augmont Digital Gold",
-                              () {},
-                              augmontGoldPalette.primaryColor,
-                            ),
-                          ),
-                          SizedBox(width: 24),
-                          Expanded(
-                            child: Widgets().getButton(
-                              "Amazon Gift voucher",
-                              () {},
-                              Colors.orange,
-                            ),
-                          ),
-                        ],
+                      // if (model.getUnclaimedPrizeBalance() > 0)
+                      Widgets().getButton(
+                        model.getWinningsButtonText(),
+                        () => model.prizeBalanceAction(context),
+                        Colors.orange,
                       ),
+                      // Row(
+                      //   children: [
+                      // Expanded(
+                      //   child: Widgets().getButton(
+                      //     "Augmont Digital Gold",
+                      //     () {},
+                      //     augmontGoldPalette.primaryColor,
+                      //   ),
+                      // ),
+                      //     SizedBox(width: 24),
+                      //     Expanded(
+                      //       child: Widgets().getButton(
+                      //         "Amazon Gift voucher",
+                      //         () {},
+                      //         Colors.orange,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),

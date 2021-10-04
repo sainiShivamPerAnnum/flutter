@@ -1,20 +1,22 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/view_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/widgets.dart';
+import 'package:felloapp/ui/widgets/buttons/buyGoldButton/buyGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/buttons/flatButton/flatButton_view.dart';
 import 'package:felloapp/ui/widgets/buttons/raisedButton/raisedButton_view.dart';
+import 'package:felloapp/ui/widgets/buttons/sellGoldButton/sellGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/miniTransactionWindow/miniTransCard_view.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Save extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    BaseUtil baseProvider = Provider.of<BaseUtil>(context);
     return BaseView<SaveViewModel>(
       onModelReady: (model) {},
       builder: (ctx, model, child) {
@@ -62,7 +64,8 @@ class Save extends StatelessWidget {
                           Widgets().getHeadlineLight(
                               "Your gold balance", Colors.black),
                           Widgets().getHeadlineBold(
-                              text: "0.567 gm", color: Colors.amber),
+                              text: "${model.getGoldBalance()} gm",
+                              color: Colors.amber),
                         ],
                       ),
                       SizedBox(
@@ -70,23 +73,9 @@ class Save extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          Expanded(
-                            child: Widgets().getButton(
-                              "Buy",
-                              () {
-                                print(baseProvider.todaysPicks);
-                              },
-                              augmontGoldPalette.primaryColor,
-                            ),
-                          ),
+                          Expanded(child: BuyGoldBtn()),
                           SizedBox(width: 24),
-                          Expanded(
-                            child: Widgets().getButton(
-                              "Sell",
-                              () {},
-                              Colors.grey[300],
-                            ),
-                          ),
+                          Expanded(child: SellGoldBtn()),
                         ],
                       ),
                       SizedBox(
@@ -138,7 +127,8 @@ class Save extends StatelessWidget {
                     children: [
                       Widgets().getHeadlineLight("Your winnings", Colors.black),
                       Widgets().getHeadlineBold(
-                          text: "\$ 1000", color: UiConstants.primaryColor),
+                          text: "₹ ${model.getUnclaimedPrizeBalance()}",
+                          color: UiConstants.primaryColor),
                     ],
                   ),
                 ),

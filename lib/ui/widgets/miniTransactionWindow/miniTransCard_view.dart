@@ -11,14 +11,13 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class MiniTransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseView<MiniTransactionCardViewModel>(
       onModelReady: (model) {
-        model.fetchTransactions();
+        model.getTransactions();
       },
       builder: (ctx, model, child) {
         return Card(
@@ -26,7 +25,7 @@ class MiniTransactionCard extends StatelessWidget {
             children: [
               Container(
                 height: 200,
-                child: model.state == ViewState.Busy
+                child: model.state == ViewState.Busy || model.txnList == null
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
