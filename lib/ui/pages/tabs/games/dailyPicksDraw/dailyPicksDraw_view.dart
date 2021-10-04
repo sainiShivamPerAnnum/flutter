@@ -1,5 +1,4 @@
 //Project Imports
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/enums/view_state.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -12,13 +11,12 @@ import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 
 //Pub Imports
-import 'package:provider/provider.dart';
 import 'package:rive/rive.dart' as rive;
 
 class PicksDraw extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BaseView<DailyPicksDrawModel>(onModelReady: (model) {
+    return BaseView<DailyPicksDrawViewModel>(onModelReady: (model) {
       model.init();
     }, builder: (ctx, model, child) {
       return Scaffold(

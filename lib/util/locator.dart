@@ -16,14 +16,13 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
+import 'package:felloapp/ui/pages/root/root_viewModel.dart';
 import 'package:felloapp/ui/pages/tabs/games/dailyPicksDraw/dailyPicksDraw_viewModel.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions/tran_viewModel.dart';
 import 'package:felloapp/ui/pages/tabs/profile/userProfile/userProfile_viewModel.dart';
-import 'package:felloapp/ui/pages/tabs/root/root_viewModel.dart';
 import 'package:felloapp/ui/widgets/buttons/buyGoldButton/buyGoldBtn_viewModel.dart';
 import 'package:felloapp/ui/widgets/buttons/flatButton/flatButton_viewModel.dart';
 import 'package:felloapp/ui/widgets/buttons/raisedButton/raisedButton_viewModel.dart';
-import 'package:felloapp/ui/widgets/buttons/sellGoldButton/sellGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/buttons/sellGoldButton/sellGoldBtn_viewModel.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_viewModel.dart';
 import 'package:felloapp/ui/widgets/miniTransactionWindow/miniTransCard_viewModel.dart';
@@ -57,8 +56,7 @@ void setupLocator() {
 
   //REST
   locator.registerFactory(() => TranViewModel());
-  //TODO: Whats draw model (view or view model) ?
-  locator.registerFactory(() => DailyPicksDrawModel());
+  locator.registerFactory(() => DailyPicksDrawViewModel());
   locator.registerFactory(() => UserProfileViewModel());
   locator.registerFactory(() => RootViewModel());
 
