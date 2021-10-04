@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -443,10 +444,14 @@ class _TransactionsState extends State<Transactions> {
   }
 
   bool isOfferStillValid(Timestamp time) {
+    String _timeoutMins = BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.OCT_FEST_OFFER_TIMEOUT);
+    if(_timeoutMins == null || _timeoutMins.isEmpty) _timeoutMins = '10';
+    int _timeout = int.tryParse(_timeoutMins);
+
     DateTime tTime =
         DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
     Duration difference = DateTime.now().difference(tTime);
-    if (difference.inSeconds <= 598) {
+    if (difference.inSeconds <= _timeout*60) {
       log("offer Still valid");
       return true;
     }

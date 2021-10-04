@@ -32,7 +32,7 @@ class OctFestInfoModal extends StatelessWidget {
                       child: FittedBox(
                         fit: BoxFit.cover,
                         child: Text(
-                          "October Free Beer Fest 🍺",
+                          "Fello October Fest 🍺",
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           style: GoogleFonts.montserrat(
@@ -86,47 +86,16 @@ class OctFestInfoModal extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         referralTile(
-                          "Share a personalised link with your friends and family.",
+                          "This October, visit any of our partner FnB outlets and get a free beverage on us.",
                           0,
                         ),
                         referralTile(
-                            "Once they signup, both of you receive 10 tickets and ₹25.",
+                            "Make your first investment of ₹150 or more and show the transaction to the outlet to avail the offer.",
                             SizeConfig.screenWidth * 0.1),
                         referralTile(
-                            "This balance gets unlocked for both once they make their first investment of atleast ₹100.",
+                            "This offer can only be availed once per user, using the outlet's download link.",
                             SizeConfig.screenWidth * 0.2),
                         SizedBox(height: SizeConfig.screenHeight * 0.2),
-                        // Container(
-                        //   width: SizeConfig.screenWidth * 0.5,
-                        //   height: SizeConfig.screenHeight * 0.1,
-                        //   child: Column(
-                        //     mainAxisAlignment: MainAxisAlignment.center,
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: [
-                        //       Text(
-                        //         "Want to earn more with Fello?",
-                        //         style:
-                        //             GoogleFonts.montserrat(color: Colors.grey),
-                        //       ),
-                        //       InkWell(
-                        //         onTap: () async {
-                        //           String url = "https://fello.in/cfo";
-                        //           if (await canLaunch(url)) {
-                        //             BaseUtil.launchUrl(url);
-                        //           } else {
-                        //             AppState.backButtonDispatcher.didPopRoute();
-                        //           }
-                        //         },
-                        //         child: Text(
-                        //           "Visit our CFO page",
-                        //           style: GoogleFonts.montserrat(
-                        //             color: UiConstants.primaryColor,
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
                       ],
                     ),
                   ],

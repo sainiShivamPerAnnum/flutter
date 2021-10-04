@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -33,10 +34,16 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
   BaseUtil baseProvider;
   bool _showInvoiceButton = false;
   bool _isInvoiceLoading = false;
+  int _timeoutMins;
 
   @override
   void initState() {
     super.initState();
+
+    String _timeoutStr = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.OCT_FEST_OFFER_TIMEOUT);
+    if (_timeoutStr == null || _timeoutStr.isEmpty) _timeoutStr = '10';
+    _timeoutMins = int.tryParse(_timeoutStr);
 
     if (widget._transaction.subType ==
             UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
@@ -382,14 +389,16 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                                   fontWeight: FontWeight.w500),
                             ),
                             TweenAnimationBuilder<Duration>(
-                                duration: getOfferDuration(),
+                                duration: getOfferDuration(_timeoutMins),
                                 tween: Tween(
-                                    begin: getOfferDuration(),
+                                    begin: getOfferDuration(_timeoutMins),
                                     end: Duration.zero),
                                 onEnd: () {
                                   print('Timer ended');
-                                  baseProvider.showNegativeAlert("Offer Ended",
-                                      "No free beer now", context);
+                                  baseProvider.showNegativeAlert(
+                                      "Offer Closed",
+                                      "Stay tuned for more such fun offers!",
+                                      context);
                                   AppState.backButtonDispatcher.didPopRoute();
                                 },
                                 builder: (BuildContext context, Duration value,
@@ -448,11 +457,11 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
     );
   }
 
-  Duration getOfferDuration() {
+  Duration getOfferDuration(int totalMins) {
     Duration difference;
     DateTime tTime = DateTime.fromMillisecondsSinceEpoch(
             widget._transaction.timestamp.millisecondsSinceEpoch)
-        .add(Duration(seconds: 600));
+        .add(Duration(minutes: totalMins));
     difference = tTime.difference(DateTime.now());
     return difference;
     //return Duration(minutes: 15); //FOR TESTING
@@ -461,7 +470,7 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
   String _getFormattedTime(Timestamp tTime) {
     DateTime now =
         DateTime.fromMillisecondsSinceEpoch(tTime.millisecondsSinceEpoch);
-    return DateFormat('kk:mm').format(now);
+    return DateFormat('h:mm a').format(now);
   }
 
   String _getFormattedDate(Timestamp tTime) {
@@ -541,7 +550,9 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
 
 class BeerTicketItem extends StatelessWidget {
   final String label, value;
+
   BeerTicketItem({this.label, @required this.value});
+
   @override
   Widget build(BuildContext context) {
     return Column(
