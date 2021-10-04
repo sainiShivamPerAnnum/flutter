@@ -19,7 +19,7 @@ import 'package:felloapp/ui/elements/tambola-global/weekly_picks.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/summary_tickets_display.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_result.dart';
-import 'package:felloapp/ui/widgets/network_bar.dart';
+import 'package:felloapp/ui/elements/network_bar.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/palettes.dart';
