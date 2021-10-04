@@ -1,14 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/root/root_viewModel.dart';
+import 'package:felloapp/ui/service_elements/profile_image.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
 class Root extends StatelessWidget {
   @override
@@ -120,23 +118,4 @@ class Root extends StatelessWidget {
   }
 }
 
-class ProfileImage extends StatelessWidget {
-  final height;
-  const ProfileImage({this.height = 0.3});
 
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<UserService>(
-      builder: (context, model, child) => CircleAvatar(
-        radius: kToolbarHeight * height,
-        backgroundImage: model.myUserDpUrl == null
-            ? AssetImage(
-                "images/profile.png",
-              )
-            : CachedNetworkImageProvider(
-                model.myUserDpUrl,
-              ),
-      ),
-    );
-  }
-}

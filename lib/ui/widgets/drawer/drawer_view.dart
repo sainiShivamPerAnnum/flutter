@@ -3,7 +3,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/widgets.dart';
-import 'package:felloapp/ui/pages/root/root_view.dart';
+import 'package:felloapp/ui/service_elements/profile_image.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_viewModel.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
