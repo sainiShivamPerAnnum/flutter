@@ -4,6 +4,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/widgets.dart';
+import 'package:felloapp/ui/pages/tabs/root/root_view.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_viewModel.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
@@ -24,15 +25,8 @@ class FDrawer extends StatelessWidget {
                         state: PageState.addPage,
                         page: UserProfileDetailsConfig);
                   },
-                  leading: CircleAvatar(
-                    radius: kToolbarHeight * 0.5,
-                    backgroundImage: model.myUserDpUrl == null
-                        ? AssetImage(
-                            "images/profile.png",
-                          )
-                        : CachedNetworkImageProvider(
-                            model.myUserDpUrl,
-                          ),
+                  leading: ProfileImage(
+                    height: 0.5,
                   ),
                   title: Widgets()
                       .getHeadlineBold(text: model.name, color: Colors.black),

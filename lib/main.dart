@@ -1,4 +1,5 @@
 //Flutter imports
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
@@ -79,6 +80,8 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => locator<FcmListener>()),
         ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
         ChangeNotifierProvider(create: (_) => locator<PaymentService>()),
+        ChangeNotifierProvider(create: (_) => locator<UserService>()),
+
         StreamProvider<ConnectivityStatus>(
           create: (_) {
             ConnectivityService connectivityService =

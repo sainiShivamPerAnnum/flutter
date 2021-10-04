@@ -4,9 +4,10 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
-class UserService {
+class UserService extends ChangeNotifier {
   final _dbModel = locator<DBModel>();
   final _logger = locator<Logger>();
 
@@ -18,7 +19,10 @@ class UserService {
   BaseUser get baseUser => _baseUser;
   String get myUserDpUrl => _myUserDpUrl;
 
-  void setMyUserDpUrl(String url) => _myUserDpUrl = url;
+  void setMyUserDpUrl(String url) {
+    _myUserDpUrl = url;
+    notifyListeners();
+  }
 
   bool get isUserOnborded {
     if (_firebaseUser != null && _baseUser != null && _baseUser.uid.isNotEmpty)
@@ -58,5 +62,6 @@ class UserService {
     } else {
       _myUserDpUrl = await CacheManager.readCache(key: 'dpUrl');
     }
+    notifyListeners();
   }
 }
