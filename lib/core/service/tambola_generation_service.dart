@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/TambolaBoard.dart';
-import 'package:felloapp/core/model/TicketRequest.dart';
+import 'package:felloapp/core/model/tambola_board_model.dart';
+import 'package:felloapp/core/model/ticket_request_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';

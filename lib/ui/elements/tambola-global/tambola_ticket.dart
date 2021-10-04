@@ -1,4 +1,4 @@
-import 'package:felloapp/core/model/TambolaBoard.dart';
+import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/ui/elements/custom-art/tambola_ticket_painter.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/tambola-home.dart';
 import 'package:felloapp/util/size_config.dart';

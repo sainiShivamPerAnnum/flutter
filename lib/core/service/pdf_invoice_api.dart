@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:felloapp/core/model/invoice.dart';
+import 'package:felloapp/core/model/invoice_model.dart';
 import 'package:felloapp/core/service/pdf_api.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';

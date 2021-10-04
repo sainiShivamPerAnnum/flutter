@@ -4,7 +4,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
+import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';

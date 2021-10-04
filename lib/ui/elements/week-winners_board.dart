@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
+import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/invoice.dart';
+import 'package:felloapp/core/model/invoice_model.dart';
 import 'package:felloapp/core/service/pdf_invoice_api.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/locator.dart';

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/model/DailyPick.dart';
-import 'package:felloapp/core/model/ReferralDetail.dart';
-import 'package:felloapp/core/model/TambolaBoard.dart';
-import 'package:felloapp/core/model/UserTransaction.dart';
+import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/core/model/referral_details_model.dart';
+import 'package:felloapp/core/model/tambola_board_model.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';

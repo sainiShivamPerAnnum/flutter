@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/ReferralDetail.dart';
+import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/size_config.dart';

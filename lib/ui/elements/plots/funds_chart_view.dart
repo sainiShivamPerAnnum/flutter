@@ -2,8 +2,8 @@
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/enums/screen_item.dart';
-import 'package:felloapp/core/model/UserFundWallet.dart';
-import 'package:felloapp/core/model/chartFundItem.dart';
+import 'package:felloapp/core/model/user_funt_wallet_model.dart';
+import 'package:felloapp/core/model/chart_fund_item_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
