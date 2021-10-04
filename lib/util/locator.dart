@@ -11,6 +11,7 @@ import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
+import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
@@ -47,6 +48,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => AppState());
   locator.registerLazySingleton(() => ConnectivityService());
   locator.registerLazySingleton(() => UserService());
+  locator.registerLazySingleton(() => TransactionService());
   locator.registerLazySingleton(() => Logger());
 
   // Hometabs

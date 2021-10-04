@@ -62,6 +62,5 @@ class UserService extends ChangeNotifier {
     } else {
       _myUserDpUrl = await CacheManager.readCache(key: 'dpUrl');
     }
-    notifyListeners();
   }
 }

@@ -8,12 +8,16 @@ import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_viewmodel.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
 import 'package:felloapp/ui/dialogs/success-dialog.dart';
 import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/modals/augmont_register_modal_sheet.dart';
+import 'package:felloapp/ui/pages/tabs/profile/transactions/tran_viewModel.dart';
+import 'package:felloapp/ui/pages/tabs/profile/transactions/transactions_view.dart';
+import 'package:felloapp/ui/widgets/miniTransactionWindow/miniTransCard_viewModel.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -32,7 +36,7 @@ class BuyGoldBtnVM extends BaseModel {
   DBModel _dbModel = locator<DBModel>();
   AugmontModel _augmontModel = locator<AugmontModel>();
   FcmListener _fcmListener = locator<FcmListener>();
-
+  TransactionService _txnService = locator<TransactionService>();
   String getActionButtonText() {
     int _status = checkAugmontStatus();
     if (_status == STATUS_UNAVAILABLE)
@@ -219,6 +223,7 @@ class BuyGoldBtnVM extends BaseModel {
             _baseUtil.getCurrentTotalClosingBalance();
         await _dbModel.updateUserTransaction(
             _baseUtil.myUser.uid, _baseUtil.currentAugmontTxn);
+        await _txnService.updateTransactions();
 
         ///if this was the user's first investment
         ///- update AugmontDetail obj

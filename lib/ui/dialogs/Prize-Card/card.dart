@@ -8,6 +8,7 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/fold-card.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
+import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -501,12 +502,9 @@ class _CloseCardState extends State<CloseCard> {
                           width: 3,
                         ),
                         shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: baseProvider.myUserDpUrl != null
-                              ? NetworkImage(baseProvider.myUserDpUrl)
-                              : AssetImage("images/profile.png"),
-                          fit: BoxFit.cover,
-                        ),
+                      ),
+                      child: ProfileImage(
+                        height: 2,
                       ),
                     ),
                   ),

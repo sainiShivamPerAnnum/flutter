@@ -458,10 +458,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           title: 'Where is my PAN Number used?',
         );
         break;
-      case "goldenTicket":
-        dialogWidget = GoldenTicketClaimDialog();
-        barrierDismissable = false;
-        break;
     }
     if (dialogWidget != null) {
       AppState.screenStack.add(ScreenItem.dialog);

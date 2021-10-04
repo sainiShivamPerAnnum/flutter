@@ -1,12 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/enums/view_state.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_viewmodel.dart';
 import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
+import 'package:felloapp/ui/pages/tabs/profile/transactions/transactions_view.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -59,38 +63,17 @@ class TranViewModel extends BaseModel {
     notifyListeners();
   }
 
-  ViewState _state = ViewState.Idle;
   final Log dblog = new Log("DBModel");
   final Log bulog = new Log("BaseUtil");
   final dbProvider = locator<DBModel>();
-  final baseProvider = locator<BaseUtil>();
+  final TransactionService _transactionService = locator<TransactionService>();
 
-  getTransactions() {
+  getTransactions() async {
     setState(ViewState.Busy);
-    if (baseProvider != null &&
-        dbProvider != null &&
-        baseProvider.hasMoreTransactionListDocuments) {
-      dbProvider
-          .getFilteredUserTransactions(baseProvider.myUser, null, null,
-              baseProvider.lastTransactionListDocument)
-          .then((Map<String, dynamic> tMap) {
-        if (baseProvider.userMiniTxnList == null ||
-            baseProvider.userMiniTxnList.length == 0) {
-          baseProvider.userMiniTxnList = List.from(tMap['listOfTransactions']);
-        } else {
-          baseProvider.userMiniTxnList
-              .addAll(List.from(tMap['listOfTransactions']));
-        }
-        filteredList = baseProvider.userMiniTxnList;
-        if (tMap['lastDocument'] != null) {
-          baseProvider.lastTransactionListDocument = tMap['lastDocument'];
-        }
-        if (tMap['length'] < 30) {
-          baseProvider.hasMoreTransactionListDocuments = false;
-        }
-        setState(ViewState.Idle);
-      });
-    }
+    await _transactionService.fetchTransactions();
+    _filteredList = _transactionService.txnList;
+    filterTransactions();
+    setState(ViewState.Idle);
   }
 
   Widget getTileLead(String type) {
@@ -144,10 +127,10 @@ class TranViewModel extends BaseModel {
 
   filterTransactions() {
     setState(ViewState.Busy);
-    filteredList = List.from(baseProvider.userMiniTxnList);
+    filteredList = List.from(_transactionService.txnList);
     if (filter != 1 || subFilter != 1) {
       filteredList.clear();
-      baseProvider.userMiniTxnList.forEach((txn) {
+      _transactionService.txnList.forEach((txn) {
         bool addItemFlag = true;
         if (filter != 1) {
           if (filter == 2) {
@@ -196,7 +179,6 @@ class TranViewModel extends BaseModel {
       });
     }
     setState(ViewState.Idle);
-    return filteredList;
   }
 
   String _getFormattedTime(Timestamp tTime) {
@@ -268,12 +250,12 @@ class TranViewModel extends BaseModel {
   }
 
   init() {
-    if (baseProvider.userMiniTxnList == null) {
+    if (_transactionService.txnList == null) {
       getTransactions();
     }
     if (_init) {
-      if (baseProvider.userMiniTxnList != null) {
-        filteredList = List.from(baseProvider.userMiniTxnList);
+      if (_transactionService.txnList != null) {
+        filteredList = List.from(_transactionService.txnList);
       } else {
         filteredList = [];
       }
@@ -281,7 +263,7 @@ class TranViewModel extends BaseModel {
         if (_scrollController.offset >=
                 _scrollController.position.maxScrollExtent &&
             !_scrollController.position.outOfRange) {
-          if (baseProvider.hasMoreTransactionListDocuments &&
+          if (_transactionService.hasMoreTransactionListDocuments &&
               state == ViewState.Idle) {
             getTransactions();
           }
