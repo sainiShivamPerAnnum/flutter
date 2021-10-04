@@ -1,5 +1,5 @@
 import 'package:felloapp/core/enums/cache_type.dart';
-import 'package:felloapp/core/model/BaseUser.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/util/locator.dart';

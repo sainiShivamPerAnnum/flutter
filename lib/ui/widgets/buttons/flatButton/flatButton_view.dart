@@ -2,7 +2,7 @@ import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/enums/view_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/widgets/buttons/flatButton/flatButton_viewModel.dart';
-import 'package:felloapp/ui/widgets/network_bar.dart';
+import 'package:felloapp/ui/elements/network_bar.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

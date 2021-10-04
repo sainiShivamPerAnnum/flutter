@@ -7,7 +7,7 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:rive/rive.dart';
 
-class DailyPicksDrawModel extends BaseModel {
+class DailyPicksDrawViewModel extends BaseModel {
   BaseUtil _baseUtil = locator<BaseUtil>();
   DBModel _dbModel = locator<DBModel>();
   final Log log = new Log("DailyPicksDraw-ViewModel");

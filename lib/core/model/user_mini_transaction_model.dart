@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/model/UserTransaction.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/util/logger.dart';
 
 class UserMiniTransaction {
