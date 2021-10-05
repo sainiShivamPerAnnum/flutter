@@ -2,22 +2,14 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/base_analytics.dart';
-import 'package:felloapp/core/enums/cache_type.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/cache_manager.dart';
-import 'package:felloapp/core/service/user_service.dart';
-import 'package:felloapp/util/fail_types.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 class ChangeProfilePicture extends StatefulWidget {
@@ -32,7 +24,6 @@ class ChangeProfilePicture extends StatefulWidget {
 
 class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
   Log log = new Log('ChangeProfilePicture');
-  final _userService = locator<UserService>();
   final FirebaseStorage storage = FirebaseStorage.instance;
   
   BaseUtil baseProvider;

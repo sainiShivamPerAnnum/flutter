@@ -1,27 +1,39 @@
 import 'package:felloapp/core/enums/cache_type.dart';
+import 'package:felloapp/core/enums/user_service_enums.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
-class UserService extends ChangeNotifier {
+
+
+class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final _dbModel = locator<DBModel>();
   final _logger = locator<Logger>();
 
   User _firebaseUser;
   BaseUser _baseUser;
   String _myUserDpUrl;
+  String _myUserName;
 
   User get firebaseUser => _firebaseUser;
   BaseUser get baseUser => _baseUser;
   String get myUserDpUrl => _myUserDpUrl;
+  String get myUserName => _myUserName;
 
-  void setMyUserDpUrl(String url) {
+  setMyUserDpUrl(String url) {
     _myUserDpUrl = url;
-    //notifyListeners();
+    notifyListeners(UserServiceProperties.myUserDpUrl);
+    _logger.d(
+        "My user dp url updated in userservice, property listeners notified");
+  }
+
+  setMyUserName(String name) {
+    _myUserName = name;
+    notifyListeners(UserServiceProperties.myUserName);
   }
 
   bool get isUserOnborded {

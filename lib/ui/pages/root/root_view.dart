@@ -29,16 +29,7 @@ class Root extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: InkWell(
                 onTap: model.showDrawer,
-                child: CircleAvatar(
-                  radius: kToolbarHeight * 0.4,
-                  backgroundImage: model.myUserDpUrl == null
-                      ? AssetImage(
-                          "images/profile.png",
-                        )
-                      : CachedNetworkImageProvider(
-                          model.myUserDpUrl,
-                        ),
-                ),
+                child: ProfileImage(),
               ),
             ),
             title: Text(

@@ -26,23 +26,14 @@ class FDrawer extends StatelessWidget {
                         state: PageState.addWidget,
                         page: UserProfileDetailsConfig,
                         widget: UserProfileDetails(
-                          needsRefresh: (needsRefresh) {
-                            if (needsRefresh) {
-                              model.refreshDrawer();
-                            }
-                          },
-                        ));
+                            // needsRefresh: (needsRefresh) {
+                            //   if (needsRefresh) {
+                            //     model.refreshDrawer();
+                            //   }
+                            // },
+                            ));
                   },
-                  leading: CircleAvatar(
-                    radius: kToolbarHeight * 0.5,
-                    backgroundImage: model.myUserDpUrl == null
-                        ? AssetImage(
-                            "images/profile.png",
-                          )
-                        : CachedNetworkImageProvider(
-                            model.myUserDpUrl,
-                          ),
-                  ),
+                  leading: ProfileImage(),
                   title: Widgets()
                       .getHeadlineBold(text: model.name, color: Colors.black),
                   subtitle: Widgets()

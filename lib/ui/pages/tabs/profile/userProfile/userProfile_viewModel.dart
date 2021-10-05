@@ -165,7 +165,7 @@ class UserProfileViewModel extends BaseModel {
     );
   }
 
-  handleDPOperation(ValueChanged<bool> needsRefresh) async {
+  handleDPOperation() async {
     BuildContext context;
     if (await _baseUtil.showNoInternetAlert(context)) return;
     var _status = await Permission.photos.status;
@@ -189,7 +189,7 @@ class UserProfileViewModel extends BaseModel {
               cancelAction: () => Navigator.pop(context)));
     } else if (_status.isGranted) {
       await chooseprofilePicture();
-      needsRefresh(true);
+      // needsRefresh(true);
     } else {
       _baseUtil.showNegativeAlert('Permission Unavailable',
           'Please enable permission from settings to continue', context);
@@ -215,7 +215,7 @@ class UserProfileViewModel extends BaseModel {
           },
         ),
       );
-      _rootViewModel.refresh();
+      // _rootViewModel.refresh();
       notifyListeners();
     }
   }
@@ -255,7 +255,6 @@ class UserProfileViewModel extends BaseModel {
       if (url != null) {
         await CacheManager.writeCache(
             key: 'dpUrl', value: url, type: CacheType.string);
-        //TODO: Add user service here.
         _userService.setMyUserDpUrl(url);
         //_baseUtil.setDisplayPictureUrl(url);
         log.debug('Final DP Uri: $url');
