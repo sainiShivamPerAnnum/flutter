@@ -92,5 +92,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+    <key>FirebaseDynamicLinksCustomDomains</key>
+    <array>
+        <string>https://fello.in/download/app</string>
+        <string>https://fello.in/app/referral</string>
+        <string>https://fello.in/claim/goldenticket</string>
+    </array>
 </dict>
 </plist>
