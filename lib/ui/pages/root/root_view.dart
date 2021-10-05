@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
@@ -28,7 +29,16 @@ class Root extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: InkWell(
                 onTap: model.showDrawer,
-                child: ProfileImage(),
+                child: CircleAvatar(
+                  radius: kToolbarHeight * 0.4,
+                  backgroundImage: model.myUserDpUrl == null
+                      ? AssetImage(
+                          "images/profile.png",
+                        )
+                      : CachedNetworkImageProvider(
+                          model.myUserDpUrl,
+                        ),
+                ),
               ),
             ),
             title: Text(
@@ -117,5 +127,3 @@ class Root extends StatelessWidget {
     );
   }
 }
-
-

@@ -454,8 +454,9 @@ class BaseUtil extends ChangeNotifier {
   }
 
   showNoInternetAlert(BuildContext context) {
-    ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityStatus>(context, listen: false);
+    ConnectivityStatus connectivityStatus = Provider.of<ConnectivityStatus>(
+        AppState.delegate.navigatorKey.currentContext,
+        listen: false);
 
     if (connectivityStatus == ConnectivityStatus.Offline) {
       Flushbar(
@@ -479,7 +480,7 @@ class BaseUtil extends ChangeNotifier {
             blurRadius: 3.0,
           )
         ],
-      )..show(context);
+      )..show(AppState.delegate.navigatorKey.currentContext);
       return true;
     }
     return false;
@@ -516,6 +517,18 @@ class BaseUtil extends ChangeNotifier {
         )
       ],
     )..show(context);
+  }
+
+  Future<void> openDialog(
+      {Widget content,
+      bool isBarrierDismissable,
+      ValueChanged<dynamic> callback}) async {
+    await showDialog(
+      context: AppState.delegate.navigatorKey.currentContext,
+      barrierDismissible: isBarrierDismissable,
+      builder: (ctx) => content,
+      useSafeArea: true,
+    );
   }
 
   AuthCredential generateAuthCredential(String verificationId, String smsCode) {

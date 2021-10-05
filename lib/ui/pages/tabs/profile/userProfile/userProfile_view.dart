@@ -5,6 +5,7 @@ import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -27,6 +28,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class UserProfileDetails extends StatefulWidget {
+  final ValueChanged<bool> needsRefresh;
+  UserProfileDetails({this.needsRefresh});
   @override
   _UserProfileDetailsState createState() => _UserProfileDetailsState();
 }
@@ -144,47 +147,9 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                   ),
                                   child: InkWell(
                                     onTap: () async {
-                                      if (await baseProvider
-                                          .showNoInternetAlert(context)) return;
-                                      var _status =
-                                          await Permission.photos.status;
-                                      if (_status.isRestricted ||
-                                          _status.isLimited ||
-                                          _status.isDenied) {
-                                        showDialog(
-                                            context: context,
-                                            builder: (ctx) {
-                                              return ConfirmActionDialog(
-                                                  title: "Request Permission",
-                                                  description:
-                                                      "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
-                                                  buttonText: "Continue",
-                                                  asset: Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: 8),
-                                                    child: Image.asset(
-                                                        "images/gallery.png",
-                                                        height: SizeConfig
-                                                                .screenWidth *
-                                                            0.24),
-                                                  ),
-                                                  confirmAction: () {
-                                                    Navigator.pop(context);
-                                                    model.chooseprofilePicture(
-                                                        context);
-                                                  },
-                                                  cancelAction: () =>
-                                                      Navigator.pop(context));
-                                            });
-                                      } else if (_status.isGranted) {
-                                        model.chooseprofilePicture(context);
-                                      } else {
-                                        baseProvider.showNegativeAlert(
-                                            'Permission Unavailable',
-                                            'Please enable permission from settings to continue',
-                                            context);
-                                      }
+                                      await model.handleDPOperation(
+                                          widget.needsRefresh);
+                                      // widget.needsRefresh(true);
                                     },
                                     child: Icon(
                                       Icons.camera,
