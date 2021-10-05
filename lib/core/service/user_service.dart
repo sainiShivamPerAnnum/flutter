@@ -21,7 +21,9 @@ class UserService extends ChangeNotifier {
 
   void setMyUserDpUrl(String url) {
     _myUserDpUrl = url;
-    notifyListeners();
+    notifyListeners(
+      
+    );
   }
 
   bool get isUserOnborded {

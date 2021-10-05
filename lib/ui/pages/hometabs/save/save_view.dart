@@ -1,13 +1,11 @@
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/view_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/widgets.dart';
-import 'package:felloapp/ui/widgets/buttons/buyGoldButton/buyGoldBtn_view.dart';
-import 'package:felloapp/ui/widgets/buttons/flatButton/flatButton_view.dart';
-import 'package:felloapp/ui/widgets/buttons/raisedButton/raisedButton_view.dart';
+import 'package:felloapp/ui/widgets/buttons/buy_gold_button/buyGoldBtn_view.dart';
+import 'package:felloapp/ui/widgets/buttons/flat_button/flatButton_view.dart';
+import 'package:felloapp/ui/widgets/buttons/raisedButton/raised_button_view.dart';
 import 'package:felloapp/ui/widgets/buttons/sellGoldButton/sellGoldBtn_view.dart';
-import 'package:felloapp/ui/widgets/miniTransactionWindow/miniTransCard_view.dart';
+import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';

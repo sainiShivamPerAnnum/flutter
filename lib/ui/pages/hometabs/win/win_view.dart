@@ -1,5 +1,5 @@
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/architecture/base_viewmodel.dart';
+import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
 import 'package:felloapp/ui/elements/week-winners_board.dart';
 import 'package:felloapp/ui/pages/hometabs/widgets.dart';

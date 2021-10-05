@@ -1,24 +1,30 @@
 import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/enums/view_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/widgets/buttons/flatButton/flatButton_viewModel.dart';
+import 'package:felloapp/ui/widgets/buttons/raisedButton/raisedButton_vm.dart';
 import 'package:felloapp/ui/elements/network_bar.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class FBtn extends StatelessWidget {
+class RBtn extends StatelessWidget {
   final String text;
-  final Function onPressed;
+  final Color bgColor;
+  final Future<void> Function() onPressed;
   final TextStyle textStyle;
 
-  FBtn({@required this.text, @required this.onPressed, this.textStyle});
+  RBtn(
+      {@required this.text,
+      @required this.onPressed,
+      this.textStyle,
+      this.bgColor});
 
   @override
   Widget build(BuildContext context) {
     ConnectivityStatus connectivityStatus =
         Provider.of<ConnectivityStatus>(context);
-    return BaseView<FBtnVM>(
+    return BaseView<RBtnVM>(
       onModelReady: (model) {},
       builder: (ctx, model, child) {
         if (connectivityStatus == ConnectivityStatus.Offline)
@@ -27,13 +33,17 @@ class FBtn extends StatelessWidget {
           );
         else
           return model.state == ViewState.Idle
-              ? TextButton(
+              ? ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: bgColor ?? UiConstants.primaryColor),
                   child: Text(
-                    text,
-                    style: textStyle,
+                    text ?? "Button",
+                    style: textStyle ??
+                        TextStyle(
+                            color: Colors.white,
+                            fontSize: SizeConfig.mediumTextSize),
                   ),
-                  onPressed: onPressed,
-                )
+                  onPressed: () => model.executeOnPress(onPressed))
               : Center(
                   child: CircularProgressIndicator(
                     color: UiConstants.primaryColor,

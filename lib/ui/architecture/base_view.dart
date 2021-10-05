@@ -1,5 +1,5 @@
 //Project Imports
-import 'package:felloapp/ui/architecture/base_viewmodel.dart';
+import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 
 //Flutter Imports
