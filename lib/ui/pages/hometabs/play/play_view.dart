@@ -79,7 +79,7 @@ class Play extends StatelessWidget {
                                 ),
                                 SizedBox(width: 36),
                                 Text(
-                                  "Game ${i + 1}",
+                                  "Tambola",
                                   style: GoogleFonts.montserrat(
                                     fontWeight: FontWeight.w300,
                                     fontSize: SizeConfig.cardTitleTextSize,

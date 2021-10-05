@@ -21,7 +21,7 @@ class UserService extends ChangeNotifier {
 
   void setMyUserDpUrl(String url) {
     _myUserDpUrl = url;
-    notifyListeners();
+    //notifyListeners();
   }
 
   bool get isUserOnborded {
@@ -40,7 +40,7 @@ class UserService extends ChangeNotifier {
   }
 
   Future<void> setBaseUser() async {
-    _baseUser = await _dbModel.getUser(firebaseUser.uid);
+    _baseUser = await _dbModel.getUser(_firebaseUser?.uid);
     _logger.d("Base user initialized");
   }
 
@@ -48,7 +48,7 @@ class UserService extends ChangeNotifier {
     if (await CacheManager.readCache(key: 'dpUrl') == null) {
       try {
         if (_baseUser != null) {
-          _myUserDpUrl = await _dbModel.getUserDP(baseUser.uid);
+          setMyUserDpUrl(await _dbModel.getUserDP(baseUser.uid));
           _logger.d("Profile picture updated");
         }
         if (_myUserDpUrl != null) {

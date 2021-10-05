@@ -28,6 +28,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class UserProfileDetails extends StatefulWidget {
+  final ValueChanged<bool> needsRefresh;
+  UserProfileDetails({this.needsRefresh});
   @override
   _UserProfileDetailsState createState() => _UserProfileDetailsState();
 }
@@ -44,9 +46,9 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
   @override
   Widget build(BuildContext context) {
     //TODO: remove providers from here
-    // baseProvider = Provider.of<BaseUtil>(context);
-    // fcmProvider = Provider.of<FcmListener>(context);
-    // dbProvider = Provider.of<DBModel>(context, listen: false);
+    baseProvider = Provider.of<BaseUtil>(context);
+    fcmProvider = Provider.of<FcmListener>(context);
+    dbProvider = Provider.of<DBModel>(context, listen: false);
     picSize = SizeConfig.screenHeight / 4.8;
     return BaseView<UserProfileViewModel>(
       onModelReady: (model) {
@@ -60,205 +62,156 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Consumer<UserService>(
-                  builder: (c, m, ch) {
-                    return Container(
-                      width: SizeConfig.screenWidth,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: m.myUserDpUrl == null || m.myUserDpUrl == ""
+                Container(
+                  width: SizeConfig.screenWidth,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image:
+                            model.myUserDpUrl == null || model.myUserDpUrl == ""
                                 ? AssetImage(
                                     "images/profile.png",
                                   )
                                 : CachedNetworkImageProvider(
-                                    m.myUserDpUrl,
+                                    model.myUserDpUrl,
                                   ),
-                            fit: BoxFit.cover),
-                      ),
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              gradient: new LinearGradient(
-                                  colors: [
-                                    Colors.black.withOpacity(0.5),
-                                    Colors.black.withOpacity(0.7)
-                                  ],
-                                  begin: Alignment(0.5, -1.0),
-                                  end: Alignment(0.5, 1.0)),
-                            ),
-                            child: SafeArea(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    height: kToolbarHeight,
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          icon: Icon(
-                                            Icons.arrow_back_rounded,
-                                            color: Colors.white,
-                                          ),
-                                          onPressed: () => AppState
-                                              .backButtonDispatcher
-                                              .didPopRoute(),
-                                        ),
-                                        Spacer(),
-                                        Text(
-                                          "My Profile",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: SizeConfig.largeTextSize,
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        SizedBox(width: 40)
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    height: picSize,
-                                    width: picSize,
-                                    margin: EdgeInsets.symmetric(vertical: 8),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                          color: Colors.white, width: 8),
-                                      image: DecorationImage(
-                                          image: m.myUserDpUrl == null ||
-                                                  m.myUserDpUrl == ""
-                                              ? AssetImage(
-                                                  "images/profile.png",
-                                                )
-                                              : CachedNetworkImageProvider(
-                                                  m.myUserDpUrl,
-                                                ),
-                                          fit: BoxFit.cover),
-                                    ),
-                                    alignment: Alignment.bottomRight,
-                                    child: Container(
-                                      height: picSize / 4.4,
-                                      width: picSize / 4.4,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: InkWell(
-                                        onTap: () async {
-                                          if (await baseProvider
-                                              .showNoInternetAlert(context))
-                                            return;
-                                          var _status =
-                                              await Permission.photos.status;
-                                          if (_status.isRestricted ||
-                                              _status.isLimited ||
-                                              _status.isDenied) {
-                                            showDialog(
-                                                context: context,
-                                                builder: (ctx) {
-                                                  return ConfirmActionDialog(
-                                                      title:
-                                                          "Request Permission",
-                                                      description:
-                                                          "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
-                                                      buttonText: "Continue",
-                                                      asset: Padding(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                vertical: 8),
-                                                        child: Image.asset(
-                                                            "images/gallery.png",
-                                                            height: SizeConfig
-                                                                    .screenWidth *
-                                                                0.24),
-                                                      ),
-                                                      confirmAction: () {
-                                                        Navigator.pop(context);
-                                                        model
-                                                            .chooseprofilePicture(
-                                                                context);
-                                                      },
-                                                      cancelAction: () =>
-                                                          Navigator.pop(
-                                                              context));
-                                                });
-                                          } else if (_status.isGranted) {
-                                            model.chooseprofilePicture(context);
-                                          } else {
-                                            baseProvider.showNegativeAlert(
-                                                'Permission Unavailable',
-                                                'Please enable permission from settings to continue',
-                                                context);
-                                          }
-                                        },
-                                        child: Icon(
-                                          Icons.camera,
-                                          color: UiConstants.primaryColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  FittedBox(
-                                    child: TextButton.icon(
-                                      onPressed: () async {
-                                        if (await baseProvider
-                                            .showNoInternetAlert(context))
-                                          return;
-                                        AppState.screenStack
-                                            .add(ScreenItem.dialog);
-                                        showDialog(
-                                            barrierDismissible: false,
-                                            context: context,
-                                            builder: (ctx) =>
-                                                UpdateNameDialog());
-                                      },
+                        fit: BoxFit.cover),
+                  ),
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: new LinearGradient(
+                              colors: [
+                                Colors.black.withOpacity(0.5),
+                                Colors.black.withOpacity(0.7)
+                              ],
+                              begin: Alignment(0.5, -1.0),
+                              end: Alignment(0.5, 1.0)),
+                        ),
+                        child: SafeArea(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: kToolbarHeight,
+                                child: Row(
+                                  children: [
+                                    IconButton(
                                       icon: Icon(
-                                        Icons.edit_outlined,
+                                        Icons.arrow_back_rounded,
                                         color: Colors.white,
-                                        size: SizeConfig.cardTitleTextSize,
                                       ),
-                                      label: Text(
-                                        baseProvider.myUser.name,
-                                        overflow: TextOverflow.clip,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize:
-                                              SizeConfig.cardTitleTextSize,
-                                          color: Colors.white,
-                                        ),
+                                      onPressed: () => AppState
+                                          .backButtonDispatcher
+                                          .didPopRoute(),
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      "My Profile",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: SizeConfig.largeTextSize,
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  )
-                                ],
+                                    Spacer(),
+                                    SizedBox(width: 40)
+                                  ],
+                                ),
                               ),
-                            ),
+                              Container(
+                                height: picSize,
+                                width: picSize,
+                                margin: EdgeInsets.symmetric(vertical: 8),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border:
+                                      Border.all(color: Colors.white, width: 8),
+                                  image: DecorationImage(
+                                      image: model.myUserDpUrl == null ||
+                                              model.myUserDpUrl == ""
+                                          ? AssetImage(
+                                              "images/profile.png",
+                                            )
+                                          : CachedNetworkImageProvider(
+                                              model.myUserDpUrl,
+                                            ),
+                                      fit: BoxFit.cover),
+                                ),
+                                alignment: Alignment.bottomRight,
+                                child: Container(
+                                  height: picSize / 4.4,
+                                  width: picSize / 4.4,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: InkWell(
+                                    onTap: () async {
+                                      await model.handleDPOperation(
+                                          widget.needsRefresh);
+                                      // widget.needsRefresh(true);
+                                    },
+                                    child: Icon(
+                                      Icons.camera,
+                                      color: UiConstants.primaryColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              FittedBox(
+                                child: TextButton.icon(
+                                  onPressed: () async {
+                                    if (await baseProvider
+                                        .showNoInternetAlert(context)) return;
+                                    AppState.screenStack.add(ScreenItem.dialog);
+                                    showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (ctx) => UpdateNameDialog());
+                                  },
+                                  icon: Icon(
+                                    Icons.edit_outlined,
+                                    color: Colors.white,
+                                    size: SizeConfig.cardTitleTextSize,
+                                  ),
+                                  label: Text(
+                                    baseProvider.myUser.name,
+                                    overflow: TextOverflow.clip,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: SizeConfig.cardTitleTextSize,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              )
+                            ],
                           ),
-                          // Positioned(
-                          //     bottom: 0,
-                          //     right: 0,
-                          //     child: IconButton(
-                          //       onPressed: () {
-                          //         AppState.screenStack.add(ScreenItem.dialog);
-                          //         showDialog(
-                          //             barrierDismissible: false,
-                          //             context: context,
-                          //             builder: (ctx) => UpdateNameDialog());
-                          //       },
-                          //       icon: Icon(
-                          //         Icons.edit_outlined,
-                          //         color: Colors.white,
-                          //         size: SizeConfig.largeTextSize,
-                          //       ),
-                          //     ))
-                        ],
+                        ),
                       ),
-                    );
-                  },
+                      // Positioned(
+                      //     bottom: 0,
+                      //     right: 0,
+                      //     child: IconButton(
+                      //       onPressed: () {
+                      //         AppState.screenStack.add(ScreenItem.dialog);
+                      //         showDialog(
+                      //             barrierDismissible: false,
+                      //             context: context,
+                      //             builder: (ctx) => UpdateNameDialog());
+                      //       },
+                      //       icon: Icon(
+                      //         Icons.edit_outlined,
+                      //         color: Colors.white,
+                      //         size: SizeConfig.largeTextSize,
+                      //       ),
+                      //     ))
+                    ],
+                  ),
                 ),
                 SectionCard(
                   baseProvider: baseProvider,

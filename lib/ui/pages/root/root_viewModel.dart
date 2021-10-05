@@ -34,9 +34,13 @@ class RootViewModel extends BaseModel {
 
   BuildContext rootContext;
   bool _isInitialized = false;
-  String get myUserDpUrl => _baseUtil.myUserDpUrl;
+  String get myUserDpUrl => userService.myUserDpUrl;
   String get name => _baseUtil.myUser.name;
   String get username => _baseUtil.myUser.username;
+
+  refresh() {
+    notifyListeners();
+  }
 
   String get userTicketCount =>
       _baseUtil.userTicketWallet.getActiveTickets().toString();

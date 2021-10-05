@@ -9,7 +9,9 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_viewmodel.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
+import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/modals/simple_kyc_modal_sheet.dart';
+import 'package:felloapp/ui/pages/root/root_viewModel.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -26,6 +28,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class UserProfileViewModel extends BaseModel {
   Log log = new Log('User Profile');
@@ -36,6 +39,7 @@ class UserProfileViewModel extends BaseModel {
   double picSize;
   XFile selectedProfilePicture;
   ValueChanged<bool> upload;
+  final RootViewModel _rootViewModel = locator<RootViewModel>();
 
   //Define this in constants
   String defaultPan = "**********";
@@ -44,35 +48,6 @@ class UserProfileViewModel extends BaseModel {
   bool isPanVisible = false;
 
   get myUserDpUrl => _userService.myUserDpUrl;
-
-//Model should never user Widgets in it. We should never pass context here...
-  chooseprofilePicture(BuildContext context) async {
-    selectedProfilePicture = await ImagePicker()
-        .pickImage(source: ImageSource.gallery, imageQuality: 45);
-    if (selectedProfilePicture != null) {
-      print(File(selectedProfilePicture.path).lengthSync() / 1024);
-      Haptic.vibrate();
-      AppState.screenStack.add(ScreenItem.dialog);
-      await _baseUtil.openDialog(
-        isBarrierDismissable: false,
-        content: ChangeProfilePicture(
-          image: File(selectedProfilePicture.path),
-          upload: (value) {
-            if (value)
-              updateProfilePicture()
-                  .then((flag) => postProfilePictureUpdate(flag));
-          },
-        ),
-      );
-      // await showDialog(
-      //   context: context,
-      //   builder: (BuildContext context) => ChangeProfilePicture(
-      //     image: File(temp.path),
-      //   ),
-      // );
-      notifyListeners();
-    }
-  }
 
   showHidePan() {
     if (isPanVisible) {
@@ -188,6 +163,61 @@ class UserProfileViewModel extends BaseModel {
         ),
       ),
     );
+  }
+
+  handleDPOperation(ValueChanged<bool> needsRefresh) async {
+    BuildContext context;
+    if (await _baseUtil.showNoInternetAlert(context)) return;
+    var _status = await Permission.photos.status;
+    if (_status.isRestricted || _status.isLimited || _status.isDenied) {
+      _baseUtil.openDialog(
+          isBarrierDismissable: false,
+          content: ConfirmActionDialog(
+              title: "Request Permission",
+              description:
+                  "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
+              buttonText: "Continue",
+              asset: Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Image.asset("images/gallery.png",
+                    height: SizeConfig.screenWidth * 0.24),
+              ),
+              confirmAction: () {
+                Navigator.pop(context);
+                chooseprofilePicture();
+              },
+              cancelAction: () => Navigator.pop(context)));
+    } else if (_status.isGranted) {
+      await chooseprofilePicture();
+      needsRefresh(true);
+    } else {
+      _baseUtil.showNegativeAlert('Permission Unavailable',
+          'Please enable permission from settings to continue', context);
+    }
+  }
+
+//Model should never user Widgets in it. We should never pass context here...
+  chooseprofilePicture() async {
+    selectedProfilePicture = await ImagePicker()
+        .pickImage(source: ImageSource.gallery, imageQuality: 45);
+    if (selectedProfilePicture != null) {
+      print(File(selectedProfilePicture.path).lengthSync() / 1024);
+      Haptic.vibrate();
+      AppState.screenStack.add(ScreenItem.dialog);
+      await _baseUtil.openDialog(
+        isBarrierDismissable: false,
+        content: ChangeProfilePicture(
+          image: File(selectedProfilePicture.path),
+          upload: (value) {
+            if (value)
+              updateProfilePicture()
+                  .then((flag) => postProfilePictureUpdate(flag));
+          },
+        ),
+      );
+      _rootViewModel.refresh();
+      notifyListeners();
+    }
   }
 
   Future<bool> updateProfilePicture() async {

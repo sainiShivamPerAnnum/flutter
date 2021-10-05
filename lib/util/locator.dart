@@ -49,6 +49,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => ConnectivityService());
   locator.registerLazySingleton(() => UserService());
   locator.registerLazySingleton(() => TransactionService());
+  locator.registerLazySingleton(() => RootViewModel());
   locator.registerLazySingleton(() => Logger());
 
   // Hometabs
@@ -60,7 +61,6 @@ void setupLocator() {
   locator.registerFactory(() => TranViewModel());
   locator.registerFactory(() => DailyPicksDrawViewModel());
   locator.registerFactory(() => UserProfileViewModel());
-  locator.registerFactory(() => RootViewModel());
 
   //WIDGETS
   locator.registerFactory(() => FBtnVM());
