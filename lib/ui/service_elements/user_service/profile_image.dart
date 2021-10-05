@@ -21,14 +21,10 @@ class ProfileImage extends StatelessWidget {
     }
 
     // Listener
-    _userService.addListener(_listener,
-        [UserServiceProperties.myUserDpUrl, UserServiceProperties.myUserName]);
+    _userService.addListener(_listener, [UserServiceProperties.myUserDpUrl]);
 
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-        properties: [
-          UserServiceProperties.myUserDpUrl,
-          UserServiceProperties.myUserName
-        ],
+        properties: [UserServiceProperties.myUserDpUrl],
         builder: (context, model, properties) {
           return CircleAvatar(
             radius: kToolbarHeight * height,

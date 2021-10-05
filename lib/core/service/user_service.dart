@@ -8,8 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-
-
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final _dbModel = locator<DBModel>();
   final _logger = locator<Logger>();
@@ -17,7 +15,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   User _firebaseUser;
   BaseUser _baseUser;
   String _myUserDpUrl;
-  String _myUserName;
+  String _myUserName = "Not defined";
 
   User get firebaseUser => _firebaseUser;
   BaseUser get baseUser => _baseUser;
@@ -34,6 +32,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   setMyUserName(String name) {
     _myUserName = name;
     notifyListeners(UserServiceProperties.myUserName);
+    _logger
+        .d("My user name updated in userservice, property listeners notified");
   }
 
   bool get isUserOnborded {

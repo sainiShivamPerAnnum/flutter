@@ -1,3 +1,5 @@
+import 'package:felloapp/core/enums/user_service_enums.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/widgets.dart';
@@ -10,7 +12,7 @@ import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 class Save extends StatelessWidget {
   @override
@@ -25,6 +27,11 @@ class Save extends StatelessWidget {
               right: SizeConfig.globalMargin),
           child: ListView(
             children: [
+              PropertyChangeConsumer<UserService, UserServiceProperties>(
+                  properties: [UserServiceProperties.myUserName],
+                  builder: (context, model, properties) {
+                    return Text(model.myUserName);
+                  }),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
