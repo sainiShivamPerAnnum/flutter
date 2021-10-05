@@ -22,6 +22,7 @@ import 'package:lottie/lottie.dart';
 class UserProfileViewModel extends BaseModel {
   final _userService = locator<UserService>();
   final BaseUtil _baseUtil = locator<BaseUtil>();
+
   double picSize;
 
   //Define this in constants
@@ -36,15 +37,18 @@ class UserProfileViewModel extends BaseModel {
   chooseprofilePicture(BuildContext context) async {
     final temp = await ImagePicker()
         .pickImage(source: ImageSource.gallery, imageQuality: 45);
+
     if (temp != null) {
       print(File(temp.path).lengthSync() / 1024);
       Haptic.vibrate();
+      
       await showDialog(
         context: context,
         builder: (BuildContext context) => ChangeProfilePicture(
           image: File(temp.path),
         ),
       );
+      
       notifyListeners();
     }
   }
@@ -165,5 +169,5 @@ class UserProfileViewModel extends BaseModel {
     );
   }
 
-  
+
 }

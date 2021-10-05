@@ -33,6 +33,7 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
   Log log = new Log('ChangeProfilePicture');
   final _userService = locator<UserService>();
   final FirebaseStorage storage = FirebaseStorage.instance;
+  
   BaseUtil baseProvider;
   DBModel dbProvider;
   bool isUploading = false;

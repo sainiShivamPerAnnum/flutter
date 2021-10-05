@@ -40,7 +40,7 @@ class UserService extends ChangeNotifier {
   }
 
   Future<void> setBaseUser() async {
-    _baseUser = await _dbModel.getUser(firebaseUser.uid);
+    _baseUser = await _dbModel.getUser(_firebaseUser?.uid);
     _logger.d("Base user initialized");
   }
 
