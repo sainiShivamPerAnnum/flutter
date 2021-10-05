@@ -11,7 +11,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/modals/simple_kyc_modal_sheet.dart';
-import 'package:felloapp/ui/pages/root/root_viewModel.dart';
+import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
