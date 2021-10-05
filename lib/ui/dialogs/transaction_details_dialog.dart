@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/UserTransaction.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/modals/octfest_info_modal.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -9,13 +12,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 
 class TransactionDetailsDialog extends StatefulWidget {
   final UserTransaction _transaction;
+  final bool showBeerBanner;
 
-  TransactionDetailsDialog(this._transaction);
+  TransactionDetailsDialog(this._transaction, this.showBeerBanner);
 
   @override
   State createState() => TransactionDetailsDialogState();
@@ -28,10 +34,16 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
   BaseUtil baseProvider;
   bool _showInvoiceButton = false;
   bool _isInvoiceLoading = false;
+  int _timeoutMins;
 
   @override
   void initState() {
     super.initState();
+
+    String _timeoutStr = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.OCT_FEST_OFFER_TIMEOUT);
+    if (_timeoutStr == null || _timeoutStr.isEmpty) _timeoutStr = '10';
+    _timeoutMins = int.tryParse(_timeoutStr);
 
     if (widget._transaction.subType ==
             UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
@@ -98,13 +110,14 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
     return Wrap(
       children: [
         Container(
-          height: SizeConfig.screenHeight * 0.12,
+          height: SizeConfig.largeTextSize * 4,
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
               color: Colors.white,
               // border: Border(
               //   bottom: BorderSide(color: Colors.black, width: 2),
               // ),
+
               borderRadius: BorderRadius.circular(12)),
           child: Center(
             child: Text(
@@ -118,7 +131,9 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
           ),
         ),
         Container(
-          height: SizeConfig.screenHeight * 0.54,
+          height: widget.showBeerBanner
+              ? SizeConfig.screenHeight * 0.34
+              : SizeConfig.screenHeight * 0.54,
           width: SizeConfig.screenWidth,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -317,8 +332,151 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
             ],
           ),
         ),
+        if (widget.showBeerBanner)
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 8),
+            width: SizeConfig.screenWidth,
+            height: SizeConfig.screenWidth * 0.5,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              gradient: new LinearGradient(colors: [
+                UiConstants.primaryColor,
+                UiConstants.primaryColor.withBlue(190),
+              ], begin: Alignment.centerLeft, end: Alignment.bottomRight),
+            ),
+            padding: EdgeInsets.only(
+                right: SizeConfig.globalMargin,
+                left: SizeConfig.globalMargin * 2),
+            child: Stack(
+              children: [
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        BeerTicketItem(
+                            label: "Name", value: baseProvider.myUser.name),
+                        BeerTicketItem(
+                            label: "Mobile",
+                            value: "+91 ${baseProvider.myUser.mobile}"),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Date & Time",
+                              style: TextStyle(
+                                fontSize: SizeConfig.smallTextSize,
+                                color: Colors.white.withOpacity(0.5),
+                              ),
+                            ),
+                            Text(
+                              "${_getFormattedDate(widget._transaction.timestamp)}, ${_getFormattedTime(widget._transaction.timestamp)}",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: SizeConfig.mediumTextSize,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "Offer ends in:  ",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: SizeConfig.smallTextSize,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            TweenAnimationBuilder<Duration>(
+                                duration: getOfferDuration(_timeoutMins),
+                                tween: Tween(
+                                    begin: getOfferDuration(_timeoutMins),
+                                    end: Duration.zero),
+                                onEnd: () {
+                                  print('Timer ended');
+                                  baseProvider.showNegativeAlert(
+                                      "Offer Closed",
+                                      "Stay tuned for more such fun offers!",
+                                      context);
+                                  AppState.backButtonDispatcher.didPopRoute();
+                                },
+                                builder: (BuildContext context, Duration value,
+                                    Widget child) {
+                                  final minutes = (value.inMinutes)
+                                      .toString()
+                                      .padLeft(2, '0');
+                                  final seconds = (value.inSeconds % 60)
+                                      .toString()
+                                      .padLeft(2, '0');
+
+                                  return Text(
+                                    "$minutes:$seconds",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: SizeConfig.largeTextSize,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  );
+                                }),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    Transform.scale(
+                      scale: 1.4,
+                      child: Lottie.asset("images/lottie/beer.json",
+                          height: SizeConfig.screenHeight * 0.14,
+                          width: SizeConfig.screenWidth * 0.24),
+                    ),
+                    SizedBox(
+                      width: SizeConfig.globalMargin * 2,
+                    )
+                  ],
+                ),
+                Positioned(
+                  top: 0,
+                  right: -10,
+                  child: IconButton(
+                    icon: Icon(Icons.info, color: Colors.white),
+                    onPressed: () {
+                      AppState.screenStack.add(ScreenItem.dialog);
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (ctx) {
+                            return OctFestInfoModal();
+                          });
+                    },
+                  ),
+                )
+              ],
+            ),
+          ),
       ],
     );
+  }
+
+  Duration getOfferDuration(int totalMins) {
+    Duration difference;
+    DateTime tTime = DateTime.fromMillisecondsSinceEpoch(
+            widget._transaction.timestamp.millisecondsSinceEpoch)
+        .add(Duration(minutes: totalMins));
+    difference = tTime.difference(DateTime.now());
+    return difference;
+    //return Duration(minutes: 15); //FOR TESTING
+  }
+
+  String _getFormattedTime(Timestamp tTime) {
+    DateTime now =
+        DateTime.fromMillisecondsSinceEpoch(tTime.millisecondsSinceEpoch);
+    return DateFormat('h:mm a').format(now);
+  }
+
+  String _getFormattedDate(Timestamp tTime) {
+    DateTime now =
+        DateTime.fromMillisecondsSinceEpoch(tTime.millisecondsSinceEpoch);
+    return DateFormat('dd MMM yyyy').format(now);
   }
 
   Widget referralTileWide(String title, String value, Color color) {
@@ -387,5 +545,40 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
         ),
       ),
     );
+  }
+}
+
+class BeerTicketItem extends StatelessWidget {
+  final String label, value;
+
+  BeerTicketItem({this.label, @required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (label != null)
+            Text(
+              "$label:",
+              style: TextStyle(
+                fontSize: SizeConfig.smallTextSize,
+                color: Colors.white.withOpacity(0.5),
+              ),
+            ),
+          Container(
+            width: SizeConfig.screenWidth * 0.5,
+            child: Text(
+              value,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.montserrat(
+                  color: Colors.white,
+                  fontSize: SizeConfig.largeTextSize,
+                  fontWeight: FontWeight.w500),
+            ),
+          ),
+        ]);
   }
 }
