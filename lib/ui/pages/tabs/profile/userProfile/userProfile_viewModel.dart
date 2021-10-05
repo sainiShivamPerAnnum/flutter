@@ -1,15 +1,22 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_analytics.dart';
+import 'package:felloapp/core/enums/cache_type.dart';
 import 'package:felloapp/core/enums/screen_item.dart';
+import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_viewmodel.dart';
 import 'package:felloapp/ui/dialogs/change_profile_picture_dialog.dart';
 import 'package:felloapp/ui/modals/simple_kyc_modal_sheet.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 //Flutter & Dart Imports
 import 'package:flutter/material.dart';
@@ -18,11 +25,17 @@ import 'dart:io';
 //Pub Imports
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
+import 'package:path_provider/path_provider.dart';
 
 class UserProfileViewModel extends BaseModel {
+  Log log = new Log('User Profile');
+
   final _userService = locator<UserService>();
   final BaseUtil _baseUtil = locator<BaseUtil>();
+  final DBModel _dbModel = locator<DBModel>();
   double picSize;
+  XFile selectedProfilePicture;
+  ValueChanged<bool> upload;
 
   //Define this in constants
   String defaultPan = "**********";
@@ -34,17 +47,29 @@ class UserProfileViewModel extends BaseModel {
 
 //Model should never user Widgets in it. We should never pass context here...
   chooseprofilePicture(BuildContext context) async {
-    final temp = await ImagePicker()
+    selectedProfilePicture = await ImagePicker()
         .pickImage(source: ImageSource.gallery, imageQuality: 45);
-    if (temp != null) {
-      print(File(temp.path).lengthSync() / 1024);
+    if (selectedProfilePicture != null) {
+      print(File(selectedProfilePicture.path).lengthSync() / 1024);
       Haptic.vibrate();
-      await showDialog(
-        context: context,
-        builder: (BuildContext context) => ChangeProfilePicture(
-          image: File(temp.path),
+      AppState.screenStack.add(ScreenItem.dialog);
+      await _baseUtil.openDialog(
+        isBarrierDismissable: false,
+        content: ChangeProfilePicture(
+          image: File(selectedProfilePicture.path),
+          upload: (value) {
+            if (value)
+              updateProfilePicture()
+                  .then((flag) => postProfilePictureUpdate(flag));
+          },
         ),
       );
+      // await showDialog(
+      //   context: context,
+      //   builder: (BuildContext context) => ChangeProfilePicture(
+      //     image: File(temp.path),
+      //   ),
+      // );
       notifyListeners();
     }
   }
@@ -165,5 +190,72 @@ class UserProfileViewModel extends BaseModel {
     );
   }
 
-  
+  Future<bool> updateProfilePicture() async {
+    Directory supportDir;
+    UploadTask uploadTask;
+    try {
+      supportDir = await getApplicationSupportDirectory();
+    } catch (e1) {
+      log.error('Support Directory not found');
+      log.error('$e1');
+      return false;
+    }
+
+    String imageName = selectedProfilePicture.path.split("/").last;
+    String targetPath = "${supportDir.path}/c-$imageName";
+    print("temp path: " + targetPath);
+    print("orignal path: " + selectedProfilePicture.path);
+
+    File compressedFile = File(selectedProfilePicture.path);
+
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref =
+          storage.ref().child("dps/${_userService.baseUser.uid}/image");
+      uploadTask = ref.putFile(compressedFile);
+    } catch (e2) {
+      log.error('putFile Failed. Reference Error');
+      log.error('$e2');
+      return false;
+    }
+
+    try {
+      TaskSnapshot res = await uploadTask;
+      String url = await res.ref.getDownloadURL();
+      if (url != null) {
+        await CacheManager.writeCache(
+            key: 'dpUrl', value: url, type: CacheType.string);
+        //TODO: Add user service here.
+        _userService.setMyUserDpUrl(url);
+        //_baseUtil.setDisplayPictureUrl(url);
+        log.debug('Final DP Uri: $url');
+        return true;
+      } else
+        return false;
+    } catch (e) {
+      if (_baseUtil.myUser.uid != null) {
+        Map<String, dynamic> errorDetails = {
+          'error_msg': 'Method call to upload picture failed',
+        };
+        _dbModel.logFailure(_baseUtil.myUser.uid,
+            FailType.ProfilePictureUpdateFailed, errorDetails);
+      }
+      print('$e');
+      return false;
+    }
+  }
+
+  postProfilePictureUpdate(bool flag) {
+    BuildContext context;
+    if (flag) {
+      BaseAnalytics.logProfilePictureAdded();
+      _baseUtil.showPositiveAlert(
+          'Complete', 'Your profile Picture has been updated', context);
+    } else {
+      _baseUtil.showNegativeAlert('Failed',
+          'Your Profile Picture could not be updated at the moment', context);
+    }
+    //upload(false);
+    AppState.backButtonDispatcher.didPopRoute();
+  }
 }

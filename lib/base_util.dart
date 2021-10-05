@@ -518,6 +518,18 @@ class BaseUtil extends ChangeNotifier {
     )..show(context);
   }
 
+  Future<void> openDialog(
+      {Widget content,
+      bool isBarrierDismissable,
+      ValueChanged<dynamic> callback}) async {
+    await showDialog(
+      context: AppState.delegate.navigatorKey.currentContext,
+      barrierDismissible: isBarrierDismissable,
+      builder: (ctx) => content,
+      useSafeArea: true,
+    );
+  }
+
   AuthCredential generateAuthCredential(String verificationId, String smsCode) {
     final AuthCredential credential = PhoneAuthProvider.credential(
       verificationId: verificationId,
