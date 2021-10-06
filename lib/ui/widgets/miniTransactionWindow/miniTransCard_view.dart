@@ -4,8 +4,7 @@ import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
-import 'package:felloapp/ui/pages/tabs/profile/transactions/tran_viewModel.dart';
-import 'package:felloapp/ui/widgets/buttons/flatButton/flatButton_view.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/miniTransactionWindow/miniTransCard_viewModel.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -112,9 +111,10 @@ class MiniTransactionCard extends StatelessWidget {
                     child: Container(
                       height: SizeConfig.mediumTextSize * 4,
                       color: UiConstants.primaryColor,
-                      child: FBtn(
+                      child: FelloButton(
                         onPressed: () => model.viewAllTransaction(),
-                        text: "View All",
+                        defaultButtonText: "View All",
+                        defaultButtonColor: Colors.white,
                         textStyle: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w700,
