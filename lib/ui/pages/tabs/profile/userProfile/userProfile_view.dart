@@ -5,7 +5,6 @@ import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -24,12 +23,9 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class UserProfileDetails extends StatefulWidget {
-  final ValueChanged<bool> needsRefresh;
-  UserProfileDetails({this.needsRefresh});
   @override
   _UserProfileDetailsState createState() => _UserProfileDetailsState();
 }
@@ -147,9 +143,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                   ),
                                   child: InkWell(
                                     onTap: () async {
-                                      await model.handleDPOperation(
-                                          widget.needsRefresh);
-                                      // widget.needsRefresh(true);
+                                      await model.handleDPOperation();
                                     },
                                     child: Icon(
                                       Icons.camera,

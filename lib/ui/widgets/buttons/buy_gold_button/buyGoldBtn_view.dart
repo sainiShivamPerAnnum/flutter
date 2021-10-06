@@ -1,6 +1,6 @@
 import 'package:felloapp/core/enums/view_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/widgets/buttons/buyGoldButton/buyGoldBtn_viewModel.dart';
+import 'package:felloapp/ui/widgets/buttons/buy_gold_button/buyGoldBtn_vm.dart';
 import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';

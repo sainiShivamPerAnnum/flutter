@@ -2,8 +2,9 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/main.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class UpdateNameDialog extends StatefulWidget {
 }
 
 class _UpdateNameDialogState extends State<UpdateNameDialog> {
+  final userService = locator<UserService>();
   BaseUtil baseProvider;
   DBModel dbProvider;
   bool isUploading = false;
@@ -102,6 +104,10 @@ class _UpdateNameDialogState extends State<UpdateNameDialog> {
                                   isUploading = !isUploading;
                                 });
                                 // baseProvider.myUser.name = _nameController.text.trim();
+                                //Todo: update user service.
+                                userService
+                                    .setMyUserName(_nameController.text.trim());
+
                                 baseProvider
                                     .setName(_nameController.text.trim());
                                 dbProvider

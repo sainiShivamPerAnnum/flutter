@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/root/root_viewModel.dart';
-import 'package:felloapp/ui/service_elements/profile_image.dart';
+import 'package:felloapp/ui/pages/root/root_vm.dart';
+import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -29,16 +29,7 @@ class Root extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: InkWell(
                 onTap: model.showDrawer,
-                child: CircleAvatar(
-                  radius: kToolbarHeight * 0.4,
-                  backgroundImage: model.myUserDpUrl == null
-                      ? AssetImage(
-                          "images/profile.png",
-                        )
-                      : CachedNetworkImageProvider(
-                          model.myUserDpUrl,
-                        ),
-                ),
+                child: ProfileImage(),
               ),
             ),
             title: Text(

@@ -1,4 +1,5 @@
 //Flutter imports
+import 'package:felloapp/core/enums/user_service_enums.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -81,7 +83,6 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => locator<FcmListener>()),
         ChangeNotifierProvider(create: (_) => locator<FcmHandler>()),
         ChangeNotifierProvider(create: (_) => locator<PaymentService>()),
-        ChangeNotifierProvider(create: (_) => locator<UserService>()),
         ChangeNotifierProvider(create: (_) => locator<TransactionService>()),
         StreamProvider<ConnectivityStatus>(
           create: (_) {
@@ -94,20 +95,23 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider(create: (_) => appState),
       ],
-      child: MaterialApp.router(
-        title: Constants.APP_NAME,
-        theme: _felloTheme(),
-        debugShowCheckedModeBanner: false,
-        backButtonDispatcher: backButtonDispatcher,
-        routerDelegate: delegate,
-        routeInformationParser: parser,
-        localizationsDelegates: [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: S.delegate.supportedLocales,
+      child: PropertyChangeProvider<UserService, UserServiceProperties>(
+        value: locator<UserService>(),
+        child: MaterialApp.router(
+          title: Constants.APP_NAME,
+          theme: _felloTheme(),
+          debugShowCheckedModeBanner: false,
+          backButtonDispatcher: backButtonDispatcher,
+          routerDelegate: delegate,
+          routeInformationParser: parser,
+          localizationsDelegates: [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
+        ),
       ),
     );
   }

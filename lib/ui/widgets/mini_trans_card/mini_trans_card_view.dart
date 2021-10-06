@@ -5,7 +5,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
-import 'package:felloapp/ui/widgets/miniTransactionWindow/miniTransCard_viewModel.dart';
+import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_vm.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
