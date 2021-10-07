@@ -15,7 +15,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   User _firebaseUser;
   BaseUser _baseUser;
   String _myUserDpUrl;
-  String _myUserName = "Not defined";
+  String _myUserName;
 
   User get firebaseUser => _firebaseUser;
   BaseUser get baseUser => _baseUser;

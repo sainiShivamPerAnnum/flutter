@@ -2,7 +2,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/fcm_handler.dart';
-import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
@@ -30,13 +29,12 @@ class RootViewModel extends BaseModel {
   HttpModel _httpModel = locator<HttpModel>();
   FcmHandler _fcmListener = locator<FcmHandler>();
   LocalDBModel _localDBModel = locator<LocalDBModel>();
-  UserService userService = locator<UserService>();
+  UserService _userService = locator<UserService>();
 
   BuildContext rootContext;
   bool _isInitialized = false;
-  String get myUserDpUrl => userService.myUserDpUrl;
-  String get name => _baseUtil.myUser.name;
-  String get username => _baseUtil.myUser.username;
+
+  String get myUserDpUrl => _userService.myUserDpUrl;
 
   refresh() {
     notifyListeners();
@@ -122,7 +120,7 @@ class RootViewModel extends BaseModel {
       _initAdhocNotifications();
 
       //User service initialized;
-      await userService.init();
+      await _userService.init();
       _baseUtil.getProfilePicture();
       // show security modal
       if (_baseUtil.show_security_prompt &&
@@ -177,7 +175,7 @@ class RootViewModel extends BaseModel {
     } else {
       //Referral dynamic link
       int addUserTicketCount = await _submitReferral(
-          _baseUtil.myUser.uid, _baseUtil.myUser.name, _uri);
+          _baseUtil.myUser.uid, _userService.myUserName, _uri);
       if (addUserTicketCount == null || addUserTicketCount < 0) {
         log.debug('Processing complete. No extra tickets to be added');
       } else {
