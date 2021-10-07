@@ -1,5 +1,5 @@
 //Flutter imports
-import 'package:felloapp/core/enums/user_service_enums.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
