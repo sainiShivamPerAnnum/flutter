@@ -5,8 +5,9 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
@@ -93,10 +94,12 @@ class Root extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 8),
             child: Row(
               children: [
-                Text(
-                  model.userTicketCount,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
+                PropertyChangeConsumer<UserService, UserServiceProperties>(
+                  builder: (context, model, property) => Text(
+                    model.userTicketWallet.getActiveTickets().toString(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
                 SizedBox(width: 8),

@@ -19,7 +19,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 
@@ -40,8 +40,6 @@ class RootViewModel extends BaseModel {
     notifyListeners();
   }
 
-  String get userTicketCount =>
-      _baseUtil.userTicketWallet.getActiveTickets().toString();
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   List<Widget> pages;
 

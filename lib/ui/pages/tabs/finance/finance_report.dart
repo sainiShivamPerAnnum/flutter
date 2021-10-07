@@ -17,7 +17,7 @@ import 'package:felloapp/ui/modals/simple_kyc_modal_sheet.dart';
 import 'package:felloapp/ui/pages/tabs/finance/augmont/augmont_withdraw_screen.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 
 //Dart and Flutter Imports
 import 'dart:math' as math;

@@ -4,7 +4,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:rive/rive.dart';
 
 class DailyPicksDrawViewModel extends BaseModel {

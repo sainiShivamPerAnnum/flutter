@@ -2,7 +2,7 @@
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
-import 'package:felloapp/util/app_theme.dart';
+import 'package:felloapp/util/styles/app_theme.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +33,7 @@ import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
 

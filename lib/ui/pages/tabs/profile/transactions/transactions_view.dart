@@ -3,8 +3,8 @@ import 'package:felloapp/core/enums/view_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions/tran_viewModel.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';

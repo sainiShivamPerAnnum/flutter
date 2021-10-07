@@ -12,9 +12,9 @@ import 'package:felloapp/ui/elements/plots/pie_chart/legend_options.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/pie_chart.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
 import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/palette.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/palette.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 
 //Flutter & Dart Imports
 import 'dart:math' as math;

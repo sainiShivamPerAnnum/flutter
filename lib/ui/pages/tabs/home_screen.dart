@@ -11,8 +11,8 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/tambola-global/tambola_daily_draw_timer.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 
 //Dart and Flutter Imports
 import 'package:flutter/material.dart';

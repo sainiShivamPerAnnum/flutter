@@ -12,8 +12,8 @@ import 'package:felloapp/ui/pages/tabs/finance/augmont/augmont-details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/icici/mf_details_page.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 
 //Dart and Flutter Imports
 import 'dart:math' as math;
@@ -22,7 +22,6 @@ import 'package:flutter/material.dart';
 //Pub Imports
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
 
 class FinancePage extends StatefulWidget {
   @override

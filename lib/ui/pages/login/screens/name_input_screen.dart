@@ -4,8 +4,8 @@ import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 
 //Dart and Flutter Imports
 import 'dart:typed_data';

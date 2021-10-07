@@ -19,18 +19,19 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
-import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 
 //Dart & Flutter Imports
 import 'dart:async';
@@ -56,6 +57,7 @@ class BaseUtil extends ChangeNotifier {
   final DBModel _dbModel = locator<DBModel>();
   final LocalDBModel _lModel = locator<LocalDBModel>();
   final AppState _appState = locator<AppState>();
+  final UserService _userService = locator<UserService>();
 
   BaseUser _myUser;
   UserFundWallet _userFundWallet;

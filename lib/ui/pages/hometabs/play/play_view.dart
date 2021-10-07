@@ -4,8 +4,9 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -114,10 +115,9 @@ class Play extends StatelessWidget {
                             Spacer(),
                             Text(
                               "Prize: 10K",
-                              style: TextStyle(
-                                  color: UiConstants.primaryColor,
-                                  fontSize: SizeConfig.largeTextSize),
-                            )
+                              style: TextStyles.body.bold
+                                  .colour(UiConstants.primaryColor),
+                            ),
                           ],
                         ),
                       ),

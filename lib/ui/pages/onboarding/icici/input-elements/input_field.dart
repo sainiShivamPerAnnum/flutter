@@ -1,5 +1,5 @@
-import 'package:felloapp/util/palette.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/palette.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class InputField extends StatelessWidget {

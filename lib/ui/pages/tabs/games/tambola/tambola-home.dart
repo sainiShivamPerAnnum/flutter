@@ -22,9 +22,9 @@ import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_result.dart';
 import 'package:felloapp/ui/elements/network_bar.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/palette.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/palette.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 
 //Dart and Flutter Imports
 import 'dart:async';
@@ -527,10 +527,13 @@ class _TambolaHomeState extends State<TambolaHome> {
 
       if (_currentBoardView == null)
         _currentBoardView = Ticket(
-          bgColor: tambolaTicketColorPaletteList[0].boardColor,
-          boardColorEven: tambolaTicketColorPaletteList[0].itemColorEven,
-          boardColorOdd: tambolaTicketColorPaletteList[0].itemColorOdd,
-          boradColorMarked: tambolaTicketColorPaletteList[0].itemColorMarked,
+          bgColor: FelloColorPalette.tambolaTicketColorPalettes()[0].boardColor,
+          boardColorEven:
+              FelloColorPalette.tambolaTicketColorPalettes()[0].itemColorEven,
+          boardColorOdd:
+              FelloColorPalette.tambolaTicketColorPalettes()[0].itemColorOdd,
+          boradColorMarked:
+              FelloColorPalette.tambolaTicketColorPalettes()[0].itemColorMarked,
           calledDigits: [],
           board: null,
         );
@@ -551,8 +554,10 @@ class _TambolaHomeState extends State<TambolaHome> {
       _calledDigits =
           baseProvider.weeklyDigits.getPicksPostDate(board.generatedDayCode);
     }
-    TambolaTicketColorPalette ticketColor = tambolaTicketColorPaletteList[
-        Random().nextInt(tambolaTicketColorPaletteList.length - 1) + 1];
+    TambolaTicketColorPalette ticketColor =
+        FelloColorPalette.tambolaTicketColorPalettes()[Random().nextInt(
+                FelloColorPalette.tambolaTicketColorPalettes().length - 1) +
+            1];
     return Ticket(
       board: board,
       calledDigits: _calledDigits,

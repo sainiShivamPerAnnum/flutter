@@ -1,5 +1,5 @@
 import 'package:felloapp/core/model/daily_pick_model.dart';
-import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

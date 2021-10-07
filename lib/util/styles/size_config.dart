@@ -15,22 +15,6 @@ class SizeConfig {
   static double blockSizeVertical;
 
   // text sizes
-  static double headline1;
-  static double headline2;
-  static double headline3;
-  static double headline4;
-  static double headline5;
-  static double headline6;
-
-  static double bodyText1;
-  static double bodyText2;
-
-  static double subtitle1;
-  static double subtitle2;
-
-  static double button;
-  static double caption;
-  static double overline;
 
 // old text sizes
   static double smallTextSize;
@@ -52,20 +36,6 @@ class SizeConfig {
     textScaleFactor = _mediaQueryData.textScaleFactor;
     blockSizeHorizontal = screenWidth / 100;
     blockSizeVertical = screenHeight / 100;
-
-    headline1 = 40;
-    headline2 = 38;
-    headline3 = 36;
-    headline4 = 34;
-    headline5 = 32;
-    headline6 = 30;
-
-    bodyText1 = 16;
-    bodyText2 = 12;
-
-    subtitle1 = 10;
-    subtitle2 = 8;
-
     smallTextSize = blockSizeHorizontal * 2.4;
     mediumTextSize = blockSizeHorizontal * 3.2;
     largeTextSize = blockSizeHorizontal * 5;
@@ -78,4 +48,21 @@ class SizeConfig {
       bottomRight: Radius.circular(SizeConfig.blockSizeHorizontal * 10),
     );
   }
+
+  static double get headline1 => 40;
+  static double get headline2 => 38;
+  static double get headline3 => 36;
+  static double get headline4 => 34;
+  static double get headline5 => 32;
+  static double get headline6 => 30;
+
+  static double get bodyText1 => 18;
+  static double get bodyText2 => 14;
+
+  static double get subtitle1 => 10;
+  static double get subtitle2 => 8;
+
+  static double get button => 16;
+  static double get caption => 12;
+  static double get overline => 16;
 }

@@ -1,4 +1,4 @@
-import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class NetworkBar extends StatelessWidget {

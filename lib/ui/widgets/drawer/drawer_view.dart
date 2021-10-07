@@ -8,7 +8,7 @@ import 'package:felloapp/ui/pages/hometabs/widgets.dart';
 import 'package:felloapp/ui/pages/tabs/profile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_vm.dart';
-import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 

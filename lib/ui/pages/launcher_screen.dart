@@ -15,7 +15,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 
 //Dart and Flutter Imports
 import 'dart:async';
@@ -89,7 +89,7 @@ class LogoFadeIn extends State<SplashScreen> {
     }
 
     ///check if user is onboarded
-    if (!baseProvider.isUserOnboarded) {
+    if (!userService.isUserOnborded) {
       log.debug("New user. Moving to Onboarding..");
       stateProvider.currentAction =
           PageAction(state: PageState.replaceAll, page: OnboardPageConfig);

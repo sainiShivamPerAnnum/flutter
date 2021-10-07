@@ -7,8 +7,8 @@ import 'package:felloapp/ui/dialogs/transaction_details_dialog.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_vm.dart';
 import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +34,8 @@ class MiniTransactionCard extends StatelessWidget {
                         : (m.txnList.length == 0
                             ? Text("No Transactions")
                             : ListView.builder(
-                                itemCount: m.txnList.length,
+                                itemCount:
+                                    m.txnList.length < 5 ? m.txnList.length : 5,
                                 itemBuilder: (ctx, i) {
                                   return ListTile(
                                     onTap: () {

@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
@@ -33,6 +34,7 @@ class BuyGoldBtnVM extends BaseModel {
   DBModel _dbModel = locator<DBModel>();
   AugmontModel _augmontModel = locator<AugmontModel>();
   FcmListener _fcmListener = locator<FcmListener>();
+  UserService _userService = locator<UserService>();
   TransactionService _txnService = locator<TransactionService>();
   String getActionButtonText() {
     int _status = checkAugmontStatus();
@@ -191,7 +193,14 @@ class BuyGoldBtnVM extends BaseModel {
             .getTicketCountForTransaction(_baseUtil.currentAugmontTxn.amount);
         if (_ticketUpdateCount > 0) {
           int _tempCurrentCount = _baseUtil.userTicketWallet.augGold99Tck;
+          //baseutil side
           _baseUtil.userTicketWallet =
+              await _dbModel.updateAugmontGoldUserTicketCount(
+                  _baseUtil.myUser.uid,
+                  _baseUtil.userTicketWallet,
+                  _ticketUpdateCount);
+          //userService side
+          _userService.userTicketWallet =
               await _dbModel.updateAugmontGoldUserTicketCount(
                   _baseUtil.myUser.uid,
                   _baseUtil.userTicketWallet,

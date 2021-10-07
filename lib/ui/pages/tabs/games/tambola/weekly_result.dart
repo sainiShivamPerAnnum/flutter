@@ -4,7 +4,7 @@ import 'package:felloapp/ui/pages/tabs/games/tambola/weekly-results-scenes/prize
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly-results-scenes/prize_partial_win.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly-results-scenes/prize_win.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly-results-scenes/processing.dart';
-import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class WeeklyResult extends StatefulWidget {

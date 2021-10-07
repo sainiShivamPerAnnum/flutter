@@ -12,8 +12,8 @@ import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/update_name_dialog.dart';
 import 'package:felloapp/ui/pages/tabs/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
+import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/ui_constants.dart';
 
 //Flutter & Dart Imports
 import 'dart:ui';

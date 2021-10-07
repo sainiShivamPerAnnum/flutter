@@ -1,8 +1,10 @@
 import 'package:felloapp/core/enums/cache_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
@@ -16,11 +18,14 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   BaseUser _baseUser;
   String _myUserDpUrl;
   String _myUserName;
+  UserTicketWallet _userTicketWallet;
 
   User get firebaseUser => _firebaseUser;
   BaseUser get baseUser => _baseUser;
   String get myUserDpUrl => _myUserDpUrl;
   String get myUserName => _myUserName;
+
+  UserTicketWallet get userTicketWallet => _userTicketWallet;
 
   setMyUserDpUrl(String url) {
     _myUserDpUrl = url;
@@ -36,6 +41,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         .d("My user name updated in userservice, property listeners notified");
   }
 
+  set userTicketWallet(UserTicketWallet wallet) {
+    _userTicketWallet = wallet;
+    notifyListeners(UserServiceProperties.myUserWallet);
+    _logger.d("Wallet updated in userservice, property listeners notified");
+  }
+
   bool get isUserOnborded {
     if (_firebaseUser != null && _baseUser != null && _baseUser.uid.isNotEmpty)
       return true;
@@ -48,12 +59,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<void> init() async {
     await setBaseUser();
-    await setProfilePicture();
+    setProfilePicture();
+    getUserTicketWalletData();
   }
 
   Future<void> setBaseUser() async {
     _baseUser = await _dbModel.getUser(_firebaseUser?.uid);
-    _myUserName = _baseUser.name;
+    _myUserName = _baseUser?.name;
     _logger.d("Base user initialized");
   }
 
@@ -73,7 +85,23 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         _logger.e(e.toString());
       }
     } else {
-      _myUserDpUrl = await CacheManager.readCache(key: 'dpUrl');
+      setMyUserDpUrl(await CacheManager.readCache(key: 'dpUrl'));
     }
+  }
+
+  Future<void> getUserTicketWalletData() async {
+    _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
+    if (_userTicketWallet == null) {
+      await _initiateNewTicketWallet();
+    }
+  }
+
+  Future<bool> _initiateNewTicketWallet() async {
+    _userTicketWallet = UserTicketWallet.newTicketWallet();
+    int _t = userTicketWallet.initTck;
+    _userTicketWallet = await _dbModel.updateInitUserTicketCount(
+        baseUser.uid, _userTicketWallet, Constants.NEW_USER_TICKET_COUNT);
+    //updateInitUserTicketCount method returns no change if operations fails
+    return (_userTicketWallet.initTck != _t);
   }
 }
