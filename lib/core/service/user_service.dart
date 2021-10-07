@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/cache_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
@@ -18,14 +19,18 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   BaseUser _baseUser;
   String _myUserDpUrl;
   String _myUserName;
+  String _idToken;
   UserTicketWallet _userTicketWallet;
+  UserFundWallet _userFundWallet;
 
   User get firebaseUser => _firebaseUser;
   BaseUser get baseUser => _baseUser;
   String get myUserDpUrl => _myUserDpUrl;
   String get myUserName => _myUserName;
+  String get idToken => _idToken;
 
   UserTicketWallet get userTicketWallet => _userTicketWallet;
+  UserFundWallet get userFundWallet => _userFundWallet;
 
   setMyUserDpUrl(String url) {
     _myUserDpUrl = url;
@@ -47,6 +52,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _logger.d("Wallet updated in userservice, property listeners notified");
   }
 
+  set userFundWallet(UserFundWallet wallet) {
+    _userFundWallet = wallet;
+    notifyListeners(UserServiceProperties.myUserFund);
+    _logger.d("Wallet updated in userservice, property listeners notified");
+  }
+
   bool get isUserOnborded {
     if (_firebaseUser != null && _baseUser != null && _baseUser.uid.isNotEmpty)
       return true;
@@ -61,10 +72,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     await setBaseUser();
     setProfilePicture();
     getUserTicketWalletData();
+    getUserFundWalletData();
   }
 
   Future<void> setBaseUser() async {
     _baseUser = await _dbModel.getUser(_firebaseUser?.uid);
+    _idToken = await _firebaseUser?.getIdToken();
     _myUserName = _baseUser?.name;
     _logger.d("Base user initialized");
   }
@@ -90,18 +103,30 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   Future<void> getUserTicketWalletData() async {
-    _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
+    await Future.delayed(Duration(seconds: 10));
+    userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
     if (_userTicketWallet == null) {
       await _initiateNewTicketWallet();
     }
   }
 
   Future<bool> _initiateNewTicketWallet() async {
-    _userTicketWallet = UserTicketWallet.newTicketWallet();
+    userTicketWallet = UserTicketWallet.newTicketWallet();
     int _t = userTicketWallet.initTck;
-    _userTicketWallet = await _dbModel.updateInitUserTicketCount(
+    userTicketWallet = await _dbModel.updateInitUserTicketCount(
         baseUser.uid, _userTicketWallet, Constants.NEW_USER_TICKET_COUNT);
     //updateInitUserTicketCount method returns no change if operations fails
-    return (_userTicketWallet.initTck != _t);
+    return (userTicketWallet.initTck != _t);
+  }
+
+  Future<void> getUserFundWalletData() async {
+    userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
+    if (_userFundWallet == null) _compileUserWallet();
+  }
+
+  _compileUserWallet() {
+    userFundWallet = (_userFundWallet == null)
+        ? UserFundWallet.newWallet()
+        : _userFundWallet;
   }
 }

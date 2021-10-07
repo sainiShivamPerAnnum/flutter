@@ -3,7 +3,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/http_ops.dart';
+import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/fold-card.dart';

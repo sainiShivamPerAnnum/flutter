@@ -6,7 +6,7 @@ import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/http_ops.dart';
+import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';

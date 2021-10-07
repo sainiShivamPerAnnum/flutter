@@ -3,7 +3,7 @@ import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/enums/screen_item.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/ops/http_ops.dart';
+import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -116,9 +116,7 @@ class RootViewModel extends BaseModel {
       });
 
       _initAdhocNotifications();
-
-      //User service initialized;
-      await _userService.init();
+ 
       _baseUtil.getProfilePicture();
       // show security modal
       if (_baseUtil.show_security_prompt &&

@@ -1,4 +1,6 @@
 import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -14,6 +16,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 class Save extends StatelessWidget {
   @override
@@ -64,9 +67,14 @@ class Save extends StatelessWidget {
                         children: [
                           Widgets().getHeadlineLight(
                               "Your gold balance", Colors.black),
-                          Widgets().getHeadlineBold(
-                              text: "${model.getGoldBalance()} gm",
-                              color: Colors.amber),
+                          PropertyChangeConsumer<UserService,
+                              UserServiceProperties>(
+                            builder: (ctx, model, child) => Widgets()
+                                .getHeadlineBold(
+                                    text:
+                                        "${model.userFundWallet.augGoldQuantity} gm",
+                                    color: Colors.amber),
+                          ),
                         ],
                       ),
                       SizedBox(
