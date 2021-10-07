@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/core/enums/user_service_enums.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';

@@ -1,5 +1,5 @@
 import 'package:felloapp/core/enums/cache_type.dart';
-import 'package:felloapp/core/enums/user_service_enums.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
@@ -15,7 +15,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   User _firebaseUser;
   BaseUser _baseUser;
   String _myUserDpUrl;
-  String _myUserName = "Not defined";
+  String _myUserName;
 
   User get firebaseUser => _firebaseUser;
   BaseUser get baseUser => _baseUser;
@@ -53,6 +53,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<void> setBaseUser() async {
     _baseUser = await _dbModel.getUser(_firebaseUser?.uid);
+    _myUserName = _baseUser.name;
     _logger.d("Base user initialized");
   }
 

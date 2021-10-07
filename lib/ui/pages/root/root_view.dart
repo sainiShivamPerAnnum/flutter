@@ -1,4 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
@@ -8,6 +9,7 @@ import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 class Root extends StatelessWidget {
   @override
@@ -23,63 +25,7 @@ class Root extends StatelessWidget {
         model.initialize();
         return Scaffold(
           key: model.scaffoldKey,
-          appBar: AppBar(
-            backgroundColor: ThemeData().scaffoldBackgroundColor,
-            leading: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: InkWell(
-                onTap: model.showDrawer,
-                child: ProfileImage(),
-              ),
-            ),
-            title: Text(
-              "Hi, ${model.name.split(' ').first ?? "user"}",
-              style: GoogleFonts.montserrat(
-                  fontWeight: FontWeight.w500,
-                  fontSize: SizeConfig.largeTextSize),
-            ),
-            actions: [
-              InkWell(
-                onTap: () => model.showTicketModal(context),
-                child: Container(
-                  margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: UiConstants.primaryColor),
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
-                    children: [
-                      Text(
-                        model.userTicketCount,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(width: 8),
-                      Icon(
-                        Icons.control_point_rounded,
-                        color: Colors.white,
-                        size: kToolbarHeight / 2.5,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              InkWell(
-                child: Icon(
-                  Icons.notifications,
-                  size: kToolbarHeight * 0.5,
-                  color: Color(0xff4C4C4C),
-                ),
-                //icon: Icon(Icons.contact_support_outlined),
-                // iconSize: kToolbarHeight * 0.5,
-                onTap: model.openAlertsScreen,
-              ),
-              SizedBox(
-                width: SizeConfig.globalMargin,
-              )
-            ],
-          ),
+          appBar: appBar(model, context),
           drawer: FDrawer(),
           body: IndexedStack(
               children: model.pages, index: AppState().getCurrentTabIndex),
@@ -115,6 +61,68 @@ class Root extends StatelessWidget {
         );
         ;
       },
+    );
+  }
+
+  AppBar appBar(RootViewModel model, BuildContext context) {
+    return AppBar(
+      backgroundColor: ThemeData().scaffoldBackgroundColor,
+      leading: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: InkWell(
+          onTap: model.showDrawer,
+          child: ProfileImage(),
+        ),
+      ),
+      title: PropertyChangeConsumer<UserService, UserServiceProperties>(
+        properties: [UserServiceProperties.myUserName],
+        builder: (context, model, property) => Text(
+          "Hi, ${model.myUserName?.split(' ')?.first ?? "user"}",
+          style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.w500, fontSize: SizeConfig.largeTextSize),
+        ),
+      ),
+      actions: [
+        InkWell(
+          onTap: () => model.showTicketModal(context),
+          child: Container(
+            margin: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: UiConstants.primaryColor),
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              children: [
+                Text(
+                  model.userTicketCount,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(width: 8),
+                Icon(
+                  Icons.control_point_rounded,
+                  color: Colors.white,
+                  size: kToolbarHeight / 2.5,
+                ),
+              ],
+            ),
+          ),
+        ),
+        InkWell(
+          child: Icon(
+            Icons.notifications,
+            size: kToolbarHeight * 0.5,
+            color: Color(0xff4C4C4C),
+          ),
+          //icon: Icon(Icons.contact_support_outlined),
+          // iconSize: kToolbarHeight * 0.5,
+          onTap: model.openAlertsScreen,
+        ),
+        SizedBox(
+          width: SizeConfig.globalMargin,
+        )
+      ],
     );
   }
 }
