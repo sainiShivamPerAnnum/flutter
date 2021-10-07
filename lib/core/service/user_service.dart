@@ -16,11 +16,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   BaseUser _baseUser;
   String _myUserDpUrl;
   String _myUserName;
+  String _idToken;
 
   User get firebaseUser => _firebaseUser;
   BaseUser get baseUser => _baseUser;
   String get myUserDpUrl => _myUserDpUrl;
   String get myUserName => _myUserName;
+  String get idToken => _idToken;
 
   setMyUserDpUrl(String url) {
     _myUserDpUrl = url;
@@ -53,6 +55,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<void> setBaseUser() async {
     _baseUser = await _dbModel.getUser(_firebaseUser?.uid);
+    _idToken = await _firebaseUser?.getIdToken();
     _myUserName = _baseUser.name;
     _logger.d("Base user initialized");
   }

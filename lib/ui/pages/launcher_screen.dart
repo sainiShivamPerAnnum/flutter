@@ -5,6 +5,7 @@ import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -41,6 +42,7 @@ class LogoFadeIn extends State<SplashScreen> {
   Timer _timer3;
   LogoStyle _logoStyle = LogoStyle.markOnly;
   UserService userService = locator<UserService>();
+  final _httpModel = locator<HttpModel>();
 
   ui.Image logo;
   DeviceUnlock deviceUnlock;
@@ -74,6 +76,7 @@ class LogoFadeIn extends State<SplashScreen> {
     await baseProvider.init();
     await userService.init();
     await fcmProvider.setupFcm();
+    _httpModel.init();
     _timer3.cancel();
     try {
       deviceUnlock = DeviceUnlock();
