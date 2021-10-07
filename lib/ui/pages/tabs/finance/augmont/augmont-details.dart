@@ -24,7 +24,7 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/palettes.dart';
+import 'package:felloapp/util/palette.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 
@@ -39,8 +39,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
-
 
 class AugmontDetailsPage extends StatefulWidget {
   static const int STATUS_UNAVAILABLE = 0;
@@ -110,7 +108,7 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: augmontGoldPalette.secondaryColor,
+        backgroundColor: FelloColorPalette.augmontFundPalette().secondaryColor,
         iconTheme: IconThemeData(color: Colors.white),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -156,16 +154,18 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
                 ProfitCalculator(
                   calFactor: (0.17 / 12),
                   invGradient: [
-                    augmontGoldPalette.secondaryColor.withBlue(800),
-                    augmontGoldPalette.secondaryColor
+                    FelloColorPalette.augmontFundPalette()
+                        .secondaryColor
+                        .withBlue(800),
+                    FelloColorPalette.augmontFundPalette().secondaryColor
                   ],
                   retGradient: [
-                    augmontGoldPalette.primaryColor,
-                    augmontGoldPalette.primaryColor2
+                    FelloColorPalette.augmontFundPalette().primaryColor,
+                    FelloColorPalette.augmontFundPalette().primaryColor2
                   ],
                 ),
                 FAQCard(Assets.goldFaqHeaders, Assets.goldFaqAnswers,
-                    augmontGoldPalette.primaryColor),
+                    FelloColorPalette.augmontFundPalette().primaryColor),
                 _buildBetaWithdrawButton(),
               ],
             ),
@@ -185,8 +185,8 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
         gradient: new LinearGradient(colors: [
           // UiConstants.primaryColor,
           // UiConstants.primaryColor.withBlue(200),
-          augmontGoldPalette.primaryColor,
-          augmontGoldPalette.primaryColor2
+          FelloColorPalette.augmontFundPalette().primaryColor,
+          FelloColorPalette.augmontFundPalette().primaryColor2
         ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
       ),
       child: new Material(
@@ -248,8 +248,8 @@ class _AugmontDetailsPageState extends State<AugmontDetailsPage> {
         borderRadius: BorderRadius.circular(10),
         gradient: new LinearGradient(
           colors: [
-            augmontGoldPalette.secondaryColor.withBlue(800),
-            augmontGoldPalette.secondaryColor,
+            FelloColorPalette.augmontFundPalette().secondaryColor.withBlue(800),
+            FelloColorPalette.augmontFundPalette().secondaryColor,
             //Colors.blueGrey,
             //Colors.blueGrey[800],
           ],
@@ -730,8 +730,8 @@ class FundDetailsCell extends StatelessWidget {
                       context: context,
                       builder: (context) => new AlertDialog(
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(UiConstants.padding),
+                          borderRadius: BorderRadius.circular(
+                              SizeConfig.cardBorderRadius),
                         ),
                         title: new Text(title),
                         content: Text(info),

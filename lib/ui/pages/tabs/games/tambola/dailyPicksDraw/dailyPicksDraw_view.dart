@@ -4,7 +4,7 @@ import 'package:felloapp/core/enums/view_state.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/tabs/games/dailyPicksDraw/dailyPicksDraw_viewModel.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/dailyPicksDraw/dailyPicksDraw_viewModel.dart';
 import 'package:felloapp/util/size_config.dart';
 
 //Dart and Flutter Imports

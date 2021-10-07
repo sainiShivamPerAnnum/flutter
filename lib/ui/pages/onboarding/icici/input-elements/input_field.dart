@@ -1,4 +1,4 @@
-import 'package:felloapp/util/palettes.dart';
+import 'package:felloapp/util/palette.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -40,24 +40,24 @@ InputDecoration augmontFieldInputDecoration(String hintText, IconData icon) {
   if (icon != null)
     return InputDecoration(
       prefixIcon: Icon(icon),
-      focusColor: augmontGoldPalette.primaryColor,
+      focusColor: FelloColorPalette.augmontFundPalette().primaryColor,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
         borderSide: BorderSide(
-          color: augmontGoldPalette.secondaryColor,
+          color: FelloColorPalette.augmontFundPalette().secondaryColor,
         ),
       ),
-      // labelStyle: GoogleFonts.montserrat(color: augmontGoldPalette.primaryColor2),
+      // labelStyle: GoogleFonts.montserrat(color:  FelloColorPalette.augmontFundPalette().primaryColor2),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
         borderSide: BorderSide(
-          color: augmontGoldPalette.primaryColor,
+          color: FelloColorPalette.augmontFundPalette().primaryColor,
         ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
         borderSide: BorderSide(
-          color: augmontGoldPalette.primaryColor,
+          color: FelloColorPalette.augmontFundPalette().primaryColor,
         ),
       ),
       errorBorder: OutlineInputBorder(
@@ -74,24 +74,24 @@ InputDecoration augmontFieldInputDecoration(String hintText, IconData icon) {
     );
 
   return InputDecoration(
-    focusColor: augmontGoldPalette.primaryColor,
+    focusColor: FelloColorPalette.augmontFundPalette().primaryColor,
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(10),
       borderSide: BorderSide(
-        color: augmontGoldPalette.secondaryColor,
+        color: FelloColorPalette.augmontFundPalette().secondaryColor,
       ),
     ),
-    // labelStyle: GoogleFonts.montserrat(color: augmontGoldPalette.primaryColor2),
+    // labelStyle: GoogleFonts.montserrat(color:  FelloColorPalette.augmontFundPalette().primaryColor2),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(10),
       borderSide: BorderSide(
-        color: augmontGoldPalette.primaryColor,
+        color: FelloColorPalette.augmontFundPalette().primaryColor,
       ),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(10),
       borderSide: BorderSide(
-        color: augmontGoldPalette.primaryColor,
+        color: FelloColorPalette.augmontFundPalette().primaryColor,
       ),
     ),
     errorBorder: OutlineInputBorder(

@@ -8,7 +8,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/widgets.dart';
 import 'package:felloapp/ui/widgets/buttons/buy_gold_button/buyGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
-import 'package:felloapp/ui/widgets/buttons/sellGoldButton/sellGoldBtn_view.dart';
+import 'package:felloapp/ui/widgets/buttons/sell_gold_button/sellGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';

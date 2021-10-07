@@ -10,7 +10,7 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.da
 import 'package:felloapp/util/augmont_state_list.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/palettes.dart';
+import 'package:felloapp/util/palette.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -76,7 +76,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w700,
-                  color: augmontGoldPalette.primaryColor,
+                  color: FelloColorPalette.augmontFundPalette().primaryColor,
                 ),
               ),
             ),
@@ -99,7 +99,7 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
         //     style: TextStyle(
         //       fontSize: 28,
         //       fontWeight: FontWeight.w700,
-        //       color: augmontGoldPalette.primaryColor,
+        //       color:  FelloColorPalette.augmontFundPalette().primaryColor,
         //     ),
         //   ),
         // ),
@@ -118,13 +118,15 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
             vertical: 4,
           ),
           decoration: BoxDecoration(
-            border: Border.all(color: augmontGoldPalette.primaryColor),
+            border: Border.all(
+                color: FelloColorPalette.augmontFundPalette().primaryColor),
             borderRadius: BorderRadius.circular(10),
           ),
           child: DropdownButtonFormField(
             decoration: InputDecoration(
                 border: InputBorder.none, enabledBorder: InputBorder.none),
-            iconEnabledColor: augmontGoldPalette.primaryColor,
+            iconEnabledColor:
+                FelloColorPalette.augmontFundPalette().primaryColor,
             hint: Text("Which state do you live in?"),
             value: stateChosenValue,
             onChanged: (String newVal) {
@@ -151,8 +153,8 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
           height: 50.0,
           decoration: BoxDecoration(
             gradient: new LinearGradient(colors: [
-              augmontGoldPalette.primaryColor,
-              augmontGoldPalette.primaryColor2
+              FelloColorPalette.augmontFundPalette().primaryColor,
+              FelloColorPalette.augmontFundPalette().primaryColor2
               // UiConstants.primaryColor,
               // UiConstants.primaryColor.withBlue(200),
             ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0)),
@@ -255,8 +257,9 @@ class AugmontInfoTiles extends StatelessWidget {
                   style: TextStyle(
                       fontSize: SizeConfig.smallTextSize * 1.3,
                       decoration: TextDecoration.underline,
-                      color:
-                          augmontGoldPalette.secondaryColor.withOpacity(0.8)),
+                      color: FelloColorPalette.augmontFundPalette()
+                          .secondaryColor
+                          .withOpacity(0.8)),
                 ),
               ),
             ],

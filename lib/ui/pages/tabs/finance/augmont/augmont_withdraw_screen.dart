@@ -9,7 +9,7 @@ import 'package:felloapp/ui/pages/tabs/finance/augmont/edit_augmont_bank_details
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/palettes.dart';
+import 'package:felloapp/util/palette.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
@@ -121,7 +121,8 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
                               child: Text('Edit Bank Info')),
                           decoration: BoxDecoration(
                             border: Border.all(
-                                color: augmontGoldPalette.primaryColor),
+                                color: FelloColorPalette.augmontFundPalette()
+                                    .primaryColor),
                             borderRadius: BorderRadius.circular(10),
                           ),
                         );
@@ -171,7 +172,7 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
                 style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w700,
-                    color: augmontGoldPalette.primaryColor),
+                    color: FelloColorPalette.augmontFundPalette().primaryColor),
               ),
               (_isLoading)
                   ? Padding(
@@ -241,7 +242,8 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
                                   textTheme: GoogleFonts.montserratTextTheme(),
                                   colorScheme: ColorScheme.light(
                                       primary:
-                                          augmontGoldPalette.primaryColor)),
+                                          FelloColorPalette.augmontFundPalette()
+                                              .primaryColor)),
                               child: TextField(
                                 controller: _quantityController,
                                 keyboardType: (Platform.isAndroid)
@@ -441,8 +443,8 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
 
   Widget _buildSubmitButton(BuildContext context) {
     LinearGradient _gradient = new LinearGradient(colors: [
-      augmontGoldPalette.secondaryColor.withBlue(800),
-      augmontGoldPalette.secondaryColor,
+      FelloColorPalette.augmontFundPalette().secondaryColor.withBlue(800),
+      FelloColorPalette.augmontFundPalette().secondaryColor,
       //Colors.blueGrey,
       //Colors.blueGrey[800],
     ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
@@ -622,7 +624,8 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
               context: context,
               builder: (context) => new AlertDialog(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(UiConstants.padding),
+                  borderRadius:
+                      BorderRadius.circular(SizeConfig.cardBorderRadius),
                 ),
                 title: new Text(title),
                 content: Text(

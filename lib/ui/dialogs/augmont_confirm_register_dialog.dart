@@ -2,7 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/palettes.dart';
+import 'package:felloapp/util/palette.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';

@@ -1,4 +1,7 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -40,10 +43,12 @@ class Play extends StatelessWidget {
                               ),
                               Text(
                                 "Title $i",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: SizeConfig.largeTextSize,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(
+                                      fontWeight: FontWeight.w700,
+                                    ),
                               )
                             ],
                           ),
@@ -52,20 +57,27 @@ class Play extends StatelessWidget {
                     }),
               ),
               SizedBox(height: 20),
-              Text(
-                "Trending Games",
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: SizeConfig.cardTitleTextSize,
-                ),
-              ),
+              Text("Trending Games",
+                  style: Theme.of(context).textTheme.headline3),
               Column(
                 children: List.generate(
                   2,
                   (i) => Column(
                     children: [
                       GestureDetector(
-                        onTap: () => BaseUtil().openTambolaHome(),
+                        onTap: () async {
+                          if (i == 0)
+                            BaseUtil().openTambolaHome();
+                          else {
+                            AppState.delegate.appState.currentAction =
+                                PageAction(
+                                    state: PageState.addPage,
+                                    page: CricketHomePageConfig);
+                            // await Future.delayed(Duration(seconds: 5), () {
+                            //   AppState.backButtonDispatcher.didPopRoute();
+                            // });
+                          }
+                        },
                         child: Card(
                           child: Container(
                             padding: EdgeInsets.all(36),
@@ -79,7 +91,7 @@ class Play extends StatelessWidget {
                                 ),
                                 SizedBox(width: 36),
                                 Text(
-                                  "Tambola",
+                                  model.gameList[i],
                                   style: GoogleFonts.montserrat(
                                     fontWeight: FontWeight.w300,
                                     fontSize: SizeConfig.cardTitleTextSize,

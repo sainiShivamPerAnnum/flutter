@@ -14,7 +14,7 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/palettes.dart';
+import 'package:felloapp/util/palette.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 
@@ -373,7 +373,9 @@ class KycInfoTiles extends StatelessWidget {
                 style: TextStyle(
                     fontSize: SizeConfig.smallTextSize * 1.3,
                     decoration: TextDecoration.underline,
-                    color: augmontGoldPalette.secondaryColor.withOpacity(0.8)),
+                    color: FelloColorPalette.augmontFundPalette()
+                        .secondaryColor
+                        .withOpacity(0.8)),
               ),
             ),
           ],
