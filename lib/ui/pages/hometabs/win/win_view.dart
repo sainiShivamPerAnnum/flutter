@@ -4,7 +4,7 @@ import 'package:felloapp/ui/elements/leaderboard.dart';
 import 'package:felloapp/ui/elements/week-winners_board.dart';
 import 'package:felloapp/ui/pages/hometabs/widgets.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
-import 'package:felloapp/util/palettes.dart';
+import 'package:felloapp/util/palette.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';

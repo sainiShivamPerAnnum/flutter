@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 
 class ChangeProfilePicture extends StatefulWidget {
   final File image;
-  ValueChanged<bool> upload;
+  final ValueChanged<bool> upload;
 
   ChangeProfilePicture({this.image, this.upload});
 
@@ -24,16 +24,11 @@ class ChangeProfilePicture extends StatefulWidget {
 
 class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
   Log log = new Log('ChangeProfilePicture');
-  final FirebaseStorage storage = FirebaseStorage.instance;
-  
-  BaseUtil baseProvider;
-  DBModel dbProvider;
+
   bool isUploading = false;
 
   @override
   Widget build(BuildContext context) {
-    baseProvider = Provider.of<BaseUtil>(context, listen: false);
-    dbProvider = Provider.of<DBModel>(context, listen: false);
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
       child: Dialog(
@@ -46,86 +41,6 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
       ),
     );
   }
-
-  // Future<File> testCompressAndGetFile(File file, String targetPath) async {
-  //   try {
-  //     int quality = 50;
-  //     double filesize = file.lengthSync() / (1024 * 1024);
-  //     if (filesize < 1) {
-  //       quality = 75;
-  //     }
-  //     var result = await FlutterImageCompress.compressAndGetFile(
-  //       file.absolute.path,
-  //       targetPath,
-  //       quality: quality,
-  //       rotate: 0,
-  //     );
-
-  //     print(file.lengthSync());
-  //     print(result.lengthSync());
-
-  //     return result;
-  //   } catch (e) {
-  //     log.error(e.toString());
-  //     return file;
-  //   }
-  // }
-
-  // Future<bool> updatePicture(BuildContext context) async {
-  //   Directory supportDir;
-  //   UploadTask uploadTask;
-  //   try {
-  //     supportDir = await getApplicationSupportDirectory();
-  //   } catch (e1) {
-  //     log.error('Support Directory not found');
-  //     log.error('$e1');
-  //     return false;
-  //   }
-
-  //   String imageName = widget.image.path.split("/").last;
-  //   String targetPath = "${supportDir.path}/c-$imageName";
-  //   print("temp path: " + targetPath);
-  //   print("orignal path: " + widget.image.path);
-
-  //   File compressedFile = File(widget.image.path);
-
-  //   try {
-  //     FirebaseStorage storage = FirebaseStorage.instance;
-  //     Reference ref =
-  //         storage.ref().child("dps/${baseProvider.myUser.uid}/image");
-  //     uploadTask = ref.putFile(compressedFile);
-  //   } catch (e2) {
-  //     log.error('putFile Failed. Reference Error');
-  //     log.error('$e2');
-  //     return false;
-  //   }
-
-  //   try {
-  //     TaskSnapshot res = await uploadTask;
-  //     String url = await res.ref.getDownloadURL();
-  //     if (url != null) {
-  //       await CacheManager.writeCache(
-  //           key: 'dpUrl', value: url, type: CacheType.string);
-  //       baseProvider.isProfilePictureUpdated = true;
-  //       //TODO: Add user service here.
-  //       _userService.setMyUserDpUrl(url);
-  //       //baseProvider.setDisplayPictureUrl(url);
-  //       log.debug('Final DP Uri: $url');
-  //       return true;
-  //     } else
-  //       return false;
-  //   } catch (e) {
-  //     if (baseProvider.myUser.uid != null) {
-  //       Map<String, dynamic> errorDetails = {
-  //         'error_msg': 'Method call to upload picture failed',
-  //       };
-  //       dbProvider.logFailure(baseProvider.myUser.uid,
-  //           FailType.ProfilePictureUpdateFailed, errorDetails);
-  //     }
-  //     print('$e');
-  //     return false;
-  //   }
-  // }
 
   dialogContent(BuildContext context) {
     return Wrap(
@@ -187,26 +102,6 @@ class _ChangeProfilePictureState extends State<ChangeProfilePicture> {
                                 isUploading = true;
                                 widget.upload(true);
                               });
-                              // if (widget.image != null) {
-                              //   updatePicture(context).then((flag) {
-                              //     if (flag) {
-                              //       BaseAnalytics.logProfilePictureAdded();
-                              //       baseProvider.showPositiveAlert(
-                              //           'Complete',
-                              //           'Your profile Picture has been updated',
-                              //           context);
-                              //     } else {
-                              //       baseProvider.showNegativeAlert(
-                              //           'Failed',
-                              //           'Your Profile Picture could not be updated at the moment',
-                              //           context);
-                              //     }
-                              //     setState(() {
-                              //       isUploading = false;
-                              //     });
-                              //     Navigator.pop(context);
-                              //   });
-                              // }
                             },
                             child: Text(
                               "Update",

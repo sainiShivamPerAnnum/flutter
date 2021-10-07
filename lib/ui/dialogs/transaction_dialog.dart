@@ -1,5 +1,6 @@
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,7 @@ class _TransactionState extends State<TransactionDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(UiConstants.padding),
+        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
       ),
       elevation: 0.0,
       backgroundColor: Colors.transparent,
@@ -40,16 +41,16 @@ class _TransactionState extends State<TransactionDialog> {
         //...bottom card part,
         Container(
           padding: EdgeInsets.only(
-            top: UiConstants.padding + 20,
-            bottom: UiConstants.padding + 30,
-            left: UiConstants.padding,
-            right: UiConstants.padding,
+            top: SizeConfig.cardBorderRadius + 20,
+            bottom: SizeConfig.cardBorderRadius + 30,
+            left: SizeConfig.cardBorderRadius,
+            right: SizeConfig.cardBorderRadius,
           ),
           //margin: EdgeInsets.only(top: UiConstants.avatarRadius),
           decoration: new BoxDecoration(
             color: Colors.white,
             shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(UiConstants.padding),
+            borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
             boxShadow: [
               BoxShadow(
                 color: Colors.black26,
@@ -82,8 +83,8 @@ class _TransactionState extends State<TransactionDialog> {
         ),
         //...top circlular image part,
 //        Positioned(
-//          left: UiConstants.padding,
-//          right: UiConstants.padding,
+//          left: SizeConfig.cardBorderRadius,
+//          right: SizeConfig.cardBorderRadius,
 //          child: CircleAvatar(
 //            backgroundColor: Colors.blueAccent,
 //            radius: UiConstants.avatarRadius,

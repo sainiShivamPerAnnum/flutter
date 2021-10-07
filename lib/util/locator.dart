@@ -18,7 +18,7 @@ import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
-import 'package:felloapp/ui/pages/tabs/games/dailyPicksDraw/dailyPicksDraw_viewModel.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/dailyPicksDraw/dailyPicksDraw_viewModel.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions/tran_viewModel.dart';
 import 'package:felloapp/ui/pages/tabs/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/widgets/buttons/buy_gold_button/buyGoldBtn_vm.dart';

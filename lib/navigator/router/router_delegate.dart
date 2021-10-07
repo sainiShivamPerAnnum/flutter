@@ -6,7 +6,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/aboutus_dialog.dart';
 import 'package:felloapp/ui/dialogs/game-poll-dialog.dart';
-import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
 import 'package:felloapp/ui/dialogs/guide_dialog.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/hamburger/chatsupport_page.dart';
@@ -25,7 +24,8 @@ import 'package:felloapp/ui/pages/tabs/finance/augmont/augmont-details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/augmont/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
 import 'package:felloapp/ui/pages/tabs/finance/icici/mf_details_page.dart';
-import 'package:felloapp/ui/pages/tabs/games/dailyPicksDraw/dailyPicksDraw_view.dart';
+import 'package:felloapp/ui/pages/tabs/games/cricket/cricket_view.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/dailyPicksDraw/dailyPicksDraw_view.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/summary_tickets_display.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/tambola-home.dart';
@@ -227,6 +227,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Notifications:
           _addPageData(NotficationsPage(), NotificationsConfig);
           break;
+        case Pages.CricketHome:
+          _addPageData(CricketView(), CricketHomePageConfig);
+          break;
         default:
           break;
       }
@@ -375,7 +378,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.Notifications:
         NotificationsConfig.currentPageAction = action;
         break;
-
+      case Pages.CricketHome:
+        CricketHomePageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }

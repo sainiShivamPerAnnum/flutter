@@ -672,8 +672,8 @@ class FundDetailsCell extends StatelessWidget {
                       context: context,
                       builder: (context) => new AlertDialog(
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(UiConstants.padding),
+                          borderRadius: BorderRadius.circular(
+                              SizeConfig.cardBorderRadius),
                         ),
                         title: new Text(title),
                         content: Text(info),

@@ -9,7 +9,7 @@ import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/util/icici_api_util.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/palettes.dart';
+import 'package:felloapp/util/palette.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 
@@ -116,8 +116,8 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
         body: Theme(
           data: ThemeData.light().copyWith(
             textTheme: GoogleFonts.montserratTextTheme(),
-            colorScheme:
-                ColorScheme.light(primary: augmontGoldPalette.primaryColor),
+            colorScheme: ColorScheme.light(
+                primary: FelloColorPalette.augmontFundPalette().primaryColor),
           ),
           child: SingleChildScrollView(
             child: Padding(
@@ -164,7 +164,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                         //     borderRadius: BorderRadius.circular(10),
                         //   ),
                         //   prefixIcon: Icon(Icons.person),
-                        //   focusColor: augmontGoldPalette.primaryColor2,
+                        //   focusColor:  FelloColorPalette.augmontFundPalette().primaryColor2,
                         //   border: OutlineInputBorder(
                         //     borderRadius: BorderRadius.circular(10),
                         //   ),
@@ -189,7 +189,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                             'Bank Account Number', Icons.keyboard),
                         // InputDecoration(
                         //   labelText: 'Bank Account Number',
-                        //   focusColor: augmontGoldPalette.primaryColor2,
+                        //   focusColor:  FelloColorPalette.augmontFundPalette().primaryColor2,
                         //   border: OutlineInputBorder(
                         //     borderRadius: BorderRadius.circular(10),
                         //   ),
@@ -213,7 +213,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                             'Confirm Bank Account Number', Icons.keyboard),
                         //  InputDecoration(
                         //   labelText: 'Confirm Bank Account Number',
-                        //   focusColor: augmontGoldPalette.primaryColor2,
+                        //   focusColor:  FelloColorPalette.augmontFundPalette().primaryColor2,
                         //   border: OutlineInputBorder(
                         //     borderRadius: BorderRadius.circular(10),
                         //   ),
@@ -237,7 +237,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                             'Bank IFSC Code', Icons.account_balance),
                         //  InputDecoration(
                         //   labelText: 'Bank IFSC Code',
-                        //   focusColor: augmontGoldPalette.primaryColor2,
+                        //   focusColor:  FelloColorPalette.augmontFundPalette().primaryColor2,
                         //   border: OutlineInputBorder(
                         //     borderRadius: BorderRadius.circular(10),
                         //   ),
@@ -259,8 +259,10 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                         decoration: BoxDecoration(
                           gradient: new LinearGradient(
                               colors: [
-                                augmontGoldPalette.primaryColor,
-                                augmontGoldPalette.primaryColor2
+                                FelloColorPalette.augmontFundPalette()
+                                    .primaryColor,
+                                FelloColorPalette.augmontFundPalette()
+                                    .primaryColor2
                               ],
                               begin: Alignment(0.5, -1.0),
                               end: Alignment(0.5, 1.0)),
@@ -368,7 +370,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
               bankIfsc: pBankIfsc,
               bankName: bankDetail[GetBankDetail.resBankName],
               bankBranchName: bankDetail[GetBankDetail.resBranchName],
-              dialogColor: augmontGoldPalette.primaryColor2,
+              dialogColor: FelloColorPalette.augmontFundPalette().primaryColor2,
               customMessage: (widget.isWithdrawFlow)
                   ? 'Are you sure you want to continue? ${baseProvider.activeGoldWithdrawalQuantity.toString()} grams of digital gold shall be processed.'
                   : '',

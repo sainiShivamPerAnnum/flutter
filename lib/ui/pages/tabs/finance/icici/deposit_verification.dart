@@ -3,6 +3,7 @@ import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/ui/dialogs/transaction_help_dialog.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +76,8 @@ class _DepositVerificationState extends State<DepositVerification> {
                     decoration: new BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(UiConstants.padding),
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.cardBorderRadius),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black26,

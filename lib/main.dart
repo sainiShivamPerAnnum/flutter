@@ -2,6 +2,7 @@
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/util/app_theme.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
@@ -99,7 +100,7 @@ class _MyAppState extends State<MyApp> {
         value: locator<UserService>(),
         child: MaterialApp.router(
           title: Constants.APP_NAME,
-          theme: _felloTheme(),
+          theme: FelloTheme.lightMode(),
           debugShowCheckedModeBanner: false,
           backButtonDispatcher: backButtonDispatcher,
           routerDelegate: delegate,
@@ -111,47 +112,6 @@ class _MyAppState extends State<MyApp> {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: S.delegate.supportedLocales,
-        ),
-      ),
-    );
-  }
-
-  ThemeData _felloTheme() {
-    return ThemeData(
-      primaryColor: UiConstants.primaryColor,
-      primarySwatch: UiConstants.kPrimaryColor,
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-      textTheme: GoogleFonts.montserratTextTheme(),
-      inputDecorationTheme: InputDecorationTheme(
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-              color: UiConstants.primaryColor.withOpacity(0.3), width: 1),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey.withOpacity(0.3), width: 1),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: UiConstants.primaryColor,
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.red.withOpacity(0.3),
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.red.withOpacity(0.3),
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(10),
         ),
       ),
     );

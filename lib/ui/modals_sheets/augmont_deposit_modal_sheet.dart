@@ -11,7 +11,7 @@ import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.da
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:felloapp/util/palettes.dart';
+import 'package:felloapp/util/palette.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 
@@ -155,14 +155,16 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
               data: ThemeData.light().copyWith(
                   textTheme: GoogleFonts.montserratTextTheme(),
                   colorScheme: ColorScheme.light(
-                      primary: augmontGoldPalette.primaryColor)),
+                      primary:
+                          FelloColorPalette.augmontFundPalette().primaryColor)),
               child: Container(
                 margin: EdgeInsets.symmetric(vertical: 8),
                 child: TextFormField(
                   autofocus: false,
                   controller: _amtController,
                   keyboardType: TextInputType.number,
-                  cursorColor: augmontGoldPalette.primaryColor,
+                  cursorColor:
+                      FelloColorPalette.augmontFundPalette().primaryColor,
                   decoration:
                       augmontFieldInputDecoration("Enter an amount", null),
                   validator: (value) {
@@ -284,7 +286,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                       dismissThresholds: 0.8,
                       icon: Icon(
                         Icons.arrow_forward_ios,
-                        color: augmontGoldPalette.primaryColor,
+                        color:
+                            FelloColorPalette.augmontFundPalette().primaryColor,
                       ),
                     ),
                   )
@@ -293,7 +296,8 @@ class AugmontDepositModalSheetState extends State<AugmontDepositModalSheet>
                 ? Padding(
                     padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
                     child: SpinKitRing(
-                      color: augmontGoldPalette.primaryColor,
+                      color:
+                          FelloColorPalette.augmontFundPalette().primaryColor,
                       size: 38.0,
                     ),
                   )

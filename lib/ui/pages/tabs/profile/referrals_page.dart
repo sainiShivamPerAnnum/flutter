@@ -131,7 +131,7 @@ class _ReferralsPageState extends State<ReferralsPage> {
                   colors: [Colors.blueGrey[600], Colors.blueGrey[400]],
                 ),
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(UiConstants.padding),
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
           boxShadow: [
             BoxShadow(
               color: Colors.black26,

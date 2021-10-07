@@ -1,6 +1,3 @@
-import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
-import 'package:felloapp/util/size_config.dart';
-import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class FelloDialog extends StatelessWidget {

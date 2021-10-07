@@ -1,32 +1,20 @@
 import 'package:flutter/material.dart';
 
-class FundPalettes {
-  final Color primaryColor;
-  final Color primaryColor2;
-  final Color secondaryColor;
-
-  const FundPalettes(
-      {this.primaryColor, this.primaryColor2, this.secondaryColor});
+class FelloColorPalette {
+  static FundPalette augmontFundPalette() {
+    return FundPalette(
+      primaryColor: Color(0xffFFB700),
+      primaryColor2: Color(0xffFFC300),
+      secondaryColor: Color(0xff203130),
+    );
+  }
 }
 
-const FundPalettes augmontGoldPalette = FundPalettes(
-  primaryColor: Color(0xffFFB700),
-  primaryColor2: Color(0xffFFC300),
-  secondaryColor: Color(0xff203130),
-);
-
-class TambolaTicketColorPalette {
-  Color boardColor;
-  Color itemColorEven;
-  Color itemColorOdd;
-  Color itemColorMarked;
-
-  TambolaTicketColorPalette(
-      {@required this.boardColor,
-      @required this.itemColorEven,
-      @required this.itemColorMarked,
-      @required this.itemColorOdd});
-}
+// const FundPalette augmontGoldPalette = FundPalette(
+//   primaryColor: Color(0xffFFB700),
+//   primaryColor2: Color(0xffFFC300),
+//   secondaryColor: Color(0xff203130),
+// );
 
 List<TambolaTicketColorPalette> tambolaTicketColorPaletteList = [
   TambolaTicketColorPalette(
@@ -72,3 +60,31 @@ List<TambolaTicketColorPalette> tambolaTicketColorPaletteList = [
     itemColorOdd: Color(0xffF5E8C7),
   ),
 ];
+
+// COLOR PALETTE MODELS
+
+class FundPalette {
+  final Color primaryColor;
+  final Color primaryColor2;
+  final Color secondaryColor;
+  final Color tertiaryColor;
+
+  const FundPalette(
+      {this.primaryColor,
+      this.primaryColor2,
+      this.secondaryColor,
+      this.tertiaryColor});
+}
+
+class TambolaTicketColorPalette {
+  Color boardColor;
+  Color itemColorEven;
+  Color itemColorOdd;
+  Color itemColorMarked;
+
+  TambolaTicketColorPalette(
+      {@required this.boardColor,
+      @required this.itemColorEven,
+      @required this.itemColorMarked,
+      @required this.itemColorOdd});
+}
