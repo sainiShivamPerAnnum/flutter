@@ -1,17 +1,21 @@
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/service/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/widgets.dart';
 import 'package:felloapp/ui/widgets/buttons/buy_gold_button/buyGoldBtn_view.dart';
-import 'package:felloapp/ui/widgets/buttons/flat_button/flatButton_view.dart';
-import 'package:felloapp/ui/widgets/buttons/raisedButton/raised_button_view.dart';
-import 'package:felloapp/ui/widgets/buttons/sellGoldButton/sellGoldBtn_view.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
+import 'package:felloapp/ui/widgets/buttons/sell_gold_button/sellGoldBtn_view.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
-import 'package:felloapp/util/palettes.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class Save extends StatelessWidget {
@@ -149,38 +153,80 @@ class Save extends StatelessWidget {
               ),
               MiniTransactionCard(),
               SizedBox(height: 40),
+              SizedBox(height: 20),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Expanded(
-                    child: RBtn(
-                      text: "What is digital gold?",
-                      onPressed: () async {
-                        await Future.delayed(Duration(seconds: 2));
-                        print("I am a future function");
+                  FelloButton(
+                      // text: "FelloButton",
+                      // bgColor: UiConstants.primaryColor,
+                      textStyle: TextStyle(color: Colors.white),
+                      action: (val) {
+                        if (val) print("I Changed");
                       },
-                      textStyle: TextStyle(
-                        color: Colors.black,
-                        fontSize: SizeConfig.mediumTextSize,
-                        fontWeight: FontWeight.w700,
+                      offlineButtonUI: Container(
+                        width: 300,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Colors.grey,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text("Fello Button"),
+                      ),
+                      activeButtonUI: Container(
+                        width: 150,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: UiConstants.primaryColor,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text("Fello Button"),
+                      ),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => FelloConfirmationDialog(
+                            content: Padding(
+                              padding:
+                                  EdgeInsets.all(SizeConfig.globalMargin * 3),
+                              child:
+                                  SvgPicture.asset("images/svgs/offline.svg"),
+                            ),
+                            onAccept: () async {
+                              Navigator.pop(context);
+
+                              AppState.delegate.appState.currentAction =
+                                  PageAction(
+                                page: TransactionPageConfig,
+                                state: PageState.addPage,
+                              );
+                            },
+                            onReject: () => Navigator.pop(context),
+                            result: (res) {
+                              if (res) print("I Changed");
+                            },
+                          ),
+                        );
+                      }),
+                  FelloButton(
+                    onPressedAsync: () async {
+                      await Future.delayed(Duration(seconds: 3));
+                    },
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (ctx) => FelloInfoDialog(
+                        title: "Info Dialog",
+                        subtitle: "This is the subtitle",
+                        body:
+                            "What other ways do you use to minimize the app size ??with tooling and language features that allow developers to eliminate a whole class of errors, increase app performance and reduce package size.",
                       ),
                     ),
-                  ),
-                  SizedBox(width: 24),
-                  Expanded(
-                    child: FBtn(
-                        text: "ABXS",
-                        onPressed: () async {
-                          await Future.delayed(Duration(seconds: 2));
-                          print("I am a future function");
-                        }),
-                    // Widgets().getButton(
-                    //   "ABXS",
-                    //   () {},
-                    //   Colors.grey[300],
-                    // ),
-                  ),
+                  )
                 ],
               ),
+              SizedBox(height: 20),
             ],
           ),
         );
