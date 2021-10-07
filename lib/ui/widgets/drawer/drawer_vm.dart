@@ -10,7 +10,7 @@ class FDrawerVM extends BaseModel {
 
   String get myUserDpUrl => userService.myUserDpUrl;
 
-  String get name => _baseUtil.myUser.name;
+  String get name => userService.myUserName;
   String get username => _baseUtil.myUser.username;
 
   refreshDrawer() {

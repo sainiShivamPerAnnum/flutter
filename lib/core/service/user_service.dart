@@ -53,6 +53,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<void> setBaseUser() async {
     _baseUser = await _dbModel.getUser(_firebaseUser?.uid);
+    _myUserName = _baseUser.name;
     _logger.d("Base user initialized");
   }
 

@@ -1,4 +1,6 @@
 import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -8,6 +10,7 @@ import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_vm.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 class FDrawer extends StatelessWidget {
   @override
@@ -33,8 +36,13 @@ class FDrawer extends StatelessWidget {
                             ));
                   },
                   leading: ProfileImage(),
-                  title: Widgets()
-                      .getHeadlineBold(text: model.name, color: Colors.black),
+                  title: PropertyChangeConsumer<UserService,
+                      UserServiceProperties>(
+                    properties: [UserServiceProperties.myUserName],
+                    builder: (context, model, properties) => Widgets()
+                        .getHeadlineBold(
+                            text: model.myUserName, color: Colors.black),
+                  ),
                   subtitle: Widgets()
                       .getBodyLight("@${model.username}", Colors.black),
                 ),
