@@ -74,9 +74,9 @@ class Play extends StatelessWidget {
                                 PageAction(
                                     state: PageState.addPage,
                                     page: CricketHomePageConfig);
-                            // await Future.delayed(Duration(seconds: 5), () {
-                            //   AppState.backButtonDispatcher.didPopRoute();
-                            // });
+                            await Future.delayed(Duration(seconds: 10), () {
+                              AppState.backButtonDispatcher.didPopRoute();
+                            });
                           }
                         },
                         child: Card(
@@ -91,13 +91,8 @@ class Play extends StatelessWidget {
                                   color: UiConstants.primaryColor,
                                 ),
                                 SizedBox(width: 36),
-                                Text(
-                                  model.gameList[i],
-                                  style: GoogleFonts.montserrat(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: SizeConfig.cardTitleTextSize,
-                                  ),
-                                )
+                                Text(model.gameList[i],
+                                    style: TextStyles.title2.light)
                               ],
                             ),
                           ),
@@ -109,13 +104,12 @@ class Play extends StatelessWidget {
                           children: [
                             Text(
                               "5 tickets",
-                              style:
-                                  TextStyle(fontSize: SizeConfig.largeTextSize),
+                              style: TextStyles.body2,
                             ),
                             Spacer(),
                             Text(
                               "Prize: 10K",
-                              style: TextStyles.body.bold
+                              style: TextStyles.body2
                                   .colour(UiConstants.primaryColor),
                             ),
                           ],

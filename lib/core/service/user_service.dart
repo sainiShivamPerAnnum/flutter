@@ -55,6 +55,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   set userFundWallet(UserFundWallet wallet) {
     _userFundWallet = wallet;
     notifyListeners(UserServiceProperties.myUserFund);
+    print(_userFundWallet.augGoldQuantity);
     _logger.d("Wallet updated in userservice, property listeners notified");
   }
 
@@ -69,10 +70,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   Future<void> init() async {
-    await setBaseUser();
-    setProfilePicture();
-    getUserTicketWalletData();
-    getUserFundWalletData();
+    if (_firebaseUser != null) {
+      await setBaseUser();
+      setProfilePicture();
+      getUserTicketWalletData();
+      getUserFundWalletData();
+    }
   }
 
   Future<void> setBaseUser() async {

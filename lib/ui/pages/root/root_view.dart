@@ -6,6 +6,7 @@ import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/ui/widgets/drawer/drawer_view.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -79,8 +80,7 @@ class Root extends StatelessWidget {
         properties: [UserServiceProperties.myUserName],
         builder: (context, model, property) => Text(
           "Hi, ${model.myUserName?.split(' ')?.first ?? "user"}",
-          style: GoogleFonts.montserrat(
-              fontWeight: FontWeight.w500, fontSize: SizeConfig.largeTextSize),
+          style: TextStyles.body1.bold,
         ),
       ),
       actions: [

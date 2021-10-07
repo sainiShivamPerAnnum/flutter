@@ -12,7 +12,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/Texts/marquee_text.dart';
 import 'package:felloapp/ui/elements/custom-art/profile-card.dart';
-import 'package:felloapp/ui/modals/share_info_modal.dart';
+import 'package:felloapp/ui/modals_sheets/share_info_modal_sheets.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';

@@ -5,10 +5,12 @@ import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/fold-card.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -58,6 +60,7 @@ class _TicketState extends State<FCard> {
   bool _isPrizeProcessing = false;
   bool _tChoice;
   bool _isclaimed = false;
+  UserService _userService = locator<UserService>();
 
   Widget get backCard => Container(
         decoration: BoxDecoration(
@@ -427,6 +430,7 @@ class _TicketState extends State<FCard> {
     bool flag = await httpProvider.registerPrizeClaim(
         baseProvider.myUser.uid, widget.unclaimedPrize, choice);
     if (flag) baseProvider.refreshFunds();
+    if (flag) _userService.getUserFundWalletData();
     if (flag) await localDBModel.savePrizeClaimChoice(choice);
     print('Claim choice saved: $flag');
     return flag;

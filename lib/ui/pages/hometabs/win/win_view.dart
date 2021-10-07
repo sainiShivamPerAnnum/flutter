@@ -1,14 +1,18 @@
+import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/elements/leaderboard.dart';
 import 'package:felloapp/ui/elements/week-winners_board.dart';
-import 'package:felloapp/ui/pages/hometabs/widgets.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 class Win extends StatelessWidget {
   @override
@@ -33,22 +37,34 @@ class Win extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Widgets()
-                              .getHeadlineLight("My winnings", Colors.black),
-                          Widgets().getHeadlineBold(
-                              text: "₹ ${model.getUnclaimedPrizeBalance()}",
-                              color: UiConstants.primaryColor),
+                          Text("My winnings", style: TextStyles.body3.light),
+                          PropertyChangeConsumer<UserService,
+                              UserServiceProperties>(
+                            builder: (ctx, model, child) => Text(
+                              "₹ ${model.userFundWallet.unclaimedBalance}",
+                              style: TextStyles.body2.bold
+                                  .colour(UiConstants.primaryColor),
+                            ),
+                          ),
                         ],
                       ),
                       // SizedBox(height: 12),
                       // Widgets().getBodyBold("Redeem for", Colors.black),
                       SizedBox(height: 12),
                       // if (model.getUnclaimedPrizeBalance() > 0)
-                      Widgets().getButton(
-                        model.getWinningsButtonText(),
-                        () => model.prizeBalanceAction(context),
-                        Colors.orange,
+                      PropertyChangeConsumer<UserService,
+                          UserServiceProperties>(
+                        builder: (ctx, m, child) => FelloButton(
+                          defaultButtonText:
+                              m.userFundWallet.isPrizeBalanceUnclaimed()
+                                  ? "Redeem"
+                                  : "Share",
+                          onPressedAsync: () =>
+                              model.prizeBalanceAction(context),
+                          defaultButtonColor: Colors.orange,
+                        ),
                       ),
+
                       // Row(
                       //   children: [
                       // Expanded(
@@ -81,8 +97,10 @@ class Win extends StatelessWidget {
                       height: 200,
                       padding:
                           EdgeInsets.symmetric(horizontal: 14, vertical: 30),
-                      child: Widgets().getTitle(
-                          "Play tambola and win upto \$1000", Colors.black),
+                      child: Text(
+                        "Play tambola and win upto \$1000",
+                        style: TextStyles.body2.bold,
+                      ),
                     )),
                   ),
                   Expanded(
@@ -91,8 +109,10 @@ class Win extends StatelessWidget {
                       height: 200,
                       padding:
                           EdgeInsets.symmetric(horizontal: 14, vertical: 30),
-                      child: Widgets().getTitle(
-                          "Refer your friend and win iphone", Colors.black),
+                      child: Text(
+                        "Refer your friend and win iphone",
+                        style: TextStyles.body2.bold,
+                      ),
                     ),
                   ))
                 ],
@@ -102,7 +122,9 @@ class Win extends StatelessWidget {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [Widgets().getTitle("Scoreboard", Colors.black)],
+                children: [
+                  Text("Scoreboard", style: TextStyles.body2.bold),
+                ],
               ),
               Container(
                 height: SizeConfig.screenHeight,

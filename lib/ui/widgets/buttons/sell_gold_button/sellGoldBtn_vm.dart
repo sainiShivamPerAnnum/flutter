@@ -1,14 +1,15 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/enums/view_state.dart';
-import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/transaction_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
+import 'package:felloapp/ui/modals_sheets/augmont_deposit_modal_sheet.dart';
 import 'package:felloapp/ui/pages/tabs/finance/augmont/augmont_withdraw_screen.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -17,12 +18,18 @@ import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import 'package:logger/logger.dart';
+
 class SellGoldBtnVM extends BaseModel {
   final Log log = new Log("AugmontService");
   GlobalKey<AugmontDepositModalSheetState> _modalKey2 = GlobalKey();
+  Logger _logger = locator<Logger>();
   BuildContext sellContext;
   BaseUtil _baseUtil = locator<BaseUtil>();
   DBModel _dbModel = locator<DBModel>();
+  UserService _userService = locator<UserService>();
+  TransactionService _txnService = locator<TransactionService>();
+
   AugmontModel _augmontModel = locator<AugmontModel>();
   double _withdrawableGoldQnty;
   GlobalKey<AugmontWithdrawScreenState> _withdrawalDialogKey2 = GlobalKey();
@@ -46,8 +53,8 @@ class SellGoldBtnVM extends BaseModel {
     if (!_baseUtil.myUser.isAugmontOnboarded) {
       _baseUtil.showNegativeAlert('Not onboarded',
           'You havent been onboarded to Augmont yet', sellContext);
-    } else if (_baseUtil.userFundWallet.augGoldQuantity == null ||
-        _baseUtil.userFundWallet.augGoldQuantity == 0) {
+    } else if (_userService.userFundWallet.augGoldQuantity == null ||
+        _userService.userFundWallet.augGoldQuantity == 0) {
       _baseUtil.showNegativeAlert('No Balance Available',
           'Your Augmont wallet has no balance presently', sellContext);
     } else {
@@ -124,9 +131,12 @@ class SellGoldBtnVM extends BaseModel {
             .getTicketCountForTransaction(_baseUtil.currentAugmontTxn.amount);
         await _dbModel.updateUserTransaction(
             _baseUtil.myUser.uid, _baseUtil.currentAugmontTxn);
+        await _txnService.updateTransactions();
+        _logger.i("Transactions Updated after withdrawal");
 
         ///update user wallet balance
         double _tempCurrentBalance = _baseUtil.userFundWallet.augGoldBalance;
+        //baseUtil side [TO BE DELETED]
         _baseUtil.userFundWallet = await _dbModel.updateUserAugmontGoldBalance(
             _baseUtil.myUser.uid,
             _baseUtil.userFundWallet,
@@ -134,6 +144,16 @@ class SellGoldBtnVM extends BaseModel {
             BaseUtil.toDouble(_baseUtil.currentAugmontTxn
                 .augmnt[UserTransaction.subFldAugTotalGoldGm]),
             -1 * _baseUtil.currentAugmontTxn.amount);
+        //userService side [3.0 Arch.]
+        _userService.userFundWallet =
+            await _dbModel.updateUserAugmontGoldBalance(
+                _userService.baseUser.uid,
+                _userService.userFundWallet,
+                _baseUtil.augmontGoldRates.goldSellPrice,
+                BaseUtil.toDouble(_baseUtil.currentAugmontTxn
+                    .augmnt[UserTransaction.subFldAugTotalGoldGm]),
+                -1 * _baseUtil.currentAugmontTxn.amount);
+        _logger.i("User Fund Wallet Updated after withdrawal");
 
         ///check if balance updated correctly
         if (_baseUtil.userFundWallet.augGoldBalance == _tempCurrentBalance) {
@@ -152,7 +172,14 @@ class SellGoldBtnVM extends BaseModel {
         if (_baseUtil.currentAugmontTxn.ticketUpCount > 0) {
           ///update user ticket count
           int _tempCurrentCount = _baseUtil.userTicketWallet.augGold99Tck;
+          // baseUtil side [TO BE DELETED]
           _baseUtil.userTicketWallet =
+              await _dbModel.updateAugmontGoldUserTicketCount(
+                  _baseUtil.myUser.uid,
+                  _baseUtil.userTicketWallet,
+                  -1 * _baseUtil.currentAugmontTxn.ticketUpCount);
+          // userService side [3.0 Arch]
+          _userService.userTicketWallet =
               await _dbModel.updateAugmontGoldUserTicketCount(
                   _baseUtil.myUser.uid,
                   _baseUtil.userTicketWallet,
@@ -180,6 +207,7 @@ class SellGoldBtnVM extends BaseModel {
       }
     } else {
       _withdrawalDialogKey2.currentState.onTransactionProcessed(false);
+      await _txnService.updateTransactions();
     }
   }
 }

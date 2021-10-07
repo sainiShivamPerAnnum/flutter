@@ -2,7 +2,7 @@ import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/elements/Buttons/large_button.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -299,7 +299,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                                   ? Container(
                                       width: SizeConfig.screenWidth * 0.3,
                                       height: SizeConfig.blockSizeVertical * 5,
-                                      child: LargeButton(
+                                      child: FelloButtonLg(
                                         child: Text(
                                           'Complete',
                                           style: Theme.of(context)
@@ -312,7 +312,7 @@ class _WalkThroughPageState extends State<WalkThroughPage> {
                                                           0.7,
                                                   fontWeight: FontWeight.bold),
                                         ),
-                                        onTap: () {
+                                        onPressed: () {
                                           AppState.backButtonDispatcher
                                               .didPopRoute();
                                         },

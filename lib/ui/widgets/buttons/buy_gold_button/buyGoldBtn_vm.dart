@@ -14,8 +14,8 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/augmont_disabled_dialog.dart';
 import 'package:felloapp/ui/dialogs/success-dialog.dart';
-import 'package:felloapp/ui/modals/augmont_deposit_modal_sheet.dart';
-import 'package:felloapp/ui/modals/augmont_register_modal_sheet.dart';
+import 'package:felloapp/ui/modals_sheets/augmont_deposit_modal_sheet.dart';
+import 'package:felloapp/ui/modals_sheets/augmont_register_modal_sheet.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -165,6 +165,7 @@ class BuyGoldBtnVM extends BaseModel {
       if (_baseUtil.currentAugmontTxn != null) {
         ///update user wallet object account balance
         double _tempCurrentBalance = _baseUtil.userFundWallet.augGoldBalance;
+        //baseutil side [TO BE DELETED]
         _baseUtil.userFundWallet = await _dbModel.updateUserAugmontGoldBalance(
             _baseUtil.myUser.uid,
             _baseUtil.userFundWallet,
@@ -172,6 +173,15 @@ class BuyGoldBtnVM extends BaseModel {
             _baseUtil
                 .currentAugmontTxn.augmnt[UserTransaction.subFldAugTotalGoldGm],
             _baseUtil.currentAugmontTxn.amount);
+        //userService side
+        _userService.userFundWallet =
+            await _dbModel.updateUserAugmontGoldBalance(
+                _baseUtil.myUser.uid,
+                _baseUtil.userFundWallet,
+                _baseUtil.augmontGoldRates.goldSellPrice,
+                _baseUtil.currentAugmontTxn
+                    .augmnt[UserTransaction.subFldAugTotalGoldGm],
+                _baseUtil.currentAugmontTxn.amount);
 
         ///check if balance updated correctly
         if (_baseUtil.userFundWallet.augGoldBalance == _tempCurrentBalance) {
@@ -193,7 +203,7 @@ class BuyGoldBtnVM extends BaseModel {
             .getTicketCountForTransaction(_baseUtil.currentAugmontTxn.amount);
         if (_ticketUpdateCount > 0) {
           int _tempCurrentCount = _baseUtil.userTicketWallet.augGold99Tck;
-          //baseutil side
+          //baseutil side [TO BE DELETED]
           _baseUtil.userTicketWallet =
               await _dbModel.updateAugmontGoldUserTicketCount(
                   _baseUtil.myUser.uid,
@@ -229,7 +239,6 @@ class BuyGoldBtnVM extends BaseModel {
             _baseUtil.getCurrentTotalClosingBalance();
         await _dbModel.updateUserTransaction(
             _baseUtil.myUser.uid, _baseUtil.currentAugmontTxn);
-        await _txnService.updateTransactions();
 
         ///if this was the user's first investment
         ///- update AugmontDetail obj

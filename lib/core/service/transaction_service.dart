@@ -5,10 +5,12 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:logger/logger.dart';
 
 class TransactionService extends ChangeNotifier {
   final _dBModel = locator<DBModel>();
   final _userService = locator<UserService>();
+  final _logger = locator<Logger>();
   List<UserTransaction> _txnList;
   DocumentSnapshot lastTransactionListDocument;
   bool hasMoreTransactionListDocuments;
@@ -49,5 +51,6 @@ class TransactionService extends ChangeNotifier {
     hasMoreTransactionListDocuments = null;
     txnList.clear();
     await fetchTransactions();
+    _logger.i("Transactions got updated");
   }
 }

@@ -1,6 +1,6 @@
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/hometabs/widgets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -20,26 +20,30 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
               width: SizeConfig.screenWidth,
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(vertical: 16),
-              child: Widgets()
-                  .getTitle("Want more tickets?", UiConstants.primaryColor),
+              child: Text(
+                "Want more tickets?",
+                style: TextStyles.title2.bold.colour(UiConstants.primaryColor),
+              ),
             ),
             ListTile(
               leading: Icon(Icons.account_balance_wallet),
-              title: Widgets().getHeadlineBold(text: "Save More Money"),
-              subtitle: Widgets()
-                  .getHeadlineLight("Get 1 ticket for every 100", Colors.black),
+              title: Text(
+                "Save More Money",
+                style: TextStyles.body2.bold,
+              ),
+              subtitle:
+                  Text("Get 1 ticket for every 100", style: TextStyles.body3),
             ),
             ListTile(
               leading: Icon(Icons.share),
-              title: Widgets().getHeadlineBold(text: "Refer your friends"),
-              subtitle: Widgets().getHeadlineLight(
-                  "Get 10 tickets per referral", Colors.black),
+              title: Text("Refer your friends", style: TextStyles.body2.bold),
+              subtitle:
+                  Text("Get 10 tickets per referral", style: TextStyles.body3),
             ),
             ListTile(
               leading: Icon(Icons.repeat),
-              title: Widgets().getHeadlineBold(text: "Set up SIP"),
-              subtitle: Widgets()
-                  .getHeadlineLight("Earn tickets on the go", Colors.black),
+              title: Text("Set up SIP", style: TextStyles.body2.bold),
+              subtitle: Text("Earn tickets on the go", style: TextStyles.body3),
             )
           ],
         ),

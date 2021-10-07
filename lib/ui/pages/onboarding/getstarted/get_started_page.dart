@@ -2,8 +2,8 @@
 import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/Buttons/large_button.dart';
 import 'package:felloapp/ui/elements/custom-art/circles_with_image.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -97,13 +97,13 @@ class _GetStartedPageState extends State<GetStartedPage> {
     return AnimatedContainer(
       duration: animDuration,
       width: (isVisible[3]) ? SizeConfig.screenWidth - 50 : 0,
-      child: new LargeButton(
+      child: FelloButtonLg(
         child: Text(
           FT.onboradButton,
           style:
               Theme.of(context).textTheme.button.copyWith(color: Colors.white),
         ),
-        onTap: () {
+        onPressed: () {
           Haptic.vibrate();
           appState.currentAction =
               PageAction(state: PageState.replaceAll, page: LoginPageConfig);

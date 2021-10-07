@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 
 class WinViewModel extends BaseModel {
   BaseUtil _baseUtil = locator<BaseUtil>();
+
   LocalDBModel _localDBModel = locator<LocalDBModel>();
 
   getUnclaimedPrizeBalance() {

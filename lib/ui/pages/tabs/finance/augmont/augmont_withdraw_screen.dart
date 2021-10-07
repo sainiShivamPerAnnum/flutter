@@ -3,15 +3,17 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/modals/simple_kyc_modal_sheet.dart';
+import 'package:felloapp/ui/modals_sheets/simple_kyc_modal_sheet.dart';
 import 'package:felloapp/ui/pages/onboarding/icici/input-elements/input_field.dart';
 import 'package:felloapp/ui/pages/tabs/finance/augmont/edit_augmont_bank_details.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/enums/screen_item.dart';
@@ -449,26 +451,14 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
       //Colors.blueGrey[800],
     ], begin: Alignment(0.5, -1.0), end: Alignment(0.5, 1.0));
 
-    return Container(
-      width: MediaQuery.of(context).size.width - 40,
-      height: 50.0,
-      decoration: BoxDecoration(
-        gradient: _gradient,
-        borderRadius: new BorderRadius.circular(10.0),
-      ),
-      child: new Material(
-        child: MaterialButton(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                _checkBankInfoMissing ? 'PROCEED' : 'WITHDRAW ',
-                style: Theme.of(context)
-                    .textTheme
-                    .button
-                    .copyWith(color: Colors.white),
-              ),
-            ],
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        FelloButtonLg(
+          color: FelloColorPalette.augmontFundPalette().secondaryColor,
+          child: Text(
+            _checkBankInfoMissing ? 'PROCEED' : 'WITHDRAW ',
+            style: TextStyles.body2.colour(Colors.white),
           ),
           onPressed: () async {
             Haptic.vibrate();
@@ -539,12 +529,8 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
               }
             }
           },
-          highlightColor: Colors.orange.withOpacity(0.5),
-          splashColor: Colors.orange.withOpacity(0.5),
         ),
-        color: Colors.transparent,
-        borderRadius: new BorderRadius.circular(20.0),
-      ),
+      ],
     );
   }
 

@@ -5,14 +5,15 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/ui/pages/hometabs/widgets.dart';
 import 'package:felloapp/ui/widgets/buttons/buy_gold_button/buyGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/buttons/sell_gold_button/sellGoldBtn_view.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/ui/widgets/fello_dialog/fello_info_dialog.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_view.dart';
+import 'package:felloapp/util/styles/palette.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -34,15 +35,16 @@ class Save extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Widgets().getHeadlineLight(
+                  Text(
                     "Savings growth",
-                    Colors.black,
+                    style: TextStyles.body3,
                   ),
                   Row(
                     children: [
-                      Widgets().getHeadlineBold(
-                        text: "15%",
-                        color: Colors.black,
+                      Text(
+                        "15%",
+                        style:
+                            TextStyles.body2.colour(UiConstants.primaryColor),
                       ),
                       SizedBox(width: 10),
                       Icon(
@@ -65,15 +67,16 @@ class Save extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Widgets().getHeadlineLight(
-                              "Your gold balance", Colors.black),
+                          Text("My Gold Balance: ",
+                              style: TextStyles.title3.light),
                           PropertyChangeConsumer<UserService,
                               UserServiceProperties>(
-                            builder: (ctx, model, child) => Widgets()
-                                .getHeadlineBold(
-                                    text:
-                                        "${model.userFundWallet.augGoldQuantity} gm",
-                                    color: Colors.amber),
+                            builder: (ctx, model, child) => Text(
+                              "${model.userFundWallet.augGoldQuantity} gm",
+                              style: TextStyles.title3.bold.colour(
+                                  FelloColorPalette.augmontFundPalette()
+                                      .primaryColor),
+                            ),
                           ),
                         ],
                       ),
@@ -110,18 +113,18 @@ class Save extends StatelessWidget {
                             width: 12,
                           ),
                           Spacer(),
-                          Widgets().getBodyLight(
+                          Text(
                             "100% secure",
-                            UiConstants.primaryColor,
+                            style: TextStyles.body3
+                                .colour(UiConstants.primaryColor),
                           ),
                         ],
                       ),
                       Divider(
                         height: 30,
                       ),
-                      Widgets().getBodyBold(
-                          "You get 1 ticket for every \$100 invested",
-                          Colors.black)
+                      Text("You get 1 ticket for every \$100 invested",
+                          style: TextStyles.body3)
                     ],
                   ),
                 ),
@@ -134,10 +137,12 @@ class Save extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Widgets().getHeadlineLight("Your winnings", Colors.black),
-                      Widgets().getHeadlineBold(
-                          text: "₹ ${model.getUnclaimedPrizeBalance()}",
-                          color: UiConstants.primaryColor),
+                      Text("Your winnings", style: TextStyles.body3),
+                      Text(
+                        "₹ ${model.getUnclaimedPrizeBalance()}",
+                        style:
+                            TextStyles.body2.colour(UiConstants.primaryColor),
+                      ),
                     ],
                   ),
                 ),
@@ -148,7 +153,7 @@ class Save extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Widgets().getTitle("Recent Transactions", Colors.black)
+                  Text("Recent Transactions", style: TextStyles.title2.bold)
                 ],
               ),
               MiniTransactionCard(),

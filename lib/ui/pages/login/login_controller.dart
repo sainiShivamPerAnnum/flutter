@@ -6,17 +6,20 @@ import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/Buttons/large_button.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/otp_input_screen.dart';
 import 'package:felloapp/ui/pages/login/screens/username.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 
 //Dart and Flutter Imports
@@ -55,6 +58,7 @@ class _LoginControllerState extends State<LoginController>
   static FcmListener fcmProvider;
   static LocalDBModel lclDbProvider;
   static AppState appStateProvider;
+  static UserService userService = locator<UserService>();
   AnimationController animationController;
 
   String userMobile;
@@ -309,22 +313,19 @@ class _LoginControllerState extends State<LoginController>
                       new Container(
                         width: SizeConfig.screenWidth -
                             SizeConfig.blockSizeHorizontal * 10,
-                        child: LargeButton(
+                        child: FelloButtonLg(
                           child: (!baseProvider.isLoginNextInProgress)
                               ? Text(
                                   _currentPage == Username.index
                                       ? 'FINISH'
                                       : 'NEXT',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .button
-                                      .copyWith(color: Colors.white),
+                                  style: TextStyles.title2.colour(Colors.white),
                                 )
                               : SpinKitThreeBounce(
                                   color: UiConstants.spinnerColor2,
                                   size: 18.0,
                                 ),
-                          onTap: () {
+                          onPressed: () {
                             if (!baseProvider.isLoginNextInProgress)
                               _processScreenInput(_currentPage);
                           },
@@ -569,6 +570,7 @@ class _LoginControllerState extends State<LoginController>
   void _onSignInSuccess() async {
     log.debug("User authenticated. Now check if details previously available.");
     baseProvider.firebaseUser = FirebaseAuth.instance.currentUser;
+    //userService.baseUser = FirebaseAuth.instance.currentUser;
     log.debug("User is set: " + baseProvider.firebaseUser.uid);
     BaseUser user = await dbProvider.getUser(baseProvider.firebaseUser.uid);
     //user variable is pre cast into User object
@@ -625,7 +627,7 @@ class _LoginControllerState extends State<LoginController>
   Future _onSignUpComplete() async {
     await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
     await BaseAnalytics.logUserProfile(baseProvider.myUser);
-
+    //await userService.init();
     await baseProvider.init();
     await fcmProvider.setupFcm();
     AppState.isOnboardingInProgress = false;

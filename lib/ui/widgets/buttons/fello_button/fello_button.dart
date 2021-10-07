@@ -11,6 +11,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
+///
+/// If passing a custom UI for the button:
+///
+/// defaultButtonColor: not required
+/// defaultButtonText: not required
+/// textStyle: not required
+/// onPressed: not requried
+/// onPressedAsync: not required
+///
 class FelloButton extends StatefulWidget {
   final ValueChanged<dynamic> action;
   final Function onPressed;

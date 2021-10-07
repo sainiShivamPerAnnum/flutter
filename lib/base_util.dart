@@ -57,7 +57,6 @@ class BaseUtil extends ChangeNotifier {
   final DBModel _dbModel = locator<DBModel>();
   final LocalDBModel _lModel = locator<LocalDBModel>();
   final AppState _appState = locator<AppState>();
-  final UserService _userService = locator<UserService>();
 
   BaseUser _myUser;
   UserFundWallet _userFundWallet;

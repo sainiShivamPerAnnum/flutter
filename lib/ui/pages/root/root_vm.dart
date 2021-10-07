@@ -10,8 +10,8 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
-import 'package:felloapp/ui/modals/security_modal_sheet.dart';
-import 'package:felloapp/ui/modals/want_more_tickets_modal_sheet.dart';
+import 'package:felloapp/ui/modals_sheets/security_modal_sheet.dart';
+import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
@@ -116,7 +116,7 @@ class RootViewModel extends BaseModel {
       });
 
       _initAdhocNotifications();
- 
+
       _baseUtil.getProfilePicture();
       // show security modal
       if (_baseUtil.show_security_prompt &&

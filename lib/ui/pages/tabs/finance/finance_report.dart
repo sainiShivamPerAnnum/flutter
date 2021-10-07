@@ -13,7 +13,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/card.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
-import 'package:felloapp/ui/modals/simple_kyc_modal_sheet.dart';
+import 'package:felloapp/ui/modals_sheets/simple_kyc_modal_sheet.dart';
 import 'package:felloapp/ui/pages/tabs/finance/augmont/augmont_withdraw_screen.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/logger.dart';

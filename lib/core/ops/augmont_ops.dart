@@ -11,6 +11,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/service/augmont_invoice_service.dart';
 import 'package:felloapp/core/service/pdf_invoice_api.dart';
+import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/icici_api_util.dart';
@@ -27,6 +28,7 @@ class AugmontModel extends ChangeNotifier {
   DBModel _dbModel = locator<DBModel>();
   RazorpayModel _rzpGateway = locator<RazorpayModel>();
   BaseUtil _baseProvider = locator<BaseUtil>();
+  TransactionService _txnService = locator<TransactionService>();
   ValueChanged<UserTransaction> _augmontTxnProcessListener;
   final String defaultBaseUri =
       'https://jg628sk4s2.execute-api.ap-south-1.amazonaws.com/prod';
@@ -357,6 +359,7 @@ class AugmontModel extends ChangeNotifier {
           FailType.UserAugmontPurchaseFailed, _failMap);
       bool flag = await _dbModel.updateUserTransaction(
           _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
+      _txnService.updateTransactions();
       if (_augmontTxnProcessListener != null)
         _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
     } else {
@@ -389,6 +392,8 @@ class AugmontModel extends ChangeNotifier {
         UserTransaction.TRAN_STATUS_CANCELLED;
     bool flag = await _dbModel.updateUserTransaction(
         _baseProvider.myUser.uid, _baseProvider.currentAugmontTxn);
+    _txnService.updateTransactions();
+
     if (_augmontTxnProcessListener != null)
       _augmontTxnProcessListener(_baseProvider.currentAugmontTxn);
   }

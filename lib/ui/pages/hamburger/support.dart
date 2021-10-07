@@ -3,7 +3,7 @@ import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/elements/Buttons/large_button.dart';
+import 'package:felloapp/ui/widgets/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -519,7 +519,7 @@ class _SupportPageState extends State<SupportPage> {
                         // decoration: BoxDecoration(
                         //     borderRadius: new BorderRadius.circular(100.0),
                         //     color: UiConstants.primaryColor),
-                        child: LargeButton(
+                        child: FelloButtonLg(
                           child: Text(
                             'Confirm',
                             style: Theme.of(context).textTheme.button.copyWith(
@@ -527,7 +527,7 @@ class _SupportPageState extends State<SupportPage> {
                                 fontSize: SizeConfig.mediumTextSize * 1.4,
                                 fontWeight: FontWeight.bold),
                           ),
-                          onTap: () async {
+                          onPressed: () async {
                             try {
                               if (_requestCallPhoneController.text
                                       .trim()

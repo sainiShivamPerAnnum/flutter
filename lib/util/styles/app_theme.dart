@@ -13,71 +13,71 @@ class FelloTheme {
       primarySwatch: UiConstants.kPrimaryColor,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       textTheme: TextTheme(
-        // For titles and headings
+        //For titles and headings
         headline1: GoogleFonts.montserrat(
           color: UiConstants.primaryColor,
           fontWeight: FontWeight.w700,
-          fontSize: SizeConfig.headline1,
+          fontSize: SizeConfig.title1,
         ),
         headline2: GoogleFonts.montserrat(
           color: UiConstants.primaryColor,
           fontWeight: FontWeight.w700,
-          fontSize: SizeConfig.headline2,
+          fontSize: SizeConfig.title2,
         ),
         headline3: GoogleFonts.montserrat(
           color: UiConstants.primaryColor,
           fontWeight: FontWeight.w700,
-          fontSize: SizeConfig.headline3,
+          fontSize: SizeConfig.title3,
         ),
-        headline4: GoogleFonts.montserrat(
-          color: UiConstants.primaryColor,
-          fontWeight: FontWeight.w500,
-          fontSize: SizeConfig.headline4,
-        ),
-        headline5: GoogleFonts.montserrat(
-          color: UiConstants.primaryColor,
-          fontWeight: FontWeight.w500,
-          fontSize: SizeConfig.headline5,
-        ),
-        headline6: GoogleFonts.montserrat(
-          color: UiConstants.primaryColor,
-          fontWeight: FontWeight.w500,
-          fontSize: SizeConfig.headline6,
-        ),
+        // headline4: GoogleFonts.montserrat(
+        //   color: UiConstants.primaryColor,
+        //   fontWeight: FontWeight.w500,
+        //   fontSize: SizeConfig.headline4,
+        // ),
+        // headline5: GoogleFonts.montserrat(
+        //   color: UiConstants.primaryColor,
+        //   fontWeight: FontWeight.w500,
+        //   fontSize: SizeConfig.headline5,
+        // ),
+        // headline6: GoogleFonts.montserrat(
+        //   color: UiConstants.primaryColor,
+        //   fontWeight: FontWeight.w500,
+        //   fontSize: SizeConfig.headline6,
+        // ),
 
         // For body and overall content
         bodyText1: GoogleFonts.montserrat(
           color: Color(0xff333333),
-          fontSize: SizeConfig.bodyText1,
+          fontSize: SizeConfig.body1,
         ),
         bodyText2: GoogleFonts.montserrat(
           color: Color(0xff333333),
-          fontSize: SizeConfig.bodyText2,
+          fontSize: SizeConfig.body2,
         ),
 
         // For mini texts
         subtitle1: GoogleFonts.montserrat(
           color: Color(0xff333333),
-          fontSize: SizeConfig.subtitle1,
+          fontSize: SizeConfig.body3,
         ),
-        subtitle2: GoogleFonts.montserrat(
-          color: Color(0xff333333),
-          fontSize: SizeConfig.subtitle2,
-        ),
+        // subtitle2: GoogleFonts.montserrat(
+        //   color: Color(0xff333333),
+        //   fontSize: SizeConfig.subtitle2,
+        // ),
 
         // Area specific
-        button: GoogleFonts.montserrat(
-          color: Color(0xff333333),
-          fontSize: SizeConfig.button,
-        ),
-        overline: GoogleFonts.montserrat(
-          color: Color(0xff333333),
-          fontSize: SizeConfig.caption,
-        ),
-        caption: GoogleFonts.montserrat(
-          color: Color(0xff333333),
-          fontSize: SizeConfig.caption,
-        ),
+        // button: GoogleFonts.montserrat(
+        //   color: Color(0xff333333),
+        //   fontSize: SizeConfig.button,
+        // ),
+        // overline: GoogleFonts.montserrat(
+        //   color: Color(0xff333333),
+        //   fontSize: SizeConfig.caption,
+        // ),
+        // caption: GoogleFonts.montserrat(
+        //   color: Color(0xff333333),
+        //   fontSize: SizeConfig.caption,
+        // ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         enabledBorder: OutlineInputBorder(
@@ -113,4 +113,12 @@ class FelloTheme {
       ),
     );
   }
+}
+
+extension TextStyleHelpers on TextStyle {
+  TextStyle get bold => copyWith(fontWeight: FontWeight.bold);
+  TextStyle get italic => copyWith(fontStyle: FontStyle.italic);
+  TextStyle letterSpace(double value) => copyWith(letterSpacing: value);
+  TextStyle weight(FontWeight weight) => copyWith(fontWeight: weight);
+  TextStyle colour(Color color) => copyWith(color: color);
 }

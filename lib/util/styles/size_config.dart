@@ -14,7 +14,7 @@ class SizeConfig {
   static double blockSizeHorizontal;
   static double blockSizeVertical;
 
-  // text sizes
+// text sizes
 
 // old text sizes
   static double smallTextSize;
@@ -49,20 +49,27 @@ class SizeConfig {
     );
   }
 
-  static double get headline1 => 40;
-  static double get headline2 => 38;
-  static double get headline3 => 36;
-  static double get headline4 => 34;
-  static double get headline5 => 32;
-  static double get headline6 => 30;
+  static double get title1 => 36;
+  static double get title2 => 32;
+  static double get title3 => 28;
+  static double get body1 => 18;
+  static double get body2 => 16;
+  static double get body3 => 14;
 
-  static double get bodyText1 => 18;
-  static double get bodyText2 => 14;
+  // static double get headline1 => 40;
+  // static double get headline2 => 38;
+  // static double get headline3 => 36;
+  // static double get headline4 => 34;
+  // static double get headline5 => 32;
+  // static double get headline6 => 30;
 
-  static double get subtitle1 => 10;
-  static double get subtitle2 => 8;
+  // static double get bodyText1 => 18;
+  // static double get bodyText2 => 14;
 
-  static double get button => 16;
-  static double get caption => 12;
-  static double get overline => 16;
+  // static double get subtitle1 => 10;
+  // static double get subtitle2 => 8;
+
+  // static double get button => 16;
+  // static double get caption => 12;
+  // static double get overline => 16;
 }
