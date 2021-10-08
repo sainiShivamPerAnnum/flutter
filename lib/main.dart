@@ -4,7 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/fcm_handler.dart';
-import 'package:felloapp/core/fcm_lisltener.dart';
+import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
