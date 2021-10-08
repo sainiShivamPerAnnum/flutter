@@ -41,7 +41,7 @@ class RootViewModel extends BaseModel {
   }
 
   String get userTicketCount =>
-      _baseUtil.userTicketWallet.getActiveTickets().toString();
+      _baseUtil.userTicketWallet?.getActiveTickets()?.toString();
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   List<Widget> pages;
 
@@ -118,7 +118,7 @@ class RootViewModel extends BaseModel {
       });
 
       _initAdhocNotifications();
- 
+
       _baseUtil.getProfilePicture();
       // show security modal
       if (_baseUtil.show_security_prompt &&

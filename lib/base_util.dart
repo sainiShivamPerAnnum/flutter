@@ -19,6 +19,7 @@ import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/pan_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/constants.dart';
@@ -56,6 +57,7 @@ class BaseUtil extends ChangeNotifier {
   final DBModel _dbModel = locator<DBModel>();
   final LocalDBModel _lModel = locator<LocalDBModel>();
   final AppState _appState = locator<AppState>();
+  final UserService _userService = locator<UserService>();
 
   BaseUser _myUser;
   UserFundWallet _userFundWallet;
@@ -184,65 +186,73 @@ class BaseUtil extends ChangeNotifier {
     logger.i('inside init base util');
     _setRuntimeDefaults();
 
-    ///analytics
+    //Analytics logs app open state.
     BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
 
     //remote config for various remote variables
-    print('base util remote config');
+    logger.i('base util remote config');
     await BaseRemoteConfig.init();
 
-    ///fetch on-boarding status and User details
-    //TODO already called in UserService cons
-    firebaseUser = FirebaseAuth.instance.currentUser;
-    if (firebaseUser != null) {
-      _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
-    }
-    /////////////
-    packageInfo = await PackageInfo.fromPlatform();
+    setPackageInfo();
 
-    isUserOnboarded =
-        (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
+    ///fetch on-boarding status and User details
+    firebaseUser = _userService.firebaseUser;
+    isUserOnboarded =  _userService.isUserOnborded;
+
+    // isUserOnboarded =
+    //     (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
 
     if (isUserOnboarded) {
-      ///see if security needs to be shown
-      show_security_prompt = await _lModel.showSecurityPrompt();
-
-      ///get user wallet
-      _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
-      if (_userFundWallet == null) _compileUserWallet();
-
-      ///get user ticket balance
-      _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
-      if (_userTicketWallet == null) {
-        await _initiateNewTicketWallet();
-      }
+      //set current user
+      myUser = _userService.baseUser;
 
       ///get user creation time
       _userCreationTimestamp = firebaseUser.metadata.creationTime;
 
-      //check if there are any icici deposits txns in process
-      //TODO not required for now
-      // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
-      // _payService = locator<PaymentService>();
-
-      ///prefill pan details if available
-      panService = new PanService();
-      if (!checkKycMissing) {
-        userRegdPan = await panService.getUserPan();
-      }
-
-      ///prefill augmont details if available
-      if (myUser.isAugmontOnboarded) {
-        augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
-      }
-
-      setUpDailyPicksCount();
-
       ///pick zerobalance asset
       Random rnd = new Random();
       zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
+
+      ///see if security needs to be shown -> Move to save tab
+      show_security_prompt = await _lModel.showSecurityPrompt();
+
+      await setUserDefaults();
     }
+  }
+
+  Future<void> setUserDefaults() async {
+    ///get user wallet -> Try moving it to view and viewmodel for finance
+    _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
+    if (_userFundWallet == null) _compileUserWallet();
+
+    ///get user ticket balance --> Try moving it to view and viewmodel for game
+    _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
+    if (_userTicketWallet == null) {
+      await _initiateNewTicketWallet();
+    }
+
+    ///prefill pan details if available --> Profile Section (Show pan number eye)
+    panService = new PanService();
+    if (!checkKycMissing) {
+      userRegdPan = await panService.getUserPan();
+    }
+    setUpDailyPicksCount();
+
+    ///prefill augmont details if available --> Save Tab
+    if (myUser.isAugmontOnboarded) {
+      augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
+
+      ///prefill augmont details if available --> Save Tab
+      if (myUser.isAugmontOnboarded) {
+        augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
+      }
+    }
+  }
+
+  void setPackageInfo() async {
+    //Appversion //add it seperate method
+    packageInfo = await PackageInfo.fromPlatform();
   }
 
   acceptNotificationsIfAny(BuildContext context) {
@@ -555,8 +565,7 @@ class BaseUtil extends ChangeNotifier {
 
   Future<bool> signOut() async {
     try {
-      await FirebaseAuth.instance.signOut();
-      log.debug('Signed Out Firebase User');
+      
       await _lModel.deleteLocalAppData();
       log.debug('Cleared local cache');
       _appState.setCurrentTabIndex = 0;

@@ -41,10 +41,11 @@ class FDrawer extends StatelessWidget {
                     properties: [UserServiceProperties.myUserName],
                     builder: (context, model, properties) => Widgets()
                         .getHeadlineBold(
-                            text: model.myUserName, color: Colors.black),
+                            text: model?.myUserName ?? "User",
+                            color: Colors.black),
                   ),
                   subtitle: Widgets()
-                      .getBodyLight("@${model.username}", Colors.black),
+                      .getBodyLight("@${model?.username}", Colors.black),
                 ),
                 SizedBox(
                   height: 16,

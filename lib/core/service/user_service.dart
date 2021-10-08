@@ -53,6 +53,22 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     await setProfilePicture();
   }
 
+  Future<bool> signout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      _logger.d("Firebase user signed out");
+      _firebaseUser = null;
+      _baseUser = null;
+      _myUserDpUrl = null;
+      _myUserName = null;
+      _idToken = null;
+      return true;
+    } catch (e) {
+      _logger.e("Failed to logout user: ${e.toString()}");
+      return false;
+    }
+  }
+
   Future<void> setBaseUser() async {
     _baseUser = await _dbModel.getUser(_firebaseUser?.uid);
     _idToken = await _firebaseUser?.getIdToken(); //TODO cache

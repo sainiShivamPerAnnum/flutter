@@ -386,6 +386,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             buttonText: 'Yes',
                             confirmAction: () {
                               Haptic.vibrate();
+                              model.signout();
                               baseProvider.signOut().then((flag) {
                                 if (flag) {
                                   //log.debug('Sign out process complete');
