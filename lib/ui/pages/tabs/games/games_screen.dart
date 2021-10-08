@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'dart:io';
 
 import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
@@ -166,7 +167,9 @@ class _GamePageState extends State<GamePage> {
                           ),
 
                           //TODO HACKY CODE - REMOVING IDEA SECTION TO MANAGE TABLET SIZE DIMENSIONS
-                          if (SizeConfig.screenWidth < 800) const IdeaSection(),
+                          if (Platform.isAndroid ||
+                              SizeConfig.screenWidth < 700)
+                            const IdeaSection(),
                           /////////////////////////////////////////////////////////////
                         ],
                       ),

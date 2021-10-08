@@ -3,17 +3,19 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
-import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/core/model/signzy_pan/pan_verification_res_model.dart';
+import 'package:felloapp/core/model/signzy_pan/signzy_identities.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:logger/logger.dart';
+
 class HttpModel extends ChangeNotifier {
   BaseUtil _baseUtil = locator<BaseUtil>(); //required to fetch client token
-  final Log log = new Log('HttpModel');
+  final logger = locator<Logger>();
   static final String ASIA_BASE_URI = FlavorConfig.instance.values.baseUriAsia;
   static final String US_BASE_URI = FlavorConfig.instance.values.baseUriUS;
 
@@ -22,19 +24,19 @@ class HttpModel extends ChangeNotifier {
       String userId, String referee, String userName) async {
     if (_baseUtil == null || _baseUtil.firebaseUser == null) return -1;
     String idToken = await _baseUtil.firebaseUser.getIdToken();
-    log.debug('Fetched user IDToken: ' + idToken);
+    logger.d('Fetched user IDToken: ' + idToken);
     try {
       Uri _uri = Uri.https(US_BASE_URI, '/validateUserReferral',
           {'uid': userId, 'rid': referee, 'uname': userName});
       http.Response _response = await http.post(_uri,
           headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
-      log.debug(_response.body);
+      logger.d(_response.body);
       if (_response.statusCode == 200) {
         try {
           Map<String, dynamic> parsed = jsonDecode(_response.body);
           if (parsed != null && parsed['add_tickets_count'] != null) {
             try {
-              log.debug(parsed['add_tickets_count'].toString());
+              logger.d(parsed['add_tickets_count'].toString());
               int userTicketUpdateCount =
                   BaseUtil.toInt(parsed['add_tickets_count']);
               return userTicketUpdateCount;
@@ -45,14 +47,14 @@ class HttpModel extends ChangeNotifier {
             return -1;
           }
         } catch (err) {
-          log.error('Failed to parse ticket update count');
+          logger.e('Failed to parse ticket update count');
           return -1;
         }
       } else {
         return -1;
       }
     } catch (e) {
-      log.error('Http post failed: ' + e.toString());
+      logger.e('Http post failed: ' + e.toString());
       return -1;
     }
   }
@@ -66,7 +68,7 @@ class HttpModel extends ChangeNotifier {
 
     String idToken;
     idToken = await _baseUtil.firebaseUser.getIdToken();
-    log.debug('Fetched user IDToken: ' + idToken);
+    logger.d('Fetched user IDToken: ' + idToken);
 
     String amx = (amount * 100).round().toString();
     String _stage = FlavorConfig.instance.values.razorpayStage.value();
@@ -75,17 +77,17 @@ class HttpModel extends ChangeNotifier {
 
     final Uri _uri =
         Uri.https(US_BASE_URI, '/razorpayops/$_stage/api/orderid', queryMap);
-    log.debug('URL: $_uri');
+    logger.d('URL: $_uri');
 
     try {
       http.Response response = await http.get(_uri,
           headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
-      log.debug(response.body);
+      logger.d(response.body);
       Map<String, dynamic> parsed = jsonDecode(response.body);
-      //log.debug(parsed);
+      //logger.d(parsed);
       return parsed;
     } catch (e) {
-      log.error('Http post failed: ' + e.toString());
+      logger.e('Http post failed: ' + e.toString());
       return null;
     }
   }
@@ -99,24 +101,24 @@ class HttpModel extends ChangeNotifier {
 
     String idToken;
     idToken = await _baseUtil.firebaseUser.getIdToken();
-    log.debug('Fetched user IDToken: ' + idToken);
+    logger.d('Fetched user IDToken: ' + idToken);
 
     String _stage = FlavorConfig.instance.values.razorpayStage.value();
     final Uri _uri = Uri.https(
         US_BASE_URI,
         '/razorpayops/$_stage/api/signature',
         {'orderid': orderId, 'payid': paymentId});
-    log.debug('URL: $_uri');
+    logger.d('URL: $_uri');
 
     try {
       http.Response response = await http.get(_uri,
           headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
-      log.debug(response.body);
+      logger.d(response.body);
       Map<String, dynamic> parsed = jsonDecode(response.body);
-      //log.debug(parsed);
+      //logger.d(parsed);
       return parsed;
     } catch (e) {
-      log.error('Http post failed: ' + e.toString());
+      logger.e('Http post failed: ' + e.toString());
       return null;
     }
   }
@@ -132,27 +134,27 @@ class HttpModel extends ChangeNotifier {
       'amount': '$amount',
       'redeemType': claimChoice.value()
     });
-    log.debug('URL: $_uri');
+    logger.d('URL: $_uri');
 
     String idToken;
     idToken = await _baseUtil.firebaseUser.getIdToken();
-    log.debug('Fetched user IDToken: ' + idToken);
+    logger.d('Fetched user IDToken: ' + idToken);
 
     try {
       http.Response response = await http.post(_uri,
           headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
-      log.debug(response.body);
+      logger.d(response.body);
       Map<String, dynamic> parsed = jsonDecode(response.body);
-      log.debug(parsed.toString());
+      logger.d(parsed.toString());
       if (response.statusCode == 200 &&
           parsed['flag'] != null &&
           parsed['flag'] == true) {
-        log.debug('Action successful');
+        logger.d('Action successful');
         return true;
       }
       return false;
     } catch (e) {
-      log.error('Http post failed: ' + e.toString());
+      logger.e('Http post failed: ' + e.toString());
       return false;
     }
   }
@@ -162,7 +164,7 @@ class HttpModel extends ChangeNotifier {
     if (_baseUtil == null || _baseUtil.firebaseUser == null) return false;
     //get auth
     String idToken = await _baseUtil.firebaseUser.getIdToken();
-    log.debug('Fetched user IDToken: ' + idToken);
+    logger.d('Fetched user IDToken: ' + idToken);
 
     //build request
     final Uri _uri =
@@ -183,14 +185,14 @@ class HttpModel extends ChangeNotifier {
               jsonDecode(await _response.stream.bytesToString());
           return !(parsed != null && parsed['flag'] != null && parsed['flag']);
         } catch (err) {
-          log.error('Failed to parse email regd boolean field');
+          logger.e('Failed to parse email regd boolean field');
           return false;
         }
       } else {
         return false;
       }
     } catch (e) {
-      log.error('Http post failed: ' + e.toString());
+      logger.e('Http post failed: ' + e.toString());
       return false;
     }
   }
@@ -199,7 +201,7 @@ class HttpModel extends ChangeNotifier {
     if (_baseUtil == null || _baseUtil.firebaseUser == null) return false;
     //get auth
     String idToken = await _baseUtil.firebaseUser.getIdToken();
-    log.debug('Fetched user IDToken: ' + idToken);
+    logger.d('Fetched user IDToken: ' + idToken);
 
     //build request
     final Uri _uri = Uri.https(ASIA_BASE_URI, '/userSearch/dev/api/ispanregd');
@@ -218,15 +220,15 @@ class HttpModel extends ChangeNotifier {
               jsonDecode(await _response.stream.bytesToString());
           return (parsed != null && parsed['flag'] != null && parsed['flag']);
         } catch (err) {
-          log.error('Failed to parse pan regd booleand field');
+          logger.e('Failed to parse pan regd booleand field');
           return false;
         }
       } else {
-        log.error("Response code: ${_response.statusCode}");
+        logger.e("Response code: ${_response.statusCode}");
         return false;
       }
     } catch (e) {
-      log.error('Http post failed: ' + e.toString());
+      logger.e('Http post failed: ' + e.toString());
       return false;
     }
   }
@@ -236,7 +238,7 @@ class HttpModel extends ChangeNotifier {
     if (_baseUtil == null || _baseUtil.firebaseUser == null) return '';
     //get auth
     String idToken = await _baseUtil.firebaseUser.getIdToken();
-    log.debug('Fetched user IDToken: ' + idToken);
+    logger.d('Fetched user IDToken: ' + idToken);
 
     //build request
     final Uri _uri = Uri.https(ASIA_BASE_URI, '/encoderops/api/encrypt');
@@ -257,14 +259,14 @@ class HttpModel extends ChangeNotifier {
           String resText = (parsed != null) ? parsed['value'] : '';
           return (resText != null) ? resText : '';
         } catch (err) {
-          log.error('Failed to encryption $err');
+          logger.e('Failed to encryption $err');
           return '';
         }
       } else {
         return '';
       }
     } catch (e) {
-      log.error('Http GET failed: ' + e.toString());
+      logger.e('Http GET failed: ' + e.toString());
       return '';
     }
   }
@@ -274,7 +276,7 @@ class HttpModel extends ChangeNotifier {
     if (_baseUtil == null || _baseUtil.firebaseUser == null) return '';
     //get auth
     String idToken = await _baseUtil.firebaseUser.getIdToken();
-    log.debug('Fetched user IDToken: ' + idToken);
+    logger.d('Fetched user IDToken: ' + idToken);
 
     //build request
     final Uri _uri = Uri.https(ASIA_BASE_URI, '/encoderops/api/decrypt');
@@ -295,14 +297,14 @@ class HttpModel extends ChangeNotifier {
           String resText = (parsed != null) ? parsed['value'] : '';
           return (resText != null) ? resText : '';
         } catch (err) {
-          log.error('Failed to decryption $err');
+          logger.e('Failed to decryption $err');
           return '';
         }
       } else {
         return '';
       }
     } catch (e) {
-      log.error('Http GET failed: ' + e.toString());
+      logger.e('Http GET failed: ' + e.toString());
       return '';
     }
   }
@@ -318,7 +320,7 @@ class HttpModel extends ChangeNotifier {
 
     //add auth
     String idToken = await _baseUtil.firebaseUser.getIdToken();
-    log.debug('Fetched user IDToken: ' + idToken);
+    logger.d('Fetched user IDToken: ' + idToken);
 
     try {
       Uri _uri = Uri.https(
@@ -328,7 +330,7 @@ class HttpModel extends ChangeNotifier {
       //post request
       http.Response _response = await http.post(_uri,
           headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
-      log.debug(_response.body);
+      logger.d(_response.body);
       if (_response.statusCode == 200) {
         //redemption successful
         try {
@@ -337,8 +339,8 @@ class HttpModel extends ChangeNotifier {
               parsed['gtck_count'] != null &&
               parsed['gamt_win'] != null) {
             try {
-              log.debug(parsed['gtck_count'].toString());
-              log.debug(parsed['gamt_win'].toString());
+              logger.d(parsed['gtck_count'].toString());
+              logger.d(parsed['gamt_win'].toString());
               int goldenTckRewardCount = BaseUtil.toInt(parsed['gtck_count']);
               int goldenTckRewardAmt = BaseUtil.toInt(parsed['gamt_win']);
               return {
@@ -347,19 +349,19 @@ class HttpModel extends ChangeNotifier {
                 'amt': goldenTckRewardAmt
               };
             } catch (ee) {
-              log.error('$ee');
+              logger.e('$ee');
             }
           }
         } catch (err) {
-          log.error('Failed to parse ticket update count');
-          log.error('$err');
+          logger.e('Failed to parse ticket update count');
+          logger.e('$err');
         }
       } else {
         try {
           Map<String, dynamic> parsed = jsonDecode(_response.body);
           if (parsed != null && parsed['msg'] != null) {
             try {
-              log.debug(parsed['msg'].toString());
+              logger.d(parsed['msg'].toString());
               return {'flag': false, 'fail_msg': parsed['msg']};
             } catch (ee) {
               return {
@@ -369,13 +371,88 @@ class HttpModel extends ChangeNotifier {
             }
           }
         } catch (err) {
-          log.error('Failed to parse ticket update count');
-          log.error('$err');
+          logger.e('Failed to parse ticket update count');
+          logger.e('$err');
         }
       }
     } catch (e) {
-      log.error('Http post failed: ' + e.toString());
+      logger.e('Http post failed: ' + e.toString());
     }
     return {'flag': false, 'fail_msg': 'Your ticket could not be redeemed'};
+  }
+
+  Future<bool> verifyPanSignzy(
+      {String baseUrl,
+      String panNumber,
+      String panName,
+      String authToken,
+      String patronId}) async {
+    SignzyIdentities _signzyIdentities;
+    bool _isPanVerified = false;
+    //add base url for signzy apis
+    // String baseUrl = 'https://preproduction.signzy.tech/api/v2/';
+    //testing pan with signy verification API
+
+    //Hit identities api to get accessToken and ID
+    var headers = {
+      'Authorization': authToken,
+      'Content-Type': 'application/json'
+    };
+
+    var identityBody = jsonEncode({
+      "type": "individualPan",
+      "email": "admin@signzy.com",
+      "callbackUrl": "https://fello.in/"
+    });
+
+    String _identitiesUri = baseUrl + '/patrons/$patronId/identities';
+
+    try {
+      final response = await http
+          .post(Uri.parse(_identitiesUri), headers: headers, body: identityBody)
+          .catchError((message) {
+        logger.e(message);
+      });
+      logger.d(response.body);
+
+      if (response.statusCode == 200) {
+        _signzyIdentities =
+            SignzyIdentities.fromJson(jsonDecode(response.body));
+
+        //Use Access token and id to hit PAN Verification Prod API
+        String panVerificationUrl = '$baseUrl/snoops';
+
+        var panVerificationBody = jsonEncode({
+          "service": "Identity",
+          "itemId": _signzyIdentities.id,
+          "task": "verification",
+          "accessToken": _signzyIdentities.accessToken,
+          "essentials": {"number": panNumber, "name": panName, "fuzzy": "true"}
+        });
+
+        final res = await http.post(Uri.parse(panVerificationUrl),
+            headers: headers, body: panVerificationBody);
+
+        logger.d("Hitting verification api");
+        logger.d(res.body);
+
+        if (res.statusCode == 200) {
+          PanVerificationResModel _panVerificationResModel =
+              PanVerificationResModel.fromJson(json.decode(res.body));
+          if (_panVerificationResModel.response.result.verified) {
+            _isPanVerified = true;
+          }
+        } else if (res.statusCode == 404) {
+          throw Exception('PAN not found');
+        } else {
+          throw Exception('Failed to get response from Signzy Verification Api');
+        }
+      }
+    } catch (e) {
+      logger.e(e);
+      throw Exception('Failed to get response from Signzy Identity Api');
+    }
+
+    return _isPanVerified;
   }
 }

@@ -78,4 +78,5 @@ class Constants {
   static AWSAugmontStage activeAwsAugmontStage = AWSAugmontStage.PROD;
   static SignzyStage activeSignzyStage = SignzyStage.PROD;
   static RazorpayStage activeRazorpayStage = RazorpayStage.PROD;
+  static SignzyPanStage activeSignzyPanStage = SignzyPanStage.PROD;
 }

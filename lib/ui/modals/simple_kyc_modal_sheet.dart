@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/AugGoldRates.dart';
+import 'package:felloapp/core/model/signzy_pan/signzy_login.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/http_ops.dart';
@@ -300,34 +301,22 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
     }
     var kObj;
     if (_flag) {
-      ///test pan number using icici api and verify if the name entered by user matches name fetched
-      kObj = await iProvider.getKycStatus(enteredPan);
-      if (kObj == null ||
-          kObj[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
-          kObj[GetKycStatus.resStatus] == null ||
-          kObj[GetKycStatus.resName] == null ||
-          kObj[GetKycStatus.resName] == '') {
-        log.error('Couldnt fetch an appropriate response');
+      SignzyPanLogin _signzyPanLogin =
+      await dbProvider.getActiveSignzyPanApiKey();
 
-        ///set name test to true as we couldnt find it in the cams database
-        _flag = true;
-      } else {
-        ///remove all whitespaces before comparing as icici apis returns poorly spaced name values
-        String recvdPanName = kObj[GetKycStatus.resName];
-        String _r = recvdPanName.replaceAll(new RegExp(r"\s"), "");
-        String _e = enteredPanName.replaceAll(new RegExp(r"\s"), "");
-        if (_r.toUpperCase() != _e.toUpperCase()) {
-          await dbProvider.logFailure(
-              baseProvider.myUser.uid, FailType.UserAugmontRegnFailed, {
-            'entered_pan_name': enteredPanName,
-            'recvd_pan_name': recvdPanName,
-            'pan_number': enteredPan
-          });
-          _flag = false;
-          _reason =
-              'The name on your PAN card does not match with the entered name. Please try again.';
-          _failCode = 0;
-        }
+      try {
+        bool isPanVerified = await httpProvider.verifyPanSignzy(
+            baseUrl: _signzyPanLogin.baseUrl,
+            panNumber: enteredPan,
+            panName: enteredPanName,
+            authToken: _signzyPanLogin.accessToken,
+            patronId: _signzyPanLogin.userId);
+
+        _flag = isPanVerified;
+      } catch (e) {
+        _flag = false;
+        log.error(e.toString());
+        _reason = 'The name on your PAN card does not match with the entered name. Please try again.';
       }
     }
     if (!_flag) {
@@ -337,7 +326,7 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
 
     return {
       'flag': true,
-      'pan_name': kObj[GetKycStatus.resName],
+      'pan_name': enteredPanName,
     };
   }
 }
