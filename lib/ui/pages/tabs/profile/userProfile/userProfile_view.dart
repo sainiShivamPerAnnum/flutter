@@ -11,6 +11,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/update_name_dialog.dart';
 import 'package:felloapp/ui/pages/tabs/profile/userProfile/userProfile_viewModel.dart';
+import 'package:felloapp/ui/widgets/fello_dialog/fello_confirm_dialog.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -376,42 +377,75 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                       showDialog(
                         context: context,
                         builder: (BuildContext dialogContext) => WillPopScope(
-                          onWillPop: () {
-                            AppState.backButtonDispatcher.didPopRoute();
-                            return Future.value(true);
-                          },
-                          child: ConfirmActionDialog(
-                            title: 'Confirm',
-                            description: 'Are you sure you want to sign out?',
-                            buttonText: 'Yes',
-                            confirmAction: () {
-                              Haptic.vibrate();
-                              baseProvider.signOut().then((flag) {
-                                if (flag) {
-                                  //log.debug('Sign out process complete');
-                                  AppState.backButtonDispatcher.didPopRoute();
-                                  AppState.delegate.appState.currentAction =
-                                      PageAction(
-                                          state: PageState.replaceAll,
-                                          page: SplashPageConfig);
-                                  baseProvider.showPositiveAlert('Signed out',
-                                      'Hope to see you soon', context);
-                                } else {
-                                  AppState.backButtonDispatcher.didPopRoute();
-                                  baseProvider.showNegativeAlert(
-                                      'Sign out failed',
-                                      'Couldn\'t signout. Please try again',
-                                      context);
-                                  //log.error('Sign out process failed');
-                                }
-                              });
-                            },
-                            cancelAction: () {
-                              Haptic.vibrate();
+                            onWillPop: () {
                               AppState.backButtonDispatcher.didPopRoute();
+                              return Future.value(true);
                             },
-                          ),
-                        ),
+                            child: FelloConfirmationDialog(
+                              title: 'Confirm',
+                              body: 'Are you sure want to sign out?',
+                              subtitle: '',
+                              accept: 'Yes',
+                              reject: 'No',
+                              onAccept: () {
+                                Haptic.vibrate();
+                                baseProvider.signOut().then((flag) {
+                                  if (flag) {
+                                    //log.debug('Sign out process complete');
+                                    AppState.backButtonDispatcher.didPopRoute();
+                                    AppState.delegate.appState.currentAction =
+                                        PageAction(
+                                            state: PageState.replaceAll,
+                                            page: SplashPageConfig);
+                                    baseProvider.showPositiveAlert('Signed out',
+                                        'Hope to see you soon', context);
+                                  } else {
+                                    AppState.backButtonDispatcher.didPopRoute();
+                                    baseProvider.showNegativeAlert(
+                                        'Sign out failed',
+                                        'Couldn\'t signout. Please try again',
+                                        context);
+                                    //log.error('Sign out process failed');
+                                  }
+                                });
+                              },
+                              onReject: () {
+                                Haptic.vibrate();
+                                AppState.backButtonDispatcher.didPopRoute();
+                              },
+                            )
+                            // ConfirmActionDialog(
+                            //   title: 'Confirm',
+                            //   description: 'Are you sure you want to sign out?',
+                            //   buttonText: 'Yes',
+                            //   confirmAction: () {
+                            //     Haptic.vibrate();
+                            //     baseProvider.signOut().then((flag) {
+                            //       if (flag) {
+                            //         //log.debug('Sign out process complete');
+                            //         AppState.backButtonDispatcher.didPopRoute();
+                            //         AppState.delegate.appState.currentAction =
+                            //             PageAction(
+                            //                 state: PageState.replaceAll,
+                            //                 page: SplashPageConfig);
+                            //         baseProvider.showPositiveAlert('Signed out',
+                            //             'Hope to see you soon', context);
+                            //       } else {
+                            //         AppState.backButtonDispatcher.didPopRoute();
+                            //         baseProvider.showNegativeAlert(
+                            //             'Sign out failed',
+                            //             'Couldn\'t signout. Please try again',
+                            //             context);
+                            //         //log.error('Sign out process failed');
+                            //       }
+                            //     });
+                            //   },
+                            //   cancelAction: () {
+                            //     Haptic.vibrate();
+                            //     AppState.backButtonDispatcher.didPopRoute();
+                            //   },
+                            // ),
+                            ),
                       );
                     },
                   ),

@@ -163,8 +163,6 @@ class Save extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   FelloButton(
-                      // text: "FelloButton",
-                      // bgColor: UiConstants.primaryColor,
                       textStyle: TextStyle(color: Colors.white),
                       action: (val) {
                         if (val) print("I Changed");

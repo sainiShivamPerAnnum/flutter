@@ -5,6 +5,7 @@ import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/ui/elements/network_bar.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -102,7 +103,7 @@ class _FelloButtonState extends State<FelloButton> {
                 },
                 child: Text(
                   widget.defaultButtonText ?? "Button",
-                  style: widget.textStyle ?? TextStyle(),
+                  style: widget.textStyle ?? TextStyles.body2.bold,
                 ),
               );
     }

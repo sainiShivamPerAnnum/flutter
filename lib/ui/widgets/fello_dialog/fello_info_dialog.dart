@@ -1,5 +1,6 @@
 import 'package:felloapp/ui/widgets/fello_dialog/fello_dialog.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -21,29 +22,19 @@ class FelloInfoDialog extends StatelessWidget {
                         left: 8.0, right: 8.0, bottom: 4.0),
                     child: Text(
                       title,
-                      style: TextStyle(
-                        color: UiConstants.primaryColor,
-                        fontSize: SizeConfig.largeTextSize,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: TextStyles.title3.bold
+                          .colour(UiConstants.primaryColor),
                     ),
                   ),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: SizeConfig.mediumTextSize,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: TextStyles.body2,
                   ),
                   SizedBox(height: 16),
                   Text(
                     body,
-                    style: TextStyle(
-                      color: Colors.black54,
-                      letterSpacing: 4,
-                      fontSize: SizeConfig.mediumTextSize,
-                    ),
+                    style:
+                        TextStyles.body2.colour(Colors.black54).letterSpace(4),
                   )
                 ],
               ),

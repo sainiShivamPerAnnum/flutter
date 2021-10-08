@@ -96,11 +96,8 @@ class Root extends StatelessWidget {
               children: [
                 PropertyChangeConsumer<UserService, UserServiceProperties>(
                   builder: (context, model, property) => Text(
-                    model.userTicketWallet.getActiveTickets().toString(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                      model.userTicketWallet.getActiveTickets().toString(),
+                      style: TextStyles.body3.bold),
                 ),
                 SizedBox(width: 8),
                 Icon(

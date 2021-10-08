@@ -42,15 +42,7 @@ class Play extends StatelessWidget {
                               SizedBox(
                                 width: 16,
                               ),
-                              Text(
-                                "Title $i",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    .copyWith(
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                              )
+                              Text("Title $i", style: TextStyles.body2.bold)
                             ],
                           ),
                         ),
@@ -59,7 +51,8 @@ class Play extends StatelessWidget {
               ),
               SizedBox(height: 20),
               Text("Trending Games",
-                  style: Theme.of(context).textTheme.headline3),
+                  style:
+                      TextStyles.title2.bold.colour(UiConstants.primaryColor)),
               Column(
                 children: List.generate(
                   2,
@@ -130,13 +123,8 @@ class Play extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 8.0, vertical: 20),
-                    child: Text(
-                      "Want more ticket?",
-                      style: TextStyle(
-                        fontSize: SizeConfig.largeTextSize,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+                    child: Text("Want more ticket?",
+                        style: TextStyles.title3.bold),
                   ),
                 ),
               )

@@ -319,7 +319,7 @@ class _LoginControllerState extends State<LoginController>
                                   _currentPage == Username.index
                                       ? 'FINISH'
                                       : 'NEXT',
-                                  style: TextStyles.title2.colour(Colors.white),
+                                  style: TextStyles.body2.colour(Colors.white),
                                 )
                               : SpinKitThreeBounce(
                                   color: UiConstants.spinnerColor2,
