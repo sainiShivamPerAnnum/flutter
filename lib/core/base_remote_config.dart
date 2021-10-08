@@ -108,6 +108,8 @@ class BaseRemoteConfig {
     remoteConfig = RemoteConfig.instance;
     try {
       // await remoteConfig.activateFetched();
+      //TODO remoteConfig lazy?
+
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(milliseconds: 30000),
         minimumFetchInterval: const Duration(hours: 6),

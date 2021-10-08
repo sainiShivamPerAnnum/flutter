@@ -1,41 +1,37 @@
 //Flutter imports
-import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/service/transaction_service.dart';
-import 'package:felloapp/core/service/user_service.dart';
-import 'package:felloapp/util/app_theme.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:flutter/material.dart';
-
-//Pub imports
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:provider/provider.dart';
-import 'package:logger/logger.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-
 //Project imports
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/fcm_handler.dart';
-import 'package:felloapp/core/fcm_listener.dart';
+import 'package:felloapp/core/fcm_lisltener.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
+import 'package:felloapp/core/service/transaction_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/route_parser.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/util/app_theme.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/ui_constants.dart';
-import 'package:felloapp/core/enums/connectivity_status.dart';
-import 'package:felloapp/core/service/connectivity_service.dart';
+//Pub imports
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:logger/logger.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 
 Future mainInit() async {
   setupLocator();

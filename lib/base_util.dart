@@ -193,10 +193,12 @@ class BaseUtil extends ChangeNotifier {
     await BaseRemoteConfig.init();
 
     ///fetch on-boarding status and User details
+    //TODO already called in UserService cons
     firebaseUser = FirebaseAuth.instance.currentUser;
     if (firebaseUser != null) {
       _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
     }
+    /////////////
     packageInfo = await PackageInfo.fromPlatform();
 
     isUserOnboarded =
