@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/UserIciciDetail.dart';
+import 'package:felloapp/core/model/user_icici_detail_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/ui/dialogs/contact_dialog.dart';

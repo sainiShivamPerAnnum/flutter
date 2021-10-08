@@ -1,13 +1,13 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/view_state.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/ui/architecture/base_viewmodel.dart';
+import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:rive/rive.dart';
 
-class DailyPicksDrawModel extends BaseModel {
+class DailyPicksDrawViewModel extends BaseModel {
   BaseUtil _baseUtil = locator<BaseUtil>();
   DBModel _dbModel = locator<DBModel>();
   final Log log = new Log("DailyPicksDraw-ViewModel");

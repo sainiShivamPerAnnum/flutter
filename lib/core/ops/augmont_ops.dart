@@ -3,10 +3,10 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/AugGoldRates.dart';
-import 'package:felloapp/core/model/UserAugmontDetail.dart';
-import 'package:felloapp/core/model/UserTransaction.dart';
-import 'package:felloapp/core/model/invoice.dart';
+import 'package:felloapp/core/model/aug_gold_rates_model.dart';
+import 'package:felloapp/core/model/user_augmont_details_model.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/model/invoice_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/service/augmont_invoice_service.dart';

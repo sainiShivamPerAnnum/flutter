@@ -1,4 +1,4 @@
-import 'package:felloapp/core/model/BaseUser.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 

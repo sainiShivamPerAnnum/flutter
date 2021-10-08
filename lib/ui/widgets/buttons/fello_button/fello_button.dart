@@ -1,0 +1,123 @@
+import 'dart:io';
+
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/ui/elements/network_bar.dart';
+import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/size_config.dart';
+import 'package:felloapp/util/ui_constants.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
+
+class FelloButton extends StatefulWidget {
+  final ValueChanged<dynamic> action;
+  final Function onPressed;
+  final Widget activeButtonUI;
+  final Widget offlineButtonUI;
+  final Color defaultButtonColor;
+  final String defaultButtonText;
+  final TextStyle textStyle;
+  final Function onPressedAsync;
+
+  FelloButton(
+      {this.action,
+      this.onPressed,
+      this.activeButtonUI,
+      this.offlineButtonUI,
+      this.defaultButtonColor,
+      this.defaultButtonText,
+      this.onPressedAsync,
+      this.textStyle});
+
+  @override
+  _FelloButtonState createState() => _FelloButtonState();
+}
+
+class _FelloButtonState extends State<FelloButton> {
+  bool isLoading = false;
+
+  updateButtonState(bool val) {
+    setState(() {
+      isLoading = val;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ConnectivityStatus connectivityStatus =
+        Provider.of<ConnectivityStatus>(context);
+    if (connectivityStatus == ConnectivityStatus.Offline)
+      return widget.offlineButtonUI != null
+          ? widget.offlineButtonUI
+          : ElevatedButton(
+              onPressed: () => BaseUtil().showNoInternetAlert(context),
+              style: ElevatedButton.styleFrom(primary: Colors.grey),
+              child: Opacity(
+                opacity: 0.7,
+                child: Text(widget.defaultButtonText ?? "Button"),
+              ),
+            );
+    else {
+      if (isLoading)
+        return SpinKitThreeBounce(
+          size: SizeConfig.mediumTextSize,
+          color: Colors.black,
+        );
+      else
+        return widget.activeButtonUI != null
+            ? InkWell(
+                onTap: () {
+                  if (Platform.isAndroid)
+                    HapticFeedback.vibrate();
+                  else
+                    HapticFeedback.lightImpact();
+                  widget.onPressed();
+                },
+                child: widget.activeButtonUI)
+            : TextButton(
+                onPressed: () async {
+                  if (widget.onPressedAsync != null) {
+                    if (widget.action != null)
+                      widget.action(true);
+                    else
+                      updateButtonState(true);
+                    await widget.onPressedAsync();
+                    if (widget.action != null)
+                      widget.action(false);
+                    else
+                      updateButtonState(false);
+                  }
+                  widget.onPressed();
+                },
+                child: Text(
+                  widget.defaultButtonText ?? "Button",
+                  style: widget.textStyle ?? TextStyle(),
+                ),
+              );
+    }
+  }
+}
+
+class DemoButton extends FelloButton {
+  DemoButton(
+      {Key key,
+      Function onPressed,
+      activeButtonUI,
+      ValueChanged action,
+      offlineButtonUI,
+      Color defaultButtonColor,
+      String defaultButtonText,
+      Function onPressedAsync,
+      TextStyle textStyle})
+      : super(
+            onPressed: onPressed,
+            activeButtonUI: activeButtonUI,
+            action: action,
+            offlineButtonUI: offlineButtonUI,
+            defaultButtonColor: defaultButtonColor,
+            defaultButtonText: defaultButtonText,
+            onPressedAsync: onPressedAsync,
+            textStyle: textStyle);
+}

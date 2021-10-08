@@ -1,4 +1,6 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/view_state.dart';
+import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions/tran_viewModel.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/size_config.dart';
@@ -10,55 +12,54 @@ import 'package:provider/provider.dart';
 class Transactions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<TranViewModel>(
-      create: (_) => locator<TranViewModel>(),
-      child: Consumer<TranViewModel>(
-        child: NoTransactionsContent(),
-        builder: (context, model, child) {
-          model.init();
-          return Scaffold(
-            appBar: BaseUtil.getAppBar(context, "Transactions"),
-            body: model.state == TranState.Busy
-                ? Center(child: CircularProgressIndicator())
-                : Container(
-                    padding: EdgeInsets.only(
-                        right: SizeConfig.blockSizeHorizontal * 3),
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.only(
-                              top: SizeConfig.blockSizeVertical * 2),
-                          height: SizeConfig.screenHeight * 0.08,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              FilterOption(
-                                filterItems: model.tranTypeFilterItems,
-                                type: TranFilterType.Type,
-                              ),
-                              FilterOption(
-                                filterItems: model.tranSubTypeFilterItems,
-                                type: TranFilterType.Subtype,
-                              )
-                            ],
-                          ),
+    return BaseView<TranViewModel>(
+      onModelReady: (model) {
+        model.init();
+      },
+      child: NoTransactionsContent(),
+      builder: (ctx, model, child) {
+        return Scaffold(
+          appBar: BaseUtil.getAppBar(context, "Transactions"),
+          body: model.state == ViewState.Busy
+              ? Center(child: CircularProgressIndicator())
+              : Container(
+                  padding: EdgeInsets.only(
+                      right: SizeConfig.blockSizeHorizontal * 3),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(
+                            top: SizeConfig.blockSizeVertical * 2),
+                        height: SizeConfig.screenHeight * 0.08,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            FilterOption(
+                              filterItems: model.tranTypeFilterItems,
+                              type: TranFilterType.Type,
+                            ),
+                            FilterOption(
+                              filterItems: model.tranSubTypeFilterItems,
+                              type: TranFilterType.Subtype,
+                            )
+                          ],
                         ),
-                        Expanded(
-                          child: (model.filteredList.length == 0
-                              ? child
-                              : ListView(
-                                  physics: BouncingScrollPhysics(),
-                                  padding: EdgeInsets.all(10),
-                                  controller: model.tranListController,
-                                  children: model.getTxns(),
-                                )),
-                        ),
-                      ],
-                    ),
+                      ),
+                      Expanded(
+                        child: (model.filteredList.length == 0
+                            ? child
+                            : ListView(
+                                physics: BouncingScrollPhysics(),
+                                padding: EdgeInsets.all(10),
+                                controller: model.tranListController,
+                                children: model.getTxns(),
+                              )),
+                      ),
+                    ],
                   ),
-          );
-        },
-      ),
+                ),
+        );
+      },
     );
   }
 }

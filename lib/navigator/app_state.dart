@@ -12,12 +12,6 @@ import 'package:flutter/material.dart';
 //Pub imports
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
-const String LoggedInKey = 'LoggedIn';
-
-var scr = new GlobalKey();
-
 class PageAction {
   PageState state;
   PageConfiguration page;

@@ -2,10 +2,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/enums/screen_item.dart';
-import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
-import 'package:felloapp/core/model/UserFundWallet.dart';
-import 'package:felloapp/core/model/UserTransaction.dart';
-import 'package:felloapp/core/model/chartFundItem.dart';
+import 'package:felloapp/core/model/tambola_winners_details.dart';
+import 'package:felloapp/core/model/user_funt_wallet_model.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/model/chart_fund_item_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';

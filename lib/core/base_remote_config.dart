@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -9,6 +10,7 @@ class BaseRemoteConfig {
   static RemoteConfig remoteConfig;
   static DBModel _dbProvider = locator<DBModel>();
   static BaseUtil _baseProvider = locator<BaseUtil>();
+  static UserService _userService = locator<UserService>();
 
   ///Each config is set as a map = {name, default value}
   static const Map<String, String> _DRAW_PICK_TIME = {'draw_pick_time': '18'};
@@ -119,12 +121,12 @@ class BaseRemoteConfig {
     } catch (exception) {
       print(
           'Unable to fetch remote config. Cached or default values will be used');
-      if (_baseProvider.myUser.uid != null) {
+      if (_userService.baseUser.uid != null) {
         Map<String, dynamic> errorDetails = {
           'error_type': 'Remote config details fetch failed',
           'error_msg': 'Remote config fetch failed, using default values.'
         };
-        _dbProvider.logFailure(_baseProvider.myUser.uid,
+        _dbProvider.logFailure(_userService.baseUser.uid,
             FailType.RemoteConfigFailed, errorDetails);
       }
       return false;

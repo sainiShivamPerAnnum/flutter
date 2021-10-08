@@ -2,18 +2,18 @@
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/enums/cache_type.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
-import 'package:felloapp/core/model/AugGoldRates.dart';
-import 'package:felloapp/core/model/BaseUser.dart';
-import 'package:felloapp/core/model/DailyPick.dart';
-import 'package:felloapp/core/model/FeedCard.dart';
-import 'package:felloapp/core/model/PrizeLeader.dart';
-import 'package:felloapp/core/model/ReferralDetail.dart';
-import 'package:felloapp/core/model/ReferralLeader.dart';
-import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
-import 'package:felloapp/core/model/UserFundWallet.dart';
-import 'package:felloapp/core/model/UserIciciDetail.dart';
-import 'package:felloapp/core/model/UserTicketWallet.dart';
-import 'package:felloapp/core/model/UserTransaction.dart';
+import 'package:felloapp/core/model/aug_gold_rates_model.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/daily_pick_model.dart';
+import 'package:felloapp/core/model/feed_card_model.dart';
+import 'package:felloapp/core/model/prize_leader_model.dart';
+import 'package:felloapp/core/model/referral_details_model.dart';
+import 'package:felloapp/core/model/referral_leader_model.dart';
+import 'package:felloapp/core/model/tambola_winners_details.dart';
+import 'package:felloapp/core/model/user_funt_wallet_model.dart';
+import 'package:felloapp/core/model/user_icici_detail_model.dart';
+import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
@@ -28,8 +28,8 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/model/TambolaBoard.dart';
-import 'package:felloapp/core/model/UserAugmontDetail.dart';
+import 'package:felloapp/core/model/tambola_board_model.dart';
+import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/util/size_config.dart';
 
@@ -466,8 +466,9 @@ class BaseUtil extends ChangeNotifier {
   }
 
   showNoInternetAlert(BuildContext context) {
-    ConnectivityStatus connectivityStatus =
-        Provider.of<ConnectivityStatus>(context, listen: false);
+    ConnectivityStatus connectivityStatus = Provider.of<ConnectivityStatus>(
+        AppState.delegate.navigatorKey.currentContext,
+        listen: false);
 
     if (connectivityStatus == ConnectivityStatus.Offline) {
       Flushbar(
@@ -491,7 +492,7 @@ class BaseUtil extends ChangeNotifier {
             blurRadius: 3.0,
           )
         ],
-      )..show(context);
+      )..show(AppState.delegate.navigatorKey.currentContext);
       return true;
     }
     return false;
@@ -528,6 +529,18 @@ class BaseUtil extends ChangeNotifier {
         )
       ],
     )..show(context);
+  }
+
+  Future<void> openDialog(
+      {Widget content,
+      bool isBarrierDismissable,
+      ValueChanged<dynamic> callback}) async {
+    await showDialog(
+      context: AppState.delegate.navigatorKey.currentContext,
+      barrierDismissible: isBarrierDismissable,
+      builder: (ctx) => content,
+      useSafeArea: true,
+    );
   }
 
   AuthCredential generateAuthCredential(String verificationId, String smsCode) {
@@ -638,15 +651,15 @@ class BaseUtil extends ChangeNotifier {
         if (myUser != null) myUserDpUrl = await _dbModel.getUserDP(myUser.uid);
         if (myUserDpUrl != null) {
           await CacheManager.writeCache(
-              key: 'dpurl', value: myUserDpUrl, type: CacheType.string);
+              key: 'dpUrl', value: myUserDpUrl, type: CacheType.string);
           setDisplayPictureUrl(myUserDpUrl);
+          log.debug("No profile picture found in cache, fetched from server");
         }
       } catch (e) {
         log.error(e.toString());
       }
-    }
-
-    setDisplayPictureUrl(await CacheManager.readCache(key: 'dpUrl'));
+    } else
+      setDisplayPictureUrl(await CacheManager.readCache(key: 'dpUrl'));
   }
 
   static void launchUrl(String url) async {

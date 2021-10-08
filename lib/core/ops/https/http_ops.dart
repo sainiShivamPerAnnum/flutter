@@ -2,32 +2,45 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
-import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/core/model/tambola_winners_details.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 
 class HttpModel extends ChangeNotifier {
-  BaseUtil _baseUtil = locator<BaseUtil>(); //required to fetch client token
+  final _userService = locator<UserService>();
+  final _logger = locator<Logger>();
+
   final Log log = new Log('HttpModel');
   static final String ASIA_BASE_URI = FlavorConfig.instance.values.baseUriAsia;
   static final String US_BASE_URI = FlavorConfig.instance.values.baseUriUS;
 
+  Map header;
+  String idToken;
+
+  void init() {
+    if (_userService == null || _userService.idToken == null) {
+      _logger.e("Null received from user service for IdToken");
+      return;
+    }
+    idToken = _userService.idToken;
+    log.debug('Fetched user IDToken: ' + idToken);
+    header = {HttpHeaders.authorizationHeader: 'Bearer $idToken'};
+    _logger.d("Https Ops initialized");
+  }
+
   ///Returns the number of tickets that need to be added to user's balance
   Future<int> postUserReferral(
       String userId, String referee, String userName) async {
-    if (_baseUtil == null || _baseUtil.firebaseUser == null) return -1;
-    String idToken = await _baseUtil.firebaseUser.getIdToken();
-    log.debug('Fetched user IDToken: ' + idToken);
     try {
       Uri _uri = Uri.https(US_BASE_URI, '/validateUserReferral',
           {'uid': userId, 'rid': referee, 'uname': userName});
-      http.Response _response = await http.post(_uri,
-          headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
+      http.Response _response = await http.post(_uri, headers: header);
       log.debug(_response.body);
       if (_response.statusCode == 200) {
         try {
@@ -61,13 +74,6 @@ class HttpModel extends ChangeNotifier {
   //sample url: https://us-central1-fello-d3a9c.cloudfunctions.net/razorpayops/dev/api/orderid?amount=121&notes=hellp
   Future<Map<String, dynamic>> generateRzpOrderId(
       double amount, String notes) async {
-    if (_baseUtil == null || _baseUtil.firebaseUser == null || amount == null)
-      return null;
-
-    String idToken;
-    idToken = await _baseUtil.firebaseUser.getIdToken();
-    log.debug('Fetched user IDToken: ' + idToken);
-
     String amx = (amount * 100).round().toString();
     String _stage = FlavorConfig.instance.values.razorpayStage.value();
     Map<String, dynamic> queryMap = {'amount': amx};
@@ -92,15 +98,6 @@ class HttpModel extends ChangeNotifier {
 
   Future<Map<String, dynamic>> generateRzpSignature(
       String orderId, String paymentId) async {
-    if (_baseUtil == null ||
-        _baseUtil.firebaseUser == null ||
-        orderId == null ||
-        paymentId == null) return null;
-
-    String idToken;
-    idToken = await _baseUtil.firebaseUser.getIdToken();
-    log.debug('Fetched user IDToken: ' + idToken);
-
     String _stage = FlavorConfig.instance.values.razorpayStage.value();
     final Uri _uri = Uri.https(
         US_BASE_URI,
@@ -134,10 +131,6 @@ class HttpModel extends ChangeNotifier {
     });
     log.debug('URL: $_uri');
 
-    String idToken;
-    idToken = await _baseUtil.firebaseUser.getIdToken();
-    log.debug('Fetched user IDToken: ' + idToken);
-
     try {
       http.Response response = await http.post(_uri,
           headers: {HttpHeaders.authorizationHeader: 'Bearer $idToken'});
@@ -159,11 +152,6 @@ class HttpModel extends ChangeNotifier {
 
   ///Returns the number of tickets that need to be added to user's balance
   Future<bool> isEmailNotRegistered(String userId, String email) async {
-    if (_baseUtil == null || _baseUtil.firebaseUser == null) return false;
-    //get auth
-    String idToken = await _baseUtil.firebaseUser.getIdToken();
-    log.debug('Fetched user IDToken: ' + idToken);
-
     //build request
     final Uri _uri =
         Uri.https(ASIA_BASE_URI, '/userSearch/dev/api/isemailregd');
@@ -196,11 +184,6 @@ class HttpModel extends ChangeNotifier {
   }
 
   Future<bool> isPanRegistered(String pan) async {
-    if (_baseUtil == null || _baseUtil.firebaseUser == null) return false;
-    //get auth
-    String idToken = await _baseUtil.firebaseUser.getIdToken();
-    log.debug('Fetched user IDToken: ' + idToken);
-
     //build request
     final Uri _uri = Uri.https(ASIA_BASE_URI, '/userSearch/dev/api/ispanregd');
     var headers = {
@@ -233,11 +216,6 @@ class HttpModel extends ChangeNotifier {
 
   ///encrypt text - used for pan
   Future<String> encryptText(String encText, int encVersion) async {
-    if (_baseUtil == null || _baseUtil.firebaseUser == null) return '';
-    //get auth
-    String idToken = await _baseUtil.firebaseUser.getIdToken();
-    log.debug('Fetched user IDToken: ' + idToken);
-
     //build request
     final Uri _uri = Uri.https(ASIA_BASE_URI, '/encoderops/api/encrypt');
     var headers = {
@@ -271,11 +249,6 @@ class HttpModel extends ChangeNotifier {
 
   ///decrypt text - used for pan
   Future<String> decryptText(String decText, int decVersion) async {
-    if (_baseUtil == null || _baseUtil.firebaseUser == null) return '';
-    //get auth
-    String idToken = await _baseUtil.firebaseUser.getIdToken();
-    log.debug('Fetched user IDToken: ' + idToken);
-
     //build request
     final Uri _uri = Uri.https(ASIA_BASE_URI, '/encoderops/api/decrypt');
     var headers = {
@@ -313,13 +286,6 @@ class HttpModel extends ChangeNotifier {
   ///fail_msg: Y}
   Future<Map<String, dynamic>> postGoldenTicketRedemption(
       String userId, String goldenTicketId) async {
-    if (_baseUtil == null || _baseUtil.firebaseUser == null)
-      return {'flag': false, 'fail_msg': 'Your ticket could not be redeemed'};
-
-    //add auth
-    String idToken = await _baseUtil.firebaseUser.getIdToken();
-    log.debug('Fetched user IDToken: ' + idToken);
-
     try {
       Uri _uri = Uri.https(
           ASIA_BASE_URI,

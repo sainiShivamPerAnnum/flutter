@@ -4,14 +4,17 @@ import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/fcm_listener.dart';
-import 'package:felloapp/core/model/BaseUser.dart';
-import 'package:felloapp/generated/l10n.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/ops/https/http_ops.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/Texts/breathing_text_widget.dart';
 import 'package:felloapp/ui/elements/logo/logo_canvas.dart';
 import 'package:felloapp/ui/elements/logo/logo_container.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/size_config.dart';
 
@@ -38,6 +41,9 @@ class LogoFadeIn extends State<SplashScreen> {
   bool _isAnimVisible = true;
   Timer _timer3;
   LogoStyle _logoStyle = LogoStyle.markOnly;
+  UserService userService = locator<UserService>();
+  final _httpModel = locator<HttpModel>();
+
   ui.Image logo;
   DeviceUnlock deviceUnlock;
   BaseUtil baseProvider;
@@ -68,7 +74,9 @@ class LogoFadeIn extends State<SplashScreen> {
     final stateProvider = Provider.of<AppState>(context, listen: false);
     stateProvider.setLastTapIndex();
     await baseProvider.init();
+    await userService.init();
     await fcmProvider.setupFcm();
+    _httpModel.init();
     _timer3.cancel();
     try {
       deviceUnlock = DeviceUnlock();
@@ -198,8 +206,7 @@ class LogoFadeIn extends State<SplashScreen> {
                                   color: Colors.grey[800],
                                   fontSize: SizeConfig.mediumTextSize))
                           : BreathingText(
-                              alertText:
-                                  FT.splashSlowConnection,
+                              alertText: FT.splashSlowConnection,
                               textStyle: GoogleFonts.montserrat(
                                 fontSize: SizeConfig.mediumTextSize * 1.3,
                               ),

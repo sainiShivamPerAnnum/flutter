@@ -25,14 +25,13 @@ const String WalkThroughPath = '/walkThrough';
 const String WalkThroughCompletedPath = '/walkThroughCompleted';
 const String YourFundsPath = '/yourFunds';
 const String NotificationsPath = '/notifications';
-
-// For testing
 const String THome = '/tHome';
 const String TWalkthrough = 'tWalkthrough';
 const String TShowAllTickets = 'tShowAllTickets';
 const String TPickDraw = 'tPickDraw';
 const String TWeeklyResult = 'tWeeklyResult';
 const String TSummaryDetails = 'tSummaryDetails';
+const String CricketHomePath = 'cricketHome';
 
 enum Pages {
   Splash,
@@ -65,6 +64,7 @@ enum Pages {
   TShowAllTickets,
   TSummaryDetails,
   Notifications,
+  CricketHome,
 }
 
 class PageConfiguration {
@@ -72,6 +72,7 @@ class PageConfiguration {
   final String path;
   final Pages uiPage;
   PageAction currentPageAction;
+  var returnValue;
 
   PageConfiguration(
       {@required this.key,
@@ -232,4 +233,10 @@ PageConfiguration TSummaryDetailsPageConfig = PageConfiguration(
   key: 'TSummaryDetails',
   path: TSummaryDetails,
   uiPage: Pages.TSummaryDetails,
+);
+
+PageConfiguration CricketHomePageConfig = PageConfiguration(
+  key: 'CricketHome',
+  path: CricketHomePath,
+  uiPage: Pages.CricketHome,
 );

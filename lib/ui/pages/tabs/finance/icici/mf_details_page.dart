@@ -1,6 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/model/BaseUser.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/ui/dialogs/integrated_icici_disabled_dialog.dart';
@@ -672,8 +672,8 @@ class FundDetailsCell extends StatelessWidget {
                       context: context,
                       builder: (context) => new AlertDialog(
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(UiConstants.padding),
+                          borderRadius: BorderRadius.circular(
+                              SizeConfig.cardBorderRadius),
                         ),
                         title: new Text(title),
                         content: Text(info),

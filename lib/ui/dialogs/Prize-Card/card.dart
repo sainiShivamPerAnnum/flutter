@@ -1,14 +1,15 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item.dart';
-import 'package:felloapp/core/model/TambolaWinnersDetail.dart';
+import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/ops/http_ops.dart';
+import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/Prize-Card/fold-card.dart';
 import 'package:felloapp/ui/dialogs/share-card.dart';
-import 'package:felloapp/util/palettes.dart';
+import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/util/palette.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 
@@ -501,12 +502,9 @@ class _CloseCardState extends State<CloseCard> {
                           width: 3,
                         ),
                         shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: baseProvider.myUserDpUrl != null
-                              ? NetworkImage(baseProvider.myUserDpUrl)
-                              : AssetImage("images/profile.png"),
-                          fit: BoxFit.cover,
-                        ),
+                      ),
+                      child: ProfileImage(
+                        height: 2,
                       ),
                     ),
                   ),
@@ -590,8 +588,8 @@ class _CloseCardState extends State<CloseCard> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight)
             : new LinearGradient(colors: [
-                augmontGoldPalette.primaryColor,
-                augmontGoldPalette.primaryColor2,
+                FelloColorPalette.augmontFundPalette().primaryColor,
+                FelloColorPalette.augmontFundPalette().primaryColor2,
               ], begin: Alignment.topLeft, end: Alignment.bottomRight),
         borderRadius: BorderRadius.circular(15),
       ),

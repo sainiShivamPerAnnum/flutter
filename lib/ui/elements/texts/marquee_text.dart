@@ -1,4 +1,4 @@
-import 'package:felloapp/util/palettes.dart';
+import 'package:felloapp/util/palette.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -33,8 +33,9 @@ class MarqueeText extends StatelessWidget {
                   showBullet
                       ? CircleAvatar(
                           radius: SizeConfig.mediumTextSize / 4,
-                          backgroundColor:
-                              bulletColor ?? augmontGoldPalette.primaryColor,
+                          backgroundColor: bulletColor ??
+                              FelloColorPalette.augmontFundPalette()
+                                  .primaryColor,
                         )
                       : SizedBox(),
                   SizedBox(
@@ -44,7 +45,8 @@ class MarqueeText extends StatelessWidget {
                     infoList[index],
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
-                      color: textColor ?? augmontGoldPalette.secondaryColor,
+                      color: textColor ??
+                          FelloColorPalette.augmontFundPalette().secondaryColor,
                       fontSize: SizeConfig.mediumTextSize,
                     ),
                   ),

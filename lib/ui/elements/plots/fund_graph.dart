@@ -1,9 +1,9 @@
 import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/ui/widgets/network_bar.dart';
+import 'package:felloapp/ui/elements/network_bar.dart';
 import 'package:felloapp/util/fail_types.dart';
-import 'package:felloapp/util/palettes.dart';
+import 'package:felloapp/util/palette.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +43,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   }
 
   final List<Color> gradientColors = [
-    augmontGoldPalette.primaryColor,
+    FelloColorPalette.augmontFundPalette().primaryColor,
     Colors.white,
   ];
 
@@ -94,7 +94,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                     textColor: Colors.black,
                   )
                 : SpinKitThreeBounce(
-                    color: augmontGoldPalette.primaryColor,
+                    color: FelloColorPalette.augmontFundPalette().primaryColor,
                     size: 30.0,
                   )),
       );
@@ -124,7 +124,8 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                           return LineTooltipItem(
                               '•  ',
                               GoogleFonts.montserrat(
-                                color: augmontGoldPalette.primaryColor,
+                                color: FelloColorPalette.augmontFundPalette()
+                                    .primaryColor,
                                 fontSize: SizeConfig.mediumTextSize,
                                 fontWeight: FontWeight.w900,
                               ),
@@ -192,7 +193,8 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                         getDotPainter: (spot, d, data, i) {
                           return FlDotCirclePainter(
                             radius: 1,
-                            color: augmontGoldPalette.primaryColor,
+                            color: FelloColorPalette.augmontFundPalette()
+                                .primaryColor,
                             strokeColor: Colors.red,
                             strokeWidth: 2,
                           );
@@ -232,7 +234,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                       ),
                       borderRadius: BorderRadius.circular(6),
                       color: index == _selectedFrequency
-                          ? augmontGoldPalette.primaryColor
+                          ? FelloColorPalette.augmontFundPalette().primaryColor
                           : Colors.transparent,
                     ),
                     child: Padding(

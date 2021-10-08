@@ -1,5 +1,5 @@
-import 'package:felloapp/core/model/UserTransaction.dart';
-import 'package:felloapp/core/ops/http_ops.dart';
+import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';

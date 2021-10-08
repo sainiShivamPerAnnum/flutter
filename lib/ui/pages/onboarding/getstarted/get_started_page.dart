@@ -1,12 +1,12 @@
 //Project Imports
 import 'package:felloapp/core/enums/pagestate.dart';
-import 'package:felloapp/generated/l10n.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/Buttons/large_button.dart';
 import 'package:felloapp/ui/elements/custom-art/circles_with_image.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/size_config.dart';
 
 //Dart and Flutter Imports

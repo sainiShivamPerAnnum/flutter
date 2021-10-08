@@ -2,8 +2,8 @@
 import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/enums/screen_item.dart';
-import 'package:felloapp/core/model/UserFundWallet.dart';
-import 'package:felloapp/core/model/chartFundItem.dart';
+import 'package:felloapp/core/model/user_funt_wallet_model.dart';
+import 'package:felloapp/core/model/chart_fund_item_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/golden_ticket_claim.dart';
@@ -12,7 +12,7 @@ import 'package:felloapp/ui/elements/plots/pie_chart/legend_options.dart';
 import 'package:felloapp/ui/elements/plots/pie_chart/pie_chart.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
 import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/palettes.dart';
+import 'package:felloapp/util/palette.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
 
@@ -44,13 +44,13 @@ class _FundsChartViewState extends State<FundsChartView> {
   AppState appState;
   final List<Color> colorListLight = [
     UiConstants.primaryColor,
-    augmontGoldPalette.primaryColor,
+    FelloColorPalette.augmontFundPalette().primaryColor,
     Color(0xff03256C),
   ];
 
   final List<Color> colorList = [
     UiConstants.primaryColor,
-    augmontGoldPalette.primaryColor,
+    FelloColorPalette.augmontFundPalette().primaryColor,
     Color(0xff2e89ba),
     Colors.blueGrey,
   ];
