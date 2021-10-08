@@ -94,7 +94,7 @@ class Root extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  model.userTicketCount,
+                  model.userTicketCount ?? "",
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                   ),

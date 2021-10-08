@@ -15,7 +15,7 @@ class WinViewModel extends BaseModel {
   LocalDBModel _localDBModel = locator<LocalDBModel>();
 
   getUnclaimedPrizeBalance() {
-    return _baseUtil.userFundWallet.unclaimedBalance ?? 0.0;
+    return _baseUtil.userFundWallet?.unclaimedBalance ?? 0.0;
   }
 
   getWinningsButtonText() {

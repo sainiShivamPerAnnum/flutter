@@ -565,8 +565,7 @@ class BaseUtil extends ChangeNotifier {
 
   Future<bool> signOut() async {
     try {
-      await FirebaseAuth.instance.signOut();
-      log.debug('Signed Out Firebase User');
+      
       await _lModel.deleteLocalAppData();
       log.debug('Cleared local cache');
       _appState.setCurrentTabIndex = 0;

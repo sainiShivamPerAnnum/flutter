@@ -63,6 +63,10 @@ class UserProfileViewModel extends BaseModel {
     }
   }
 
+  signout() async {
+    await _userService.signout();
+  }
+
   Map<String, String> getBankDetail() {
     Map<String, String> bankCreds = {};
     if (_baseUtil.augmontDetail != null &&
