@@ -47,13 +47,13 @@ void setupLocator() {
   locator.registerLazySingleton(() => ConnectivityService());
   locator.registerLazySingleton(() => UserService());
   locator.registerLazySingleton(() => TransactionService());
-  locator.registerLazySingleton(() => RootViewModel());
   locator.registerLazySingleton(() => Logger());
 
   // Hometabs
   locator.registerFactory(() => PlayViewModel());
   locator.registerFactory(() => SaveViewModel());
   locator.registerFactory(() => WinViewModel());
+  locator.registerFactory(() => RootViewModel());
 
   //REST
   locator.registerFactory(() => TranViewModel());
