@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -12,30 +11,16 @@ import 'package:felloapp/util/logger.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:logger/logger.dart';
 
 class FcmListener extends ChangeNotifier {
-  Log log = new Log("FcmListener");
   BaseUtil _baseUtil = locator<BaseUtil>();
   DBModel _dbModel = locator<DBModel>();
   Logger logger = locator<Logger>();
   FcmHandler _handler = locator<FcmHandler>();
   FirebaseMessaging _fcm;
   bool isTambolaNotificationLoading = false;
-  // /// Create a [AndroidNotificationChannel] for heads up notifications
-  // static const AndroidNotificationChannel _androidChannel =
-  //     AndroidNotificationChannel(
-  //   'high_importance_channel', // id
-  //   'High Importance Notifications', // title
-  //   'This channel is used for important notifications.', // description
-  //   importance: Importance.high,
-  // );
-
-  // Initialize the [FlutterLocalNotificationsPlugin] package.
-  // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  //     FlutterLocalNotificationsPlugin();
 
   static Future<dynamic> backgroundMessageHandler(RemoteMessage message) async {
     print('background notif');
@@ -60,19 +45,14 @@ class FcmListener extends ChangeNotifier {
   Future<FirebaseMessaging> setupFcm() async {
     _fcm = FirebaseMessaging.instance;
     _fcm.getInitialMessage().then((RemoteMessage message) {
-      log.debug("onMessage recieved: " + message.toString());
+      logger.d("onMessage recieved: " + message.toString());
       if (message != null && message.data != null) {
         _handler.handleMessage(message.data);
       }
     });
-    // await flutterLocalNotificationsPlugin
-    //     .resolvePlatformSpecificImplementation<
-    //         AndroidFlutterLocalNotificationsPlugin>()
-    //     ?.createNotificationChannel(_androidChannel);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
       Freshchat.isFreshchatNotification(message.data).then((flag) {
         if (flag) {
           _handleFreshchatNotif(message.data);
@@ -146,7 +126,7 @@ class FcmListener extends ChangeNotifier {
         _baseUtil.userFundWallet.augGoldBalance != null &&
         _baseUtil.userFundWallet.augGoldBalance > 300)
       addSubscription(FcmTopic.FREQUENTFLYER)
-          .then((value) => log.debug("Added frequent flyer subscription"));
+          .then((value) => logger.d("Added frequent flyer subscription"));
 
     if (_baseUtil.userTicketWallet != null &&
         _baseUtil.userTicketWallet.getActiveTickets() > 0 &&
@@ -178,32 +158,11 @@ class FcmListener extends ChangeNotifier {
     _channel
         .invokeMethod('createNotificationChannel', tambolaChannelMap)
         .then((value) {
-      log.debug('Tambola Notification channel created successfully');
+      logger.d('Tambola Notification channel created successfully');
     }).catchError((e) {
-      log.error('Tambola notification channel setup failed');
+      logger.d('Tambola notification channel setup failed');
     });
-    //
-    // const AndroidNotificationChannel _androidTambolaChannel =
-    //     AndroidNotificationChannel(
-    //   'TAMBOLA_PICK_NOTIF_2', // id
-    //   'Tambola Daily Picks', // title
-    //   'Tambola notifications', // description
-    //   importance: Importance.high,
-    // );
-    //
-    // await flutterLocalNotificationsPlugin
-    //     .resolvePlatformSpecificImplementation<
-    //         AndroidFlutterLocalNotificationsPlugin>()
-    //     ?.createNotificationChannel(_androidTambolaChannel);
   }
-
-  // Future<void> _firebaseMessagingBackgroundHandler(
-  //     RemoteMessage message) async {
-  //   // If you're going to use other Firebase services in the background, such as Firestore,
-  //   // make sure you call `initializeApp` before using other Firebase services.
-  //   //await Firebase.initializeApp();
-  //   print('Handling a background message ${message.messageId}');
-  // }
 
   _saveDeviceToken(String fcmToken) async {
     bool flag = true;
@@ -213,7 +172,7 @@ class FcmListener extends ChangeNotifier {
         (_baseUtil.myUser.client_token == null ||
             (_baseUtil.myUser.client_token != null &&
                 _baseUtil.myUser.client_token != fcmToken))) {
-      log.debug("Updating FCM token to local and server db");
+      logger.d("Updating FCM token to local and server db");
       _baseUtil.myUser.client_token = fcmToken;
       Freshchat.setPushRegistrationToken(fcmToken);
       flag = await _dbModel.updateClientToken(_baseUtil.myUser, fcmToken);
@@ -223,13 +182,8 @@ class FcmListener extends ChangeNotifier {
 
 // TAMBOLA DRAW NOTIFICATION STATUS HANDLE CODE
 
-  // SAVE STATUS TO SHARED PREFS
-  saveTambolaDrawNotification(bool val) async {}
-
   // TOGGLE THE SUBSCRIPTION
   Future toggleTambolaDrawNotificationStatus(bool val) async {
-    // isTambolaNotificationLoading = true;
-    // notifyListeners();
     print("Draw notification val : $val");
     try {
       if (val) {
@@ -241,7 +195,7 @@ class FcmListener extends ChangeNotifier {
       }
       _baseUtil.toggleTambolaNotificationStatus(val);
     } catch (e) {
-      log.error(e.toString());
+      logger.e(e.toString());
       if (_baseUtil.myUser.uid != null) {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Changing Tambola Notification Status failed'
