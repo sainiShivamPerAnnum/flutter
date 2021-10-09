@@ -1,7 +1,7 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/pagestate.dart';
-import 'package:felloapp/core/enums/screen_item.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -156,8 +156,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                               FittedBox(
                                 child: TextButton.icon(
                                   onPressed: () async {
-                                    if (await baseProvider
-                                        .showNoInternetAlert(context)) return;
+                                    if (await BaseUtil.showNoInternetAlert())
+                                      return;
                                     AppState.screenStack.add(ScreenItem.dialog);
                                     showDialog(
                                         barrierDismissible: false,
@@ -325,8 +325,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                       .getPreference(Preferences.APPLOCK) ==
                                   1),
                               onChanged: (val) async {
-                                if (await baseProvider
-                                    .showNoInternetAlert(context)) return;
+                                if (await BaseUtil.showNoInternetAlert())
+                                  return;
                                 baseProvider.flipSecurityValue(val);
                               }),
                         ),
@@ -346,8 +346,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                               .TAMBOLANOTIFICATIONS) ==
                                       1),
                                   onChanged: (val) async {
-                                    if (await baseProvider
-                                        .showNoInternetAlert(context)) return;
+                                    if (await BaseUtil.showNoInternetAlert())
+                                      return;
 
                                     fcmProvider
                                         .toggleTambolaDrawNotificationStatus(
@@ -371,8 +371,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                       ),
                     ),
                     onPressed: () async {
-                      if (await baseProvider.showNoInternetAlert(context))
-                        return;
+                      if (await BaseUtil.showNoInternetAlert()) return;
                       AppState.screenStack.add(ScreenItem.dialog);
                       showDialog(
                         context: context,
@@ -387,8 +386,9 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                               subtitle: '',
                               accept: 'Yes',
                               reject: 'No',
-                              onAccept: () {
+                              onAccept: () async {
                                 Haptic.vibrate();
+                                await model.signout();
                                 baseProvider.signOut().then((flag) {
                                   if (flag) {
                                     //log.debug('Sign out process complete');
@@ -397,14 +397,14 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                                         PageAction(
                                             state: PageState.replaceAll,
                                             page: SplashPageConfig);
-                                    baseProvider.showPositiveAlert('Signed out',
-                                        'Hope to see you soon', context);
+                                    BaseUtil.showPositiveAlert(
+                                        'Signed out', 'Hope to see you soon');
                                   } else {
                                     AppState.backButtonDispatcher.didPopRoute();
-                                    baseProvider.showNegativeAlert(
-                                        'Sign out failed',
-                                        'Couldn\'t signout. Please try again',
-                                        context);
+                                    BaseUtil.showNegativeAlert(
+                                      'Sign out failed',
+                                      'Couldn\'t signout. Please try again',
+                                    );
                                     //log.error('Sign out process failed');
                                   }
                                 });
@@ -428,11 +428,11 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                             //             PageAction(
                             //                 state: PageState.replaceAll,
                             //                 page: SplashPageConfig);
-                            //         baseProvider.showPositiveAlert('Signed out',
+                            //         BaseUtil.showPositiveAlert('Signed out',
                             //             'Hope to see you soon', context);
                             //       } else {
                             //         AppState.backButtonDispatcher.didPopRoute();
-                            //         baseProvider.showNegativeAlert(
+                            //         BaseUtil.showNegativeAlert(
                             //             'Sign out failed',
                             //             'Couldn\'t signout. Please try again',
                             //             context);

@@ -15,8 +15,8 @@ import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:felloapp/core/enums/pagestate.dart';
-import 'package:felloapp/core/enums/screen_item.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 
 //Dart and Flutter Imports
 import 'dart:io';
@@ -434,12 +434,12 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
       Navigator.of(context).pop();
     }
     if (!flag) {
-      baseProvider.showNegativeAlert('Withdrawal Failed',
-          'Please try again in some time or contact us for assistance', context,
+      BaseUtil.showNegativeAlert('Withdrawal Failed',
+          'Please try again in some time or contact us for assistance',
           seconds: 5);
     } else {
-      baseProvider.showPositiveAlert('Withdrawal Request is now processing',
-          'We will inform you once the withdrawal is complete!', context);
+      BaseUtil.showPositiveAlert('Withdrawal Request is now processing',
+          'We will inform you once the withdrawal is complete!');
     }
   }
 
@@ -463,13 +463,15 @@ class AugmontWithdrawScreenState extends State<AugmontWithdrawScreen>
           onPressed: () async {
             Haptic.vibrate();
             FocusScope.of(context).unfocus();
-            if (baseProvider.showNoInternetAlert(context)) return;
+            if (BaseUtil.showNoInternetAlert()) return;
             if (baseProvider.checkKycMissing) {
               _controller.forward().then((value) => _controller.reverse());
             } else {
               if (widget.withdrawableGoldQnty == 0.0) {
-                baseProvider.showNegativeAlert('Unable to process',
-                    'Your withdrawable balance is low', context);
+                BaseUtil.showNegativeAlert(
+                  'Unable to process',
+                  'Your withdrawable balance is low',
+                );
                 return;
               }
               final amtErr = _validateAmount(_quantityController.text);

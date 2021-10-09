@@ -1,7 +1,7 @@
 //Project Imports
 import 'package:felloapp/core/base_analytics.dart';
-import 'package:felloapp/core/enums/cache_type.dart';
-import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
+import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/daily_pick_model.dart';
@@ -36,7 +36,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 //Dart & Flutter Imports
 import 'dart:async';
 import 'dart:math';
-import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:flutter/material.dart';
 
 //Pub Imports
@@ -57,6 +57,7 @@ class BaseUtil extends ChangeNotifier {
   final DBModel _dbModel = locator<DBModel>();
   final LocalDBModel _lModel = locator<LocalDBModel>();
   final AppState _appState = locator<AppState>();
+  final UserService _userService = locator<UserService>();
 
   BaseUser _myUser;
   UserFundWallet _userFundWallet;
@@ -65,13 +66,13 @@ class BaseUtil extends ChangeNotifier {
   FirebaseAnalytics baseAnalytics;
   PaymentService _payService;
   List<FeedCard> feedCards;
-  int _dailyPickCount;
   String userRegdPan;
-  List<int> todaysPicks;
 
   ///Tambola global objects
-  DailyPick weeklyDigits;
-  List<TambolaBoard> userWeeklyBoards;
+  // int _dailyPickCount;
+  // List<int> todaysPicks;
+  // DailyPick weeklyDigits;
+  // List<TambolaBoard> userWeeklyBoards;
 
   ///ICICI global objects
   UserIciciDetail _iciciDetail;
@@ -138,7 +139,7 @@ class BaseUtil extends ChangeNotifier {
   static bool isDeviceOffline, ticketRequestSent, playScreenFirst;
   static int ticketCountBeforeRequest,
       infoSliderIndex,
-      _atomicTicketGenerationLeftCount,
+      // _atomicTicketGenerationLeftCount,
       ticketGenerateCount,
       atomicTicketDeletionLeftCount;
 
@@ -176,7 +177,7 @@ class BaseUtil extends ChangeNotifier {
     ticketCountBeforeRequest = Constants.NEW_USER_TICKET_COUNT;
     infoSliderIndex = 0;
     playScreenFirst = true;
-    _atomicTicketGenerationLeftCount = 0;
+    // _atomicTicketGenerationLeftCount = 0;
     atomicTicketDeletionLeftCount = 0;
     show_security_prompt = false;
   }
@@ -185,63 +186,73 @@ class BaseUtil extends ChangeNotifier {
     logger.i('inside init base util');
     _setRuntimeDefaults();
 
-    ///analytics
+    //Analytics logs app open state.
     BaseAnalytics.init();
     BaseAnalytics.analytics.logAppOpen();
 
     //remote config for various remote variables
-    print('base util remote config');
+    logger.i('base util remote config');
     await BaseRemoteConfig.init();
 
-    ///fetch on-boarding status and User details
-    firebaseUser = FirebaseAuth.instance.currentUser;
-    if (firebaseUser != null) {
-      _myUser = await _dbModel.getUser(firebaseUser.uid); //_lModel.getUser();
-    }
-    packageInfo = await PackageInfo.fromPlatform();
+    setPackageInfo();
 
-    isUserOnboarded =
-        (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
+    ///fetch on-boarding status and User details
+    firebaseUser = _userService.firebaseUser;
+    isUserOnboarded = _userService.isUserOnborded;
+
+    // isUserOnboarded =
+    //     (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
 
     if (isUserOnboarded) {
-      ///see if security needs to be shown
-      show_security_prompt = await _lModel.showSecurityPrompt();
-
-      ///get user wallet
-      _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
-      if (_userFundWallet == null) _compileUserWallet();
-
-      ///get user ticket balance
-      _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
-      if (_userTicketWallet == null) {
-        await _initiateNewTicketWallet();
-      }
+      //set current user
+      myUser = _userService.baseUser;
 
       ///get user creation time
       _userCreationTimestamp = firebaseUser.metadata.creationTime;
 
-      //check if there are any icici deposits txns in process
-      //TODO not required for now
-      // if (myUser.isIciciOnboarded) _payService.verifyPaymentsIfAny();
-      // _payService = locator<PaymentService>();
-
-      ///prefill pan details if available
-      panService = new PanService();
-      if (!checkKycMissing) {
-        userRegdPan = await panService.getUserPan();
-      }
-
-      ///prefill augmont details if available
-      if (myUser.isAugmontOnboarded) {
-        augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
-      }
-
-      setUpDailyPicksCount();
-
       ///pick zerobalance asset
       Random rnd = new Random();
       zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
+
+      ///see if security needs to be shown -> Move to save tab
+      show_security_prompt = await _lModel.showSecurityPrompt();
+
+      await setUserDefaults();
     }
+  }
+
+  Future<void> setUserDefaults() async {
+    ///get user wallet -> Try moving it to view and viewmodel for finance
+    _userFundWallet = await _dbModel.getUserFundWallet(firebaseUser.uid);
+    if (_userFundWallet == null) _compileUserWallet();
+
+    ///get user ticket balance --> Try moving it to view and viewmodel for game
+    _userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
+    if (_userTicketWallet == null) {
+      await _initiateNewTicketWallet();
+    }
+
+    ///prefill pan details if available --> Profile Section (Show pan number eye)
+    panService = new PanService();
+    if (!checkKycMissing) {
+      userRegdPan = await panService.getUserPan();
+    }
+    //setUpDailyPicksCount();
+
+    ///prefill augmont details if available --> Save Tab
+    if (myUser.isAugmontOnboarded) {
+      augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
+
+      ///prefill augmont details if available --> Save Tab
+      if (myUser.isAugmontOnboarded) {
+        augmontDetail = await _dbModel.getUserAugmontDetails(myUser.uid);
+      }
+    }
+  }
+
+  void setPackageInfo() async {
+    //Appversion //add it seperate method
+    packageInfo = await PackageInfo.fromPlatform();
   }
 
   acceptNotificationsIfAny(BuildContext context) {
@@ -249,12 +260,12 @@ class BaseUtil extends ChangeNotifier {
     if (_payService != null && myUser.pendingTxnId != null) {
       _payService.addPaymentStatusListener((value) {
         if (value == PaymentService.TRANSACTION_COMPLETE) {
-          showPositiveAlert('Transaction Complete',
-              'Your account balance has been updated!', context,
+          showPositiveAlert(
+              'Transaction Complete', 'Your account balance has been updated!',
               seconds: 5);
         } else if (value == PaymentService.TRANSACTION_REJECTED) {
-          showPositiveAlert('Transaction Closed',
-              'The transaction was not completed', context,
+          showPositiveAlert(
+              'Transaction Closed', 'The transaction was not completed',
               seconds: 5);
         } else {
           log.debug('Received notif for pending transaction: $value');
@@ -334,68 +345,7 @@ class BaseUtil extends ChangeNotifier {
     return (!skFlag && !augFlag);
   }
 
-  setUpDailyPicksCount() {
-    String _dpc = BaseRemoteConfig.remoteConfig
-        .getString(BaseRemoteConfig.TAMBOLA_DAILY_PICK_COUNT);
-    if (_dpc == null || _dpc.isEmpty) _dpc = '3';
-    _dailyPickCount = 3;
-    try {
-      _dailyPickCount = int.parse(_dpc);
-    } catch (e) {
-      log.error('key parsing failed: ' + e.toString());
-      Map<String, String> errorDetails = {'error_msg': e.toString()};
-      _dbModel.logFailure(
-          _myUser.uid, FailType.DailyPickParseFailed, errorDetails);
-      _dailyPickCount = 3;
-    }
-    log.debug("Daily picks count: $_dailyPickCount");
-  }
-
-  fetchWeeklyPicks({bool forcedRefresh = false}) async {
-    if (forcedRefresh) weeklyDrawFetched = false;
-    if (!weeklyDrawFetched) {
-      try {
-        log.debug('Requesting for weekly picks');
-        DailyPick _picks = await _dbModel.getWeeklyPicks();
-        weeklyDrawFetched = true;
-        if (_picks != null) {
-          weeklyDigits = _picks;
-        }
-        switch (DateTime.now().weekday) {
-          case 1:
-            todaysPicks = weeklyDigits.mon;
-            break;
-          case 2:
-            todaysPicks = weeklyDigits.tue;
-            break;
-          case 3:
-            todaysPicks = weeklyDigits.wed;
-            break;
-          case 4:
-            todaysPicks = weeklyDigits.thu;
-            break;
-          case 5:
-            todaysPicks = weeklyDigits.fri;
-            break;
-          case 6:
-            todaysPicks = weeklyDigits.sat;
-            break;
-          case 7:
-            todaysPicks = weeklyDigits.sun;
-            break;
-        }
-        if (todaysPicks == null) {
-          log.debug("Today's picks are not generated yet");
-        }
-        notifyListeners();
-      } catch (e) {
-        log.error('$e');
-      }
-    }
-  }
-
-  showPositiveAlert(String title, String message, BuildContext context,
-      {int seconds}) {
+  static showPositiveAlert(String title, String message, {int seconds}) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Flushbar(
         flushbarPosition: FlushbarPosition.BOTTOM,
@@ -426,8 +376,7 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
-  showNegativeAlert(String title, String message, BuildContext context,
-      {int seconds}) {
+  static showNegativeAlert(String title, String message, {int seconds}) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Flushbar(
         flushbarPosition: FlushbarPosition.BOTTOM,
@@ -454,7 +403,7 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
-  showNoInternetAlert(BuildContext context) {
+  static showNoInternetAlert() {
     ConnectivityStatus connectivityStatus = Provider.of<ConnectivityStatus>(
         AppState.delegate.navigatorKey.currentContext,
         listen: false);
@@ -554,8 +503,6 @@ class BaseUtil extends ChangeNotifier {
 
   Future<bool> signOut() async {
     try {
-      await FirebaseAuth.instance.signOut();
-      log.debug('Signed Out Firebase User');
       await _lModel.deleteLocalAppData();
       log.debug('Cleared local cache');
       _appState.setCurrentTabIndex = 0;
@@ -575,10 +522,10 @@ class BaseUtil extends ChangeNotifier {
       baseAnalytics = null;
       _payService = null;
       feedCards = null;
-      _dailyPickCount = null;
+      // _dailyPickCount = null;
       userRegdPan = null;
-      weeklyDigits = null;
-      userWeeklyBoards = null;
+      // weeklyDigits = null;
+      // userWeeklyBoards = null;
       _iciciDetail = null;
       _currentICICITxn = null;
       _currentICICINonInstantWthrlTxn = null;
@@ -992,26 +939,26 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  int get atomicTicketGenerationLeftCount => _atomicTicketGenerationLeftCount;
+  // int get atomicTicketGenerationLeftCount => _atomicTicketGenerationLeftCount;
 
-  set atomicTicketGenerationLeftCount(int value) {
-    _atomicTicketGenerationLeftCount = value;
-    notifyListeners();
-  }
+  // set atomicTicketGenerationLeftCount(int value) {
+  //   _atomicTicketGenerationLeftCount = value;
+  //   notifyListeners();
+  // }
 
-  int get dailyPicksCount => _dailyPickCount;
+  // int get dailyPicksCount => _dailyPickCount;
 
-  set dailyPicksCount(int count) {
-    _dailyPickCount = count;
-    notifyListeners();
-  }
+  // set dailyPicksCount(int count) {
+  //   _dailyPickCount = count;
+  //   notifyListeners();
+  // }
 
   Future<bool> isOfflineSnackBar(BuildContext context) async {
     ConnectivityStatus connectivityStatus =
         Provider.of<ConnectivityStatus>(context, listen: false);
 
     if (connectivityStatus == ConnectivityStatus.Offline) {
-      await showNegativeAlert('Offline', 'Please connect to internet', context,
+      await showNegativeAlert('Offline', 'Please connect to internet',
           seconds: 3);
       return true;
     }

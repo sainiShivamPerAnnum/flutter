@@ -1,5 +1,5 @@
 //Project Imports
-import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/custom-art/circles_with_image.dart';

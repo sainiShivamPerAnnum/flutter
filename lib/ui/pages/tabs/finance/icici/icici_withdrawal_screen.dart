@@ -400,8 +400,8 @@ class ICICIWithdrawalState extends State<ICICIWithdrawal> {
                 // }
               } else {
                 Navigator.of(context).pop();
-                baseProvider.showNegativeAlert('Withdrawal Failed',
-                    'Error: ${combDetailsMap['reason']}', context);
+                BaseUtil.showNegativeAlert(
+                    'Withdrawal Failed', 'Error: ${combDetailsMap['reason']}');
               }
             });
             return true;
@@ -455,15 +455,15 @@ class ICICIWithdrawalState extends State<ICICIWithdrawal> {
         .then((wMap) {
       if (wMap['instant_flag'] == null || !wMap['instant_flag']) {
         Navigator.of(context).pop();
-        baseProvider.showNegativeAlert('Transaction failed',
-            wMap['instant_fail_reason'] ?? 'Please try again.', context);
+        BaseUtil.showNegativeAlert('Transaction failed',
+            wMap['instant_fail_reason'] ?? 'Please try again.');
       }
       if (wMap['non_instant_flag'] != null) {
         ///check if the non instant transaction worked correctly
         if (!wMap['non_instant_flag']) {
           Navigator.of(context).pop();
-          baseProvider.showNegativeAlert('Transaction failed',
-              wMap['non_instant_fail_reason'] ?? 'Please try again.', context);
+          BaseUtil.showNegativeAlert('Transaction failed',
+              wMap['non_instant_fail_reason'] ?? 'Please try again.');
         } else {
           ///show the otp entering dialog. the transaction is already stored as a global variable
           onShowOtpDialog();

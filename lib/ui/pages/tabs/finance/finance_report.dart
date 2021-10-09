@@ -1,7 +1,7 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/pagestate.dart';
-import 'package:felloapp/core/enums/screen_item.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
@@ -337,7 +337,7 @@ class _YourFundsState extends State<YourFunds> {
   Widget _addKycInfoWidget() {
     return InkWell(
       onTap: () {
-        if (baseProvider.showNoInternetAlert(context)) return;
+        if (BaseUtil.showNoInternetAlert()) return;
         AppState.screenStack.add(ScreenItem.dialog);
         showModalBottomSheet(
             isDismissible: false,
@@ -386,17 +386,21 @@ class _YourFundsState extends State<YourFunds> {
 
   _onWithdrawalClicked() async {
     HapticFeedback.vibrate();
-    if (baseProvider.showNoInternetAlert(context)) return;
+    if (BaseUtil.showNoInternetAlert()) return;
     baseProvider.augmontDetail = (baseProvider.augmontDetail == null)
         ? (await dbProvider.getUserAugmontDetails(baseProvider.myUser.uid))
         : baseProvider.augmontDetail;
     if (!baseProvider.myUser.isAugmontOnboarded) {
-      baseProvider.showNegativeAlert(
-          'Not onboarded', 'You havent been onboarded to Augmont yet', context);
+      BaseUtil.showNegativeAlert(
+        'Not onboarded',
+        'You havent been onboarded to Augmont yet',
+      );
     } else if (baseProvider.userFundWallet.augGoldQuantity == null ||
         baseProvider.userFundWallet.augGoldQuantity == 0) {
-      baseProvider.showNegativeAlert('No balance',
-          'Your Augmont wallet has no balance presently', context);
+      BaseUtil.showNegativeAlert(
+        'No balance',
+        'Your Augmont wallet has no balance presently',
+      );
     } else {
       baseProvider.isAugWithdrawRouteLogicInProgress = true;
       setState(() {});
@@ -425,8 +429,10 @@ class _YourFundsState extends State<YourFunds> {
           _liveGoldQuantityBalance == 0) {
         baseProvider.isAugWithdrawRouteLogicInProgress = false;
         setState(() {});
-        baseProvider.showNegativeAlert('Couldn\'t complete your request',
-            'Please try again in some time', context);
+        BaseUtil.showNegativeAlert(
+          'Couldn\'t complete your request',
+          'Please try again in some time',
+        );
       } else {
         baseProvider.isAugWithdrawRouteLogicInProgress = false;
         setState(() {});

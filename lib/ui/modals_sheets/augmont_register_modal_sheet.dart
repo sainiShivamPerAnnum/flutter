@@ -201,15 +201,15 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
     UserAugmontDetail detail = await augmontProvider.createSimpleUser(
         baseProvider.myUser.mobile, stateChosenValue);
     if (detail == null) {
-      baseProvider.showNegativeAlert('Registration Failed',
-          'Failed to regsiter at the moment. Please try again.', context);
+      BaseUtil.showNegativeAlert('Registration Failed',
+          'Failed to regsiter at the moment. Please try again.');
       baseProvider.isAugmontRegnInProgress = false;
       setState(() {});
       return;
     } else {
       ///show completion animation
-      baseProvider.showPositiveAlert('Registration Successful',
-          'You are successfully registered!', context);
+      BaseUtil.showPositiveAlert(
+          'Registration Successful', 'You are successfully registered!');
       baseProvider.isAugmontRegnInProgress = false;
       setState(() {});
       AppState.backButtonDispatcher.didPopRoute();
@@ -220,8 +220,8 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
 
   bool _preVerifyInputs() {
     if (stateChosenValue == null || stateChosenValue.isEmpty) {
-      baseProvider.showNegativeAlert('State missing',
-          'Kindly enter your current residential state', context);
+      BaseUtil.showNegativeAlert(
+          'State missing', 'Kindly enter your current residential state');
       return false;
     }
     return true;
@@ -231,7 +231,6 @@ class AugmontRegisterModalSheetState extends State<AugmontRegisterModalSheet> {
 class AugmontInfoTiles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    BaseUtil baseProvider = Provider.of<BaseUtil>(context, listen: false);
     return Positioned(
       bottom: 0,
       child: Container(
@@ -249,8 +248,8 @@ class AugmontInfoTiles extends StatelessWidget {
                   if (await canLaunch(url))
                     await launch(url);
                   else
-                    baseProvider.showNegativeAlert('Failed to launch URL',
-                        'Please try again in sometime', context);
+                    BaseUtil.showNegativeAlert(
+                        'Failed to launch URL', 'Please try again in sometime');
                 },
                 label: Text(
                   'More about Augmont',

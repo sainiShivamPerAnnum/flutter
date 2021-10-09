@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/ui/elements/network_bar.dart';
 import 'package:felloapp/util/assets.dart';
@@ -73,8 +73,8 @@ class _GamePollState extends State<GamePoll> {
         };
         dbProvider.logFailure(
             baseProvider.myUser.uid, FailType.GameVoteFailed, errorDetails);
-        baseProvider.showNegativeAlert('Couldn\'t save response',
-            'Please try again in some time', context);
+        BaseUtil.showNegativeAlert(
+            'Couldn\'t save response', 'Please try again in some time');
       }
       setState(() {
         isVoted = flag;
@@ -100,7 +100,7 @@ class _GamePollState extends State<GamePoll> {
         isVoted: isVoted,
         ontap: () {
           if (connectivityStatus == ConnectivityStatus.Offline) {
-            baseProvider.showNoInternetAlert(context);
+            BaseUtil.showNoInternetAlert();
           } else if (!isVoted) {
             Haptic.vibrate();
             addPollVote(_item.id);

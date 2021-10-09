@@ -3,8 +3,8 @@ import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/core/enums/pagestate.dart';
-import 'package:felloapp/core/enums/screen_item.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 
 //Flutter imports
 import 'package:flutter/material.dart';
@@ -114,7 +114,7 @@ class AppState extends ChangeNotifier {
     }
   }
 
-  setLastTapIndex() {
+  static setLastTapIndex() {
     SharedPreferences.getInstance().then((instance) {
       _rootIndex = instance.getInt('lastTab') ?? 0;
     });

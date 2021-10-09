@@ -2,14 +2,14 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/core/service/tambola_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 
 class TambolaBoard {
   static Log log = new Log('TambolaBoard');
   BaseUtil _baseUtil = locator<BaseUtil>(); //required to fetch client token
-
+  TambolaService _tambolaService = locator<TambolaService>();
   final String doc_key;
   final Timestamp assigned_time;
   final String val;
@@ -104,7 +104,7 @@ class TambolaBoard {
         calledDigits == null ||
         calledDigits.isEmpty) return 5;
     int digitsLeftToBeAnnounced =
-        _baseUtil.dailyPicksCount * 7 - calledDigits.length;
+        _tambolaService.dailyPicksCount * 7 - calledDigits.length;
     int rowCalledCount = 0;
     for (int i = 0; i < boardLength; i++) {
       if (tambolaBoard[rowIndex][i] != 0 &&
@@ -159,7 +159,7 @@ class TambolaBoard {
         calledDigits.isEmpty) return 15;
     int fullHouseCount = 0;
     int digitsLeftToBeAnnounced =
-        _baseUtil.dailyPicksCount * 7 - calledDigits.length;
+        _tambolaService.dailyPicksCount * 7 - calledDigits.length;
     for (int i = 0; i < boardHeight; i++) {
       for (int j = 0; j < boardLength; j++) {
         if (tambolaBoard[i][j] != 0) {

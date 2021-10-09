@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_remote_config.dart';
-import 'package:felloapp/core/enums/screen_item.dart';
-import 'package:felloapp/core/enums/view_state.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
@@ -47,7 +47,7 @@ class BuyGoldBtnVM extends BaseModel {
   }
 
   buyButtonAction(BuildContext context) async {
-    if (await _baseUtil.showNoInternetAlert(context)) return;
+    if (await BaseUtil.showNoInternetAlert()) return;
     augContext = context;
     Haptic.vibrate();
     _baseUtil.isAugDepositRouteLogicInProgress = true;
@@ -128,10 +128,10 @@ class BuyGoldBtnVM extends BaseModel {
       setState(ViewState.Idle);
 
       if (_baseUtil.augmontGoldRates == null) {
-        _baseUtil.showNegativeAlert(
-            'Portal unavailable',
-            'The current rates couldn\'t be loaded. Please try again',
-            augContext);
+        BaseUtil.showNegativeAlert(
+          'Portal unavailable',
+          'The current rates couldn\'t be loaded. Please try again',
+        );
         return false;
       } else {
         AppState.screenStack.add(ScreenItem.dialog);
@@ -261,8 +261,10 @@ class BuyGoldBtnVM extends BaseModel {
           if (_isUnlocked) {
             //give it a few seconds before showing congratulatory message
             Timer(const Duration(seconds: 4), () {
-              _baseUtil.showPositiveAlert('Congratulations are in order!',
-                  'Your referral bonus has been unlocked 🎉', augContext);
+              BaseUtil.showPositiveAlert(
+                'Congratulations are in order!',
+                'Your referral bonus has been unlocked 🎉',
+              );
             });
           }
         }
@@ -295,7 +297,7 @@ class BuyGoldBtnVM extends BaseModel {
     // setState(() {});
 
     if (flag) {
-      // baseProvider.showPositiveAlert(
+      // BaseUtil.showPositiveAlert(
       //     'SUCCESS', 'You gold deposit was confirmed!', context);
       AppState.screenStack.add(ScreenItem.dialog);
       Haptic.vibrate();
@@ -306,10 +308,8 @@ class BuyGoldBtnVM extends BaseModel {
       );
     } else {
       AppState.backButtonDispatcher.didPopRoute();
-      _baseUtil.showNegativeAlert(
-          'Failed',
+      BaseUtil.showNegativeAlert('Failed',
           'Your gold deposit failed. Please try again or contact us if you are facing issues',
-          augContext,
           seconds: 5);
     }
   }

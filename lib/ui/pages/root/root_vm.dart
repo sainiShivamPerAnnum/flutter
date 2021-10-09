@@ -1,6 +1,6 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/pagestate.dart';
-import 'package:felloapp/core/enums/screen_item.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
@@ -82,8 +82,7 @@ class RootViewModel extends BaseModel {
     if (_fcmListener != null && _baseUtil != null) {
       _fcmListener.addIncomingMessageListener((valueMap) {
         if (valueMap['title'] != null && valueMap['body'] != null) {
-          _baseUtil.showPositiveAlert(valueMap['title'], valueMap['body'],
-              AppState.delegate.navigatorKey.currentContext,
+          BaseUtil.showPositiveAlert(valueMap['title'], valueMap['body'],
               seconds: 5);
         }
       });
@@ -130,10 +129,8 @@ class RootViewModel extends BaseModel {
       }
       _baseUtil.isUnreadFreshchatSupportMessages().then((flag) {
         if (flag) {
-          _baseUtil.showPositiveAlert(
-              'You have unread support messages',
+          BaseUtil.showPositiveAlert('You have unread support messages',
               'Go to the Contact Us section to view',
-              AppState.delegate.navigatorKey.currentContext,
               seconds: 4);
         }
       });

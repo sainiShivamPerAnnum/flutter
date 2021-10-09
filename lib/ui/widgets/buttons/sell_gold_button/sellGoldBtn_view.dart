@@ -1,6 +1,6 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/connectivity_status.dart';
-import 'package:felloapp/core/enums/view_state.dart';
+import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/widgets/buttons/sell_gold_button/sellGoldBtn_vm.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -26,7 +26,7 @@ class SellGoldBtn extends StatelessWidget {
           return disabledButtonUI != null
               ? disabledButtonUI
               : ElevatedButton(
-                  onPressed: () => BaseUtil().showNoInternetAlert(context),
+                  onPressed: () => BaseUtil.showNoInternetAlert(),
                   style: ElevatedButton.styleFrom(primary: Colors.grey),
                   child: Opacity(
                     opacity: 0.7,

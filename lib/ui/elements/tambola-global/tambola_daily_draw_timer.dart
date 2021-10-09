@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/service/tambola_service.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +29,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
   bool showClock = true;
   bool countDown = true;
   BaseUtil baseProvider;
+  TambolaService _tambolaService = locator<TambolaService>();
 
   @override
   void initState() {
@@ -55,7 +58,7 @@ class _DailyPicksTimerState extends State<DailyPicksTimer> {
     final addSeconds = countDown ? -1 : 1;
     final seconds = duration.inSeconds + addSeconds;
     if (seconds < 0) {
-      await baseProvider.fetchWeeklyPicks(forcedRefresh: true);
+      await _tambolaService.fetchWeeklyPicks(forcedRefresh: true);
       setState(() {
         showClock = false;
         timer?.cancel();

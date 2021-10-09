@@ -161,8 +161,10 @@ class VerifyEmailState extends State<VerifyEmail> {
       setState(() {
         _isProcessing = false;
       });
-      baseProvider.showNegativeAlert(
-          "Email already registered", "Please try with another email", context);
+      BaseUtil.showNegativeAlert(
+        "Email already registered",
+        "Please try with another email",
+      );
 
       return;
     }
@@ -180,10 +182,10 @@ class VerifyEmailState extends State<VerifyEmail> {
           setState(() {
             _isProcessing = false;
           });
-          baseProvider.showNegativeAlert(
-              "Verification failed",
-              "Email cannot be verified at the moment, please try again in sometime.",
-              context);
+          BaseUtil.showNegativeAlert(
+            "Verification failed",
+            "Email cannot be verified at the moment, please try again in sometime.",
+          );
         }
       });
     }
@@ -202,12 +204,14 @@ class VerifyEmailState extends State<VerifyEmail> {
         _isVerifying = false;
       });
       if (res) {
-        baseProvider.showPositiveAlert(
-            "Email verified", "Thank you for verifying your email", context);
+        BaseUtil.showPositiveAlert(
+            "Email verified", "Thank you for verifying your email");
         AppState.backButtonDispatcher.didPopRoute();
       } else {
-        baseProvider.showNegativeAlert("Email verification failed",
-            "Please try again in sometime", context);
+        BaseUtil.showNegativeAlert(
+          "Email verification failed",
+          "Please try again in sometime",
+        );
       }
     } else {
       setState(() {
@@ -240,24 +244,29 @@ class VerifyEmailState extends State<VerifyEmail> {
           setState(() {
             _isGoogleLoginInProcess = false;
           });
-          baseProvider.showPositiveAlert(
-              "Success", "Email Verified successfully", context);
+          BaseUtil.showPositiveAlert("Success", "Email Verified successfully");
           Navigator.pop(context);
           AppState.backButtonDispatcher.didPopRoute();
         } else {
           _isGoogleLoginInProcess = false;
-          baseProvider.showNegativeAlert("Oops! we ran into problem",
-              "Email cannot be verified at the moment", context);
+          BaseUtil.showNegativeAlert(
+            "Oops! we ran into problem",
+            "Email cannot be verified at the moment",
+          );
         }
       } else {
         _isGoogleLoginInProcess = false;
-        baseProvider.showNegativeAlert("Email already registered",
-            "Please try with another email", context);
+        BaseUtil.showNegativeAlert(
+          "Email already registered",
+          "Please try with another email",
+        );
       }
     } else {
       _isGoogleLoginInProcess = false;
-      baseProvider.showNegativeAlert("No account selected",
-          "Please choose an account from the list", context);
+      BaseUtil.showNegativeAlert(
+        "No account selected",
+        "Please choose an account from the list",
+      );
     }
     setState(() {});
   }
@@ -419,10 +428,10 @@ class VerifyEmailState extends State<VerifyEmail> {
                                           end: Duration.zero),
                                       onEnd: () {
                                         print('Timer ended');
-                                        baseProvider.showNegativeAlert(
-                                            "Session Expired!",
-                                            "Please try again",
-                                            context);
+                                        BaseUtil.showNegativeAlert(
+                                          "Session Expired!",
+                                          "Please try again",
+                                        );
                                         AppState.backButtonDispatcher
                                             .didPopRoute();
                                       },

@@ -2,7 +2,7 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/screen_item.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
@@ -63,10 +63,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     }
     // If onboarding is in progress
     else if (AppState.isOnboardingInProgress) {
-      BaseUtil().showNegativeAlert(
-          "Exit Onboarding?🕺",
-          "Press back once more to exit",
-          _routerDelegate.navigatorKey.currentContext);
+      BaseUtil.showNegativeAlert(
+          "Exit Onboarding?🕺", "Press back once more to exit");
       AppState.isOnboardingInProgress = false;
       return Future.value(true);
     }

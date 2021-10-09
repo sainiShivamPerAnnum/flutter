@@ -117,16 +117,14 @@ class _UpdateNameDialogState extends State<UpdateNameDialog> {
                                     isUploading = false;
                                   });
                                   if (flag) {
-                                    baseProvider.showPositiveAlert(
-                                        'Update Succesful',
-                                        'Your name has been updated',
-                                        context);
+                                    BaseUtil.showPositiveAlert(
+                                      'Update Succesful',
+                                      'Your name has been updated',
+                                    );
                                     AppState.backButtonDispatcher.didPopRoute();
                                   } else {
-                                    baseProvider.showNegativeAlert(
-                                        'Update failed',
-                                        'Your name could not be updated at the moment',
-                                        context);
+                                    BaseUtil.showNegativeAlert('Update failed',
+                                        'Your name could not be updated at the moment');
                                   }
                                 });
                               }

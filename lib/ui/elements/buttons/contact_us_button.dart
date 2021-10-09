@@ -26,7 +26,7 @@ class ContactUsBtn extends StatelessWidget {
                     isUnavailable: BaseUtil.isDeviceOffline,
                     onClick: () {
                       if (BaseUtil.isDeviceOffline) {
-                        baseProvider.showNoInternetAlert(context);
+                        BaseUtil.showNoInternetAlert();
                         return;
                       }
                       if (baseProvider.isSignedIn() &&
@@ -39,15 +39,15 @@ class ContactUsBtn extends StatelessWidget {
                         //     .then((flag) {
                         //   if (flag) {
                         //     Navigator.of(context).pop();
-                        //     baseProvider.showPositiveAlert(
+                        //     BaseUtil.showPositiveAlert(
                         //         'Callback placed!',
                         //         'We\'ll contact you soon on your registered mobile',
                         //         context);
                         //   }
                         // });
                       } else {
-                        baseProvider.showNegativeAlert('Unavailable',
-                            'Callbacks are reserved for active users', context);
+                        BaseUtil.showNegativeAlert('Unavailable',
+                            'Callbacks are reserved for active users');
                       }
                     },
                   )),

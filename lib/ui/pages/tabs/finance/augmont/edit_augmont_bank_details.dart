@@ -1,6 +1,6 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/screen_item.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -287,8 +287,7 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                                   ),
                             onPressed: () {
                               FocusScope.of(context).unfocus();
-                              if (baseProvider.showNoInternetAlert(context))
-                                return;
+                              if (BaseUtil.showNoInternetAlert()) return;
                               if (_formKey.currentState.validate()) {
                                 _onUpdateClicked();
                               }
@@ -329,16 +328,20 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
     if (curBankAccNo == null || pBankAccNo != curBankAccNo) noChanges = false;
     if (curBankIfsc == null || pBankIfsc != curBankIfsc) noChanges = false;
     if (noChanges) {
-      baseProvider.showNegativeAlert(
-          'No Update', 'No changes were made', context);
+      BaseUtil.showNegativeAlert(
+        'No Update',
+        'No changes were made',
+      );
       baseProvider.isEditAugmontBankDetailInProgress = false;
       setState(() {});
       return;
     }
 
     if (pConfirmBankAccNo != pBankAccNo) {
-      baseProvider.showNegativeAlert(
-          'Fields mismatch', 'Bank account numbers do not match', context);
+      BaseUtil.showNegativeAlert(
+        'Fields mismatch',
+        'Bank account numbers do not match',
+      );
       baseProvider.isEditAugmontBankDetailInProgress = false;
       setState(() {});
       return;
@@ -352,8 +355,10 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
         bankDetail[QUERY_SUCCESS_FLAG] == QUERY_FAILED ||
         bankDetail[GetBankDetail.resBankName] == null) {
       log.error('Couldnt fetch an appropriate response');
-      baseProvider.showNegativeAlert(
-          'Update Failed', 'Invalid IFSC Code entered', context);
+      BaseUtil.showNegativeAlert(
+        'Update Failed',
+        'Invalid IFSC Code entered',
+      );
       baseProvider.isEditAugmontBankDetailInProgress = false;
       setState(() {});
       return;
@@ -392,21 +397,23 @@ class _EditAugmontBankDetailState extends State<EditAugmontBankDetail> {
                     baseProvider.isEditAugmontBankDetailInProgress = false;
                     setState(() {});
                     if (flag) {
-                      baseProvider.showPositiveAlert('Complete',
-                          'Your details have been updated', context);
+                      BaseUtil.showPositiveAlert(
+                          'Complete', 'Your details have been updated');
                       AppState.backButtonDispatcher.didPopRoute();
                     } else {
-                      baseProvider.showNegativeAlert(
-                          'Failed',
-                          'Your details could not be updated at the moment. Please try again',
-                          context);
+                      BaseUtil.showNegativeAlert(
+                        'Failed',
+                        'Your details could not be updated at the moment. Please try again',
+                      );
                     }
                   }
                 });
               },
               onReject: () {
-                baseProvider.showNegativeAlert(
-                    'Update Cancelled', 'Please try again', context);
+                BaseUtil.showNegativeAlert(
+                  'Update Cancelled',
+                  'Please try again',
+                );
                 baseProvider.isEditAugmontBankDetailInProgress = false;
                 setState(() {});
                 return;

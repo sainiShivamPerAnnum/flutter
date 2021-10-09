@@ -293,8 +293,8 @@ class _ShareCardState extends State<ShareCard> {
 
       AppState.backButtonDispatcher.didPopRoute();
       print(e.toString());
-      baseProvider.showNegativeAlert(
-          "Task Failed", "Unable to capture the card at the moment", context);
+      BaseUtil.showNegativeAlert(
+          "Task Failed", "Unable to capture the card at the moment");
     }
     return null;
   }
@@ -349,8 +349,8 @@ class _ShareCardState extends State<ShareCard> {
     } catch (e) {
       // backButtonDispatcher.didPopRoute();
       print(e.toString());
-      baseProvider.showNegativeAlert(
-          "Task Failed", "Unable to share the picture at the moment", context);
+      BaseUtil.showNegativeAlert(
+          "Task Failed", "Unable to share the picture at the moment");
     }
   }
 }

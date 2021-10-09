@@ -1,6 +1,6 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/screen_item.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
@@ -224,22 +224,22 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
               _q = await dbProvider.updateUser(baseProvider.myUser);
             }
             if (!_p || !_q) {
-              baseProvider.showNegativeAlert('Verification Failed',
-                  'Failed to verify at the moment. Please try again.', context);
+              BaseUtil.showNegativeAlert('Verification Failed',
+                  'Failed to verify at the moment. Please try again.');
               baseProvider.isSimpleKycInProgress = false;
               setState(() {});
               return;
             } else {
-              baseProvider.showPositiveAlert('Verification Successful',
-                  'You are successfully verified!', context);
+              BaseUtil.showPositiveAlert(
+                  'Verification Successful', 'You are successfully verified!');
               baseProvider.isSimpleKycInProgress = false;
               setState(() {});
               AppState.backButtonDispatcher.didPopRoute();
             }
           },
           onReject: () {
-            baseProvider.showNegativeAlert(
-                'Registration Cancelled', 'Please try again', context);
+            BaseUtil.showNegativeAlert(
+                'Registration Cancelled', 'Please try again');
             baseProvider.isSimpleKycInProgress = false;
             setState(() {});
             return;
@@ -257,8 +257,8 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
                   title: 'Invalid Details',
                 ));
       else
-        baseProvider.showNegativeAlert('Registration failed',
-            veriDetails['reason'] ?? 'Please try again', context);
+        BaseUtil.showNegativeAlert(
+            'Registration failed', veriDetails['reason'] ?? 'Please try again');
 
       baseProvider.isSimpleKycInProgress = false;
       setState(() {});
@@ -269,17 +269,17 @@ class SimpleKycModalSheetState extends State<SimpleKycModalSheet>
   bool _preVerifyInputs() {
     RegExp panCheck = RegExp(r"[A-Z]{5}[0-9]{4}[A-Z]{1}");
     if (_panInput.text.isEmpty) {
-      baseProvider.showNegativeAlert(
-          'Invalid Pan', 'Kindly enter a valid PAN Number', context);
+      BaseUtil.showNegativeAlert(
+          'Invalid Pan', 'Kindly enter a valid PAN Number');
       return false;
     } else if (!panCheck.hasMatch(_panInput.text) ||
         _panInput.text.length != 10) {
-      baseProvider.showNegativeAlert(
-          'Invalid Pan', 'Kindly enter a valid PAN Number', context);
+      BaseUtil.showNegativeAlert(
+          'Invalid Pan', 'Kindly enter a valid PAN Number');
       return false;
     } else if (_panHolderNameInput.text.isEmpty) {
-      baseProvider.showNegativeAlert('Name missing',
-          'Kindly enter your name as per your pan card', context);
+      BaseUtil.showNegativeAlert(
+          'Name missing', 'Kindly enter your name as per your pan card');
       return false;
     }
     return true;

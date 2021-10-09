@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/ui/elements/network_bar.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -62,7 +62,7 @@ class _FelloButtonState extends State<FelloButton> {
       return widget.offlineButtonUI != null
           ? widget.offlineButtonUI
           : ElevatedButton(
-              onPressed: () => BaseUtil().showNoInternetAlert(context),
+              onPressed: () => BaseUtil.showNoInternetAlert(),
               style: ElevatedButton.styleFrom(primary: Colors.grey),
               child: Opacity(
                 opacity: 0.7,

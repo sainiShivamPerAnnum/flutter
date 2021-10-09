@@ -130,7 +130,7 @@
 //     if (fcmProvider != null && baseProvider != null) {
 //       fcmProvider.addIncomingMessageListener((valueMap) {
 //         if (valueMap['title'] != null && valueMap['body'] != null) {
-//           baseProvider.showPositiveAlert(
+//           BaseUtil.showPositiveAlert(
 //               valueMap['title'], valueMap['body'], context,
 //               seconds: 5);
 //         }
@@ -182,7 +182,7 @@
 //       }
 //       baseProvider.isUnreadFreshchatSupportMessages().then((flag) {
 //         if (flag) {
-//           baseProvider.showPositiveAlert('You have unread support messages',
+//           BaseUtil.showPositiveAlert('You have unread support messages',
 //               'Go to the Contact Us section to view', context,
 //               seconds: 4);
 //         }

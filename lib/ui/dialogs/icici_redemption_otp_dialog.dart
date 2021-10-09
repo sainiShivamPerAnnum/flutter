@@ -140,14 +140,13 @@ class IciciRedemptionOtpDialogState extends State<IciciRedemptionOtpDialog> {
       setState(() {});
       Navigator.of(context).pop();
       Navigator.of(context).pop();
-      baseProvider.showPositiveAlert(
-          'Success', 'Your transaction has been completed', context);
+      BaseUtil.showPositiveAlert(
+          'Success', 'Your transaction has been completed');
       baseProvider.showRefreshIndicator(context);
     } else {
       baseProvider.isRedemptionOtpInProgress = false;
       setState(() {});
-      baseProvider.showNegativeAlert(
-          'Invalid OTP', 'Please try again', context);
+      BaseUtil.showNegativeAlert('Invalid OTP', 'Please try again');
     }
   }
 }

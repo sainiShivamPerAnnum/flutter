@@ -44,32 +44,41 @@ class _ClaimUsernameState extends State<ClaimUsername> {
               setState(() {
                 _isUpdating = false;
               });
-              baseProvider.showPositiveAlert(
-                  "Success!", "Username updated successfully", context);
+              BaseUtil.showPositiveAlert(
+                  "Success!", "Username updated successfully");
               AppState.backButtonDispatcher.didPopRoute();
             } else {
               setState(() {
                 _isUpdating = false;
               });
-              baseProvider.showNegativeAlert('Oops! we ran into trouble',
-                  'Please try again in sometime', context);
+              BaseUtil.showNegativeAlert(
+                'Oops! we ran into trouble',
+                'Please try again in sometime',
+              );
             }
           } else {
             setState(() {
               _isUpdating = false;
             });
-            baseProvider.showNegativeAlert('Oops! we ran into trouble!',
-                'Please try again in sometime', context);
+            BaseUtil.showNegativeAlert(
+              'Oops! we ran into trouble!',
+              'Please try again in sometime',
+            );
           }
         } else {
           setState(() {
             _isUpdating = false;
           });
-          baseProvider.showNegativeAlert('Oops! we ran into trouble!',
-              'Please try again in sometime', context);
+          BaseUtil.showNegativeAlert(
+            'Oops! we ran into trouble!',
+            'Please try again in sometime',
+          );
         }
       } else {
-        baseProvider.showNegativeAlert("Error", "Please try again", context);
+        BaseUtil.showNegativeAlert(
+          "Error",
+          "Please try again",
+        );
       }
     }
   }

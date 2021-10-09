@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:flutter/foundation.dart';
 
 class ConnectivityService extends ChangeNotifier {

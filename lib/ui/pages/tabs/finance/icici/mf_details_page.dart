@@ -320,12 +320,12 @@ class _MFDetailsPageState extends State<MFDetailsPage> {
 
   onWithdrawalClicked() {
     if (!baseProvider.myUser.isIciciOnboarded) {
-      baseProvider.showNegativeAlert(
-          'Not onboarded', 'You havent been onboarded to ICICI yet', context);
+      BaseUtil.showNegativeAlert(
+          'Not onboarded', 'You havent been onboarded to ICICI yet');
     } else if (baseProvider.userFundWallet.iciciBalance == null ||
         baseProvider.userFundWallet.iciciBalance == 0) {
-      baseProvider.showNegativeAlert(
-          'No balance', 'Your ICICI wallet has no balance presently', context);
+      BaseUtil.showNegativeAlert(
+          'No balance', 'Your ICICI wallet has no balance presently');
     } else {
       Haptic.vibrate();
       Navigator.push(

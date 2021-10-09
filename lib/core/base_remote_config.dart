@@ -4,6 +4,7 @@ import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:logger/logger.dart';
 
 class BaseRemoteConfig {
   static RemoteConfig remoteConfig;
@@ -104,17 +105,19 @@ class BaseRemoteConfig {
   };
 
   static Future<bool> init() async {
-    print('initializing remote config');
+    final Logger logger = locator<Logger>();
+    logger.i('initializing remote config');
     remoteConfig = RemoteConfig.instance;
     try {
       // await remoteConfig.activateFetched();
+      //TODO remoteConfig lazy?
+
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(milliseconds: 30000),
         minimumFetchInterval: const Duration(hours: 6),
       ));
       await remoteConfig.setDefaults(DEFAULTS);
       //RemoteConfigValue(null, ValueSource.valueStatic);
-
       await remoteConfig.fetchAndActivate();
       return true;
     } catch (exception) {

@@ -36,10 +36,10 @@ class KYCInvalid extends StatelessWidget {
               ),
               onPressed: () async {
                 Haptic.vibrate();
-                baseProvider.showNegativeAlert(
-                    'Unavailable',
-                    'The in-house KYC verification engine will be made available soon',
-                    context);
+                BaseUtil.showNegativeAlert(
+                  'Unavailable',
+                  'The in-house KYC verification engine will be made available soon',
+                );
                 // Navigator.of(context).pop();
                 // Navigator.of(context).pushNamed('/verifykyc');
               },

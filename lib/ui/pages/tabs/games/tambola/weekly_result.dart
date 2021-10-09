@@ -1,9 +1,9 @@
 import 'package:felloapp/main.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola/weekly-results-scenes/prize_loss.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola/weekly-results-scenes/prize_partial_win.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola/weekly-results-scenes/prize_win.dart';
-import 'package:felloapp/ui/pages/tabs/games/tambola/weekly-results-scenes/processing.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_results/prize_loss.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_results/prize_partial_win.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_results/prize_win.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_results/processing.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 

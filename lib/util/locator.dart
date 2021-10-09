@@ -11,6 +11,7 @@ import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
+import 'package:felloapp/core/service/tambola_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -18,7 +19,11 @@ import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
+import 'package:felloapp/ui/pages/splash/splash_view.dart';
+import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/dailyPicksDraw/dailyPicksDraw_viewModel.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/tambola_home/tambola_home_vm.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/tambola_widgets/picks_card/picks_card_vm.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions/tran_viewModel.dart';
 import 'package:felloapp/ui/pages/tabs/profile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/widgets/buttons/buy_gold_button/buyGoldBtn_vm.dart';
@@ -47,8 +52,13 @@ void setupLocator() {
   locator.registerLazySingleton(() => ConnectivityService());
   locator.registerLazySingleton(() => UserService());
   locator.registerLazySingleton(() => TransactionService());
-  locator.registerLazySingleton(() => RootViewModel());
+  locator.registerLazySingleton(() => TambolaService());
   locator.registerLazySingleton(() => Logger());
+
+  locator.registerFactory(() => RootViewModel());
+
+  // SPLASH
+  locator.registerFactory(() => LauncherViewModel());
 
   // Hometabs
   locator.registerFactory(() => PlayViewModel());
@@ -60,6 +70,8 @@ void setupLocator() {
   locator.registerFactory(() => DailyPicksDrawViewModel());
   locator.registerFactory(() => UserProfileViewModel());
 
+  locator.registerFactory(() => TambolaHomeViewModel());
+  locator.registerFactory(() => PicksCardViewModel());
   //WIDGETS
   // locator.registerFactory(() => FBtnVM());
   // locator.registerFactory(() => RBtnVM());

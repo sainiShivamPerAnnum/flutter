@@ -1,7 +1,7 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
-import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -158,8 +158,10 @@ class _LoginControllerState extends State<LoginController>
       } else {
         log.error("User auto sign in didnt work");
         baseProvider.isLoginNextInProgress = false;
-        baseProvider.showNegativeAlert('Sign In Failed',
-            'Please check your network or number and try again', context);
+        BaseUtil.showNegativeAlert(
+          'Sign In Failed',
+          'Please check your network or number and try again',
+        );
         setState(() {});
       }
     };
@@ -173,8 +175,10 @@ class _LoginControllerState extends State<LoginController>
         log.error("Quota for otps exceeded");
       }
       log.error("Verification process failed:  ${exception.message}");
-      baseProvider.showNegativeAlert('Sign In Failed',
-          'Please check your network or number and try again', context);
+      BaseUtil.showNegativeAlert(
+        'Sign In Failed',
+        'Please check your network or number and try again',
+      );
       baseProvider.isLoginNextInProgress = false;
       setState(() {});
     };
@@ -330,33 +334,6 @@ class _LoginControllerState extends State<LoginController>
                               _processScreenInput(_currentPage);
                           },
                         ),
-
-                        // Material(
-                        //   child: MaterialButton(
-                        //     child: (!baseProvider.isLoginNextInProgress)
-                        //         ? Text(
-                        //             _currentPage == Username.index
-                        //                 ? 'FINISH'
-                        //                 : 'NEXT',
-                        //             style: Theme.of(context)
-                        //                 .textTheme
-                        //                 .button
-                        //                 .copyWith(color: Colors.white),
-                        //           )
-                        //         : SpinKitThreeBounce(
-                        //             color: UiConstants.spinnerColor2,
-                        //             size: 18.0,
-                        //           ),
-                        //     onPressed: () {
-                        //       if (!baseProvider.isLoginNextInProgress)
-                        //         _processScreenInput(_currentPage);
-                        //     },
-                        //     highlightColor: Colors.white30,
-                        //     splashColor: Colors.white30,
-                        //   ),
-                        //   color: Colors.transparent,
-                        //   borderRadius: new BorderRadius.circular(30.0),
-                        // ),
                       ),
                     ],
                   ),
@@ -404,15 +381,15 @@ class _LoginControllerState extends State<LoginController>
               _otpScreenKey.currentState.onOtpReceived();
               _onSignInSuccess();
             } else {
-              baseProvider.showNegativeAlert(
-                  'Invalid Otp', 'Please enter a valid otp', context);
+              BaseUtil.showNegativeAlert(
+                  'Invalid Otp', 'Please enter a valid otp');
               baseProvider.isLoginNextInProgress = false;
               FocusScope.of(_otpScreenKey.currentContext).unfocus();
               setState(() {});
             }
           } else {
-            baseProvider.showNegativeAlert(
-                'Enter OTP', 'Please enter a valid one time password', context);
+            BaseUtil.showNegativeAlert(
+                'Enter OTP', 'Please enter a valid one time password');
           }
           break;
         }
@@ -423,24 +400,30 @@ class _LoginControllerState extends State<LoginController>
           if (_nameScreenKey.currentState.formKey.currentState.validate() &&
               _nameScreenKey.currentState.isValidDate()) {
             if (!_nameScreenKey.currentState.isEmailEntered) {
-              baseProvider.showNegativeAlert(
-                  'Email field empty', 'Please enter a valid email', context);
+              BaseUtil.showNegativeAlert(
+                  'Email field empty', 'Please enter a valid email');
               return false;
             }
 
             if (_nameScreenKey.currentState.selectedDate == null) {
-              baseProvider.showNegativeAlert('Invalid Date of Birth',
-                  'Please enter a valid date of birth', context);
+              BaseUtil.showNegativeAlert(
+                'Invalid Date of Birth',
+                'Please enter a valid date of birth',
+              );
               return false;
             } else if (!_isAdult(_nameScreenKey.currentState.selectedDate)) {
-              baseProvider.showNegativeAlert(
-                  'Ineligible', 'You need to be above 18 to join', context);
+              BaseUtil.showNegativeAlert(
+                'Ineligible',
+                'You need to be above 18 to join',
+              );
               return false;
             }
             if (_nameScreenKey.currentState.gen == null ||
                 _nameScreenKey.currentState.isInvested == null) {
-              baseProvider.showNegativeAlert(
-                  'Invalid details', 'Please enter all the fields', context);
+              BaseUtil.showNegativeAlert(
+                'Invalid details',
+                'Please enter all the fields',
+              );
               return false;
             }
             FocusScope.of(_nameScreenKey.currentContext).unfocus();
@@ -511,26 +494,34 @@ class _LoginControllerState extends State<LoginController>
                     log.debug("User object saved successfully");
                     _onSignUpComplete();
                   } else {
-                    baseProvider.showNegativeAlert('Update failed',
-                        'Please try again in sometime', context);
+                    BaseUtil.showNegativeAlert(
+                      'Update failed',
+                      'Please try again in sometime',
+                    );
                     baseProvider.isLoginNextInProgress = false;
                     setState(() {});
                   }
                 } else {
-                  baseProvider.showNegativeAlert('Username update failed',
-                      'Please try again in sometime', context);
+                  BaseUtil.showNegativeAlert(
+                    'Username update failed',
+                    'Please try again in sometime',
+                  );
                   baseProvider.isLoginNextInProgress = false;
                   setState(() {});
                 }
               } else {
-                baseProvider.showNegativeAlert('username not available',
-                    'Please choose another username', context);
+                BaseUtil.showNegativeAlert(
+                  'username not available',
+                  'Please choose another username',
+                );
                 baseProvider.isLoginNextInProgress = false;
                 setState(() {});
               }
             } else {
-              baseProvider.showNegativeAlert(
-                  "Error", "Please try again", context);
+              BaseUtil.showNegativeAlert(
+                "Error",
+                "Please try again",
+              );
             }
           }
 
@@ -627,7 +618,7 @@ class _LoginControllerState extends State<LoginController>
   Future _onSignUpComplete() async {
     await BaseAnalytics.analytics.logSignUp(signUpMethod: 'phonenumber');
     await BaseAnalytics.logUserProfile(baseProvider.myUser);
-    //await userService.init();
+    await userService.init();
     await baseProvider.init();
     await fcmProvider.setupFcm();
     AppState.isOnboardingInProgress = false;
@@ -637,10 +628,10 @@ class _LoginControllerState extends State<LoginController>
     }
     appStateProvider.currentAction =
         PageAction(state: PageState.replaceAll, page: RootPageConfig);
-    baseProvider.showPositiveAlert(
-        'Sign In Complete',
-        'Welcome to ${Constants.APP_NAME}, ${baseProvider.myUser.name}',
-        context);
+    BaseUtil.showPositiveAlert(
+      'Sign In Complete',
+      'Welcome to ${Constants.APP_NAME}, ${baseProvider.myUser.name}',
+    );
     //process complete
     //TODO move to home through animation
   }

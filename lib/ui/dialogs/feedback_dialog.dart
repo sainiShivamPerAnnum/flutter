@@ -1,5 +1,5 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/logger.dart';
@@ -134,7 +134,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
                   Haptic.vibrate();
                   log.debug('DialogAction clicked');
                   if (connectivityStatus == ConnectivityStatus.Offline)
-                    baseProvider.showNoInternetAlert(context);
+                    BaseUtil.showNoInternetAlert();
                   else if (_formKey.currentState.validate()) {
                     widget.dialogAction(fdbkController.text);
                   }

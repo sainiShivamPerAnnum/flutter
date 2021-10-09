@@ -1,5 +1,5 @@
-import 'package:felloapp/core/enums/screen_item.dart';
-import 'package:felloapp/core/enums/view_state.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';

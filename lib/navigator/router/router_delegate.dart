@@ -1,7 +1,7 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/pagestate.dart';
-import 'package:felloapp/core/enums/screen_item.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/aboutus_dialog.dart';
@@ -13,14 +13,13 @@ import 'package:felloapp/ui/pages/hamburger/faq_page.dart';
 import 'package:felloapp/ui/pages/hamburger/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/hamburger/support.dart';
 import 'package:felloapp/ui/pages/hamburger/tnc_page.dart';
-import 'package:felloapp/ui/pages/launcher_screen.dart';
 import 'package:felloapp/ui/pages/login/login_controller.dart';
 import 'package:felloapp/ui/pages/notifications/notifications.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/get_started_page.dart';
 import 'package:felloapp/ui/pages/onboarding/getstarted/walkthrough_page.dart';
 import 'package:felloapp/ui/pages/onboarding/update_screen.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
-import 'package:felloapp/ui/pages/tabs/finance/augmont/augmont-details.dart';
+import 'package:felloapp/ui/pages/splash/splash_view.dart';
 import 'package:felloapp/ui/pages/tabs/finance/augmont/edit_augmont_bank_details.dart';
 import 'package:felloapp/ui/pages/tabs/finance/finance_report.dart';
 import 'package:felloapp/ui/pages/tabs/finance/icici/mf_details_page.dart';
@@ -29,6 +28,7 @@ import 'package:felloapp/ui/pages/tabs/games/tambola/dailyPicksDraw/dailyPicksDr
 import 'package:felloapp/ui/pages/tabs/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/summary_tickets_display.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/tambola-home.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/tambola_walkthrough.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/weekly_result.dart';
@@ -144,7 +144,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     if (shouldAddPage) {
       switch (pageConfig.uiPage) {
         case Pages.Splash:
-          _addPageData(SplashScreen(), SplashPageConfig);
+          _addPageData(LauncherView(), SplashPageConfig);
           break;
         case Pages.Login:
           _addPageData(LoginController(), LoginPageConfig);
@@ -161,9 +161,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.MfDetails:
           _addPageData(MFDetailsPage(), MfDetailsPageConfig);
           break;
-        case Pages.AugDetails:
-          _addPageData(AugmontDetailsPage(), AugDetailsPageConfig);
-          break;
+        // case Pages.AugDetails:
+        //   _addPageData(AugmontDetailsPage(), AugDetailsPageConfig);
+        //   break;
         case Pages.Transaction:
           _addPageData(Transactions(), MfDetailsPageConfig);
           break;
@@ -207,7 +207,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(YourFunds(), YourFundsConfig);
           break;
         case Pages.THome:
-          _addPageData(TambolaHome(), THomePageConfig);
+          _addPageData(TambolaHomeView(), THomePageConfig);
           break;
         case Pages.TPickDraw:
           _addPageData(PicksDraw(), TPickDrawPageConfig);

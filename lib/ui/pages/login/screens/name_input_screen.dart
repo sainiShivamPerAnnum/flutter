@@ -1,6 +1,6 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/screen_item.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/logger.dart';
@@ -116,36 +116,36 @@ class NameInputScreenState extends State<NameInputScreen> {
               setState(() {
                 baseProvider.isGoogleSignInProgress = false;
               });
-              baseProvider.showNegativeAlert(
-                  "Error getting profile picture", "Please try again", context);
+              BaseUtil.showNegativeAlert(
+                  "Error getting profile picture", "Please try again");
             }
           } catch (e) {
             baseProvider.isGoogleSignInProgress = false;
-            baseProvider.showNegativeAlert(
-                "Error uploading profile picture", "Please try again", context);
+            BaseUtil.showNegativeAlert(
+                "Error uploading profile picture", "Please try again");
           }
           AppState.backButtonDispatcher.didPopRoute();
         } else {
           setState(() {
             baseProvider.isGoogleSignInProgress = false;
           });
-          baseProvider.showNegativeAlert("Email already registered",
-              "Please try with another email", context);
+          BaseUtil.showNegativeAlert(
+              "Email already registered", "Please try with another email");
         }
       } else {
         setState(() {
           baseProvider.isGoogleSignInProgress = false;
         });
-        baseProvider.showNegativeAlert("No account selected",
-            "Please choose an account from the list", context);
+        BaseUtil.showNegativeAlert(
+            "No account selected", "Please choose an account from the list");
       }
     } catch (e) {
       print(e.toString());
       setState(() {
         baseProvider.isGoogleSignInProgress = false;
       });
-      baseProvider.showNegativeAlert(
-          "Unable to verify", "Please try a different method", context);
+      BaseUtil.showNegativeAlert(
+          "Unable to verify", "Please try a different method");
     }
   }
 

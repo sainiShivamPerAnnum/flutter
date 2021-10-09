@@ -1,4 +1,4 @@
-import 'package:felloapp/core/enums/cache_type.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,10 +38,15 @@ class CacheManager {
     }
   }
 
-  static Future deleteCache(
-      {@required String key, @required String value}) async {
+  static Future deleteCache({@required String key}) async {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     await sharedPreferences.remove(key);
+  }
+
+  static Future clearCacheMemory() async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    await sharedPreferences.clear();
   }
 }

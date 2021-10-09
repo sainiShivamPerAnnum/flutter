@@ -5,6 +5,8 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/tambola_board_model.dart';
 import 'package:felloapp/core/model/ticket_request_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/tambola_service.dart';
+import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
@@ -21,6 +23,7 @@ class TambolaGenerationService extends ChangeNotifier {
 
   BaseUtil baseProvider = locator<BaseUtil>();
   DBModel dbProvider = locator<DBModel>();
+  final _tambolaService = locator<TambolaService>();
   StreamSubscription<DocumentSnapshot> _currentSubscription;
   ValueChanged<int> _generationComplete;
   bool _generationStartedAndPartiallyCompleted = false;
@@ -36,7 +39,7 @@ class TambolaGenerationService extends ChangeNotifier {
       int currentTambolaBoardCount) async {
     return await _genLock.synchronized(() async {
       ///check if there is atomic field was updated before
-      if (baseProvider.atomicTicketGenerationLeftCount > 0) return false;
+      if (_tambolaService.atomicTicketGenerationLeftCount > 0) return false;
 
       BaseUtil.ticketGenerateCount = 0;
       if (currentTambolaBoardCount != null &&
@@ -51,7 +54,7 @@ class TambolaGenerationService extends ChangeNotifier {
         }
       }
       if (BaseUtil.ticketGenerateCount > 0 &&
-          baseProvider.atomicTicketGenerationLeftCount == 0) {
+          _tambolaService.atomicTicketGenerationLeftCount == 0) {
         ///check if there is any active ticket generation in progress presently
         bool _activeTicketGenInProgress = await dbProvider
             .isTicketGenerationInProcess(baseProvider.myUser.uid);
@@ -59,7 +62,7 @@ class TambolaGenerationService extends ChangeNotifier {
           log.debug('Ticket generation already in progress');
           return false;
         } else {
-          baseProvider.atomicTicketGenerationLeftCount =
+          _tambolaService.atomicTicketGenerationLeftCount =
               BaseUtil.ticketGenerateCount;
           _initiateTicketGeneration();
           return true;
@@ -101,17 +104,17 @@ class TambolaGenerationService extends ChangeNotifier {
 
   Future<bool> _initiateTicketDeletion() async {
     return await _delLock.synchronized(() async {
-      if (baseProvider.userWeeklyBoards == null ||
-          baseProvider.userWeeklyBoards.isEmpty ||
+      if (_tambolaService.userWeeklyBoards == null ||
+          _tambolaService.userWeeklyBoards.isEmpty ||
           BaseUtil.atomicTicketDeletionLeftCount == 0)
         return _onTicketDeletionRequestFailed();
-      baseProvider.userWeeklyBoards.sort((a, b) => a
+      _tambolaService.userWeeklyBoards.sort((a, b) => a
           .assigned_time.millisecondsSinceEpoch
           .compareTo(b.assigned_time.millisecondsSinceEpoch));
       print('post sort');
 
       List<TambolaBoard> _tList = [];
-      for (TambolaBoard board in baseProvider.userWeeklyBoards) {
+      for (TambolaBoard board in _tambolaService.userWeeklyBoards) {
         _tList.add(board);
       }
 
@@ -119,7 +122,7 @@ class TambolaGenerationService extends ChangeNotifier {
       int _t = BaseUtil.atomicTicketDeletionLeftCount;
       List<String> _deleteTicketRefList = [];
       while (_t > 0) {
-        _deleteTicketRefList.add(baseProvider.userWeeklyBoards[_k].doc_key);
+        _deleteTicketRefList.add(_tambolaService.userWeeklyBoards[_k].doc_key);
         _k++;
         _t--;
       }
@@ -127,7 +130,7 @@ class TambolaGenerationService extends ChangeNotifier {
         bool flag = await dbProvider.deleteSelectUserTickets(
             baseProvider.myUser.uid, _deleteTicketRefList);
         if (flag) {
-          baseProvider.userWeeklyBoards
+          _tambolaService.userWeeklyBoards
               .removeRange(0, BaseUtil.atomicTicketDeletionLeftCount);
           BaseUtil.atomicTicketDeletionLeftCount = 0;
           return true;
@@ -138,14 +141,14 @@ class TambolaGenerationService extends ChangeNotifier {
   }
 
   _initiateTicketGeneration() async {
-    int iterationsRequired = (baseProvider.atomicTicketGenerationLeftCount /
+    int iterationsRequired = (_tambolaService.atomicTicketGenerationLeftCount /
             Constants.MAX_TICKET_GEN_PER_REQUEST)
         .ceil();
 
-    int _countPacket = (baseProvider.atomicTicketGenerationLeftCount >
+    int _countPacket = (_tambolaService.atomicTicketGenerationLeftCount >
             Constants.MAX_TICKET_GEN_PER_REQUEST)
         ? Constants.MAX_TICKET_GEN_PER_REQUEST
-        : baseProvider.atomicTicketGenerationLeftCount;
+        : _tambolaService.atomicTicketGenerationLeftCount;
     _currentSubscription = await dbProvider.subscribeToTicketRequest(
         baseProvider.myUser, _countPacket);
     if (_currentSubscription == null)
@@ -163,12 +166,12 @@ class TambolaGenerationService extends ChangeNotifier {
       _onTicketGenerationRequestFailed();
     } else if (request.status == 'C') {
       _clearVariables();
-      baseProvider.atomicTicketGenerationLeftCount =
-          baseProvider.atomicTicketGenerationLeftCount - request.count;
-      if (baseProvider.atomicTicketGenerationLeftCount == 0) {
+      _tambolaService.atomicTicketGenerationLeftCount =
+          _tambolaService.atomicTicketGenerationLeftCount - request.count;
+      if (_tambolaService.atomicTicketGenerationLeftCount == 0) {
         _onTicketGenerationRequestComplete();
       } else {
-        if (baseProvider.atomicTicketGenerationLeftCount < 0) {
+        if (_tambolaService.atomicTicketGenerationLeftCount < 0) {
           //what the hell happened
           _onTicketGenerationRequestFailed();
         } else {
@@ -194,12 +197,12 @@ class TambolaGenerationService extends ChangeNotifier {
       Map<String, dynamic> errorDetails = {
         'error_msg': 'Ticket generation failed at one or many steps',
         'atmoic_ticket_gen_left_count':
-            baseProvider.atomicTicketGenerationLeftCount.toString()
+            _tambolaService.atomicTicketGenerationLeftCount.toString()
       };
       dbProvider.logFailure(baseProvider.myUser.uid,
           FailType.TambolaTicketGenerationFailed, errorDetails);
     }
-    baseProvider.atomicTicketGenerationLeftCount =
+    _tambolaService.atomicTicketGenerationLeftCount =
         0; // clear this so it can be attempted again
     if (_generationComplete != null) {
       if (_generationStartedAndPartiallyCompleted)

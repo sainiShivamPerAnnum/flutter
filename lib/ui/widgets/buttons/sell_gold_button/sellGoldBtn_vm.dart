@@ -1,6 +1,6 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/pagestate.dart';
-import 'package:felloapp/core/enums/view_state.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -35,7 +35,7 @@ class SellGoldBtnVM extends BaseModel {
   GlobalKey<AugmontWithdrawScreenState> _withdrawalDialogKey2 = GlobalKey();
 
   sellButtonAction(BuildContext sellContext) async {
-    if (await _baseUtil.showNoInternetAlert(sellContext)) return;
+    if (await BaseUtil.showNoInternetAlert()) return;
     sellContext = sellContext;
     if (!_baseUtil.isAugWithdrawRouteLogicInProgress) {
       Haptic.vibrate();
@@ -51,12 +51,12 @@ class SellGoldBtnVM extends BaseModel {
         ? (await _dbModel.getUserAugmontDetails(_baseUtil.myUser.uid))
         : _baseUtil.augmontDetail;
     if (!_baseUtil.myUser.isAugmontOnboarded) {
-      _baseUtil.showNegativeAlert('Not onboarded',
-          'You havent been onboarded to Augmont yet', sellContext);
+      BaseUtil.showNegativeAlert(
+          'Not onboarded', 'You havent been onboarded to Augmont yet');
     } else if (_userService.userFundWallet.augGoldQuantity == null ||
         _userService.userFundWallet.augGoldQuantity == 0) {
-      _baseUtil.showNegativeAlert('No Balance Available',
-          'Your Augmont wallet has no balance presently', sellContext);
+      BaseUtil.showNegativeAlert('No Balance Available',
+          'Your Augmont wallet has no balance presently');
     } else {
       _baseUtil.isAugWithdrawRouteLogicInProgress = true;
       setState(ViewState.Busy);
@@ -85,8 +85,8 @@ class SellGoldBtnVM extends BaseModel {
           _liveGoldQuantityBalance == 0) {
         _baseUtil.isAugWithdrawRouteLogicInProgress = false;
         setState(ViewState.Idle);
-        _baseUtil.showNegativeAlert('Couldn\'t complete your request',
-            'Please try again in some time', sellContext);
+        BaseUtil.showNegativeAlert(
+            'Couldn\'t complete your request', 'Please try again in some time');
       } else {
         _baseUtil.isAugWithdrawRouteLogicInProgress = false;
         setState(ViewState.Idle);

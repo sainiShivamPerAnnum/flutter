@@ -1,5 +1,5 @@
 //Project Imports
-import 'package:felloapp/core/enums/connectivity_status.dart';
+import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -9,7 +9,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/util/locator.dart';
 
 //Flutter Imports
@@ -228,10 +228,10 @@ class _SupportPageState extends State<SupportPage> {
                       try {
                         _launchEmail();
                       } catch (e) {
-                        baseProvider.showNegativeAlert(
-                            'Error',
-                            'Something went wrong, could not launch email right now. Please try again later',
-                            context);
+                        BaseUtil.showNegativeAlert(
+                          'Error',
+                          'Something went wrong, could not launch email right now. Please try again later',
+                        );
                       }
                     },
                   ),
@@ -250,7 +250,7 @@ class _SupportPageState extends State<SupportPage> {
                       if (connectivityStatus != ConnectivityStatus.Offline)
                         _showRequestCallSheet();
                       else
-                        baseProvider.showNoInternetAlert(context);
+                        BaseUtil.showNoInternetAlert();
                     },
                   ),
                   Padding(
@@ -533,10 +533,10 @@ class _SupportPageState extends State<SupportPage> {
                                       .trim()
                                       .length !=
                                   10) {
-                                baseProvider.showNegativeAlert(
-                                    'Incorrect',
-                                    'Please enter a valid phone number',
-                                    context);
+                                BaseUtil.showNegativeAlert(
+                                  'Incorrect',
+                                  'Please enter a valid phone number',
+                                );
                                 return;
                               }
                               bool res = await dbProvider.addCallbackRequest(
@@ -545,16 +545,16 @@ class _SupportPageState extends State<SupportPage> {
                                   _requestCallPhoneController.text.trim(),
                                   callTimes[_selectedTimeSlotIndex]);
                               if (res) {
-                                baseProvider.showPositiveAlert(
-                                    'Callback Placed',
-                                    'Thank you for letting us know, we will call you soon!',
-                                    context);
+                                BaseUtil.showPositiveAlert(
+                                  'Callback Placed',
+                                  'Thank you for letting us know, we will call you soon!',
+                                );
                                 Navigator.of(context).pop();
                               } else {
-                                baseProvider.showPositiveAlert(
-                                    'Error',
-                                    'Something went wrong while placing a request, please try again later.',
-                                    context);
+                                BaseUtil.showNegativeAlert(
+                                  'Error',
+                                  'Something went wrong while placing a request, please try again later.',
+                                );
                                 if (baseProvider.myUser.uid != null) {
                                   Map<String, dynamic> errorDetails = {
                                     'error_msg':
@@ -570,10 +570,10 @@ class _SupportPageState extends State<SupportPage> {
                                 Navigator.of(context).pop();
                               }
                             } catch (e) {
-                              baseProvider.showPositiveAlert(
-                                  'Error',
-                                  'Something went wrong while placing a request, please try again later.',
-                                  context);
+                              BaseUtil.showNegativeAlert(
+                                'Error',
+                                'Something went wrong while placing a request, please try again later.',
+                              );
                               Navigator.of(context).pop();
                             }
                           },

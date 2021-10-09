@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/view_state.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/tambola_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
@@ -10,6 +11,7 @@ import 'package:rive/rive.dart';
 class DailyPicksDrawViewModel extends BaseModel {
   BaseUtil _baseUtil = locator<BaseUtil>();
   DBModel _dbModel = locator<DBModel>();
+  TambolaService _tambolaService = locator<TambolaService>();
   final Log log = new Log("DailyPicksDraw-ViewModel");
   bool isInitCompleted = false;
   RiveAnimationController boxController = SimpleAnimation('idle');
@@ -18,12 +20,11 @@ class DailyPicksDrawViewModel extends BaseModel {
   double opacity = 0;
   bool showTxt = false;
   double ringWidth = 0;
-  List<int> todaysPicks;
+  List<int> get todaysPicks => _tambolaService.todaysPicks;
 
   init() async {
     setState(ViewState.Busy);
-    await _baseUtil.fetchWeeklyPicks();
-    todaysPicks = _baseUtil.todaysPicks;
+    await _tambolaService.fetchWeeklyPicks();
     setState(ViewState.Idle);
     startAnimation();
   }

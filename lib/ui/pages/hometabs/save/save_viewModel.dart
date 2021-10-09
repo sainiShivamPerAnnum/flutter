@@ -8,10 +8,10 @@ class SaveViewModel extends BaseModel {
   UserService _userService = locator<UserService>();
 
   getGoldBalance() {
-    return _baseUtil.userFundWallet.augGoldQuantity ?? 0.0;
+    return _baseUtil.userFundWallet?.augGoldQuantity ?? 0.0;
   }
 
   getUnclaimedPrizeBalance() {
-    return _baseUtil.userFundWallet.prizeLifetimeWin ?? 0.0;
+    return _baseUtil.userFundWallet?.prizeLifetimeWin ?? 0.0;
   }
 }

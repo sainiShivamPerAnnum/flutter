@@ -1,5 +1,5 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/screen_item.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -16,7 +16,7 @@ class WinViewModel extends BaseModel {
   LocalDBModel _localDBModel = locator<LocalDBModel>();
 
   getUnclaimedPrizeBalance() {
-    return _baseUtil.userFundWallet.unclaimedBalance ?? 0.0;
+    return _baseUtil.userFundWallet?.unclaimedBalance ?? 0.0;
   }
 
   getWinningsButtonText() {

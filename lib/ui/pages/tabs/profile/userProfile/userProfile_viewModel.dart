@@ -1,8 +1,8 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
-import 'package:felloapp/core/enums/cache_type.dart';
-import 'package:felloapp/core/enums/screen_item.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/user_service.dart';
@@ -63,6 +63,10 @@ class UserProfileViewModel extends BaseModel {
     }
   }
 
+  signout() async {
+    await _userService.signout();
+  }
+
   Map<String, String> getBankDetail() {
     Map<String, String> bankCreds = {};
     if (_baseUtil.augmontDetail != null &&
@@ -106,7 +110,7 @@ class UserProfileViewModel extends BaseModel {
         children: [
           ElevatedButton(
             onPressed: () async {
-              if (await _baseUtil.showNoInternetAlert(context)) return;
+              if (await BaseUtil.showNoInternetAlert()) return;
               AppState.screenStack.add(ScreenItem.dialog);
               showModalBottomSheet(
                   isDismissible: false,
@@ -167,7 +171,7 @@ class UserProfileViewModel extends BaseModel {
 
   handleDPOperation() async {
     BuildContext context;
-    if (await _baseUtil.showNoInternetAlert(context)) return;
+    if (await BaseUtil.showNoInternetAlert()) return;
     var _status = await Permission.photos.status;
     if (_status.isRestricted || _status.isLimited || _status.isDenied) {
       _baseUtil.openDialog(
@@ -191,8 +195,8 @@ class UserProfileViewModel extends BaseModel {
       await chooseprofilePicture();
       // needsRefresh(true);
     } else {
-      _baseUtil.showNegativeAlert('Permission Unavailable',
-          'Please enable permission from settings to continue', context);
+      BaseUtil.showNegativeAlert('Permission Unavailable',
+          'Please enable permission from settings to continue');
     }
   }
 
@@ -278,11 +282,13 @@ class UserProfileViewModel extends BaseModel {
     BuildContext context;
     if (flag) {
       BaseAnalytics.logProfilePictureAdded();
-      _baseUtil.showPositiveAlert(
-          'Complete', 'Your profile Picture has been updated', context);
+      BaseUtil.showPositiveAlert(
+          'Complete', 'Your profile Picture has been updated');
     } else {
-      _baseUtil.showNegativeAlert('Failed',
-          'Your Profile Picture could not be updated at the moment', context);
+      BaseUtil.showNegativeAlert(
+        'Failed',
+        'Your Profile Picture could not be updated at the moment',
+      );
     }
     //upload(false);
     AppState.backButtonDispatcher.didPopRoute();

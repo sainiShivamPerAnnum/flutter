@@ -285,17 +285,15 @@ class TransactionDetailsDialogState extends State<TransactionDetailsDialog> {
                             if (generatedPdfFilePath != null) {
                               OpenFile.open(generatedPdfFilePath);
                             } else {
-                              baseProvider.showNegativeAlert(
+                              BaseUtil.showNegativeAlert(
                                   'Invoice could\'nt be loaded',
-                                  'Please try again in some time',
-                                  context);
+                                  'Please try again in some time');
                             }
                           });
                         } else {
-                          baseProvider.showNegativeAlert(
+                          BaseUtil.showNegativeAlert(
                               'Invoice could\'nt be loaded',
-                              'Please try again in some time',
-                              context);
+                              'Please try again in some time');
                         }
                       },
                     ),

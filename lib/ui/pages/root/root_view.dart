@@ -96,7 +96,7 @@ class Root extends StatelessWidget {
               children: [
                 PropertyChangeConsumer<UserService, UserServiceProperties>(
                   builder: (context, model, property) => Text(
-                      model.userTicketWallet.getActiveTickets().toString(),
+                      model.userTicketWallet.getActiveTickets().toString() ?? 0,
                       style: TextStyles.body3.bold),
                 ),
                 SizedBox(width: 8),

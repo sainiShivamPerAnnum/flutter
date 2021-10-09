@@ -1,4 +1,4 @@
-import 'package:felloapp/core/enums/cache_type.dart';
+import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
@@ -65,16 +65,32 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     return false;
   }
 
-  UserService() {
-    _firebaseUser = FirebaseAuth.instance.currentUser;
-  }
+  // UserService() {}
 
   Future<void> init() async {
+    _firebaseUser = FirebaseAuth.instance.currentUser;
     if (_firebaseUser != null) {
       await setBaseUser();
       setProfilePicture();
       getUserTicketWalletData();
       getUserFundWalletData();
+    }
+  }
+
+  Future<bool> signout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      await CacheManager.clearCacheMemory();
+      _logger.d("Firebase user signed out");
+      _firebaseUser = null;
+      _baseUser = null;
+      _myUserDpUrl = null;
+      _myUserName = null;
+      _idToken = null;
+      return true;
+    } catch (e) {
+      _logger.e("Failed to logout user: ${e.toString()}");
+      return false;
     }
   }
 
@@ -90,12 +106,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       try {
         if (_baseUser != null) {
           setMyUserDpUrl(await _dbModel.getUserDP(baseUser.uid));
-          _logger.d("Profile picture updated");
+          _logger.d("No cached profile picture found. updated from server");
         }
         if (_myUserDpUrl != null) {
           await CacheManager.writeCache(
               key: 'dpUrl', value: _myUserDpUrl, type: CacheType.string);
-          _logger.d("No profile picture found in cache, fetched from server");
+          _logger.d("Profile picture fetched from server and cached");
         }
       } catch (e) {
         _logger.e(e.toString());
@@ -106,7 +122,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   Future<void> getUserTicketWalletData() async {
-    await Future.delayed(Duration(seconds: 10));
     userTicketWallet = await _dbModel.getUserTicketWallet(firebaseUser.uid);
     if (_userTicketWallet == null) {
       await _initiateNewTicketWallet();

@@ -1,6 +1,6 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -213,14 +213,14 @@ class GuideDialog extends StatelessWidget {
                             //                   .then((flag) {
                             //                 if (flag) {
                             //                   Navigator.of(context).pop();
-                            //                   baseProvider.showPositiveAlert(
+                            //                   BaseUtil.showPositiveAlert(
                             //                       'Callback placed!',
                             //                       'We\'ll contact you soon on your registered mobile',
                             //                       context);
                             //                 }
                             //               });
                             //             } else {
-                            //               baseProvider.showNegativeAlert(
+                            //               BaseUtil.showNegativeAlert(
                             //                   'Unavailable',
                             //                   'Callbacks are reserved for active users',
                             //                   context);

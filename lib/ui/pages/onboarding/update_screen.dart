@@ -135,8 +135,10 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
       updateInfo = await InAppUpdate.checkForUpdate();
       if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
         InAppUpdate.performImmediateUpdate().catchError((err) {
-          baseProvider.showNegativeAlert('Update Error',
-              'Oops! Something went wrong while updating your app', context);
+          BaseUtil.showNegativeAlert(
+            'Update Error',
+            'Oops! Something went wrong while updating your app',
+          );
           log.error(err);
           dbProvider.logFailure(
               baseProvider.myUser.uid, FailType.AndroidInAppUpdateFailed, {
@@ -148,8 +150,8 @@ class _UpdateRequiredScreenState extends State<UpdateRequiredScreen> {
         });
       }
     } catch (e) {
-      baseProvider.showNegativeAlert('Update Error',
-          'Oops! Something went wrong while updating your app', context);
+      BaseUtil.showNegativeAlert(
+          'Update Error', 'Oops! Something went wrong while updating your app');
       log.error(e);
       dbProvider.logFailure(
           baseProvider.myUser.uid, FailType.AndroidInAppUpdateFailed, {

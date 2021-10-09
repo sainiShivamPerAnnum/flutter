@@ -1,6 +1,6 @@
 //Project Imports
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/screen_item.dart';
+import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/tambola_winners_details.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
@@ -123,8 +123,8 @@ class _TicketState extends State<FCard> {
                         })
                       : AppState.backButtonDispatcher.didPopRoute();
                 } else {
-                  baseProvider.showNegativeAlert(
-                      "Please wait", "Your prize is being processed", context);
+                  BaseUtil.showNegativeAlert(
+                      "Please wait", "Your prize is being processed");
                 }
               }),
         ),
@@ -327,7 +327,7 @@ class _TicketState extends State<FCard> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      if (baseProvider.showNoInternetAlert(context)) return;
+                      if (BaseUtil.showNoInternetAlert()) return;
 
                       setState(() {
                         _isPrizeProcessing = true;
@@ -348,8 +348,8 @@ class _TicketState extends State<FCard> {
                             _isOpen = false;
                           });
                         } else {
-                          baseProvider.showNegativeAlert('Failed to send claim',
-                              'Please try again in some time', context);
+                          BaseUtil.showNegativeAlert('Failed to send claim',
+                              'Please try again in some time');
                           setState(() {
                             _isPrizeProcessing = false;
                           });
@@ -376,7 +376,7 @@ class _TicketState extends State<FCard> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      if (baseProvider.showNoInternetAlert(context)) return;
+                      if (BaseUtil.showNoInternetAlert()) return;
                       setState(() {
                         _isPrizeProcessing = true;
                       });
@@ -398,8 +398,8 @@ class _TicketState extends State<FCard> {
                             _isOpen = false;
                           });
                         } else {
-                          baseProvider.showNegativeAlert('Failed to send claim',
-                              'Please try again in some time', context);
+                          BaseUtil.showNegativeAlert('Failed to send claim',
+                              'Please try again in some time');
                           setState(() {
                             _isPrizeProcessing = false;
                           });
@@ -742,8 +742,8 @@ class _CloseCardState extends State<CloseCard> {
         }
         AppState.backButtonDispatcher.didPopRoute();
         AppState.backButtonDispatcher.didPopRoute();
-        baseProvider.showPositiveAlert("Saved Successfulyy",
-            "Share card saved successfully to the gallery", context);
+        BaseUtil.showPositiveAlert("Saved Successfulyy",
+            "Share card saved successfully to the gallery");
       }
     } catch (e) {
       setState(() {
@@ -751,8 +751,8 @@ class _CloseCardState extends State<CloseCard> {
       });
       AppState.backButtonDispatcher.didPopRoute();
       print(e.toString());
-      baseProvider.showNegativeAlert(
-          "Task Failed", "Unable to save the picture at the moment", context);
+      BaseUtil.showNegativeAlert(
+          "Task Failed", "Unable to save the picture at the moment");
     }
   }
 

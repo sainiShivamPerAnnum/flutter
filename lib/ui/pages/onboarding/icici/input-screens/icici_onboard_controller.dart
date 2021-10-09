@@ -1237,17 +1237,17 @@ class _IciciOnboardControllerState extends State<IciciOnboardController> {
                                             //     .then((flag) {
                                             //   if (flag) {
                                             //     Navigator.of(context).pop();
-                                            //     baseProvider.showPositiveAlert(
+                                            //     BaseUtil.showPositiveAlert(
                                             //         'Callback placed!',
                                             //         'We\'ll contact you soon on your registered mobile',
                                             //         context);
                                             //   }
                                             // });
                                           } else {
-                                            baseProvider.showNegativeAlert(
-                                                'Unavailable',
-                                                'Callbacks are reserved for active users',
-                                                context);
+                                            BaseUtil.showNegativeAlert(
+                                              'Unavailable',
+                                              'Callbacks are reserved for active users',
+                                            );
                                           }
                                         },
                                       ));

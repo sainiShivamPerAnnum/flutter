@@ -46,8 +46,8 @@ class _ChatSupportState extends State<ChatSupport> {
       Navigator.pop(context);
     } else if (isFreshchatLoaded == "error") {
       Navigator.of(context).pop();
-      baseProvider.showNegativeAlert(
-          'Error', 'Something went wrong, please try again!', context,
+      BaseUtil.showNegativeAlert(
+          'Error', 'Something went wrong, please try again!',
           seconds: 3);
     }
     return Container(
