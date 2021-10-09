@@ -3,8 +3,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/fcm_handler.dart';
-import 'package:felloapp/core/fcm_listener.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
@@ -12,6 +10,8 @@ import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
+import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
+import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';

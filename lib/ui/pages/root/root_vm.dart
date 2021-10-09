@@ -1,10 +1,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/enums/screen_item.dart';
-import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
+import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -18,18 +18,18 @@ import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/ui_constants.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class RootViewModel extends BaseModel {
-  Log log = new Log("Root_ViewModel");
-  BaseUtil _baseUtil = locator<BaseUtil>();
-  HttpModel _httpModel = locator<HttpModel>();
-  FcmHandler _fcmListener = locator<FcmHandler>();
-  LocalDBModel _localDBModel = locator<LocalDBModel>();
-  UserService _userService = locator<UserService>();
+  final BaseUtil _baseUtil = locator<BaseUtil>();
+  final HttpModel _httpModel = locator<HttpModel>();
+  final FcmHandler _fcmListener = locator<FcmHandler>();
+  final LocalDBModel _localDBModel = locator<LocalDBModel>();
+  final UserService _userService = locator<UserService>();
+  final Logger _logger = locator<Logger>();
 
   BuildContext rootContext;
   bool _isInitialized = false;
@@ -148,11 +148,11 @@ class RootViewModel extends BaseModel {
       final Uri deepLink = dynamicLink?.link;
       if (deepLink == null) return null;
 
-      log.debug('Received deep link. Process the referral');
+      _logger.d('Received deep link. Process the referral');
       return _processDynamicLink(_baseUtil.myUser.uid, deepLink, context);
     }, onError: (OnLinkErrorException e) async {
-      log.error('Error in fetching deeplink');
-      log.error(e);
+      _logger.e('Error in fetching deeplink');
+      _logger.e(e);
       return null;
     });
 
@@ -160,7 +160,7 @@ class RootViewModel extends BaseModel {
         await FirebaseDynamicLinks.instance.getInitialLink();
     final Uri deepLink = data?.link;
     if (deepLink != null) {
-      log.debug('Received deep link. Process the referral');
+      _logger.d('Received deep link. Process the referral');
       return _processDynamicLink(_baseUtil.myUser.uid, deepLink, context);
     }
   }
@@ -175,9 +175,9 @@ class RootViewModel extends BaseModel {
       int addUserTicketCount = await _submitReferral(
           _baseUtil.myUser.uid, _userService.myUserName, _uri);
       if (addUserTicketCount == null || addUserTicketCount < 0) {
-        log.debug('Processing complete. No extra tickets to be added');
+        _logger.d('Processing complete. No extra tickets to be added');
       } else {
-        log.debug('$addUserTicketCount tickets need to be added for the user');
+        _logger.d('$addUserTicketCount tickets need to be added for the user');
       }
     }
   }
@@ -188,12 +188,12 @@ class RootViewModel extends BaseModel {
       String prefix = 'https://fello.in/';
       if (deepLink.startsWith(prefix)) {
         String referee = deepLink.replaceAll(prefix, '');
-        log.debug(referee);
+        _logger.d(referee);
         if (prefix.length > 0 && prefix != userId) {
           return _httpModel
               .postUserReferral(userId, referee, userName)
               .then((userTicketUpdateCount) {
-            log.debug('User deserves $userTicketUpdateCount more tickets');
+            _logger.d('User deserves $userTicketUpdateCount more tickets');
             return userTicketUpdateCount;
           });
         } else
@@ -201,7 +201,7 @@ class RootViewModel extends BaseModel {
       } else
         return -1;
     } catch (e) {
-      log.error(e);
+      _logger.e(e);
       return -1;
     }
   }
@@ -216,7 +216,7 @@ class RootViewModel extends BaseModel {
         return _httpModel
             .postGoldenTicketRedemption(userId, docId)
             .then((redemptionMap) {
-          // log.debug('Flag is ${tckCount.toString()}');
+          //_logger.d('Flag is ${tckCount.toString()}');
           if (redemptionMap != null &&
               redemptionMap['flag'] &&
               redemptionMap['count'] > 0) {
@@ -242,7 +242,7 @@ class RootViewModel extends BaseModel {
       }
       return -1;
     } catch (e) {
-      log.error('$e');
+      _logger.e('$e');
       return -1;
     }
   }

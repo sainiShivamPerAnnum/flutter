@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/fcm_handler.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
+import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/fcm_topics.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/logger.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,10 +14,11 @@ import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:logger/logger.dart';
 
 class FcmListener extends ChangeNotifier {
-  BaseUtil _baseUtil = locator<BaseUtil>();
-  DBModel _dbModel = locator<DBModel>();
-  Logger logger = locator<Logger>();
-  FcmHandler _handler = locator<FcmHandler>();
+  final BaseUtil _baseUtil = locator<BaseUtil>();
+  final DBModel _dbModel = locator<DBModel>();
+  final Logger logger = locator<Logger>();
+  final FcmHandler _handler = locator<FcmHandler>();
+
   FirebaseMessaging _fcm;
   bool isTambolaNotificationLoading = false;
 
