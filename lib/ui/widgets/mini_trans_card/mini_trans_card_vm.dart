@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/enums/pagestate.dart';
 import 'package:felloapp/core/enums/view_state.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
@@ -26,6 +27,7 @@ class MiniTransactionCardViewModel extends BaseModel {
   AppState appState;
 
   List<UserTransaction> get txnList => _txnService.txnList;
+
   getMiniTransactions() async {
     bulog.debug("Getting mini transactions");
     setState(ViewState.Busy);
@@ -91,5 +93,30 @@ class MiniTransactionCardViewModel extends BaseModel {
   viewAllTransaction() async {
     AppState.delegate.appState.currentAction =
         PageAction(state: PageState.addPage, page: TransactionPageConfig);
+  }
+
+  bool isOfferStillValid(Timestamp time) {
+    String _timeoutMins = BaseRemoteConfig.remoteConfig
+        .getString(BaseRemoteConfig.OCT_FEST_OFFER_TIMEOUT);
+    if (_timeoutMins == null || _timeoutMins.isEmpty) _timeoutMins = '10';
+    int _timeout = int.tryParse(_timeoutMins);
+
+    DateTime tTime =
+        DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
+    Duration difference = DateTime.now().difference(tTime);
+    if (difference.inSeconds <= _timeout * 60) {
+      log("offer Still valid");
+      return true;
+    }
+    log("offer no more valid");
+    return false;
+  }
+
+  bool getBeerTicketStatus(UserTransaction transaction) {
+    if (baseProvider.firstAugmontTransaction != null &&
+        baseProvider.firstAugmontTransaction == transaction &&
+        transaction.amount >= 150.0 &&
+        isOfferStillValid(transaction.timestamp)) return true;
+    return false;
   }
 }

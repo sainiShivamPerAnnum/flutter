@@ -37,3 +37,11 @@ extension ParseFreshchatToString on FreshchatStage {
     return this.toString().split('.').last.toLowerCase();
   }
 }
+
+enum SignzyPanStage { DEV, PROD }
+
+extension ParsePanSignzyToString on SignzyPanStage {
+  String value() {
+    return this.toString().split('.').last.toLowerCase();
+  }
+}

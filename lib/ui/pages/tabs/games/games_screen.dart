@@ -1,4 +1,11 @@
 //Project Imports
+//Dart and Flutter Imports
+import 'dart:async';
+import 'dart:io';
+import 'dart:ui';
+
+//Pub Imports
+import 'package:confetti/confetti.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/base_analytics.dart';
 import 'package:felloapp/core/enums/connectivity_status.dart';
@@ -15,16 +22,8 @@ import 'package:felloapp/ui/elements/week-winners_board.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/size_config.dart';
 import 'package:felloapp/util/ui_constants.dart';
-
-//Dart and Flutter Imports
-import 'dart:async';
-import 'dart:io';
-import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-//Pub Imports
-import 'package:confetti/confetti.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -170,7 +169,9 @@ class _GamePageState extends State<GamePage> {
                           ),
 
                           //TODO HACKY CODE - REMOVING IDEA SECTION TO MANAGE TABLET SIZE DIMENSIONS
-                          if (SizeConfig.screenWidth < 800) const IdeaSection(),
+                          if (Platform.isAndroid ||
+                              SizeConfig.screenWidth < 700)
+                            const IdeaSection(),
                           /////////////////////////////////////////////////////////////
                         ],
                       ),

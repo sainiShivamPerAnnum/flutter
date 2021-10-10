@@ -20,7 +20,6 @@ class CricketView extends StatelessWidget {
       body: SafeArea(
         child: WebView(
           initialUrl: "https://www.google.com",
-          //"https://play.famobi.com/om-nom-run",
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController controller) {
             _controller.complete(controller);
