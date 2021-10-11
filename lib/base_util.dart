@@ -97,6 +97,7 @@ class BaseUtil extends ChangeNotifier {
   Map<String, dynamic> freshchatKeys;
   double activeGoldWithdrawalQuantity;
   int withdrawFlowStackCount;
+  UserTransaction firstAugmontTransaction;
 
   /// Objects for Transaction list Pagination
   DocumentSnapshot lastTransactionListDocument;
@@ -180,6 +181,7 @@ class BaseUtil extends ChangeNotifier {
     _atomicTicketGenerationLeftCount = 0;
     atomicTicketDeletionLeftCount = 0;
     show_security_prompt = false;
+    firstAugmontTransaction = null;
   }
 
   Future init() async {

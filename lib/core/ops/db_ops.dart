@@ -20,6 +20,7 @@ import 'package:felloapp/core/model/user_icici_detail_model.dart';
 import 'package:felloapp/core/model/user_ticket_wallet_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/model/alert_model.dart';
+import 'package:felloapp/core/model/signzy_pan/signzy_login.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/credentials_stage.dart';
@@ -476,6 +477,29 @@ class DBModel extends ChangeNotifier {
       }
     }
 
+    return null;
+  }
+
+  Future<SignzyPanLogin> getActiveSignzyPanApiKey() async {
+    int keyIndex = 1;
+    QuerySnapshot querySnapshot = await _api.getCredentialsByTypeAndStage(
+        'signzy-pan', FlavorConfig.instance.values.signzyPanStage.value(), keyIndex);
+    if (querySnapshot != null && querySnapshot.docs.length == 1) {
+      DocumentSnapshot snapshot = querySnapshot.docs[0];
+      Map<String, dynamic> _doc = snapshot.data();
+      if (snapshot.exists && _doc != null && _doc['apiKey'] != null) {
+        log.debug('api token:' +
+            _doc['apiKey'] +
+            '\n patronId:' +
+            _doc['channel_id']);
+        SignzyPanLogin _signzyPanLogin = SignzyPanLogin();
+        _signzyPanLogin.accessToken = _doc['apiKey'];
+        _signzyPanLogin.ttl = _doc['ttl'];
+        _signzyPanLogin.userId = _doc['channel_id'];
+        _signzyPanLogin.baseUrl = _doc['base_url'];
+        return _signzyPanLogin;
+      }
+    }
     return null;
   }
 
