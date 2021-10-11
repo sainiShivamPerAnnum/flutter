@@ -28,6 +28,7 @@ import 'package:felloapp/ui/pages/tabs/games/tambola/dailyPicksDraw/dailyPicksDr
 import 'package:felloapp/ui/pages/tabs/games/tambola/show_all_tickets.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/summary_tickets_display.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/tambola-home.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/tambola_game/tambola_game_view.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/tambola_home/tambola_home_view.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/tambola_walkthrough.dart';
 import 'package:felloapp/util/locator.dart';
@@ -209,6 +210,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.THome:
           _addPageData(TambolaHomeView(), THomePageConfig);
           break;
+        case Pages.TGame:
+          _addPageData(TambolaGameView(), THomePageConfig);
+          break;
         case Pages.TPickDraw:
           _addPageData(PicksDraw(), TPickDrawPageConfig);
           break;
@@ -359,6 +363,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.THome:
         THomePageConfig.currentPageAction = action;
+        break;
+      case Pages.TGame:
+        TGamePageConfig.currentPageAction = action;
         break;
       case Pages.TPickDraw:
         TPickDrawPageConfig.currentPageAction = action;

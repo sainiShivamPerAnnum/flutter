@@ -34,7 +34,7 @@ class SellGoldBtnVM extends BaseModel {
   double _withdrawableGoldQnty;
   GlobalKey<AugmontWithdrawScreenState> _withdrawalDialogKey2 = GlobalKey();
 
-  sellButtonAction(BuildContext sellContext) async {
+  sellButtonAction() async {
     if (await BaseUtil.showNoInternetAlert()) return;
     sellContext = sellContext;
     if (!_baseUtil.isAugWithdrawRouteLogicInProgress) {

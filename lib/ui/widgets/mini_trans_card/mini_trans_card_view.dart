@@ -8,6 +8,7 @@ import 'package:felloapp/ui/widgets/buttons/fello_button/fello_button.dart';
 import 'package:felloapp/ui/widgets/mini_trans_card/mini_trans_card_vm.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,21 +23,19 @@ class MiniTransactionCard extends StatelessWidget {
       builder: (ctx, model, child) {
         return Consumer<TransactionService>(
           builder: (ctx, m, child) {
-            return Card(
-              child: Stack(
-                children: [
-                  Container(
-                    height: 200,
-                    child: model.state == ViewState.Busy || m.txnList == null
-                        ? Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : (m.txnList.length == 0
-                            ? Text("No Transactions")
-                            : ListView.builder(
-                                itemCount:
-                                    m.txnList.length < 5 ? m.txnList.length : 5,
-                                itemBuilder: (ctx, i) {
+            return Column(
+              children: [
+                Container(
+                  child: model.state == ViewState.Busy || m.txnList == null
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : (m.txnList.length == 0
+                          ? Text("No Transactions")
+                          : Column(
+                              children: List.generate(
+                                m.txnList.length < 5 ? m.txnList.length : 5,
+                                (i) {
                                   return ListTile(
                                     onTap: () {
                                       Haptic.vibrate();
@@ -104,27 +103,20 @@ class MiniTransactionCard extends StatelessWidget {
                                     ),
                                   );
                                 },
-                              )),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    width: SizeConfig.screenWidth,
-                    child: Container(
-                      height: SizeConfig.mediumTextSize * 4,
-                      color: UiConstants.primaryColor,
-                      child: FelloButton(
-                        onPressed: () => model.viewAllTransaction(),
-                        defaultButtonText: "View All",
-                        defaultButtonColor: Colors.white,
-                        textStyle: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: SizeConfig.mediumTextSize),
-                      ),
-                    ),
-                  )
-                ],
-              ),
+                              ),
+                            )),
+                ),
+                FelloButton(
+                  onPressed: () => model.viewAllTransaction(),
+                  defaultButtonText: "View All",
+                  defaultButtonColor: Colors.white,
+                  textStyle:
+                      TextStyles.body1.bold.colour(UiConstants.primaryColor),
+                ),
+                SizedBox(
+                  height: 8,
+                )
+              ],
             );
           },
         );

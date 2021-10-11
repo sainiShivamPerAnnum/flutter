@@ -46,9 +46,8 @@ class BuyGoldBtnVM extends BaseModel {
       return 'SAVE';
   }
 
-  buyButtonAction(BuildContext context) async {
+  buyButtonAction() async {
     if (await BaseUtil.showNoInternetAlert()) return;
-    augContext = context;
     Haptic.vibrate();
     _baseUtil.isAugDepositRouteLogicInProgress = true;
     _onDepositClicked().then((value) {});

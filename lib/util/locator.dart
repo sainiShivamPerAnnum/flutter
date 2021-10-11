@@ -22,6 +22,7 @@ import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/dailyPicksDraw/dailyPicksDraw_viewModel.dart';
+import 'package:felloapp/ui/pages/tabs/games/tambola/tambola_game/tambola_game_vm.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/ui/pages/tabs/games/tambola/tambola_widgets/picks_card/picks_card_vm.dart';
 import 'package:felloapp/ui/pages/tabs/profile/transactions/tran_viewModel.dart';
@@ -71,6 +72,7 @@ void setupLocator() {
   locator.registerFactory(() => UserProfileViewModel());
 
   locator.registerFactory(() => TambolaHomeViewModel());
+  locator.registerFactory(() => TambolaGameViewModel());
   locator.registerFactory(() => PicksCardViewModel());
   //WIDGETS
   // locator.registerFactory(() => FBtnVM());

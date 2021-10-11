@@ -107,7 +107,7 @@ class _NavbarButtonState extends State<NavbarButton>
           rotationY: 180 * _iconAnimController.value,
           child: SvgPicture.asset(
             widget.data.iconImage,
-            height: 32,
+            height: 28,
             color: widget.isSelected ? Colors.white : Color(0xffC2EDE4),
           ),
         ),
@@ -139,7 +139,7 @@ class _NavbarButtonState extends State<NavbarButton>
       child: Container(
         color: UiConstants.primaryColor,
         margin: EdgeInsets.symmetric(
-          vertical: kBottomNavigationBarHeight * 0.08,
+          vertical: kBottomNavigationBarHeight * 0.16,
         ),
         //Wrap in an animated container, so changes to width & color automatically animate into place
         child: AnimatedContainer(

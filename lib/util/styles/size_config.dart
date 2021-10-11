@@ -43,7 +43,7 @@ class SizeConfig {
     cardTitleTextSize = blockSizeHorizontal * 7;
     cardBorderRadius = 12;
     globalMargin = blockSizeHorizontal * 3;
-    scaffoldMargin = blockSizeHorizontal * 4;
+    scaffoldMargin = blockSizeHorizontal * 5;
     isGamefirstTime = true;
     homeViewBorder = BorderRadius.only(
       bottomLeft: Radius.circular(SizeConfig.blockSizeHorizontal * 10),

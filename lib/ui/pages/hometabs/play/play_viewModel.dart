@@ -5,9 +5,12 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/elements/parallax-card/data_model.dart';
 import 'package:felloapp/ui/modals_sheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -16,16 +19,12 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PlayViewModel extends BaseModel {
-  List<String> _gamesList = ["Tambola", "Google"];
-  ui.Image _gameImage;
-  ui.Image get gameImage => _gameImage;
+  List<GameModel> _gamesList = [
+    GameModel(gameName: "Tambola", pageConfig: THomePageConfig, tag: 'tambola'),
+    GameModel(gameName: "Cricket", pageConfig: THomePageConfig, tag: 'cricket')
+  ];
 
-  set gameImage(ui.Image image) {
-    _gameImage = image;
-    notifyListeners();
-  }
-
-  List get gameList => _gamesList;
+  List<GameModel> get gameList => _gamesList;
 
   showTicketModal(BuildContext context) {
     AppState.screenStack.add(ScreenItem.dialog);
@@ -34,23 +33,5 @@ class PlayViewModel extends BaseModel {
         builder: (ctx) {
           return WantMoreTicketsModalSheet();
         });
-  }
-
-  loadImage() {
-    setState(ViewState.Busy);
-    getImageFileFromAssets("PAN_card.png");
-    setState(ViewState.Idle);
-  }
-
-  Future<ui.Image> getImageFileFromAssets(String path) async {
-    final byteData = await rootBundle.load('images/$path');
-
-    final file = File('${(await getTemporaryDirectory()).path}/$path');
-    await file.writeAsBytes(byteData.buffer
-        .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-    Uint8List list = file.readAsBytesSync();
-    ui.Image myBackground = await decodeImageFromList(list);
-    gameImage = myBackground;
-    //return myBackground;
   }
 }

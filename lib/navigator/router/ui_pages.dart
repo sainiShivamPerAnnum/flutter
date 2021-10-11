@@ -26,6 +26,7 @@ const String WalkThroughCompletedPath = '/walkThroughCompleted';
 const String YourFundsPath = '/yourFunds';
 const String NotificationsPath = '/notifications';
 const String THome = '/tHome';
+const String TGame = '/tGame';
 const String TWalkthrough = 'tWalkthrough';
 const String TShowAllTickets = 'tShowAllTickets';
 const String TPickDraw = 'tPickDraw';
@@ -58,6 +59,7 @@ enum Pages {
   WalkThroughCompleted,
   YourFunds,
   THome,
+  TGame,
   TWeeklyResult,
   TWalkthrough,
   TPickDraw,
@@ -207,6 +209,11 @@ PageConfiguration THomePageConfig = PageConfiguration(
   key: 'THome',
   path: THome,
   uiPage: Pages.THome,
+);
+PageConfiguration TGamePageConfig = PageConfiguration(
+  key: 'TGame',
+  path: TGame,
+  uiPage: Pages.TGame,
 );
 PageConfiguration TWeeklyResultPageConfig = PageConfiguration(
   key: 'TWeeklyResult',

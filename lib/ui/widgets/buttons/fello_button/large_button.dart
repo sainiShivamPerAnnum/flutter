@@ -12,10 +12,10 @@ class FelloButtonLg extends StatelessWidget {
   Widget build(BuildContext context) {
     return FelloButton(
       activeButtonUI: Container(
-        height: 50.0,
+        height: 70.0,
         decoration: BoxDecoration(
           color: color ?? UiConstants.primaryColor,
-          borderRadius: new BorderRadius.circular(10.0),
+          borderRadius: new BorderRadius.circular(16.0),
         ),
         child: Material(
           child: MaterialButton(

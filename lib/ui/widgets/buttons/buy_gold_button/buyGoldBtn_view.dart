@@ -35,7 +35,7 @@ class BuyGoldBtn extends StatelessWidget {
       else {
         return activeButtonUI != null
             ? InkWell(
-                onTap: model.buyButtonAction(context),
+                onTap: model.buyButtonAction,
                 child: model.state == ViewState.Busy
                     ? loadingButtonUI
                     : activeButtonUI)
@@ -43,7 +43,7 @@ class BuyGoldBtn extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   primary: FelloColorPalette.augmontFundPalette().primaryColor,
                 ),
-                onPressed: () => model.buyButtonAction(context),
+                onPressed: model.buyButtonAction,
                 child: model.state == ViewState.Busy
                     ? SpinKitThreeBounce(
                         size: SizeConfig.mediumTextSize,
