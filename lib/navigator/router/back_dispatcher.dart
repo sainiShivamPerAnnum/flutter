@@ -71,7 +71,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
     // If the root tab is not 0 at the time of exit
     else if (AppState.screenStack.length == 1 &&
-        _routerDelegate.appState.getCurrentTabIndex != 0 &&
+        AppState.getCurrentTabIndex != 0 &&
         _baseUtil.isUserOnboarded) {
       _routerDelegate.appState.setCurrentGameTabIndex = 0;
       _routerDelegate.appState.returnHome();

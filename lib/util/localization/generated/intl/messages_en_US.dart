@@ -51,7 +51,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "resultsPageSafeDosageTitle" : MessageLookupByLibrary.simpleMessage("Daily Safe Maximum"),
     "resultsPageSecondDisclaimer" : MessageLookupByLibrary.simpleMessage("*Applies to age 18 and over. This calculator does not replace professional medical advice."),
     "secondSuggestedDrinkName" : MessageLookupByLibrary.simpleMessage("Espresso (Shot)"),
+    "splashNoInternet" : MessageLookupByLibrary.simpleMessage("No active internet connection"),
+    "splashSecureText" : MessageLookupByLibrary.simpleMessage("100% safe and secure"),
     "splashSlowConnection" : MessageLookupByLibrary.simpleMessage("Connection taking longer than usual"),
+    "splashTagline" : MessageLookupByLibrary.simpleMessage("Your savings and gaming app"),
     "thirdSuggestedDrinkName" : MessageLookupByLibrary.simpleMessage("Latte (Mug)")
   };
 }

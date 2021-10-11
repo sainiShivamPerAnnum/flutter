@@ -25,6 +25,7 @@ class SizeConfig {
 // ui size constants
   static double cardBorderRadius;
   static double globalMargin;
+  static double scaffoldMargin;
   static BorderRadius homeViewBorder;
   static bool isGamefirstTime;
 
@@ -42,6 +43,7 @@ class SizeConfig {
     cardTitleTextSize = blockSizeHorizontal * 7;
     cardBorderRadius = 12;
     globalMargin = blockSizeHorizontal * 3;
+    scaffoldMargin = blockSizeHorizontal * 4;
     isGamefirstTime = true;
     homeViewBorder = BorderRadius.only(
       bottomLeft: Radius.circular(SizeConfig.blockSizeHorizontal * 10),

@@ -12,6 +12,9 @@ import 'package:provider/provider.dart';
 class Transactions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var query = MediaQuery.of(context);
+    print(query.devicePixelRatio);
+    print(query.textScaleFactor);
     return BaseView<TranViewModel>(
       onModelReady: (model) {
         model.init();

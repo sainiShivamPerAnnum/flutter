@@ -217,15 +217,21 @@ class Save extends StatelessWidget {
                     onPressedAsync: () async {
                       await Future.delayed(Duration(seconds: 3));
                     },
-                    onPressed: () => showDialog(
-                      context: context,
-                      builder: (ctx) => FelloInfoDialog(
-                        title: "Info Dialog",
-                        subtitle: "This is the subtitle",
-                        body:
-                            "What other ways do you use to minimize the app size ??with tooling and language features that allow developers to eliminate a whole class of errors, increase app performance and reduce package size.",
-                      ),
-                    ),
+                    onPressed: () {
+                      AppState.delegate.appState.currentAction = PageAction(
+                        state: PageState.addPage,
+                        page: SplashPageConfig,
+                      );
+                    },
+                    // onPressed: () => showDialog(
+                    //   context: context,
+                    //   builder: (ctx) => FelloInfoDialog(
+                    //     title: "Info Dialog",
+                    //     subtitle: "This is the subtitle",
+                    //     body:
+                    //         "What other ways do you use to minimize the app size ??with tooling and language features that allow developers to eliminate a whole class of errors, increase app performance and reduce package size.",
+                    //   ),
+                    // ),
                   )
                 ],
               ),

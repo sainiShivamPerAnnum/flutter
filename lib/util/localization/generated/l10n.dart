@@ -35,11 +35,41 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Your savings and gaming app`
+  String get splashTagline {
+    return Intl.message(
+      'Your savings and gaming app',
+      name: 'splashTagline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `100% safe and secure`
+  String get splashSecureText {
+    return Intl.message(
+      '100% safe and secure',
+      name: 'splashSecureText',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Connection taking longer than usual`
   String get splashSlowConnection {
     return Intl.message(
       'Connection taking longer than usual',
       name: 'splashSlowConnection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No active internet connection`
+  String get splashNoInternet {
+    return Intl.message(
+      'No active internet connection',
+      name: 'splashNoInternet',
       desc: '',
       args: [],
     );

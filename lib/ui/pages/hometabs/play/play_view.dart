@@ -1,7 +1,7 @@
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui show Image;
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -9,129 +9,399 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 
 class Play extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseView<PlayViewModel>(
-      onModelReady: (model) {},
+      onModelReady: (model) {
+        model.loadImage();
+      },
       builder: (ctx, model, child) {
         return Container(
-          padding: EdgeInsets.only(
-              left: SizeConfig.globalMargin,
-              top: SizeConfig.globalMargin,
-              right: SizeConfig.globalMargin),
           child: ListView(
             children: [
               Container(
                 width: SizeConfig.screenWidth,
-                height: 100,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 5,
-                    itemBuilder: (ctx, i) {
-                      return Card(
-                        margin: EdgeInsets.all(8),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: Row(
-                            children: [
-                              CircleAvatar(),
-                              SizedBox(
-                                width: 16,
-                              ),
-                              Text("Title $i", style: TextStyles.body2.bold)
-                            ],
-                          ),
-                        ),
-                      );
-                    }),
-              ),
-              SizedBox(height: 20),
-              Text("Trending Games",
-                  style:
-                      TextStyles.title2.bold.colour(UiConstants.primaryColor)),
-              Column(
-                children: List.generate(
-                  2,
-                  (i) => Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          if (i == 0)
-                            BaseUtil().openTambolaHome();
-                          else {
-                            AppState.delegate.appState.currentAction =
-                                PageAction(
-                                    state: PageState.addPage,
-                                    page: CricketHomePageConfig);
-                            await Future.delayed(Duration(seconds: 10), () {
-                              AppState.backButtonDispatcher.didPopRoute();
-                            });
-                          }
-                        },
-                        child: Card(
-                          child: Container(
-                            padding: EdgeInsets.all(36),
-                            child: Row(
+                height: SizeConfig.screenWidth * 0.5,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: List.generate(
+                      2,
+                      (index) {
+                        return Container(
+                          width: SizeConfig.screenWidth * 0.64,
+                          height: SizeConfig.screenWidth * 0.4,
+                          margin: EdgeInsets.only(
+                              left: SizeConfig.scaffoldMargin,
+                              right: SizeConfig.scaffoldMargin / 2),
+                          decoration: BoxDecoration(
+                              color: UiConstants.tertiarySolid,
+                              borderRadius: BorderRadius.circular(40),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 30,
+                                  color: UiConstants.tertiarySolid
+                                      .withOpacity(0.4),
+                                  offset: Offset(
+                                    0,
+                                    SizeConfig.screenWidth * 0.15,
+                                  ),
+                                  spreadRadius: -50,
+                                )
+                              ]),
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 24.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SvgPicture.asset(
-                                  "images/svgs/game.svg",
-                                  height: 50,
-                                  width: 50,
-                                  color: UiConstants.primaryColor,
+                                Text(
+                                  "WIN",
+                                  style: TextStyles.title3
+                                      .colour(Colors.white)
+                                      .bold,
                                 ),
-                                SizedBox(width: 36),
-                                Text(model.gameList[i],
-                                    style: TextStyles.title2.light)
+                                SizedBox(height: 4),
+                                Text(
+                                  "4 Tickets Now",
+                                  style: TextStyles.title3
+                                      .colour(Colors.white)
+                                      .bold,
+                                ),
+                                SizedBox(
+                                  height: 12,
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  width: SizeConfig.screenWidth * 0.24,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  padding: EdgeInsets.symmetric(vertical: 12),
+                                  child: Text(
+                                    "Explore",
+                                    style: TextStyles.body1
+                                        .colour(Colors.white)
+                                        .bold,
+                                  ),
+                                )
                               ],
                             ),
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Row(
-                          children: [
-                            Text(
-                              "5 tickets",
-                              style: TextStyles.body2,
-                            ),
-                            Spacer(),
-                            Text(
-                              "Prize: 10K",
-                              style: TextStyles.body2
-                                  .colour(UiConstants.primaryColor),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 16,
-                      )
-                    ],
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
-              InkWell(
-                onTap: () => model.showTicketModal(context),
-                child: Card(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.globalMargin, vertical: 40),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 20),
-                    child: Text("Want more ticket?",
-                        style: TextStyles.title3.bold),
+              Row(
+                children: [
+                  SizedBox(width: SizeConfig.scaffoldMargin),
+                  Text(
+                    "Trending Games",
+                    style: TextStyles.title3.bold,
+                  ),
+                ],
+              ),
+              if (model.state == ViewState.Idle)
+                Column(
+                  children: List.generate(
+                    2,
+                    (index) => Container(
+                      width: SizeConfig.screenWidth,
+                      height: SizeConfig.screenWidth * 0.68,
+                      margin: EdgeInsets.all(SizeConfig.scaffoldMargin),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(68),
+                      ),
+                      padding: EdgeInsets.all(SizeConfig.globalMargin / 2),
+                      child: Column(
+                        children: [
+                          // ClipPath(
+                          //   clipper: GameClipper(),
+                          //   child: Container(
+                          //     width: SizeConfig.screenWidth,
+                          //     height: SizeConfig.screenWidth * 0.36,
+                          //     decoration: BoxDecoration(
+                          //         color: UiConstants.tertiarySolid
+                          //         // image: DecorationImage(
+                          //         //     image: AssetImage("images/PAN_card.png"),
+                          //         //     fit: BoxFit.cover),
+                          //         ),
+                          //   ),
+                          // ),
+                          CustomPaint(
+                            size: Size(
+                                SizeConfig.screenWidth -
+                                    SizeConfig.scaffoldMargin * 2,
+                                ((SizeConfig.screenWidth -
+                                            SizeConfig.scaffoldMargin * 2) *
+                                        0.45344571428571423)
+                                    .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+                            painter: GamePainter(myBackground: model.gameImage),
+                          ),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Tambola',
+                                  style: TextStyles.title3.bold
+                                      .colour(UiConstants.primaryColor),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    TextButton.icon(
+                                      icon: CircleAvatar(
+                                        backgroundColor:
+                                            Colors.black.withOpacity(0.2),
+                                        child: Icon(
+                                          Icons.airplane_ticket,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      label: Text("5 tickets",
+                                          style: TextStyles.body3
+                                              .colour(Colors.black54)),
+                                      onPressed: () {},
+                                    ),
+                                    SizedBox(width: 16),
+                                    TextButton.icon(
+                                        icon: CircleAvatar(
+                                          backgroundColor:
+                                              Colors.black.withOpacity(0.2),
+                                          child: Icon(
+                                            Icons.money,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        label: Text("Rs 10K",
+                                            style: TextStyles.body3
+                                                .colour(Colors.black54)),
+                                        onPressed: () {}),
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ),
                 ),
+              SizedBox(
+                height: kBottomNavigationBarHeight * 3.2,
               )
             ],
           ),
         );
       },
     );
+  }
+}
+
+//Add this CustomPaint widget to the Widget Tree
+
+//Copy this CustomPainter code to the Bottom of the File
+class GameClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path_0 = Path();
+    path_0.moveTo(0, size.height * 0.4648722);
+    path_0.cubicTo(0, size.height * 0.3256462, 0, size.height * 0.2560332,
+        size.width * 0.009685714, size.height * 0.2010006);
+    path_0.arcToPoint(Offset(size.width * 0.09114286, size.height * 0.02136025),
+        radius:
+            Radius.elliptical(size.width * 0.1428571, size.height * 0.3150480),
+        rotation: 0,
+        largeArc: false,
+        clockwise: true);
+    path_0.cubicTo(size.width * 0.1160971, 0, size.width * 0.1474714, 0,
+        size.width * 0.2102171, 0);
+    path_0.lineTo(size.width * 0.7897800, 0);
+    path_0.cubicTo(size.width * 0.8525286, 0, size.width * 0.8839029, 0,
+        size.width * 0.9088486, size.height * 0.02136025);
+    path_0.arcToPoint(Offset(size.width * 0.9903143, size.height * 0.2010006),
+        radius:
+            Radius.elliptical(size.width * 0.1428571, size.height * 0.3150480),
+        rotation: 0,
+        largeArc: false,
+        clockwise: true);
+    path_0.cubicTo(size.width, size.height * 0.2560332, size.width,
+        size.height * 0.3256462, size.width, size.height * 0.4648722);
+    path_0.cubicTo(
+        size.width,
+        size.height * 0.6350422,
+        size.width,
+        size.height * 0.7201303,
+        size.width * 0.9879086,
+        size.height * 0.7847718);
+    path_0.arcToPoint(Offset(size.width * 0.8837143, size.height * 0.9896349),
+        radius:
+            Radius.elliptical(size.width * 0.1600000, size.height * 0.3528537),
+        rotation: 0,
+        largeArc: false,
+        clockwise: true);
+    path_0.cubicTo(
+        size.width * 0.8532171,
+        size.height * 1.008739,
+        size.width * 0.8151257,
+        size.height * 0.9990864,
+        size.width * 0.7389400,
+        size.height * 0.9797676);
+    path_0.cubicTo(
+        size.width * 0.6632771,
+        size.height * 0.9605812,
+        size.width * 0.6254457,
+        size.height * 0.9509848,
+        size.width * 0.5875429,
+        size.height * 0.9458559);
+    path_0.arcToPoint(Offset(size.width * 0.4124457, size.height * 0.9458559),
+        radius:
+            Radius.elliptical(size.width * 1.428663, size.height * 3.150681),
+        rotation: 0,
+        largeArc: false,
+        clockwise: false);
+    path_0.cubicTo(
+        size.width * 0.3745429,
+        size.height * 0.9509848,
+        size.width * 0.3367114,
+        size.height * 0.9605812,
+        size.width * 0.2610457,
+        size.height * 0.9797676);
+    path_0.cubicTo(
+        size.width * 0.1848629,
+        size.height * 0.9990801,
+        size.width * 0.1467600,
+        size.height * 1.008752,
+        size.width * 0.1162714,
+        size.height * 0.9896349);
+    path_0.arcToPoint(Offset(size.width * 0.01209143, size.height * 0.7847718),
+        radius:
+            Radius.elliptical(size.width * 0.1600000, size.height * 0.3528537),
+        rotation: 0,
+        largeArc: false,
+        clockwise: true);
+    path_0.cubicTo(0, size.height * 0.7201303, 0, size.height * 0.6350422, 0,
+        size.height * 0.4648722);
+    path_0.close();
+    return path_0;
+    // Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
+    // paint_0_fill.color = UiConstants.tertiarySolid.withOpacity(1.0);
+    // canvas.drawPath(path_0, paint_0_fill);
+    // canvas.drawImage(image, Offset.zero, Paint());
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    // TODO: implement shouldReclip
+    return true;
+  }
+}
+
+//Copy this CustomPainter code to the Bottom of the File
+class GamePainter extends CustomPainter {
+  final ui.Image myBackground;
+  const GamePainter({this.myBackground});
+  @override
+  void paint(Canvas canvas, Size size) {
+    Path path_0 = Path();
+    path_0.moveTo(0, size.height * 0.4648722);
+    path_0.cubicTo(0, size.height * 0.3256462, 0, size.height * 0.2560332,
+        size.width * 0.009685714, size.height * 0.2010006);
+    path_0.arcToPoint(Offset(size.width * 0.09114286, size.height * 0.02136025),
+        radius:
+            Radius.elliptical(size.width * 0.1428571, size.height * 0.3150480),
+        rotation: 0,
+        largeArc: false,
+        clockwise: true);
+    path_0.cubicTo(size.width * 0.1160971, 0, size.width * 0.1474714, 0,
+        size.width * 0.2102171, 0);
+    path_0.lineTo(size.width * 0.7897800, 0);
+    path_0.cubicTo(size.width * 0.8525286, 0, size.width * 0.8839029, 0,
+        size.width * 0.9088486, size.height * 0.02136025);
+    path_0.arcToPoint(Offset(size.width * 0.9903143, size.height * 0.2010006),
+        radius:
+            Radius.elliptical(size.width * 0.1428571, size.height * 0.3150480),
+        rotation: 0,
+        largeArc: false,
+        clockwise: true);
+    path_0.cubicTo(size.width, size.height * 0.2560332, size.width,
+        size.height * 0.3256462, size.width, size.height * 0.4648722);
+    path_0.cubicTo(
+        size.width,
+        size.height * 0.6350422,
+        size.width,
+        size.height * 0.7201303,
+        size.width * 0.9879086,
+        size.height * 0.7847718);
+    path_0.arcToPoint(Offset(size.width * 0.8837143, size.height * 0.9896349),
+        radius:
+            Radius.elliptical(size.width * 0.1600000, size.height * 0.3528537),
+        rotation: 0,
+        largeArc: false,
+        clockwise: true);
+    path_0.cubicTo(
+        size.width * 0.8532171,
+        size.height * 1.008739,
+        size.width * 0.8151257,
+        size.height * 0.9990864,
+        size.width * 0.7389400,
+        size.height * 0.9797676);
+    path_0.cubicTo(
+        size.width * 0.6632771,
+        size.height * 0.9605812,
+        size.width * 0.6254457,
+        size.height * 0.9509848,
+        size.width * 0.5875429,
+        size.height * 0.9458559);
+    path_0.arcToPoint(Offset(size.width * 0.4124457, size.height * 0.9458559),
+        radius:
+            Radius.elliptical(size.width * 1.428663, size.height * 3.150681),
+        rotation: 0,
+        largeArc: false,
+        clockwise: false);
+    path_0.cubicTo(
+        size.width * 0.3745429,
+        size.height * 0.9509848,
+        size.width * 0.3367114,
+        size.height * 0.9605812,
+        size.width * 0.2610457,
+        size.height * 0.9797676);
+    path_0.cubicTo(
+        size.width * 0.1848629,
+        size.height * 0.9990801,
+        size.width * 0.1467600,
+        size.height * 1.008752,
+        size.width * 0.1162714,
+        size.height * 0.9896349);
+    path_0.arcToPoint(Offset(size.width * 0.01209143, size.height * 0.7847718),
+        radius:
+            Radius.elliptical(size.width * 0.1600000, size.height * 0.3528537),
+        rotation: 0,
+        largeArc: false,
+        clockwise: true);
+    path_0.cubicTo(0, size.height * 0.7201303, 0, size.height * 0.6350422, 0,
+        size.height * 0.4648722);
+    path_0.close();
+
+    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
+    paint_0_fill.color = UiConstants.tertiarySolid.withOpacity(1.0);
+    canvas.drawPath(path_0, paint_0_fill);
+    // canvas.drawImage(myBackground, Offset.zero, Paint());
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }

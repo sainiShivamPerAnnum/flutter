@@ -2,6 +2,7 @@ import 'dart:core';
 import 'dart:io';
 import 'dart:math';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +25,7 @@ class NavBar extends StatelessWidget {
     //For each item in our list of data, create a NavBtn widget
     List<Widget> buttonWidgets = items.map((data) {
       //Create a button, and add the onTap listener
-      return NavbarButton(data, data == selectedItem, data.showFocus,
-          onTap: () {
+      return NavbarButton(data, data == selectedItem, onTap: () {
         //Get the index for the clicked data
         var index = items.indexOf(data);
         //Notify any listeners that we've been tapped, we rely on a parent widget to change our selectedIndex and redraw
@@ -36,16 +36,17 @@ class NavBar extends StatelessWidget {
     //Create a container with a row, and add our btn widgets into the row
     return Container(
       decoration: BoxDecoration(
-        color: UiConstants.bottomNavBarColor,
+        borderRadius: BorderRadius.circular(32),
       ),
-      height: kBottomNavigationBarHeight,
-      margin: (Platform.isIOS)
-          ? EdgeInsets.only(
-              left: SizeConfig.blockSizeHorizontal * 5,
-              right: SizeConfig.blockSizeHorizontal * 5,
-              bottom: MediaQuery.of(context).padding.bottom * 0.15)
-          : EdgeInsets.symmetric(
-              horizontal: SizeConfig.blockSizeHorizontal * 5),
+
+      // margin:
+      //  (Platform.isIOS)
+      //     ? EdgeInsets.only(
+      //         left: SizeConfig.blockSizeHorizontal * 5,
+      //         right: SizeConfig.blockSizeHorizontal * 5,
+      //         bottom: MediaQuery.of(context).padding.bottom * 0.15)
+      //     : EdgeInsets.symmetric(
+      //         horizontal: SizeConfig.blockSizeHorizontal * 5),
       //Clip the row of widgets, to suppress any overflow errors that might occur during animation
       child: Row(
         //Center buttons horizontally
@@ -62,11 +63,9 @@ class NavBar extends StatelessWidget {
 class NavbarButton extends StatefulWidget {
   final NavBarItemData data;
   final bool isSelected;
-  final bool isFocus;
   final VoidCallback onTap;
 
-  const NavbarButton(this.data, this.isSelected, this.isFocus,
-      {@required this.onTap});
+  const NavbarButton(this.data, this.isSelected, {@required this.onTap});
 
   @override
   _NavbarButtonState createState() => _NavbarButtonState();
@@ -101,28 +100,25 @@ class _NavbarButtonState extends State<NavbarButton>
 
   Widget _buildContent() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         //Rotate the icon using the current animation value
         Rotation3d(
           rotationY: 180 * _iconAnimController.value,
           child: SvgPicture.asset(
             widget.data.iconImage,
-            height: 30,
-            color: widget.isSelected ? Colors.white : Color(0xffcccccc),
+            height: 32,
+            color: widget.isSelected ? Colors.white : Color(0xffC2EDE4),
           ),
         ),
         //Add some hz spacing
-        SizedBox(width: SizeConfig.blockSizeHorizontal),
+        SizedBox(width: SizeConfig.blockSizeHorizontal * 2),
         //Label
         FittedBox(
+          fit: BoxFit.scaleDown,
           child: Text(
             widget.data.title,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: SizeConfig.mediumTextSize,
-            ),
+            style: TextStyles.body1.colour(Colors.white).bold,
           ),
         ),
       ],
@@ -141,25 +137,31 @@ class _NavbarButtonState extends State<NavbarButton>
       onTap: () => widget.onTap(),
       //Wrap in a bit of extra padding to make it easier to tap
       child: Container(
-        color: UiConstants.bottomNavBarColor,
+        color: UiConstants.primaryColor,
         margin: EdgeInsets.symmetric(
-          vertical: kBottomNavigationBarHeight * 0.11,
+          vertical: kBottomNavigationBarHeight * 0.08,
         ),
-        padding: EdgeInsets.symmetric(horizontal: 10),
         //Wrap in an animated container, so changes to width & color automatically animate into place
         child: AnimatedContainer(
           alignment: Alignment.center,
+
           //Determine target width, selected item is wider
-          width: widget.isSelected ? widget.data.width : 50,
+          width: widget.isSelected ? SizeConfig.screenWidth * 0.28 : 60,
           curve: Curves.easeOutCubic,
           padding: EdgeInsets.all(12),
-          duration: Duration(milliseconds: 1000),
+          duration: Duration(milliseconds: 1400),
           //Use BoxDecoration top create a rounded container
           decoration: BoxDecoration(
-            color: widget.isSelected
-                ? UiConstants.primaryColor
-                : UiConstants.bottomNavBarColor,
-            borderRadius: BorderRadius.all(Radius.circular(24)),
+            border: Border.all(
+                color: widget.isSelected
+                    ? Colors.white
+                    : UiConstants.primaryColor),
+            // color: widget.isSelected
+            //     ? UiConstants.primaryColor
+            //     : UiConstants.bottomNavBarColor,
+            borderRadius: BorderRadius.all(
+              Radius.circular(100),
+            ),
           ),
           //Wrap the row in a ClippedView to suppress any overflow errors if we momentarily exceed the screen size
           child: ClippedView(
@@ -234,9 +236,10 @@ class NavBarItemData {
   final String title;
   final IconData icon;
   final String iconImage;
-  final double width;
-  bool showFocus;
 
   NavBarItemData(
-      this.title, this.icon, this.width, this.iconImage, this.showFocus);
+    this.title,
+    this.icon,
+    this.iconImage,
+  );
 }

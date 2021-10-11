@@ -64,7 +64,7 @@ class AppState extends ChangeNotifier {
 
 // GETTERS AND SETTERS
 
-  int get getCurrentTabIndex => _rootIndex;
+  static int get getCurrentTabIndex => _rootIndex;
 
   set setCurrentTabIndex(int index) {
     _gameTabIndex = 0;

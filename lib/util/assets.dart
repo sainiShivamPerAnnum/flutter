@@ -1,6 +1,7 @@
 import 'constants.dart';
 
 class Assets {
+  static final String splashBackground = "assets/images/splash_bg.png";
   static final String logoMaxSize = 'images/fello_logo.png';
   static final String logoShortform = 'images/fello-short-logo.png';
   static final String referGraphic = 'images/transfer.png';

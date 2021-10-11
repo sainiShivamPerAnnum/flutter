@@ -94,6 +94,11 @@ flutter:
     - resources/augmont/fello-augmont-invoice.html
     - resources/fello-email-verification.html
 
+    - assets/images/
+    - assets/vectors/
+    - assets/lotties/
+
+
   fonts:
     - family: Cucciolo
       fonts:
