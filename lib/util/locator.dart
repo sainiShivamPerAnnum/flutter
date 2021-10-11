@@ -5,12 +5,14 @@ import 'package:felloapp/core/ops/https/http_ops.dart';
 import 'package:felloapp/core/ops/icici_ops.dart';
 import 'package:felloapp/core/ops/lcl_db_ops.dart';
 import 'package:felloapp/core/ops/razorpay_ops.dart';
+import 'package:felloapp/core/repository/fcl_actions_repo.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/connectivity_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
+import 'package:felloapp/core/service/payment_service.dart';
 import 'package:felloapp/core/service/transaction_service.dart';
 import 'package:felloapp/core/service/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -31,23 +33,33 @@ import 'package:logger/logger.dart';
 GetIt locator = GetIt.instance;
 
 void setupLocator() {
+  //Logger
+  locator.registerLazySingleton(() => Logger());
+
+  //Services
   locator.registerLazySingleton(() => Api());
   locator.registerLazySingleton(() => LocalApi());
+  locator.registerLazySingleton(() => FcmListener());
+  locator.registerLazySingleton(() => FcmHandler());
+
+  //Model Services
+
+  locator.registerLazySingleton(() => BaseUtil());
+
+  locator.registerLazySingleton(() => PaymentService());
+  locator.registerLazySingleton(() => AppState());
+  locator.registerLazySingleton(() => ConnectivityService());
+  locator.registerLazySingleton(() => UserService());
+  locator.registerLazySingleton(() => TransactionService());
+
+  //Repository
   locator.registerLazySingleton(() => DBModel());
   locator.registerLazySingleton(() => LocalDBModel());
   locator.registerLazySingleton(() => HttpModel());
   locator.registerLazySingleton(() => ICICIModel());
   locator.registerLazySingleton(() => AugmontModel());
   locator.registerLazySingleton(() => RazorpayModel());
-  locator.registerLazySingleton(() => BaseUtil());
-  locator.registerLazySingleton(() => FcmListener());
-  locator.registerLazySingleton(() => FcmHandler());
-  locator.registerLazySingleton(() => PaymentService());
-  locator.registerLazySingleton(() => AppState());
-  locator.registerLazySingleton(() => ConnectivityService());
-  locator.registerLazySingleton(() => UserService());
-  locator.registerLazySingleton(() => TransactionService());
-  locator.registerLazySingleton(() => Logger());
+  locator.registerLazySingleton(() => FclActionsRepo());
 
   // Hometabs
   locator.registerFactory(() => PlayViewModel());

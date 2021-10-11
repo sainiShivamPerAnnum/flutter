@@ -198,7 +198,7 @@ class BaseUtil extends ChangeNotifier {
 
     ///fetch on-boarding status and User details
     firebaseUser = _userService.firebaseUser;
-    isUserOnboarded =  _userService.isUserOnborded;
+    isUserOnboarded = _userService.isUserOnborded;
 
     // isUserOnboarded =
     //     (firebaseUser != null && _myUser != null && _myUser.uid.isNotEmpty);
@@ -565,7 +565,6 @@ class BaseUtil extends ChangeNotifier {
 
   Future<bool> signOut() async {
     try {
-      
       await _lModel.deleteLocalAppData();
       log.debug('Cleared local cache');
       _appState.setCurrentTabIndex = 0;

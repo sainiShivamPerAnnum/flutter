@@ -77,6 +77,7 @@ class APIService implements API {
     await metric.start();
 
     var responseJson;
+    _baseUrl = "https://asia-south1-fello-dev-station.cloudfunctions.net";
     // token = Preference.getString('token');
     try {
       logger.d("response from $url");
@@ -84,9 +85,9 @@ class APIService implements API {
         Uri.parse(_baseUrl + url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: token != null ? token : '',
-          'platform': Platform.isAndroid ? 'android' : 'iOS',
-          'version': await _getAppVersion(),
+          // HttpHeaders.authorizationHeader: token != null ? token : '',
+          // 'platform': Platform.isAndroid ? 'android' : 'iOS',
+          // 'version': await _getAppVersion(),
         },
         body: jsonEncode(body ?? {}),
       );

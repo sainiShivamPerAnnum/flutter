@@ -73,8 +73,8 @@ class LogoFadeIn extends State<SplashScreen> {
     final fcmProvider = Provider.of<FcmListener>(context, listen: false);
     final stateProvider = Provider.of<AppState>(context, listen: false);
     stateProvider.setLastTapIndex();
-    await baseProvider.init();
     await userService.init();
+    await baseProvider.init();
     await fcmProvider.setupFcm();
     _httpModel.init();
     _timer3.cancel();

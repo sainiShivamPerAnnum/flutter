@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/pagestate.dart';
+import 'package:felloapp/core/enums/view_state.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -59,75 +60,82 @@ class Play extends StatelessWidget {
               SizedBox(height: 20),
               Text("Trending Games",
                   style: Theme.of(context).textTheme.headline3),
-              Column(
-                children: List.generate(
-                  2,
-                  (i) => Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          if (i == 0)
-                            BaseUtil().openTambolaHome();
-                          else {
-                            AppState.delegate.appState.currentAction =
-                                PageAction(
-                                    state: PageState.addPage,
-                                    page: CricketHomePageConfig);
-                            // await Future.delayed(Duration(seconds: 5), () {
-                            //   AppState.backButtonDispatcher.didPopRoute();
-                            // });
-                          }
-                        },
-                        child: Card(
-                          child: Container(
-                            padding: EdgeInsets.all(36),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(
-                                  "images/svgs/game.svg",
-                                  height: 50,
-                                  width: 50,
-                                  color: UiConstants.primaryColor,
-                                ),
-                                SizedBox(width: 36),
-                                Text(
-                                  model.gameList[i],
-                                  style: GoogleFonts.montserrat(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: SizeConfig.cardTitleTextSize,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Row(
+              model.state == ViewState.Busy
+                  ? CircularProgressIndicator()
+                  : Column(
+                      children: List.generate(
+                        2,
+                        (i) => Column(
                           children: [
-                            Text(
-                              "5 tickets",
-                              style:
-                                  TextStyle(fontSize: SizeConfig.largeTextSize),
+                            GestureDetector(
+                              onTap: () async {
+                                if (i == 0)
+                                  BaseUtil().openTambolaHome();
+                                else {
+                                  if (await model.openWebView()) {
+                                    AppState.delegate.appState.currentAction =
+                                        PageAction(
+                                            state: PageState.addPage,
+                                            page: CricketHomePageConfig);
+                                  }
+
+                                  // await Future.delayed(Duration(seconds: 5), () {
+                                  //   AppState.backButtonDispatcher.didPopRoute();
+                                  // });
+                                }
+                              },
+                              child: Card(
+                                child: Container(
+                                  padding: EdgeInsets.all(36),
+                                  child: Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        "images/svgs/game.svg",
+                                        height: 50,
+                                        width: 50,
+                                        color: UiConstants.primaryColor,
+                                      ),
+                                      SizedBox(width: 36),
+                                      Text(
+                                        model.gameList[i],
+                                        style: GoogleFonts.montserrat(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize:
+                                              SizeConfig.cardTitleTextSize,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
-                            Spacer(),
-                            Text(
-                              "Prize: 10K",
-                              style: TextStyle(
-                                  color: UiConstants.primaryColor,
-                                  fontSize: SizeConfig.largeTextSize),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "5 tickets",
+                                    style: TextStyle(
+                                        fontSize: SizeConfig.largeTextSize),
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    "Prize: 10K",
+                                    style: TextStyle(
+                                        color: UiConstants.primaryColor,
+                                        fontSize: SizeConfig.largeTextSize),
+                                  )
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 16,
                             )
                           ],
                         ),
                       ),
-                      SizedBox(
-                        height: 16,
-                      )
-                    ],
-                  ),
-                ),
-              ),
+                    ),
               InkWell(
                 onTap: () => model.showTicketModal(context),
                 child: Card(
