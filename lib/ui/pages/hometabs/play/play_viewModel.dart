@@ -62,8 +62,12 @@ class PlayViewModel extends BaseModel {
   final _fclActionRepo = locator<FlcActionsRepo>();
   final _logger = locator<Logger>();
 
+  String _message;
+
   List<GameModel> get gameList => _gamesList;
   List<OfferCardModel> get offerList => _offerList;
+
+  String get message => _message;
 
   showTicketModal(BuildContext context) {
     AppState.screenStack.add(ScreenItem.dialog);
@@ -77,7 +81,8 @@ class PlayViewModel extends BaseModel {
   Future<bool> openWebView() async {
     setState(ViewState.Busy);
     ApiResponse<FlcModel> _flcResponse = await _fclActionRepo.substractFlc();
-    if (_flcResponse.code == 200) {
+    _message = _flcResponse.model.message;
+    if (_flcResponse.model.canUserPlay) {
       setState(ViewState.Idle);
       return true;
     } else {

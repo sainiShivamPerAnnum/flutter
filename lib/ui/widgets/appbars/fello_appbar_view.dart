@@ -6,15 +6,6 @@
 // import 'package:felloapp/util/styles/size_config.dart';
 // import 'package:felloapp/util/styles/ui_constants.dart';
 
-// import 'package:flutter/material.dart';
-
-// class FelloAppBar extends StatelessWidget implements PreferredSizeWidget {
-//   final Text title;
-//   final AppBar appBar;
-//   final List<Widget> widgets;
-
-//   const FelloAppBar({Key key, this.title, this.appBar, this.widgets})
-//       : super(key: key);
 
 //   @override
 //   Widget build(BuildContext context) {

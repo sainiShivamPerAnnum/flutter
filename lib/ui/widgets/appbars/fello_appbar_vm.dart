@@ -1,5 +1,4 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
-
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/user_coin_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -11,14 +10,19 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
 class FelloAppBarVM extends BaseModel {
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   final _userCoinService = locator<UserCoinService>();
+
+  GlobalKey<ScaffoldState> _scaffoldKey;
 
   bool _isLoadingFlc = true;
   get isLoadingFlc => _isLoadingFlc;
 
+  setScaffoldKey(scaffoldKey) {
+    _scaffoldKey = scaffoldKey;
+  }
+
   showDrawer() {
-    scaffoldKey.currentState.openDrawer();
+    _scaffoldKey.currentState.openDrawer();
   }
 
   getFlc() async {

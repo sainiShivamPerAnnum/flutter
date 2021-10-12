@@ -40,6 +40,9 @@ class RootViewModel extends BaseModel {
     notifyListeners();
   }
 
+  String get userTicketCount =>
+      _baseUtil.userTicketWallet?.getActiveTickets()?.toString();
+      
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   List<Widget> pages;
 

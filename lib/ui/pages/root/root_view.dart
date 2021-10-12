@@ -28,6 +28,10 @@ class Root extends StatelessWidget {
         model.initialize();
         return Scaffold(
           key: model.scaffoldKey,
+          // appBar: FelloAppBar(
+          //   scaffoldKey: model.scaffoldKey,
+          //   appBar: AppBar(),
+          // ), //TODO shourya-commented
           drawer: FDrawer(),
           body: HomeBackground(
             whiteBackground: WhiteBackground(
