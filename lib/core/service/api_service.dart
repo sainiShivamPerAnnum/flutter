@@ -75,14 +75,12 @@ class APIService implements API {
     final HttpMetric metric =
         FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
     await metric.start();
-
     var responseJson;
-
-    // token = Preference.getString('token');
     try {
+      String _url = _baseUrl + url;
       logger.d("response from $url");
       final response = await http.post(
-        Uri.parse(_baseUrl + url),
+        Uri.parse(_url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           // HttpHeaders.authorizationHeader: token != null ? token : '',

@@ -33,7 +33,7 @@ class FlcActionsRepo {
       "type": "SUBTRACT",
       "subType": "GM_CRIC2020"
     };
-
+    _logger.d("Substract FLC : $_body");
     try {
       final response = await APIService.instance
           .postData(_apiPaths.kSubstractFlcPreGameApi, body: _body);
@@ -41,7 +41,7 @@ class FlcActionsRepo {
       return ApiResponse(model: FlcModel.fromMap(response), code: 200);
     } catch (e) {
       _logger.e(e);
-      return ApiResponse.withError(e, 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 }
